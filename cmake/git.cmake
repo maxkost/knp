@@ -1,18 +1,22 @@
 find_package(Git QUIET)
-if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
-# Update submodules as needed
-    option(GIT_SUBMODULE "Check submodules during build" ON)
-    if (GIT_SUBMODULE)
-        message(STATUS "Submodule update")
-        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
-                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                        RESULT_VARIABLE GIT_SUBMOD_RESULT)
-        if(NOT GIT_SUBMOD_RESULT EQUAL "0")
-            message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+
+
+function(add_git_submodule dir)
+    # Add a Git submodule directory to CMake, assuming the
+    # Git submodule directory is a CMake project.
+
+    set(project_list "${dir}/CMakeLists.txt")
+
+    if(NOT EXISTS "${project_list}")
+        message(STATUS "Adding submodule \"${project_list}\"...")
+        if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+            execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive -- ${dir}
+                            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+                            COMMAND_ERROR_IS_FATAL ANY)
+            message(FATAL_ERROR "\"${project_list}\" was not found and Git can't be executed!")
         endif()
     endif()
-endif()
 
-if(NOT EXISTS "${PROJECT_SOURCE_DIR}/extern/repo/CMakeLists.txt")
-    message(FATAL_ERROR "The submodules were not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
-endif()
+    add_subdirectory(${dir})
+endfunction(add_git_submodule)
+
