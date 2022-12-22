@@ -1,0 +1,92 @@
+# This file configures https://pre-commit.com/
+# Based on pre-commit hooks in
+#   https://github.com/pre-commit/pre-commit-hooks
+#   https://github.com/jumanjihouse/pre-commit-hooks
+# to use specific hooks and options.
+fail_fast: false
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: 1f6de3d70391131fac4b911ae913c568e571e34e
+    hooks:
+      - id: trailing-whitespace
+        exclude: \.output
+#      - id: end-of-file-fixer
+#        exclude: \.(cp?p?$|output)
+      - id: check-docstring-first
+      - id: check-added-large-files
+      - id: check-yaml
+      - id: debug-statements
+      - id: requirements-txt-fixer
+  - repo: https://github.com/asottile/reorder_python_imports
+    rev: bc7b5b2f0fde191c9d0121588ef9bbb79f8e5e21
+    hooks:
+      - id: reorder-python-imports
+        language_version: python3
+  - repo: https://github.com/pre-commit/pre-commit
+    rev: v2.16.0
+    hooks:
+    -   id: validate_manifest
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v1.16.1
+    hooks:
+      - id: pyupgrade
+#  - repo: https://github.com/ambv/black
+#    rev: cea13f498418784e22f8fbd78db3f9240a2bad11
+#    hooks:
+#      - id: black
+#        args: ["-l", "120"]
+#  - repo: local
+#    hooks:
+#      - id: clang-format
+#        name: clang-format
+#        args: ["--style=file"]
+#        entry: tools/hooks/clang_format.py
+#        description: Formats C, C++, Objective-C, and Java code
+#        types_or: [c, c++, c#, objective-c, java]
+#        language: python
+#      - id: clang-tidy
+#        name: clang-tidy
+#        args: ["--config-file=knp/.clang-tidy"]
+#        entry: tools/hooks/clang_tidy.py
+#        description: Find warnings/errors in C, C++, and Objective-C code
+#        types_or: [c, c++, c#, objective-c]
+#        language: python
+#      - id: oclint
+#        name: oclint
+#        entry: tools/hooks/oclint.py
+#        description: Find warnings/errors in C, C++, and Objective-C code
+#        types_or: [c, c++, c#, objective-c]
+#        language: python
+      # - id: uncrustify
+      #  name: uncrustify
+      #  entry: tools/hooks/uncrustify.py
+      #  description: Formats C, C++, Objective-C, Java, D, and Vala code
+      #  # D, vala currently aren't valid file types. See https://github.com/pre-commit/identify/issues/258
+      #  types_or: [c, c++, c#, objective-c, java]
+      #  language: python
+#      - id: cppcheck
+#        name: cppcheck
+#        entry: tools/hooks/cppcheck.py
+#        description: Find warnings/errors in C, C++, and Objective-C code
+#        types_or: [c, c++, c#, objective-c]
+#        language: python
+#      - id: cpplint
+#        name: cpplint
+#        entry: cpplint.py
+#        description: Find warnings/errors in C/CPP code
+#        types_or:  [c, c++, c#, objective-c, cuda]
+#        language: python
+#      - id: include-what-you-use
+#        name: include-what-you-use
+#        entry: tools/hooks/include_what_you_use.py
+#        description: Runs Include-What-You-Use (iwyu) in C/CPP code
+#        types_or:  [c, c++, c#, objective-c, cuda]
+#        language: python
+#
+#      - id: tests
+#        name: tests
+#        entry: bash -c "pip install . && pytest -v -xxx"
+#        description: Tests expected output of all scripts
+#        language: system
+#        types: [python]

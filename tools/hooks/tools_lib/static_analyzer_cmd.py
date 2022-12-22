@@ -1,5 +1,5 @@
-import sys
 import subprocess as sp
+import sys
 from typing import List
 
 from .command import Command

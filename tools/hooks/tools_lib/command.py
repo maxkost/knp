@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 """fns for clang-format, clang-tidy, oclint"""
-
 import os
 import re
 import shutil
