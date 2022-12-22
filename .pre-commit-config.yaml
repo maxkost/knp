@@ -74,6 +74,7 @@ repos:
       - id: cpplint
         name: cpplint
         entry: tools/hooks/cpplint.py
+        args: ["--root", "knp"]
         description: Find warnings/errors in C/CPP code
         types_or:  [c, c++, c#, objective-c, cuda]
         language: python
