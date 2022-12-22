@@ -36,22 +36,22 @@ repos:
 #    hooks:
 #      - id: black
 #        args: ["-l", "120"]
-#  - repo: local
-#    hooks:
-#      - id: clang-format
-#        name: clang-format
-#        args: ["--style=file"]
-#        entry: tools/hooks/clang_format.py
-#        description: Formats C, C++, Objective-C, and Java code
-#        types_or: [c, c++, c#, objective-c, java]
-#        language: python
-#      - id: clang-tidy
-#        name: clang-tidy
-#        args: ["--config-file=knp/.clang-tidy"]
-#        entry: tools/hooks/clang_tidy.py
-#        description: Find warnings/errors in C, C++, and Objective-C code
-#        types_or: [c, c++, c#, objective-c]
-#        language: python
+  - repo: local
+    hooks:
+      - id: clang-format
+        name: clang-format
+        args: ["--style=file"]
+        entry: tools/hooks/clang_format.py
+        description: Formats C, C++, Objective-C, and Java code
+        types_or: [c, c++, c#, objective-c, java]
+        language: python
+      - id: clang-tidy
+        name: clang-tidy
+        args: ["--config-file=knp/.clang-tidy"]
+        entry: tools/hooks/clang_tidy.py
+        description: Find warnings/errors in C, C++, and Objective-C code
+        types_or: [c, c++, c#, objective-c]
+        language: python
 #      - id: oclint
 #        name: oclint
 #        entry: tools/hooks/oclint.py
@@ -65,18 +65,18 @@ repos:
       #  # D, vala currently aren't valid file types. See https://github.com/pre-commit/identify/issues/258
       #  types_or: [c, c++, c#, objective-c, java]
       #  language: python
-#      - id: cppcheck
-#        name: cppcheck
-#        entry: tools/hooks/cppcheck.py
-#        description: Find warnings/errors in C, C++, and Objective-C code
-#        types_or: [c, c++, c#, objective-c]
-#        language: python
-#      - id: cpplint
-#        name: cpplint
-#        entry: cpplint.py
-#        description: Find warnings/errors in C/CPP code
-#        types_or:  [c, c++, c#, objective-c, cuda]
-#        language: python
+      - id: cppcheck
+        name: cppcheck
+        entry: tools/hooks/cppcheck.py
+        description: Find warnings/errors in C, C++, and Objective-C code
+        types_or: [c, c++, c#, objective-c]
+        language: python
+      - id: cpplint
+        name: cpplint
+        entry: cpplint.py
+        description: Find warnings/errors in C/CPP code
+        types_or:  [c, c++, c#, objective-c, cuda]
+        language: python
 #      - id: include-what-you-use
 #        name: include-what-you-use
 #        entry: tools/hooks/include_what_you_use.py
