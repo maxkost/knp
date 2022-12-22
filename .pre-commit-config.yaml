@@ -73,7 +73,7 @@ repos:
         language: python
       - id: cpplint
         name: cpplint
-        entry: cpplint.py
+        entry: tools/hooks/cpplint.py
         description: Find warnings/errors in C/CPP code
         types_or:  [c, c++, c#, objective-c, cuda]
         language: python
