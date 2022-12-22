@@ -3,7 +3,7 @@ import os
 import subprocess as sp
 from typing import List
 
-from tools.code_tools.utils import Command
+from .command import Command
 
 
 class FormatterCmd(Command):

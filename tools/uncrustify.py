@@ -6,7 +6,7 @@ import subprocess as sp
 import sys
 from typing import List
 
-from .formatter_cmd import FormatterCmd
+from tools_lib.formatter_cmd import FormatterCmd
 
 
 class UncrustifyCmd(FormatterCmd):

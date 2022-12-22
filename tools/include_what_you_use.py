@@ -4,7 +4,7 @@
 import sys
 from typing import List
 
-from .static_analyzer_cmd import StaticAnalyzerCmd
+from tools_lib.static_analyzer_cmd import StaticAnalyzerCmd
 
 
 class IncludeWhatYouUseCmd(StaticAnalyzerCmd):
