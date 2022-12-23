@@ -26,7 +26,6 @@ repos:
   #
   # Git.
   #
-
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: "v4.4.0"
     hooks:
@@ -41,7 +40,6 @@ repos:
   #
   # C++
   #
-
   - repo: https://github.com/pocc/pre-commit-hooks
     rev: "v1.3.5"
     hooks:
@@ -49,7 +47,7 @@ repos:
         args: ["--style=file"]
       - id: clang-tidy
         args: ["--config-file=knp/.clang-tidy"]
-      - id: oclint
+      # - id: oclint
       # - id: uncrustify
       - id: cppcheck
       - id: cpplint
@@ -111,6 +109,7 @@ repos:
       - id: cccc
         name: cccc
         entry: tools/hooks/cccc.py
+        args: ["--outdir=build/cccc", "--limits_file=knp/.cccc.json"]
         description: Code counter for C and C++
         types_or:  [c, c++, c#, objective-c, cuda]
         language: python
@@ -125,7 +124,6 @@ repos:
   #
   # CMake
   #
-
   - repo: https://github.com/cheshirekow/cmake-format-precommit
     rev: "v0.6.13"
     hooks:
@@ -137,7 +135,6 @@ repos:
   #
   # Python
   #
-
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: "v4.4.0"
     hooks:
@@ -259,7 +256,6 @@ repos:
   #
   # Markdown
   #
-
   - repo: https://github.com/markdownlint/markdownlint
     rev: "v0.12.0"
     hooks:
