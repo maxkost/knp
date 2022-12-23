@@ -109,6 +109,33 @@ repos:
         args: ["-r", "-lll"]
         exclude: ".*fixtures"
 
+# TODO: Enable this on the knp/pyframework
+#  - repo: https://github.com/regebro/pyroma
+#    rev: "4.1"
+#    hooks:
+#      - id: pyroma
+#        # Must be specified because of the default value in pyroma
+#        always_run: false
+#        args: ["knp"]
+#        files: |
+#          (?x)^(
+#              README.md|
+#              pyproject.toml|
+#              pylint/__init__.py|
+#              pylint/__pkginfo__.py|
+#              setup.cfg
+#          )$
+
+
+  #
+  # Markdown
+  #
+
+  - repo: https://github.com/markdownlint/markdownlint
+    rev: ""
+    hooks:
+      - id: markdownlint
+
   #
   # C++
   #
