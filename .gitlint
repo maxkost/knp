@@ -19,7 +19,8 @@ ignore-fixup-commits=true
 ignore-fixup-amend-commits=true
 ignore-squash-commits=true
 
-ignore=M1,author-valid-email
+# Temporary ignore this.
+ignore=M1,author-valid-email,B6,body-message-is-missing
 
 # Ignore any data sent to gitlint via stdin
 # ignore-stdin=true
