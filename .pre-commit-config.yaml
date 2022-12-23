@@ -32,11 +32,10 @@ repos:
       - id: check-merge-conflict
       # - id: no-commit-to-branch
 
-  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
-    rev: "v9.3.0"
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: ""
     hooks:
-      - id: commitlint
-        stages: [commit-msg]
+      - id: gitlint
 
   #
   # C++
