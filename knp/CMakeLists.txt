@@ -3,6 +3,9 @@ cmake_minimum_required(3.25)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Need for the linters.
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 project(knp VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 
 set(Boost_USE_STATIC_LIBS ON)
