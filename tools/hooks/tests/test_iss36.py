@@ -36,7 +36,7 @@ class TestIss36:
         ]
 
     def test_run(cls, expd_output, expd_retcode):
-        """ See issue 36, tests cmake"""
+        """See issue 36, tests cmake"""
         os.makedirs(os.path.join(cls.test_dir, "src"), exist_ok=True)
         with open(os.path.join(cls.test_dir, "src", "ok.c"), "w") as f:
             f.write(utils.test_file_strs["ok.c"])

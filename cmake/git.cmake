@@ -19,4 +19,3 @@ function(add_git_submodule dir)
 
     add_subdirectory(${dir})
 endfunction(add_git_submodule)
-

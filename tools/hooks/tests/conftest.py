@@ -5,8 +5,6 @@ Taken from
 import os
 import shutil
 
-import pytest
-
 
 def pytest_exception_interact(node, call, report):
     """See https://docs.pytest.org/en/latest/reference.html#_pytest.hookspec.pytest_exception_interact"""  # noqa: E501

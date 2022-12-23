@@ -106,4 +106,3 @@ function(CUDA_CONVERT_FLAGS EXISTING_TARGET)
             )
     endif()
 endfunction()
-
