@@ -24,6 +24,18 @@ repos:
       - id: debug-statements
       - id: requirements-txt-fixer
 
+  - repo: https://github.com/PyCQA/autoflake
+    rev: v2.0.0
+    hooks:
+      - id: autoflake
+        exclude: &fixtures tests(/\w*)*/functional/|tests/input|doc/data/messages|tests(/\w*)*data/
+        args:
+          - --in-place
+          - --remove-all-unused-imports
+          - --expand-star-imports
+          - --remove-duplicate-keys
+          - --remove-unused-variables
+
   - repo: https://github.com/pycqa/pylint
     rev: ""  # pylint-2.14.5
     hooks:
