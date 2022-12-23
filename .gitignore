@@ -5,13 +5,14 @@
 .tox
 
 *.test.yml
+
+# Python
+
 *.pyc
 *pb2*.py
-
-.DS_Store
 __pycache__
 .pytest_cache
-
+.mypy_cache
 
 # C++.
 
@@ -22,6 +23,12 @@ a.out
 /build/**
 /build*/**
 *.autosave
+
+.cccc
+
+# Mac OS X
+
+.DS_Store
 
 # Vim swap.
 
