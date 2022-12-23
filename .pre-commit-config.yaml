@@ -40,14 +40,13 @@ repos:
     rev: ""  # pylint-2.14.5
     hooks:
       - id: pylint
-        args: ["-rn", "-sn", "--rcfile=knp/.pylintrc", "--fail-on=I"]
+        args: ["-rn", "-sn", "--rcfile=knp/.pylintrc", "--fail-on=I", "--load-plugins=pylint.extensions.docparams"]
         exclude: tests(/\w*)*/functional/|tests/input|tests(/\w*)*data/|doc/
       - id: pylint
         alias: pylint-with-spelling
         args: ["-rn", "-sn", "--rcfile=knp/.pylintrc", "--fail-on=I", "--spelling-dict=en,ru"]
         exclude: tests(/\w*)*/functional/|tests/input|tests(/\w*)*data/|doc/
         stages: [manual]
-
   - repo: https://github.com/PyCQA/flake8
     rev: 6.0.0
     hooks:
@@ -57,11 +56,12 @@ repos:
           [flake8-bugbear==22.12.6, flake8-typing-imports==1.14.0]
         exclude: ".*fixtures"
 
-  - repo: https://github.com/asottile/reorder_python_imports
-    rev: bc7b5b2f0fde191c9d0121588ef9bbb79f8e5e21
-    hooks:
-      - id: reorder-python-imports
-        language_version: python3
+  # Bad: removes blank string after shebang.
+  # - repo: https://github.com/asottile/reorder_python_imports
+  #  rev: bc7b5b2f0fde191c9d0121588ef9bbb79f8e5e21
+  #  hooks:
+  #    - id: reorder-python-imports
+  #      language_version: python3
 
   - repo: https://github.com/pre-commit/pre-commit
     rev: v2.16.0

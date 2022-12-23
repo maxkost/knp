@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-"""
-PyLint CI runner.
-"""
+
+"""PyLint CI runner."""
+
 import os
 import sys
 from pathlib import Path
