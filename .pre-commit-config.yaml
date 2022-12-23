@@ -95,10 +95,13 @@ repos:
   # CMake
   #
 
-  - repo: https://github.com/cmake-lint/cmake-lint
+  - repo: https://github.com/cheshirekow/cmake-format-precommit
     rev: ""
     hooks:
-      - id: cmakelint
+      - id: cmake-format
+        args: ["--config", "knp/.cmake-format.yaml"]
+      - id: cmake-lint
+        args: ["--config-files", "knp/.cmake-format.yaml"]
 
   #
   # Python
