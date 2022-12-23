@@ -8,6 +8,99 @@ fail_fast: false
 repos:
 
   #
+  # C++
+  #
+
+  - repo: https://github.com/pocc/pre-commit-hooks
+    rev: ""
+    hooks:
+      - id: clang-format
+        args: ["--style=file"]
+      - id: clang-tidy
+        args: ["--config-file=knp/.clang-tidy"]
+      - id: oclint
+      # - id: uncrustify
+      - id: cppcheck
+      - id: cpplint
+        args: ["--root", "knp"]
+        additional_dependencies:
+          [cpplint==1.6.1]
+      # - id: include-what-you-use
+
+  - repo: local
+    hooks:
+#      - id: clang-format
+#        name: clang-format
+#        args: ["--style=file"]
+#        entry: tools/hooks/clang_format.py
+#        description: Formats C, C++, Objective-C, and Java code
+#        types_or: [c, c++, c#, objective-c, java]
+#        language: python
+#      - id: clang-tidy
+#        name: clang-tidy
+#        args: ["--config-file=knp/.clang-tidy"]
+#        entry: tools/hooks/clang_tidy.py
+#        description: Find warnings/errors in C, C++, and Objective-C code
+#        types_or: [c, c++, c#, objective-c]
+#        language: python
+#      - id: oclint
+#        name: oclint
+#        entry: tools/hooks/oclint.py
+#        description: Find warnings/errors in C, C++, and Objective-C code
+#        types_or: [c, c++, c#, objective-c]
+#        language: python
+      # - id: uncrustify
+      #  name: uncrustify
+      #  entry: tools/hooks/uncrustify.py
+      #  description: Formats C, C++, Objective-C, Java, D, and Vala code
+      #  # D, vala currently aren't valid file types. See https://github.com/pre-commit/identify/issues/258
+      #  types_or: [c, c++, c#, objective-c, java]
+      #  language: python
+#      - id: cppcheck
+#        name: cppcheck
+#        entry: tools/hooks/cppcheck.py
+#        description: Find warnings/errors in C, C++, and Objective-C code
+#        types_or: [c, c++, c#, objective-c]
+#        language: python
+#      - id: cpplint
+#        name: cpplint
+#        entry: tools/hooks/cpplint.py
+#        args: ["--root", "knp"]
+#        additional_dependencies:
+#          [cpplint==1.6.1]
+#        description: Find warnings/errors in C/CPP code
+#        types_or:  [c, c++, c#, objective-c, cuda]
+#        language: python
+#      - id: include-what-you-use
+#        name: include-what-you-use
+#        entry: tools/hooks/include_what_you_use.py
+#        description: Runs Include-What-You-Use (iwyu) in C/CPP code
+#        types_or:  [c, c++, c#, objective-c, cuda]
+#        language: python
+      - id: cccc
+        name: cccc
+        entry: tools/hooks/cccc.py
+        description: Code counter for C and C++
+        types_or:  [c, c++, c#, objective-c, cuda]
+        language: python
+#
+#      - id: tests
+#        name: tests
+#        entry: bash -c "pip install . && pytest -v -xxx"
+#        description: Tests expected output of all scripts
+#        language: system
+#        types: [python]
+
+  #
+  # CMake
+  #
+
+  - repo: https://github.com/cmake-lint/cmake-lint
+    rev: ""
+    hooks:
+      - id: cmakelint
+
+  #
   # Python
   #
 
@@ -135,7 +228,6 @@ repos:
 #              setup.cfg
 #          )$
 
-
   #
   # Markdown
   #
@@ -144,87 +236,3 @@ repos:
     rev: ""
     hooks:
       - id: markdownlint
-
-  #
-  # C++
-  #
-
-  - repo: https://github.com/pocc/pre-commit-hooks
-    rev: ""
-    hooks:
-      - id: clang-format
-        args: ["--style=file"]
-      - id: clang-tidy
-        args: ["--config-file=knp/.clang-tidy"]
-      # - id: oclint
-      # - id: uncrustify
-      - id: cppcheck
-      - id: cpplint
-        args: ["--root", "knp"]
-        additional_dependencies:
-          [cpplint==1.6.1]
-      # - id: include-what-you-use
-
-  - repo: local
-    hooks:
-#      - id: clang-format
-#        name: clang-format
-#        args: ["--style=file"]
-#        entry: tools/hooks/clang_format.py
-#        description: Formats C, C++, Objective-C, and Java code
-#        types_or: [c, c++, c#, objective-c, java]
-#        language: python
-#      - id: clang-tidy
-#        name: clang-tidy
-#        args: ["--config-file=knp/.clang-tidy"]
-#        entry: tools/hooks/clang_tidy.py
-#        description: Find warnings/errors in C, C++, and Objective-C code
-#        types_or: [c, c++, c#, objective-c]
-#        language: python
-#      - id: oclint
-#        name: oclint
-#        entry: tools/hooks/oclint.py
-#        description: Find warnings/errors in C, C++, and Objective-C code
-#        types_or: [c, c++, c#, objective-c]
-#        language: python
-      # - id: uncrustify
-      #  name: uncrustify
-      #  entry: tools/hooks/uncrustify.py
-      #  description: Formats C, C++, Objective-C, Java, D, and Vala code
-      #  # D, vala currently aren't valid file types. See https://github.com/pre-commit/identify/issues/258
-      #  types_or: [c, c++, c#, objective-c, java]
-      #  language: python
-#      - id: cppcheck
-#        name: cppcheck
-#        entry: tools/hooks/cppcheck.py
-#        description: Find warnings/errors in C, C++, and Objective-C code
-#        types_or: [c, c++, c#, objective-c]
-#        language: python
-#      - id: cpplint
-#        name: cpplint
-#        entry: tools/hooks/cpplint.py
-#        args: ["--root", "knp"]
-#        additional_dependencies:
-#          [cpplint==1.6.1]
-#        description: Find warnings/errors in C/CPP code
-#        types_or:  [c, c++, c#, objective-c, cuda]
-#        language: python
-#      - id: include-what-you-use
-#        name: include-what-you-use
-#        entry: tools/hooks/include_what_you_use.py
-#        description: Runs Include-What-You-Use (iwyu) in C/CPP code
-#        types_or:  [c, c++, c#, objective-c, cuda]
-#        language: python
-      - id: cccc
-        name: cccc
-        entry: tools/hooks/cccc.py
-        description: Code counter for C and C++
-        types_or:  [c, c++, c#, objective-c, cuda]
-        language: python
-#
-#      - id: tests
-#        name: tests
-#        entry: bash -c "pip install . && pytest -v -xxx"
-#        description: Tests expected output of all scripts
-#        language: system
-#        types: [python]
