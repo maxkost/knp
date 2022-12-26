@@ -29,9 +29,8 @@ class Command:
         if path is None:
             website = "https://github.com/pocc/pre-commit-hooks#example-usage"
             problem = self.command + " not found"
-            details = """Make sure {} is installed and on your PATH.\nFor more info: {}""".format(
-                self.command, website
-            )  # noqa: E501
+            # noqa: E501
+            details = f"""Make sure {self.command} is installed and on your PATH.\nFor more info: {website}"""
             self.raise_error(problem, details)
 
     def get_added_files(self):
@@ -45,7 +44,7 @@ class Command:
         # Find files the same way pre-commit does.
         if len(added_files) == 0:
             cmd = ["git", "diff", "--staged", "--name-only", "--diff-filter=A"]
-            sp_child = sp.run(cmd, stdout=sp.PIPE, stderr=sp.PIPE)
+            sp_child = sp.run(cmd, stdout=sp.PIPE, stderr=sp.PIPE, check=False)
             if sp_child.stderr or sp_child.returncode != 0:
                 self.raise_error(
                     "Problem determining which files are being committed using git.", sp_child.stderr.decode()
@@ -57,7 +56,7 @@ class Command:
         """Parse the args into usable variables"""
         self.args = list(args[1:])  # don't include calling function
         for arg in args:
-            if arg in self.files and not arg.startswith("-"):
+            if arg in self.files and arg in self.args and not arg.startswith("-"):
                 self.args.remove(arg)
             if arg.startswith("--version"):
                 # If --version is passed in as 2 arguments, where the second is version
@@ -69,8 +68,8 @@ class Command:
                 actual_version = self.get_version_str()
                 self.assert_version(actual_version, expected_version)
         # All commands other than clang-tidy or oclint require files, --version ok
-        is_cmd_clang_analyzer = self.command == "clang-tidy" or self.command == "oclint"
-        has_args = self.files or self.args or "version" in self.args
+        is_cmd_clang_analyzer = self.command in ["clang-tidy", "oclint"]
+        has_args = self.files or self.args or ("version" in self.args)
         if not has_args and not is_cmd_clang_analyzer:
             self.raise_error("Missing arguments", "No file arguments found and no files are pending commit.")
 
@@ -93,11 +92,9 @@ class Command:
         expected_len = len(expected_ver)  # allows for fuzzy versions
         if expected_ver not in actual_ver[:expected_len]:
             problem = "Version of " + self.command + " is wrong"
-            details = """Expected version: {}
-Found version: {}
-Edit your pre-commit config or use a different version of {}.""".format(
-                expected_ver, actual_ver, self.command
-            )
+            details = f"""Expected version: {expected_ver}
+Found version: {actual_ver}
+Edit your pre-commit config or use a different version of {self.command}."""
             self.raise_error(problem, details)
         # If the version is correct, exit normally
         sys.exit(0)
@@ -115,7 +112,7 @@ Edit your pre-commit config or use a different version of {}.""".format(
     def get_version_str(self):
         """Get the version string like 8.0.0 for a given command."""
         args = [self.command, "--version"]
-        sp_child = sp.run(args, stdout=sp.PIPE, stderr=sp.PIPE)
+        sp_child = sp.run(args, stdout=sp.PIPE, stderr=sp.PIPE, check=False)
         version_str = str(sp_child.stdout, encoding="utf-8")
         # After version like `8.0.0` is expected to be '\n' or ' '
         regex = self.look_behind + r"((?:\d+\.)+[\d+_\+\-a-z]+)"

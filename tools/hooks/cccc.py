@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import List
 from xml.etree import ElementTree
 
-from .tools_lib.static_analyzer_cmd import StaticAnalyzerCmd
+from tools_lib.static_analyzer_cmd import StaticAnalyzerCmd  # pylint: disable = E0401
 
 
 class CcccCmd(StaticAnalyzerCmd):
@@ -18,6 +18,7 @@ class CcccCmd(StaticAnalyzerCmd):
 
     def __init__(self, args: List[str]):
         super().__init__(self.command, '', args)
+        self.check_installed()
         self.parse_args(args)
         self.artifacts_dir = Path().cwd() / '.cccc'
         self.config_name = 'cccc.xml'
@@ -66,8 +67,8 @@ class CcccCmd(StaticAnalyzerCmd):
 
                 for i, v in limits.items():
                     if module_data.get(i, 0) > v:
-                        sys.stdout.buffer.write(
-                            f'{i} in "{file}" [{module_name}] == {module_data[i]} ' f'exciting limit {v}!'.encode()
+                        self.raise_error(
+                            f'{i} in "{file}" [{module_name}] == {module_data[i]}', f'This excites limit {v}!'
                         )
                         sys.exit(1)
 

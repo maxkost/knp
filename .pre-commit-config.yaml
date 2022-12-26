@@ -106,6 +106,12 @@ repos:
 #        description: Runs Include-What-You-Use (iwyu) in C/CPP code
 #        types_or:  [c, c++, c#, objective-c, cuda]
 #        language: python
+      - id: cloc
+        name: cloc
+        entry: tools/hooks/cloc.py
+        description: Code lines counter
+        types_or:  [c, c++, c#, objective-c, cuda, python, bash]
+        language: python
       - id: cccc
         name: cccc
         entry: tools/hooks/cccc.py
