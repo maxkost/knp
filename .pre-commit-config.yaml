@@ -196,12 +196,7 @@ repos:
     rev: v0.991
     hooks:
       - id: mypy
-        name: mypy
-        entry: mypy
-        language: python
-        types: [python]
         args: [--no-strict-optional, --ignore-missing-imports]
-        require_serial: true
         additional_dependencies:
           [
             "isort>=5",
@@ -214,7 +209,7 @@ repos:
             "types-PyYAML",
             "types-typed-ast >= 1.4.1"
           ]
-        exclude: tests(/\w*)*/functional/|tests/input|tests(/.*)+/conftest.py|doc/data/messages|tests(/\w*)*data/
+#        exclude: tests(/\w*)*/functional/|tests/input|tests(/.*)+/conftest.py|doc/data/messages|tests(/\w*)*data/
 
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.3.1

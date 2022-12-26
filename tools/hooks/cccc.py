@@ -53,6 +53,7 @@ class CcccCmd(StaticAnalyzerCmd):
             for module in root.findall('./procedural_summary/'):
                 module_data = {}
                 module_name = ''
+
                 for param in module:
                     if 'name' == param.tag:
                         module_name = param.text
