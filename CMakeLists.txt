@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.22) # TODO: increase to 3.25
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
+include("version")
+include("third-party")
+
 project(knp)
 
 # Need for the linters.
@@ -12,6 +17,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
 include_directories(${THIRD_PARTY_INCLUDES})
 
-include(git)
-
-add_git_submodule(third_party/googletest)
+add_third_party(googletest)
+add_third_party(spdlog)
+add_third_party(pybind11)
