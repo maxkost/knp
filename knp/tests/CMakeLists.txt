@@ -14,7 +14,9 @@ endif()
 include(GoogleTest)
 enable_testing()
 
-file(GLOB COMMON_SOURCE common/*.cpp common/*.h)
+file(GLOB COMMON_SOURCE
+     "${CMAKE_CURRENT_LIST_DIR}/common/*.cpp"
+     "${CMAKE_CURRENT_LIST_DIR}/common/*.h")
 
 add_executable("${PROJECT_NAME}" ${COMMON_SOURCE} tester.cpp)
 
@@ -47,7 +49,6 @@ target_include_directories("${PROJECT_NAME}"
     PRIVATE "${GTEST_DIR}/googletest/include"
     PRIVATE "${GTEST_DIR}/googlemock/include"
 )
-
 
 target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main)
 
