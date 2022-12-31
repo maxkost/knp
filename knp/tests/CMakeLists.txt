@@ -44,11 +44,6 @@ add_executable("${PROJECT_NAME}" ${COMMON_SOURCE} tester.cpp)
 #    target_link_libraries("${PROJECT_NAME}-${BACKEND}" PRIVATE "snn_backend_${BACKEND}" gtest gtest_main)
 #
 #
-#    gtest_discover_tests("${PROJECT_NAME}-${BACKEND}"
-#        # Set a working directory to find test data via paths relative to the project root
-#        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data"
-#        PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data"
-#    )
 #endforeach()
 
 target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main)
@@ -56,3 +51,9 @@ target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main)
 if(${BUILD_GMOCK})
     target_link_libraries("${PROJECT_NAME}" PRIVATE gmock gmock_main)
 endif()
+
+gtest_discover_tests("${PROJECT_NAME}"
+    # Set a working directory to find test data via paths relative to the project root
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data"
+    PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data"
+)
