@@ -18,7 +18,7 @@ file(GLOB COMMON_SOURCE
      "${CMAKE_CURRENT_LIST_DIR}/common/*.cpp"
      "${CMAKE_CURRENT_LIST_DIR}/common/*.h")
 
-add_executable("${PROJECT_NAME}" ${COMMON_SOURCE} tester.cpp)
+add_executable("${PROJECT_NAME}" tester.cpp ${COMMON_SOURCE})
 
 
 #file(GLOB BACKENDS LIST_DIRECTORIES yes "${CMAKE_CURRENT_SOURCE_DIR}/../include/snn-library/backends/*")
@@ -39,7 +39,7 @@ add_executable("${PROJECT_NAME}" ${COMMON_SOURCE} tester.cpp)
 #
 #
 #    # target_compile_options("${PROJECT_NAME}-${BACKEND}" PRIVATE)
-#    target_link_libraries("${PROJECT_NAME}-${BACKEND}" PRIVATE "snn_backend_${BACKEND}" gtest gtest_main)
+#    target_link_libraries("${PROJECT_NAME}-${BACKEND}" PRIVATE "snn_backend_${BACKEND}")
 #
 #
 #endforeach()
@@ -55,6 +55,10 @@ target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main)
 if(${BUILD_GMOCK})
     target_link_libraries("${PROJECT_NAME}" PRIVATE gmock gmock_main)
 endif()
+
+include(codecoverage)
+
+
 
 gtest_discover_tests("${PROJECT_NAME}"
     # Set a working directory to find test data via paths relative to the project root

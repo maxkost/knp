@@ -6,7 +6,7 @@
 #include <tests_common.h>
 
 
-TEST(BuildTestSuite, TestName)
+TEST(SuiteBuildTest, BuildTest)
 {
     ASSERT_EQ(true, true);
 }
