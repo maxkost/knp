@@ -19,8 +19,8 @@ if(ENABLE_COVERAGE)
     append_coverage_compiler_flags()
 endif()
 
-include(CTest)
 include(Dart)
+include(CTest)
 
 enable_testing()
 
