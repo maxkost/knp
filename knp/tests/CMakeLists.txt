@@ -35,16 +35,19 @@ add_executable("${PROJECT_NAME}" ${COMMON_SOURCE} tester.cpp)
 #    message(STATUS "Tests for the back-end \"${BE_UPPER}\" will be built.")
 #    add_executable("${PROJECT_NAME}-${BACKEND}" ${COMMON_SOURCE} ${TEST_BACKEND_SOURCE} ../include/snn-library/utilities/network_load.h cpu/network_file_test.cpp common/net_from_csv_test.cpp)
 #
-#    target_include_directories("${PROJECT_NAME}-${BACKEND}"
-#        PRIVATE "${GTEST_DIR}/googletest/include"
-#        PRIVATE "${GTEST_DIR}/googlemock/include"
-#    )
 #
 #    # target_compile_options("${PROJECT_NAME}-${BACKEND}" PRIVATE)
 #    target_link_libraries("${PROJECT_NAME}-${BACKEND}" PRIVATE "snn_backend_${BACKEND}" gtest gtest_main)
 #
 #
 #endforeach()
+
+target_include_directories("${PROJECT_NAME}"
+    PRIVATE "${CMAKE_CURRENT_LIST_DIR}/common"
+    PRIVATE "${GTEST_DIR}/googletest/include"
+    PRIVATE "${GTEST_DIR}/googlemock/include"
+)
+
 
 target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main)
 
