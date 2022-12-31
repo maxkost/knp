@@ -7,6 +7,8 @@ include("third-party")
 
 project(knp)
 
+option(BUILD_TESTS "Build tests" ON)
+
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
