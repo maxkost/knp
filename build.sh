@@ -1,7 +1,7 @@
 #!/bin/bash
 
 VERBOSE=0
-DEBUG=0
+RELEASE=0
 CMAKE_BINARY=cmake
 CMAKE_ADD_OPTS=${CMAKE_ADD_OPTS:-""}
 MAKE_ADD_OPTS=${MAKE_ADD_OPTS:-""}
@@ -14,7 +14,11 @@ usage() { echo "Usage: $0 [-v] [-d] [-c]" 1>&2; }
 build()
 {
   [ $VERBOSE == 1 ] && MAKE_ADD_OPTS="${MAKE_ADD_OPTS} VERBOSE=1"
-  [ $DEBUG == 1 ] && CMAKE_ADD_OPTS="${CMAKE_ADD_OPTS} -DCMAKE_BUILD_TYPE=Debug"
+  if [[ $RELEASE == 1 ]]; then
+    CMAKE_ADD_OPTS="${CMAKE_ADD_OPTS} -DCMAKE_BUILD_TYPE=Release"
+  else
+    CMAKE_ADD_OPTS="${CMAKE_ADD_OPTS} -DCMAKE_BUILD_TYPE=Debug"
+  fi
   [ "${CLEAN}" == 1 ] && BUILD_ADD_OPTS="${BUILD_ADD_OPTS} --clean-first"
   set -e
   set -o xtrace
@@ -47,8 +51,8 @@ while getopts "dcvh" o; do
     v)
       VERBOSE=1
     ;;
-    d)
-      DEBUG=1
+    r)
+      RELEASE=1
     ;;
     *)
       usage
