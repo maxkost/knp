@@ -19,8 +19,13 @@ if(ENABLE_COVERAGE)
     append_coverage_compiler_flags()
 endif()
 
+include(CTest)
+include(Dart)
+
 enable_testing()
+
 include(GoogleTest)
+
 
 file(GLOB COMMON_SOURCE
      "${CMAKE_CURRENT_LIST_DIR}/common/*.cpp"
@@ -106,5 +111,6 @@ endif()
 add_custom_target(test_memcheck
     COMMAND ${CMAKE_CTEST_COMMAND}
         --force-new-ctest-process --test-action memcheck
+        --rerun-failed --output-on-failure
     COMMAND cat "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log"
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data")
