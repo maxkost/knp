@@ -4,14 +4,14 @@
 
 
 # Configuration directories and files
-SourceDirectory: /home/artiom/projects/KNP/knp/tests
-BuildDirectory: /home/artiom/projects/KNP/build/knp/tests
+SourceDirectory: ../../
+BuildDirectory: ../../build/knp/tests
 
 # Where to place the cost data store
 CostDataFile:
 
 # Site is something like machine.domain, i.e. pragmatic.crd
-Site: working-machine
+Site: build-machine
 
 # Build name is osname-revision-compiler, i.e. Linux-2.4.2-2smp-c++
 BuildName: Linux-c++
