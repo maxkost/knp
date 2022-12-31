@@ -160,15 +160,27 @@ foreach(LANG ${LANGUAGES})
   endif()
 endforeach()
 
-set(COVERAGE_COMPILER_FLAGS "-g -fprofile-arcs -ftest-coverage"
-    CACHE INTERNAL "")
-if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
+set(COVERAGE_COMPILER_FLAGS "-pg" CACHE INTERNAL "")
+
+macro(check_and_set_compiler_flag option_name)
     include(CheckCXXCompilerFlag)
-    check_cxx_compiler_flag(-fprofile-abs-path HAVE_fprofile_abs_path)
-    if(HAVE_fprofile_abs_path)
-        set(COVERAGE_COMPILER_FLAGS "${COVERAGE_COMPILER_FLAGS} -fprofile-abs-path")
+    string(REGEX REPLACE "[-/\\]" "_" _optvar "${option_name}")
+    check_cxx_compiler_flag(${option_name} "HAVE_${_optvar}")
+
+    if(${HAVE_${_optvar}})
+        list(APPEND COVERAGE_COMPILER_FLAGS ${option_name})
     endif()
+
+endmacro()
+
+check_and_set_compiler_flag(-ftest-coverage)
+check_and_set_compiler_flag(-fprofile-arcs)
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
+    check_and_set_compiler_flag(-fprofile-abs-path)
 endif()
+
+list(JOIN COVERAGE_COMPILER_FLAGS " " COVERAGE_COMPILER_FLAGS)
 
 set(CMAKE_Fortran_FLAGS_COVERAGE
     ${COVERAGE_COMPILER_FLAGS}
@@ -400,7 +412,7 @@ endfunction() # setup_target_for_coverage_lcov
 #                                            #  to BASE_DIRECTORY, with CMake 3.4+)
 # )
 # The user can set the variable GCOVR_ADDITIONAL_ARGS to supply additional flags to the
-# GCVOR command.
+# GCOVR command.
 function(setup_target_for_coverage_gcovr_xml)
 
     set(options NONE)
@@ -721,6 +733,96 @@ function(setup_target_for_coverage_fastcov)
     )
 
 endfunction() # setup_target_for_coverage_fastcov
+
+# Defines a target for running and collection code coverage information
+# Builds dependencies, runs the given executable and outputs reports.
+
+# setup_target_for_coverage_gcov_json(
+#     NAME ctest_coverage                    # New target name
+#     EXECUTABLE ctest -j ${PROCESSOR_COUNT} # Executable in PROJECT_BINARY_DIR
+#     DEPENDENCIES executable_target         # Dependencies to build first
+#     BASE_DIRECTORY "../"                   # Base directory for report
+#                                            #  (defaults to PROJECT_SOURCE_DIR)
+#     EXCLUDE "src/dir1/*" "src/dir2/*"      # Patterns to exclude (can be relative
+#                                            #  to BASE_DIRECTORY, with CMake 3.4+)
+# )
+# The user can set the variable GCOV_ADDITIONAL_ARGS to supply additional flags to the
+# GCOV command.
+function(setup_target_for_coverage_gcov_json)
+
+    set(options NONE)
+    set(oneValueArgs BASE_DIRECTORY NAME)
+    set(multiValueArgs EXCLUDE EXECUTABLE EXECUTABLE_ARGS DEPENDENCIES)
+    cmake_parse_arguments(Coverage "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    if(NOT GCOV_PATH)
+        message(FATAL_ERROR "gcov not found! Aborting...")
+    endif() # NOT GCOV_PATH
+
+    # Set base directory (as absolute path), or default to PROJECT_SOURCE_DIR
+    if(DEFINED Coverage_BASE_DIRECTORY)
+        get_filename_component(BASEDIR ${Coverage_BASE_DIRECTORY} ABSOLUTE)
+    else()
+        set(BASEDIR ${PROJECT_SOURCE_DIR})
+    endif()
+
+    # Collect excludes (CMake 3.4+: Also compute absolute paths)
+    set(GCOV_EXCLUDES "")
+    foreach(EXCLUDE ${Coverage_EXCLUDE} ${COVERAGE_EXCLUDES} ${COVERAGE_GCOV_EXCLUDES})
+        if(CMAKE_VERSION VERSION_GREATER 3.4)
+            get_filename_component(EXCLUDE ${EXCLUDE} ABSOLUTE BASE_DIR ${BASEDIR})
+        endif()
+        list(APPEND GCOV_EXCLUDES "${EXCLUDE}")
+    endforeach()
+    list(REMOVE_DUPLICATES GCOV_EXCLUDES)
+
+    # Combine excludes to several -e arguments [GCov doesn't support excludes].
+    #set(GCOV_EXCLUDE_ARGS "")
+    #foreach(EXCLUDE ${GCOV_EXCLUDES})
+    #    list(APPEND GCOV_EXCLUDE_ARGS "-e")
+    #    list(APPEND GCOV_EXCLUDE_ARGS "${EXCLUDE}")
+    #endforeach()
+
+    # Set up commands which will be run to generate coverage data
+    # Run tests
+    set(GCOV_JSON_EXEC_TESTS_CMD
+        ${Coverage_EXECUTABLE} ${Coverage_EXECUTABLE_ARGS}
+    )
+    # Running gcovr
+    set(GCOV_JSON_CMD
+        ${GCOV_PATH} --json-format ${Coverage_NAME}.json -r ${BASEDIR} ${GCOV_ADDITIONAL_ARGS}
+        ${GCOVR_EXCLUDE_ARGS} --object-directory "${PROJECT_BINARY_DIR}"
+    )
+
+    if(CODE_COVERAGE_VERBOSE)
+        message(STATUS "Executed command report")
+
+        message(STATUS "Command to run tests: ")
+        string(REPLACE ";" " " GCOV_JSON_EXEC_TESTS_CMD_SPACED "${GCOV_JSON_EXEC_TESTS_CMD}")
+        message(STATUS "${GCOV_JSON_EXEC_TESTS_CMD_SPACED}")
+
+        message(STATUS "Command to generate gcovr XML coverage data: ")
+        string(REPLACE ";" " " GCOV_JSON_CMD_SPACED "${GCOV_JSON_CMD}")
+        message(STATUS "${GCOV_JSON_CMD_SPACED}")
+    endif()
+
+    add_custom_target(${Coverage_NAME}
+        COMMAND ${GCOV_JSON_EXEC_TESTS_CMD}
+        COMMAND ${GCOV_JSON_CMD}
+        BYPRODUCTS ${Coverage_NAME}.json
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+        DEPENDS ${Coverage_DEPENDENCIES}
+        VERBATIM # Protect arguments to commands
+        COMMENT "Running gcov to produce JSON code coverage report."
+    )
+
+    # Show info where to find the report
+    add_custom_command(TARGET ${Coverage_NAME} POST_BUILD
+        COMMAND ;
+        COMMENT "JSON code coverage report saved in ${Coverage_NAME}.json."
+    )
+endfunction() # setup_target_for_coverage_gcov_json
+
 
 function(append_coverage_compiler_flags)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COVERAGE_COMPILER_FLAGS}" PARENT_SCOPE)

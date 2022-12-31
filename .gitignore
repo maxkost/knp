@@ -51,3 +51,8 @@ Session.vim
 # CTest
 
 Testing
+
+
+# gprof
+
+gmon.out
