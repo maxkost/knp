@@ -160,7 +160,7 @@ foreach(LANG ${LANGUAGES})
   endif()
 endforeach()
 
-set(COVERAGE_COMPILER_FLAGS "-pg" CACHE INTERNAL "")
+set(COVERAGE_COMPILER_FLAGS "" CACHE INTERNAL "")
 
 macro(check_and_set_compiler_flag option_name)
     include(CheckCXXCompilerFlag)
@@ -173,11 +173,13 @@ macro(check_and_set_compiler_flag option_name)
 
 endmacro()
 
-check_and_set_compiler_flag(-ftest-coverage)
 check_and_set_compiler_flag(-fprofile-arcs)
+check_and_set_compiler_flag(-ftest-coverage)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
     check_and_set_compiler_flag(-fprofile-abs-path)
+    check_and_set_compiler_flag(-fprofile-instr-generate)
+    check_and_set_compiler_flag(-fcoverage-mapping)
 endif()
 
 list(JOIN COVERAGE_COMPILER_FLAGS " " COVERAGE_COMPILER_FLAGS)
