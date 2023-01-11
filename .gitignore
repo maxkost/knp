@@ -53,6 +53,12 @@ Session.vim
 Testing
 
 
-# gprof
+# gprof call graph
 
 gmon.out
+
+
+# Coverage results.
+
+*.gcda
+*.gcno
