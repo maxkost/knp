@@ -1,4 +1,5 @@
 FormatStyle:        'file'
+WarningsAsErrors:   '*'
 Checks:             '*,
                     -fuchsia-default-arguments-declarations,
                     -fuchsia-default-arguments-calls,

@@ -45,8 +45,9 @@ repos:
     hooks:
       - id: clang-format
         args: ["--style=file", "-i"]
-      - id: clang-tidy
-        args: ["--config-file=knp/.clang-tidy",  "-extra-arg-before=-xc++", "-extra-arg=-std=c++17", "-p=build"]
+      # Tidy integrated in CMake calls.
+      #- id: clang-tidy
+      #  args: ["--config-file=knp/.clang-tidy",  "-extra-arg-before=-xc++", "-extra-arg=-std=c++17", "-p=build"]
       # - id: oclint
       # - id: uncrustify
       - id: cppcheck

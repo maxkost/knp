@@ -9,6 +9,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(knpcore VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 
 include(GNUInstallDirs)
+include(clang-tidy)
 
 source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers REGULAR_EXPRESSION "include/.*")
@@ -22,6 +23,8 @@ add_library("${PROJECT_NAME}" impl/backend.cpp)
 target_include_directories("${PROJECT_NAME}" PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+
+add_clang_tidy("${PROJECT_NAME}" "${CMAKE_TIDY_CONFIG}" "--fix-notes;--fix")
 
 install(TARGETS "${PROJECT_NAME}"
         EXPORT "${PROJECT_NAME}"
