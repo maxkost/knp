@@ -46,10 +46,11 @@ repos:
       - id: clang-format
         args: ["--style=file", "-i"]
       - id: clang-tidy
-        args: ["--config-file=knp/.clang-tidy", "-p=build"]
+        args: ["--config-file=knp/.clang-tidy",  "-extra-arg-before=-xc++", "-extra-arg=-std=c++17", "-p=build"]
       # - id: oclint
       # - id: uncrustify
       - id: cppcheck
+        args: ["-x", "c++"]
       - id: cpplint
         args: ["--root", "knp"]
         additional_dependencies:

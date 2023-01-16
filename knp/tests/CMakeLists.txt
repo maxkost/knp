@@ -64,6 +64,7 @@ target_include_directories("${PROJECT_NAME}"
 )
 
 target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main)
+target_link_libraries("${PROJECT_NAME}" PRIVATE knpcore)
 
 if(${BUILD_GMOCK})
     target_link_libraries("${PROJECT_NAME}" PRIVATE gmock gmock_main)
@@ -106,7 +107,6 @@ if(ENABLE_COVERAGE)
         message(FATAL_ERROR "Coverage can't be enabled!")
     endif()
 endif()
-
 
 add_custom_target(test_memcheck
     COMMAND ${CMAKE_CTEST_COMMAND}

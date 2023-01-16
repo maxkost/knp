@@ -1,35 +1,19 @@
 FormatStyle:        'file'
 Checks:             '*,
-                    -cert-dcl21-cpp,
-                    -cppcoreguidelines-pro-type-vararg,
-                    -hicpp-vararg,
-                    -bugprone-exception-escape,
                     -fuchsia-default-arguments-declarations,
-                    -misc-non-private-member-variables-in-classes,
-                    -modernize-use-nodiscard,
-                    -cppcoreguidelines-avoid-magic-numbers,
-                    -readability-magic-numbers,
-                    -modernize-use-trailing-return-type,
                     -fuchsia-default-arguments-calls,
-                    -google-readability-braces-around-statements,
-                    -hicpp-braces-around-statements,
-                    -readability-braces-around-statements,
-                    -readability-implicit-bool-conversion,
+                    -misc-non-private-member-variables-in-classes,
+                    -modernize-use-trailing-return-type,
                     -llvm-header-guard,
-                    -cppcoreguidelines-pro-bounds-pointer-arithmetic,
-                    -fuchsia-overloaded-operator,
-                    -hicpp-signed-bitwise,
-                    -readability-named-parameter,
                     -android-cloexec-dup,
-                    -cppcoreguidelines-pro-bounds-constant-array-index,
-                    -readability-static-accessed-through-instance'
+                    -llvmlibc-implementation-in-namespace'
 CheckOptions:
   - key:            header-filter
     value:          .
   - key:            readability-identifier-naming.NamespaceCase
     value:          lower_case
   - key:            readability-identifier-naming.ClassCase
-    value:          lower_case
+    value:          CamelCase
   - key:            readability-identifier-naming.StructCase
     value:          lower_case
   - key:            readability-identifier-naming.FunctionCase

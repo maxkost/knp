@@ -177,7 +177,7 @@ check_and_set_compiler_flag(-fprofile-arcs)
 check_and_set_compiler_flag(-ftest-coverage)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
-    check_and_set_compiler_flag(-fprofile-abs-path)
+#    check_and_set_compiler_flag(-fprofile-abs-path)
     check_and_set_compiler_flag(-fprofile-instr-generate)
     check_and_set_compiler_flag(-fcoverage-mapping)
 endif()

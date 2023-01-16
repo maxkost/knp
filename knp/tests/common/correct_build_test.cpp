@@ -3,6 +3,7 @@
  */
 
 
+#include <knp/core/backend.h>
 #include <tests_common.h>
 
 

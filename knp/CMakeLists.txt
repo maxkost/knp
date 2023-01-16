@@ -10,4 +10,9 @@ project(knp VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 
 set(Boost_USE_STATIC_LIBS ON)
 
+add_subdirectory(neuron-traits-library)
+add_subdirectory(synapse-traits-library)
+add_subdirectory(core-library)
+add_subdirectory(base-framework)
+add_subdirectory(python-framework)
 add_subdirectory(tests)

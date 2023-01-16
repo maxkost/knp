@@ -1,0 +1,33 @@
+cmake_minimum_required(VERSION 3.22)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Need for the linters.
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+project(knpcore VERSION "${KNP_VERSION}" LANGUAGES C CXX)
+
+include(GNUInstallDirs)
+
+source_group(source REGULAR_EXPRESSION "impl/.*")
+source_group(headers REGULAR_EXPRESSION "include/.*")
+
+if(ENABLE_COVERAGE)
+    include(codecoverage)
+    append_coverage_compiler_flags()
+endif()
+
+add_library("${PROJECT_NAME}" impl/backend.cpp)
+target_include_directories("${PROJECT_NAME}" PUBLIC
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+
+install(TARGETS "${PROJECT_NAME}"
+        EXPORT "${PROJECT_NAME}"
+#        NAMESPACE KNP::
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
