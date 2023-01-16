@@ -38,7 +38,7 @@ ignore=M1,author-valid-email,B6,body-message-is-missing
 # Whether to use Python `search` instead of `match` semantics in rules that use
 # regexes. Context: https://github.com/jorisroovers/gitlint/issues/254
 # Disabled by default, but will be enabled by default in the future.
-# regex-style-search=true
+#regex-style-search=true
 
 # Enable debug mode (prints more output). Disabled by default.
 # debug=true
@@ -67,11 +67,12 @@ min-length=10
 # will not cause a violation, but "WIP: my title" will.
 # words=wip
 
-# [title-match-regex]
+[title-match-regex]
 # python-style regex that the commit-msg title must match
 # Note that the regex can contradict with other rules if not used correctly
 # (e.g. title-must-not-contain-word).
-# regex=^US[0-9]*
+regex=^[A-Za-z0-9 "']+: #[0-9]+$
+
 
 [body-max-line-length]
 line-length=120
