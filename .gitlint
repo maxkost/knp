@@ -71,7 +71,7 @@ min-length=10
 # python-style regex that the commit-msg title must match
 # Note that the regex can contradict with other rules if not used correctly
 # (e.g. title-must-not-contain-word).
-regex=^[A-Za-z0-9 "'\.]+: #[0-9]{7}$
+regex=^[A-Za-z0-9 "'.]+: #[0-9]{7}$
 
 
 [body-max-line-length]
