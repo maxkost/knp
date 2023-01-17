@@ -8,7 +8,7 @@ MAKE_ADD_OPTS=${MAKE_ADD_OPTS:-""}
 
 CURDIR="$(dirname "$(readlink -f "$0")")"
 
-usage() { echo "Usage: $0 [-v] [-d] [-c]" 1>&2; }
+usage() { echo "Usage: $0 [-v] [-r] [-c]" 1>&2; }
 
 
 build()
@@ -39,7 +39,7 @@ build()
 }
 
 
-while getopts "dcvh" o; do
+while getopts "rcvh" o; do
   case "${o}" in
     h)
       usage
