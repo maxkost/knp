@@ -69,6 +69,7 @@ disable=C0111, # Missing module docstring (Any comments should be deleted on PRO
         W3101,  # missing-timeout
         W0201,  # attribute-defined-outside-init
         R0903,  # Too few public methods
+        E0401,  # Unable to import module
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
