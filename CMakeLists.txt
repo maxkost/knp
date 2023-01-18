@@ -5,6 +5,8 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include("version")
 include("third-party")
 
+include("print_variables")
+
 project(knp)
 
 option(BUILD_TESTS "Build tests" ON)

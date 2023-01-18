@@ -9,6 +9,9 @@
 namespace knp::core
 {
 
+/*
+ * @brief Backend base class.
+ */
 class Backend
 {
 };
