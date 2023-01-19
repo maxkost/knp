@@ -1,6 +1,8 @@
 # Clang-tidy linter module.
 # Artiom N.(cl)2022
 
+include_guard(GLOBAL)
+
 
 function(find_clang_tidy result)
     find_program(CLANG_TIDY_CACHE_PATH NAMES "cltcache" "clang-tidy-cache" "cltcache.py"
@@ -24,7 +26,15 @@ endfunction()
 
 
 function(add_clang_tidy target)
-#  config_path add_params
+#  CONFIG_FILE_PATH <config> [add_params]
+    cmake_parse_arguments(
+        PARSED_ARGS
+        ""
+        "CONFIG_FILE_PATH"
+        "EXTRA_ARGS"
+        ${ARGN}
+    )
+
     if(NOT CLANG_TIDY_COMMAND)
         find_clang_tidy(CLANG_TIDY_COMMAND)
     endif()
@@ -36,19 +46,24 @@ function(add_clang_tidy target)
     get_property(langs GLOBAL PROPERTY ENABLED_LANGUAGES)
 
     if("CXX" IN_LIST langs)
-        list(APPEND TIDY_ARGS "--extra-arg-before=-xc++" "--extra-arg=-std=c++17" ${ARGV2})
+        list(APPEND TIDY_ARGS "--extra-arg-before=-xc++" "--extra-arg=-std=c++17" ${PARSED_ARGS_EXTRA_ARGS})
     else()
         list(TIDY_ARGS APPEND ${add_params})
     endif()
 
-    if(ARGV1)
-        list(APPEND TIDY_ARGS "--config-file=${ARGV1}")
+    if(PARSED_ARGS_CONFIG_FILE_PATH)
+        list(APPEND TIDY_ARGS "--config-file=${PARSED_ARGS_CONFIG_FILE_PATH}")
     endif()
 
     list(APPEND CLANG_TIDY_COMMAND ${CMAKE_CXX_CLANG_TIDY} ${TIDY_ARGS})
 
     message(STATUS "Setting clang-tidy on \"${target}\": ${CLANG_TIDY_COMMAND}")
 
+    if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        # cstddef:50:10: error: 'stddef.h' file not found [clang-diagnostic-error].
+        message(WARNING "Clang-tidy was disabled because of the bug!")
+        return()
+    endif()
 
     if("${target}" STREQUAL "ALL")
         set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}" CACHE STRING "CMake wrapped clang-tidy")
