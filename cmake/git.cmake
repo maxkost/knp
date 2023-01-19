@@ -26,5 +26,10 @@ function(add_git_submodule dir)
         endif()
     endif()
 
-    add_subdirectory("${dir}")
+    if(EXISTS "${project_list}")
+        get_filename_component(build_dir "${dir}" NAME)
+        set(CMAKE_VERIFY_INTERFACE_HEADER_SETS OFF)
+        add_subdirectory("${dir}" "${CMAKE_BINARY_DIR}/${build_dir}" SYSTEM)
+    endif()
+
 endfunction()
