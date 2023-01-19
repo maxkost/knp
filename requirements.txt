@@ -1,3 +1,4 @@
+clang-tidy==14.0.6
 # black==19.10b0
 pre-commit==2.20.0
 pytest==5.4.1
