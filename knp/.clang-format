@@ -30,9 +30,7 @@ IncludeCategories:
     Priority:        2
   # Headers in "" with extension.
   - Regex:           '"([\w.\/-_])+"'
-    Priority:        1
-  # Other headers.
-  - Regex:           '^"[\w]+/'
     Priority:        21
+  # Other headers.
   - Regex:           '.*'
     Priority:        22
