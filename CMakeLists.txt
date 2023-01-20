@@ -9,7 +9,8 @@ include("print_variables")
 
 project(knp)
 
-option(BUILD_TESTS "Build tests" ON)
+option(KNP_BUILD_TESTS "Build tests" ON)
+option(KNP_ENABLE_COVERAGE "Enable coverage test" ON)
 
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

@@ -1,5 +1,6 @@
 ---
 BasedOnStyle: Google
+AccessModifierOffset: -4
 AlignAfterOpenBracket: AlwaysBreak
 AllowShortFunctionsOnASingleLine: Inline
 BreakBeforeBraces: Allman
@@ -8,5 +9,28 @@ ConstructorInitializerIndentWidth: "4"
 ContinuationIndentWidth: "4"
 IndentWidth: "4"
 MaxEmptyLinesToKeep: "2"
+NamespaceIndentation: None
 SpaceInEmptyParentheses: "false"
 TabWidth: "4"
+UseTab: Never
+
+IncludeBlocks: Regroup
+IncludeCategories:
+  # Headers in <> from specific external libraries.
+  - Regex:           '<boost\/([\w.\/-_])+>'
+    Priority:        20
+  # Headers in <> without extension (system C++ headers).
+  - Regex:           '<([\w\/-_])+>'
+    Priority:        11
+  # Headers in <> with extension (system C headers).
+  - Regex:           '<([\w.\/-_])+>'
+    Priority:        10
+  # KNP headers in <>.
+  - Regex:           '<knp\/([\w.\/-_])+>'
+    Priority:        2
+  # Headers in "" with extension.
+  - Regex:           '"([\w.\/-_])+"'
+    Priority:        21
+  # Other headers.
+  - Regex:           '.*'
+    Priority:        22
