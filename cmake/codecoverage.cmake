@@ -164,20 +164,22 @@ set(COVERAGE_COMPILER_FLAGS "" CACHE INTERNAL "")
 
 macro(check_and_set_compiler_flag option_name)
     include(CheckCXXCompilerFlag)
+
     string(REGEX REPLACE "[-/\\]" "_" _optvar "${option_name}")
     check_cxx_compiler_flag(${option_name} "HAVE_${_optvar}")
 
     if(${HAVE_${_optvar}})
         list(APPEND COVERAGE_COMPILER_FLAGS ${option_name})
     endif()
-
 endmacro()
 
-check_and_set_compiler_flag(-fprofile-arcs)
 check_and_set_compiler_flag(-ftest-coverage)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
-#    check_and_set_compiler_flag(-fprofile-abs-path)
+    check_and_set_compiler_flag(-fprofile-abs-path)
+    # Need to be linked with gcov to test.
+    # check_and_set_compiler_flag(-fprofile-arcs)
+    list(APPEND COVERAGE_COMPILER_FLAGS -fprofile-arcs)
     check_and_set_compiler_flag(-fprofile-instr-generate)
     check_and_set_compiler_flag(-fcoverage-mapping)
 endif()
@@ -837,4 +839,9 @@ endfunction() # append_coverage_compiler_flags
 function(append_coverage_compiler_flags_to_target name)
     target_compile_options(${name}
         PRIVATE ${COVERAGE_COMPILER_FLAGS})
+endfunction()
+
+
+function(link_target_with_gcov name)
+    target_link_libraries(${name} PRIVATE gcov)
 endfunction()

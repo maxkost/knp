@@ -14,11 +14,6 @@ if(NOT KNP_BUILD_TESTS)
     return()
 endif()
 
-if(KNP_ENABLE_COVERAGE)
-    include(codecoverage)
-    append_coverage_compiler_flags()
-endif()
-
 include(Dart)
 include(CTest)
 
@@ -66,6 +61,12 @@ target_include_directories("${PROJECT_NAME}"
 target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main)
 target_link_libraries("${PROJECT_NAME}" PRIVATE knpcore)
 
+if(KNP_ENABLE_COVERAGE)
+    include(codecoverage)
+    append_coverage_compiler_flags()
+    link_target_with_gcov("${PROJECT_NAME}")
+endif()
+
 if(${BUILD_GMOCK})
     target_link_libraries("${PROJECT_NAME}" PRIVATE gmock gmock_main)
 endif()
@@ -83,7 +84,7 @@ if(ENABLE_COVERAGE)
     set(COV_EXECUTABLE "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
     set(COV_NAME "${PROJECT_NAME}_coverage")
     set(COV_DEPENDENCIES "${PROJECT_NAME}")
-    set(COV_BASE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data")
+    set(COV_BASE_DIRECTORY "${CMAKE_SOURCE_DIR}")
 
     set(CODE_COVERAGE_VERBOSE true)
 

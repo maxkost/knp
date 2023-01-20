@@ -28,6 +28,7 @@ add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_A
 if(KNP_ENABLE_COVERAGE)
     include(codecoverage)
     append_coverage_compiler_flags()
+    link_target_with_gcov("${PROJECT_NAME}")
 endif()
 
 install(TARGETS "${PROJECT_NAME}"
