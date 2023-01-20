@@ -14,11 +14,6 @@ include(clang-tidy)
 source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers REGULAR_EXPRESSION "include/.*")
 
-if(ENABLE_COVERAGE)
-    include(codecoverage)
-    append_coverage_compiler_flags()
-endif()
-
 add_library("${PROJECT_NAME}"
     impl/backend.cpp
     impl/uid.cpp
@@ -29,6 +24,11 @@ target_include_directories("${PROJECT_NAME}" PUBLIC
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
 add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
+
+if(KNP_ENABLE_COVERAGE)
+    include(codecoverage)
+    append_coverage_compiler_flags()
+endif()
 
 install(TARGETS "${PROJECT_NAME}"
         EXPORT "${PROJECT_NAME}"

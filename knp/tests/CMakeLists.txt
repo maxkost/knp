@@ -9,12 +9,12 @@ project(knp-tester CXX)
 option(ENABLE_COVERAGE "Coverage enabled" ON)
 
 
-if(NOT BUILD_TESTS)
+if(NOT KNP_BUILD_TESTS)
     message(STATUS "Tests building disabled...")
     return()
 endif()
 
-if(ENABLE_COVERAGE)
+if(KNP_ENABLE_COVERAGE)
     include(codecoverage)
     append_coverage_compiler_flags()
 endif()
@@ -76,31 +76,39 @@ gtest_discover_tests("${PROJECT_NAME}"
     PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data"
 )
 
+
 if(ENABLE_COVERAGE)
     message(STATUS "Coverage enabled")
 
+    set(COV_EXECUTABLE "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
+    set(COV_NAME "${PROJECT_NAME}_coverage")
+    set(COV_DEPENDENCIES "${PROJECT_NAME}")
+    set(COV_BASE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data")
+
+    set(CODE_COVERAGE_VERBOSE true)
+
     if(GCOVR_PATH)
         setup_target_for_coverage_gcovr_xml(
-            NAME ctest_coverage
-            EXECUTABLE ctest -j ${PROCESSOR_COUNT}
-            DEPENDENCIES "${PROJECT_NAME}"
-            BASE_DIRECTORY "${CMAKE_SOURCE_DIR}"
+            NAME "${COV_NAME}"
+            EXECUTABLE ${COV_EXECUTABLE}
+            DEPENDENCIES ${COV_DEPENDENCIES}
+            BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
         )
         message(VERBOSE "Gcovr selected")
     elseif(LCOV_PATH)
         setup_target_for_coverage_lcov(
-            NAME ctest_coverage
-            EXECUTABLE ctest -j ${PROCESSOR_COUNT}
-            DEPENDENCIES "${PROJECT_NAME}"
-            BASE_DIRECTORY "${CMAKE_SOURCE_DIR}"
+            NAME "${COV_NAME}"
+            EXECUTABLE ${COV_EXECUTABLE}
+            DEPENDENCIES ${COV_DEPENDENCIES}
+            BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
         )
         message(VERBOSE "Lcov selected")
     elseif(GCOV_PATH)
         setup_target_for_coverage_gcov_json(
-            NAME ctest_coverage
-            EXECUTABLE ctest -j ${PROCESSOR_COUNT}
-            DEPENDENCIES "${PROJECT_NAME}"
-            BASE_DIRECTORY "${CMAKE_SOURCE_DIR}"
+            NAME "${COV_NAME}"
+            EXECUTABLE ${COV_EXECUTABLE}
+            DEPENDENCIES ${COV_DEPENDENCIES}
+            BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
         )
         message(STATUS "Gcov selected")
     else()

@@ -29,7 +29,7 @@ build()
   export ${MAKE_ADD_OPTS}
 
   "${CMAKE_BINARY}" \
-        -DBUILD_TESTS=true \
+        -DKNP_BUILD_TESTS=true \
         -DCMAKE_INSTALL_PREFIX="install" \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=On \
         ${CMAKE_ADD_OPTS} \
