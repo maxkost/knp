@@ -843,5 +843,7 @@ endfunction()
 
 
 function(link_target_with_gcov name)
-    target_link_libraries(${name} PRIVATE gcov)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+        target_link_libraries(${name} PRIVATE gcov)
+    endif()
 endfunction()
