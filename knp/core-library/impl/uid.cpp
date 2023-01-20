@@ -19,7 +19,7 @@ static ::std::atomic_uint64_t tag_counter = 1;
 
 ::boost::uuids::uuid continuously_uid_generator::operator()() const
 {
-    ::boost::uuids::uuid result = {{0}};
+    ::boost::uuids::uuid result = {{1}};
     const auto c_value{tag_counter++};
     constexpr auto value_size = sizeof(c_value);
 
