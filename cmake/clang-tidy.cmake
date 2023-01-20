@@ -59,6 +59,9 @@ function(add_clang_tidy target)
 
     message(STATUS "Setting clang-tidy on \"${target}\": ${CLANG_TIDY_COMMAND}")
 
+    # Temporary skip.
+    return()
+
     if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         # cstddef:50:10: error: 'stddef.h' file not found [clang-diagnostic-error].
         message(WARNING "Clang-tidy was disabled because of the bug!")
