@@ -11,6 +11,8 @@
 
 TEST(UidTest, UidGeneratorTest)
 {
+    using uuid = ::boost::uuids::uuid;
+
     auto u = ::knp::core::continuously_uid_generator()();
     ASSERT_EQ(uuid{{1}}, u);
     ASSERT_NE(uuid{{2}}, u);
