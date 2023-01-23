@@ -45,13 +45,14 @@ repos:
     hooks:
       - id: clang-format
         args: ["--style=file", "-i"]
-      # Tidy integrated in CMake calls.
-      #- id: clang-tidy
-      #  args: ["--config-file=knp/.clang-tidy",  "-extra-arg-before=-xc++", "-extra-arg=-std=c++17", "-p=build"]
       # - id: oclint
       # - id: uncrustify
+      # DO NOT RUN: see comment below (in the local hook description).
+      #- id: clang-tidy
+      #  name: clang-tidy
+      #  args: ["--config-file=knp/.clang-tidy",  "-extra-arg-before=-xc++", "-extra-arg=-std=c++17", "-p=build"]
       - id: cppcheck
-        args: ["-x", "c++"]
+        args: ["-x", "c++", "--suppress-xml=knp/.cppcheck-suppress.xml"]  # --cppcheck-build-dir=build]
       - id: cpplint
         args: ["--root", "knp"]
         additional_dependencies:
@@ -67,13 +68,19 @@ repos:
 #        description: Formats C, C++, Objective-C, and Java code
 #        types_or: [c, c++, c#, objective-c, java]
 #        language: python
-#      - id: clang-tidy
-#        name: clang-tidy
-#        args: ["--config-file=knp/.clang-tidy"]
-#        entry: tools/hooks/clang_tidy.py
-#        description: Find warnings/errors in C, C++, and Objective-C code
-#        types_or: [c, c++, c#, objective-c]
-#        language: python
+      # Tidy is not integrated in CMake calls.
+      #   - Bug: cstddef:50:10: error: 'stddef.h' file not found [clang-diagnostic-error].
+      #   - Don't necessary to run tidy on the every build.
+      #   - With a cache tidy is faster.
+      #   - I don't know where is the real build directory.
+      #   - Hook implementation with a cache is buggy now.
+      #- id: clang-tidy
+      #  name: clang-tidy
+      #  args: ["--config-file=knp/.clang-tidy",  "-extra-arg-before=-xc++", "-extra-arg=-std=c++17", "-p=build"]
+      #  entry: tools/hooks/clang_tidy.py
+      #  description: Find warnings/errors in C, C++, and Objective-C code
+      #  types_or: [c, c++, c#, objective-c]
+      #  language: python
 #      - id: oclint
 #        name: oclint
 #        entry: tools/hooks/oclint.py
