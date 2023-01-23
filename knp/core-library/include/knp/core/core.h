@@ -17,7 +17,7 @@ namespace knp::core
 {
 
 /**
- * Tags.
+ * @brief Tags.
  */
 class TagMap
 {
