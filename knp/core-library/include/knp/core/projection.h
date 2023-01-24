@@ -1,4 +1,5 @@
 /**
+ * @file projection.h
  * @brief General Projection Interface.
  * @author Artiom N.
  * @date 18.01.2023
@@ -11,7 +12,7 @@ namespace knp::core
 {
 
 /**
- * @brief The Projection class is definition of the similar connections between neurons from two populations.
+ * @brief The Projection class is definition of the similar connections between neurons of two populations.
  */
 class Projection
 {

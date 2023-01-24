@@ -47,7 +47,11 @@ class CcccCmd(StaticAnalyzerCmd):
             self.run_command(self.args + [file])
             self.exit_on_error()
 
-            tree = ElementTree.parse(self.config_file)
+            try:
+                tree = ElementTree.parse(self.config_file)
+            except ElementTree.ParseError as e:
+                print(f'WARNING: CCCC BUG: {e}!!!')
+                return
             root = tree.getroot()
 
             for module in root.findall('./procedural_summary/'):

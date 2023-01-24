@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """PyLint CI runner."""
 
@@ -11,13 +11,6 @@ from typing import Dict, NoReturn, List, Tuple, Union
 
 from pylint.reporters.text import ParseableTextReporter
 from pylint.lint.run import Run as PylintRun
-
-
-SCRIPT_DIR = Path(__file__).parent.absolute()
-PROJECT_DIR = WORKING_DIR = Path(sys.argv[1])
-PYLINT_DIR = 'pylint_report'
-PYLINT_PATH = WORKING_DIR / PYLINT_DIR
-PYLINT_REPORT_FILE = PYLINT_PATH / 'pylint-report.txt'
 
 
 class TeeIO(io.StringIO):
@@ -74,6 +67,16 @@ def get_pylint_suppressors(
                     lines_list.append((n, ln))
     return lines
 
+
+if len(sys.argv) < 2:
+    print(f'{Path(__file__).name} <working_directory>')
+    sys.exit(1)
+
+SCRIPT_DIR = Path(__file__).parent.absolute()
+PROJECT_DIR = WORKING_DIR = Path(sys.argv[1])
+PYLINT_DIR = 'pylint_report'
+PYLINT_PATH = WORKING_DIR / PYLINT_DIR
+PYLINT_REPORT_FILE = PYLINT_PATH / 'pylint-report.txt'
 
 WORKING_DIR.cwd()
 PYLINT_PATH.mkdir(exist_ok=True)

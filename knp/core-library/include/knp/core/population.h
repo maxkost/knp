@@ -1,9 +1,9 @@
 /**
+ * @file population.h
  * @brief General Population Interface.
  * @author Artiom N.
  * @date 18.01.2023
  */
-
 
 #pragma once
 

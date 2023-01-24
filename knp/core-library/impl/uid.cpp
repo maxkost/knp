@@ -1,4 +1,5 @@
 /**
+ * @file uid.cpp
  * @brief UID implementation.
  * @author Artiom N.
  * @date 22.05.20

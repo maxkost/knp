@@ -16,4 +16,4 @@ If you need reference on a specific file, the <a href="files.html">files</a> pag
 
   //! \defgroup Backend Backends
 
-  /*! \defgroup I/O Input and output channels */
+  /*! \defgroup IO Input and output channels */
