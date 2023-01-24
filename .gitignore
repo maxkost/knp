@@ -14,6 +14,11 @@ __pycache__
 .pytest_cache
 .mypy_cache
 
+# PyLint
+
+/knp/pylint_report
+
+
 # C++.
 
 a.out

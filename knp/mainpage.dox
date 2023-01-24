@@ -1,0 +1,19 @@
+/**
+\mainpage KNP code documentation
+
+\tableofcontents
+
+This Doxygen page offers code level documentation.
+
+\section modules Browse modules
+
+KNP code is organized into modules.
+
+\section files Browse files
+
+If you need reference on a specific file, the <a href="files.html">files</a> page lists all files in KNP.
+*/
+
+  //! \defgroup Backend Backends
+
+  /*! \defgroup I/O Input and output channels */

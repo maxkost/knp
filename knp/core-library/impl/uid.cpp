@@ -16,7 +16,7 @@ namespace knp::core
 namespace
 {
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
-static volatile ::std::atomic_uint64_t tag_counter = 1;
+volatile ::std::atomic_uint64_t tag_counter = 1;
 }  // namespace
 
 

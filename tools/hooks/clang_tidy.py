@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Wrapper script for clang-tidy."""
+from pathlib import Path
 import re
 import sys
 from typing import List
@@ -10,10 +11,14 @@ from tools_lib.static_analyzer_cmd import StaticAnalyzerCmd
 class ClangTidyCmd(StaticAnalyzerCmd):
     """Class for the clang-tidy command."""
 
-    command = "clang-tidy"
+    command = 'clang-tidy'
+    cache_command = (Path(__file__).parent.parent / 'cltcache.py').absolute()
     lookbehind = "LLVM version "
 
     def __init__(self, args: List[str]):
+        if Path(self.cache_command).exists():
+            args.insert(1, self.command)
+            self.command = str(self.cache_command)
         super().__init__(self.command, self.lookbehind, args)
         self.parse_args(args)
         self.edit_in_place = "-fix" in self.args or "--fix-errors" in self.args

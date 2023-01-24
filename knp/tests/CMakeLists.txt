@@ -113,7 +113,7 @@ if(ENABLE_COVERAGE)
         )
         message(STATUS "Gcov selected")
     else()
-        message(FATAL_ERROR "Coverage can't be enabled!")
+        message(WARNING "Coverage can't be enabled!")
     endif()
 endif()
 

@@ -45,13 +45,14 @@ repos:
     hooks:
       - id: clang-format
         args: ["--style=file", "-i"]
-      # Tidy integrated in CMake calls.
-      #- id: clang-tidy
-      #  args: ["--config-file=knp/.clang-tidy",  "-extra-arg-before=-xc++", "-extra-arg=-std=c++17", "-p=build"]
       # - id: oclint
       # - id: uncrustify
+      # DO NOT RUN: see comment below (in the local hook description).
+      #- id: clang-tidy
+      #  name: clang-tidy
+      #  args: ["--config-file=knp/.clang-tidy",  "-extra-arg-before=-xc++", "-extra-arg=-std=c++17", "-p=build"]
       - id: cppcheck
-        args: ["-x", "c++"]
+        args: ["-x", "c++", "--suppress-xml=knp/.cppcheck-suppress.xml"]  # --cppcheck-build-dir=build]
       - id: cpplint
         args: ["--root", "knp"]
         additional_dependencies:
@@ -60,20 +61,19 @@ repos:
 
   - repo: local
     hooks:
-#      - id: clang-format
-#        name: clang-format
-#        args: ["--style=file"]
-#        entry: tools/hooks/clang_format.py
-#        description: Formats C, C++, Objective-C, and Java code
-#        types_or: [c, c++, c#, objective-c, java]
-#        language: python
-#      - id: clang-tidy
-#        name: clang-tidy
-#        args: ["--config-file=knp/.clang-tidy"]
-#        entry: tools/hooks/clang_tidy.py
-#        description: Find warnings/errors in C, C++, and Objective-C code
-#        types_or: [c, c++, c#, objective-c]
-#        language: python
+      # Tidy is not integrated in CMake calls.
+      #   - Bug: cstddef:50:10: error: 'stddef.h' file not found [clang-diagnostic-error].
+      #   - Don't necessary to run tidy on the every build.
+      #   - With a cache tidy is faster.
+      #   - I don't know where is the real build directory.
+      #   - Hook implementation with a cache is buggy now.
+      #- id: clang-tidy
+      #  name: clang-tidy
+      #  args: ["--config-file=knp/.clang-tidy",  "-extra-arg-before=-xc++", "-extra-arg=-std=c++17", "-p=build"]
+      #  entry: tools/hooks/clang_tidy.py
+      #  description: Find warnings/errors in C, C++, and Objective-C code
+      #  types_or: [c, c++, c#, objective-c]
+      #  language: python
 #      - id: oclint
 #        name: oclint
 #        entry: tools/hooks/oclint.py
@@ -87,27 +87,6 @@ repos:
       #  # D, vala currently aren't valid file types. See https://github.com/pre-commit/identify/issues/258
       #  types_or: [c, c++, c#, objective-c, java]
       #  language: python
-#      - id: cppcheck
-#        name: cppcheck
-#        entry: tools/hooks/cppcheck.py
-#        description: Find warnings/errors in C, C++, and Objective-C code
-#        types_or: [c, c++, c#, objective-c]
-#        language: python
-#      - id: cpplint
-#        name: cpplint
-#        entry: tools/hooks/cpplint.py
-#        args: ["--root", "knp"]
-#        additional_dependencies:
-#          [cpplint==1.6.1]
-#        description: Find warnings/errors in C/CPP code
-#        types_or:  [c, c++, c#, objective-c, cuda]
-#        language: python
-#      - id: include-what-you-use
-#        name: include-what-you-use
-#        entry: tools/hooks/include_what_you_use.py
-#        description: Runs Include-What-You-Use (iwyu) in C/CPP code
-#        types_or:  [c, c++, c#, objective-c, cuda]
-#        language: python
       - id: cloc
         name: cloc
         entry: tools/hooks/cloc.py
@@ -121,14 +100,6 @@ repos:
         description: Code counter for C and C++
         types_or:  [c, c++, c#, objective-c, cuda]
         language: python
-#
-#      - id: tests
-#        name: tests
-#        entry: bash -c "pip install . && pytest -v -xxx"
-#        description: Tests expected output of all scripts
-#        language: system
-#        types: [python]
-
   #
   # CMake
   #
@@ -240,6 +211,14 @@ repos:
       - id: bandit
         args: ["-r", "-lll"]
         exclude: ".*fixtures"
+
+#      - id: tests
+#        name: tests
+#        entry: bash -c "pip install . && pytest -v -xxx"
+#        description: Tests expected output of all scripts
+#        language: system
+#        types: [python]
+
 
 # TODO: Enable this on the knp/pyframework
 #  - repo: https://github.com/regebro/pyroma
