@@ -10,11 +10,13 @@
 namespace knp::core
 {
 
-/*
- * @brief Backend base class.
+/**
+ * @brief Backends base class.
  */
 class Backend
 {
+public:
+private:
 };
 
 }  // namespace knp::core
