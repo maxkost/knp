@@ -85,13 +85,16 @@ sys.exit = ExitSuppressor.exit_function
 os.environ['PYTHON_PATH'] = f'{WORKING_DIR}:{os.environ.get("PYTHON_PATH", "")}'
 argv = sys.argv[1:] + [f'--rcfile={PROJECT_DIR / ".pylintrc"}', '--exit-zero', str(WORKING_DIR)]
 
-print(f'Pylint suppressed\n{"=" * 17}\n')
-with TeeIO(PYLINT_PATH / 'pylint-disabled.txt') as tf:
-    for fn, skip_list in get_pylint_suppressors(WORKING_DIR).items():
-        tf.write(f'{str(fn)}:\n')
-        for line_no, line in skip_list:
-            tf.write(f'  {line_no}: {line}')
-print('-' * 70)
+suppressors = get_pylint_suppressors(WORKING_DIR)
+
+if suppressors:
+    print(f'Pylint suppressed\n{"=" * 17}\n')
+    with TeeIO(PYLINT_PATH / 'pylint-disabled.txt') as tf:
+        for fn, skip_list in suppressors.items():
+            tf.write(f'{str(fn)}:\n')
+            for line_no, line in skip_list:
+                tf.write(f'  {line_no}: {line}')
+    print('-' * 70)
 
 try:
     with TeeIO(PYLINT_REPORT_FILE) as rf:
