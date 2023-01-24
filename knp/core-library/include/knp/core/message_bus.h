@@ -1,10 +1,11 @@
-#pragma once
-
 /**
+ * @file message_bus.h
  * @brief Message bus interface.
  * @author Artiom N.
  * @date 23.01.2023
  */
+
+#pragma once
 
 #include <knp/uid.h>
 

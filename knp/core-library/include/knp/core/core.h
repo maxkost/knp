@@ -1,10 +1,11 @@
-#pragma once
-
 /**
+ * @file core.h
  * @brief Core library main include.
  * @author Artiom N.
  * @date 11.01.2023
  */
+
+#pragma once
 
 #include <knp/uid.h>
 

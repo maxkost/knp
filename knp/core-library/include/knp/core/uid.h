@@ -1,4 +1,5 @@
 /**
+ * @file uid.h
  * @brief UID class and routines.
  * @author Artiom N.
  * @date 01.02.2021
@@ -22,6 +23,11 @@ namespace knp::core
 #define _ENABLE_PSEUDO_UID_GENERATOR 1
 #endif
 
+/**
+ * @brief Debug UID generator.
+ *
+ * UIDs will be like 0001-..., 0002-..., 0003-....
+ */
 class continuously_uid_generator
 {
 public:
