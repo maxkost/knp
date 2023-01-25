@@ -23,6 +23,9 @@ target_include_directories("${PROJECT_NAME}" PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
+target_link_libraries("${PROJECT_NAME}" PUBLIC neuron_traits_library)
+target_link_libraries("${PROJECT_NAME}" PUBLIC synapse_traits_library)
+
 #add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
 
 if(KNP_ENABLE_COVERAGE)

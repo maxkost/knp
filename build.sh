@@ -32,6 +32,7 @@ build()
         -DKNP_BUILD_TESTS=true \
         -DCMAKE_INSTALL_PREFIX="install" \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=On \
+        -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ \
         ${CMAKE_ADD_OPTS} \
         -B build \
         -S . && \
