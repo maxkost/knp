@@ -16,6 +16,7 @@ source_group(headers REGULAR_EXPRESSION "include/.*")
 
 add_library("${PROJECT_NAME}"
     impl/backend.cpp
+    impl/population.cpp
     impl/uid.cpp
 )
 add_library(KNP::Core ALIAS "${PROJECT_NAME}")

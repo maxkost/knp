@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <knp/core.h>
-#include <knp/uid.h>
+#include <knp/core/core.h>
+#include <knp/core/uid.h>
 
 #include <vector>
 
@@ -26,7 +26,7 @@ template <typename NeuronType>
 class Population
 {
 public:
-    get_neurons_parameters()->std::vector<NeuronType>;
+    std::vector<NeuronType> get_neurons_parameters();
 
 public:
     UID presynaptic_population_uid_;
