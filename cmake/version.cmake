@@ -35,3 +35,27 @@ function(determine_version_with_git)
     )
     message(STATUS "${MSG_PREFIX} Determined ETL version ${ETL_VERSION} from the git tag")
 endfunction()
+
+#
+#include(CMakePackageConfigHelpers)
+#
+#write_basic_package_version_file(
+#        "utilsConfigVersion.cmake"
+#        VERSION ${PROJECT_VERSION}
+#        COMPATIBILITY AnyNewerVersion
+#)
+#
+#configure_package_config_file(
+#        "${PROJECT_SOURCE_DIR}/cmake/utilsConfig.cmake.in"
+#        "${PROJECT_BINARY_DIR}/utilsConfig.cmake"
+#        INSTALL_DESTINATION
+#        ${CMAKE_INSTALL_LIBDIR}/cmake/utils
+#)
+#
+#install(
+#        FILES
+#        ${PROJECT_BINARY_DIR}/utilsConfig.cmake
+#        ${CMAKE_CURRENT_BINARY_DIR}/utilsConfigVersion.cmake
+#        DESTINATION
+#        ${CMAKE_INSTALL_LIBDIR}/cmake/utils
+#)

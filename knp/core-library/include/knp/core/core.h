@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <knp/uid.h>
+#include <knp/core/uid.h>
 
 #include <any>
 #include <map>
@@ -23,11 +23,11 @@ namespace knp::core
 class TagMap
 {
 public:
-    [[nodiscard]] get_tag(const std::string &name)->&std::any { return tags_[name]; }
+    [[nodiscard]] std::any &get_tag(const std::string &name) { return tags_[name]; }
     template <typename T>
-    [[nodiscard]] get_tag<T>(const std::string &name)->std::any
+    [[nodiscard]] std::any &get_tag(const std::string &name)
     {
-        return std::any_cast<T> tags_[name];
+        return std::any_cast<T>(tags_[name]);
     }
 
 private:
