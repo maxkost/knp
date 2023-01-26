@@ -17,20 +17,33 @@ UseTab: Never
 IncludeBlocks: Regroup
 IncludeCategories:
   # KNP headers in <>.
-  - Regex:           '<knp\/([\w.\/\-_])+>'
+  - Regex:           '<knp\/[[:alnum:]_\/\-]+>'
+    SortPriority:    0
     Priority:        2
-  # Headers in <> without extension (system C++ headers).
-  - Regex:           '<([\w\/\-_])+>'
-    Priority:        11
+    CaseSensitive:   true
   # Headers in <> with extension (system C headers).
-  - Regex:           '<([\w.\/\-_])+>'
+  - Regex:           '<[[:alnum:]_.\/\-]+\.[[:alnum:]_]+>'
+    SortPriority:    10
     Priority:        10
+    CaseSensitive:   true
+  # Headers in <> without extension (system C++ headers).
+  - Regex:           '<[[:alnum:]_.\/\-]+>'
+    SortPriority:    11
+    Priority:        11
+    CaseSensitive:   true
   # Headers in <> from specific external libraries.
-  - Regex:           '<boost\/([\w.\/\-_])+>'
+  - Regex:           '<boost\/[[:alnum:]_.\/\-]+>'
+    SortPriority:    20
     Priority:        20
+    CaseSensitive:   true
   # Headers in "" with extension.
-  - Regex:           '"([\w.\/\-_])+"'
+  - Regex:           '"[[:alnum:]_.\/\-]+"'
+    SortPriority:    21
     Priority:        21
+    CaseSensitive:   true
   # Other headers.
   - Regex:           '.*'
+    SortPriority:    22
     Priority:        22
+    CaseSensitive:   true
+SortIncludes: CaseSensitive

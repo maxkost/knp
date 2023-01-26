@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <knp/uid.h>
+#include <knp/core/uid.h>
 
 #include <functional>
 #include <memory>

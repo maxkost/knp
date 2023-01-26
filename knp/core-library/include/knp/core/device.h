@@ -16,6 +16,9 @@ namespace knp::core
 class Device
 {
 public:
+    [[nodiscard]] const UID &get_uid() const { return base_.uid_; }
+    [[nodiscard]] auto &get_tags() { return base_.tags_; }
+
 private:
     BaseData base_;
 };

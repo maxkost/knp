@@ -31,7 +31,7 @@ struct SynapticImpactMessage
 {
     MessageHeader header_;
     UID presynaptic_population_uid_;
-    std::map<SynapticImpact> impacts_;
+    std::vector<SynapticImpact> impacts_;
 };
 
 }  // namespace knp::core::messaging
