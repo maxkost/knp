@@ -10,5 +10,7 @@
 namespace knp::neuron_traits
 {
 
+template <typename NeuronType>
+struct neuron_parameters;
 
 }  // namespace knp::neuron_traits

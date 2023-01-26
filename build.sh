@@ -27,12 +27,11 @@ build()
 
   export CCACHE_DISABLE=1
   export ${MAKE_ADD_OPTS}
-
+#        -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ \
   "${CMAKE_BINARY}" \
         -DKNP_BUILD_TESTS=true \
         -DCMAKE_INSTALL_PREFIX="install" \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=On \
-        -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ \
         ${CMAKE_ADD_OPTS} \
         -B build \
         -S . && \
