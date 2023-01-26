@@ -9,7 +9,7 @@
 
 #include <knp/core/core.h>
 #include <knp/core/uid.h>
-
+#include <knp/neuron-traits/type_traits.h>
 #include <vector>
 
 
@@ -26,7 +26,7 @@ template <typename NeuronType>
 class Population
 {
 public:
-    std::vector<NeuronType> get_neurons_parameters();
+    std::vector<neuron_traits::neuron_parameters<NeuronType>> get_neurons_parameters();
 
 public:
     UID presynaptic_population_uid_;

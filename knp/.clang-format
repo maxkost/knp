@@ -16,20 +16,20 @@ UseTab: Never
 
 IncludeBlocks: Regroup
 IncludeCategories:
-  # Headers in <> from specific external libraries.
-  - Regex:           '<boost\/([\w.\/-_])+>'
-    Priority:        20
+  # KNP headers in <>.
+  - Regex:           '<knp\/([\w.\/\-_])+>'
+    Priority:        2
   # Headers in <> without extension (system C++ headers).
-  - Regex:           '<([\w\/-_])+>'
+  - Regex:           '<([\w\/\-_])+>'
     Priority:        11
   # Headers in <> with extension (system C headers).
-  - Regex:           '<([\w.\/-_])+>'
+  - Regex:           '<([\w.\/\-_])+>'
     Priority:        10
-  # KNP headers in <>.
-  - Regex:           '<knp\/([\w.\/-_])+>'
-    Priority:        2
+  # Headers in <> from specific external libraries.
+  - Regex:           '<boost\/([\w.\/\-_])+>'
+    Priority:        20
   # Headers in "" with extension.
-  - Regex:           '"([\w.\/-_])+"'
+  - Regex:           '"([\w.\/\-_])+"'
     Priority:        21
   # Other headers.
   - Regex:           '.*'
