@@ -8,8 +8,11 @@
 
 #include <knp/core/population.h>
 
+#include <knp/neuron-traits/blifat.h>
+
 
 namespace knp::core
 {
+
 
 }  // namespace knp::core

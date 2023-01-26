@@ -14,6 +14,8 @@
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/vector.hpp>
 
+#include "type_traits.h"
+
 
 namespace knp::neuron_traits
 {
@@ -23,7 +25,7 @@ struct BLIFATNeuron;
 template <>
 struct neuron_parameters<BLIFATNeuron>
 {
-    constexpr parameters = boost::hana::make_map(hana::make_pair("membrane_potential"_s, hana::type_c<float>));
+    using parameters = boost::hana::make_map(hana::make_pair("membrane_potential"_s, hana::type_c<float>));
 };
 
 }  // namespace knp::neuron_traits

@@ -14,12 +14,12 @@ namespace knp::core::messaging
 {
 
 /**
- * @brief Common class for the message headers.
+ * @brief Common message headers.
  */
-class MessageHeader
+struct MessageHeader
 {
-public:
-private:
+    UID sender_uid_;
+    time_t send_time_;
 };
 
 }  // namespace knp::core::messaging

@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include "message_header.h"
 
 
@@ -19,6 +21,7 @@ namespace knp::core::messaging
 struct SpikeMessage
 {
     MessageHeader header_;
+    std::vector<uint32_t> neuron_indexes_;
 };
 
 }  // namespace knp::core::messaging
