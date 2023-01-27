@@ -16,6 +16,9 @@
 namespace knp::core::messaging
 {
 
+/**
+ * @brief Synaptic impact needs to change neuron parameters after the synapses state was calculated.
+ */
 struct SynapticImpact
 {
     size_t connection_index_;
