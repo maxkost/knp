@@ -18,7 +18,7 @@ add_library("${PROJECT_NAME}"
     impl/backend.cpp
     impl/population.cpp
     impl/uid.cpp
-)
+    impl/projection.cpp)
 add_library(KNP::Core ALIAS "${PROJECT_NAME}")
 
 target_include_directories("${PROJECT_NAME}" PUBLIC
