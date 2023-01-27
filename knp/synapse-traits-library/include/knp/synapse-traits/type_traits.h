@@ -9,6 +9,6 @@
 
 namespace knp::synapse_traits
 {
-
-
+    template <typename SynapseType>
+    struct synapse_parameters;
 }  // namespace knp::synapse_traits
