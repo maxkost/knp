@@ -1,12 +1,12 @@
 /**
- * @file device.cpp
- * @brief CPU device implementation.
+ * @file backend.cpp
+ * @brief Single-threaded CPU backend class implementation.
  * @author Artiom N.
  * @date 30.01.2023
  */
 
 
-#include <knp/core/device.h>
+#include <knp/backends/cpu-single-threaded/backend.h>
 
 
 namespace knp::backends::single_threaded_cpu
