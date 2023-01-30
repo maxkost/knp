@@ -1,0 +1,23 @@
+cmake_minimum_required(VERSION 3.22)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Need for the linters.
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+project(knp-cpu-single-threaded-backend VERSION "${KNP_VERSION}" LANGUAGES C CXX)
+
+include(GNUInstallDirs)
+include(clang-tidy)
+
+source_group(source REGULAR_EXPRESSION "impl/.*")
+source_group(headers REGULAR_EXPRESSION "include/.*")
+
+add_library("${PROJECT_NAME}"
+    impl/device.cpp
+)
+
+add_library(KNP::Core::Backend::CPUSingleThreaded ALIAS "${PROJECT_NAME}")
+
+target_link_libraries("${PROJECT_NAME}" PUBLIC knp-core)

@@ -22,7 +22,7 @@ namespace knp::core
 class MessageBus
 {
 public:
-    /*
+    /**
      * @brief message subscription method.
      * @param publisher_uid publisher which messages subscriber want to receive.
      * @param callback is a Callable will be used when the message received.
@@ -32,19 +32,20 @@ public:
     template <typename MessageType>
     UID subscribe(const UID &publisher_uid, std::function<void(const MessageType &)> callback);
 
-    /*
+    /**
      * @brief message unsubscription method.
      * @param subscription_uid UID returned by subscribe method.
      */
     void unsubscribe(const UID &subscription_uid);
 
-    /*
+    /**
      * @brief Publish message to the bus.
      * @param message is a published message.
      */
     template <typename MessageType>
     void send_message(const MessageType &message);
-    /*
+
+    /**
      * @brief Publish message to the bus.
      * @param message is a published message. Object will be moved.
      */

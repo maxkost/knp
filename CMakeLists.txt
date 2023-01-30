@@ -39,5 +39,5 @@ add_subdirectory(knp)
 if(KNP_BUILD_DOCUMENTATION)
     add_doxygen(knp-doc "${CMAKE_CURRENT_SOURCE_DIR}/knp/Doxyfile.in")
     # Automatically build doc.
-    add_dependencies(knpcore knp-doc)
+    add_dependencies(knp-core knp-doc)
 endif()

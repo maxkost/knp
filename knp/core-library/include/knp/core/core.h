@@ -14,6 +14,7 @@
 #include <string>
 
 
+/// Core library namespace.
 namespace knp::core
 {
 
@@ -23,7 +24,19 @@ namespace knp::core
 class TagMap
 {
 public:
+    /**
+     * Get tag by name.
+     * @param name tag name.
+     * @return tag value.
+     */
     [[nodiscard]] std::any &get_tag(const std::string &name) { return tags_[name]; }
+
+    /**
+     * Get typed tag by name.
+     * @tparam tag value type.
+     * @param name tag name.
+     * @return tag value.
+     */
     template <typename T>
     [[nodiscard]] std::any &get_tag(const std::string &name)
     {
@@ -36,11 +49,17 @@ private:
 
 
 /**
- * @brief Common data for the several different components.
+ * @brief Common data for the several different entities.
+ * @see Backend has BaseData.
+ * @see Device has BaseData.
+ * @see Population has BaseData.
+ * @see Projection has BaseData.
  */
 struct BaseData
 {
+    /// Entity unique identifier.
     UID uid_;
+    /// Entity tags.
     TagMap tags_;
 };
 }  // namespace knp::core
