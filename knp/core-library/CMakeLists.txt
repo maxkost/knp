@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(knpcore VERSION "${KNP_VERSION}" LANGUAGES C CXX)
+project(knp-core VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 
 include(GNUInstallDirs)
 include(clang-tidy)
@@ -16,6 +16,7 @@ source_group(headers REGULAR_EXPRESSION "include/.*")
 
 add_library("${PROJECT_NAME}"
     impl/backend.cpp
+    impl/device.cpp
     impl/population.cpp
     impl/uid.cpp
     impl/projection.cpp)
@@ -25,8 +26,8 @@ target_include_directories("${PROJECT_NAME}" PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
-target_link_libraries("${PROJECT_NAME}" PUBLIC neuron_traits)
-target_link_libraries("${PROJECT_NAME}" PUBLIC synapse_traits)
+target_link_libraries("${PROJECT_NAME}" PUBLIC knp-neuron-traits)
+target_link_libraries("${PROJECT_NAME}" PUBLIC knp-synapse-traits)
 
 #add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
 

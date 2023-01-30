@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <knp/core/core.h>
+
 #include <string>
 
 
