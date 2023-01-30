@@ -1,12 +1,12 @@
 /**
- * @file backend.cpp
- * @brief Backend base class implementation.
+ * @file device.cpp
+ * @brief Device base class implementation.
  * @author Artiom N.
- * @date 11.01.2023
+ * @date 30.01.2023
  */
 
 
-#include <knp/core/backend.h>
+#include <knp/core/device.h>
 
 
 namespace knp::core
