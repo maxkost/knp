@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include <string>
+
+
 namespace knp::core
 {
 
@@ -41,7 +44,19 @@ public:
      * Get current device type.
      * @return device type.
      */
-    virtual DeviceType get_device_type() const = 0;
+    [[nodiscard]] virtual DeviceType get_type() const = 0;
+
+    /**
+     * Get device name, i.e. CPU0.
+     * @return device name in the arbitrary format.
+     */
+    [[nodiscard]] virtual const std::string &get_name() const = 0;
+
+    /**
+     * Get device power consumption.
+     * @return power consumption.
+     */
+    [[nodiscard]] virtual const float &get_power() const = 0;
 
 private:
     BaseData base_;
