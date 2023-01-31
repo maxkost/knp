@@ -13,7 +13,7 @@ macro(add_doxygen target_name doxyfile_in)
     endif()
 
     set(_s_auto_list PROJECT_BRIEF OUTPUT_DIRECTORY INPUT LANGUAGE EXAMPLE_PATH LOGO
-        GENERATE_TAGFILE)
+        GENERATE_TAGFILE BUNDLE_ID PUBLISHER_NAME)
     set(_m_auto_list EXCLUDE_PATTERNS EXTRA_FILES PREDEFINED TAGFILES STRIP_FROM_INC_PATH)
 
     cmake_parse_arguments(
