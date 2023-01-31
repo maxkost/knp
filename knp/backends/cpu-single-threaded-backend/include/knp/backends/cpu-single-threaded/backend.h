@@ -1,5 +1,5 @@
 /**
- * @file device.h
+ * @file backend.h
  * @brief Single threaded CPU backend class definition.
  * @author Artiom N.
  * @date 30.01.2023
