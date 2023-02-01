@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.22) # TODO: increase to 3.25
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-include("doxygen")
 include("print_variables")
 include("third-party")
 include("version")
@@ -37,7 +36,26 @@ add_third_party(pybind11)
 add_subdirectory(knp)
 
 if(KNP_BUILD_DOCUMENTATION)
-    add_doxygen(knp-doc "${CMAKE_CURRENT_SOURCE_DIR}/knp/Doxyfile.in")
+    include("doxygen")
+    foreach(_i
+            core-library base-framework
+            neuron-traits-library synapse-traits-library
+            devices-library)
+        list(APPEND _strip_list "${CMAKE_CURRENT_SOURCE_DIR}/knp/${_i}/include")
+    endforeach()
+
+    add_doxygen(knp-doc "${CMAKE_CURRENT_SOURCE_DIR}/knp/Doxyfile.in"
+        PROJECT_VERSION "0.0.1"
+        PROJECT_BRIEF "Spiking Networks Platform"
+        OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc_doxygen"
+        INPUT "${CMAKE_CURRENT_SOURCE_DIR}/knp"
+        EXAMPLE_PATH "knp/tests"
+        LOGO "${CMAKE_CURRENT_SOURCE_DIR}/knp/knp-logo.png"
+        BUNDLE_ID "com.kaspersky.KNP"
+        PUBLISHER_NAME "Kaspersky Lab"
+        EXCLUDE_PATTERNS "knp/tests;knp/.descr"
+        STRIP_FROM_INC_PATH "${_strip_list}"
+    )
     # Automatically build doc.
     add_dependencies(knp-core knp-doc)
 endif()
