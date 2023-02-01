@@ -12,8 +12,8 @@ macro(add_doxygen target_name doxyfile_in)
         message(FATAL_ERROR "Doxygen is needed to build the documentation.")
     endif()
 
-    set(_s_auto_list PROJECT_BRIEF OUTPUT_DIRECTORY INPUT LANGUAGE EXAMPLE_PATH LOGO
-        GENERATE_TAGFILE BUNDLE_ID PUBLISHER_NAME)
+    set(_s_auto_list PROJECT_BRIEF OUTPUT_DIRECTORY INPUT LANGUAGE EXAMPLE_PATH PROJECT_LOGO
+        GENERATE_TAGFILE BUNDLE_ID PUBLISHER_NAME SOURCE_BROWSER VERBATIM_HEADERS)
     set(_m_auto_list EXCLUDE_PATTERNS EXTRA_FILES PREDEFINED TAGFILES STRIP_FROM_INC_PATH)
 
     cmake_parse_arguments(
@@ -29,6 +29,9 @@ macro(add_doxygen target_name doxyfile_in)
     set(DOXYGEN_PROJECT_NUMBER "${PARSED_ARGS_PROJECT_VERSION}")
 
     set(DOXYGEN_LANGUAGE "English")
+    set(DOXYGEN_SOURCE_BROWSER YES)
+    set(DOXYGEN_VERBATIM_HEADERS YES)
+
     foreach(i_var IN LISTS _s_auto_list _m_auto_list)
         if(PARSED_ARGS_${i_var})
             set(DOXYGEN_${i_var} "${PARSED_ARGS_${i_var}}")
@@ -41,6 +44,8 @@ macro(add_doxygen target_name doxyfile_in)
             set(DOXYGEN_${i_var} "\\\n    ${DOXYGEN_${i_var}}")
         endif()
     endforeach()
+
+    get_filename_component(DOXYGEN_SRCDIR "${doxyfile_in}" DIRECTORY)
 
     configure_file("${doxyfile_in}" "${DOXYFILE}" @ONLY)
     message("Doxygen build started.")
