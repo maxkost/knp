@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include <string>
-#include <tuple>
+#include <limits>
 #include <utility>
 
 #include "type_traits.h"
@@ -23,7 +22,7 @@ template <>
 struct neuron_parameters<BLIFATNeuron>
 {
     // It means that the neuron never fired (= fired long time ago).
-    size_t n_time_steps_since_last_firing_ = 0x100000000000UL;
+    size_t n_time_steps_since_last_firing_ = std::numeric_limits<size_t>::infinity();
     double dynamic_threshold_ = 0.;
     double threshold_decay_ = 0.;
     double threshold_increment_ = 0.;
