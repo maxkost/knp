@@ -20,6 +20,20 @@
 namespace knp::core
 {
 
+template<class ItemClass>
+using SynapseParameters = typename synapse_traits::synapse_parameters<ItemClass>;
+
+template<class ItemClass>
+struct SynapseValue
+{
+    SynapseParameters<ItemClass> params;
+    size_t id_from;
+    size_t id_to;
+};
+
+template<class ItemClass>
+using SynapseGenerator = std::function<std::optional<SynapseValue<ItemClass>>(size_t)>;
+
 /**
  * @brief The Projection class is definition of the similar connections between neurons of two populations.
  * @note I think this class should later be divided to interface and implementation classes.
@@ -28,19 +42,24 @@ template <class ItemClass>
 class Projection
 {
 public:
-    using SynapseConnection = std::pair<size_t, size_t>;
-    using SynapseParameters = typename synapse_traits::synapse_parameters<ItemClass>::SynapseParameters;
-    using SynapseGenerationType = std::pair<SynapseParameters, SynapseConnection>;
-    using SynapseGenerator = std::function<std::optional<SynapseGenerationType>(size_t)>;
+    using SynValue = SynapseValue<ItemClass>;
+    using SynGenerator = SynapseGenerator<ItemClass>;
+    using SynParameters = SynapseParameters<ItemClass>;
 
-    Projection(size_t num_iterations, SynapseGenerator generator) : is_locked_(false)
+    /**
+     * Constructs projection by running a synapse generator N times
+     * @param num_iterations
+     * @param generator
+     */
+    Projection(UID presynaptic_uid, UID postsynaptic_uid, size_t num_iterations, SynGenerator generator)
+    : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
     {
         for (size_t i = 0; i < num_iterations; ++i)
         {
             auto params = generator(i);
             if (params)
             {
-                parameters_.push_back(std::move(params));
+                parameters_.push_back(std::move(params.value()));
             }
         }
     }
@@ -50,6 +69,7 @@ public:
      * Get this projection UID.
      * @return UID.
      */
+
     [[nodiscard]] const UID &get_uid() const { return base_.uid_; }
     /**
      * Get this projection tags.
@@ -64,9 +84,9 @@ public:
      * @param synapse_index index of the synapse
      * @return a container of synapse parameters
      */
-    [[nodiscard]] SynapseParameters &get_synapse_parameters(size_t synapse_index) const
+    [[nodiscard]] SynParameters &get_synapse_parameters(size_t synapse_index) const
     {
-        return parameters_[synapse_index].first;
+        return parameters_[synapse_index].params;
     }
 
     /**
@@ -86,7 +106,7 @@ public:
      * @param new_parameters new synapse parameters.
      * @param synapse_index index of the synapse.
      */
-    void set_synapse_parameter(SynapseParameters &&new_parameters, size_t index)
+    void set_synapse_parameter(SynParameters &&new_parameters, size_t index)
     {
         parameters_[index] == new_parameters;
     }
@@ -133,7 +153,7 @@ public:
      * @param generator a functional object that is used to generate connections
      * @return number of added connections, which can be less or equal to num_iterations
      */
-    [[nodiscard]] size_t add_synapses(size_t num_iterations, SynapseGenerator generator)
+    [[nodiscard]] size_t add_synapses(size_t num_iterations, SynGenerator generator)
     {
         size_t counter = 0;
         for (size_t i = 0; i < num_iterations; ++i)
@@ -149,15 +169,28 @@ public:
     }
 
     /**
+     * Adds a set of user-made synapses to the projection
+     * @param synapses the set of synapses that will be added to the container
+     * @note may create duplicates
+     * @return number of synapses that were added (should be the same as synapses.size())
+     */
+    [[nodiscard]] size_t add_synapses(std::vector<SynValue> synapses)
+    {
+        size_t starting_size = parameters_.size();
+        std::move(synapses.begin(), synapses.end(), std::back_insert_iterator(parameters_));
+        return parameters_.size() - starting_size;
+    }
+
+    /**
      * Removes all the connections that lead to the neuron with given id
      * @param neuron_index the index of postsynaptic neuron that will be deleted
      * @return number of removed connections
      */
-    size_t remove_postsynaptic_neuron(size_t neuron_index)
+    [[nodiscard]] size_t remove_postsynaptic_neuron(size_t neuron_index)
     {
         size_t starting_size = parameters_.size();
         std::remove_if(parameters_.begin(), parameters_.end(),
-                       [&](std::pair<SynapseParameters, SynapseConnection> &param){return param.second == neuron_index;});
+                       [neuron_index](const SynValue &synapse) {return synapse.id_to == neuron_index;});
         return starting_size - parameters_.size();
     }
 
@@ -166,39 +199,54 @@ public:
      * @param neuron_index the index of presynaptic neuron that will be deleted
      * @return number of removed connections
      */
-    size_t remove_presynaptic_neuron(size_t neuron_index)
+    [[nodiscard]] size_t remove_presynaptic_neuron(size_t neuron_index)
     {
         size_t starting_size = parameters_.size();
         std::remove_if(parameters_.begin(), parameters_.end(),
-                       [&](std::pair<SynapseParameters, SynapseConnection> &param){return param.first == neuron_index;});
+                       [neuron_index](const SynValue &synapse) {return synapse.id_from == neuron_index;});
         return starting_size - parameters_.size();
     }
-    
+
+    /**
+     * Removes any connections between two neurons
+     * @param neuron_from
+     * @param neuron_to
+     * @return number of removed connections
+     */
+    [[nodiscard]] size_t disconnect_neurons(size_t neuron_from, size_t neuron_to)
+    {
+        size_t starting_size = parameters_.size();
+        std::remove_if(parameters_.begin(), parameters_.end(),
+                       [neuron_from, neuron_to](const SynValue &synapse)
+                       {return synapse.id_from == neuron_from && synapse.id_to == neuron_to;});
+        return starting_size - parameters_.size();
+    }
+
 
 public:
     /**
      * Reset synapses weights.
      */
-    void reset_weights();
+    void reset_weights() {}
 
     /**
      * Lock synapses weights.
      */
-    void lock_weights();
+    void lock_weights() { is_locked_ = true; }
 
     /**
      * Unlock synapses weights.
      */
-    void unlock_weights();
+    void unlock_weights() {is_locked_ = false; }
 
 private:
     BaseData base_;
     UID presynaptic_uid_;
     UID postsynaptic_uid_;
-    bool is_locked_;
+    bool is_locked_ = false;
 
     /// Parameters container.
-    std::vector<std::pair<SynapseParameters, SynapseConnection>> parameters_;
+    std::vector<SynValue> parameters_;
 };
 
 }  // namespace knp::core

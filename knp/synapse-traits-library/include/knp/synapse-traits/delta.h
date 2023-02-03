@@ -17,8 +17,6 @@ namespace knp::synapse_traits
     template <>
     struct synapse_parameters<DeltaSynapse>
     {
-        size_t pre_id;
-        size_t post_id;
         float weight_;
         size_t delay_;
     };
