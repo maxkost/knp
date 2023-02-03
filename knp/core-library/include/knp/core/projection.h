@@ -189,8 +189,9 @@ public:
     [[nodiscard]] size_t remove_postsynaptic_neuron(size_t neuron_index)
     {
         size_t starting_size = parameters_.size();
-        std::remove_if(parameters_.begin(), parameters_.end(),
-                       [neuron_index](const SynValue &synapse) {return synapse.id_to == neuron_index;});
+        parameters_.resize(std::remove_if(parameters_.begin(), parameters_.end(),
+                                    [neuron_index](const SynValue &synapse) {return synapse.id_to == neuron_index;})
+                           - parameters_.begin());
         return starting_size - parameters_.size();
     }
 
@@ -202,8 +203,10 @@ public:
     [[nodiscard]] size_t remove_presynaptic_neuron(size_t neuron_index)
     {
         size_t starting_size = parameters_.size();
-        std::remove_if(parameters_.begin(), parameters_.end(),
-                       [neuron_index](const SynValue &synapse) {return synapse.id_from == neuron_index;});
+        parameters_.resize(std::remove_if(parameters_.begin(), parameters_.end(),
+                                        [neuron_index](const SynValue &synapse)
+                                        {return synapse.id_from == neuron_index;})
+                           - parameters_.begin());
         return starting_size - parameters_.size();
     }
 
@@ -216,9 +219,11 @@ public:
     [[nodiscard]] size_t disconnect_neurons(size_t neuron_from, size_t neuron_to)
     {
         size_t starting_size = parameters_.size();
-        std::remove_if(parameters_.begin(), parameters_.end(),
+        parameters_.resize(
+                std::remove_if(parameters_.begin(), parameters_.end(),
                        [neuron_from, neuron_to](const SynValue &synapse)
-                       {return synapse.id_from == neuron_from && synapse.id_to == neuron_to;});
+                       {return synapse.id_from == neuron_from && synapse.id_to == neuron_to;})
+        - parameters_.begin());
         return starting_size - parameters_.size();
     }
 

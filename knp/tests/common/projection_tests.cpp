@@ -20,7 +20,7 @@ TEST(CoreProjectionTest, ProjectionGenerationTest)
     const std::function<std::optional<knc::SynapseValue<kntr::DeltaSynapse>>(size_t)> generator =
         [](size_t iter) -> std::optional<knc::SynapseValue<kntr::DeltaSynapse>>
         {
-            const size_t id_from = iter / presynaptic_size;
+            const size_t id_from = iter / postsynaptic_size;
             const size_t id_to = iter % postsynaptic_size;
             knp::core::SynapseParameters<kntr::DeltaSynapse> params;
             params.delay_ = std::rand() % 5 + 1;
@@ -30,5 +30,8 @@ TEST(CoreProjectionTest, ProjectionGenerationTest)
     knc::Projection<knp::synapse_traits::DeltaSynapse> projection(knc::UID{}, knc::UID{},
                                                                   presynaptic_size * postsynaptic_size, generator);
     ASSERT_EQ(projection.get_size(), presynaptic_size * postsynaptic_size);
+    size_t synapses_removed = projection.remove_postsynaptic_neuron(100);
+    ASSERT_EQ(synapses_removed, presynaptic_size);
+
 
 }
