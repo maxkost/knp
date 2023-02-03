@@ -38,7 +38,7 @@ public:
      * @return tag value.
      */
     template <typename T>
-    [[nodiscard]] std::any &get_tag(const std::string &name)
+    [[nodiscard]] T &get_tag(const std::string &name)
     {
         return std::any_cast<T>(tags_[name]);
     }

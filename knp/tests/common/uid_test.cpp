@@ -4,12 +4,10 @@
 
 #include <knp/core/uid.h>
 
-#include <string>
-
 #include "tests_common.h"
 
 
-TEST(UidTest, UidGeneratorTest)
+TEST(UidSuite, UidGenerator)
 {
     using uuid = ::boost::uuids::uuid;
 
@@ -23,7 +21,7 @@ TEST(UidTest, UidGeneratorTest)
 }
 
 
-TEST(UidTest, UidToStringTest)
+TEST(UidSuite, UidToString)
 {
     ::knp::core::UID uid{::boost::uuids::uuid{{1, 2, 3}}};
 
