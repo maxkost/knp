@@ -124,6 +124,13 @@ public:
     [[nodiscard]] UID get_postsynaptic() const { return postsynaptic_uid_; }
 
     /**
+     * Gets synaptic parameters and connection for a given index
+     * @param index the index of the synapse
+     * @return synapse parameters and connection
+     */
+    [[nodiscard]] SynValue& operator[](size_t index) { return parameters_[index]; }
+
+    /**
      * Calculates connection parameters for a given synapse index
      * @param index synapse index
      * @return presynaptic neuron index, synapse index, postsynaptic neuron index
@@ -179,6 +186,19 @@ public:
         size_t starting_size = parameters_.size();
         std::move(synapses.begin(), synapses.end(), std::back_insert_iterator(parameters_));
         return parameters_.size() - starting_size;
+    }
+
+    /**
+     * Removes a synapse by its index
+     * @param index 
+     */
+    [[nodiscard]] void remove_synapse(size_t index)
+    {
+        if (index > parameters_.size())
+        {
+            return;
+        }
+        parameters_.erase(parameters_.begin() + index);
     }
 
     /**
