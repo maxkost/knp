@@ -190,9 +190,9 @@ public:
 
     /**
      * Removes a synapse by its index
-     * @param index 
+     * @param index index of the synapse to be removed
      */
-    [[nodiscard]] void remove_synapse(size_t index)
+    void remove_synapse(size_t index)
     {
         if (index > parameters_.size())
         {
