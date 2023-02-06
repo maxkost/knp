@@ -7,7 +7,7 @@
 #include <tests_common.h>
 
 
-TEST(SuiteBuildTest, BuildTest)
+TEST(BuildSuite, BuildTest)
 {
     ASSERT_EQ(true, true);
 }

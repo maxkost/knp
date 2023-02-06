@@ -22,11 +22,11 @@ enable_testing()
 include(GoogleTest)
 
 
-file(GLOB COMMON_SOURCE
-     "${CMAKE_CURRENT_LIST_DIR}/common/*.cpp"
-     "${CMAKE_CURRENT_LIST_DIR}/common/*.h")
+file(GLOB_RECURSE COMMON_SOURCE CONFIGURE_DEPENDS
+     "*.cpp"
+     "*.h")
 
-add_executable("${PROJECT_NAME}" tester.cpp ${COMMON_SOURCE} common/projection_tests.cpp)
+add_executable("${PROJECT_NAME}" ${COMMON_SOURCE})
 
 
 #file(GLOB BACKENDS LIST_DIRECTORIES yes "${CMAKE_CURRENT_SOURCE_DIR}/../include/snn-library/backends/*")

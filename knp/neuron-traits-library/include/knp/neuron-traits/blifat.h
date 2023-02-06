@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include <string>
-#include <tuple>
+#include <limits>
 #include <utility>
 #include <numeric>
 
@@ -17,9 +16,9 @@
 
 namespace knp::neuron_traits
 {
-const auto steps_before_firing_starting = std::numeric_limits<size_t>::infinity();
-const double default_reverse_inh_potential = -0.3;
-const double default_min_potential = -1.0e9;
+static const auto steps_before_firing_starting = std::numeric_limits<size_t>::infinity();
+static const double default_reverse_inh_potential = -0.3;
+static const double default_min_potential = -1.0e9;
 
 struct BLIFATNeuron;
 

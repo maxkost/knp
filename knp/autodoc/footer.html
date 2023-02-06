@@ -1,0 +1,29 @@
+<!-- HTML footer for doxygen 1.8.13-->
+</div> <!-- started in header -->
+<!-- start footer part -->
+<footer class="site-footer">
+  <div class="copyright">
+    © 2023 AO Kaspersky Lab. All Rights Reserved.
+  </div>
+  <!--BEGIN GENERATE_TREEVIEW-->
+  <div id="nav-path" class="navpath">
+    <!-- id is needed for treeview function! -->
+    <ul>
+      $navpath
+    </ul>
+  </div>
+  <!--END GENERATE_TREEVIEW-->
+
+</footer>
+<script>
+  jQuery(function($){
+    if ( document.location.pathname.endsWith('index.html')
+      || document.location.pathname.endsWith('/')
+    ) {
+      $("body > .header").hide()
+    }
+  })
+</script>
+</body>
+
+</html>

@@ -44,16 +44,17 @@ if(KNP_BUILD_DOCUMENTATION)
         list(APPEND _strip_list "${CMAKE_CURRENT_SOURCE_DIR}/knp/${_i}/include")
     endforeach()
 
-    add_doxygen(knp-doc "${CMAKE_CURRENT_SOURCE_DIR}/knp/Doxyfile.in"
+    add_doxygen(knp-doc "${CMAKE_CURRENT_SOURCE_DIR}/knp/autodoc/Doxyfile.in"
         PROJECT_VERSION "0.0.1"
         PROJECT_BRIEF "Spiking Networks Platform"
         OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc_doxygen"
         INPUT "${CMAKE_CURRENT_SOURCE_DIR}/knp"
         EXAMPLE_PATH "knp/tests"
-        LOGO "${CMAKE_CURRENT_SOURCE_DIR}/knp/knp-logo.png"
+        PROJECT_LOGO "${CMAKE_CURRENT_SOURCE_DIR}/knp/autodoc/logo.png"
+        SOURCE_BROWSER YES
         BUNDLE_ID "com.kaspersky.KNP"
         PUBLISHER_NAME "Kaspersky Lab"
-        EXCLUDE_PATTERNS "knp/tests;knp/.descr"
+        EXCLUDE_PATTERNS "knp/tests;knp/.descr;knp/autodoc;.*"
         STRIP_FROM_INC_PATH "${_strip_list}"
     )
     # Automatically build doc.
