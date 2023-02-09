@@ -28,13 +28,13 @@ class Projection
 {
 public:
     using SynapseParameters = typename synapse_traits::synapse_parameters<ItemClass>;
-    struct SynapseValue
+    struct Synapse
     {
         SynapseParameters params;
         size_t id_from;
         size_t id_to;
     };
-    using SynapseGenerator = std::function<std::optional<SynapseValue>(size_t)>;
+    using SynapseGenerator = std::function<std::optional<Synapse>(size_t)>;
 
     /**
      * Construct projection by running a synapse generator N times
@@ -117,8 +117,8 @@ public:
      * @param index the index of the synapse
      * @return synapse parameters and connection
      */
-    [[nodiscard]] SynapseValue& operator[](size_t index) { return parameters_[index]; }
-    [[nodiscard]] const SynapseValue& operator[](size_t index) const {return parameters_[index]; }
+    [[nodiscard]] Synapse& operator[](size_t index) { return parameters_[index]; }
+    [[nodiscard]] const Synapse& operator[](size_t index) const {return parameters_[index]; }
 
     /**
      * Calculate connection parameters for a given synapse index
@@ -154,8 +154,7 @@ public:
         size_t starting_size = parameters_.size();
         for (size_t i = 0; i < num_iterations; ++i)
         {
-            auto data = generator(i);
-            if (data)
+            if (auto data = std::move(generator(i)))
             {
                 parameters_.emplace_back(std::move(data));
             }
@@ -169,7 +168,7 @@ public:
      * @note may create duplicates
      * @return number of synapses that were added (should be the same as synapses.size())
      */
-    size_t add_synapses(std::vector<SynapseValue> synapses)
+    size_t add_synapses(std::vector<Synapse> synapses)
     {
         size_t starting_size = parameters_.size();
         std::move(synapses.begin(), synapses.end(), std::back_insert_iterator(parameters_));
@@ -190,7 +189,7 @@ public:
     template<class Predicate>
     size_t disconnect_if(Predicate predicate)
     {
-        size_t starting_size = parameters_.size();
+        const size_t starting_size = parameters_.size();
         parameters_.resize(std::remove_if(parameters_.begin(), parameters_.end(), predicate) - parameters_.begin());
         return starting_size - parameters_.size();
     }
@@ -202,7 +201,7 @@ public:
      */
     size_t remove_postsynaptic_neuron(size_t neuron_index)
     {
-        return disconnect_if([neuron_index](const SynapseValue &synapse) {return synapse.id_to == neuron_index;});
+        return disconnect_if([neuron_index](const Synapse &synapse) {return synapse.id_to == neuron_index;});
     }
 
     /**
@@ -212,7 +211,7 @@ public:
      */
     size_t remove_presynaptic_neuron(size_t neuron_index)
     {
-        return disconnect_if([neuron_index](const SynapseValue &synapse) {return synapse.id_from == neuron_index;});
+        return disconnect_if([neuron_index](const Synapse &synapse) {return synapse.id_from == neuron_index;});
     }
 
     /**
@@ -224,7 +223,7 @@ public:
     size_t disconnect_neurons(size_t neuron_from, size_t neuron_to)
     {
         return disconnect_if(
-                [neuron_from, neuron_to](const SynapseValue &synapse)
+                [neuron_from, neuron_to](const Synapse &synapse)
                 {
                     return (synapse.id_from == neuron_from) && (synapse.id_to == neuron_to);
                 }
@@ -261,7 +260,7 @@ private:
     bool is_locked_ = false;
 
     /// Parameters container.
-    std::vector<SynapseValue> parameters_;
+    std::vector<Synapse> parameters_;
 };
 
 }  // namespace knp::core
