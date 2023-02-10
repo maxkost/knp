@@ -22,7 +22,6 @@ TEST(CoreProjectionTest, ProjectionGenerationTest)
     const size_t presynaptic_size = 99;
     const size_t postsynaptic_size = 101;
 
-
     // Creating a dense projection with random weights ( -0.12 to +0.17 ) and delay (1 to 5)
     SynapseGenerator generator =
         [](size_t iter) -> std::optional<Synapse>
@@ -37,13 +36,12 @@ TEST(CoreProjectionTest, ProjectionGenerationTest)
     ASSERT_EQ(projection[1000].params.delay_, 11);
     ASSERT_EQ(std::get<0>(projection.get_connection(1000)), 1000u / postsynaptic_size);
     ASSERT_EQ(projection.get_connections()[1000], projection.get_connection(1000));
-
 }
 
 
 TEST(CoreProjectionTest, ProjectionModificationTest)
 {
-    // Testing: add_synapses, remove_presynaptic_neuron, remove_postsynaptic_neuron, disconnect,
+    // TODO: add_synapses, remove_presynaptic_neuron, remove_postsynaptic_neuron, disconnect,
     // Create a 1-to-1 projection
     const size_t presynaptic_size = 1000;
     const size_t postsynaptic_size = 1000;
@@ -52,7 +50,4 @@ TEST(CoreProjectionTest, ProjectionModificationTest)
     projection.add_synapses(presynaptic_size, generator);
     ASSERT_EQ(projection.size(), presynaptic_size);
     projection.add_synapses({Synapse{{1.F, 2}, 10, 12}});
-
-
-
 }

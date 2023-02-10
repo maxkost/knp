@@ -21,10 +21,10 @@ struct BLIFATNeuron;
 template <>
 struct default_values<BLIFATNeuron>
 {
+    // TODO: see if there are any problems with this implementation, then change it or delete this TODO
     constexpr static size_t steps_before_firing = std::numeric_limits<size_t>::infinity();
     constexpr static double reverse_inhibitory_potential = -0.3;
     constexpr static double min_potential = -1.0e9;
-
 };
 
 

@@ -180,7 +180,7 @@ public:
      */
     size_t add_synapses(std::vector<Synapse> synapses)
     {
-        size_t starting_size = parameters_.size();
+        const size_t starting_size = parameters_.size();
         std::move(synapses.begin(), synapses.end(), std::back_insert_iterator(parameters_));
         return parameters_.size() - starting_size;
     }
