@@ -8,6 +8,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp-core VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 
+find_package(Boost 1.66.0 REQUIRED)
+
 include(GNUInstallDirs)
 include(clang-tidy)
 
@@ -25,6 +27,8 @@ add_library(KNP::Core ALIAS "${PROJECT_NAME}")
 target_include_directories("${PROJECT_NAME}" PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+
+target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS})
 
 target_link_libraries("${PROJECT_NAME}" PUBLIC knp-neuron-traits)
 target_link_libraries("${PROJECT_NAME}" PUBLIC knp-synapse-traits)
