@@ -37,9 +37,17 @@ public:
     using SynapseGenerator = std::function<std::optional<Synapse>(size_t)>;
 
     /**
+     * Construct an empty projection
+     * @param presynaptic_uid the Uid of the presynaptic population
+     * @param postsynaptic_uid the Uid of the postsynaptic population
+     */
+    Projection(UID presynaptic_uid, UID postsynaptic_uid)
+            : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid) {}
+
+    /**
      * Construct projection by running a synapse generator N times
-     * @param num_iterations
-     * @param generator
+     * @param num_iterations number of iterations
+     * @param generator a function that returs
      */
     Projection(UID presynaptic_uid, UID postsynaptic_uid, size_t num_iterations, SynapseGenerator &generator)
     : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
@@ -52,6 +60,7 @@ public:
             }
         }
     }
+
 
 public:
     /**
@@ -88,7 +97,7 @@ public:
      * Get the number of synapses
      * @return number of synapses inside the projection
      */
-    [[nodiscard]] size_t get_size() { return parameters_.size(); }
+    [[nodiscard]] size_t size() { return parameters_.size(); }
 
     /**
      * Set new synapse parameter
@@ -125,9 +134,9 @@ public:
      * @param index synapse index
      * @return presynaptic neuron index, synapse index, postsynaptic neuron index
      */
-    [[nodiscard]] std::tuple<size_t, size_t, size_t> &get_connection(size_t index) const
+    [[nodiscard]] std::tuple<size_t, size_t, size_t> get_connection(size_t index) const
     {
-        return std::make_tuple(parameters_[index].pre_id, index, parameters_[index].post_id);
+        return std::make_tuple(parameters_[index].id_from, index, parameters_[index].id_to);
     }
 
     /**
@@ -135,10 +144,11 @@ public:
      */
     [[nodiscard]] std::vector<std::tuple<size_t, size_t, size_t>> get_connections() const
     {
-        std::vector<std::tuple<size_t, size_t, size_t>> result(parameters_.size());
+        std::vector<std::tuple<size_t, size_t, size_t>> result;
+        result.reserve(parameters_.size());
         for (size_t i = 0; i < parameters_.size(); ++i)
         {
-            result[i] = std::make_tuple(parameters_[i].second.first, i, parameters_[i].second.second);
+            result.emplace_back(std::make_tuple(parameters_[i].id_from, i, parameters_[i].id_to));
         }
         return result;
     }
@@ -156,7 +166,7 @@ public:
         {
             if (auto data = std::move(generator(i)))
             {
-                parameters_.emplace_back(std::move(data));
+                parameters_.emplace_back(std::move(data.value()));
             }
         }
         return parameters_.size() - starting_size;
