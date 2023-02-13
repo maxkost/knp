@@ -21,7 +21,7 @@ namespace knp::core
 {
 /**
  * @brief The Projection class is a definition of similar connections between the neurons of two populations.
- * @note I think this class should later be divided to interface and implementation classes.
+ * @note This class should later be divided to interface and implementation classes.
  */
 template <class ItemClass>
 class Projection
@@ -77,22 +77,20 @@ public:
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
 
 public:
-    /**
-     * Calculate synapse parameters based on its index and its ItemClass
-     * @param synapse_index index of the synapse
-     * @return a container of synapse parameters
-     */
-    [[nodiscard]] SynapseParameters &get_synapse_parameters(size_t synapse_index) const
-    {
-        return parameters_[synapse_index].params;
-    }
+    /// Synapse indexing operator
+    [[nodiscard]] Synapse& operator[](size_t index) { return parameters_[index]; }
+    [[nodiscard]] const Synapse& operator[](size_t index) const {return parameters_[index]; }
 
-    /**
-     * Calculate (if needed) and return all the synaptic parameters for the projection
-     * @return vector of parameters and connections, one structure for each synapse
-     */
-    [[nodiscard]] const auto &get_synapses_parameters() const { return parameters_; }
+    // TODO: add custom iterator class
+    auto begin() const { return parameters_.cbegin(); }
+    // TODO: add custom iterator class
+    auto begin() { return parameters_.begin(); }
+    // TODO: add custom iterator class
+    auto end() const { return parameters_.cend(); }
+    // TODO: add custom iterator class
+    auto end() { return parameters_.end(); }
 
+public:
     /**
      * Get the number of synapses
      * @return number of synapses inside the projection
@@ -126,8 +124,7 @@ public:
      * @param index the index of the synapse
      * @return synapse parameters and connection
      */
-    [[nodiscard]] Synapse& operator[](size_t index) { return parameters_[index]; }
-    [[nodiscard]] const Synapse& operator[](size_t index) const {return parameters_[index]; }
+
 
     /**
      * Calculate connection parameters for a given synapse index
@@ -203,6 +200,9 @@ public:
         parameters_.resize(std::remove_if(parameters_.begin(), parameters_.end(), predicate) - parameters_.begin());
         return starting_size - parameters_.size();
     }
+
+
+
 
     /**
      * Remove all the connections that lead to the neuron with given id

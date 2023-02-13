@@ -16,7 +16,7 @@ using SynapseParameters = DeltaProjection::SynapseParameters;
 using SynapseGenerator = DeltaProjection::SynapseGenerator;
 
 
-TEST(CoreProjectionTest, ProjectionGenerationTest)
+TEST(ProjectionSuite, Generation)
 {
     // Testing: constructor, get_connections, get_connection, operator[], get_size,
     const size_t presynaptic_size = 99;
@@ -39,15 +39,53 @@ TEST(CoreProjectionTest, ProjectionGenerationTest)
 }
 
 
-TEST(CoreProjectionTest, ProjectionModificationTest)
+TEST(ProjectionSuite, Modification)
 {
     // TODO: add_synapses, remove_presynaptic_neuron, remove_postsynaptic_neuron, disconnect,
-    // Create a 1-to-1 projection
     const size_t presynaptic_size = 1000;
-    const size_t postsynaptic_size = 1000;
-    DeltaProjection projection(knc::UID{}, knc::UID{});
-    SynapseGenerator generator = [](size_t index) { return Synapse{{0.0F, 1}, index, index}; };
-    projection.add_synapses(presynaptic_size, generator);
+    const size_t postsynaptic_size = presynaptic_size;
+    const size_t neuron_index = 10; // A specific neuron
+    DeltaProjection projection(knc::UID{}, knc::UID{}); // Create an empty projection
+
+    SynapseGenerator generator1 = [](size_t index) { return Synapse{{0.0F, 1}, index, index}; };
+    projection.add_synapses(presynaptic_size, generator1); // Add 1-to-1 synapses
     ASSERT_EQ(projection.size(), presynaptic_size);
-    projection.add_synapses({Synapse{{1.F, 2}, 10, 12}});
+
+    size_t count = projection.add_synapses({Synapse{{1.F, 2}, neuron_index, neuron_index + 2}}); // Add a synapse from neuron 10 to neuron 12
+    ASSERT_EQ(count, 1);
+
+    SynapseGenerator generator2 = [](size_t index) { return Synapse{{0.1F, 2}, index, (index+1) % postsynaptic_size}; };
+    count = projection.add_synapses(presynaptic_size, generator2); // Add synapses from pre neuron N to post neuron N+1
+    ASSERT_EQ(count, presynaptic_size);
+    ASSERT_EQ(projection.size(), 2*presynaptic_size + 1);
+
+    // Neuron #10 now should have three connections: 10, 11 and 12, let's check it
+    std::vector<Synapse> connections;
+    std::copy_if(projection.begin(), projection.end(), std::back_inserter(connections),
+                 [](const Synapse &syn) { return syn.id_from == neuron_index; });
+
+    ASSERT_EQ(connections.size(), 3);
+    for (size_t i = 0; i < 3; ++i)
+    {
+        // The ordering of values is implementation-defined, so we just check that all connections are present
+        ASSERT_TRUE(std::find_if(connections.begin(), connections.end(),
+                                 [&i](const Synapse& syn) {return syn.id_to == neuron_index + i;})
+                                 != connections.end());
+    }
+
+    count = projection.remove_presynaptic_neuron(neuron_index);
+    ASSERT_EQ(count, 3);
+    ASSERT_EQ(projection.size(), 2*presynaptic_size - 2);
+    connections.clear();
+    for (size_t i = 0; i < projection.size(); ++i)
+    {
+        if (projection[i].id_from == neuron_index)
+        {
+            connections.push_back(projection[i]);
+        }
+    }
+    ASSERT_EQ(connections.size(), 0);
+    Synapse &synapse = projection[10];
+    synapse.params.weight_ = 100.0F;
+    ASSERT_EQ(synapse.params.weight_, 100.0F);
 }
