@@ -82,13 +82,13 @@ public:
     [[nodiscard]] const Synapse& operator[](size_t index) const {return parameters_[index]; }
 
     // TODO: add custom iterator class
-    auto begin() const { return parameters_.cbegin(); }
+    [[nodiscard]] auto begin() const { return parameters_.cbegin(); }
     // TODO: add custom iterator class
-    auto begin() { return parameters_.begin(); }
+    [[nodiscard]] auto begin() { return parameters_.begin(); }
     // TODO: add custom iterator class
-    auto end() const { return parameters_.cend(); }
+    [[nodiscard]] auto end() const { return parameters_.cend(); }
     // TODO: add custom iterator class
-    auto end() { return parameters_.end(); }
+    [[nodiscard]] auto end() { return parameters_.end(); }
 
 public:
     /**
