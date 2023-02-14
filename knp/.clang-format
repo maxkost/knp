@@ -8,6 +8,7 @@ ColumnLimit: 120
 ConstructorInitializerIndentWidth: 4
 ContinuationIndentWidth: 4
 IndentWidth: 4
+IndentPPDirectives: AfterHash
 MaxEmptyLinesToKeep: 2
 NamespaceIndentation: None
 SpaceInEmptyParentheses: false
