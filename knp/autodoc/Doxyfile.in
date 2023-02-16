@@ -245,150 +245,150 @@ TAB_SIZE               = 4
 # "Side Effects:". You can put \n's in the value part of an alias to insert
 # newlines.
 
-ALIASES                = "footnote{1}=\latexonly\footnote\{\1\}\endlatexonly\htmlonly<sup title=\"\1\">\1</sup>\endhtmlonly"
-ALIASES               += marginenote{3}="<table width=100% align=\"left\"><tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>\1</small></td><td valign=\"top\" bgcolor=\"\3\" align=\"left\">\2</td></tr></table>"
+# ALIASES                = "footnote{1}=\latexonly\footnote\{\1\}\endlatexonly\htmlonly<sup title=\"\1\">\1</sup>\endhtmlonly"
+# ALIASES               += marginenote{3}="<table width=100% align=\"left\"><tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>\1</small></td><td valign=\"top\" bgcolor=\"\3\" align=\"left\">\2</td></tr></table>"
 
-ALIASES               += marginenote{4}="<table width=100% align=\"left\"><tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>\1</small></td><td valign=\"top\" width=\"10%\" bgcolor=\"\4\" align=\"left\">\2</td><td align=\"left\" bgcolor=\"\4\">\3</td></tr></table>"
+# ALIASES               += marginenote{4}="<table width=100% align=\"left\"><tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>\1</small></td><td valign=\"top\" width=\"10%\" bgcolor=\"\4\" align=\"left\">\2</td><td align=\"left\" bgcolor=\"\4\">\3</td></tr></table>"
 
-ALIASES               += table{2}="<table border=\"0\" width=100% align=\"left\"><tr><td valign=\"top\" width=\"10%\" align=\"left\">\1</td><td valign=\"top\" align=\"left\">\2</td></tr></table>"
-ALIASES               += starttable{1}="<table border=\"\1\" width=\"100%\" align=\"left\">"
-ALIASES               += endtable="</table>"
-ALIASES               += row{1}="<tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small></small></td><td valign=\"top\" align=\"left\">\1</td></tr>"
-ALIASES               += row{2}="<tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small></small></td><td valign=\"top\" width=\"10%\" align=\"left\">\1</td><td valign=\"top\" align=\"left\">\2</td></tr>"
-ALIASES               += row{3}="<tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small></small></td><td valign=\"top\" width=\"10%\" align=\"left\">\1</td><td valign=\"top\" align=\"left\">\2</td><td valign=\"top\" align=\"left\">\3</td></tr>"
-ALIASES               += row{4}="<tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small></small></td><td valign=\"top\" width=\"10%\" align=\"left\">\1</td><td valign=\"top\" align=\"left\">\2</td><td valign=\"top\" align=\"left\">\3</td><td valign=\"top\" align=\"left\">\4</td></tr>"
-ALIASES               += rowmarginenote{2}="<tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>\1</small></td><td valign=\"top\" align=\"left\">\2</td></tr>"
-ALIASES               += rowmarginenote{3}="<tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>\1</small></td><td valign=\"top\" width=\"10%\" align=\"left\">\2</td><td valign=\"top\" align=\"left\">\3</td></tr>"
+# ALIASES               += table{2}="<table border=\"0\" width=100% align=\"left\"><tr><td valign=\"top\" width=\"10%\" align=\"left\">\1</td><td valign=\"top\" align=\"left\">\2</td></tr></table>"
+# ALIASES               += starttable{1}="<table border=\"\1\" width=\"100%\" align=\"left\">"
+# ALIASES               += endtable="</table>"
+# ALIASES               += row{1}="<tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small></small></td><td valign=\"top\" align=\"left\">\1</td></tr>"
+# ALIASES               += row{2}="<tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small></small></td><td valign=\"top\" width=\"10%\" align=\"left\">\1</td><td valign=\"top\" align=\"left\">\2</td></tr>"
+# ALIASES               += row{3}="<tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small></small></td><td valign=\"top\" width=\"10%\" align=\"left\">\1</td><td valign=\"top\" align=\"left\">\2</td><td valign=\"top\" align=\"left\">\3</td></tr>"
+# ALIASES               += row{4}="<tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small></small></td><td valign=\"top\" width=\"10%\" align=\"left\">\1</td><td valign=\"top\" align=\"left\">\2</td><td valign=\"top\" align=\"left\">\3</td><td valign=\"top\" align=\"left\">\4</td></tr>"
+# ALIASES               += rowmarginenote{2}="<tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>\1</small></td><td valign=\"top\" align=\"left\">\2</td></tr>"
+# ALIASES               += rowmarginenote{3}="<tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>\1</small></td><td valign=\"top\" width=\"10%\" align=\"left\">\2</td><td valign=\"top\" align=\"left\">\3</td></tr>"
 
-ALIASES               += rowadv{1}="\if ADV <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>ADV</small></td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\1</td></tr> \endif"
-ALIASES               += rowadv{2}="\if ADV <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>ADV</small></td><td valign=\"top\" bgcolor=\"LightGray\" width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
-ALIASES               += rowcx{2}="\if CX <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>CX</small></td><td valign=\"top\" bgcolor=\"LightGray\" width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
-ALIASES               += rowcx{3}="\if CX <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>CX</small></td><td valign=\"top\" bgcolor=\"LightGray\" width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\3</td></tr> \endif"
-ALIASES               += rowob{1}="\if OB <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>OB</small></td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\1</td></tr> \endif"
-ALIASES               += rowob{2}="\if OB <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>OB</small></td><td valign=\"top\" bgcolor=\"LightGray\" width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
-ALIASES               += rowobcx{2}="\if (OB && CX) <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>OB CX</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
-ALIASES               += rowobxsi{2}="\if (OB && XSI) <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>OB XSI</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
-ALIASES               += rowobtef{2}="\if (OB && TEF) <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>OB TEF</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
-ALIASES               += rowobtrc{2}="\if (OB && TRC) <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>OB TRC</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
-ALIASES               += rowobxsr{2}="\if (OB && XSR) <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>OB XSR</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
-ALIASES               += rowpsc{2}="\if PSC <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>PSC</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
-ALIASES               += rowcpt{2}="\if CPT <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>CPT</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
-ALIASES               += rowcpt{3}="\if CPT <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>CPT</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\3</td></tr> \endif"
-ALIASES               += rowmon{2}="\if MON <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>MON</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
-ALIASES               += rowmon{3}="\if MON <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>MON</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\3</td></tr> \endif"
-ALIASES               += rowsio{2}="\if SIO <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>SIO</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
-ALIASES               += row_xsi_or_sio{2}="\if (XSI || SIO) <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>XSI|SIO</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
+# ALIASES               += rowadv{1}="\if ADV <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>ADV</small></td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\1</td></tr> \endif"
+# ALIASES               += rowadv{2}="\if ADV <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>ADV</small></td><td valign=\"top\" bgcolor=\"LightGray\" width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
+# ALIASES               += rowcx{2}="\if CX <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>CX</small></td><td valign=\"top\" bgcolor=\"LightGray\" width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
+# ALIASES               += rowcx{3}="\if CX <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>CX</small></td><td valign=\"top\" bgcolor=\"LightGray\" width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\3</td></tr> \endif"
+# ALIASES               += rowob{1}="\if OB <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>OB</small></td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\1</td></tr> \endif"
+# ALIASES               += rowob{2}="\if OB <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>OB</small></td><td valign=\"top\" bgcolor=\"LightGray\" width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
+# ALIASES               += rowobcx{2}="\if (OB && CX) <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>OB CX</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
+# ALIASES               += rowobxsi{2}="\if (OB && XSI) <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>OB XSI</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
+# ALIASES               += rowobtef{2}="\if (OB && TEF) <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>OB TEF</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
+# ALIASES               += rowobtrc{2}="\if (OB && TRC) <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>OB TRC</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
+# ALIASES               += rowobxsr{2}="\if (OB && XSR) <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>OB XSR</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
+# ALIASES               += rowpsc{2}="\if PSC <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>PSC</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
+# ALIASES               += rowcpt{2}="\if CPT <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>CPT</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
+# ALIASES               += rowcpt{3}="\if CPT <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>CPT</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\3</td></tr> \endif"
+# ALIASES               += rowmon{2}="\if MON <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>MON</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
+# ALIASES               += rowmon{3}="\if MON <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>MON</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\3</td></tr> \endif"
+# ALIASES               += rowsio{2}="\if SIO <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>SIO</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
+# ALIASES               += row_xsi_or_sio{2}="\if (XSI || SIO) <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>XSI|SIO</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
 
-ALIASES               += rowxsi{2}="\if XSI <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>XSI</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
-ALIASES               += rowxsi{3}="\if XSI <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>XSI</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\3</td></tr> \endif"
+# ALIASES               += rowxsi{2}="\if XSI <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>XSI</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
+# ALIASES               += rowxsi{3}="\if XSI <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>XSI</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\3</td></tr> \endif"
 
-ALIASES               += rowmsg{2}="\if MSG <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>MSG</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
-ALIASES               += row_ss_or_tsp{2}="\if (SS || TSP) <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>SS|TSP</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
+# ALIASES               += rowmsg{2}="\if MSG <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>MSG</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
+# ALIASES               += row_ss_or_tsp{2}="\if (SS || TSP) <tr><td valign=\"top\" width=\"2.2%\" align=\"left\"><small>SS|TSP</small></td><td valign=\"top\" bgcolor=\"LightGray\"  width="10%" align=\"left\">\1</td><td valign=\"top\" bgcolor=\"LightGray\" align=\"left\">\2</td></tr> \endif"
 
-ALIASES               += colorize{2}="<span style=\"background-color:\2\">\1</span>"
-ALIASES               += colorizecx{2}="\if CX \colorize{\1,\2} \endif"
-ALIASES               += colorizeobxsi{2}="\if (OB && XSI) \colorize{\1,\2} \endif"
-ALIASES               += colorizeobxsr{2}="\if (OB && XSR) \colorize{\1,\2} \endif"
-ALIASES               += colorizeshm{2}="\if SHM \colorize{\1,\2} \endif"
-ALIASES               += colorizess{2}="\if SS \colorize{\1,\2} \endif"
-ALIASES               += colorizexsi{2}="\if XSI \colorize{\1,\2} \endif"
+# ALIASES               += colorize{2}="<span style=\"background-color:\2\">\1</span>"
+# ALIASES               += colorizecx{2}="\if CX \colorize{\1,\2} \endif"
+# ALIASES               += colorizeobxsi{2}="\if (OB && XSI) \colorize{\1,\2} \endif"
+# ALIASES               += colorizeobxsr{2}="\if (OB && XSR) \colorize{\1,\2} \endif"
+# ALIASES               += colorizeshm{2}="\if SHM \colorize{\1,\2} \endif"
+# ALIASES               += colorizess{2}="\if SS \colorize{\1,\2} \endif"
+# ALIASES               += colorizexsi{2}="\if XSI \colorize{\1,\2} \endif"
 
-ALIASES               += adv{2}="\if ADV \marginenote{ADV,\1,\2} \endif"
-ALIASES               += adv{3}="\if ADV \marginenote{ADV,\1,\2,\3} \endif"
-ALIASES               += cd{2}="\if CD \marginenote{CD,\1,\2} \endif"
-ALIASES               += cd{3}="\if CD \marginenote{CD,\1,\2,\3} \endif"
-ALIASES               += cx{2}="\if CX \marginenote{CX,\1,\2} \endif"
-ALIASES               += cx{3}="\if CX \marginenote{CX,\1,\2,\3} \endif"
-ALIASES               += fd{2}="\if FD \marginenote{FD,\1,\2} \endif"
-ALIASES               += fd{3}="\if FD \marginenote{FD,\1,\2,\3} \endif"
-ALIASES               += fr{2}="\if FR \marginenote{FR,\1,\2} \endif"
-ALIASES               += fr{3}="\if FR \marginenote{FR,\1,\2,\3} \endif"
-ALIASES               += fsc{2}="\if FSC \marginenote{FSC,\1,\2} \endif"
-ALIASES               += fsc{3}="\if FSC \marginenote{FSC,\1,\2,\3} \endif"
-ALIASES               += sio{2}="\if SIO \marginenote{SIO,\1,\2} \endif"
-ALIASES               += sio{3}="\if SIO \marginenote{SIO,\1,\2,\3} \endif"
-ALIASES               += shm{2}="\if SHM \marginenote{SHM,\1,\2} \endif"
-ALIASES               += shm{3}="\if SHM \marginenote{SHM,\1,\2,\3} \endif"
-ALIASES               += ss_or_tsp{2}="\if (SS || TSP) \marginenote{SS|TSP,\1,\2} \endif"
-ALIASES               += ss_or_tsp{3}="\if (SS || TSP) \marginenote{SS|TSP,\1,\2,\3} \endif"
-ALIASES               += tym{2}="\if TYM \marginenote{TYM,\1,\2} \endif"
-ALIASES               += tym{3}="\if TYM \marginenote{TYM,\1,\2,\3} \endif"
-ALIASES               += obbe{2}="\if (OB && BE) \marginenote{OB BE,\1,\2} \endif"
-ALIASES               += obbe{3}="\if (OB && BE) \marginenote{OB BE,\1,\2,\3} \endif"
-ALIASES               += obxsr{2}="\if (OB && XSR) \marginenote{OB XSR,\1,\2} \endif"
-ALIASES               += obxsr{3}="\if (OB && XSR) \marginenote{OB XSR,\1,\2,\3} \endif"
-ALIASES               += obxsi{2}="\if (OB && XSI) \marginenote{OB XSI,\1,\2} \endif"
-ALIASES               += obxsi{3}="\if (OB && XSI) \marginenote{OB XSI,\1,\2,\3} \endif"
-ALIASES               += obtef{2}="\if (OB && TEF) \marginenote{OB TEF,\1,\2} \endif"
-ALIASES               += obtef{3}="\if (OB && TEF) \marginenote{OB TEF,\1,\2,\3} \endif"
-ALIASES               += obtrc{2}="\if (OB && TRC) \marginenote{OB TRC,\1,\2} \endif"
-ALIASES               += obtrc{3}="\if (OB && TRC) \marginenote{OB TRC,\1,\2,\3} \endif"
-ALIASES               += obtri{2}="\if (OB && TRI) \marginenote{OB TRI,\1,\2} \endif"
-ALIASES               += obtri{3}="\if (OB && TRI) \marginenote{OB TRI,\1,\2,\3} \endif"
-ALIASES               += obtrl{2}="\if (OB && TRL) \marginenote{OB TRL,\1,\2} \endif"
-ALIASES               += obtrl{3}="\if (OB && TRL) \marginenote{OB TRL,\1,\2,\3} \endif"
-ALIASES               += ob{2}="\if OB \marginenote{OB,\1,\2} \endif"
-ALIASES               += ob{3}="\if OB \marginenote{OB,\1,\2,\3} \endif"
-ALIASES               += sd{2}="\if SD \marginenote{SD,\1,\2} \endif"
-ALIASES               += sd{3}="\if SD \marginenote{SD,\1,\2,\3} \endif"
-ALIASES               += xsi{2}="\if XSI \marginenote{XSI,\1,\2} \endif"
-ALIASES               += xsi{3}="\if XSI \marginenote{XSI,\1,\2,\3} \endif"
-ALIASES               += xbd{2}="\if XBD \marginenote{XBD,\1,\2} \endif"
-ALIASES               += xbd{3}="\if XBD \marginenote{XBD,\1,\2,\3} \endif"
-ALIASES               += xcu{2}="\if XCU \marginenote{XCU,\1,\2} \endif"
-ALIASES               += xcu{3}="\if XCU \marginenote{XCU,\1,\2,\3} \endif"
-ALIASES               += xsh{2}="\if XSH \marginenote{XSH,\1,\2} \endif"
-ALIASES               += xsh{3}="\if XSH \marginenote{XSH,\1,\2,\3} \endif"
-ALIASES               += cx{2}="\if CX \marginenote{CX,\1,\2} \endif"
-ALIASES               += cx{3}="\if CX \marginenote{CX,\1,\2,\3} \endif"
-ALIASES               += ml{2}="\if ML \marginenote{ML,\1,\2} \endif"
-ALIASES               += ml{3}="\if ML \marginenote{ML,\1,\2,\3} \endif"
-ALIASES               += mlr{2}="\if MLR \marginenote{MLR,\1,\2} \endif"
-ALIASES               += mlr{3}="\if MLR \marginenote{MLR,\1,\2,\3} \endif"
-ALIASES               += ss{2}="\if SS \marginenote{SS,\1,\2} \endif"
-ALIASES               += ss{3}="\if SS \marginenote{SS,\1,\2,\3} \endif"
-ALIASES               += mon{2}="\if MON \marginenote{MON,\1,\2} \endif"
-ALIASES               += mon{3}="\if MON \marginenote{MON,\1,\2,\3} \endif"
-ALIASES               += msg{2}="\if MSG \marginenote{MSG,\1,\2} \endif"
-ALIASES               += msg{3}="\if MSG \marginenote{MSG,\1,\2,\3} \endif"
-ALIASES               += obcx{2}="\if (OB && CX) \marginenote{OB CX,\1,\2} \endif"
-ALIASES               += obcx{3}="\if (OB && CX) \marginenote{OB CX,\1,\2,\3} \endif"
-ALIASES               += cpt{2}="\if CPT \marginenote{CPT,\1,\2} \endif"
-ALIASES               += cpt{3}="\if CPT \marginenote{CPT,\1,\2,\3} \endif"
-ALIASES               += tct{2}="\if TCT \marginenote{TCT,\1,\2} \endif"
-ALIASES               += tct{3}="\if TCT \marginenote{TCT,\1,\2,\3} \endif"
-ALIASES               += pio{2}="\if PIO \marginenote{PIO,\1,\2} \endif"
-ALIASES               += pio{3}="\if PIO \marginenote{PIO,\1,\2,\3} \endif"
-ALIASES               += ps{2}="\if PS \marginenote{PS,\1,\2} \endif"
-ALIASES               += ps{3}="\if PS \marginenote{PS,\1,\2,\3} \endif"
-ALIASES               += psc{2}="\if PSC \marginenote{PSC,\1,\2} \endif"
-ALIASES               += psc{3}="\if PSC \marginenote{PSC,\1,\2,\3} \endif"
-ALIASES               += rpi{2}="\if RPI \marginenote{RPI,\1,\2} \endif"
-ALIASES               += rpi{3}="\if RPI \marginenote{RPI,\1,\2,\3} \endif"
-ALIASES               += rpp{2}="\if RPP \marginenote{RPP,\1,\2} \endif"
-ALIASES               += rpp{3}="\if RPP \marginenote{RPP,\1,\2,\3} \endif"
-ALIASES               += rs{2}="\if RS \marginenote{RS,\1,\2} \endif"
-ALIASES               += rs{3}="\if RS \marginenote{RS,\1,\2,\3} \endif"
-ALIASES               += spn{2}="\if SPN \marginenote{SPN,\1,\2} \endif"
-ALIASES               += spn{3}="\if SPN \marginenote{SPN,\1,\2,\3} \endif"
-ALIASES               += tpi{2}="\if TPI \marginenote{TPI,\1,\2} \endif"
-ALIASES               += tpi{3}="\if TPI \marginenote{TPI,\1,\2,\3} \endif"
-ALIASES               += tpp{2}="\if TPP \marginenote{TPP,\1,\2} \endif"
-ALIASES               += tpp{3}="\if TPP \marginenote{TPP,\1,\2,\3} \endif"
-ALIASES               += tps{2}="\if TPS \marginenote{TPS,\1,\2} \endif"
-ALIASES               += tps{3}="\if TPS \marginenote{TPS,\1,\2,\3} \endif"
-ALIASES               += tsa{2}="\if TSA \marginenote{TSA,\1,\2} \endif"
-ALIASES               += tsa{3}="\if TSA \marginenote{TSA,\1,\2,\3} \endif"
-ALIASES               += tsh{2}="\if TSH \marginenote{TSH,\1,\2} \endif"
-ALIASES               += tsh{3}="\if TSH \marginenote{TSH,\1,\2,\3} \endif"
-ALIASES               += tsp{2}="\if TSP \marginenote{TSP,\1,\2} \endif"
-ALIASES               += tsp{3}="\if TSP \marginenote{TSP,\1,\2,\3} \endif"
-ALIASES               += tss{2}="\if TSS \marginenote{TSS,\1,\2} \endif"
-ALIASES               += tss{3}="\if TSS \marginenote{TSS,\1,\2,\3} \endif"
-ALIASES               += up{2}="\if UP \marginenote{UP,\1,\2} \endif"
-ALIASES               += up{3}="\if UP \marginenote{UP,\1,\2,\3} \endif"
-ALIASES               += uu{2}="\if UU \marginenote{UU,\1,\2} \endif"
-ALIASES               += uu{3}="\if UU \marginenote{UU,\1,\2,\3} \endif"
+# ALIASES               += adv{2}="\if ADV \marginenote{ADV,\1,\2} \endif"
+# ALIASES               += adv{3}="\if ADV \marginenote{ADV,\1,\2,\3} \endif"
+# ALIASES               += cd{2}="\if CD \marginenote{CD,\1,\2} \endif"
+# ALIASES               += cd{3}="\if CD \marginenote{CD,\1,\2,\3} \endif"
+# ALIASES               += cx{2}="\if CX \marginenote{CX,\1,\2} \endif"
+# ALIASES               += cx{3}="\if CX \marginenote{CX,\1,\2,\3} \endif"
+# ALIASES               += fd{2}="\if FD \marginenote{FD,\1,\2} \endif"
+# ALIASES               += fd{3}="\if FD \marginenote{FD,\1,\2,\3} \endif"
+# ALIASES               += fr{2}="\if FR \marginenote{FR,\1,\2} \endif"
+# ALIASES               += fr{3}="\if FR \marginenote{FR,\1,\2,\3} \endif"
+# ALIASES               += fsc{2}="\if FSC \marginenote{FSC,\1,\2} \endif"
+# ALIASES               += fsc{3}="\if FSC \marginenote{FSC,\1,\2,\3} \endif"
+# ALIASES               += sio{2}="\if SIO \marginenote{SIO,\1,\2} \endif"
+# ALIASES               += sio{3}="\if SIO \marginenote{SIO,\1,\2,\3} \endif"
+# ALIASES               += shm{2}="\if SHM \marginenote{SHM,\1,\2} \endif"
+# ALIASES               += shm{3}="\if SHM \marginenote{SHM,\1,\2,\3} \endif"
+# ALIASES               += ss_or_tsp{2}="\if (SS || TSP) \marginenote{SS|TSP,\1,\2} \endif"
+# ALIASES               += ss_or_tsp{3}="\if (SS || TSP) \marginenote{SS|TSP,\1,\2,\3} \endif"
+# ALIASES               += tym{2}="\if TYM \marginenote{TYM,\1,\2} \endif"
+# ALIASES               += tym{3}="\if TYM \marginenote{TYM,\1,\2,\3} \endif"
+# ALIASES               += obbe{2}="\if (OB && BE) \marginenote{OB BE,\1,\2} \endif"
+# ALIASES               += obbe{3}="\if (OB && BE) \marginenote{OB BE,\1,\2,\3} \endif"
+# ALIASES               += obxsr{2}="\if (OB && XSR) \marginenote{OB XSR,\1,\2} \endif"
+# ALIASES               += obxsr{3}="\if (OB && XSR) \marginenote{OB XSR,\1,\2,\3} \endif"
+# ALIASES               += obxsi{2}="\if (OB && XSI) \marginenote{OB XSI,\1,\2} \endif"
+# ALIASES               += obxsi{3}="\if (OB && XSI) \marginenote{OB XSI,\1,\2,\3} \endif"
+# ALIASES               += obtef{2}="\if (OB && TEF) \marginenote{OB TEF,\1,\2} \endif"
+# ALIASES               += obtef{3}="\if (OB && TEF) \marginenote{OB TEF,\1,\2,\3} \endif"
+# ALIASES               += obtrc{2}="\if (OB && TRC) \marginenote{OB TRC,\1,\2} \endif"
+# ALIASES               += obtrc{3}="\if (OB && TRC) \marginenote{OB TRC,\1,\2,\3} \endif"
+# ALIASES               += obtri{2}="\if (OB && TRI) \marginenote{OB TRI,\1,\2} \endif"
+# ALIASES               += obtri{3}="\if (OB && TRI) \marginenote{OB TRI,\1,\2,\3} \endif"
+# ALIASES               += obtrl{2}="\if (OB && TRL) \marginenote{OB TRL,\1,\2} \endif"
+# ALIASES               += obtrl{3}="\if (OB && TRL) \marginenote{OB TRL,\1,\2,\3} \endif"
+# ALIASES               += ob{2}="\if OB \marginenote{OB,\1,\2} \endif"
+# ALIASES               += ob{3}="\if OB \marginenote{OB,\1,\2,\3} \endif"
+# ALIASES               += sd{2}="\if SD \marginenote{SD,\1,\2} \endif"
+# ALIASES               += sd{3}="\if SD \marginenote{SD,\1,\2,\3} \endif"
+# ALIASES               += xsi{2}="\if XSI \marginenote{XSI,\1,\2} \endif"
+# ALIASES               += xsi{3}="\if XSI \marginenote{XSI,\1,\2,\3} \endif"
+# ALIASES               += xbd{2}="\if XBD \marginenote{XBD,\1,\2} \endif"
+# ALIASES               += xbd{3}="\if XBD \marginenote{XBD,\1,\2,\3} \endif"
+# ALIASES               += xcu{2}="\if XCU \marginenote{XCU,\1,\2} \endif"
+# ALIASES               += xcu{3}="\if XCU \marginenote{XCU,\1,\2,\3} \endif"
+# ALIASES               += xsh{2}="\if XSH \marginenote{XSH,\1,\2} \endif"
+# ALIASES               += xsh{3}="\if XSH \marginenote{XSH,\1,\2,\3} \endif"
+# ALIASES               += cx{2}="\if CX \marginenote{CX,\1,\2} \endif"
+# ALIASES               += cx{3}="\if CX \marginenote{CX,\1,\2,\3} \endif"
+# ALIASES               += ml{2}="\if ML \marginenote{ML,\1,\2} \endif"
+# ALIASES               += ml{3}="\if ML \marginenote{ML,\1,\2,\3} \endif"
+# ALIASES               += mlr{2}="\if MLR \marginenote{MLR,\1,\2} \endif"
+# ALIASES               += mlr{3}="\if MLR \marginenote{MLR,\1,\2,\3} \endif"
+# ALIASES               += ss{2}="\if SS \marginenote{SS,\1,\2} \endif"
+# ALIASES               += ss{3}="\if SS \marginenote{SS,\1,\2,\3} \endif"
+# ALIASES               += mon{2}="\if MON \marginenote{MON,\1,\2} \endif"
+# ALIASES               += mon{3}="\if MON \marginenote{MON,\1,\2,\3} \endif"
+# ALIASES               += msg{2}="\if MSG \marginenote{MSG,\1,\2} \endif"
+# ALIASES               += msg{3}="\if MSG \marginenote{MSG,\1,\2,\3} \endif"
+# ALIASES               += obcx{2}="\if (OB && CX) \marginenote{OB CX,\1,\2} \endif"
+# ALIASES               += obcx{3}="\if (OB && CX) \marginenote{OB CX,\1,\2,\3} \endif"
+# ALIASES               += cpt{2}="\if CPT \marginenote{CPT,\1,\2} \endif"
+# ALIASES               += cpt{3}="\if CPT \marginenote{CPT,\1,\2,\3} \endif"
+# ALIASES               += tct{2}="\if TCT \marginenote{TCT,\1,\2} \endif"
+# ALIASES               += tct{3}="\if TCT \marginenote{TCT,\1,\2,\3} \endif"
+# ALIASES               += pio{2}="\if PIO \marginenote{PIO,\1,\2} \endif"
+# ALIASES               += pio{3}="\if PIO \marginenote{PIO,\1,\2,\3} \endif"
+# ALIASES               += ps{2}="\if PS \marginenote{PS,\1,\2} \endif"
+# ALIASES               += ps{3}="\if PS \marginenote{PS,\1,\2,\3} \endif"
+# ALIASES               += psc{2}="\if PSC \marginenote{PSC,\1,\2} \endif"
+# ALIASES               += psc{3}="\if PSC \marginenote{PSC,\1,\2,\3} \endif"
+# ALIASES               += rpi{2}="\if RPI \marginenote{RPI,\1,\2} \endif"
+# ALIASES               += rpi{3}="\if RPI \marginenote{RPI,\1,\2,\3} \endif"
+# ALIASES               += rpp{2}="\if RPP \marginenote{RPP,\1,\2} \endif"
+# ALIASES               += rpp{3}="\if RPP \marginenote{RPP,\1,\2,\3} \endif"
+# ALIASES               += rs{2}="\if RS \marginenote{RS,\1,\2} \endif"
+# ALIASES               += rs{3}="\if RS \marginenote{RS,\1,\2,\3} \endif"
+# ALIASES               += spn{2}="\if SPN \marginenote{SPN,\1,\2} \endif"
+# ALIASES               += spn{3}="\if SPN \marginenote{SPN,\1,\2,\3} \endif"
+# ALIASES               += tpi{2}="\if TPI \marginenote{TPI,\1,\2} \endif"
+# ALIASES               += tpi{3}="\if TPI \marginenote{TPI,\1,\2,\3} \endif"
+# ALIASES               += tpp{2}="\if TPP \marginenote{TPP,\1,\2} \endif"
+# ALIASES               += tpp{3}="\if TPP \marginenote{TPP,\1,\2,\3} \endif"
+# ALIASES               += tps{2}="\if TPS \marginenote{TPS,\1,\2} \endif"
+# ALIASES               += tps{3}="\if TPS \marginenote{TPS,\1,\2,\3} \endif"
+# ALIASES               += tsa{2}="\if TSA \marginenote{TSA,\1,\2} \endif"
+# ALIASES               += tsa{3}="\if TSA \marginenote{TSA,\1,\2,\3} \endif"
+# ALIASES               += tsh{2}="\if TSH \marginenote{TSH,\1,\2} \endif"
+# ALIASES               += tsh{3}="\if TSH \marginenote{TSH,\1,\2,\3} \endif"
+# ALIASES               += tsp{2}="\if TSP \marginenote{TSP,\1,\2} \endif"
+# ALIASES               += tsp{3}="\if TSP \marginenote{TSP,\1,\2,\3} \endif"
+# ALIASES               += tss{2}="\if TSS \marginenote{TSS,\1,\2} \endif"
+# ALIASES               += tss{3}="\if TSS \marginenote{TSS,\1,\2,\3} \endif"
+# ALIASES               += up{2}="\if UP \marginenote{UP,\1,\2} \endif"
+# ALIASES               += up{3}="\if UP \marginenote{UP,\1,\2,\3} \endif"
+# ALIASES               += uu{2}="\if UU \marginenote{UU,\1,\2} \endif"
+# ALIASES               += uu{3}="\if UU \marginenote{UU,\1,\2,\3} \endif"
 
 # This tag can be used to specify a number of word-keyword mappings (TCL only).
 # A mapping has the form "name=value". For example adding "class=itcl::class"
@@ -1286,7 +1286,7 @@ HTML_FOOTER            = @DOXYGEN_SRCDIR@/footer.html
 # obsolete.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_STYLESHEET        =
+# HTML_STYLESHEET
 
 # The HTML_EXTRA_STYLESHEET tag can be used to specify additional user-defined
 # cascading style sheets that are included after the standard style sheets
@@ -1299,7 +1299,7 @@ HTML_STYLESHEET        =
 # list). For an example see the documentation.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_STYLESHEET  = @DOXYGEN_SRCDIR@/styles/styles.css
+HTML_EXTRA_STYLESHEET  = @DOXYGEN_SRCDIR@/styles/doxygen-awesome.css
 
 # The HTML_EXTRA_FILES tag can be used to specify one or more extra images or
 # other source files which should be copied to the HTML output directory. Note
@@ -1326,7 +1326,7 @@ HTML_EXTRA_FILES       = @DOXYGEN_HTML_EXTRA_FILES@ \
 # Minimum value: 0, maximum value: 359, default value: 220.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_COLORSTYLE_HUE    = 180
+# HTML_COLORSTYLE_HUE    = 180
 
 # The HTML_COLORSTYLE_SAT tag controls the purity (or saturation) of the colors
 # in the HTML output. For a value of 0 the output will use grayscales only. A
@@ -1334,7 +1334,7 @@ HTML_COLORSTYLE_HUE    = 180
 # Minimum value: 0, maximum value: 255, default value: 100.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_COLORSTYLE_SAT    = 100
+# HTML_COLORSTYLE_SAT    = 100
 
 # The HTML_COLORSTYLE_GAMMA tag controls the gamma correction applied to the
 # luminance component of the colors in the HTML output. Values below 100
@@ -1345,7 +1345,9 @@ HTML_COLORSTYLE_SAT    = 100
 # Minimum value: 40, maximum value: 240, default value: 80.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_COLORSTYLE_GAMMA  = 240
+# HTML_COLORSTYLE_GAMMA  = 240
+
+HTML_COLORSTYLE          = DARK
 
 # If the HTML_TIMESTAMP tag is set to YES then the footer of each generated HTML
 # page will contain the date and time when the page was generated. Setting this
@@ -1591,7 +1593,9 @@ DISABLE_INDEX          = NO
 # The default value is: NO.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-GENERATE_TREEVIEW      = NO
+GENERATE_TREEVIEW      = YES
+
+FULL_SIDEBAR           = NO
 
 # The ENUM_VALUES_PER_LINE tag can be used to set the number of enum values that
 # doxygen will group on one line in the generated HTML documentation.
