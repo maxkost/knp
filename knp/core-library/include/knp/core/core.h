@@ -12,6 +12,9 @@
 #include <any>
 #include <map>
 #include <string>
+#include <variant>
+
+#include <boost/mp11.hpp>
 
 
 /// Core library namespace.
@@ -25,14 +28,14 @@ class TagMap
 {
 public:
     /**
-     * Get tag by name.
+     * @brief Get tag by name.
      * @param name tag name.
      * @return tag value.
      */
     [[nodiscard]] std::any &get_tag(const std::string &name) { return tags_[name]; }
 
     /**
-     * Get typed tag by name.
+     * @brief Get typed tag by name.
      * @tparam tag value type.
      * @param name tag name.
      * @return tag value.
@@ -62,4 +65,14 @@ struct BaseData
     /// Entity tags.
     TagMap tags_;
 };
+
+
+template <typename... Types>
+std::variant<Types...> as_variant(boost::mp11::mp_list<Types...>);
+
+/**
+ * @brief Types list to std::variant converter.
+ */
+template <typename T>
+using AsVariant = decltype(as_variant(T{}));
 }  // namespace knp::core

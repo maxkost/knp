@@ -10,7 +10,6 @@
 #include <knp/core/backend.h>
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
-#include <knp/core/type_list.h>
 #include <knp/devices/cpu.h>
 #include <knp/neuron-traits/blifat.h>
 #include <knp/synapse-traits/delta.h>
@@ -32,8 +31,8 @@ public:
     using SupportedPopulations = boost::mp11::mp_transform<knp::core::Population, SupportedNeurons>;
     using SupportedProjections = boost::mp11::mp_transform<knp::core::Projection, SupportedSynapses>;
 
-    using PopulationVariants = boost::mp11::mp_fill<std::variant, SupportedPopulations>;
-    using ProjectionVariants = boost::mp11::mp_fill<std::variant, SupportedProjections>;
+    using PopulationVariants = knp::core::AsVariant<SupportedPopulations>;
+    using ProjectionVariants = knp::core::AsVariant<SupportedProjections>;
 
 public:
     // SingleThreadedCPUBackend(knp::devices::CPU &&cpu);
@@ -65,6 +64,8 @@ public:
 
 private:
     knp::devices::CPU device_;
+    std::vector<PopulationVariants> populations_;
+    std::vector<ProjectionVariants> projections_;
 };
 
 }  // namespace knp::backends::single_threaded_cpu
