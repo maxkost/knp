@@ -15,7 +15,7 @@ source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers REGULAR_EXPRESSION "include/.*")
 
 add_library("${PROJECT_NAME}-cpu"
-    impl/cpu.cpp
+    impl/cpu.cpp impl/cpu_power.cpp impl/cpu_power.h
 )
 add_library(KNP::Devices::CPU ALIAS "${PROJECT_NAME}-cpu")
 
@@ -23,7 +23,7 @@ target_include_directories("${PROJECT_NAME}-cpu" PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
-target_link_libraries("${PROJECT_NAME}-cpu" PUBLIC knp-core)
+target_link_libraries("${PROJECT_NAME}-cpu" PUBLIC spdlog::spdlog_header_only knp-core PCM_STATIC)
 
 #add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
 
