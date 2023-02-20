@@ -13,4 +13,10 @@
 namespace knp::backends::single_threaded_cpu
 {
 
+class SingleThreadedCPUBackend
+{
+public:
+private:
+};
+
 }  // namespace knp::backends::single_threaded_cpu
