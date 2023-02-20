@@ -32,6 +32,7 @@ include_directories(${THIRD_PARTY_INCLUDES})
 add_third_party(googletest)
 add_third_party(spdlog)
 add_third_party(pybind11)
+add_third_party(pcm)
 
 add_subdirectory(knp)
 
