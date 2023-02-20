@@ -14,8 +14,6 @@
 #include <string>
 #include <variant>
 
-#include <boost/mp11.hpp>
-
 
 /// Core library namespace.
 namespace knp::core
@@ -66,13 +64,4 @@ struct BaseData
     TagMap tags_;
 };
 
-
-template <typename... Types>
-std::variant<Types...> as_variant(boost::mp11::mp_list<Types...>);
-
-/**
- * @brief Types list to std::variant converter.
- */
-template <typename T>
-using AsVariant = decltype(as_variant(T{}));
 }  // namespace knp::core

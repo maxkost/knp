@@ -31,8 +31,8 @@ public:
     using SupportedPopulations = boost::mp11::mp_transform<knp::core::Population, SupportedNeurons>;
     using SupportedProjections = boost::mp11::mp_transform<knp::core::Projection, SupportedSynapses>;
 
-    using PopulationVariants = knp::core::AsVariant<SupportedPopulations>;
-    using ProjectionVariants = knp::core::AsVariant<SupportedProjections>;
+    using PopulationVariants = boost::mp11::mp_rename<SupportedPopulations, std::variant>;
+    using ProjectionVariants = boost::mp11::mp_rename<SupportedProjections, std::variant>;
 
 public:
     // SingleThreadedCPUBackend(knp::devices::CPU &&cpu);
