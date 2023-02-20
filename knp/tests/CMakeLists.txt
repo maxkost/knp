@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(knp-tester CXX)
 
-option(ENABLE_COVERAGE "Coverage enabled" ON)
+option(KNP_ENABLE_COVERAGE "Coverage enabled" ON)
 
 
 if(NOT KNP_BUILD_TESTS)
@@ -78,7 +78,7 @@ gtest_discover_tests("${PROJECT_NAME}"
 )
 
 
-if(ENABLE_COVERAGE)
+if(KNP_ENABLE_COVERAGE)
     message(STATUS "Coverage enabled")
 
     set(COV_EXECUTABLE "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
