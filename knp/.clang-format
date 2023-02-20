@@ -23,10 +23,10 @@ IncludeCategories:
     Priority:        2
     CaseSensitive:   true
   # Headers in <> with extension (system C headers).
-#  - Regex:           '<[[:alnum:]_.\/\-]+\.[[:alnum:]_]+>'
-#    SortPriority:    10
-#    Priority:        10
-#    CaseSensitive:   true
+  - Regex:           '<[[:alnum:]_.\-]+\.[[:alnum:]_]+>'
+    SortPriority:    10
+    Priority:        10
+    CaseSensitive:   true
   # Headers in <> without extension (system C++ headers).
   - Regex:           '<[[:alnum:]_\/\-]+>'
     SortPriority:    11
