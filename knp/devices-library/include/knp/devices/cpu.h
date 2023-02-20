@@ -45,5 +45,6 @@ public:
 
 private:
     mutable std::unique_ptr<CpuPower> power_meter_;
+    const std::string cpu_name_;
 };
 }  // namespace knp::devices
