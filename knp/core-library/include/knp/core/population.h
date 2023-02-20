@@ -20,7 +20,6 @@
 namespace knp::core
 {
 
-
 /**
  * @brief The Population class is a container of neurons of the same model.
  * @tparam NeuronType type of the population neurons.
