@@ -37,7 +37,7 @@ public:
     using NeuronParameters = neuron_traits::neuron_parameters<NeuronType>;
 
     /**
-     * Neurons generator type.
+     * @brief Neurons generator type.
      */
     using NeuronGenerator = std::function<NeuronParameters(PopulationType &population, size_t index)>;
 
@@ -47,13 +47,13 @@ public:
 
 public:
     /**
-     * Get this population UID.
+     * @brief Get this population UID.
      * @return UID.
      */
     [[nodiscard]] const UID &get_uid() const { return base_.uid_; }
 
     /**
-     * Get this population tags.
+     * @brief Get this population tags.
      * @return tag map.
      * @see TagMap.
      */
@@ -61,27 +61,27 @@ public:
 
 public:
     /**
-     * Get parameters of the all neurons in the population.
+     * @brief Get parameters of the all neurons in the population.
      * @return parameters vector.
      */
     [[nodiscard]] const std::vector<NeuronParameters> &get_neurons_parameters() const { return neurons_; }
 
     /**
-     * Get parameters of the concrete neuron in the population.
+     * @brief Get parameters of the concrete neuron in the population.
      * @param index neuron index.
      * @return parameters vector.
      */
     [[nodiscard]] const NeuronParameters &get_neuron_parameters(size_t index) const { return neurons_[index]; }
 
     /**
-     * Set parameters of the concrete neuron in the population.
+     * @brief Set parameters of the concrete neuron in the population.
      * @param index neuron index.
      * @param parameters neuron parameters.
      */
     void set_neuron_parameters(size_t index, NeuronParameters &&parameters) { neurons_[index] = std::move(parameters); }
 
     /**
-     * Set parameters of the concrete neuron in the population.
+     * @brief Set parameters of the concrete neuron in the population.
      * @param index neuron index.
      * @param parameters neuron parameters.
      */
@@ -89,7 +89,7 @@ public:
 
 public:
     /**
-     * Get concrete neuron tags.
+     * @brief Get concrete neuron tags.
      * @param index neuron index.
      * @return neuron tags.
      */
@@ -100,7 +100,7 @@ public:
 
 public:
     /**
-     * Add neurons to the population.
+     * @brief Add neurons to the population.
      * @param generator neurons adding strategy.
      */
     void add_neurons(NeuronGenerator generator, size_t count)
@@ -113,7 +113,7 @@ public:
     }
 
     /**
-     * Remove neurons from the population.
+     * @brief Remove neurons from the population.
      * @param neuron_indexes indexes of the removing neurons.
      */
     void remove_neurons(const std::vector<size_t> &neuron_indexes)
@@ -126,7 +126,7 @@ public:
     }
 
     /**
-     * Remove neuron from the population.
+     * @brief Remove neuron from the population.
      * @param neuron_index index of the removing neuron.
      */
     void remove_neuron(const size_t &neuron_index)
@@ -152,7 +152,7 @@ public:
 
 public:
     /**
-     * Neurons count.
+     * @brief Neurons count.
      * @return neurons count in the population.
      */
     size_t size() const { return neurons_.size(); }

@@ -38,26 +38,26 @@ public:
 
 public:
     /**
-     * Remove projections with given UIDs from the backend.
+     * @brief Remove projections with given UIDs from the backend.
      * @param uids identifiers of the projections, which will be removed.
      */
     virtual void remove_projections(const std::vector<UID> &uids) = 0;
 
     /**
-     * Remove synapses from the projection with given UID from the backend.
+     * @brief Remove synapses from the projection with given UID from the backend.
      * @param projection_uid identifiers of the projection.
      * @param indexes synapses indexes to remove.
      */
     virtual void remove_synapses(const UID &projection_uid, const std::vector<size_t> &indexes) = 0;
 
     /**
-     * Remove populations with given UIDs from the backend.
+     * @brief Remove populations with given UIDs from the backend.
      * @param uids identifiers of the populations, which will be removed.
      */
     virtual void remove_populations(const std::vector<UID> &uids) = 0;
 
     /**
-     * Remove neurons from the population with given UID from the backend.
+     * @brief Remove neurons from the population with given UID from the backend.
      * @param population_uid identifiers of the population.
      * @param indexes neurons indexes to remove.
      */
@@ -65,39 +65,39 @@ public:
 
 public:
     /**
-     * Get devices list, supported by the backend.
+     * @brief Get devices list, supported by the backend.
      * @return list of the devices.
      * @see Device.
      */
     [[nodiscard]] virtual std::vector<Device *> &&get_devices() const = 0;
 
     /**
-     * Get device which
+     * @brief Get device which
      * @return
      */
     virtual std::unique_ptr<Device> &get_current_device() const;
 
     /**
-     * Select device, where backend will work.
+     * @brief Select device, where backend will work.
      * @param uid of the device which the backend uses.
      */
     void select_device(const UID &uid);
 
 public:
     /**
-     * Start execution.
+     * @brief Start execution.
      */
     void start();
 
     /**
-     * Stop execution.
+     * @brief Stop execution.
      */
     void stop();
 
     /**
-     * Make one execution step.
+     * @brief Make one execution step.
      *
-     * Need for debugging.
+     * Need for debugging purposes.
      */
     void step();
 
