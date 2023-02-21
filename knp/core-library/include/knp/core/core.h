@@ -18,6 +18,9 @@
 /// Core library namespace.
 namespace knp::core
 {
+/// Always false template need to fail static asserts.
+template <class>
+inline constexpr bool always_false_v = false;
 
 /**
  * @brief Tags.

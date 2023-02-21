@@ -79,6 +79,10 @@ protected:
      */
     void calculate_projection(knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection);
 
+    // private:
+    //     template<typename TypeList, const char* msg, typename Container, typename CalculateFunction>
+    //     inline void calculator(Container &container, CalculateFunction calculate_function);
+
 private:
     knp::devices::CPU device_;
     std::vector<PopulationVariants> populations_;
