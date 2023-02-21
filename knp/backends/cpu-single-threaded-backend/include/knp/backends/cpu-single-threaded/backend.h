@@ -62,6 +62,20 @@ public:
      */
     void load_projections(const std::vector<ProjectionVariants> &&projections);
 
+protected:
+    /**
+     * @brief calculate BLIFAT neurons population.
+     * Projection will be changed during calculation.
+     * @param population.
+     */
+    void calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population);
+    /**
+     * @brief calculate DeltaSynapse projection.
+     * Projection will be changed during calculation.
+     * @param projection.
+     */
+    void calculate_projection(knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection);
+
 private:
     knp::devices::CPU device_;
     std::vector<PopulationVariants> populations_;
