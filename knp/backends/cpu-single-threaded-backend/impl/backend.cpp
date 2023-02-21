@@ -53,16 +53,34 @@ void SingleThreadedCPUBackend::step()
 }
 
 
-void SingleThreadedCPUBackend::load_populations(const std::vector<PopulationVariants> &populations) {}
+void SingleThreadedCPUBackend::load_populations(const std::vector<PopulationVariants> &populations)
+{
+    populations_.clear();
+    populations_.reserve(populations.size());
+
+    for (const auto &p : populations) populations_.push_back(p);
+}
 
 
-void SingleThreadedCPUBackend::load_populations(std::vector<PopulationVariants> &&populations) {}
+void SingleThreadedCPUBackend::load_populations(std::vector<PopulationVariants> &&populations)
+{
+    populations_ = std::move(populations);
+}
 
 
-void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVariants> &projections) {}
+void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVariants> &projections)
+{
+    projections_.clear();
+    projections_.reserve(projections.size());
+
+    for (const auto &p : projections) projections_.push_back(p);
+}
 
 
-void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVariants> &&projections) {}
+void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVariants> &&projections)
+{
+    projections_ = std::move(projections);
+}
 
 
 void SingleThreadedCPUBackend::calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population)
