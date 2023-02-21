@@ -16,6 +16,8 @@ source_group(headers REGULAR_EXPRESSION "include/.*")
 
 add_library("${PROJECT_NAME}"
     impl/backend.cpp
+    impl/blifat_population.cpp
+    impl/delta_synapse_projection.cpp
 )
 
 add_library(KNP::Core::Backend::CPUSingleThreaded ALIAS "${PROJECT_NAME}")

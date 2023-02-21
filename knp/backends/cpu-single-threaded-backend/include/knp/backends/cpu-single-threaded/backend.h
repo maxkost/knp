@@ -62,6 +62,9 @@ public:
      */
     void load_projections(const std::vector<ProjectionVariants> &&projections);
 
+public:
+    void step() override;
+
 protected:
     /**
      * @brief calculate BLIFAT neurons population.

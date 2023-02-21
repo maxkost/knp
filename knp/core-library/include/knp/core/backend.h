@@ -99,7 +99,7 @@ public:
      *
      * Need for debugging purposes.
      */
-    void step();
+    virtual void step() = 0;
 
 public:
     MessageBus message_bus_;
