@@ -9,6 +9,8 @@
 #include <knp/backends/cpu-single-threaded/backend.h>
 #include <knp/core/core.h>
 
+#include <functional>
+
 #include <boost/mp11.hpp>
 
 #include "blifat_population.h"
@@ -18,38 +20,30 @@
 namespace knp::backends::single_threaded_cpu
 {
 
+template <typename TypeList, auto CalculateMethod, typename Container>
+inline void SingleThreadedCPUBackend::calculator(Container &container)
+{
+    for (auto &e : container)
+    {
+        std::visit(
+            [this](auto &arg)
+            {
+                using T = std::decay_t<decltype(arg)>;
+                if constexpr (boost::mp11::mp_find<TypeList, T>{} == boost::mp11::mp_size<TypeList>{})
+                    static_assert(knp::core::always_false_v<T>, "Type doesn't supported by the CPU ST backend!");
+                std::invoke(CalculateMethod, this, arg);
+            },
+            e);
+    }
+}
+
+
 void SingleThreadedCPUBackend::step()
 {
     // Calculate projections.
-    // TODO: Make template.
-    for (auto &p : projections_)
-    {
-        std::visit(
-            [this](auto &projection)
-            {
-                using T = std::decay_t<decltype(projection)>;
-                if constexpr (
-                    boost::mp11::mp_find<SupportedProjections, T>{} == boost::mp11::mp_size<SupportedProjections>{})
-                    static_assert(knp::core::always_false_v<T>, "Backend doesn't support this projection type!");
-                calculate_projection(projection);
-            },
-            p);
-    }
-
+    calculator<SupportedProjections, &SingleThreadedCPUBackend::calculate_projection>(projections_);
     // Calculate populations.
-    for (auto &p : populations_)
-    {
-        std::visit(
-            [this](auto &population)
-            {
-                using T = std::decay_t<decltype(population)>;
-                if constexpr (
-                    boost::mp11::mp_find<SupportedPopulations, T>{} == boost::mp11::mp_size<SupportedPopulations>{})
-                    static_assert(knp::core::always_false_v<T>, "Backend doesn't support this population type!");
-                calculate_population(population);
-            },
-            p);
-    }
+    calculator<SupportedPopulations, &SingleThreadedCPUBackend::calculate_population>(populations_);
 }
 
 

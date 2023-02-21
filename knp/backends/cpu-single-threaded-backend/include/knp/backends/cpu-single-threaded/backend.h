@@ -79,9 +79,9 @@ protected:
      */
     void calculate_projection(knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection);
 
-    // private:
-    //     template<typename TypeList, const char* msg, typename Container, typename CalculateFunction>
-    //     inline void calculator(Container &container, CalculateFunction calculate_function);
+private:
+    template <typename TypeList, auto CalculateMethod, typename Container>
+    inline void calculator(Container &container);
 
 private:
     knp::devices::CPU device_;
