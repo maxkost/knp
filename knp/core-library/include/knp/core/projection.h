@@ -37,7 +37,7 @@ public:
     using SynapseGenerator = std::function<std::optional<Synapse>(size_t)>;
 
     /**
-     * Construct an empty projection
+     * @brief Construct an empty projection
      * @param presynaptic_uid the Uid of the presynaptic population
      * @param postsynaptic_uid the Uid of the postsynaptic population
      */
@@ -45,7 +45,7 @@ public:
     : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid) {}
 
     /**
-     * Construct projection by running a synapse generator N times
+     * @brief Construct projection by running a synapse generator N times
      * @param num_iterations number of iterations
      * @param generator a function that returns
      */
@@ -63,13 +63,13 @@ public:
 
 public:
     /**
-     * Get this projection UID.
+     * @brief Get this projection UID.
      * @return UID.
      */
     [[nodiscard]] const UID &get_uid() const { return base_.uid_; }
 
     /**
-     * Get this projection tags.
+     * @brief Get this projection tags.
      * @return tag map.
      * @see TagMap.
      */
@@ -91,13 +91,13 @@ public:
 
 public:
     /**
-     * Get the number of synapses
+     * @brief Get the number of synapses
      * @return number of synapses inside the projection
      */
     [[nodiscard]] size_t size() { return parameters_.size(); }
 
     /**
-     * Set new synapse parameter
+     * @brief Set new synapse parameter
      * @param new_parameters new synapse parameters.
      * @param synapse_index index of the synapse.
      */
@@ -107,13 +107,13 @@ public:
     }
 
     /**
-     * Return the UID of population this projection gets signals from
+     * @brief Return the UID of population this projection gets signals from
      * @return presynaptic population UID
      */
     [[nodiscard]] UID get_presynaptic() const { return presynaptic_uid_; }
 
     /**
-     * Return the UID of population this projection sends signals to
+     * @brief Return the UID of population this projection sends signals to
      * @return postsynaptic population UID
      */
     [[nodiscard]] UID get_postsynaptic() const { return postsynaptic_uid_; }
