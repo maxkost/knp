@@ -60,7 +60,7 @@ public:
      */
     [[nodiscard]] virtual const float get_power() const = 0;
 
-private:
+protected:
     BaseData base_;
 };
 

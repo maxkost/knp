@@ -31,6 +31,8 @@ include_directories(third-party ${THIRD_PARTY_INCLUDES})
 
 add_third_party(googletest)
 add_third_party(spdlog)
+
+set(CPPZMQ_BUILD_TESTS off)
 add_third_party(cppzmq)
 add_third_party(pybind11)
 add_third_party(pcm)
