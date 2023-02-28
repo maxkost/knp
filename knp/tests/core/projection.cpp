@@ -16,6 +16,18 @@ using SynapseParameters = DeltaProjection::SynapseParameters;
 using SynapseGenerator = DeltaProjection::SynapseGenerator;
 
 
+SynapseGenerator make_dense_generator(std::pair<size_t, size_t> pop_sizes, SynapseParameters default_params)
+{
+    SynapseGenerator generator = [=](size_t index) -> std::optional<Synapse>
+    {
+        const size_t id_from = index / pop_sizes.second;
+        const size_t id_to = index % pop_sizes.second;
+        return Synapse{default_params, id_from, id_to};
+    };
+    return generator;
+}
+
+
 TEST(ProjectionSuite, Generation)
 {
     // Testing: constructor, get_connections, get_connection, operator[], get_size,
@@ -127,3 +139,43 @@ TEST(ProjectionSuite, SynapseRemoval)
     ASSERT_EQ(projection.size(), 0);
 }
 
+
+TEST(ProjectionSuite, LockTest)
+{
+    DeltaProjection projection(knc::UID{}, knc::UID{});
+    ASSERT_FALSE(projection.is_locked());
+    projection.lock_weights();
+    ASSERT_TRUE(projection.is_locked());
+    projection.unlock_weights();
+    ASSERT_FALSE(projection.is_locked());
+}
+
+
+TEST(ProjectionSuite, DisconnectNeurons)
+{
+    const size_t presynaptic_size = 9;
+    const size_t postsynaptic_size = 11;
+    auto generator = make_dense_generator({presynaptic_size, postsynaptic_size}, {0.0, 1});
+    DeltaProjection projection{knc::UID{}, knc::UID{}, presynaptic_size * postsynaptic_size, generator};
+    const size_t count = projection.disconnect_neurons(0, 1);
+    ASSERT_EQ(count, 1);
+    ASSERT_EQ(std::count_if(projection.begin(), projection.end(),
+                            [](const Synapse &synapse) { return synapse.id_from == 0; }),
+              postsynaptic_size - 1);
+    ASSERT_EQ(std::count_if(projection.begin(), projection.end(),
+                            [](const Synapse &synapse) { return synapse.id_to == 1; }),
+              presynaptic_size - 1);
+}
+
+
+TEST(ProjectionSuite, GetUIDTest)
+{
+    const knc::UID uid_from(true);
+    const knc::UID uid_to(true);
+
+    ASSERT_NE(uid_from, uid_to);
+    auto generator = make_dense_generator({10, 10}, {0, 1});
+    const DeltaProjection projection(uid_from, uid_to, 100, generator);
+    ASSERT_EQ(projection.get_presynaptic(), uid_from);
+    ASSERT_EQ(projection.get_postsynaptic(), uid_to);
+}

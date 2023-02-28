@@ -61,6 +61,18 @@ public:
         }
     }
 
+    Projection(UID presynaptic_uid, UID postsynaptic_uid, size_t num_iterations, const SynapseGenerator &generator)
+            : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
+    {
+        for (size_t i = 0; i < num_iterations; ++i)
+        {
+            if (auto params = std::move(generator(i)))
+            {
+                parameters_.emplace_back(std::move(params.value()));
+            }
+        }
+    }
+
 public:
     /**
      * @brief Get this projection UID.
@@ -95,16 +107,6 @@ public:
      * @return number of synapses inside the projection
      */
     [[nodiscard]] size_t size() { return parameters_.size(); }
-
-    /**
-     * @brief Set new synapse parameter
-     * @param new_parameters new synapse parameters.
-     * @param synapse_index index of the synapse.
-     */
-    void set_synapse_parameter(SynapseParameters &&new_parameters, size_t index)
-    {
-        parameters_[index] == new_parameters;
-    }
 
     /**
      * @brief Return the UID of population this projection gets signals from
@@ -151,7 +153,21 @@ public:
     template<class Generator>
     size_t add_synapses(size_t num_iterations, Generator &generator)
     {
-        // TODO : maybe add static checks
+        const size_t starting_size = parameters_.size();
+        for (size_t i = 0; i < num_iterations; ++i)
+        {
+            if (auto data = std::move(generator(i)))
+            {
+                parameters_.emplace_back(std::move(data.value()));
+            }
+        }
+        return parameters_.size() - starting_size;
+    }
+
+
+    template<class Generator>
+    size_t add_synapses(size_t num_iterations, const Generator &generator)
+    {
         const size_t starting_size = parameters_.size();
         for (size_t i = 0; i < num_iterations; ++i)
         {
