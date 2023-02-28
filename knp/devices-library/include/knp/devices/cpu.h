@@ -11,6 +11,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 
 namespace knp::devices
@@ -47,4 +48,8 @@ private:
     mutable std::unique_ptr<CpuPower> power_meter_;
     const std::string cpu_name_;
 };
+
+
+std::vector<CPU> list_processors();
+
 }  // namespace knp::devices
