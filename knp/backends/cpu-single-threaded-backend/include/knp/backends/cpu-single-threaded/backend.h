@@ -66,6 +66,8 @@ public:
     void step() override;
 
 protected:
+    void init();
+
     /**
      * @brief calculate BLIFAT neurons population.
      * Projection will be changed during calculation.
