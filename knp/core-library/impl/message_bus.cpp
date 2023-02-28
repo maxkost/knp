@@ -8,29 +8,27 @@
 #include <knp/core/message_bus.h>
 #include <knp/core/messaging.h>
 
+#include <zmq.hpp>
+
 
 namespace knp::core
 {
 
-template <typename MessageType>
-UID subscribe(const UID &publisher_uid, std::function<void(const MessageType &)> callback)
+
+class MessageBus::MessageBusImpl
 {
-}
+public:
+    MessageBusImpl()
+    {
+        zmq::socket_t sock(ctx, zmq::socket_type::push);
+        sock.bind("inproc://test");
+    }
+
+private:
+    zmq::context_t context_;
+};
 
 
-void MessageBus::unsubscribe(const UID &subscription_uid) {}
-
-
-template <typename MessageType>
-void send_message(const MessageType &message)
-{
-}
-
-
-template <typename MessageType>
-void send_message(MessageType &&message)
-{
-}
-
+MessageEndpoint &&MessageBus::get_endpoint() {}
 
 }  // namespace knp::core
