@@ -8,8 +8,6 @@
 #include <knp/core/message_bus.h>
 #include <knp/core/messaging.h>
 
-#include <zmq.hpp>
-
 
 namespace knp::core
 {
@@ -20,8 +18,8 @@ class MessageBus::MessageBusImpl
 public:
     MessageBusImpl()
     {
-        zmq::socket_t sock(ctx, zmq::socket_type::push);
-        sock.bind("inproc://test");
+        //        zmq::socket_t sock(ctx, zmq::socket_type::push);
+        //        sock.bind("inproc://test");
     }
 
 private:

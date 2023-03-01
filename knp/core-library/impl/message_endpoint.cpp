@@ -8,8 +8,6 @@
 #include <knp/core/message_endpoint.h>
 #include <knp/core/messaging.h>
 
-#include <zmq.hpp>
-
 
 namespace knp::core
 {
@@ -18,7 +16,9 @@ namespace knp::core
 class MessageEndpoint::MessageEndpointImpl
 {
 public:
-    MessageEndpointImpl() { sock.send(zmq::str_buffer("Hello, world"), zmq::send_flags::dontwait); }
+    MessageEndpointImpl()
+    { /*sock.send(zmq::str_buffer("Hello, world"), zmq::send_flags::dontwait);*/
+    }
 
 private:
     zmq::context_t context_;

@@ -9,8 +9,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(knp-core VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 
 find_package(Boost 1.66.0 REQUIRED)
-#find_package(cppzmq)
-find_package(Threads)
+find_package(cppzmq)
+#find_package(Threads)
 
 include(GNUInstallDirs)
 include(clang-tidy)
@@ -32,7 +32,7 @@ target_include_directories("${PROJECT_NAME}" PUBLIC
 
 target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS})
 
-target_link_libraries("${PROJECT_NAME}" PUBLIC spdlog::spdlog_header_only cppzmq zmq ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries("${PROJECT_NAME}" PUBLIC spdlog::spdlog_header_only cppzmq)
 target_link_libraries("${PROJECT_NAME}" PUBLIC knp-neuron-traits knp-synapse-traits)
 
 #add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
