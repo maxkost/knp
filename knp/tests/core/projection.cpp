@@ -3,9 +3,9 @@
 //
 #include "knp/core/projection.h"
 #include "knp/synapse-traits/delta.h"
-#include <tests_common.h>
 #include <cstdlib>
 #include <optional>
+#include <tests_common.h>
 
 namespace knc = knp::core;
 namespace kntr = knp::synapse_traits;
@@ -16,13 +16,25 @@ using SynapseParameters = DeltaProjection::SynapseParameters;
 using SynapseGenerator = DeltaProjection::SynapseGenerator;
 
 
-SynapseGenerator make_dense_generator(std::pair<size_t, size_t> pop_sizes, SynapseParameters default_params)
+SynapseGenerator make_dense_generator(std::pair<size_t, size_t> pop_sizes, const SynapseParameters &default_params)
 {
     SynapseGenerator generator = [=](size_t index) -> std::optional<Synapse>
     {
         const size_t id_from = index / pop_sizes.second;
         const size_t id_to = index % pop_sizes.second;
         return Synapse{default_params, id_from, id_to};
+    };
+    return generator;
+}
+
+
+SynapseGenerator make_cyclic_generator(std::pair<size_t, size_t> pop_sizes, const SynapseParameters &default_params,
+                                       size_t synapses_per_neuron)
+{
+    SynapseGenerator generator = [=](size_t index) -> std::optional<Synapse>
+    {
+        const size_t index_from = index % pop_sizes.first;
+        return Synapse {default_params, index_from, (index_from + index / pop_sizes.second) % pop_sizes.second};
     };
     return generator;
 }
@@ -88,6 +100,41 @@ TEST(ProjectionSuite, SynapseAddition)
 }
 
 
+TEST(ProjectionSuite, DeletePresynapticTest)
+{
+    const size_t size_from = 99;
+    const size_t size_to = 101;
+    const size_t synapses_per_neuron = 5;
+    const size_t neuron_index = 10;
+    auto generator = make_cyclic_generator({size_from, size_to}, {0.0F, 1}, synapses_per_neuron);
+    DeltaProjection projection{knc::UID{}, knc::UID{}, size_from * synapses_per_neuron, generator };
+    const size_t count = projection.remove_presynaptic_neuron(neuron_index);
+    ASSERT_EQ(count, synapses_per_neuron);
+    ASSERT_EQ(projection.size(), (size_from - 1) * synapses_per_neuron);  // the size of projection is correct
+    ASSERT_EQ(std::find_if(projection.begin(), projection.end(),
+                           [&](Synapse &synapse) { return synapse.id_from == neuron_index; }),
+              projection.end());  // all the synapses that should have been deleted are actually deleted
+}
+
+
+TEST(ProjectionSuite, DeletePostsynapticTest)
+{
+    const size_t size_from = 99;
+    const size_t size_to = 101;
+    const size_t synapses_per_neuron = 10;
+    const size_t neuron_index = 15;
+    auto generator = make_cyclic_generator({size_from, size_to}, {0.0F, 1}, synapses_per_neuron);
+    DeltaProjection projection{knc::UID{}, knc::UID{}, size_from * synapses_per_neuron, generator };
+    const size_t count = projection.remove_postsynaptic_neuron(neuron_index);
+    ASSERT_EQ(count, synapses_per_neuron);
+    ASSERT_EQ(projection.size(), (size_from - 1) * synapses_per_neuron);  // the size of projection is correct
+    ASSERT_EQ(std::find_if(projection.begin(), projection.end(),
+                           [&](Synapse &synapse) { return synapse.id_to == neuron_index; }),
+              projection.end());  // ensure all the synapses that should have been deleted are actually deleted
+
+}
+
+
 TEST(ProjectionSuite, SynapseRemoval)
 {
     // Projection doesn't contain the neuron we're removing
@@ -98,43 +145,20 @@ TEST(ProjectionSuite, SynapseRemoval)
 
     const size_t presynaptic_size = 100;
     const size_t postsynaptic_size = presynaptic_size;
-    const size_t connections_per_neuron = 4;
-    const size_t total_connections = presynaptic_size * connections_per_neuron;
+    const size_t synapses_per_neuron = 4;
+    const size_t total_connections = presynaptic_size * synapses_per_neuron;
 
     // If we run this generator N * presynaptic size, we'll have 1 to N connections of x->x, x->x+1, ... x->x+N, cycled
-    SynapseGenerator generator = [&](size_t index) -> std::optional<Synapse>
-        {
-             const size_t index_from = index % presynaptic_size;
-             return Synapse {{0, index / postsynaptic_size + 1}, index_from,
-                             (index_from + index / postsynaptic_size) % postsynaptic_size};
-        };
-    count = projection.add_synapses(total_connections, generator);
+    count = projection.add_synapses(total_connections, make_cyclic_generator({presynaptic_size, postsynaptic_size},
+                                                                             {0, 1}, synapses_per_neuron));
     ASSERT_EQ(count, total_connections);
 
-    // Now let's start deleting
     // Delete a single synapse
     projection.remove_synapse(0);
     ASSERT_EQ(projection.size(), total_connections - 1);  // A synapse is deleted
     ASSERT_EQ(projection[0].id_from, 1);  // the deleted synapse is the correct one
 
-    // Delete a presynaptic neuron
-    const size_t presynaptic_delete_index = 1;
-    count = projection.remove_presynaptic_neuron(presynaptic_delete_index);
-    ASSERT_EQ(count, connections_per_neuron);  // return value is as expected
-    ASSERT_EQ(projection.size(), total_connections - 1 - connections_per_neuron);  // the size of projection is correct
-    ASSERT_EQ(std::find_if(projection.begin(), projection.end(),
-                           [&](Synapse &synapse) { return synapse.id_from == presynaptic_delete_index; }),
-              projection.end());  // all the synapses that should have been deleted are actually deleted
-
-    // Delete a postsynaptic_neuron
-    const size_t postsynaptic_delete_index = presynaptic_delete_index;
-    count = projection.remove_postsynaptic_neuron(postsynaptic_delete_index);
-    ASSERT_EQ(count, connections_per_neuron - 1); // we've already deleted x-x connection, so one less is left
-    ASSERT_EQ(std::find_if(projection.begin(), projection.end(),
-                           [&](Synapse &synapse) { return synapse.id_to == postsynaptic_delete_index; }),
-              projection.end());
-
-    // Delete all
+    // Delete all synapses
     projection.clear();
     ASSERT_EQ(projection.size(), 0);
 }

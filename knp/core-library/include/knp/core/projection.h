@@ -150,8 +150,7 @@ public:
      * @param generator a functional object that is used to generate connections
      * @return number of added connections, which can be less or equal to num_iterations
      */
-    template<class Generator>
-    size_t add_synapses(size_t num_iterations, Generator &generator)
+    size_t add_synapses(size_t num_iterations, SynapseGenerator &generator)
     {
         const size_t starting_size = parameters_.size();
         for (size_t i = 0; i < num_iterations; ++i)
@@ -164,9 +163,7 @@ public:
         return parameters_.size() - starting_size;
     }
 
-
-    template<class Generator>
-    size_t add_synapses(size_t num_iterations, const Generator &generator)
+    size_t add_synapses(size_t num_iterations, const SynapseGenerator &generator)
     {
         const size_t starting_size = parameters_.size();
         for (size_t i = 0; i < num_iterations; ++i)
