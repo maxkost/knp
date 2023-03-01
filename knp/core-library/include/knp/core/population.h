@@ -40,7 +40,7 @@ public:
     using PopulationType = Population<NeuronType>;
     /**
      * @brief Neuron parameters and their values for the specified neuron type.
-     */ 
+     */
     using NeuronParameters = neuron_traits::neuron_parameters<NeuronType>;
 
     /**
@@ -147,12 +147,12 @@ public:
 
 public:
     /**
-    * @brief Get parameter values of a neuron with the given index.
-    */
+     * @brief Get parameter values of a neuron with the given index.
+     */
     const auto &operator[](const size_t index) const { return get_neuron_parameters(index); }
     /**
-    * @brief Get parameter values of a neuron with the given index.
-    */
+     * @brief Get parameter values of a neuron with the given index.
+     */
     auto &operator[](const size_t index) { return neurons_[index]; }
     /// TODO: make iterator class.
     const auto begin() const { return neurons_.cbegin(); }

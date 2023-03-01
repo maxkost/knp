@@ -12,11 +12,15 @@
 #include <any>
 #include <map>
 #include <string>
+#include <variant>
 
 
 /// Core library namespace.
 namespace knp::core
 {
+/// Always false template need to fail static asserts.
+template <class>
+inline constexpr bool always_false_v = false;
 
 /**
  * @brief Tags.
@@ -25,14 +29,14 @@ class TagMap
 {
 public:
     /**
-     * Get tag by name.
+     * @brief Get tag by name.
      * @param name tag name.
      * @return tag value.
      */
     [[nodiscard]] std::any &get_tag(const std::string &name) { return tags_[name]; }
 
     /**
-     * Get typed tag by name.
+     * @brief Get typed tag by name.
      * @tparam tag value type.
      * @param name tag name.
      * @return tag value.
@@ -62,4 +66,5 @@ struct BaseData
     /// Entity tags.
     TagMap tags_;
 };
+
 }  // namespace knp::core

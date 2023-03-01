@@ -4,7 +4,7 @@ set(CPACK_PACKAGE_NAME "${PROJECT_NAME}" CACHE STRING "The resulting package nam
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Simple C++ application"
         CACHE STRING "Package description for the package metadata"
         )
-set(CPACK_PACKAGE_VENDOR "Some Company")
+set(CPACK_PACKAGE_VENDOR "Kaspersky Laboratory")
 
 set(CPACK_VERBATIM_VARIABLES YES)
 

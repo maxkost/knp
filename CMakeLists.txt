@@ -27,11 +27,12 @@ set(DOXYFILE_IN "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in")
 include(GNUInstallDirs)
 
 file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
-include_directories(${THIRD_PARTY_INCLUDES})
+include_directories(third-party ${THIRD_PARTY_INCLUDES})
 
 add_third_party(googletest)
 add_third_party(spdlog)
 add_third_party(pybind11)
+add_third_party(pcm)
 
 add_subdirectory(knp)
 

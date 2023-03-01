@@ -7,5 +7,4 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(knp-base-framework LANGUAGES C CXX)
 
 
-#target_link_libraries("${PROJECT_NAME}" PUBLIC neuron_traits)
-#target_link_libraries("${PROJECT_NAME}" PUBLIC synapse_traits)
+#target_link_libraries("${PROJECT_NAME}" PUBLIC spdlog::spdlog_header_only knp-core)
