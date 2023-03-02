@@ -12,8 +12,8 @@ using BLIFATParams = knp::neuron_traits::neuron_parameters<knp::neuron_traits::B
 
 BLIFATParams neuron_generator(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &, size_t index)
 {
-    BLIFATParams p{.potential_ = static_cast<double>(index)};
-    return p;
+    BLIFATParams params{.potential_ = static_cast<double>(index)};
+    return params;
 }
 
 
