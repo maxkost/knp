@@ -61,6 +61,18 @@ public:
         }
     }
 
+    Projection(UID presynaptic_uid, UID postsynaptic_uid, size_t num_iterations, const SynapseGenerator &generator)
+            : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
+    {
+        for (size_t i = 0; i < num_iterations; ++i)
+        {
+            if (auto params = std::move(generator(i)))
+            {
+                parameters_.emplace_back(std::move(params.value()));
+            }
+        }
+    }
+
 public:
     /**
      * @brief Get this projection UID.
@@ -95,16 +107,6 @@ public:
      * @return number of synapses inside the projection
      */
     [[nodiscard]] size_t size() { return parameters_.size(); }
-
-    /**
-     * @brief Set new synapse parameter
-     * @param new_parameters new synapse parameters.
-     * @param synapse_index index of the synapse.
-     */
-    void set_synapse_parameter(SynapseParameters &&new_parameters, size_t index)
-    {
-        parameters_[index] == new_parameters;
-    }
 
     /**
      * @brief Return the UID of population this projection gets signals from
@@ -161,6 +163,19 @@ public:
         return parameters_.size() - starting_size;
     }
 
+    size_t add_synapses(size_t num_iterations, const SynapseGenerator &generator)
+    {
+        const size_t starting_size = parameters_.size();
+        for (size_t i = 0; i < num_iterations; ++i)
+        {
+            if (auto data = std::move(generator(i)))
+            {
+                parameters_.emplace_back(std::move(data.value()));
+            }
+        }
+        return parameters_.size() - starting_size;
+    }
+
     /**
      * @brief Add a set of user-made synapses to the projection
      * @param synapses the set of synapses that will be added to the container
@@ -173,6 +188,9 @@ public:
         std::move(synapses.begin(), synapses.end(), std::back_insert_iterator(parameters_));
         return parameters_.size() - starting_size;
     }
+
+    /// Remove all synapses
+    void clear() { parameters_.clear(); }
 
     /**
      * @brief Remove a synapse by its index

@@ -67,6 +67,7 @@ struct UID
 
     bool operator<(const UID &uid) const { return uid.tag < tag; }
     bool operator==(const UID &uid) const { return uid.tag == tag; }
+    bool operator!=(const UID &uid) const { return uid.tag != tag; }
 
     ::boost::uuids::uuid tag;
 };
