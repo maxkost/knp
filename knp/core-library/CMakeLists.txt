@@ -14,16 +14,18 @@ find_package(ZeroMQ REQUIRED)
 include(GNUInstallDirs)
 include(clang-tidy)
 
-source_group(source REGULAR_EXPRESSION "impl/.*")
-source_group(headers REGULAR_EXPRESSION "include/.*")
-
 add_library("${PROJECT_NAME}"
     impl/backend.cpp
     impl/device.cpp
     impl/population.cpp
     impl/uid.cpp
-    impl/projection.cpp)
+    impl/projection.cpp
+    impl/message_bus.cpp
+    impl/message_endpoint.cpp)
 add_library(KNP::Core ALIAS "${PROJECT_NAME}")
+
+source_group(source REGULAR_EXPRESSION "impl/.*")
+source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "include/.*")
 
 target_include_directories("${PROJECT_NAME}" PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
@@ -35,7 +37,7 @@ target_link_libraries("${PROJECT_NAME}" PUBLIC spdlog::spdlog_header_only)
 target_link_libraries("${PROJECT_NAME}" PRIVATE zmq)
 target_link_libraries("${PROJECT_NAME}" PUBLIC knp-neuron-traits knp-synapse-traits)
 
-#add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
+# add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
 
 if(KNP_ENABLE_COVERAGE)
     include(codecoverage)

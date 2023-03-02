@@ -7,10 +7,17 @@
 
 #pragma once
 
+#include <knp/core/messaging.h>
 #include <knp/core/uid.h>
 
 #include <functional>
 #include <memory>
+
+
+namespace zmq
+{
+class context_t;
+}
 
 
 namespace knp::core
@@ -23,6 +30,9 @@ namespace knp::core
  */
 class MessageEndpoint
 {
+public:
+    virtual ~MessageEndpoint();
+
 public:
     /**
      * @brief message subscription method.
@@ -46,13 +56,14 @@ public:
      */
     template <typename MessageType>
     void send_message(const MessageType &message);
-
-    /**
-     * @brief Publish message to the bus.
-     * @param message is a published message. Object will be moved.
-     */
     template <typename MessageType>
     void send_message(MessageType &&message);
+
+protected:
+    explicit MessageEndpoint(void *context);
+
+private:
+    MessageEndpoint() = delete;
 
 private:
     /// Message endpoint implementation.
