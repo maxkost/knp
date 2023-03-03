@@ -64,7 +64,7 @@ public:
         }
     }
 
-    Projection(UID presynaptic_uid, UID postsynaptic_uid, size_t num_iterations, const SynapseGenerator generator)
+    Projection(UID presynaptic_uid, UID postsynaptic_uid, size_t num_iterations, const SynapseGenerator &generator)
         : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
     {
         for (size_t i = 0; i < num_iterations; ++i)
