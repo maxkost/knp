@@ -12,12 +12,9 @@
 
 #include <functional>
 #include <memory>
+#include <string>
 
-
-namespace zmq
-{
-class context_t;
-}
+#include <boost/mp11.hpp>
 
 
 namespace knp::core
@@ -30,6 +27,10 @@ namespace knp::core
  */
 class MessageEndpoint
 {
+public:
+    using SupportedMessages =
+        boost::mp11::mp_list<knp::core::messaging::SpikeMessage, knp::core::messaging::SynapticImpactMessage>;
+
 public:
     virtual ~MessageEndpoint();
 
@@ -60,7 +61,7 @@ public:
     void send_message(MessageType &&message);
 
 protected:
-    explicit MessageEndpoint(void *context);
+    explicit MessageEndpoint(void *context, const std::string &sub_addr, const std::string &pub_addr);
 
 private:
     MessageEndpoint() = delete;
