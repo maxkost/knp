@@ -27,12 +27,14 @@ struct SynapticImpact
     size_t postsynaptic_neuron_index_;
 };
 
+
 /**
  * @brief Synaptic impact message structure.
  */
 struct SynapticImpactMessage
 {
     MessageHeader header_;
+    UID postsynaptic_population_uid_;
     UID presynaptic_population_uid_;
     std::vector<SynapticImpact> impacts_;
 };
