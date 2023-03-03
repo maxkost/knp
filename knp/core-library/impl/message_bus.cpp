@@ -43,6 +43,7 @@ public:
     {
         router_socket_.bind(router_sock_address_);
         publish_socket_.bind(publish_sock_address_);
+        // zmq::proxy(router_socket_, publish_socket_);
     }
 
     void step()

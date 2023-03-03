@@ -14,6 +14,7 @@
 #include <functional>
 #include <optional>
 #include <tuple>
+#include <utility>
 #include <vector>
 
 
@@ -42,15 +43,17 @@ public:
      * @param postsynaptic_uid the Uid of the postsynaptic population
      */
     Projection(UID presynaptic_uid, UID postsynaptic_uid)
-    : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid) {}
+        : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
+    {
+    }
 
     /**
      * @brief Construct projection by running a synapse generator N times
      * @param num_iterations number of iterations
      * @param generator a function that returns
      */
-    Projection(UID presynaptic_uid, UID postsynaptic_uid, size_t num_iterations, SynapseGenerator &generator)
-    : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
+    Projection(UID presynaptic_uid, UID postsynaptic_uid, size_t num_iterations, SynapseGenerator generator)
+        : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
     {
         for (size_t i = 0; i < num_iterations; ++i)
         {
@@ -61,8 +64,8 @@ public:
         }
     }
 
-    Projection(UID presynaptic_uid, UID postsynaptic_uid, size_t num_iterations, const SynapseGenerator &generator)
-            : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
+    Projection(UID presynaptic_uid, UID postsynaptic_uid, size_t num_iterations, const SynapseGenerator generator)
+        : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
     {
         for (size_t i = 0; i < num_iterations; ++i)
         {
@@ -89,8 +92,8 @@ public:
 
 public:
     /// Synapse indexing operator
-    [[nodiscard]] Synapse& operator[](size_t index) { return parameters_[index]; }
-    [[nodiscard]] const Synapse& operator[](size_t index) const {return parameters_[index]; }
+    [[nodiscard]] Synapse &operator[](size_t index) { return parameters_[index]; }
+    [[nodiscard]] const Synapse &operator[](size_t index) const { return parameters_[index]; }
 
     // TODO: add custom iterator class
     [[nodiscard]] auto begin() const { return parameters_.cbegin(); }
@@ -150,7 +153,7 @@ public:
      * @param generator a functional object that is used to generate connections
      * @return number of added connections, which can be less or equal to num_iterations
      */
-    size_t add_synapses(size_t num_iterations, SynapseGenerator &generator)
+    size_t add_synapses(size_t num_iterations, SynapseGenerator generator)
     {
         const size_t starting_size = parameters_.size();
         for (size_t i = 0; i < num_iterations; ++i)
@@ -203,7 +206,7 @@ public:
      * @param predicate a functor that receives SynapseValue and returns true if the synapse must be deleted
      * @return the number of deleted synapses
      */
-    template<class Predicate>
+    template <class Predicate>
     size_t disconnect_if(Predicate predicate)
     {
         const size_t starting_size = parameters_.size();
@@ -218,7 +221,7 @@ public:
      */
     size_t remove_postsynaptic_neuron(size_t neuron_index)
     {
-        return disconnect_if([neuron_index](const Synapse &synapse) {return synapse.id_to == neuron_index;});
+        return disconnect_if([neuron_index](const Synapse &synapse) { return synapse.id_to == neuron_index; });
     }
 
     /**
@@ -228,7 +231,7 @@ public:
      */
     size_t remove_presynaptic_neuron(size_t neuron_index)
     {
-        return disconnect_if([neuron_index](const Synapse &synapse) {return synapse.id_from == neuron_index;});
+        return disconnect_if([neuron_index](const Synapse &synapse) { return synapse.id_from == neuron_index; });
     }
 
     /**
@@ -239,14 +242,9 @@ public:
      */
     size_t disconnect_neurons(size_t neuron_from, size_t neuron_to)
     {
-        return disconnect_if(
-                [neuron_from, neuron_to](const Synapse &synapse)
-                {
-                    return (synapse.id_from == neuron_from) && (synapse.id_to == neuron_to);
-                }
-        );
+        return disconnect_if([neuron_from, neuron_to](const Synapse &synapse)
+                             { return (synapse.id_from == neuron_from) && (synapse.id_to == neuron_to); });
     }
-
 
 public:
     /**
@@ -262,7 +260,7 @@ public:
     /**
      * @brief Return true if the projection is locked
      */
-     bool is_locked() { return is_locked_; }
+    bool is_locked() { return is_locked_; }
 
 private:
     BaseData base_;
