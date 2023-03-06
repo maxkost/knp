@@ -12,6 +12,12 @@ project(knp)
 option(KNP_BUILD_TESTS "Build tests" ON)
 option(KNP_ENABLE_COVERAGE "Enable coverage test" ON)
 option(KNP_BUILD_DOCUMENTATION "Build doxygen auto documentation" ON)
+option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
+
+if(NOT KNP_MAINTAINER_BUILD)
+    execute_process(COMMAND pre-commit install --install-hooks
+                    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+endif()
 
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

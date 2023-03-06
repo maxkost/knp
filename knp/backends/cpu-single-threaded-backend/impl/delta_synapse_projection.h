@@ -13,4 +13,4 @@
 
 
 void calculate_delta_synapse_projection(
-    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, knp::core::MessageBus &bus);
+    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, knp::core::MessageEndpoint &endpoint);

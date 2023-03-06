@@ -13,7 +13,7 @@ root_dir = Path(sys.argv[1])
 percent = int(sys.argv[2])
 params = sys.argv[2:]
 
-command = ['gcovr', '-r', str(root_dir), '--json-summary']
+command = ['gcovr', '-r', str(root_dir), '-e', str(root_dir / 'third-party/.*'), '--json-summary']
 
 result = subprocess.run(command, check=False, stdout=subprocess.PIPE)
 

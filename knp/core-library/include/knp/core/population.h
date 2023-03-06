@@ -173,9 +173,7 @@ public:
 public:
     void operator()(const messaging::SynapticImpactMessage &synaptic_impact) {}
 
-public:
-    UID presynaptic_population_uid_;
-    UID postsynaptic_population_uid_;
+private:
     std::vector<NeuronParameters> neurons_;
     BaseData base_;
 };

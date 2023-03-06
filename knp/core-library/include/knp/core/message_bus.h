@@ -22,12 +22,16 @@ namespace knp::core
 class MessageBus
 {
 public:
+    MessageBus();
+    ~MessageBus();
+
+public:
     /**
      * @brief endpoint returning method.
      * @see MessageEndpoint.
      * @return endpoint to communicate via the bus.
      */
-    MessageEndpoint &&get_endpoint();
+    MessageEndpoint get_endpoint();
 
 private:
     /// Message bus implementation.

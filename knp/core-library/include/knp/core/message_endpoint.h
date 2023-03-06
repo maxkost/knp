@@ -7,10 +7,14 @@
 
 #pragma once
 
+#include <knp/core/messaging.h>
 #include <knp/core/uid.h>
 
 #include <functional>
 #include <memory>
+#include <string>
+
+#include <boost/mp11.hpp>
 
 
 namespace knp::core
@@ -23,6 +27,15 @@ namespace knp::core
  */
 class MessageEndpoint
 {
+public:
+    using SupportedMessages =
+        boost::mp11::mp_list<knp::core::messaging::SpikeMessage, knp::core::messaging::SynapticImpactMessage>;
+
+public:
+    MessageEndpoint(MessageEndpoint &&endpoint);
+    MessageEndpoint &operator=(MessageEndpoint &&endpoint) = default;
+    virtual ~MessageEndpoint();
+
 public:
     /**
      * @brief message subscription method.
@@ -46,13 +59,14 @@ public:
      */
     template <typename MessageType>
     void send_message(const MessageType &message);
-
-    /**
-     * @brief Publish message to the bus.
-     * @param message is a published message. Object will be moved.
-     */
     template <typename MessageType>
     void send_message(MessageType &&message);
+
+protected:
+    explicit MessageEndpoint(void *context, const std::string &sub_addr, const std::string &pub_addr);
+
+private:
+    MessageEndpoint() = delete;
 
 private:
     /// Message endpoint implementation.

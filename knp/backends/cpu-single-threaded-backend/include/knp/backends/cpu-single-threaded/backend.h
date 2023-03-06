@@ -14,6 +14,7 @@
 #include <knp/neuron-traits/blifat.h>
 #include <knp/synapse-traits/delta.h>
 
+#include <utility>
 #include <variant>
 #include <vector>
 
@@ -35,7 +36,7 @@ public:
     using ProjectionVariants = boost::mp11::mp_rename<SupportedProjections, std::variant>;
 
 public:
-    // SingleThreadedCPUBackend(knp::devices::CPU &&cpu);
+    SingleThreadedCPUBackend() : message_endpoint_{std::move(message_bus_.get_endpoint())} {}
 
 public:
     /**
@@ -89,6 +90,7 @@ private:
     knp::devices::CPU device_;
     std::vector<PopulationVariants> populations_;
     std::vector<ProjectionVariants> projections_;
+    core::MessageEndpoint message_endpoint_;
 };
 
 }  // namespace knp::backends::single_threaded_cpu
