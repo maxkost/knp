@@ -64,9 +64,9 @@ public:
         }
     }
 
-    MessageEndpoint &&get_endpoint()
+    MessageEndpoint get_endpoint()
     {
-        return std::move(MessageEndpointConstructible(&context_, publish_sock_address_, router_sock_address_));
+        return MessageEndpointConstructible(&context_, publish_sock_address_, router_sock_address_);
     }
 
 private:
@@ -78,15 +78,18 @@ private:
 };
 
 
-MessageBus::MessageBus() {}
+MessageBus::MessageBus() : impl_(std::make_unique<MessageBusImpl>())
+{
+    assert(impl_.get());
+}
 
 
 MessageBus::~MessageBus() {}
 
 
-MessageEndpoint &&MessageBus::get_endpoint()
+MessageEndpoint MessageBus::get_endpoint()
 {
-    return std::move(impl_->get_endpoint());
+    return impl_->get_endpoint();
 }
 
 }  // namespace knp::core
