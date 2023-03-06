@@ -52,18 +52,6 @@ public:
      * @param num_iterations number of iterations
      * @param generator a function that returns
      */
-    Projection(UID presynaptic_uid, UID postsynaptic_uid, size_t num_iterations, SynapseGenerator generator)
-        : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
-    {
-        for (size_t i = 0; i < num_iterations; ++i)
-        {
-            if (auto params = std::move(generator(i)))
-            {
-                parameters_.emplace_back(std::move(params.value()));
-            }
-        }
-    }
-
     Projection(UID presynaptic_uid, UID postsynaptic_uid, size_t num_iterations, const SynapseGenerator &generator)
         : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
     {
@@ -153,19 +141,6 @@ public:
      * @param generator a functional object that is used to generate connections
      * @return number of added connections, which can be less or equal to num_iterations
      */
-    size_t add_synapses(size_t num_iterations, SynapseGenerator generator)
-    {
-        const size_t starting_size = parameters_.size();
-        for (size_t i = 0; i < num_iterations; ++i)
-        {
-            if (auto data = std::move(generator(i)))
-            {
-                parameters_.emplace_back(std::move(data.value()));
-            }
-        }
-        return parameters_.size() - starting_size;
-    }
-
     size_t add_synapses(size_t num_iterations, const SynapseGenerator &generator)
     {
         const size_t starting_size = parameters_.size();

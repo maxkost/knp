@@ -24,6 +24,7 @@ class CPU : public knp::core::Device
 {
 public:
     CPU();
+    ~CPU();
 
 public:
     /**

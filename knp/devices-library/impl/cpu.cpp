@@ -15,6 +15,7 @@ namespace knp::devices
 {
 
 CPU::CPU() : power_meter_{std::make_unique<CpuPower>()} {}
+CPU::~CPU() {}
 
 
 knp::core::DeviceType CPU::get_type() const
