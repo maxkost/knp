@@ -22,6 +22,10 @@ namespace knp::core
 class MessageBus
 {
 public:
+    MessageBus();
+    ~MessageBus();
+
+public:
     /**
      * @brief endpoint returning method.
      * @see MessageEndpoint.

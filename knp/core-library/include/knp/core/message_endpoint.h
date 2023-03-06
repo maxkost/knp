@@ -32,6 +32,8 @@ public:
         boost::mp11::mp_list<knp::core::messaging::SpikeMessage, knp::core::messaging::SynapticImpactMessage>;
 
 public:
+    MessageEndpoint(MessageEndpoint &&endpoint);
+    MessageEndpoint &operator=(MessageEndpoint &&endpoint) = default;
     virtual ~MessageEndpoint();
 
 public:

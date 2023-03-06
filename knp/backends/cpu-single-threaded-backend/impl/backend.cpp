@@ -79,13 +79,13 @@ void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVari
 
 void SingleThreadedCPUBackend::calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population)
 {
-    calculate_blifat_population(population, message_bus_);
+    calculate_blifat_population(population, message_endpoint_);
 }
 
 
 void SingleThreadedCPUBackend::calculate_projection(
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection)
 {
-    calculate_delta_synapse_projection(projection, message_bus_);
+    calculate_delta_synapse_projection(projection, message_endpoint_);
 }
 }  // namespace knp::backends::single_threaded_cpu

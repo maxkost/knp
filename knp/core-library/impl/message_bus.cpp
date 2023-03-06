@@ -78,6 +78,12 @@ private:
 };
 
 
+MessageBus::MessageBus() {}
+
+
+MessageBus::~MessageBus() {}
+
+
 MessageEndpoint &&MessageBus::get_endpoint()
 {
     return std::move(impl_->get_endpoint());
