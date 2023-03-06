@@ -28,7 +28,11 @@ public:
     {
         pub_socket_.connect(pub_addr);
 
-        sub_socket_.set(zmq::sockopt::subscribe, "");
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        sub_socket_.setsockopt(ZMQ_SUBSCRIBE, "");
+#pragma GCC diagnostic pop
+        // sub_socket_.set(zmq::sockopt::subscribe, "");
         sub_socket_.connect(sub_addr);
     }
 
