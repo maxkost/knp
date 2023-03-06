@@ -31,7 +31,7 @@ public:
      * @see MessageEndpoint.
      * @return endpoint to communicate via the bus.
      */
-    MessageEndpoint get_endpoint();
+    [[nodiscard]] MessageEndpoint get_endpoint();
 
 private:
     /// Message bus implementation.

@@ -64,7 +64,7 @@ public:
         }
     }
 
-    MessageEndpoint get_endpoint()
+    [[nodiscard]] MessageEndpoint get_endpoint()
     {
         return MessageEndpointConstructible(&context_, publish_sock_address_, router_sock_address_);
     }
