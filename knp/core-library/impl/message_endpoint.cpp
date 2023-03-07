@@ -28,16 +28,24 @@ public:
     {
         pub_socket_.connect(pub_addr);
 
+// #if (ZMQ_VERSION >= ZMQ_MAKE_VERSION(4, 3, 4))
+//         sub_socket_.set(zmq::sockopt::subscribe, "");
+// #else
+//  Strange version inconsistence: set() exists on Manjaro, but doesn't exist on Debian in the same library versions.
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
         sub_socket_.setsockopt(ZMQ_SUBSCRIBE, "");
 #pragma GCC diagnostic pop
-        // sub_socket_.set(zmq::sockopt::subscribe, "");
+        // #endif
         sub_socket_.connect(sub_addr);
     }
 
 public:
     void publish(const std::vector<uint8_t> &data) { pub_socket_.send(zmq::buffer(data), zmq::send_flags::dontwait); }
+    void send_message(const void *data, size_t size)
+    {
+        pub_socket_.send(zmq::message_t(data, size), zmq::send_flags::dontwait);
+    }
 
     void subscribe() {}
 
@@ -75,13 +83,15 @@ void MessageEndpoint::unsubscribe(const UID &subscription_uid) {}
 template <typename MessageType>
 void MessageEndpoint::send_message(const MessageType &message)
 {
+    impl_->send_message(&message, sizeof(message));
 }
 
 
 template <typename MessageType>
-void MessageEndpoint::send_message(MessageType &&message)
+MessageType MessageEndpoint::receive_message()
 {
 }
+
 
 // Instantiation.
 template <>
@@ -89,10 +99,9 @@ UID MessageEndpoint::subscribe<messaging::SpikeMessage>(
     const UID &publisher_uid, std::function<void(const messaging::SpikeMessage &)> callback);
 
 template <>
-void MessageEndpoint::send_message<messaging::SpikeMessage>(messaging::SpikeMessage &&message);
-
-template <>
 void MessageEndpoint::send_message<messaging::SpikeMessage>(const messaging::SpikeMessage &message);
+template <>
+void MessageEndpoint::send_message<messaging::SynapticImpactMessage>(const messaging::SynapticImpactMessage &message);
 
 
 }  // namespace knp::core

@@ -240,7 +240,14 @@ repos:
   #
   # Markdown
   #
-  - repo: https://github.com/markdownlint/markdownlint
-    rev: "v0.12.0"
+
+  # Written on Ruby, but we want to install gem.
+  # - repo: https://github.com/markdownlint/markdownlint
+  #  rev: "v0.12.0"
+  #  hooks:
+  #    - id: markdownlint
+
+  - repo: https://github.com/executablebooks/mdformat
+    rev: "0.7.16"
     hooks:
-      - id: markdownlint
+     - id: mdformat
