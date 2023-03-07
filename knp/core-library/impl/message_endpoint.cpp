@@ -83,6 +83,12 @@ void MessageEndpoint::send_message(const MessageType &message)
 }
 
 
+template <typename MessageType>
+MessageType MessageEndpoint::receive_message()
+{
+}
+
+
 // Instantiation.
 template <>
 UID MessageEndpoint::subscribe<messaging::SpikeMessage>(

@@ -60,6 +60,13 @@ public:
     template <typename MessageType>
     void send_message(const MessageType &message);
 
+    /**
+     * @brief Receive message from the bus.
+     * @param message is a received message.
+     */
+    template <typename MessageType>
+    MessageType receive_message();
+
 protected:
     explicit MessageEndpoint(void *context, const std::string &sub_addr, const std::string &pub_addr);
 
