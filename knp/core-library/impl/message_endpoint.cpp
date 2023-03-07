@@ -28,11 +28,15 @@ public:
     {
         pub_socket_.connect(pub_addr);
 
-#if (ZMQ_VERSION >= ZMQ_MAKE_VERSION(4, 3, 4))
-        sub_socket_.set(zmq::sockopt::subscribe, "");
-#else
+// #if (ZMQ_VERSION >= ZMQ_MAKE_VERSION(4, 3, 4))
+//         sub_socket_.set(zmq::sockopt::subscribe, "");
+// #else
+//  Strange version inconsistence: set() exists on Manjaro, but doesn't exist on Debian in the same library versions.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
         sub_socket_.setsockopt(ZMQ_SUBSCRIBE, "");
-#endif
+#pragma GCC diagnostic pop
+        // #endif
         sub_socket_.connect(sub_addr);
     }
 
