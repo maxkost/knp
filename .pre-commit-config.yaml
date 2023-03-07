@@ -241,7 +241,7 @@ repos:
   # Markdown
   #
 
-  # Written on Ruby, but we want to install gem.
+  # Written on Ruby, but we don't want to install gem.
   # - repo: https://github.com/markdownlint/markdownlint
   #  rev: "v0.12.0"
   #  hooks:
