@@ -38,6 +38,10 @@ public:
 
 public:
     void publish(const std::vector<uint8_t> &data) { pub_socket_.send(zmq::buffer(data), zmq::send_flags::dontwait); }
+    void send_message(const void *data, size_t size)
+    {
+        pub_socket_.send(zmq::message_t(data, size), zmq::send_flags::dontwait);
+    }
 
     void subscribe() {}
 
@@ -75,13 +79,9 @@ void MessageEndpoint::unsubscribe(const UID &subscription_uid) {}
 template <typename MessageType>
 void MessageEndpoint::send_message(const MessageType &message)
 {
+    impl_->send_message(&message, sizeof(message));
 }
 
-
-template <typename MessageType>
-void MessageEndpoint::send_message(MessageType &&message)
-{
-}
 
 // Instantiation.
 template <>
@@ -89,10 +89,9 @@ UID MessageEndpoint::subscribe<messaging::SpikeMessage>(
     const UID &publisher_uid, std::function<void(const messaging::SpikeMessage &)> callback);
 
 template <>
-void MessageEndpoint::send_message<messaging::SpikeMessage>(messaging::SpikeMessage &&message);
-
-template <>
 void MessageEndpoint::send_message<messaging::SpikeMessage>(const messaging::SpikeMessage &message);
+template <>
+void MessageEndpoint::send_message<messaging::SynapticImpactMessage>(const messaging::SynapticImpactMessage &message);
 
 
 }  // namespace knp::core

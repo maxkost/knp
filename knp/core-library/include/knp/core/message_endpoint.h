@@ -59,8 +59,6 @@ public:
      */
     template <typename MessageType>
     void send_message(const MessageType &message);
-    template <typename MessageType>
-    void send_message(MessageType &&message);
 
 protected:
     explicit MessageEndpoint(void *context, const std::string &sub_addr, const std::string &pub_addr);
