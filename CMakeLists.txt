@@ -15,7 +15,9 @@ option(KNP_BUILD_DOCUMENTATION "Build doxygen auto documentation" ON)
 option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
 
 if(NOT KNP_MAINTAINER_BUILD)
-    execute_process(COMMAND pre-commit install --install-hooks
+    execute_process(COMMAND pre-commit install
+                    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+    execute_process(COMMAND pre-commit install -t commit-msg
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 endif()
 
