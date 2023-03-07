@@ -55,8 +55,7 @@ repos:
       #  args: ["--config-file=knp/.clang-tidy",  "-extra-arg-before=-xc++", "-extra-arg=-std=c++17", "-p=build"]
       - id: cppcheck
         args: ["-x", "c++", "--suppress-xml=knp/.cppcheck-suppress.xml"]  # --cppcheck-build-dir=build]
-        additional_dependencies:
-          [cppcheck-codequality==1.3.1]
+
       - id: cpplint
         args: ["--root", "knp"]
         additional_dependencies:
@@ -215,6 +214,12 @@ repos:
         args: ["-r", "-lll"]
         exclude: ".*fixtures"
 
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+
 #      - id: tests
 #        name: tests
 #        entry: bash -c "pip install . && pytest -v -xxx"
@@ -254,8 +259,3 @@ repos:
     rev: "0.7.16"
     hooks:
      - id: mdformat
-
-  - repo: https://github.com/pycqa/isort
-    rev: 5.12.0
-    hooks:
-      - id: isort
