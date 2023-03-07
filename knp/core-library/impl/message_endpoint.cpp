@@ -28,7 +28,7 @@ public:
     {
         pub_socket_.connect(pub_addr);
 
-#if (ZMQ_VERSION >= ZMQ_MAKE_VERSION(4, 0, 0))
+#if (ZMQ_VERSION >= ZMQ_MAKE_VERSION(4, 3, 4))
         sub_socket_.set(zmq::sockopt::subscribe, "");
 #else
         sub_socket_.setsockopt(ZMQ_SUBSCRIBE, "");
