@@ -11,6 +11,7 @@
 #include <knp/core/uid.h>
 #include <knp/synapse-traits/type_traits.h>
 
+#include <algorithm>
 #include <functional>
 #include <optional>
 #include <tuple>
@@ -136,7 +137,7 @@ public:
     }
 
     /**
-     * @brief Add connections to the existing array
+     * @brief Append connections to the existing array
      * @param num_iterations number of iterations to run the generator
      * @param generator a functional object that is used to generate connections
      * @return number of added connections, which can be less or equal to num_iterations
@@ -155,15 +156,15 @@ public:
     }
 
     /**
-     * @brief Add a set of user-made synapses to the projection
+     * @brief Append a set of user-made synapses to the projection
      * @param synapses the set of synapses that will be added to the container
      * @note may create duplicates
      * @return number of synapses that were added (should be the same as synapses.size())
      */
-    size_t add_synapses(std::vector<Synapse> synapses)
+    size_t add_synapses(const std::vector<Synapse> &synapses)
     {
         const size_t starting_size = parameters_.size();
-        std::move(synapses.begin(), synapses.end(), std::back_insert_iterator(parameters_));
+        std::copy(synapses.begin(), synapses.end(), std::back_insert_iterator(parameters_));
         return parameters_.size() - starting_size;
     }
 
