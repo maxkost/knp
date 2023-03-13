@@ -168,7 +168,7 @@ FULL_PATH_NAMES        = YES
 # will be relative from the directory where doxygen is started.
 # This tag requires that the tag FULL_PATH_NAMES is set to YES.
 
-STRIP_FROM_PATH        = @CMAKE_CURRENT_SOURCE_DIR@
+STRIP_FROM_PATH        = @CMAKE_SOURCE_DIR@
 
 # The STRIP_FROM_INC_PATH tag can be used to strip a user-defined part of the
 # path mentioned in the documentation of a class, which tells the reader which
@@ -1146,6 +1146,7 @@ HTML_FOOTER            = @DOXYGEN_SRCDIR@/footer.html
 
 HTML_EXTRA_STYLESHEET  = @DOXYGEN_SRCDIR@/styles/doxygen-awesome.css \
     @DOXYGEN_SRCDIR@/styles/decapitalize.css \
+    @DOXYGEN_SRCDIR@/styles/icons.css \
     @DOXYGEN_SRCDIR@/styles/custom.css \
 # @DOXYGEN_SRCDIR@/styles/doxygen-awesome-sidebar-only.css
 
@@ -1169,7 +1170,11 @@ HTML_EXTRA_FILES       = @DOXYGEN_HTML_EXTRA_FILES@ \
     @DOXYGEN_SRCDIR@/js/doxygen-awesome-interactive-toc.js \
     @DOXYGEN_SRCDIR@/js/doxygen-awesome-paragraph-link.js \
     @DOXYGEN_SRCDIR@/js/doxygen-awesome-tabs.js \
-    @DOXYGEN_SRCDIR@/js/toggle-alternative-theme.js
+    @DOXYGEN_SRCDIR@/js/toggle-alternative-theme.js \
+    @DOXYGEN_SRCDIR@/js/icons-add-properties.js \
+    @DOXYGEN_SRCDIR@/icons/symbol-class.svg \
+    @DOXYGEN_SRCDIR@/icons/symbol-namespace.svg \
+    @DOXYGEN_SRCDIR@/icons/logo.drawio.svg
 
 # The HTML_COLORSTYLE_HUE tag controls the color of the HTML output. Doxygen
 # will adjust the colors in the style sheet and background images according to
