@@ -1109,7 +1109,7 @@ HTML_FILE_EXTENSION    = .html
 # of the possible markers and block names see the documentation.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_HEADER            = @DOXYGEN_SRCDIR@/header.html.in
+HTML_HEADER            = @DOXYGEN_SRCDIR@/header.html
 
 # The HTML_FOOTER tag can be used to specify a user-defined HTML footer for each
 # generated HTML page. If the tag is left blank doxygen will generate a standard
@@ -1145,7 +1145,8 @@ HTML_FOOTER            = @DOXYGEN_SRCDIR@/footer.html
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
 HTML_EXTRA_STYLESHEET  = @DOXYGEN_SRCDIR@/styles/doxygen-awesome.css \
-    @DOXYGEN_SRCDIR@/styles/decapitalize.css
+    @DOXYGEN_SRCDIR@/styles/decapitalize.css \
+    @DOXYGEN_SRCDIR@/styles/custom.css \
 # @DOXYGEN_SRCDIR@/styles/doxygen-awesome-sidebar-only.css
 
 # The HTML_EXTRA_FILES tag can be used to specify one or more extra images or
@@ -1167,7 +1168,8 @@ HTML_EXTRA_FILES       = @DOXYGEN_HTML_EXTRA_FILES@ \
     @DOXYGEN_SRCDIR@/js/doxygen-awesome-fragment-copy-button.js \
     @DOXYGEN_SRCDIR@/js/doxygen-awesome-interactive-toc.js \
     @DOXYGEN_SRCDIR@/js/doxygen-awesome-paragraph-link.js \
-    @DOXYGEN_SRCDIR@/js/doxygen-awesome-tabs.js
+    @DOXYGEN_SRCDIR@/js/doxygen-awesome-tabs.js \
+    @DOXYGEN_SRCDIR@/js/toggle-alternative-theme.js
 
 # The HTML_COLORSTYLE_HUE tag controls the color of the HTML output. Doxygen
 # will adjust the colors in the style sheet and background images according to
