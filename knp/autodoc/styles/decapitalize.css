@@ -1,0 +1,10 @@
+/* Capitalization of the text in the Doxygen side-bar menu */
+
+div#side-nav > div#nav-tree ul.children_ul a {
+    text-transform: lowercase;
+    display: inline-block;
+}
+
+div#side-nav > div#nav-tree ul.children_ul a:first-letter {
+    text-transform: uppercase;
+}

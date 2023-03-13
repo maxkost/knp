@@ -1,0 +1,13 @@
+/* Icons for the classes and namespaces */
+
+span.icon-N {
+    content: url(symbol-namespace.svg);
+    display: inline-block;
+    vertical-align: middle;
+}
+
+span.icon-C {
+    content: url(symbol-class.svg);
+    display: inline-block;
+    vertical-align: middle;
+}

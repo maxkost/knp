@@ -1,5 +1,5 @@
 /**
-\mainpage KNP code documentation
+\mainpage Kaspersky Neuromorphic Platform code documentation
 
 \tableofcontents
 
@@ -7,11 +7,11 @@ This Doxygen page offers code level documentation.
 
 \section modules Browse modules
 
-KNP code is organized into modules.
+Kaspersky Neuromorphic Platform code is organized into modules.
 
 \section files Browse files
 
-If you need reference on a specific file, the <a href="files.html">files</a> page lists all files in KNP.
+If you need reference on a specific file, the <a href="files.html">files</a> page lists all files in Kaspersky Neuromorphic Platform.
 */
 
   //! \defgroup Backend Backends
