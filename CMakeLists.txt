@@ -54,8 +54,9 @@ if(KNP_BUILD_DOCUMENTATION)
     endforeach()
 
     add_doxygen(knp-doc "${CMAKE_CURRENT_SOURCE_DIR}/knp/autodoc/Doxyfile.in"
-        PROJECT_VERSION "0.0.1"
-        PROJECT_BRIEF "Spiking Networks Platform"
+        PROJECT_NAME "Kaspersky Neuromorphic Platform"
+        PROJECT_VERSION "1.0.0"
+        PROJECT_BRIEF "API Reference Guide"
         OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc_doxygen"
         INPUT "${CMAKE_CURRENT_SOURCE_DIR}/knp"
         EXAMPLE_PATH "knp/tests"
