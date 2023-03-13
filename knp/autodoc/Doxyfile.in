@@ -1162,7 +1162,12 @@ HTML_EXTRA_FILES       = @DOXYGEN_HTML_EXTRA_FILES@ \
     @DOXYGEN_SRCDIR@/fonts/exljbris---MuseoSansCyrl-500Italic.otf \
     @DOXYGEN_SRCDIR@/fonts/exljbris---MuseoSansCyrl-500.otf \
     @DOXYGEN_SRCDIR@/fonts/exljbris---MuseoSansCyrl-700.otf \
-    @DOXYGEN_SRCDIR@/fonts/museo-sans.css
+    @DOXYGEN_SRCDIR@/fonts/museo-sans.css \
+    @DOXYGEN_SRCDIR@/js/doxygen-awesome-darkmode-toggle.js \
+    @DOXYGEN_SRCDIR@/js/doxygen-awesome-fragment-copy-button.js \
+    @DOXYGEN_SRCDIR@/js/doxygen-awesome-interactive-toc.js \
+    @DOXYGEN_SRCDIR@/js/doxygen-awesome-paragraph-link.js \
+    @DOXYGEN_SRCDIR@/js/doxygen-awesome-tabs.js
 
 # The HTML_COLORSTYLE_HUE tag controls the color of the HTML output. Doxygen
 # will adjust the colors in the style sheet and background images according to
@@ -1194,7 +1199,7 @@ HTML_EXTRA_FILES       = @DOXYGEN_HTML_EXTRA_FILES@ \
 
 # HTML_COLORSTYLE_GAMMA  = 240
 
-HTML_COLORSTYLE          = DARK
+HTML_COLORSTYLE          = LIGHT
 
 # If the HTML_TIMESTAMP tag is set to YES then the footer of each generated HTML
 # page will contain the date and time when the page was generated. Setting this
