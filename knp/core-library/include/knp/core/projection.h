@@ -139,7 +139,7 @@ public:
     }
 
     /**
-     * @brief Add connections to the existing projection.
+     * @brief Append connections to the existing projection.
      * @param num_iterations number of iterations to run the synapse generator.
      * @param generator a function that generates a synapse.
      * @return number of synapses added to the projection, which can be less or equal to the num_iterations value.
@@ -195,7 +195,7 @@ public:
     }
 
     /**
-     * @brief Remove all synapses that send signals to a neuron with the given index.
+     * @brief Remove all synapses that lead to a neuron with the given index.
      * @param neuron_index index of the postsynaptic neuron which related synapses must be deleted.
      * @return number of deleted synapses.
      */
