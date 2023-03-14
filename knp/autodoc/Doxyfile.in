@@ -1375,6 +1375,7 @@ HTML_EXTRA_STYLESHEET  = @DOXYGEN_SRCDIR@/styles/doxygen-awesome.css \
     @DOXYGEN_SRCDIR@/styles/doxygen-awesome-sidebar-only-darkmode-toggle.css \
     @DOXYGEN_SRCDIR@/styles/custom-alternative.css \
     @DOXYGEN_SRCDIR@/styles/decapitalize.css \
+    @DOXYGEN_SRCDIR@/styles/search-height-fix.css \
     @DOXYGEN_SRCDIR@/styles/icons.css \
 # @DOXYGEN_SRCDIR@/styles/doxygen-awesome-sidebar-only.css
 
