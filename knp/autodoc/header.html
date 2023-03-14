@@ -44,6 +44,14 @@ $search
 $mathjax
 <link href="$relpath^$stylesheet" rel="stylesheet" type="text/css" />
 $extrastylesheet
+
+<script type="text/javascript">
+    SearchBox = new Function('name', 'resultsPath', 'extension', SearchBox.toString().
+                             replace('function SearchBox(name, resultsPath, extension)', '').
+                             replace("domPopupSearchResultsWindow.style.height  = height + 'px';",
+                                     "domPopupSearchResultsWindow.style.height  = 'fit-content';"));
+</script>
+
 </head>
 <body>
 

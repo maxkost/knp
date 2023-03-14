@@ -1403,6 +1403,7 @@ HTML_EXTRA_FILES       = @DOXYGEN_HTML_EXTRA_FILES@ \
     @DOXYGEN_SRCDIR@/icons/symbol-class.svg \
     @DOXYGEN_SRCDIR@/icons/symbol-namespace.svg \
     @DOXYGEN_SRCDIR@/icons/logo.drawio.svg
+
 # The HTML_COLORSTYLE tag can be used to specify if the generated HTML output
 # should be rendered with a dark or light theme.
 # Possible values are: LIGHT always generate light mode output, DARK always
