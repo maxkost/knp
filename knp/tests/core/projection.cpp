@@ -18,7 +18,7 @@ using SynapseParameters = DeltaProjection::SynapseParameters;
 using SynapseGenerator = DeltaProjection::SynapseGenerator;
 
 
-SynapseGenerator make_dense_generator(std::pair<size_t, size_t> pop_sizes, const SynapseParameters &default_params)
+SynapseGenerator make_dense_generator(std::pair<size_t, size_t> pop_sizes, SynapseParameters default_params)
 {
     SynapseGenerator generator = [=](size_t index) -> std::optional<Synapse>
     {
@@ -30,7 +30,7 @@ SynapseGenerator make_dense_generator(std::pair<size_t, size_t> pop_sizes, const
 }
 
 
-SynapseGenerator make_cyclic_generator(std::pair<size_t, size_t> pop_sizes, const SynapseParameters &default_params)
+SynapseGenerator make_cyclic_generator(std::pair<size_t, size_t> pop_sizes, SynapseParameters default_params)
 {
     SynapseGenerator generator = [=](size_t index) -> std::optional<Synapse>
     {
@@ -118,7 +118,7 @@ TEST(ProjectionSuite, DeletePresynapticTest)
     const size_t neuron_index = 10;
     auto generator = make_cyclic_generator({size_from, size_to}, {0.0F, 1});
     DeltaProjection projection{knc::UID{}, knc::UID{}, size_from * synapses_per_neuron, generator};
-    const size_t count = projection.remove_presynaptic_neuron(neuron_index);
+    const size_t count = projection.disconnect_presynaptic_neuron(neuron_index);
     ASSERT_EQ(count, synapses_per_neuron);
     ASSERT_EQ(projection.size(), (size_from - 1) * synapses_per_neuron);  // the size of projection is correct
     ASSERT_EQ(
@@ -137,7 +137,7 @@ TEST(ProjectionSuite, DeletePostsynapticTest)
     const size_t neuron_index = 15;
     auto generator = make_cyclic_generator({size_from, size_to}, {0.0F, 1});
     DeltaProjection projection{knc::UID{}, knc::UID{}, size_from * synapses_per_neuron, generator};
-    const size_t count = projection.remove_postsynaptic_neuron(neuron_index);
+    const size_t count = projection.disconnect_postsynaptic_neuron(neuron_index);
     ASSERT_EQ(count, synapses_per_neuron);
     ASSERT_EQ(projection.size(), (size_from - 1) * synapses_per_neuron);  // the size of projection is correct
     ASSERT_EQ(
@@ -152,7 +152,7 @@ TEST(ProjectionSuite, SynapseRemoval)
 {
     // Projection doesn't contain the neuron we're removing
     DeltaProjection projection{knc::UID{}, knc::UID{}};
-    size_t count = projection.remove_presynaptic_neuron(100);
+    size_t count = projection.disconnect_presynaptic_neuron(100);
     ASSERT_EQ(count, 0);
     ASSERT_EQ(projection.size(), 0);
 
