@@ -81,8 +81,8 @@ public:
 
 public:
     /**
-    * @brief Get parameter values of a synaose with the given index.
-    */
+     * @brief Get parameter values of a synaose with the given index.
+     */
     [[nodiscard]] Synapse &operator[](size_t index) { return parameters_[index]; }
     [[nodiscard]] const Synapse &operator[](size_t index) const { return parameters_[index]; }
 
@@ -171,8 +171,8 @@ public:
     }
 
     /**
-    * @brief Remove all synapses from the projection.
-    */ 
+     * @brief Remove all synapses from the projection.
+     */
     void clear() { parameters_.clear(); }
 
     /**
@@ -199,7 +199,7 @@ public:
      * @param neuron_index index of the postsynaptic neuron which related synapses must be deleted.
      * @return number of deleted synapses.
      */
-    size_t remove_postsynaptic_neuron(size_t neuron_index)
+    size_t disconnect_postsynaptic_neuron(size_t neuron_index)
     {
         return disconnect_if([neuron_index](const Synapse &synapse) { return synapse.id_to == neuron_index; });
     }
@@ -209,7 +209,7 @@ public:
      * @param neuron_index index of the presynaptic neuron which related synapses must be deleted.
      * @return number of deleted synapses.
      */
-    size_t remove_presynaptic_neuron(size_t neuron_index)
+    size_t disconnect_presynaptic_neuron(size_t neuron_index)
     {
         return disconnect_if([neuron_index](const Synapse &synapse) { return synapse.id_from == neuron_index; });
     }
@@ -247,23 +247,23 @@ private:
     BaseData base_;
 
     /**
-    * @brief UID of the population that sends spikes to the projection (presynaptic population)
-    */ 
+     * @brief UID of the population that sends spikes to the projection (presynaptic population)
+     */
     UID presynaptic_uid_;
 
     /**
-    * @brief UID of the population that receives synapse responses from this projection (postsynaptic population).
-    */
+     * @brief UID of the population that receives synapse responses from this projection (postsynaptic population).
+     */
     UID postsynaptic_uid_;
 
     /**
-    * @brief Return false if the weight change for synapses is locked.
-    */
+     * @brief Return false if the weight change for synapses is locked.
+     */
     bool is_locked_ = false;
 
     /**
-    * @brief Container of synapse parameters.
-    */
+     * @brief Container of synapse parameters.
+     */
     std::vector<Synapse> parameters_;
 };
 
