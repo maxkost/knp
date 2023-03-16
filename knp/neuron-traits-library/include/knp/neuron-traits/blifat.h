@@ -8,8 +8,8 @@
 #pragma once
 
 #include <limits>
-#include <utility>
 #include <numeric>
+#include <utility>
 
 #include "type_traits.h"
 
@@ -22,7 +22,7 @@ template <>
 struct default_values<BLIFATNeuron>
 {
     // TODO: see if there are any problems with this implementation, then change it or delete this TODO
-    constexpr static size_t steps_before_firing = std::numeric_limits<size_t>::infinity();
+    constexpr static std::size_t steps_before_firing = std::numeric_limits<std::size_t>::infinity();
     constexpr static double reverse_inhibitory_potential = -0.3;
     constexpr static double min_potential = -1.0e9;
 };
@@ -32,7 +32,7 @@ template <>
 struct neuron_parameters<BLIFATNeuron>
 {
     // It means that the neuron never fired (= fired long time ago).
-    size_t n_time_steps_since_last_firing_ = default_values<BLIFATNeuron>::steps_before_firing;
+    std::size_t n_time_steps_since_last_firing_ = default_values<BLIFATNeuron>::steps_before_firing;
     double dynamic_threshold_ = 0.;
     double threshold_decay_ = 0.;
     double threshold_increment_ = 0.;

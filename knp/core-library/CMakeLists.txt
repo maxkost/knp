@@ -13,6 +13,7 @@ find_package(ZeroMQ REQUIRED)
 
 include(GNUInstallDirs)
 include(clang-tidy)
+file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/core/*.h)
 
 add_library("${PROJECT_NAME}"
     impl/backend.cpp
@@ -21,7 +22,10 @@ add_library("${PROJECT_NAME}"
     impl/uid.cpp
     impl/projection.cpp
     impl/message_bus.cpp
-    impl/message_endpoint.cpp)
+    impl/message_endpoint.cpp
+
+    ${${PROJECT_NAME}_headers}
+    )
 add_library(KNP::Core ALIAS "${PROJECT_NAME}")
 
 source_group(source REGULAR_EXPRESSION "impl/.*")

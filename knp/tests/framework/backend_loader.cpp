@@ -7,4 +7,7 @@
 #include <tests_common.h>
 
 
-TEST(FrameworkSuite, BackendLoader) {}
+TEST(FrameworkSuite, BackendLoader)
+{
+    knp::framework::BackendLoader backend_loader;
+}

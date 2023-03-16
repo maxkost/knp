@@ -11,6 +11,7 @@ project(knp-cpu-single-threaded-backend VERSION "${KNP_VERSION}" LANGUAGES C CXX
 include(GNUInstallDirs)
 include(clang-tidy)
 
+file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/backends/cpu-single-threaded/*.h)
 source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers REGULAR_EXPRESSION "include/.*")
 
@@ -18,6 +19,8 @@ add_library("${PROJECT_NAME}"
     impl/backend.cpp
     impl/blifat_population.cpp
     impl/delta_synapse_projection.cpp
+
+    ${${PROJECT_NAME}_headers}
 )
 
 add_library(KNP::Core::Backend::CPUSingleThreaded ALIAS "${PROJECT_NAME}")

@@ -11,11 +11,13 @@ find_package(Boost 1.66.0 REQUIRED)
 
 include(GNUInstallDirs)
 
+file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/framework/*.h)
+
 source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "include/.*")
 
-add_library("${PROJECT_NAME}-core" impl/backend_loader.cpp)
-add_library(KNP::Framework::Core ALIAS "${PROJECT_NAME}-core")
+add_library("${PROJECT_NAME}-core" impl/backend_loader.cpp ${${PROJECT_NAME}_headers})
+add_library(KNP::BaseFramework::Core ALIAS "${PROJECT_NAME}-core")
 
 target_include_directories("${PROJECT_NAME}-core" PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
