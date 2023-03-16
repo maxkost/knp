@@ -6,7 +6,6 @@
  */
 
 #include <knp/core/projection.h>
-#include <knp/synapse-traits/delta.h>
 
 
 namespace knp::core
