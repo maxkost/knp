@@ -11,6 +11,7 @@
 #include <string>
 #include <utility>
 
+#include <boost/container_hash/hash.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -20,7 +21,7 @@ namespace knp::core
 {
 
 #if defined(_DEBUG) || defined(DEBUG)
-#define _ENABLE_PSEUDO_UID_GENERATOR 1
+#    define _ENABLE_PSEUDO_UID_GENERATOR 1
 #endif
 
 /**
@@ -35,9 +36,9 @@ public:
 };
 
 #if defined(_ENABLE_PSEUDO_UID_GENERATOR)
-#define uid_generator continuously_uid_generator
+#    define uid_generator continuously_uid_generator
 #else
-#define uid_generator ::boost::uuids::random_generator
+#    define uid_generator ::boost::uuids::random_generator
 #endif
 
 
@@ -53,8 +54,8 @@ struct UID
     explicit UID(::boost::uuids::uuid &&guid) : tag(std::move(guid)) {}
     UID(const UID &) = default;
 
-    operator const ::boost::uuids::uuid &() const { return tag; }
-    operator ::std::string() const
+    explicit operator const ::boost::uuids::uuid &() const { return tag; }
+    explicit operator ::std::string() const
     {
         std::stringstream ss;
 
@@ -63,7 +64,7 @@ struct UID
         return ss.str();
     }
 
-    operator const bool() const { return !tag.is_nil(); }
+    explicit operator bool() const { return !tag.is_nil(); }
 
     bool operator<(const UID &uid) const { return uid.tag < tag; }
     bool operator==(const UID &uid) const { return uid.tag == tag; }
@@ -78,5 +79,10 @@ inline ::std::ostream &operator<<(std::ostream &s, const UID &uid)
     s << uid.tag;
     return s;
 }
+
+struct UID_hash
+{
+    auto operator()(UID value) { return boost::hash<boost::uuids::uuid>()(boost::uuids::uuid(value)); }
+};
 
 }  // namespace knp::core

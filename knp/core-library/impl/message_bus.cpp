@@ -36,8 +36,8 @@ class MessageBus::MessageBusImpl
 public:
     MessageBusImpl()
         :  // TODO: replace with std::format.
-          router_sock_address_("inproc://route_" + std::to_string(UID())),
-          publish_sock_address_("inproc://publish_" + std::to_string(UID())),
+          router_sock_address_("inproc://route_" + std::string(UID())),
+          publish_sock_address_("inproc://publish_" + std::string(UID())),
           router_socket_(context_, zmq::socket_type::router),
           publish_socket_(context_, zmq::socket_type::xpub)
     {

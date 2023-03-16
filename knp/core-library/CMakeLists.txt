@@ -21,7 +21,7 @@ add_library("${PROJECT_NAME}"
     impl/uid.cpp
     impl/projection.cpp
     impl/message_bus.cpp
-    impl/message_endpoint.cpp)
+    impl/message_endpoint.cpp include/knp/core/subscription.h)
 add_library(KNP::Core ALIAS "${PROJECT_NAME}")
 
 source_group(source REGULAR_EXPRESSION "impl/.*")
