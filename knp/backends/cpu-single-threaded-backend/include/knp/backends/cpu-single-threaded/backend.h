@@ -14,10 +14,13 @@
 #include <knp/neuron-traits/blifat.h>
 #include <knp/synapse-traits/delta.h>
 
+#include <memory>
 #include <utility>
 #include <variant>
 #include <vector>
 
+#include <boost/config.hpp>
+#include <boost/dll/alias.hpp>
 #include <boost/mp11.hpp>
 
 
@@ -36,7 +39,11 @@ public:
     using ProjectionVariants = boost::mp11::mp_rename<SupportedProjections, std::variant>;
 
 public:
-    SingleThreadedCPUBackend() : message_endpoint_{std::move(message_bus_.get_endpoint())} {}
+    // TODO: set protected (in testing purposes).
+    SingleThreadedCPUBackend() : message_endpoint_{message_bus_.get_endpoint()} {}
+
+public:
+    static std::shared_ptr<SingleThreadedCPUBackend> create() { return std::make_shared<SingleThreadedCPUBackend>(); }
 
 public:
     /**
@@ -64,6 +71,34 @@ public:
     void load_projections(const std::vector<ProjectionVariants> &&projections);
 
 public:
+    /**
+     * @brief Remove projections with given UIDs from the backend.
+     * @param uids identifiers of the projections, which will be removed.
+     */
+    void remove_projections(const std::vector<knp::core::UID> &uids) override {}
+
+    /**
+     * @brief Remove synapses from the projection with given UID from the backend.
+     * @param projection_uid identifiers of the projection.
+     * @param indexes synapses indexes to remove.
+     */
+    void remove_synapses(const knp::core::UID &projection_uid, const std::vector<size_t> &indexes) override {}
+
+    /**
+     * @brief Remove populations with given UIDs from the backend.
+     * @param uids identifiers of the populations, which will be removed.
+     */
+    void remove_populations(const std::vector<knp::core::UID> &uids) override {}
+
+public:
+    /**
+     * @brief Get devices list, supported by the backend.
+     * @return list of the devices.
+     * @see Device.
+     */
+    [[nodiscard]] std::vector<std::unique_ptr<knp::core::Device>> get_devices() const override;
+
+public:
     void step() override;
 
 protected:
@@ -87,10 +122,12 @@ private:
     inline void calculator(Container &container);
 
 private:
-    knp::devices::CPU device_;
     std::vector<PopulationVariants> populations_;
     std::vector<ProjectionVariants> projections_;
     core::MessageEndpoint message_endpoint_;
 };
+
+
+BOOST_DLL_ALIAS(knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::create, create_backend)
 
 }  // namespace knp::backends::single_threaded_cpu

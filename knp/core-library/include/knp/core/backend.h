@@ -14,6 +14,8 @@
 #include <memory>
 #include <vector>
 
+#include <boost/config.hpp>
+
 
 namespace knp::core
 {
@@ -21,7 +23,7 @@ namespace knp::core
 /**
  * @brief Backends base class.
  */
-class Backend
+class BOOST_SYMBOL_VISIBLE Backend
 {
 public:
     /**
@@ -69,19 +71,20 @@ public:
      * @return list of the devices.
      * @see Device.
      */
-    [[nodiscard]] virtual std::vector<Device *> &&get_devices() const = 0;
+    [[nodiscard]] virtual std::vector<std::unique_ptr<Device>> get_devices() const = 0;
 
     /**
      * @brief Get device which
      * @return
      */
-    virtual std::unique_ptr<Device> &get_current_device() const;
+    const std::unique_ptr<Device> &get_current_device() const { return device_; }
+    std::unique_ptr<Device> &get_current_device() { return device_; }
 
     /**
      * @brief Select device, where backend will work.
      * @param uid of the device which the backend uses.
      */
-    void select_device(const UID &uid);
+    virtual void select_device(const UID &uid);
 
 public:
     /**
@@ -106,6 +109,7 @@ public:
 
 private:
     BaseData base_;
+    std::unique_ptr<Device> device_;
 };
 
 }  // namespace knp::core

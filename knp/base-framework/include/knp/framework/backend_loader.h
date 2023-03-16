@@ -7,16 +7,21 @@
 
 #pragma once
 
-#include <knp/core/uid.h>
+#include <knp/core/backend.h>
 
-#include <any>
-#include <map>
-#include <string>
-#include <variant>
+#include <filesystem>
+#include <memory>
 
 
 /// Framework namespace.
 namespace knp::framework
 {
+
+class BackendLoader
+{
+public:
+    std::shared_ptr<core::Backend> load(const std::filesystem::path &backend_path);
+    bool is_backend(const std::filesystem::path &backend_path) const;
+};
 
 }  // namespace knp::framework

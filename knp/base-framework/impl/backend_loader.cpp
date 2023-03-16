@@ -6,3 +6,35 @@
  */
 
 #include <knp/framework/backend_loader.h>
+
+#include <spdlog/spdlog.h>
+
+#include <functional>
+
+#include <boost/dll/import.hpp>
+
+
+namespace knp::framework
+{
+
+std::shared_ptr<core::Backend> BackendLoader::load(const std::filesystem::path &backend_path)
+{
+    typedef std::shared_ptr<core::Backend>(BackendCreateFunction)();
+
+    SPDLOG_INFO("Loading plugin by path \"%s\"", backend_path.string());
+
+    std::function<BackendCreateFunction> creator = boost::dll::import_alias<BackendCreateFunction>(
+        backend_path, "create_backend", boost::dll::load_mode::append_decorations);
+
+    return creator();
+}
+
+
+bool BackendLoader::is_backend(const std::filesystem::path &backend_path) const
+{
+    SPDLOG_INFO("Checking library by path \"%s\"", backend_path.string());
+    boost::dll::shared_library lib{backend_path, boost::dll::load_mode::append_decorations};
+    return lib.has("create_backend");
+}
+
+}  // namespace knp::framework
