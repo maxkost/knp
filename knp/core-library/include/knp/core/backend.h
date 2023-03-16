@@ -12,6 +12,7 @@
 #include <knp/core/message_bus.h>
 
 #include <memory>
+#include <set>
 #include <vector>
 
 #include <boost/config.hpp>
@@ -74,17 +75,18 @@ public:
     [[nodiscard]] virtual std::vector<std::unique_ptr<Device>> get_devices() const = 0;
 
     /**
-     * @brief Get device which
-     * @return
+     * @brief Get device list where back-end runs network.
+     * @return list of the devices.
+     * @see Device.
      */
-    const std::unique_ptr<Device> &get_current_device() const { return device_; }
-    std::unique_ptr<Device> &get_current_device() { return device_; }
+    const std::vector<std::unique_ptr<Device>> &get_current_devices() const { return devices_; }
+    std::vector<std::unique_ptr<Device>> &get_current_devices() { return devices_; }
 
     /**
-     * @brief Select device, where backend will work.
-     * @param uid of the device which the backend uses.
+     * @brief Select devices, where backend will work.
+     * @param uids vector of the devices which the backend uses.
      */
-    virtual void select_device(const UID &uid);
+    virtual void select_devices(const std::set<UID> &uids);
 
 public:
     /**
@@ -109,7 +111,7 @@ public:
 
 private:
     BaseData base_;
-    std::unique_ptr<Device> device_;
+    std::vector<std::unique_ptr<Device>> devices_;
 };
 
 }  // namespace knp::core

@@ -14,22 +14,27 @@
 namespace knp::core
 {
 
-void Backend::select_device(const UID& uid)
+void Backend::select_devices(const std::set<UID>& uids)
 {
-    SPDLOG_INFO("Finding device with UID = %s", std::string(uid));
     for (auto&& device : get_devices())
     {
-        SPDLOG_TRACE("Trying UID %s", std::string(device->get_uid));
-        if (device->get_uid() == uid)
+        SPDLOG_DEBUG("Trying UID %s", std::string(device->get_uid));
+        if (uids.find(device->get_uid()) != uids.end())
         {
-            SPDLOG_DEBUG("Device with UID %s was found", std::string(uid));
-            device_ = std::move(device);
+            SPDLOG_INFO("Device with UID %s was selected", std::string(device->get_uid()));
+            devices_.push_back(std::move(device));
             return;
+        }
+        else
+        {
+            SPDLOG_TRACE("Device with UID %s was not selected", std::string(device->get_uid()));
         }
     }
 
-    SPDLOG_ERROR("Can't find device with UID = %s", std::string(uid));
-    throw std::logic_error("Can't find device with given UID!");
+    if (uids.size() != devices_.size())
+    {
+        throw std::logic_error("Not all device UIDs were selected!");
+    }
 }
 
 }  // namespace knp::core
