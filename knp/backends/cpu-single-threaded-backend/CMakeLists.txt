@@ -10,12 +10,16 @@ project(knp-cpu-single-threaded-backend VERSION "${KNP_VERSION}" LANGUAGES C CXX
 
 include(GNUInstallDirs)
 include(clang-tidy)
+include(knp-functions)
+
+find_package(Boost 1.66.0 REQUIRED)
 
 file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/backends/cpu-single-threaded/*.h)
 source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers REGULAR_EXPRESSION "include/.*")
 
-add_library("${PROJECT_NAME}"
+knp_add_library("${PROJECT_NAME}"
+    SHARED
     impl/backend.cpp
     impl/blifat_population.cpp
     impl/delta_synapse_projection.cpp
@@ -29,5 +33,5 @@ target_include_directories("${PROJECT_NAME}" PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
-target_link_libraries("${PROJECT_NAME}" PUBLIC spdlog::spdlog_header_only)
-target_link_libraries("${PROJECT_NAME}" PUBLIC knp-core KNP::Devices::CPU knp-neuron-traits knp-synapse-traits)
+target_link_libraries("${PROJECT_NAME}" PRIVATE Boost::headers spdlog::spdlog_header_only)
+target_link_libraries("${PROJECT_NAME}" PUBLIC KNP::Core KNP::Devices::CPU knp-neuron-traits knp-synapse-traits)

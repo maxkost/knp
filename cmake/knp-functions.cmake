@@ -1,4 +1,11 @@
-function(snn_capitalize_string src result)
+#
+# KNP build functions. Artiom N.(cl)2023.
+#
+
+
+include_guard(GLOBAL)
+
+function(knp_capitalize_string src result)
     # Get first letter and capitalize.
     string(SUBSTRING ${src} 0 1 first-letter)
     string(TOUPPER ${first-letter} first-letter)
@@ -10,29 +17,51 @@ function(snn_capitalize_string src result)
 endfunction()
 
 
-function (snn_use_backend BACKEND_DIRECTORY)
-    set("${BACKEND_DIRECTORY}" PARENT_SCOPE)
-    set(BACKEND_SUBDIR "${CMAKE_CURRENT_SOURCE_DIR}/src/impl/backends/${BACKEND_DIRECTORY}")
-    add_subdirectory("${BACKEND_SUBDIR}")
+function (knp_add_library lib_name lib_type)
+    set(options "")
+    set(one_value_args "ALIAS")
+    set(multi_value_args "")
+    cmake_parse_arguments(LIBRARY_PARAMS "${options}" "${one_value_args}" "${multi_value_args}" ${ARGN})
+
+    set(${lib_name}_source ${ARGN})
+
+    string(TOUPPER "${lib_type}" lib_type)
+
+    if(NOT lib_type OR lib_type STREQUAL "BOTH")
+        # Build common object library.
+        add_library("${lib_name}_obj" OBJECT ${${lib_name}_source})
+        set_target_properties("${lib_name}_obj" PROPERTIES POSITION_INDEPENDENT_CODE ON)
+        add_library("${lib_name}" SHARED $<TARGET_OBJECTS:${lib_name}_obj>)
+        add_library("${lib_name}_static" STATIC $<TARGET_OBJECTS:${lib_name}_obj>)
+        set_target_properties("${lib_name}_static" PROPERTIES OUTPUT_NAME "${lib_name}")
+    elseif(lib_type STREQUAL SHARED OR lib_type STREQUAL MODULE)
+#        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS} -Wall -fPIC -fPIE -fstack-protector-all -Wformat -Wformat-security")
+#        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMMON_FLAGS} -Wall -fPIC -fPIE -fstack-protector-all -Wformat -Wformat-security")
+        add_library("${lib_name}" ${lib_type} ${${lib_name}_source})
+    elseif(lib_type STREQUAL STATIC)
+        add_library("${lib_name}" STATIC ${${lib_name}_source})
+    else()
+        message(FATAL_ERROR "Incorrect library build type: \"${lib_type}\". Use SHARED/MODULE, STATIC or BOTH.")
+    endif()
 endfunction()
 
 
-function (snn_set_backend_common_parameters BACKEND_NAME PROJECT_ROOT_DIR)
+function (knp_set_backend_common_parameters BACKEND_NAME PROJECT_ROOT_DIR)
     string(TOLOWER "${BACKEND_NAME}" BACKEND_DIRECTORY)
     file(REAL_PATH "${PROJECT_ROOT_DIR}/src" PROJECT_SOURCE_DIR)
     file(REAL_PATH "${PROJECT_SOURCE_DIR}/impl/backends/${BACKEND_DIRECTORY}" BACKEND_SUBDIR)
-    snn_capitalize_string(${BACKEND_DIRECTORY} BACKEND_CLASS_PREFIX)
-    target_compile_definitions("snn_backend_${BACKEND_DIRECTORY}" PRIVATE "-D_BUILD_LIBRARY" PUBLIC "-DSNN_LIBRARY_BACKEND_NAME=\"${BACKEND_NAME}\"" "-DSNN_LIBRARY_BACKEND_CLASS=calculation_backend::${BACKEND_CLASS_PREFIX}CalculationBackend")
-    target_include_directories("snn_backend_${BACKEND_DIRECTORY}" PRIVATE "${BACKEND_SUBDIR}")
-    target_include_directories("snn_backend_${BACKEND_DIRECTORY}" PUBLIC "${PROJECT_SOURCE_DIR}/include")
-    target_include_directories("snn_backend_${BACKEND_DIRECTORY}" PUBLIC "${PROJECT_SOURCE_DIR}/include/snn-library/backends/${BACKEND_DIRECTORY}")
+    knp_capitalize_string(${BACKEND_DIRECTORY} BACKEND_CLASS_PREFIX)
+    target_compile_definitions("knp_backend_${BACKEND_DIRECTORY}" PRIVATE "-D_BUILD_LIBRARY" PUBLIC "-Dknp_LIBRARY_BACKEND_NAME=\"${BACKEND_NAME}\"" "-Dknp_LIBRARY_BACKEND_CLASS=calculation_backend::${BACKEND_CLASS_PREFIX}CalculationBackend")
+    target_include_directories("knp_backend_${BACKEND_DIRECTORY}" PRIVATE "${BACKEND_SUBDIR}")
+    target_include_directories("knp_backend_${BACKEND_DIRECTORY}" PUBLIC "${PROJECT_SOURCE_DIR}/include")
+    target_include_directories("knp_backend_${BACKEND_DIRECTORY}" PUBLIC "${PROJECT_SOURCE_DIR}/include/snn-library/backends/${BACKEND_DIRECTORY}")
     target_compile_features("${PROJECT_NAME}" PUBLIC cxx_std_17)
     string(TOUPPER "${BACKEND_NAME}" BACKEND_NAME_UPPER)
     set("BUILD_${BACKEND_NAME_UPPER}_BACKEND" 1 CACHE INTERNAL "")
 endfunction()
 
 
-macro (snn_set_cmake_common_parameters)
+macro (knp_set_cmake_common_parameters)
     # find_package(Intl REQUIRED)
     set(CMAKE_CXX_STANDARD 17)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)

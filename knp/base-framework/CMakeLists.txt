@@ -6,21 +6,22 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp-base-framework VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 
-
-find_package(Boost 1.66.0 REQUIRED)
+find_package(Boost 1.66.0 COMPONENTS filesystem REQUIRED)
 
 include(GNUInstallDirs)
+include(knp-functions)
 
 file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/framework/*.h)
 
 source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "include/.*")
 
-add_library("${PROJECT_NAME}-core" impl/backend_loader.cpp ${${PROJECT_NAME}_headers})
+knp_add_library("${PROJECT_NAME}-core" SHARED impl/backend_loader.cpp ${${PROJECT_NAME}_headers})
 add_library(KNP::BaseFramework::Core ALIAS "${PROJECT_NAME}-core")
 
 target_include_directories("${PROJECT_NAME}-core" PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
-target_link_libraries("${PROJECT_NAME}-core" PUBLIC spdlog::spdlog_header_only knp-core)
+target_link_libraries("${PROJECT_NAME}-core" PRIVATE spdlog::spdlog_header_only Boost::headers Boost::filesystem)
+target_link_libraries("${PROJECT_NAME}-core" PUBLIC knp-core)

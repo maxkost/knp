@@ -15,7 +15,8 @@ include(GNUInstallDirs)
 include(clang-tidy)
 file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/core/*.h)
 
-add_library("${PROJECT_NAME}"
+knp_add_library("${PROJECT_NAME}"
+    STATIC
     impl/backend.cpp
     impl/device.cpp
     impl/population.cpp
@@ -37,8 +38,7 @@ target_include_directories("${PROJECT_NAME}" PUBLIC
 
 target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS})
 
-target_link_libraries("${PROJECT_NAME}" PUBLIC spdlog::spdlog_header_only)
-target_link_libraries("${PROJECT_NAME}" PRIVATE zmq)
+target_link_libraries("${PROJECT_NAME}" PRIVATE spdlog zmq)
 target_link_libraries("${PROJECT_NAME}" PUBLIC knp-neuron-traits knp-synapse-traits)
 
 # add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")

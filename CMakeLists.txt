@@ -2,9 +2,10 @@ cmake_minimum_required(VERSION 3.22) # TODO: increase to 3.25
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-include("print_variables")
-include("third-party")
-include("version")
+include(knp-functions)
+include(print-variables)
+include(third-party)
+include(version)
 
 
 project(knp)
@@ -38,6 +39,8 @@ file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
 include_directories(third-party ${THIRD_PARTY_INCLUDES})
 
 add_third_party(googletest)
+
+set(SPDLOG_BUILD_PIC ON)
 add_third_party(spdlog)
 add_third_party(pybind11)
 add_third_party(pcm)

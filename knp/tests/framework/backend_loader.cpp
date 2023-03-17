@@ -10,4 +10,5 @@
 TEST(FrameworkSuite, BackendLoader)
 {
     knp::framework::BackendLoader backend_loader;
+    backend_loader.load("");
 }
