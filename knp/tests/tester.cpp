@@ -6,11 +6,6 @@
 
 #include <exception>
 #include <iostream>
-#include <string>
-#include <vector>
-
-
-std::vector<std::string> command_line_arguments;
 
 
 int main(int argc, char *argv[])
