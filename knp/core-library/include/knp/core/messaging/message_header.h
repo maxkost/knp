@@ -14,7 +14,7 @@ namespace knp::core::messaging
 {
 
 /**
- * @brief Common message headers.
+ * @brief Common header for messages.
  */
 struct MessageHeader
 {

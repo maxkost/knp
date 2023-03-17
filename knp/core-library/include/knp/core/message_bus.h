@@ -17,7 +17,7 @@ namespace knp::core
 {
 
 /**
- * @brief Message bus interface.
+ * @brief The MessageBus class defines an interafce to the message bus.
  */
 class MessageBus
 {
@@ -27,9 +27,9 @@ public:
 
 public:
     /**
-     * @brief endpoint returning method.
+     * @brief Get endpoint that sends and receives messages through the message bus.
      * @see MessageEndpoint.
-     * @return endpoint to communicate via the bus.
+     * @return endpoint that uses the message bus.
      */
     [[nodiscard]] MessageEndpoint get_endpoint();
 
