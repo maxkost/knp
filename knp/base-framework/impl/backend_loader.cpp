@@ -21,10 +21,10 @@ std::shared_ptr<core::Backend> BackendLoader::load(const std::filesystem::path &
 {
     typedef std::shared_ptr<core::Backend>(BackendCreateFunction)();
 
-    SPDLOG_INFO("Loading plugin by path \"%s\"", backend_path.string());
+    SPDLOG_INFO("Loading backend by path \"{}\"", backend_path.string());
 
     std::function<BackendCreateFunction> creator = boost::dll::import_alias<BackendCreateFunction>(
-        backend_path, "create_backend", boost::dll::load_mode::append_decorations);
+        backend_path, "create_knp_backend", boost::dll::load_mode::append_decorations);
 
     return creator();
 }
@@ -32,9 +32,9 @@ std::shared_ptr<core::Backend> BackendLoader::load(const std::filesystem::path &
 
 bool BackendLoader::is_backend(const std::filesystem::path &backend_path) const
 {
-    SPDLOG_INFO("Checking library by path \"%s\"", backend_path.string());
+    SPDLOG_INFO("Checking library by path \"{}\"", backend_path.string());
     boost::dll::shared_library lib{backend_path, boost::dll::load_mode::append_decorations};
-    return lib.has("create_backend");
+    return lib.has("create_knp_backend");
 }
 
 }  // namespace knp::framework

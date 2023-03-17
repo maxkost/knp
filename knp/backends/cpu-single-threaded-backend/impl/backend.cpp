@@ -89,11 +89,11 @@ std::vector<std::unique_ptr<knp::core::Device>> SingleThreadedCPUBackend::get_de
 
     for (auto &&cpu : processors)
     {
-        SPDLOG_DEBUG("Device CPU \"%s\"", cpu.get_name());
+        SPDLOG_DEBUG("Device CPU \"{}\"", cpu.get_name());
         result.push_back(std::make_unique<knp::devices::cpu::CPU>(std::move(cpu)));
     }
 
-    SPDLOG_DEBUG("CPUs count = %d", result.size());
+    SPDLOG_DEBUG("CPUs count = {}", result.size());
     return result;
 }
 
