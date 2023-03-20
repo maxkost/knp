@@ -17,5 +17,6 @@ TEST(FrameworkSuite, BackendLoader)
 
     auto cpu_st_backend = backend_loader.load(exe_dir.parent_path() / "lib" / "knp-cpu-single-threaded-backend");
 
-    std::cout << cpu_st_backend->get_uid() << std::endl;
+
+    EXPECT_NO_THROW((void)cpu_st_backend->get_uid());
 }
