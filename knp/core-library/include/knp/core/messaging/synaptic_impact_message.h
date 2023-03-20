@@ -18,7 +18,7 @@ namespace knp::core::messaging
 
 /**
  * @brief A structure that contains the synaptic impact value and indexes of presynaptic and posynaptic neurons. 
- * @details Synaptic impact changes neuron parameters after the synapses state was calculated.
+ * @details Synaptic impact changes parameters of neurons after the synapses state was calculated.
  */
 struct SynapticImpact
 {
