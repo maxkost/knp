@@ -170,9 +170,6 @@ public:
      */
     size_t size() const { return neurons_.size(); }
 
-public:
-    void operator()(const messaging::SynapticImpactMessage &synaptic_impact) {}
-
 private:
     std::vector<NeuronParameters> neurons_;
     BaseData base_;

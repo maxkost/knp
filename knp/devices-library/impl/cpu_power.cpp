@@ -13,7 +13,7 @@
 #include <utility>
 
 
-namespace knp::devices
+namespace knp::devices::cpu
 {
 CpuPower::CpuPower()
 {
@@ -63,4 +63,4 @@ float CpuPower::get_power()
 
     return consumed_watts;
 }
-}  // namespace knp::devices
+}  // namespace knp::devices::cpu

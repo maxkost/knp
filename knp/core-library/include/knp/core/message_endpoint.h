@@ -22,9 +22,8 @@ namespace knp::core
 {
 
 /**
- * @brief Message endpoint.
- *
- * Need to subscribe to the messages or to send messages.
+ * @brief The MessageEndpoint class is a definition of message endpoints.
+ * @details You can use message endpoints to receive or send messages.
  */
 class MessageEndpoint
 {
@@ -39,11 +38,11 @@ public:
 
 public:
     /**
-     * @brief message subscription method.
-     * @param publisher_uid publisher which messages subscriber want to receive.
-     * @param callback is a Callable will be used when the message received.
-     * @tparam MessageType message class which subscriber want to receive.
-     * @return subscription id.
+     * @brief Subscribe to messages.
+     * @param publisher_uid UID of the object which messages to receive.
+     * @param callback a Callable to use after receiving the message.
+     * @tparam MessageType type of messages to receive.
+     * @return subscription UID.
      */
     template <typename MessageType>
     UID subscribe(const UID &publisher_uid, std::function<void(const MessageType &)> callback);
@@ -52,21 +51,21 @@ public:
     UID subscribe(const UID &receiver, const std::vector<UID> &senders);
 
     /**
-     * @brief message unsubscription method.
-     * @param subscription_uid UID returned by subscribe method.
+     * @brief Unsubscribe from messages.
+     * @param subscription_uid subscription UID.
      */
     void unsubscribe(const UID &subscription_uid);
 
     /**
-     * @brief Publish message to the bus.
-     * @param message is a published message.
+     * @brief Send a message to the message bus.
+     * @param message message to send.
      */
     template <typename MessageType>
     void send_message(const MessageType &message);
 
     /**
-     * @brief Receive message from the bus.
-     * @param message is a received message.
+     * @brief Receive a message from the message bus.
+     * @param message message to receive.
      */
     template <typename MessageType>
     MessageType receive_message();

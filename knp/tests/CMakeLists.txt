@@ -59,7 +59,7 @@ target_include_directories("${PROJECT_NAME}"
 )
 
 target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main)
-target_link_libraries("${PROJECT_NAME}" PRIVATE knp-core)
+target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Core KNP::BaseFramework::Core)
 
 if(KNP_ENABLE_COVERAGE)
     include(codecoverage)
