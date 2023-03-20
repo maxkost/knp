@@ -23,7 +23,8 @@ target_include_directories("${PROJECT_NAME}-cpu" PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
-target_link_libraries("${PROJECT_NAME}-cpu" PUBLIC spdlog::spdlog_header_only knp-core PCM_STATIC)
+target_link_libraries("${PROJECT_NAME}-cpu" PRIVATE spdlog PCM_STATIC)
+target_link_libraries("${PROJECT_NAME}-cpu" PUBLIC knp-core)
 
 #add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
 

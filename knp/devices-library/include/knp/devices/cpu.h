@@ -14,7 +14,7 @@
 #include <vector>
 
 
-namespace knp::devices
+namespace knp::devices::cpu
 {
 
 // Need to store PCM instance pointer.
@@ -25,6 +25,11 @@ class CPU : public knp::core::Device
 public:
     CPU();
     ~CPU();
+
+    CPU(const CPU &) = delete;
+
+    CPU(CPU &&);
+    CPU &operator=(CPU &&);
 
 public:
     /**
@@ -43,14 +48,15 @@ public:
      * @brief Get device power consumption.
      * @return power consumption.
      */
-    [[nodiscard]] const float get_power() const override;
+    [[nodiscard]] float get_power() const override;
 
 private:
+    // Non const, because of move operator.
+    std::string cpu_name_;
     mutable std::unique_ptr<CpuPower> power_meter_;
-    const std::string cpu_name_;
 };
 
 
 std::vector<CPU> list_processors();
 
-}  // namespace knp::devices
+}  // namespace knp::devices::cpu

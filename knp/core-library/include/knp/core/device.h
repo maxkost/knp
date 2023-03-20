@@ -58,7 +58,7 @@ public:
      * @brief Get the power consumption details for the device.
      * @return amount of consumed power.
      */
-    [[nodiscard]] virtual const float get_power() const = 0;
+    [[nodiscard]] virtual float get_power() const = 0;
 
 protected:
     BaseData base_;

@@ -9,7 +9,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 
-set(Boost_USE_STATIC_LIBS ON)
+# TODO: Enable for the latest Boost versions: it doesn't work for DLLs on the old versions.
+# set(Boost_USE_STATIC_LIBS ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_subdirectory(neuron-traits-library)
 add_subdirectory(synapse-traits-library)

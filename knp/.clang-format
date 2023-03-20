@@ -23,7 +23,7 @@ IncludeCategories:
     Priority:        2
     CaseSensitive:   true
   # Headers in <> with .h extension (system C headers).
-  - Regex:           '<[[:alnum:]_.\-]+\.h>'
+  - Regex:           '<[[:alnum:]_.\/\-]+\.h>'
     SortPriority:    10
     Priority:        10
     CaseSensitive:   true

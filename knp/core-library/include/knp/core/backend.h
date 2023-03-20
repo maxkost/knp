@@ -12,7 +12,10 @@
 #include <knp/core/message_bus.h>
 
 #include <memory>
+#include <set>
 #include <vector>
+
+#include <boost/config.hpp>
 
 
 namespace knp::core
@@ -21,7 +24,7 @@ namespace knp::core
 /**
  * @brief The Backend class is the base class for backends.
  */
-class Backend
+class BOOST_SYMBOL_VISIBLE Backend
 {
 public:
     /**
@@ -66,22 +69,24 @@ public:
 public:
     /**
      * @brief Get list of devices supported by the backend.
-     * @return device list.
+     * @return list of devices.
      * @see Device.
      */
-    [[nodiscard]] virtual std::vector<Device *> &&get_devices() const = 0;
+    [[nodiscard]] virtual std::vector<std::unique_ptr<Device>> get_devices() const = 0;
 
     /**
-     * @brief Get device which
-     * @return
+     * @brief Get a list of devices on which the backend runs a network.
+     * @return list of devices.
+     * @see Device.
      */
-    virtual std::unique_ptr<Device> &get_current_device() const;
+    const std::vector<std::unique_ptr<Device>> &get_current_devices() const { return devices_; }
+    std::vector<std::unique_ptr<Device>> &get_current_devices() { return devices_; }
 
     /**
-     * @brief Select a device on which to run the backend.
-     * @param uid device UID.
+     * @brief Select devices on which to run the backend.
+     * @param uids set of device UIDs that the backend uses.
      */
-    void select_device(const UID &uid);
+    virtual void select_devices(const std::set<UID> &uids);
 
 public:
     /**
@@ -105,6 +110,7 @@ public:
 
 private:
     BaseData base_;
+    std::vector<std::unique_ptr<Device>> devices_;
 };
 
 }  // namespace knp::core

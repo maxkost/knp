@@ -8,6 +8,9 @@
 
 #include <knp/backends/cpu-single-threaded/backend.h>
 #include <knp/core/core.h>
+#include <knp/devices/cpu.h>
+
+#include <spdlog/spdlog.h>
 
 #include <functional>
 
@@ -74,6 +77,24 @@ void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVari
 void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVariants> &&projections)
 {
     projections_ = std::move(projections);
+}
+
+
+std::vector<std::unique_ptr<knp::core::Device>> SingleThreadedCPUBackend::get_devices() const
+{
+    std::vector<std::unique_ptr<knp::core::Device>> result;
+    auto processors{knp::devices::cpu::list_processors()};
+
+    result.reserve(processors.size());
+
+    for (auto &&cpu : processors)
+    {
+        SPDLOG_DEBUG("Device CPU \"{}\"", cpu.get_name());
+        result.push_back(std::make_unique<knp::devices::cpu::CPU>(std::move(cpu)));
+    }
+
+    SPDLOG_DEBUG("CPUs count = {}", result.size());
+    return result;
 }
 
 

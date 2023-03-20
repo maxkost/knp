@@ -14,7 +14,7 @@
 #include <vector>
 
 
-namespace knp::devices
+namespace knp::devices::cpu
 {
 /**
  * @brief Power getter via Intel PCM.
@@ -34,4 +34,4 @@ private:
     std::vector<pcm::CoreCounterState> /* cstates1, */ cstates2_;
     pcm::SystemCounterState sstate1_, sstate2_;
 };
-}  // namespace knp::devices
+}  // namespace knp::devices::cpu
