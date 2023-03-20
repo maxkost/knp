@@ -9,14 +9,24 @@
 #include <filesystem>
 
 
-TEST(FrameworkSuite, BackendLoader)
+std::filesystem::path get_backend_path()
+{
+    return knp::testing::get_exe_path().parent_path() / "lib" / "knp-cpu-single-threaded-backend";
+}
+
+
+TEST(FrameworkSuite, BackendLoaderLoad)
 {
     knp::framework::BackendLoader backend_loader;
-    auto exe_dir =
-        std::filesystem::weakly_canonical(std::filesystem::path(testing::internal::GetArgvs()[0])).parent_path();
-
-    auto cpu_st_backend = backend_loader.load(exe_dir.parent_path() / "lib" / "knp-cpu-single-threaded-backend");
-
+    auto cpu_st_backend = backend_loader.load(get_backend_path());
 
     EXPECT_NO_THROW((void)cpu_st_backend->get_uid());
+}
+
+
+TEST(FrameworkSuite, BackendLoaderCheck)
+{
+    knp::framework::BackendLoader backend_loader;
+
+    ASSERT_TRUE(backend_loader.is_backend(get_backend_path()));
 }

@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 #include <gtest/internal/gtest-filepath.h>
 
+#include <filesystem>
 #include <string>
 #include <vector>
 
@@ -19,3 +20,12 @@ namespace testing::internal
 FilePath GetCurrentExecutableName();
 #endif
 }  // namespace testing::internal
+
+
+namespace knp::testing
+{
+
+/// Return tester executable path.
+std::filesystem::path get_exe_path();
+
+}  // namespace knp::testing
