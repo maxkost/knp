@@ -34,4 +34,4 @@ target_include_directories("${PROJECT_NAME}" PUBLIC
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
 target_link_libraries("${PROJECT_NAME}" PRIVATE Boost::headers spdlog::spdlog_header_only)
-target_link_libraries("${PROJECT_NAME}" PUBLIC KNP::Core KNP::Devices::CPU knp-neuron-traits knp-synapse-traits)
+target_link_libraries("${PROJECT_NAME}" PUBLIC KNP::Core KNP::Devices::CPU KNP::Neuron::Traits KNP::Synapse::Traits)

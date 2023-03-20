@@ -7,7 +7,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(knp-neuron-traits LANGUAGES C CXX)
 
 add_library("${PROJECT_NAME}" INTERFACE include/knp/neuron-traits/blifat.h)
-add_library(KNP::neuron_traits ALIAS "${PROJECT_NAME}")
+add_library(KNP::Neuron::Traits ALIAS "${PROJECT_NAME}")
 target_include_directories("${PROJECT_NAME}" INTERFACE
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
