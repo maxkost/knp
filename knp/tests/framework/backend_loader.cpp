@@ -30,3 +30,14 @@ TEST(FrameworkSuite, BackendLoaderCheck)
 
     ASSERT_TRUE(backend_loader.is_backend(get_backend_path()));
 }
+
+
+TEST(FrameworkSuite, BackendGetDevices)
+{
+    knp::framework::BackendLoader backend_loader;
+    auto cpu_st_backend = backend_loader.load(get_backend_path());
+
+    std::set<knp::core::UID> dev_uids{knp::core::UID()};
+
+    ASSERT_THROW(cpu_st_backend->select_devices(dev_uids), std::logic_error);
+}

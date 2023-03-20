@@ -29,3 +29,17 @@ TEST(UidSuite, UidToString)
 
     std::cout << uid << std::endl;
 }
+
+
+TEST(UidSuite, UidEq)
+{
+    ::knp::core::UID uid1{::boost::uuids::uuid{{1, 2, 3}}};
+    ::knp::core::UID uid2{::boost::uuids::uuid{{1, 2, 3}}};
+    ::knp::core::UID uid3{::boost::uuids::uuid{{3, 2, 1}}};
+    ::knp::core::UID uid4(uid1);
+
+    ASSERT_EQ(uid1, uid2);
+    ASSERT_NE(uid1, uid3);
+    ASSERT_EQ(uid4, uid2);
+    ASSERT_LT(uid3, uid1);
+}
