@@ -31,10 +31,10 @@ public:
     }
 
     /// Get a set of sender UIDs
-    const auto &get_senders() { return senders_; }
+    [[nodiscard]] const auto &get_senders() const { return senders_; }
 
     /// Get receiver UID
-    UID get_receiver() { return receiver_; }
+    [[nodiscard]] UID get_receiver() const { return receiver_; }
 
     /**
      * @brief Unsubscribe from a sender. If not subscribed to the sender, do nothing.
@@ -55,13 +55,13 @@ public:
      * @param uid sender UID
      * @return true if sender exists
      */
-    bool has_sender(const UID &uid) { return senders_.count(uid); }
+    [[nodiscard]] bool has_sender(const UID &uid) const { return senders_.count(uid); }
 
 private:
     /// Set of sender UIDs
     std::unordered_set<UID, UID_hash> senders_;
     /// Receiver UID
-    UID receiver_;
+    const UID receiver_;
     /// Message cache
     std::vector<MessageType> messages_;
 };

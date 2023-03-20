@@ -13,6 +13,7 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include <boost/mp11.hpp>
 
@@ -46,6 +47,9 @@ public:
      */
     template <typename MessageType>
     UID subscribe(const UID &publisher_uid, std::function<void(const MessageType &)> callback);
+
+    template <typename MessageType>
+    UID subscribe(const UID &receiver, const std::vector<UID> &senders);
 
     /**
      * @brief message unsubscription method.
