@@ -39,9 +39,9 @@ public:
     using SynapseGenerator = std::function<std::optional<Synapse>(size_t)>;
 
     /**
-     * @brief Construct an empty projection
-     * @param presynaptic_uid the Uid of the presynaptic population
-     * @param postsynaptic_uid the Uid of the postsynaptic population
+     * @brief Construct an empty projection.
+     * @param presynaptic_uid UID of the presynaptic population.
+     * @param postsynaptic_uid UID of the postsynaptic population.
      */
     Projection(UID presynaptic_uid, UID postsynaptic_uid)
         : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
@@ -49,9 +49,9 @@ public:
     }
 
     /**
-     * @brief Construct projection by running a synapse generator N times
-     * @param num_iterations number of iterations
-     * @param generator a function that returns
+     * @brief Construct a projection by running a synapse generator a given number of times.
+     * @param num_iterations number of iterations to run the synapse generator.
+     * @param generator a function that generates a synapse.
      */
     Projection(UID presynaptic_uid, UID postsynaptic_uid, size_t num_iterations, const SynapseGenerator &generator)
         : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
@@ -67,20 +67,22 @@ public:
 
 public:
     /**
-     * @brief Get this projection UID.
+     * @brief Get the projection UID.
      * @return UID.
      */
     [[nodiscard]] const UID &get_uid() const { return base_.uid_; }
 
     /**
-     * @brief Get this projection tags.
+     * @brief Get tags used by the projection.
      * @return tag map.
      * @see TagMap.
      */
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
 
 public:
-    /// Synapse indexing operator
+    /**
+     * @brief Get parameter values of a synaose with the given index.
+     */
     [[nodiscard]] Synapse &operator[](size_t index) { return parameters_[index]; }
     [[nodiscard]] const Synapse &operator[](size_t index) const { return parameters_[index]; }
 
@@ -95,27 +97,27 @@ public:
 
 public:
     /**
-     * @brief Get the number of synapses
-     * @return number of synapses inside the projection
+     * @brief Count the number of synapses in the projection.
+     * @return synapse count.
      */
     [[nodiscard]] size_t size() { return parameters_.size(); }
 
     /**
-     * @brief Return the UID of population this projection gets signals from
-     * @return presynaptic population UID
+     * @brief Get UID of the population from which this projection receives signals.
+     * @return UID of the presynaptic population.
      */
     [[nodiscard]] UID get_presynaptic() const { return presynaptic_uid_; }
 
     /**
-     * @brief Return the UID of population this projection sends signals to
-     * @return postsynaptic population UID
+     * @brief Get UID of the population to which this projection sends signals.
+     * @return UID of the postsynaptic population.
      */
     [[nodiscard]] UID get_postsynaptic() const { return postsynaptic_uid_; }
 
     /**
-     * @brief Calculate connection parameters for a given synapse index
-     * @param index synapse index
-     * @return presynaptic neuron index, synapse index, postsynaptic neuron index
+     * @brief Calculate connection parameters for a synapse with the given index.
+     * @param index index of the projection synapse.
+     * @return presynaptic neuron index, synapse index, postsynaptic neuron index.
      */
     [[nodiscard]] std::tuple<size_t, size_t, size_t> get_connection(size_t index) const
     {
@@ -123,7 +125,7 @@ public:
     }
 
     /**
-     * @brief calculate connections parameters from data
+     * @brief Calculate connection parameters for all synapses in the projection.
      */
     [[nodiscard]] std::vector<std::tuple<size_t, size_t, size_t>> get_connections() const
     {
@@ -137,10 +139,10 @@ public:
     }
 
     /**
-     * @brief Append connections to the existing array
-     * @param num_iterations number of iterations to run the generator
-     * @param generator a functional object that is used to generate connections
-     * @return number of added connections, which can be less or equal to num_iterations
+     * @brief Append connections to the existing projection.
+     * @param num_iterations number of iterations to run the synapse generator.
+     * @param generator a function that generates a synapse.
+     * @return number of synapses added to the projection, which can be less or equal to the num_iterations value.
      */
     size_t add_synapses(size_t num_iterations, const SynapseGenerator &generator)
     {
@@ -156,10 +158,10 @@ public:
     }
 
     /**
-     * @brief Append a set of user-made synapses to the projection
-     * @param synapses the set of synapses that will be added to the container
-     * @note may create duplicates
-     * @return number of synapses that were added (should be the same as synapses.size())
+     * @brief Add a set of user-defined synapses to the projection.
+     * @param synapses vector of synapses to add to the projection.
+     * @note The method might create duplicate synapses.
+     * @return number of synapses added to the projection.
      */
     size_t add_synapses(const std::vector<Synapse> &synapses)
     {
@@ -168,19 +170,21 @@ public:
         return parameters_.size() - starting_size;
     }
 
-    /// Remove all synapses
+    /**
+     * @brief Remove all synapses from the projection.
+     */
     void clear() { parameters_.clear(); }
 
     /**
-     * @brief Remove a synapse by its index
-     * @param index index of the synapse to be removed
+     * @brief Remove a synapse with the given index from the projection.
+     * @param index index of the synapse to remove.
      */
     void remove_synapse(size_t index) { parameters_.erase(parameters_.begin() + index); }
 
     /**
-     * @brief Remove synapses according to a given criterion
-     * @param predicate a functor that receives SynapseValue and returns true if the synapse must be deleted
-     * @return the number of deleted synapses
+     * @brief Remove synapses according to a given criterion.
+     * @param predicate functor that receives a synapse and returns true if the synapse must be deleted.
+     * @return number of deleted synapses.
      */
     template <class Predicate>
     size_t disconnect_if(Predicate predicate)
@@ -191,30 +195,30 @@ public:
     }
 
     /**
-     * @brief Remove all the connections that lead to the neuron with given id
-     * @param neuron_index the index of postsynaptic neuron that will be deleted
-     * @return number of removed connections
+     * @brief Remove all synapses that lead to a neuron with the given index.
+     * @param neuron_index index of the postsynaptic neuron which related synapses must be deleted.
+     * @return number of deleted synapses.
      */
-    size_t remove_postsynaptic_neuron(size_t neuron_index)
+    size_t disconnect_postsynaptic_neuron(size_t neuron_index)
     {
         return disconnect_if([neuron_index](const Synapse &synapse) { return synapse.id_to == neuron_index; });
     }
 
     /**
-     * @brief Remove all the connections that lead from the neuron with given id
-     * @param neuron_index the index of presynaptic neuron that will be deleted
-     * @return number of removed connections
+     * @brief Remove all synapses that receive signals from a neuron with the given index.
+     * @param neuron_index index of the presynaptic neuron which related synapses must be deleted.
+     * @return number of deleted synapses.
      */
-    size_t remove_presynaptic_neuron(size_t neuron_index)
+    size_t disconnect_presynaptic_neuron(size_t neuron_index)
     {
         return disconnect_if([neuron_index](const Synapse &synapse) { return synapse.id_from == neuron_index; });
     }
 
     /**
-     * @brief Remove any connections between two neurons
-     * @param neuron_from
-     * @param neuron_to
-     * @return number of removed connections
+     * @brief Remove all synapses between two neurons with given indexes.
+     * @param neuron_from index of the presynaptic neuron.
+     * @param neuron_to index of the postsynaptic neuron.
+     * @return number of deleted synapses.
      */
     size_t disconnect_neurons(size_t neuron_from, size_t neuron_to)
     {
@@ -224,33 +228,42 @@ public:
 
 public:
     /**
-     * @brief Lock synapses weights.
+     * @brief Lock the possibility to change synapses weights.
      */
     void lock_weights() { is_locked_ = true; }
 
     /**
-     * @brief Unlock synapses weights.
+     * @brief Unlock the possibility to change synapses weights.
      */
     void unlock_weights() { is_locked_ = false; }
 
     /**
-     * @brief Return true if the projection is locked
+     * @brief Determine if the synapse weight change is locked.
+     * @return true if the synapse weight changes is locked; false if the synapse weight change is unlocked.
      */
     bool is_locked() { return is_locked_; }
 
 private:
     BaseData base_;
 
-    /// Uid of the population that sends spikes to this projection (presynaptic)
+    /**
+     * @brief UID of the population that sends spikes to the projection (presynaptic population)
+     */
     UID presynaptic_uid_;
 
-    /// Uid of the population that receives synapse responses from this projection (postsynaptic)
+    /**
+     * @brief UID of the population that receives synapse responses from this projection (postsynaptic population).
+     */
     UID postsynaptic_uid_;
 
-    /// If the weights are locked for internal modification (unused).
+    /**
+     * @brief Return false if the weight change for synapses is locked.
+     */
     bool is_locked_ = false;
 
-    /// Parameters container.
+    /**
+     * @brief Container of synapse parameters.
+     */
     std::vector<Synapse> parameters_;
 };
 

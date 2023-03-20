@@ -22,18 +22,18 @@ namespace knp::core
 {
 
 /**
- * @brief Backends base class.
+ * @brief The Backend class is the base class for backends.
  */
 class BOOST_SYMBOL_VISIBLE Backend
 {
 public:
     /**
-     * @brief Get this backend UID.
+     * @brief Get the backend UID.
      * @return UID.
      */
     [[nodiscard]] const UID &get_uid() const { return base_.uid_; }
     /**
-     * @brief Get this backend tags.
+     * @brief Get tags used by the backend.
      * @return tag map.
      * @see TagMap.
      */
@@ -42,34 +42,34 @@ public:
 public:
     /**
      * @brief Remove projections with given UIDs from the backend.
-     * @param uids identifiers of the projections, which will be removed.
+     * @param uids UIDs of projections to remove.
      */
     virtual void remove_projections(const std::vector<UID> &uids) = 0;
 
     /**
-     * @brief Remove synapses from the projection with given UID from the backend.
-     * @param projection_uid identifiers of the projection.
-     * @param indexes synapses indexes to remove.
+     * @brief Remove synapses of the projection with the given UID from the backend.
+     * @param projection_uid projection UID.
+     * @param indexes indexes of synapses to remove.
      */
     virtual void remove_synapses(const UID &projection_uid, const std::vector<size_t> &indexes) = 0;
 
     /**
      * @brief Remove populations with given UIDs from the backend.
-     * @param uids identifiers of the populations, which will be removed.
+     * @param uids UIDs of populations remove.
      */
     virtual void remove_populations(const std::vector<UID> &uids) = 0;
 
     /**
-     * @brief Remove neurons from the population with given UID from the backend.
-     * @param population_uid identifiers of the population.
-     * @param indexes neurons indexes to remove.
+     * @brief Remove neurons of the population with the given UID from the backend.
+     * @param population_uid population UID.
+     * @param indexes indexes of neurons to remove.
      */
     void remove_neurons(const UID &population_uid, const std::vector<size_t> &indexes);
 
 public:
     /**
-     * @brief Get devices list, supported by the backend.
-     * @return list of the devices.
+     * @brief Get list of devices supported by the backend.
+     * @return device list.
      * @see Device.
      */
     [[nodiscard]] virtual std::vector<std::unique_ptr<Device>> get_devices() const = 0;
@@ -83,26 +83,25 @@ public:
     std::vector<std::unique_ptr<Device>> &get_current_devices() { return devices_; }
 
     /**
-     * @brief Select devices, where backend will work.
+     * @brief Select devices on which to run the backend.
      * @param uids vector of the devices which the backend uses.
      */
     virtual void select_devices(const std::set<UID> &uids);
 
 public:
     /**
-     * @brief Start execution.
+     * @brief Start network execution on the backend.
      */
     void start();
 
     /**
-     * @brief Stop execution.
+     * @brief Stop network execution on the backend.
      */
     void stop();
 
     /**
-     * @brief Make one execution step.
-     *
-     * Need for debugging purposes.
+     * @brief Make one network execution step.
+     * @details You can use this method for debugging purposes.
      */
     virtual void step() = 0;
 

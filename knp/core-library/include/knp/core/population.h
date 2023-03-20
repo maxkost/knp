@@ -50,7 +50,7 @@ public:
 
 public:
     /**
-     * @brief Population constructor.
+     * @brief Construct a population by running a neuron generator.
      */
     Population(NeuronGenerator generator, size_t neurons_count) { add_neurons(generator, neurons_count); }
 

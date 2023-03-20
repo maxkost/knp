@@ -23,19 +23,19 @@ enum class DeviceType
 };
 
 /**
- * @brief Device base class.
+ * @brief The Device class is the base class for devices supported by the device library.
  */
 class Device
 {
 public:
     /**
-     * @brief Get this device UID.
+     * @brief Get the device UID.
      * @return UID.
      */
     [[nodiscard]] const UID &get_uid() const { return base_.uid_; }
 
     /**
-     * @brief Get this device tags.
+     * @brief Get tags used by the device.
      * @return tag map.
      * @see TagMap.
      */
@@ -43,20 +43,20 @@ public:
 
 public:
     /**
-     * @brief Get current device type.
+     * @brief Get the device type.
      * @return device type.
      */
     [[nodiscard]] virtual DeviceType get_type() const = 0;
 
     /**
-     * @brief Get device name, i.e. CPU0.
+     * @brief Get the device name.
      * @return device name in the arbitrary format.
      */
     [[nodiscard]] virtual const std::string &get_name() const = 0;
 
     /**
-     * @brief Get device power consumption.
-     * @return power consumption.
+     * @brief Get the power consumption details for the device.
+     * @return amount of consumed power.
      */
     [[nodiscard]] virtual float get_power() const = 0;
 

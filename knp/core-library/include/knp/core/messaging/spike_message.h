@@ -16,7 +16,7 @@ namespace knp::core::messaging
 {
 
 /**
- * @brief Spike message structure.
+ * @brief Structure of the spike message.
  */
 struct SpikeMessage
 {
