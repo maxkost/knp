@@ -1,31 +1,39 @@
-<!-- HTML footer for doxygen 1.8.13-->
-</div> <!-- started in header -->
+<!-- HTML footer for doxygen 1.9.6-->
 <!-- start footer part -->
 <footer class="site-footer">
-  <div class="copyright">
-    © 2023 AO Kaspersky Lab
-  </div>
+
   <!--BEGIN GENERATE_TREEVIEW-->
   <div id="nav-path" class="navpath">
     <!-- id is needed for treeview function! -->
-    <ul>
-      $navpath
-    </ul>
-  </div>
-  <!--END GENERATE_TREEVIEW-->
+  <ul>
+    $navpath
+    <li class="footer">$generatedby <a href="https://www.doxygen.org/index.html"><img class="footer" src="$relpath^doxygen.svg" width="104" height="31" alt="doxygen"/></a> $doxygenversion </li>
+    <li class="footer copyright">© 2023 AO Kaspersky Lab</li>
+  </ul>
+</div>
+<!--END GENERATE_TREEVIEW-->
+
+<!--BEGIN !GENERATE_TREEVIEW-->
+<hr class="footer"/><address class="footer"><small>
+$generatedby&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="$relpath^doxygen.svg" width="104" height="31" alt="doxygen"/></a> $doxygenversion
+</small></address>
+<!--END !GENERATE_TREEVIEW-->
 
 </footer>
+
 <script>
-  jQuery(function($){
+  // Hide body header on the index page.
+  jQuery(function($)
+  {
     if ( document.location.pathname.endsWith('index.html')
-      || document.location.pathname.endsWith('/')
-    ) {
+      || document.location.pathname.endsWith('/'))
+	{
       $("body > .header").hide()
     }
   })
 
   $.add_icon_classes()
 </script>
-</body>
 
+</body>
 </html>
