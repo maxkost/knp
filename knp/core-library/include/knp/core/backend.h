@@ -69,14 +69,14 @@ public:
 public:
     /**
      * @brief Get list of devices supported by the backend.
-     * @return device list.
+     * @return list of devices.
      * @see Device.
      */
     [[nodiscard]] virtual std::vector<std::unique_ptr<Device>> get_devices() const = 0;
 
     /**
-     * @brief Get device list where back-end runs network.
-     * @return list of the devices.
+     * @brief Get a list of devices on which the backend runs a network.
+     * @return list of devices.
      * @see Device.
      */
     const std::vector<std::unique_ptr<Device>> &get_current_devices() const { return devices_; }
@@ -84,7 +84,7 @@ public:
 
     /**
      * @brief Select devices on which to run the backend.
-     * @param uids vector of the devices which the backend uses.
+     * @param uids set of device UIDs that the backend uses.
      */
     virtual void select_devices(const std::set<UID> &uids);
 
