@@ -19,7 +19,7 @@ namespace knp::framework
 
 std::function<BackendLoader::BackendCreateFunction> BackendLoader::make_creator(const std::filesystem::path &p)
 {
-    auto creator_iter = creators_.find(p);
+    auto creator_iter = creators_.find(p.string());
 
     if (creator_iter != creators_.end()) return creator_iter->second;
 
@@ -30,7 +30,7 @@ std::function<BackendLoader::BackendCreateFunction> BackendLoader::make_creator(
 
     SPDLOG_DEBUG("Created backend creator...");
 
-    creators_[p] = creator;
+    creators_[p.string()] = creator;
 
     return creator;
 }

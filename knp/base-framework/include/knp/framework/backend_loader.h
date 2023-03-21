@@ -11,6 +11,7 @@
 
 #include <filesystem>
 #include <memory>
+#include <string>
 #include <unordered_map>
 
 
@@ -31,7 +32,8 @@ protected:
     std::function<BackendCreateFunction> make_creator(const std::filesystem::path &p);
 
 private:
-    std::unordered_map<std::filesystem::path, std::function<BackendCreateFunction>> creators_;
+    // std::filesystem::path doesn't work on any compilers.
+    std::unordered_map<std::string, std::function<BackendCreateFunction>> creators_;
 };
 
 }  // namespace knp::framework
