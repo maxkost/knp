@@ -1402,8 +1402,7 @@ HTML_EXTRA_FILES       = @DOXYGEN_HTML_EXTRA_FILES@ \
     @DOXYGEN_SRCDIR@/js/doxygen-awesome-tabs.js \
     @DOXYGEN_SRCDIR@/js/icons-add-properties.js \
     @DOXYGEN_SRCDIR@/icons/symbol-class.svg \
-    @DOXYGEN_SRCDIR@/icons/symbol-namespace.svg \
-    @DOXYGEN_SRCDIR@/icons/logo.drawio.svg
+    @DOXYGEN_SRCDIR@/icons/symbol-namespace.svg
 
 # The HTML_COLORSTYLE tag can be used to specify if the generated HTML output
 # should be rendered with a dark or light theme.
