@@ -73,8 +73,8 @@ endif()
 
 gtest_discover_tests("${PROJECT_NAME}"
     # Set a working directory to find test data via paths relative to the project root
-    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data"
-    PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
 

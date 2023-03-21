@@ -41,6 +41,19 @@ inline void SingleThreadedCPUBackend::calculator(Container &container)
 }
 
 
+SingleThreadedCPUBackend::SingleThreadedCPUBackend() : message_endpoint_{message_bus_.get_endpoint()}
+{
+    SPDLOG_INFO("CPU backend instance created...");
+}
+
+
+std::shared_ptr<SingleThreadedCPUBackend> SingleThreadedCPUBackend::create()
+{
+    SPDLOG_DEBUG("Creating CPU backend instance...");
+    return std::make_shared<SingleThreadedCPUBackend>();
+}
+
+
 void SingleThreadedCPUBackend::step()
 {
     // Calculate projections.
