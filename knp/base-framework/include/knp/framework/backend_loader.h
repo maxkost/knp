@@ -11,6 +11,8 @@
 
 #include <filesystem>
 #include <memory>
+#include <string>
+#include <unordered_map>
 
 
 /// Framework namespace.
@@ -22,6 +24,16 @@ class BackendLoader
 public:
     std::shared_ptr<core::Backend> load(const std::filesystem::path &backend_path);
     bool is_backend(const std::filesystem::path &backend_path) const;
+
+public:
+    typedef std::shared_ptr<core::Backend>(BackendCreateFunction)();
+
+protected:
+    std::function<BackendCreateFunction> make_creator(const std::filesystem::path &p);
+
+private:
+    // std::filesystem::path doesn't work on any compilers.
+    std::unordered_map<std::string, std::function<BackendCreateFunction>> creators_;
 };
 
 }  // namespace knp::framework

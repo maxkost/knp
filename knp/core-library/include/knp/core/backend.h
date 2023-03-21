@@ -27,6 +27,9 @@ namespace knp::core
 class BOOST_SYMBOL_VISIBLE Backend
 {
 public:
+    virtual ~Backend() = 0;
+
+public:
     /**
      * @brief Get the backend UID.
      * @return UID.

@@ -20,7 +20,7 @@ namespace knp::core
 {
 
 #if defined(_DEBUG) || defined(DEBUG)
-#define _ENABLE_PSEUDO_UID_GENERATOR 1
+#    define _ENABLE_PSEUDO_UID_GENERATOR 1
 #endif
 
 /**
@@ -32,12 +32,14 @@ class continuously_uid_generator
 {
 public:
     ::boost::uuids::uuid operator()() const;
+    /// Reset UID counter.
+    void reset(uint64_t initial_value = 1);
 };
 
 #if defined(_ENABLE_PSEUDO_UID_GENERATOR)
-#define uid_generator continuously_uid_generator
+#    define uid_generator continuously_uid_generator
 #else
-#define uid_generator ::boost::uuids::random_generator
+#    define uid_generator ::boost::uuids::random_generator
 #endif
 
 
