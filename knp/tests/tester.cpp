@@ -2,8 +2,6 @@
  * Tests runner.
  **/
 
-#include <knp/framework/backend_loader.h>
-
 #include <gtest/gtest.h>
 #include <spdlog/spdlog.h>
 #include <tests_common.h>
