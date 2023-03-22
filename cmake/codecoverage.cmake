@@ -218,9 +218,18 @@ if(NOT (CMAKE_BUILD_TYPE STREQUAL "Debug" OR GENERATOR_IS_MULTI_CONFIG))
     message(WARNING "Code coverage results with an optimised (non-Debug) build may be misleading")
 endif() # NOT (CMAKE_BUILD_TYPE STREQUAL "Debug" OR GENERATOR_IS_MULTI_CONFIG)
 
-if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
-    link_libraries(gcov)
-endif()
+# GCC.
+link_libraries(
+    $<$<LINK_LANG_AND_ID:CXX,GNU>:gcov>
+    $<$<LINK_LANG_AND_ID:C,GNU>:gcov>
+    $<$<LINK_LANG_AND_ID:Fortran,GNU>:gcov>)
+
+# Clang.
+link_libraries(
+    $<$<LINK_LANG_AND_ID:CXX,Clang,AppleClang>:profile_rt>
+    $<$<LINK_LANG_AND_ID:C,Clang,AppleClang>:profile_rt>
+    $<$<LINK_LANG_AND_ID:Fortran,Clang,AppleClang>:profile_rt>)
+
 
 # Defines a target for running and collection code coverage information
 # Builds dependencies, runs the given executable and outputs reports.
