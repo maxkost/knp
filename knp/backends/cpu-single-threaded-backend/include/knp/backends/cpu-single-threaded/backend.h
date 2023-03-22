@@ -108,13 +108,13 @@ protected:
     /**
      * @brief calculate BLIFAT neurons population.
      * Projection will be changed during calculation.
-     * @param population.
+     * @param population population of BLIFAT neurons to calculate.
      */
     void calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population);
     /**
      * @brief calculate DeltaSynapse projection.
      * Projection will be changed during calculation.
-     * @param projection.
+     * @param projection projection of Delta synapses to calculate.
      */
     void calculate_projection(knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection);
 

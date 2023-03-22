@@ -52,6 +52,8 @@ public:
      * @brief Construct a projection by running a synapse generator a given number of times.
      * @param num_iterations number of iterations to run the synapse generator.
      * @param generator a function that generates a synapse.
+     * @param presynaptic_uid presynaptic population UID.
+     * @param postsynaptic_uid postsynaptic population UID.
      */
     Projection(UID presynaptic_uid, UID postsynaptic_uid, size_t num_iterations, const SynapseGenerator &generator)
         : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)

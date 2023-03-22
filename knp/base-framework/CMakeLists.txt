@@ -19,9 +19,5 @@ source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "includ
 knp_add_library("${PROJECT_NAME}-core" SHARED impl/backend_loader.cpp ${${PROJECT_NAME}_headers})
 add_library(KNP::BaseFramework::Core ALIAS "${PROJECT_NAME}-core")
 
-target_include_directories("${PROJECT_NAME}-core" PUBLIC
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
-
 target_link_libraries("${PROJECT_NAME}-core" PRIVATE spdlog::spdlog_header_only Boost::headers Boost::filesystem)
 target_link_libraries("${PROJECT_NAME}-core" PUBLIC knp-core)

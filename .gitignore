@@ -76,3 +76,8 @@ gmon.out
 # OCLint
 
 /tools/oclint-*
+
+
+# QtCreator
+
+CMakeLists.txt.user
