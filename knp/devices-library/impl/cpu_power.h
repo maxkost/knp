@@ -7,11 +7,16 @@
 
 #pragma once
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdocumentation"
+
 #include <pcm/src/cpucounters.h>
 
 #include <chrono>
 #include <cinttypes>
 #include <vector>
+
+#pragma clang diagnostic pop
 
 
 namespace knp::devices::cpu

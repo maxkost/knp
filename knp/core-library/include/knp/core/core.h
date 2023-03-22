@@ -37,7 +37,7 @@ public:
 
     /**
      * @brief Get typed tag by name.
-     * @tparam tag value type.
+     * @tparam T tag value type.
      * @param name tag name.
      * @return tag value.
      */
