@@ -9,3 +9,14 @@
 
 #include <knp/core/messaging/spike_message.h>
 #include <knp/core/messaging/synaptic_impact_message.h>
+
+namespace knp::core::messaging
+{
+struct by_type
+{
+};
+struct by_sender_uid
+{
+};
+typedef std::variant<SpikeMessage, SynapticImpactMessage> MessageVariant;
+}  // namespace knp::core::messaging

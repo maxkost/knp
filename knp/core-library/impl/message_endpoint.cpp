@@ -15,6 +15,25 @@
 namespace knp::core
 {
 
+UID get_receiver(const SubscriptionVariant &subscription)
+{
+    switch (subscription.index())
+    {
+        case 0:
+            return std::get<0>(subscription).get_receiver();
+        case 1:
+            return std::get<1>(subscription).get_receiver();
+        default:
+            throw std::runtime_error("Unknown subscription type: " + std::to_string(subscription.index()));
+    }
+}
+
+
+std::pair<UID, size_t> get_subscription_key(const SubscriptionVariant &subscription)
+{
+    return std::make_pair(get_receiver(subscription), subscription.index());
+}
+
 
 class MessageEndpoint::MessageEndpointImpl
 {
@@ -70,13 +89,6 @@ MessageEndpoint::MessageEndpoint(void *context, const std::string &sub_addr, con
 MessageEndpoint::~MessageEndpoint() {}
 
 
-template <typename MessageType>
-UID MessageEndpoint::subscribe(const UID &publisher_uid, std::function<void(const MessageType &)> callback)
-{
-    return UID();
-}
-
-
 void MessageEndpoint::unsubscribe(const UID &subscription_uid) {}
 
 
@@ -92,11 +104,6 @@ MessageType MessageEndpoint::receive_message()
 {
 }
 
-
-// Instantiation.
-template <>
-UID MessageEndpoint::subscribe<messaging::SpikeMessage>(
-    const UID &publisher_uid, std::function<void(const messaging::SpikeMessage &)> callback);
 
 template <>
 void MessageEndpoint::send_message<messaging::SpikeMessage>(const messaging::SpikeMessage &message);

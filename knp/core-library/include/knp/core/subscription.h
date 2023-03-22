@@ -51,6 +51,18 @@ public:
     size_t add_sender(const UID &uid) { return senders_.insert(uid).second; }
 
     /**
+     * @brief Add a number of senders to the subscription
+     * @param senders a vector of sender UIDs
+     * @return number of new senders added
+     */
+    size_t add_senders(const std::vector<UID> &senders)
+    {
+        size_t size_before = senders_.size();
+        std::copy(senders.begin(), senders.end(), std::inserter(senders_, senders_.end()));
+        return senders_.size() - size_before;
+    };
+
+    /**
      * @brief Checks if a sender exists
      * @param uid sender UID
      * @return true if sender exists
