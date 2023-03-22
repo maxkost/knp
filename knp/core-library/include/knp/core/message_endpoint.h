@@ -38,7 +38,7 @@ public:
 public:
     /**
      * @brief Subscribe to messages.
-     * @param publisher_uid UID of the object which messages to receive. 
+     * @param publisher_uid UID of the object which messages to receive.
      * @param callback a Callable to use after receiving the message.
      * @tparam MessageType type of messages to receive.
      * @return subscription UID.
@@ -61,7 +61,6 @@ public:
 
     /**
      * @brief Receive a message from the message bus.
-     * @param message message to receive.
      */
     template <typename MessageType>
     MessageType receive_message();
