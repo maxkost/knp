@@ -7,8 +7,10 @@
 
 #pragma once
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdocumentation"
+#if defined(__clang__)
+#    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wdocumentation"
+#endif
 
 #include <pcm/src/cpucounters.h>
 
@@ -16,7 +18,9 @@
 #include <cinttypes>
 #include <vector>
 
-#pragma clang diagnostic pop
+#if defined(__clang__)
+#    pragma clang diagnostic pop
+#endif
 
 
 namespace knp::devices::cpu
