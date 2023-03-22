@@ -11,6 +11,8 @@
 #include <numeric>
 #include <utility>
 
+#include <boost/mp11.hpp>
+
 #include "type_traits.h"
 
 
@@ -54,5 +56,8 @@ struct neuron_parameters<BLIFATNeuron>
     double potential_reset_value_ = 0.;
     double min_potential_ = default_values<BLIFATNeuron>::min_potential;
 };
+
+
+using AllNeurons = boost::mp11::mp_list<BLIFATNeuron>;
 
 }  // namespace knp::neuron_traits

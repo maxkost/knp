@@ -25,4 +25,4 @@ knp_add_library("${PROJECT_NAME}-core"
 add_library(KNP::BaseFramework::Core ALIAS "${PROJECT_NAME}-core")
 
 target_link_libraries("${PROJECT_NAME}-core" PRIVATE spdlog::spdlog_header_only Boost::headers Boost::filesystem)
-target_link_libraries("${PROJECT_NAME}-core" PUBLIC knp-core)
+target_link_libraries("${PROJECT_NAME}-core" PUBLIC KNP::Core KNP::Neuron::Traits KNP::Synapse::Traits)
