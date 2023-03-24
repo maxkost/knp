@@ -94,10 +94,23 @@ public:
     }
 
     /**
-     * @brief Unsubscribe from messages.
-     * @param subscription_uid subscription UID.
+     * @brief Unsubscribe from messages of a certain type
+     * @param receiver receiver UID.
      */
-    void unsubscribe(const UID &subscription_uid);
+    template <typename MessageType>
+    void unsubscribe(const UID &receiver)
+    {
+        constexpr size_t index = GetTypeIndex<msg::MessageVariant, MessageType>();
+        auto &sub_list = subscriptions_.get<by_type_and_uid>();
+        sub_list.erase(sub_list.find(std::make_pair(receiver, index)));
+    }
+
+    /**
+     * @brief Remove all subscriptions with given reciever id
+     * @param receiver_uid UID of the receiver
+     */
+    void remove_receiver(const UID &receiver_uid);
+
 
     /**
      * @brief Send a message to the message bus.

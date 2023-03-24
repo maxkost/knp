@@ -80,6 +80,12 @@ inline ::std::ostream &operator<<(std::ostream &s, const UID &uid)
     return s;
 }
 
+inline ::std::istream &operator>>(std::istream &s, UID &uid)
+{
+    s >> uid.tag;
+    return s;
+}
+
 struct UID_hash
 {
     auto operator()(UID value) { return boost::hash<boost::uuids::uuid>()(boost::uuids::uuid(value)); }

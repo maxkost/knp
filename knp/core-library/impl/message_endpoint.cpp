@@ -66,8 +66,6 @@ public:
         pub_socket_.send(zmq::message_t(data, size), zmq::send_flags::dontwait);
     }
 
-    void subscribe() {}
-
 private:
     // zmq::context_t &context_;
     zmq::socket_t sub_socket_;
@@ -89,7 +87,13 @@ MessageEndpoint::MessageEndpoint(void *context, const std::string &sub_addr, con
 MessageEndpoint::~MessageEndpoint() {}
 
 
-void MessageEndpoint::unsubscribe(const UID &subscription_uid) {}
+void MessageEndpoint::remove_receiver(const UID &receiver_uid)
+{
+    for (auto sub_iter = subscriptions_.begin(); sub_iter != subscriptions_.end(); ++sub_iter)
+    {
+        if (receiver_uid == get_receiver(*sub_iter)) subscriptions_.erase(sub_iter);
+    }
+}
 
 
 template <typename MessageType>
