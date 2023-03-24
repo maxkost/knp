@@ -111,7 +111,7 @@ public:
     /**
      * @brief Add neurons to the population.
      * @param generator type of the neuron generator.
-     * @param count generator calls count.
+     * @param count number of times to run the neuron generator.
      */
     void add_neurons(NeuronGenerator generator, size_t count)
     {

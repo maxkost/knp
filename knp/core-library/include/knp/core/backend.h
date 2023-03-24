@@ -71,7 +71,7 @@ public:
 
 public:
     /**
-     * @brief Get list of devices supported by the backend.
+     * @brief Get a list of devices supported by the backend.
      * @return list of devices.
      * @see Device.
      */

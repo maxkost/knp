@@ -15,7 +15,9 @@
 #include <variant>
 
 
-/// Core library namespace.
+/**
+* @brief Core library namespace.
+*/ 
 namespace knp::core
 {
 /// Always false template need to fail static asserts.
@@ -23,20 +25,20 @@ template <class>
 inline constexpr bool always_false_v = false;
 
 /**
- * @brief Tags.
+ * @brief The TagMap class is a definition of tags used by entity and their values.
  */
 class TagMap
 {
 public:
     /**
-     * @brief Get tag by name.
+     * @brief Get the tag value by tag name.
      * @param name tag name.
      * @return tag value.
      */
     [[nodiscard]] std::any &get_tag(const std::string &name) { return tags_[name]; }
 
     /**
-     * @brief Get typed tag by name.
+     * @brief Get the tag value by tag name and value type.
      * @tparam T tag value type.
      * @param name tag name.
      * @return tag value.
@@ -53,17 +55,18 @@ private:
 
 
 /**
- * @brief Common data for the several different entities.
- * @see Backend has BaseData.
- * @see Device has BaseData.
- * @see Population has BaseData.
- * @see Projection has BaseData.
+ * @brief Common parameters for the several different entities.
+ * @details For example, BaseData is used in entities of Backend, Device, Population and Projection classes.
  */
 struct BaseData
 {
-    /// Entity unique identifier.
+    /**
+    * @brief Entity unique identifier.
+    */ 
     UID uid_;
-    /// Entity tags.
+    /**
+    * @brief Entity tags.
+    */ 
     TagMap tags_;
 };
 
