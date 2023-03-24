@@ -61,7 +61,7 @@ PROJECT_BRIEF          = "@DOXYGEN_PROJECT_BRIEF@"
 # pixels and the maximum width should not exceed 200 pixels. Doxygen will copy
 # the logo to the output directory.
 
-PROJECT_LOGO           = @DOXYGEN_PROJECT_LOGO@
+PROJECT_LOGO           = @DOXYGEN_SRCDIR@/icons/logo.svg
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) path
 # into which the generated documentation will be written. If a relative path is
@@ -1373,6 +1373,7 @@ HTML_EXTRA_STYLESHEET  = \
     @DOXYGEN_SRCDIR@/common_files/styles/custom-alternative.css \
     @DOXYGEN_SRCDIR@/common_files/styles/search-height-fix.css \
     @DOXYGEN_SRCDIR@/common_files/styles/icons.css \
+    @DOXYGEN_SRCDIR@/icons/logo_dark.svg \
 # @DOXYGEN_SRCDIR@/common_files/styles/decapitalize.css \
 # @DOXYGEN_SRCDIR@/common_files/styles/doxygen-awesome-sidebar-only.css
 
