@@ -36,6 +36,15 @@ public:
     using AllProjectionVariants = boost::mp11::mp_rename<AllProjections, std::variant>;
 
 public:
+    using PopulationContainer = std::vector<AllPopulationVariants>;
+    using ProjectionContainer = std::vector<AllProjectionVariants>;
+
+    using PopulationIterator = PopulationContainer::iterator;
+    using PopulationConstIterator = PopulationContainer::const_iterator;
+    using ProjectionIterator = ProjectionContainer::iterator;
+    using ProjectionConstIterator = ProjectionContainer::const_iterator;
+
+public:
     Network() = default;
 
 public:
@@ -88,6 +97,17 @@ public:
     const AllProjectionVariants &get_projection(const knp::core::UID &projection_uid) const;
 
 public:
+    PopulationIterator begin_populations();
+    PopulationConstIterator begin_populations() const;
+    PopulationIterator end_populations();
+    PopulationConstIterator end_populations() const;
+
+    ProjectionIterator begin_projections();
+    ProjectionConstIterator begin_projections() const;
+    ProjectionIterator end_projections();
+    ProjectionConstIterator end_projections() const;
+
+public:
     /**
      * @brief Get the network UID.
      * @return UID.
@@ -102,8 +122,8 @@ public:
 
 private:
     knp::core::BaseData base_;
-    std::vector<AllPopulationVariants> populations_;
-    std::vector<AllProjectionVariants> projections_;
+    PopulationContainer populations_;
+    ProjectionContainer projections_;
 };
 
 }  // namespace knp::framework
