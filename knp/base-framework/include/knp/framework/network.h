@@ -54,24 +54,11 @@ public:
      */
     void add_population(AllPopulationVariants &&population);
     /**
-     * @brief add_projection add projection to network.
-     * @param projection new projection.
+     * @brief add_population
+     * @param population
      */
-    void add_projection(AllProjectionVariants &&projection);
-
-public:
-    /**
-     * @brief remove_projection remove projection from network.
-     * @param projection_uid projection UID.
-     */
-    void remove_projection(const knp::core::UID &projection_uid);
-    /**
-     * @brief remove_population remove population from network.
-     * @param population_uid population UID.
-     */
-    void remove_population(const knp::core::UID &population_uid);
-
-public:
+    template <typename PopulationType>
+    void add_population(PopulationType &&population);
     /**
      * @brief get_population get population from network.
      * @param population_uid population UID.
@@ -85,7 +72,24 @@ public:
      */
     template <typename PopulationType>
     const PopulationType &get_population(const knp::core::UID &population_uid) const;
+    /**
+     * @brief remove_population remove population from network.
+     * @param population_uid population UID.
+     */
+    void remove_population(const knp::core::UID &population_uid);
 
+public:
+    /**
+     * @brief add_projection add projection to network.
+     * @param projection new projection.
+     */
+    void add_projection(AllProjectionVariants &&projection);
+    /**
+     * @brief add_projection
+     * @param projection
+     */
+    template <typename ProjectionType>
+    void add_projection(ProjectionType &&projection);
     /**
      * @brief get_projection get projection from network.
      * @param projection_uid projection UID.
@@ -99,6 +103,11 @@ public:
      */
     template <typename ProjectionType>
     const ProjectionType &get_projection(const knp::core::UID &projection_uid) const;
+    /**
+     * @brief remove_projection remove projection from network.
+     * @param projection_uid projection UID.
+     */
+    void remove_projection(const knp::core::UID &projection_uid);
 
 public:
     PopulationIterator begin_populations();
@@ -123,6 +132,16 @@ public:
      * @see TagMap.
      */
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
+
+
+private:
+    template <typename T, typename VT, auto Container>
+    typename decltype(Container)::iterator &find_elem(const knp::core::UID &uid);
+
+    template <typename PopulationType>
+    void remove_population(const knp::core::UID &population_uid);
+    template <typename ProjectionType>
+    void remove_projection(const knp::core::UID &projection_uid);
 
 private:
     knp::core::BaseData base_;
