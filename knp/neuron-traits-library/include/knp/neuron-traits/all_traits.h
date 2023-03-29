@@ -15,6 +15,8 @@
 namespace knp::neuron_traits
 {
 
-using AllNeurons = boost::mp11::mp_list<BLIFATNeuron>;
+// Comma-separated neurons list.
+#define ALL_NEURONS knp::neuron_traits::BLIFATNeuron
+using AllNeurons = boost::mp11::mp_list<ALL_NEURONS>;
 
 }  // namespace knp::neuron_traits

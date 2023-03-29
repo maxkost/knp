@@ -78,11 +78,13 @@ public:
      * @throw std::logic_error if population was not found.
      * @return existing population.
      */
-    AllPopulationVariants &get_population(const knp::core::UID &population_uid);
+    template <typename PopulationType>
+    PopulationType &get_population(const knp::core::UID &population_uid);
     /**
      * @copydoc get_population
      */
-    const AllPopulationVariants &get_population(const knp::core::UID &population_uid) const;
+    template <typename PopulationType>
+    const PopulationType &get_population(const knp::core::UID &population_uid) const;
 
     /**
      * @brief get_projection get projection from network.
@@ -90,11 +92,13 @@ public:
      * @throw std::logic_error if projection was not found.
      * @return existing projection.
      */
-    AllProjectionVariants &get_projection(const knp::core::UID &projection_uid);
+    template <typename ProjectionType>
+    ProjectionType &get_projection(const knp::core::UID &projection_uid);
     /**
      * @copydoc get_projection
      */
-    const AllProjectionVariants &get_projection(const knp::core::UID &projection_uid) const;
+    template <typename ProjectionType>
+    const ProjectionType &get_projection(const knp::core::UID &projection_uid) const;
 
 public:
     PopulationIterator begin_populations();
