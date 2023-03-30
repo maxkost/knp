@@ -133,7 +133,6 @@ public:
      */
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
 
-
 private:
     template <typename T, typename VT, auto Container>
     typename decltype(Container)::iterator &find_elem(const knp::core::UID &uid);
