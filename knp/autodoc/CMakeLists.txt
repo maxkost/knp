@@ -23,7 +23,6 @@ if(KNP_BUILD_DOCUMENTATION)
         OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/doc_doxygen"
         INPUT "${CMAKE_SOURCE_DIR}/knp"
         EXAMPLE_PATH "${CMAKE_SOURCE_DIR}/knp/tests"
-        PROJECT_LOGO "${CMAKE_CURRENT_SOURCE_DIR}/icons/logo.svg"
         SOURCE_BROWSER YES
         BUNDLE_ID "com.kaspersky.KNP"
         PUBLISHER_NAME "Kaspersky Lab"

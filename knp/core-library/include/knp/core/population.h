@@ -20,7 +20,6 @@
 namespace knp::core
 {
 
-
 /**
  * @brief The Population class is a container of neurons of the same model.
  * @tparam NeuronType type of the population neurons.
@@ -46,7 +45,7 @@ public:
     /**
      * @brief Type of the neuron generator.
      */
-    using NeuronGenerator = std::function<NeuronParameters(PopulationType &population, size_t index)>;
+    using NeuronGenerator = std::function<NeuronParameters(size_t index)>;
 
 public:
     /**
@@ -118,7 +117,7 @@ public:
         neurons_.reserve(count);
         for (size_t i = 0; i < count; ++i)
         {
-            neurons_.template emplace_back(std::move(generator(*this, i)));
+            neurons_.template emplace_back(std::move(generator(i)));
         }
     }
 
@@ -156,11 +155,11 @@ public:
      */
     auto &operator[](const size_t index) { return neurons_[index]; }
     /// TODO: make iterator class.
-    const auto begin() const { return neurons_.cbegin(); }
+    auto begin() const { return neurons_.cbegin(); }
     /// TODO: make iterator class.
     auto begin() { return neurons_.begin(); }
     /// TODO: make iterator class.
-    const auto end() const { return neurons_.cend(); }
+    auto end() const { return neurons_.cend(); }
     /// TODO: make iterator class.
     auto end() { return neurons_.end(); }
 

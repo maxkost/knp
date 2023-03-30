@@ -5,12 +5,13 @@
 
 #include <knp/core/population.h>
 #include <knp/neuron-traits/blifat.h>
+
 #include <tests_common.h>
 
 
 using BLIFATParams = knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>;
 
-BLIFATParams neuron_generator(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &, size_t index)
+BLIFATParams neuron_generator(size_t index)
 {
     BLIFATParams params{.potential_ = static_cast<double>(index)};
     return params;

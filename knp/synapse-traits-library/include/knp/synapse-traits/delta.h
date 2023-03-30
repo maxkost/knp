@@ -24,4 +24,5 @@ struct synapse_parameters<DeltaSynapse>
     float weight_;
     std::size_t delay_;
 };
+
 }  // namespace knp::synapse_traits
