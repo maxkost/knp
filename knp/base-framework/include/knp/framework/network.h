@@ -77,6 +77,8 @@ public:
      * @param population_uid population UID.
      */
     void remove_population(const knp::core::UID &population_uid);
+    template <typename PopulationType>
+    void remove_population(const knp::core::UID &population_uid);
 
 public:
     /**
@@ -108,6 +110,8 @@ public:
      * @param projection_uid projection UID.
      */
     void remove_projection(const knp::core::UID &projection_uid);
+    template <typename ProjectionType>
+    void remove_projection(const knp::core::UID &projection_uid);
 
 public:
     PopulationIterator begin_populations();
@@ -136,11 +140,6 @@ public:
 private:
     template <typename T, typename VT, auto Container>
     typename decltype(Container)::iterator &find_elem(const knp::core::UID &uid);
-
-    template <typename PopulationType>
-    void remove_population(const knp::core::UID &population_uid);
-    template <typename ProjectionType>
-    void remove_projection(const knp::core::UID &projection_uid);
 
 private:
     knp::core::BaseData base_;
