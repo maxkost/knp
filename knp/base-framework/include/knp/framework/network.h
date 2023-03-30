@@ -8,12 +8,14 @@
 #pragma once
 
 #include <knp/core/core.h>
+#include <knp/core/impexp.h>
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 #include <knp/framework/coordinates/generator.h>
 #include <knp/neuron-traits/all_traits.h>
 #include <knp/synapse-traits/all_traits.h>
 
+#include <variant>
 #include <vector>
 
 
@@ -54,8 +56,7 @@ public:
      */
     void add_population(AllPopulationVariants &&population);
     /**
-     * @brief add_population
-     * @param population
+     * @copydoc add_population
      */
     template <typename PopulationType>
     void add_population(PopulationType &&population);
@@ -87,8 +88,7 @@ public:
      */
     void add_projection(AllProjectionVariants &&projection);
     /**
-     * @brief add_projection
-     * @param projection
+     * @copydoc add_projection
      */
     template <typename ProjectionType>
     void add_projection(ProjectionType &&projection);
@@ -138,8 +138,8 @@ public:
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
 
 private:
-    template <typename T, typename VT, auto Container>
-    typename decltype(Container)::iterator &find_elem(const knp::core::UID &uid);
+    template <typename T, typename VT, typename ContainerT>
+    typename ContainerT::iterator find_elem(const knp::core::UID &uid, ContainerT &container);
 
 private:
     knp::core::BaseData base_;
