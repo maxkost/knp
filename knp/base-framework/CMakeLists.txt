@@ -20,6 +20,7 @@ knp_add_library("${PROJECT_NAME}-core"
     SHARED
     impl/backend_loader.cpp
     impl/network.cpp
+    impl/model.cpp
 
     ${${PROJECT_NAME}_headers})
 add_library(KNP::BaseFramework::Core ALIAS "${PROJECT_NAME}-core")
