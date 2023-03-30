@@ -57,7 +57,4 @@ struct neuron_parameters<BLIFATNeuron>
     double min_potential_ = default_values<BLIFATNeuron>::min_potential;
 };
 
-
-using AllNeurons = boost::mp11::mp_list<BLIFATNeuron>;
-
 }  // namespace knp::neuron_traits
