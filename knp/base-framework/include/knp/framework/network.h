@@ -78,8 +78,6 @@ public:
      * @param population_uid population UID.
      */
     void remove_population(const knp::core::UID &population_uid);
-    template <typename PopulationType>
-    void remove_population(const knp::core::UID &population_uid);
 
 public:
     /**
@@ -110,8 +108,6 @@ public:
      * @param projection_uid projection UID.
      */
     void remove_projection(const knp::core::UID &projection_uid);
-    template <typename ProjectionType>
-    void remove_projection(const knp::core::UID &projection_uid);
 
 public:
     PopulationIterator begin_populations();
@@ -123,6 +119,10 @@ public:
     ProjectionConstIterator begin_projections() const;
     ProjectionIterator end_projections();
     ProjectionConstIterator end_projections() const;
+
+public:
+    size_t populations_count() const { return populations_.size(); }
+    size_t projections_count() const { return projections_.size(); }
 
 public:
     /**
@@ -138,8 +138,10 @@ public:
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
 
 private:
-    template <typename T, typename VT, typename ContainerT>
-    typename ContainerT::iterator find_elem(const knp::core::UID &uid, ContainerT &container);
+    template <typename T, typename VT>
+    typename std::vector<VT>::iterator find_elem(const knp::core::UID &uid, std::vector<VT> &container);
+    template <typename Ts, typename VT>
+    typename std::vector<VT>::iterator find_variant(const knp::core::UID &uid, std::vector<VT> &container);
 
 private:
     knp::core::BaseData base_;
