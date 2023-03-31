@@ -10,21 +10,23 @@ project(knp-devices VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 
 include(GNUInstallDirs)
 include(clang-tidy)
+include(knp-functions)
+
+file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/devices/*.h)
 
 source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers REGULAR_EXPRESSION "include/.*")
 
-add_library("${PROJECT_NAME}-cpu"
+knp_add_library("${PROJECT_NAME}-cpu"
+    STATIC
     impl/cpu.cpp impl/cpu_power.cpp impl/cpu_power.h
+
+    ${${PROJECT_NAME}_headers}
 )
 add_library(KNP::Devices::CPU ALIAS "${PROJECT_NAME}-cpu")
 
-target_include_directories("${PROJECT_NAME}-cpu" PUBLIC
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
-
-target_link_libraries("${PROJECT_NAME}-cpu" PRIVATE spdlog PCM_STATIC)
-target_link_libraries("${PROJECT_NAME}-cpu" PUBLIC knp-core)
+target_link_libraries("${PROJECT_NAME}-cpu" PRIVATE spdlog::spdlog_header_only PCM_STATIC)
+target_link_libraries("${PROJECT_NAME}-cpu" PUBLIC KNP::Core)
 
 #add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
 

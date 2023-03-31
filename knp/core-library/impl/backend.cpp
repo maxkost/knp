@@ -14,6 +14,12 @@
 namespace knp::core
 {
 
+Backend::~Backend()
+{
+    SPDLOG_INFO("Backend {} unloaded", base_.uid_);
+}
+
+
 void Backend::select_devices(const std::set<UID>& uids)
 {
     for (auto&& device : get_devices())

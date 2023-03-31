@@ -28,6 +28,9 @@ enum class DeviceType
 class Device
 {
 public:
+    virtual ~Device() = default;
+
+public:
     /**
      * @brief Get the device UID.
      * @return UID.

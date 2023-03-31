@@ -18,7 +18,7 @@ std::filesystem::path get_backend_path()
 TEST(FrameworkSuite, BackendLoaderLoad)
 {
     knp::framework::BackendLoader backend_loader;
-    auto cpu_st_backend = backend_loader.load(get_backend_path());
+    auto cpu_st_backend{backend_loader.load(get_backend_path())};
 
     EXPECT_NO_THROW((void)cpu_st_backend->get_uid());
 }

@@ -27,6 +27,9 @@ namespace knp::core
 class BOOST_SYMBOL_VISIBLE Backend
 {
 public:
+    virtual ~Backend() = 0;
+
+public:
     /**
      * @brief Get the backend UID.
      * @return UID.
@@ -68,7 +71,7 @@ public:
 
 public:
     /**
-     * @brief Get list of devices supported by the backend.
+     * @brief Get a list of devices supported by the backend.
      * @return list of devices.
      * @see Device.
      */

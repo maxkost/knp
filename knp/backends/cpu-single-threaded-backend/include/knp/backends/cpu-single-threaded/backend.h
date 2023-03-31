@@ -40,10 +40,11 @@ public:
 
 public:
     // TODO: set protected (in testing purposes).
-    SingleThreadedCPUBackend() : message_endpoint_{message_bus_.get_endpoint()} {}
+    SingleThreadedCPUBackend();
+    ~SingleThreadedCPUBackend() = default;
 
 public:
-    static std::shared_ptr<SingleThreadedCPUBackend> create() { return std::make_shared<SingleThreadedCPUBackend>(); }
+    static std::shared_ptr<SingleThreadedCPUBackend> create();
 
 public:
     /**
@@ -107,13 +108,13 @@ protected:
     /**
      * @brief calculate BLIFAT neurons population.
      * Projection will be changed during calculation.
-     * @param population.
+     * @param population population of BLIFAT neurons to calculate.
      */
     void calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population);
     /**
      * @brief calculate DeltaSynapse projection.
      * Projection will be changed during calculation.
-     * @param projection.
+     * @param projection projection of Delta synapses to calculate.
      */
     void calculate_projection(knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection);
 

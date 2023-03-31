@@ -25,14 +25,17 @@ namespace knp::core
 #endif
 
 /**
- * @brief Debug UID generator.
- *
- * UIDs will be like 0001-..., 0002-..., 0003-....
+ * @brief UID generator for entities.
+ * @details You can use this class for debugging. UID is displayed as a 128-bit number.
  */
 class continuously_uid_generator
 {
 public:
     ::boost::uuids::uuid operator()() const;
+    /**
+     * @brief Reset UID counter.
+     */
+    void reset(uint64_t initial_value = 1);
 };
 
 #if defined(_ENABLE_PSEUDO_UID_GENERATOR)
@@ -43,7 +46,7 @@ public:
 
 
 /**
- * @brief The UID class is an unique identifier type.
+ * @brief The UID class is a definition of unique identifiers for entities.
  */
 
 struct UID

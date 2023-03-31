@@ -17,6 +17,19 @@ function(knp_capitalize_string src result)
 endfunction()
 
 
+function(knp_set_target_parameters target)
+    target_compile_options("${target}" PRIVATE $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wdocumentation>)
+    target_compile_options("${target}" PRIVATE $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-Wdocumentation>)
+    # SDL requirements.
+    target_compile_options("${target}" PUBLIC $<$<COMPILE_LANG_AND_ID:C,GNU,Clang>:-Wall -fstack-protector-all -Wformat -Wformat-security>)
+    target_compile_options("${target}" PUBLIC $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang>:-Wall -fstack-protector-all -Wformat -Wformat-security>)
+
+    target_include_directories("${target}" PUBLIC
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+endfunction()
+
+
 function (knp_add_library lib_name lib_type)
     set(options "")
     set(one_value_args "ALIAS")
@@ -31,15 +44,17 @@ function (knp_add_library lib_name lib_type)
         # Build common object library.
         add_library("${lib_name}_obj" OBJECT ${${lib_name}_source})
         set_target_properties("${lib_name}_obj" PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
         add_library("${lib_name}" SHARED $<TARGET_OBJECTS:${lib_name}_obj>)
         add_library("${lib_name}_static" STATIC $<TARGET_OBJECTS:${lib_name}_obj>)
         set_target_properties("${lib_name}_static" PROPERTIES OUTPUT_NAME "${lib_name}")
     elseif(lib_type STREQUAL SHARED OR lib_type STREQUAL MODULE)
-#        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS} -Wall -fPIC -fPIE -fstack-protector-all -Wformat -Wformat-security")
-#        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMMON_FLAGS} -Wall -fPIC -fPIE -fstack-protector-all -Wformat -Wformat-security")
         add_library("${lib_name}" ${lib_type} ${${lib_name}_source})
+        target_compile_definitions("${lib_name}" PRIVATE BUILD_SHARED_LIBS)
+        knp_set_target_parameters("${lib_name}")
     elseif(lib_type STREQUAL STATIC)
         add_library("${lib_name}" STATIC ${${lib_name}_source})
+        knp_set_target_parameters("${lib_name}")
     else()
         message(FATAL_ERROR "Incorrect library build type: \"${lib_type}\". Use SHARED/MODULE, STATIC or BOTH.")
     endif()
@@ -51,7 +66,7 @@ function (knp_set_backend_common_parameters BACKEND_NAME PROJECT_ROOT_DIR)
     file(REAL_PATH "${PROJECT_ROOT_DIR}/src" PROJECT_SOURCE_DIR)
     file(REAL_PATH "${PROJECT_SOURCE_DIR}/impl/backends/${BACKEND_DIRECTORY}" BACKEND_SUBDIR)
     knp_capitalize_string(${BACKEND_DIRECTORY} BACKEND_CLASS_PREFIX)
-    target_compile_definitions("knp_backend_${BACKEND_DIRECTORY}" PRIVATE "-D_BUILD_LIBRARY" PUBLIC "-Dknp_LIBRARY_BACKEND_NAME=\"${BACKEND_NAME}\"" "-Dknp_LIBRARY_BACKEND_CLASS=calculation_backend::${BACKEND_CLASS_PREFIX}CalculationBackend")
+    target_compile_definitions("knp_backend_${BACKEND_DIRECTORY}" PRIVATE "-D_BUILD_LIBRARY" PUBLIC "-DKNP_LIBRARY_BACKEND_NAME=\"${BACKEND_NAME}\"" "-DKNP_LIBRARY_BACKEND_CLASS=calculation_backend::${BACKEND_CLASS_PREFIX}CalculationBackend")
     target_include_directories("knp_backend_${BACKEND_DIRECTORY}" PRIVATE "${BACKEND_SUBDIR}")
     target_include_directories("knp_backend_${BACKEND_DIRECTORY}" PUBLIC "${PROJECT_SOURCE_DIR}/include")
     target_include_directories("knp_backend_${BACKEND_DIRECTORY}" PUBLIC "${PROJECT_SOURCE_DIR}/include/snn-library/backends/${BACKEND_DIRECTORY}")
@@ -74,19 +89,6 @@ macro (knp_set_cmake_common_parameters)
         include_directories(${Boost_INCLUDE_DIRS})
     endif()
 
-    #
-    # SDL requirements.
-    #
-
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS} -Wall -fPIE -fstack-protector-all -Wformat -Wformat-security")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMMON_FLAGS} -Wall -fPIE -fstack-protector-all -Wformat -Wformat-security")
-
-    #
-    # Coverage. TODO: Doesn't work with OpenAcc, fix it.
-    #
-
-    # set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
-    # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
 
     set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -D_FORTIFY_SOURCE=2")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -D_FORTIFY_SOURCE=2")

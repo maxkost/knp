@@ -120,7 +120,6 @@ public:
 
     /**
      * @brief Receive a message from the message bus.
-     * @param message message to receive.
      * @return true if nonempty message was received, false otherwise.
      */
     template <class MessageType>

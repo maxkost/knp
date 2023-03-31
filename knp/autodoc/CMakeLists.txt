@@ -22,12 +22,11 @@ if(KNP_BUILD_DOCUMENTATION)
         PROJECT_BRIEF "API Reference Guide"
         OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/doc_doxygen"
         INPUT "${CMAKE_SOURCE_DIR}/knp"
-        EXAMPLE_PATH "knp/tests"
-        PROJECT_LOGO "${CMAKE_CURRENT_SOURCE_DIR}/logo.svg"
+        EXAMPLE_PATH "${CMAKE_SOURCE_DIR}/knp/tests"
         SOURCE_BROWSER YES
         BUNDLE_ID "com.kaspersky.KNP"
         PUBLISHER_NAME "Kaspersky Lab"
-        EXCLUDE_PATTERNS "${CMAKE_SOURCE_DIR}/knp/tests;${CMAKE_SOURCE_DIR}/knp/.descr;${CMAKE_SOURCE_DIR}/knp/autodoc;.*"
+        EXCLUDE_PATTERNS "*.descr*"
         STRIP_FROM_INC_PATH "${_strip_list}"
     )
     # Automatically build doc.

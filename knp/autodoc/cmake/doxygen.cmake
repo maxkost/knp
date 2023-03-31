@@ -12,7 +12,7 @@ macro(add_doxygen target_name doxyfile_in)
         message(FATAL_ERROR "Doxygen is needed to build the documentation.")
     endif()
 
-    set(_s_auto_list PROJECT_NAME PROJECT_BRIEF OUTPUT_DIRECTORY INPUT LANGUAGE EXAMPLE_PATH PROJECT_LOGO
+    set(_s_auto_list PROJECT_NAME PROJECT_BRIEF OUTPUT_DIRECTORY INPUT LANGUAGE EXAMPLE_PATH
         GENERATE_TAGFILE BUNDLE_ID PUBLISHER_NAME SOURCE_BROWSER VERBATIM_HEADERS)
     set(_m_auto_list EXCLUDE_PATTERNS EXTRA_FILES PREDEFINED TAGFILES STRIP_FROM_INC_PATH)
 
@@ -23,6 +23,8 @@ macro(add_doxygen target_name doxyfile_in)
         "${_m_auto_list}"
         ${ARGN}
     )
+
+    set(DOXYGEN_INPUT "")
 
     set(DOXYFILE "${CMAKE_CURRENT_BINARY_DIR}/doxyfile")
     set(DOXYGEN_PROJECT_NAME "${target_name}")

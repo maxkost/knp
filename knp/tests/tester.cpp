@@ -3,6 +3,8 @@
  **/
 
 #include <gtest/gtest.h>
+#include <spdlog/spdlog.h>
+#include <tests_common.h>
 
 #include <exception>
 #include <iostream>
@@ -10,6 +12,8 @@
 
 int main(int argc, char *argv[])
 {
+    spdlog::set_level(spdlog::level::debug);
+
     testing::InitGoogleTest(&argc, argv);
     try
     {

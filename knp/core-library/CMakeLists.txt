@@ -13,6 +13,8 @@ find_package(ZeroMQ REQUIRED)
 
 include(GNUInstallDirs)
 include(clang-tidy)
+include(knp-functions)
+
 file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/core/*.h)
 
 knp_add_library("${PROJECT_NAME}"
@@ -31,10 +33,6 @@ add_library(KNP::Core ALIAS "${PROJECT_NAME}")
 
 source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "include/.*")
-
-target_include_directories("${PROJECT_NAME}" PUBLIC
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
 target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS})
 
