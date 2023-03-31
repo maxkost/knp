@@ -11,6 +11,8 @@
 
 #include <zmq.hpp>
 
+#include "message_bus_zmq_impl/message_endpoint_impl.h"
+
 
 namespace knp::core
 {
@@ -46,54 +48,6 @@ std::pair<UID, size_t> get_subscription_key(const MessageEndpoint::SubscriptionV
 {
     return std::make_pair(get_receiver(subscription), subscription.index());
 }
-
-
-class MessageEndpoint::MessageEndpointImpl
-{
-public:
-    explicit MessageEndpointImpl(zmq::context_t &context, const std::string &sub_addr, const std::string &pub_addr)
-        :  // context_(context),
-          sub_socket_(context, zmq::socket_type::sub),
-          pub_socket_(context, zmq::socket_type::pub),
-          sub_addr_(sub_addr),
-          pub_addr_(pub_addr)
-    {
-        pub_socket_.connect(pub_addr);
-
-// #if (ZMQ_VERSION >= ZMQ_MAKE_VERSION(4, 3, 4))
-//         sub_socket_.set(zmq::sockopt::subscribe, "");
-// #else
-//  Strange version inconsistence: set() exists on Manjaro, but doesn't exist on Debian in the same library versions.
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        sub_socket_.setsockopt(ZMQ_SUBSCRIBE, "");
-#pragma GCC diagnostic pop
-        // #endif
-        sub_socket_.connect(sub_addr);
-    }
-
-public:
-    void publish(const std::vector<uint8_t> &data) { pub_socket_.send(zmq::buffer(data), zmq::send_flags::dontwait); }
-    void send_message(const void *data, size_t size)
-    {
-        pub_socket_.send(zmq::message_t(data, size), zmq::send_flags::dontwait);
-    }
-
-    std::optional<MessageVariant> receive_message()
-    {
-        zmq::message_t msg;
-        auto recv_result = sub_socket_.recv(msg, zmq::recv_flags::dontwait);
-        if (recv_result.has_value()) return std::optional<MessageVariant>{};
-        return *msg.data<MessageVariant>();
-    }
-
-private:
-    // zmq::context_t &context_;
-    zmq::socket_t sub_socket_;
-    zmq::socket_t pub_socket_;
-    std::string sub_addr_;
-    std::string pub_addr_;
-};
 
 
 MessageEndpoint::MessageEndpoint(MessageEndpoint &&endpoint) : impl_(std::move(endpoint.impl_)) {}
