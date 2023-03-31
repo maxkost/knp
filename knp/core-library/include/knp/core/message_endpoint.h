@@ -102,6 +102,7 @@ public:
      * @brief Receive a message from the message bus.
      * @return true if nonempty message was received, false otherwise.
      */
+    template <typename MessageType>
     bool receive_message();
 
 public:

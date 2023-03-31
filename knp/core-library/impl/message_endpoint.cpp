@@ -132,6 +132,7 @@ void MessageEndpoint::send_message(const MessageEndpoint::MessageVariant &messag
 }
 
 
+template <typename MessageType>
 bool MessageEndpoint::receive_message()
 {
     SPDLOG_TRACE("Receiving message...");
@@ -139,21 +140,22 @@ bool MessageEndpoint::receive_message()
     std::optional<MessageVariant> message_var = impl_->receive_message();
     if (!message_var) return false;
 
-    constexpr size_t index = get_type_index<SubscriptionVariant, messaging::SpikeMessage>;
+    constexpr size_t index = get_type_index<SubscriptionVariant, MessageType>;
 
-    auto const iter_pair = subscriptions_.get<by_type>().equal_range(index);
-    //    UID sender_uid = message.header_.sender_uid_;
-    //    auto &message = std::get<messaging::SpikeMessage>(message_var.value());
+    auto message = std::get<MessageType>(message_var.value());
+    const UID &sender_uid = message.header_.sender_uid_;
+
+    auto const [iter_first, iter_second] = subscriptions_.get<by_type>().equal_range(index);
 
     // Find a subscription you need
-    for (auto iter = iter_pair.first; iter != iter_pair.second; ++iter)
+    for (auto iter = iter_first; iter != iter_second; ++iter)
     {
-        //        const SubscriptionVariant &sub_variant = *iter;
-        //        auto subscription = std::get<Subscription<messaging::SpikeMessage>>(sub_variant);
-        //        if (subscription.has_sender(sender_uid))
-        //        {
-        //            // subscription.add_message(message);
-        //        }
+        auto subscription = std::get<Subscription<MessageType>>(*iter);
+
+        if (subscription.has_sender(sender_uid))
+        {
+            subscription.add_message(message);
+        }
     }
 
     return true;

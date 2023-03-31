@@ -69,6 +69,9 @@ public:
      */
     [[nodiscard]] bool has_sender(const UID &uid) const { return senders_.count(uid); }
 
+public:
+    size_t add_message(const MessageType &message) { return 0; }
+
 private:
     /// Set of sender UIDs
     std::unordered_set<UID, UID_hash> senders_;
