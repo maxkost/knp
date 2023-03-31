@@ -55,9 +55,7 @@ public:
         zmq::message_t message;
         if (router_socket_.recv(message))
         {
-            const std::string e_msg = "Router socket can't receive message!";
-            SPDLOG_CRITICAL(e_msg);
-            throw std::logic_error(e_msg);
+            return false;  // No message, but no exception as well
         }
         SPDLOG_DEBUG("Received message");  //  message.
         if (!publish_socket_.send(message, zmq::send_flags::dontwait))
@@ -95,6 +93,20 @@ MessageBus::~MessageBus() {}
 MessageEndpoint MessageBus::get_endpoint()
 {
     return impl_->get_endpoint();
+}
+
+
+bool MessageBus::step()
+{
+    return impl_->step();
+}
+
+
+size_t MessageBus::route_messages()
+{
+    size_t count = 0;
+    while (step()) ++count;
+    return count;
 }
 
 }  // namespace knp::core

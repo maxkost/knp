@@ -58,8 +58,8 @@ class MessageEndpoint::MessageEndpointImpl
 public:
     explicit MessageEndpointImpl(zmq::context_t &context, const std::string &sub_addr, const std::string &pub_addr)
         :  // context_(context),
-          sub_socket_(context, zmq::socket_type::sub),
-          pub_socket_(context, zmq::socket_type::pub),
+          sub_socket_(context, zmq::socket_type::xsub),
+          pub_socket_(context, zmq::socket_type::dealer),
           sub_addr_(sub_addr),
           pub_addr_(pub_addr)
     {
@@ -130,7 +130,24 @@ void MessageEndpoint::send_message(const msg::MessageVariant &message)
 template <>
 bool MessageEndpoint::receive_message<msg::SpikeMessage>()
 {
-    return true;
+    std::optional<messaging::MessageVariant> message_var = impl_->receive_message();
+    if (!message_var) return false;
+
+    constexpr size_t index = get_type_index<SubscriptionVariant, msg::SpikeMessage>;
+    auto const iter_pair = subscriptions_.get<by_type>().equal_range(index);
+    auto &message = std::get<msg::SpikeMessage>(message_var.value());
+    UID sender_uid = message.header_.sender_uid_;
+
+    // Find a subscription you need
+    for (auto iter = iter_pair.first; iter != iter_pair.second; ++iter)
+    {
+        const SubscriptionVariant &sub_variant = *iter;
+        auto subscription = std::get<Subscription<msg::SpikeMessage>>(sub_variant);
+        if (subscription.has_sender(sender_uid))
+        {
+            subscription.add_message(message);
+        }
+    }
 }
 
 

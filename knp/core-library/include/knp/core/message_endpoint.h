@@ -32,6 +32,8 @@ namespace knp::core
 {
 namespace mi = boost::multi_index;
 namespace msg = messaging;
+
+// Make this a list that is created from Message list. Probably using boost::mp11.
 using SubscriptionVariant =
     std::variant<Subscription<messaging::SynapticImpactMessage>, Subscription<messaging::SpikeMessage>>;
 

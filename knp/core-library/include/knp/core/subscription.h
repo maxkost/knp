@@ -30,6 +30,22 @@ public:
     {
     }
 
+    /**
+     * @brief Add message to the message list
+     * @param message message to add
+     */
+    void add_message(const MessageType &message) { messages_.push_back(message); }
+
+    /**
+     * @brief Returns a list of received messages
+     */
+    const std::vector<MessageType> &get_messages() { return messages_; }
+
+    /**
+     * @brief Removes all messages from a list
+     */
+    void clear_messages() { messages_.clear(); }
+
     /// Get a set of sender UIDs
     [[nodiscard]] const auto &get_senders() const { return senders_; }
 
