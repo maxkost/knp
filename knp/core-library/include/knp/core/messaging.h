@@ -10,19 +10,14 @@
 #include <knp/core/messaging/spike_message.h>
 #include <knp/core/messaging/synaptic_impact_message.h>
 
+#include <boost/mp11.hpp>
+
 
 namespace knp::core::messaging
 {
 
-typedef std::variant<SpikeMessage, SynapticImpactMessage> MessageVariant;
+#define ALL_MESSAGES SpikeMessage, SynapticImpactMessage
 
-std::istream &operator>>(std::istream &stream, MessageHeader &header);
-std::ostream &operator<<(std::ostream &stream, const MessageHeader &header);
-std::istream &operator>>(std::istream &stream, SynapticImpact &impact);
-std::ostream &operator<<(std::ostream &stream, const SynapticImpact &impact);
-std::ostream &operator<<(std::ostream &stream, const SynapticImpactMessage &msg);
-std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg);
-std::ostream &operator<<(std::ostream &stream, const SpikeMessage &msg);
-std::istream &operator>>(std::istream &stream, SpikeMessage &msg);
+using AllMessages = boost::mp11::mp_list<ALL_MESSAGES>;
 
 }  // namespace knp::core::messaging

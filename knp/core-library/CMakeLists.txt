@@ -26,7 +26,10 @@ knp_add_library("${PROJECT_NAME}"
     impl/projection.cpp
     impl/message_bus.cpp
     impl/message_endpoint.cpp
-    impl/messaging.cpp
+    impl/message_header.cpp
+    impl/spike_message.cpp
+    impl/synaptic_impact_message.cpp
+
     ${${PROJECT_NAME}_headers}
     )
 add_library(KNP::Core ALIAS "${PROJECT_NAME}")

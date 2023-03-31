@@ -17,9 +17,8 @@
 
 namespace knp::core
 {
-namespace msg = messaging;
 
-UID get_receiver(const SubscriptionVariant &subscription)
+UID get_receiver(const MessageEndpoint::SubscriptionVariant &subscription)
 {
     // For
     switch (subscription.index())
@@ -34,7 +33,22 @@ UID get_receiver(const SubscriptionVariant &subscription)
 }
 
 
-msg::MessageHeader get_header(const msg::MessageVariant &message)
+template <typename T, typename VT>
+typename std::vector<VT>::iterator find_elem(const knp::core::UID &uid, std::vector<VT> &container)
+{
+    auto result = std::find_if(
+        container.begin(), container.end(),
+        [&uid](VT &p_variant) -> bool
+        {
+            constexpr auto type_n = boost::mp11::mp_find<VT, T>();
+            if (p_variant.index() != type_n) return false;
+            return uid == (std::get<type_n>(p_variant)).get_uid();
+        });
+    return result;
+}
+
+
+messaging::MessageHeader get_header(const MessageEndpoint::MessageVariant &message)
 {
     switch (message.index())
     {
@@ -47,7 +61,7 @@ msg::MessageHeader get_header(const msg::MessageVariant &message)
 }
 
 
-std::pair<UID, size_t> get_subscription_key(const SubscriptionVariant &subscription)
+std::pair<UID, size_t> get_subscription_key(const MessageEndpoint::SubscriptionVariant &subscription)
 {
     return std::make_pair(get_receiver(subscription), subscription.index());
 }
@@ -58,8 +72,8 @@ class MessageEndpoint::MessageEndpointImpl
 public:
     explicit MessageEndpointImpl(zmq::context_t &context, const std::string &sub_addr, const std::string &pub_addr)
         :  // context_(context),
-          sub_socket_(context, zmq::socket_type::xsub),
-          pub_socket_(context, zmq::socket_type::dealer),
+          sub_socket_(context, zmq::socket_type::sub),
+          pub_socket_(context, zmq::socket_type::pub),
           sub_addr_(sub_addr),
           pub_addr_(pub_addr)
     {
@@ -84,12 +98,12 @@ public:
         pub_socket_.send(zmq::message_t(data, size), zmq::send_flags::dontwait);
     }
 
-    std::optional<msg::MessageVariant> receive_message()
+    std::optional<MessageVariant> receive_message()
     {
         zmq::message_t msg;
         auto recv_result = sub_socket_.recv(msg, zmq::recv_flags::dontwait);
-        if (recv_result.has_value()) return std::optional<msg::MessageVariant>{};
-        return *msg.data<msg::MessageVariant>();
+        if (recv_result.has_value()) return std::optional<MessageVariant>{};
+        return *msg.data<MessageVariant>();
     }
 
 private:
@@ -115,39 +129,42 @@ MessageEndpoint::~MessageEndpoint() {}
 
 void MessageEndpoint::remove_receiver(const UID &receiver_uid)
 {
-    for (auto sub_iter = subscriptions_.begin(); sub_iter != subscriptions_.end(); ++sub_iter)
-    {
-        if (receiver_uid == get_receiver(*sub_iter)) subscriptions_.erase(sub_iter);
-    }
+    //    for (auto sub_iter = subscriptions_.begin(); sub_iter != subscriptions_.end(); ++sub_iter)
+    //    {
+    //        if (receiver_uid == get_receiver(*sub_iter)) subscriptions_.erase(sub_iter);
+    //    }
 }
 
 
-void MessageEndpoint::send_message(const msg::MessageVariant &message)
+void MessageEndpoint::send_message(const MessageEndpoint::MessageVariant &message)
 {
-    impl_->send_message(&message, sizeof(msg::MessageVariant));
+    impl_->send_message(&message, sizeof(MessageVariant));
 }
 
 template <>
-bool MessageEndpoint::receive_message<msg::SpikeMessage>()
+bool MessageEndpoint::receive_message<messaging::SpikeMessage>()
 {
-    std::optional<messaging::MessageVariant> message_var = impl_->receive_message();
-    if (!message_var) return false;
+    //    -    std::optional<messaging::MessageVariant> message_var = impl_->receive_message();
+    //    -    if (!message_var) return false;
+    //    -
+    //    -    constexpr size_t index = get_type_index<SubscriptionVariant, msg::SpikeMessage>;
+    //    -    auto const iter_pair = subscriptions_.get<by_type>().equal_range(index);
+    //    -    auto &message = std::get<msg::SpikeMessage>(message_var.value());
+    //    -    UID sender_uid = message.header_.sender_uid_;
+    //    -
+    //    -    // Find a subscription you need
+    //    -    for (auto iter = iter_pair.first; iter != iter_pair.second; ++iter)
+    //    -    {
+    //    -        const SubscriptionVariant &sub_variant = *iter;
+    //    -        auto subscription = std::get<Subscription<msg::SpikeMessage>>(sub_variant);
+    //    -        if (subscription.has_sender(sender_uid))
+    //    -        {
+    //    -            subscription.add_message(message);
+    //    -        }
+    //    -    }
 
-    constexpr size_t index = get_type_index<SubscriptionVariant, msg::SpikeMessage>;
-    auto const iter_pair = subscriptions_.get<by_type>().equal_range(index);
-    auto &message = std::get<msg::SpikeMessage>(message_var.value());
-    UID sender_uid = message.header_.sender_uid_;
 
-    // Find a subscription you need
-    for (auto iter = iter_pair.first; iter != iter_pair.second; ++iter)
-    {
-        const SubscriptionVariant &sub_variant = *iter;
-        auto subscription = std::get<Subscription<msg::SpikeMessage>>(sub_variant);
-        if (subscription.has_sender(sender_uid))
-        {
-            subscription.add_message(message);
-        }
-    }
+    return true;
 }
 
 

@@ -1,26 +1,14 @@
 /**
- * @file messaging.cpp
- * @brief Message bus interface.
- * @author Vartemkov A.
+ * @file synaptic_impact_message.cpp
+ * @brief Synaptic impact message I/O operators implementation.
+ * @author Vartenkov A.
  * @date 23.03.2023
  */
 
-#include <knp/core/messaging.h>
+#include <knp/core/messaging/synaptic_impact_message.h>
 
 namespace knp::core::messaging
 {
-
-std::istream &operator>>(std::istream &stream, MessageHeader &header)
-{
-    stream >> header.sender_uid_ >> header.send_time_;
-    return stream;
-}
-
-std::ostream &operator<<(std::ostream &stream, const MessageHeader &header)
-{
-    stream << header.sender_uid_ << header.send_time_;
-    return stream;
-}
 
 std::istream &operator>>(std::istream &stream, SynapticImpact &impact)
 {
@@ -51,25 +39,6 @@ std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg)
     for (size_t i = 0; i < n; ++i)
     {
         stream >> msg.impacts_[i];
-    }
-    return stream;
-}
-
-std::ostream &operator<<(std::ostream &stream, const SpikeMessage &msg)
-{
-    stream << msg.header_.sender_uid_ << msg.header_.send_time_ << msg.neuron_indexes_.size();
-    for (auto n : msg.neuron_indexes_) stream << n;
-    return stream;
-}
-
-std::istream &operator>>(std::istream &stream, SpikeMessage &msg)
-{
-    size_t n = 0;
-    stream >> msg.header_.sender_uid_ >> msg.header_.send_time_ >> n;
-    msg.neuron_indexes_.resize(n);
-    for (size_t i = 0; i < n; ++i)
-    {
-        stream >> msg.neuron_indexes_[i];
     }
     return stream;
 }

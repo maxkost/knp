@@ -19,30 +19,12 @@
 #include <vector>
 
 #include <boost/mp11.hpp>
-#include <boost/multi_index/composite_key.hpp>
-#include <boost/multi_index/global_fun.hpp>
-#include <boost/multi_index/hashed_index.hpp>
-#include <boost/multi_index/identity.hpp>
-#include <boost/multi_index/mem_fun.hpp>
-#include <boost/multi_index/ordered_index.hpp>
 #include <boost/multi_index_container.hpp>
 
 
 namespace knp::core
 {
 namespace mi = boost::multi_index;
-namespace msg = messaging;
-
-// Make this a list that is created from Message list. Probably using boost::mp11.
-using SubscriptionVariant =
-    std::variant<Subscription<messaging::SynapticImpactMessage>, Subscription<messaging::SpikeMessage>>;
-
-UID get_receiver(const SubscriptionVariant &subscription);
-std::pair<UID, size_t> get_subscription_key(const SubscriptionVariant &subscription);
-
-template <typename Variant, typename Type>
-constexpr size_t get_type_index = boost::mp11::mp_find<Variant, Type>::value;
-
 
 /**
  * @brief The MessageEndpoint class is a definition of message endpoints.
@@ -51,8 +33,18 @@ constexpr size_t get_type_index = boost::mp11::mp_find<Variant, Type>::value;
 class MessageEndpoint
 {
 public:
-    using SupportedMessages =
-        boost::mp11::mp_list<knp::core::messaging::SpikeMessage, knp::core::messaging::SynapticImpactMessage>;
+    using SupportedMessages = messaging::AllMessages;
+    using AllSubscriptions = boost::mp11::mp_transform<Subscription, SupportedMessages>;
+
+    using SubscriptionVariant = boost::mp11::mp_rename<AllSubscriptions, std::variant>;
+    using MessageVariant = boost::mp11::mp_rename<SupportedMessages, std::variant>;
+
+public:
+    UID get_receiver(const SubscriptionVariant &subscription);
+    std::pair<UID, size_t> get_subscription_key(const SubscriptionVariant &subscription);
+
+    template <typename Variant, typename Type>
+    static constexpr size_t get_type_index = boost::mp11::mp_find<Variant, Type>::value;
 
 public:
     MessageEndpoint(MessageEndpoint &&endpoint);
@@ -81,18 +73,19 @@ public:
     template <typename MessageType>
     size_t subscribe(const UID &receiver, const std::vector<UID> &senders)
     {
-        constexpr size_t index = get_type_index<SubscriptionVariant, Subscription<MessageType>>;
+        //        constexpr size_t index = get_type_index<SubscriptionVariant, Subscription<MessageType>>;
 
-        auto iter = subscriptions_.get<by_type_and_uid>().find(std::make_pair(receiver, index));
-        if (iter != subscriptions_.get<by_type_and_uid>().end())
-        {
-            return std::get<index>(*iter).add_senders(senders);
-        }
-        else
-        {
-            subscriptions_.emplace(Subscription<MessageType>(receiver, senders));
-            return senders.size();
-        }
+        //        auto iter = subscriptions_.get<by_type_and_uid>().find(std::make_pair(receiver, index));
+        //        if (iter != subscriptions_.get<by_type_and_uid>().end())
+        //        {
+        //            return std::get<index>(*iter).add_senders(senders);
+        //        }
+        //        else
+        //        {
+        //            subscriptions_.emplace(Subscription<MessageType>(receiver, senders));
+        //            return senders.size();
+        //        }
+        return 0;
     }
 
     /**
@@ -102,9 +95,9 @@ public:
     template <typename MessageType>
     void unsubscribe(const UID &receiver)
     {
-        constexpr size_t index = get_type_index<msg::MessageVariant, MessageType>();
-        auto &sub_list = subscriptions_.get<by_type_and_uid>();
-        sub_list.erase(sub_list.find(std::make_pair(receiver, index)));
+        //        constexpr size_t index = get_type_index<MessageVariant, MessageType>();
+        //        auto &sub_list = subscriptions_.get<by_type_and_uid>();
+        //        sub_list.erase(sub_list.find(std::make_pair(receiver, index)));
     }
 
     /**
@@ -113,12 +106,11 @@ public:
      */
     void remove_receiver(const UID &receiver_uid);
 
-
     /**
      * @brief Send a message to the message bus.
      * @param message message to send.
      */
-    void send_message(const msg::MessageVariant &message);
+    void send_message(const MessageVariant &message);
 
     /**
      * @brief Receive a message from the message bus.
@@ -127,19 +119,21 @@ public:
     template <class MessageType>
     bool receive_message();
 
-    typedef mi::multi_index_container<
-        SubscriptionVariant,
-        mi::indexed_by<
-            mi::ordered_non_unique<
-                mi::tag<by_type>, BOOST_MULTI_INDEX_CONST_MEM_FUN(SubscriptionVariant, size_t, index)>,
-            mi::ordered_non_unique<
-                mi::tag<by_receiver>, mi::global_fun<const SubscriptionVariant &, UID, get_receiver>>,
-            mi::ordered_unique<
-                mi::tag<by_type_and_uid>,
-                mi::composite_key<
-                    mi::global_fun<const SubscriptionVariant &, UID, get_receiver>,
-                    mi::const_mem_fun<SubscriptionVariant, size_t, &SubscriptionVariant::index>>>>>
-        SubscriptionContainer;
+    //    typedef mi::multi_index_container<
+    //        MessageEndpoint::SubscriptionVariant
+    //        mi::indexed_by<
+    //            mi::ordered_non_unique<
+    //                mi::tag<by_type>, BOOST_MULTI_INDEX_CONST_MEM_FUN(SubscriptionVariant, size_t, index)>,
+    //            mi::ordered_non_unique<
+    //                mi::tag<by_receiver>, mi::global_fun<const SubscriptionVariant &, UID, get_receiver>>,
+    //            mi::ordered_unique<
+    //                mi::tag<by_type_and_uid>,
+    //                mi::composite_key<
+    //                    mi::global_fun<const SubscriptionVariant &, UID, get_receiver>,
+    //                    mi::const_mem_fun<SubscriptionVariant, size_t, &SubscriptionVariant::index>>>
+    //            >
+    //        >
+    //        SubscriptionContainer;
 
 protected:
     explicit MessageEndpoint(void *context, const std::string &sub_addr, const std::string &pub_addr);
@@ -151,7 +145,7 @@ private:
     /// Message endpoint implementation.
     class MessageEndpointImpl;
 
-    SubscriptionContainer subscriptions_;
+    //    SubscriptionContainer subscriptions_;
     std::unique_ptr<MessageEndpointImpl> impl_;
 };
 

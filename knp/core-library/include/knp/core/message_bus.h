@@ -33,20 +33,6 @@ public:
      */
     [[nodiscard]] MessageEndpoint get_endpoint();
 
-    /**
-     * @brief Receive and send all messages in the message queue
-     * @return number of messages routed
-     * @throws zmq::error_t on standard zmq errors
-     * @throws std::logic_error on not being able to write message to socket
-     */
-    size_t route_messages();
-
-    /**
-     * @brief Receive message from an endpoint, send it to an endpoint
-     * @return true if message successfully received, false if no message
-     */
-    bool step();
-
 private:
     /// Message bus implementation.
     class MessageBusImpl;

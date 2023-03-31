@@ -9,6 +9,8 @@
 
 #include <knp/core/uid.h>
 
+#include <iostream>
+
 
 namespace knp::core::messaging
 {
@@ -18,8 +20,11 @@ namespace knp::core::messaging
  */
 struct MessageHeader
 {
-    UID sender_uid_;
+    knp::core::UID sender_uid_;
     time_t send_time_;
 };
+
+std::istream &operator>>(std::istream &stream, MessageHeader &header);
+std::ostream &operator<<(std::ostream &stream, const MessageHeader &header);
 
 }  // namespace knp::core::messaging

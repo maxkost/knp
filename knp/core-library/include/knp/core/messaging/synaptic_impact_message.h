@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <iostream>
 #include <map>
 #include <vector>
 
@@ -17,7 +18,7 @@ namespace knp::core::messaging
 {
 
 /**
- * @brief A structure that contains the synaptic impact value and indexes of presynaptic and posynaptic neurons. 
+ * @brief A structure that contains the synaptic impact value and indexes of presynaptic and posynaptic neurons.
  * @details Synaptic impact changes parameters of neurons after the synapses state was calculated.
  */
 struct SynapticImpact
@@ -39,5 +40,10 @@ struct SynapticImpactMessage
     UID presynaptic_population_uid_;
     std::vector<SynapticImpact> impacts_;
 };
+
+std::istream &operator>>(std::istream &stream, SynapticImpact &impact);
+std::ostream &operator<<(std::ostream &stream, const SynapticImpact &impact);
+std::ostream &operator<<(std::ostream &stream, const SynapticImpactMessage &msg);
+std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg);
 
 }  // namespace knp::core::messaging

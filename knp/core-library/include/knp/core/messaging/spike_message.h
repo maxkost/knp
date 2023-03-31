@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <iostream>
 #include <vector>
 
 #include "message_header.h"
