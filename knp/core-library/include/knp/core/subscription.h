@@ -34,7 +34,7 @@ public:
     [[nodiscard]] const auto &get_senders() const { return senders_; }
 
     /// Get receiver UID
-    [[nodiscard]] UID get_receiver() const { return receiver_; }
+    [[nodiscard]] UID get_receiver_uid() const { return receiver_; }
 
     /**
      * @brief Unsubscribe from a sender. If not subscribed to the sender, do nothing.

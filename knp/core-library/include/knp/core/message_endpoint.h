@@ -13,12 +13,18 @@
 
 #include <functional>
 #include <memory>
+#include <numeric>
 #include <string>
 #include <utility>
 #include <variant>
 #include <vector>
 
 #include <boost/mp11.hpp>
+#include <boost/multi_index/composite_key.hpp>
+#include <boost/multi_index/global_fun.hpp>
+#include <boost/multi_index/identity.hpp>
+#include <boost/multi_index/mem_fun.hpp>
+#include <boost/multi_index/ordered_index.hpp>
 #include <boost/multi_index_container.hpp>
 
 
@@ -40,8 +46,8 @@ public:
     using MessageVariant = boost::mp11::mp_rename<SupportedMessages, std::variant>;
 
 public:
-    UID get_receiver(const SubscriptionVariant &subscription);
-    std::pair<UID, size_t> get_subscription_key(const SubscriptionVariant &subscription);
+    static UID get_receiver_uid(const SubscriptionVariant &subscription);
+    static std::pair<UID, size_t> get_subscription_key(const SubscriptionVariant &subscription);
 
     template <typename Variant, typename Type>
     static constexpr size_t get_type_index = boost::mp11::mp_find<Variant, Type>::value;
@@ -93,12 +99,7 @@ public:
      * @param receiver receiver UID.
      */
     template <typename MessageType>
-    void unsubscribe(const UID &receiver)
-    {
-        //        constexpr size_t index = get_type_index<MessageVariant, MessageType>();
-        //        auto &sub_list = subscriptions_.get<by_type_and_uid>();
-        //        sub_list.erase(sub_list.find(std::make_pair(receiver, index)));
-    }
+    void unsubscribe(const UID &receiver);
 
     /**
      * @brief Remove all subscriptions with given reciever id
@@ -119,24 +120,31 @@ public:
     template <class MessageType>
     bool receive_message();
 
-    //    typedef mi::multi_index_container<
-    //        MessageEndpoint::SubscriptionVariant
-    //        mi::indexed_by<
-    //            mi::ordered_non_unique<
-    //                mi::tag<by_type>, BOOST_MULTI_INDEX_CONST_MEM_FUN(SubscriptionVariant, size_t, index)>,
-    //            mi::ordered_non_unique<
-    //                mi::tag<by_receiver>, mi::global_fun<const SubscriptionVariant &, UID, get_receiver>>,
-    //            mi::ordered_unique<
-    //                mi::tag<by_type_and_uid>,
-    //                mi::composite_key<
-    //                    mi::global_fun<const SubscriptionVariant &, UID, get_receiver>,
-    //                    mi::const_mem_fun<SubscriptionVariant, size_t, &SubscriptionVariant::index>>>
-    //            >
-    //        >
-    //        SubscriptionContainer;
+    typedef mi::multi_index_container<
+        MessageEndpoint::SubscriptionVariant,
+        mi::indexed_by<
+            mi::ordered_non_unique<
+                mi::tag<by_type>,
+                BOOST_MULTI_INDEX_CONST_MEM_FUN(MessageEndpoint::SubscriptionVariant, std::size_t, index)>,
+            mi::ordered_non_unique<
+                mi::tag<by_receiver>,
+                mi::global_fun<const SubscriptionVariant &, UID, MessageEndpoint::get_receiver_uid>>,
+            mi::ordered_unique<
+                mi::tag<by_type_and_uid>,
+                mi::composite_key<
+                    mi::global_fun<const SubscriptionVariant &, UID, MessageEndpoint::get_receiver_uid>,
+                    BOOST_MULTI_INDEX_CONST_MEM_FUN(MessageEndpoint::SubscriptionVariant, std::size_t, index)>>>>
+        SubscriptionContainer;
 
 protected:
     explicit MessageEndpoint(void *context, const std::string &sub_addr, const std::string &pub_addr);
+
+protected:
+    // TODO: Make common functions.
+    template <typename T, typename VT>
+    typename std::vector<VT>::iterator find_elem(const knp::core::UID &uid, std::vector<VT> &container);
+    template <typename Ts, typename VT>
+    typename std::vector<VT>::iterator find_variant(const knp::core::UID &uid, std::vector<VT> &container);
 
 private:
     MessageEndpoint() = delete;
@@ -145,7 +153,7 @@ private:
     /// Message endpoint implementation.
     class MessageEndpointImpl;
 
-    //    SubscriptionContainer subscriptions_;
+    SubscriptionContainer subscriptions_;
     std::unique_ptr<MessageEndpointImpl> impl_;
 };
 

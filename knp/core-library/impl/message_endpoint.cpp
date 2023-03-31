@@ -11,30 +11,18 @@
 
 #include <zmq.hpp>
 
-#define RETURN_BY_INDEX_CASE(name, index) \
-    case (index):                         \
-        return std::get<index>(name)
 
 namespace knp::core
 {
 
 UID get_receiver(const MessageEndpoint::SubscriptionVariant &subscription)
 {
-    // For
-    switch (subscription.index())
-    {
-        RETURN_BY_INDEX_CASE(subscription, 0).get_receiver();
-        RETURN_BY_INDEX_CASE(subscription, 1).get_receiver();
-        default:
-            throw std::runtime_error(
-                "Unknown subscription index: " + std::to_string(subscription.index()) +
-                ". Expand subscription index lists.");
-    }
+    return std::visit([](auto &v) { return std::decay_t<decltype(v)>(v).get_receiver_uid(); }, subscription);
 }
 
 
 template <typename T, typename VT>
-typename std::vector<VT>::iterator find_elem(const knp::core::UID &uid, std::vector<VT> &container)
+typename std::vector<VT>::iterator MessageEndpoint::find_elem(const knp::core::UID &uid, std::vector<VT> &container)
 {
     auto result = std::find_if(
         container.begin(), container.end(),
@@ -50,14 +38,7 @@ typename std::vector<VT>::iterator find_elem(const knp::core::UID &uid, std::vec
 
 messaging::MessageHeader get_header(const MessageEndpoint::MessageVariant &message)
 {
-    switch (message.index())
-    {
-        RETURN_BY_INDEX_CASE(message, 0).header_;
-        RETURN_BY_INDEX_CASE(message, 1).header_;
-        default:
-            throw std::runtime_error(
-                "Unknown message index: " + std::to_string(message.index()) + ". Expand message index lists.");
-    }
+    return std::visit([](auto &v) { return std::decay_t<decltype(v)>(v).header_; }, message);
 }
 
 
@@ -127,12 +108,22 @@ MessageEndpoint::MessageEndpoint(void *context, const std::string &sub_addr, con
 MessageEndpoint::~MessageEndpoint() {}
 
 
+template <typename MessageType>
+void MessageEndpoint::unsubscribe(const UID &receiver)
+{
+    constexpr size_t index = get_type_index<MessageVariant, MessageType>();
+    auto &sub_list = subscriptions_.get<by_type_and_uid>();
+    sub_list.erase(sub_list.find(std::make_pair(receiver, index)));
+}
+
+
 void MessageEndpoint::remove_receiver(const UID &receiver_uid)
 {
-    //    for (auto sub_iter = subscriptions_.begin(); sub_iter != subscriptions_.end(); ++sub_iter)
-    //    {
-    //        if (receiver_uid == get_receiver(*sub_iter)) subscriptions_.erase(sub_iter);
-    //    }
+    // TODO: find
+    for (auto sub_iter = subscriptions_.begin(); sub_iter != subscriptions_.end(); ++sub_iter)
+    {
+        if (receiver_uid == get_receiver(*sub_iter)) subscriptions_.erase(sub_iter);
+    }
 }
 
 
@@ -141,31 +132,31 @@ void MessageEndpoint::send_message(const MessageEndpoint::MessageVariant &messag
     impl_->send_message(&message, sizeof(MessageVariant));
 }
 
+
 template <>
 bool MessageEndpoint::receive_message<messaging::SpikeMessage>()
 {
-    //    -    std::optional<messaging::MessageVariant> message_var = impl_->receive_message();
-    //    -    if (!message_var) return false;
-    //    -
-    //    -    constexpr size_t index = get_type_index<SubscriptionVariant, msg::SpikeMessage>;
-    //    -    auto const iter_pair = subscriptions_.get<by_type>().equal_range(index);
-    //    -    auto &message = std::get<msg::SpikeMessage>(message_var.value());
-    //    -    UID sender_uid = message.header_.sender_uid_;
-    //    -
-    //    -    // Find a subscription you need
-    //    -    for (auto iter = iter_pair.first; iter != iter_pair.second; ++iter)
-    //    -    {
-    //    -        const SubscriptionVariant &sub_variant = *iter;
-    //    -        auto subscription = std::get<Subscription<msg::SpikeMessage>>(sub_variant);
-    //    -        if (subscription.has_sender(sender_uid))
-    //    -        {
-    //    -            subscription.add_message(message);
-    //    -        }
-    //    -    }
+    std::optional<MessageVariant> message_var = impl_->receive_message();
+    if (!message_var) return false;
 
+    constexpr size_t index = get_type_index<SubscriptionVariant, messaging::SpikeMessage>;
+
+    auto const iter_pair = subscriptions_.get<by_type>().equal_range(index);
+    //    UID sender_uid = message.header_.sender_uid_;
+    //    auto &message = std::get<messaging::SpikeMessage>(message_var.value());
+
+    // Find a subscription you need
+    for (auto iter = iter_pair.first; iter != iter_pair.second; ++iter)
+    {
+        //        const SubscriptionVariant &sub_variant = *iter;
+        //        auto subscription = std::get<Subscription<messaging::SpikeMessage>>(sub_variant);
+        //        if (subscription.has_sender(sender_uid))
+        //        {
+        //            // subscription.add_message(message);
+        //        }
+    }
 
     return true;
 }
-
 
 }  // namespace knp::core

@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <knp/core/messaging/message_header.h>
 #include <knp/core/messaging/spike_message.h>
 #include <knp/core/messaging/synaptic_impact_message.h>
 
