@@ -88,9 +88,9 @@ public:
 
     /**
      * @brief Remove all subscriptions with given reciever id
-     * @param receiver_uid UID of the receiver
+     * @param receiver UID of the receiver
      */
-    void remove_receiver(const UID &receiver_uid);
+    void remove_receiver(const UID &receiver);
 
     /**
      * @brief Send a message to the message bus.
@@ -102,10 +102,10 @@ public:
      * @brief Receive a message from the message bus.
      * @return true if nonempty message was received, false otherwise.
      */
-    template <class MessageType>
     bool receive_message();
 
-    typedef mi::multi_index_container<
+public:
+    using SubscriptionContainer = mi::multi_index_container<
         MessageEndpoint::SubscriptionVariant,
         mi::indexed_by<
             mi::ordered_non_unique<
@@ -118,18 +118,10 @@ public:
                 mi::tag<by_type_and_uid>,
                 mi::composite_key<
                     mi::global_fun<const SubscriptionVariant &, UID, MessageEndpoint::get_receiver_uid>,
-                    BOOST_MULTI_INDEX_CONST_MEM_FUN(MessageEndpoint::SubscriptionVariant, std::size_t, index)>>>>
-        SubscriptionContainer;
+                    BOOST_MULTI_INDEX_CONST_MEM_FUN(MessageEndpoint::SubscriptionVariant, std::size_t, index)>>>>;
 
 protected:
     explicit MessageEndpoint(void *context, const std::string &sub_addr, const std::string &pub_addr);
-
-protected:
-    // TODO: Make common functions.
-    template <typename T, typename VT>
-    typename std::vector<VT>::iterator find_elem(const knp::core::UID &uid, std::vector<VT> &container);
-    template <typename Ts, typename VT>
-    typename std::vector<VT>::iterator find_variant(const knp::core::UID &uid, std::vector<VT> &container);
 
 private:
     MessageEndpoint() = delete;

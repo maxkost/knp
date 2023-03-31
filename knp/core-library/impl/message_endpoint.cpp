@@ -7,9 +7,9 @@
 
 #include <knp/core/message_endpoint.h>
 
-#include <memory>
+#include <spdlog/spdlog.h>
 
-#include <zmq.hpp>
+#include <memory>
 
 #include "message_bus_zmq_impl/message_endpoint_impl.h"
 
@@ -24,7 +24,7 @@ UID get_receiver(const MessageEndpoint::SubscriptionVariant &subscription)
 
 
 template <typename T, typename VT>
-typename std::vector<VT>::iterator MessageEndpoint::find_elem(const knp::core::UID &uid, std::vector<VT> &container)
+typename std::vector<VT>::iterator find_elem(const knp::core::UID &uid, std::vector<VT> &container)
 {
     auto result = std::find_if(
         container.begin(), container.end(),
@@ -33,6 +33,25 @@ typename std::vector<VT>::iterator MessageEndpoint::find_elem(const knp::core::U
             constexpr auto type_n = boost::mp11::mp_find<VT, T>();
             if (p_variant.index() != type_n) return false;
             return uid == (std::get<type_n>(p_variant)).get_uid();
+        });
+    return result;
+}
+
+
+template <typename VT, typename ContainerT = std::vector<VT>>
+typename ContainerT::iterator find_variant(const knp::core::UID &uid, ContainerT &container)
+{
+    auto result = std::find_if(
+        container.begin(), container.end(),
+        [&uid](VT &p_variant) -> bool
+        {
+            return std::visit(
+                [&](auto &v)
+                {
+                    // return uid == (std::get<std::decay_t<decltype(v)>>(p_variant)).get_uid();
+                    return uid == std::decay_t<decltype(v)>(v).get_uid();
+                },
+                p_variant);
         });
     return result;
 }
@@ -65,7 +84,9 @@ MessageEndpoint::~MessageEndpoint() {}
 template <typename MessageType>
 size_t MessageEndpoint::subscribe(const UID &receiver, const std::vector<UID> &senders)
 {
-    constexpr size_t index = get_type_index<SubscriptionVariant, Subscription<MessageType>>;
+    SPDLOG_DEBUG("Subscribing {} to the list of senders...", std::string(receiver));
+
+    constexpr auto index = get_type_index<SubscriptionVariant, Subscription<MessageType>>();
 
     auto iter = subscriptions_.get<by_type_and_uid>().find(std::make_pair(receiver, index));
     if (iter != subscriptions_.get<by_type_and_uid>().end())
@@ -84,31 +105,37 @@ size_t MessageEndpoint::subscribe(const UID &receiver, const std::vector<UID> &s
 template <typename MessageType>
 void MessageEndpoint::unsubscribe(const UID &receiver)
 {
-    constexpr size_t index = get_type_index<MessageVariant, MessageType>();
+    SPDLOG_DEBUG("Unsubscribing {}...", std::string(receiver));
+
+    constexpr auto index = get_type_index<MessageVariant, MessageType>();
+
     auto &sub_list = subscriptions_.get<by_type_and_uid>();
     sub_list.erase(sub_list.find(std::make_pair(receiver, index)));
 }
 
 
-void MessageEndpoint::remove_receiver(const UID &receiver_uid)
+void MessageEndpoint::remove_receiver(const UID &receiver)
 {
-    // TODO: find
+    SPDLOG_DEBUG("Removing receiver {}...", std::string(receiver));
+
     for (auto sub_iter = subscriptions_.begin(); sub_iter != subscriptions_.end(); ++sub_iter)
     {
-        if (receiver_uid == get_receiver(*sub_iter)) subscriptions_.erase(sub_iter);
+        if (get_receiver(*sub_iter) == receiver) subscriptions_.erase(sub_iter);
     }
 }
 
 
 void MessageEndpoint::send_message(const MessageEndpoint::MessageVariant &message)
 {
+    SPDLOG_TRACE("Sending message from the {}...", std::string(get_header(message).sender_uid_));
     impl_->send_message(&message, sizeof(MessageVariant));
 }
 
 
-template <>
-bool MessageEndpoint::receive_message<messaging::SpikeMessage>()
+bool MessageEndpoint::receive_message()
 {
+    SPDLOG_TRACE("Receiving message...");
+
     std::optional<MessageVariant> message_var = impl_->receive_message();
     if (!message_var) return false;
 
