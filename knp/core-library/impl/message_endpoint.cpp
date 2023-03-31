@@ -109,6 +109,25 @@ MessageEndpoint::~MessageEndpoint() {}
 
 
 template <typename MessageType>
+size_t MessageEndpoint::subscribe(const UID &receiver, const std::vector<UID> &senders)
+{
+    constexpr size_t index = get_type_index<SubscriptionVariant, Subscription<MessageType>>;
+
+    auto iter = subscriptions_.get<by_type_and_uid>().find(std::make_pair(receiver, index));
+    if (iter != subscriptions_.get<by_type_and_uid>().end())
+    {
+        return std::get<index>(*iter).add_senders(senders);
+    }
+    else
+    {
+        subscriptions_.emplace(Subscription<MessageType>(receiver, senders));
+        return senders.size();
+    }
+    return 0;
+}
+
+
+template <typename MessageType>
 void MessageEndpoint::unsubscribe(const UID &receiver)
 {
     constexpr size_t index = get_type_index<MessageVariant, MessageType>();
