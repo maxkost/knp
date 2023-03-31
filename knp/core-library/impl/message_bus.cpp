@@ -9,6 +9,7 @@
 #include <knp/core/messaging.h>
 
 #include <spdlog/spdlog.h>
+
 #include <zmq.hpp>
 
 
@@ -46,7 +47,10 @@ public:
         // zmq::proxy(router_socket_, publish_socket_);
     }
 
-    void step()
+    /**
+     * @brief send a single message from one socket to another
+     */
+    bool step()
     {
         zmq::message_t message;
         if (router_socket_.recv(message))
@@ -62,6 +66,7 @@ public:
             SPDLOG_CRITICAL(e_msg);
             throw std::logic_error(e_msg);
         }
+        return true;
     }
 
     [[nodiscard]] MessageEndpoint get_endpoint()

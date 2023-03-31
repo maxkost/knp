@@ -88,7 +88,7 @@ inline ::std::istream &operator>>(std::istream &s, UID &uid)
 
 struct UID_hash
 {
-    auto operator()(UID value) { return boost::hash<boost::uuids::uuid>()(boost::uuids::uuid(value)); }
+    auto operator()(const UID &value) { return boost::hash<boost::uuids::uuid>()(boost::uuids::uuid(value)); }
 };
 
 }  // namespace knp::core

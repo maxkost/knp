@@ -11,20 +11,38 @@
 
 #include <zmq.hpp>
 
+#define RETURN_BY_INDEX_CASE(name, index) \
+    case (index):                         \
+        return std::get<index>(name)
 
 namespace knp::core
 {
+namespace msg = messaging;
 
 UID get_receiver(const SubscriptionVariant &subscription)
 {
+    // For
     switch (subscription.index())
     {
-        case 0:
-            return std::get<0>(subscription).get_receiver();
-        case 1:
-            return std::get<1>(subscription).get_receiver();
+        RETURN_BY_INDEX_CASE(subscription, 0).get_receiver();
+        RETURN_BY_INDEX_CASE(subscription, 1).get_receiver();
         default:
-            throw std::runtime_error("Unknown subscription type: " + std::to_string(subscription.index()));
+            throw std::runtime_error(
+                "Unknown subscription index: " + std::to_string(subscription.index()) +
+                ". Expand subscription index lists.");
+    }
+}
+
+
+msg::MessageHeader get_header(const msg::MessageVariant &message)
+{
+    switch (message.index())
+    {
+        RETURN_BY_INDEX_CASE(message, 0).header_;
+        RETURN_BY_INDEX_CASE(message, 1).header_;
+        default:
+            throw std::runtime_error(
+                "Unknown message index: " + std::to_string(message.index()) + ". Expand message index lists.");
     }
 }
 
@@ -41,7 +59,7 @@ public:
     explicit MessageEndpointImpl(zmq::context_t &context, const std::string &sub_addr, const std::string &pub_addr)
         :  // context_(context),
           sub_socket_(context, zmq::socket_type::sub),
-          pub_socket_(context, zmq::socket_type::dealer),
+          pub_socket_(context, zmq::socket_type::pub),
           sub_addr_(sub_addr),
           pub_addr_(pub_addr)
     {
@@ -64,6 +82,14 @@ public:
     void send_message(const void *data, size_t size)
     {
         pub_socket_.send(zmq::message_t(data, size), zmq::send_flags::dontwait);
+    }
+
+    std::optional<msg::MessageVariant> receive_message()
+    {
+        zmq::message_t msg;
+        auto recv_result = sub_socket_.recv(msg, zmq::recv_flags::dontwait);
+        if (recv_result.has_value()) return std::optional<msg::MessageVariant>{};
+        return *msg.data<msg::MessageVariant>();
     }
 
 private:
@@ -96,23 +122,16 @@ void MessageEndpoint::remove_receiver(const UID &receiver_uid)
 }
 
 
-template <typename MessageType>
-void MessageEndpoint::send_message(const MessageType &message)
+void MessageEndpoint::send_message(const msg::MessageVariant &message)
 {
-    impl_->send_message(&message, sizeof(message));
+    impl_->send_message(&message, sizeof(msg::MessageVariant));
 }
 
-
-template <typename MessageType>
-MessageType MessageEndpoint::receive_message()
+template <>
+bool MessageEndpoint::receive_message<msg::SpikeMessage>()
 {
+    return true;
 }
-
-
-template <>
-void MessageEndpoint::send_message<messaging::SpikeMessage>(const messaging::SpikeMessage &message);
-template <>
-void MessageEndpoint::send_message<messaging::SynapticImpactMessage>(const messaging::SynapticImpactMessage &message);
 
 
 }  // namespace knp::core

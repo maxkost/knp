@@ -39,7 +39,7 @@ UID get_receiver(const SubscriptionVariant &subscription);
 std::pair<UID, size_t> get_subscription_key(const SubscriptionVariant &subscription);
 
 template <typename Variant, typename Type>
-constexpr size_t GetTypeIndex = boost::mp11::mp_find<Variant, Type>::value;
+constexpr size_t get_type_index = boost::mp11::mp_find<Variant, Type>::value;
 
 
 /**
@@ -79,7 +79,7 @@ public:
     template <typename MessageType>
     size_t subscribe(const UID &receiver, const std::vector<UID> &senders)
     {
-        constexpr size_t index = GetTypeIndex<SubscriptionVariant, Subscription<MessageType>>();
+        constexpr size_t index = get_type_index<SubscriptionVariant, Subscription<MessageType>>;
 
         auto iter = subscriptions_.get<by_type_and_uid>().find(std::make_pair(receiver, index));
         if (iter != subscriptions_.get<by_type_and_uid>().end())
@@ -100,7 +100,7 @@ public:
     template <typename MessageType>
     void unsubscribe(const UID &receiver)
     {
-        constexpr size_t index = GetTypeIndex<msg::MessageVariant, MessageType>();
+        constexpr size_t index = get_type_index<msg::MessageVariant, MessageType>();
         auto &sub_list = subscriptions_.get<by_type_and_uid>();
         sub_list.erase(sub_list.find(std::make_pair(receiver, index)));
     }
@@ -116,15 +116,15 @@ public:
      * @brief Send a message to the message bus.
      * @param message message to send.
      */
-    template <typename MessageType>
-    void send_message(const MessageType &message);
+    void send_message(const msg::MessageVariant &message);
 
     /**
      * @brief Receive a message from the message bus.
      * @param message message to receive.
+     * @return true if nonempty message was received, false otherwise.
      */
-    template <typename MessageType>
-    MessageType receive_message();
+    template <class MessageType>
+    bool receive_message();
 
     typedef mi::multi_index_container<
         SubscriptionVariant,
