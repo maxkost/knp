@@ -9,10 +9,12 @@
 #include <knp/core/uid.h>
 
 #include <algorithm>
+#include <string>
 #include <unordered_set>
 #include <vector>
 
-#include <boost/container_hash/hash.hpp>
+#include <boost/functional/hash.hpp>
+
 
 namespace knp::core
 {
@@ -44,14 +46,14 @@ public:
      * @param uid sender UID
      * @return 1 if unsubscribed, 0 if no sender was found
      */
-    size_t remove_sender(const UID &uid) { return senders_.erase(uid); }
+    size_t remove_sender(const UID &uid) { return senders_.erase(static_cast<std::string>(uid)); }
 
     /**
      * @brief Add an additional sender to the subscription
      * @param uid new sender UID
      * @return number of senders added (0 if already subscribed, 1 otherwise)
      */
-    size_t add_sender(const UID &uid) { return senders_.insert(uid).second; }
+    size_t add_sender(const UID &uid) { return senders_.insert(static_cast<std::string>(uid)).second; }
 
     /**
      * @brief Add a number of senders to the subscription
@@ -70,7 +72,10 @@ public:
      * @param uid sender UID
      * @return true if sender exists
      */
-    [[nodiscard]] bool has_sender(const UID &uid) const { return 0; /*senders_.find(uid) != senders_.end();*/ }
+    [[nodiscard]] bool has_sender(const UID &uid) const
+    {
+        return senders_.find(static_cast<std::string>(uid)) != senders_.end();
+    }
 
 public:
     void add_message(MessageType &&message) { messages_.push_back(message); }
@@ -78,7 +83,8 @@ public:
 
 private:
     /// Set of sender UIDs
-    std::unordered_set<UID, UID_hash> senders_;
+    // boost::hash<UID>.
+    std::unordered_set<std::string> senders_;
     /// Receiver UID
     const UID receiver_;
     /// Message cache

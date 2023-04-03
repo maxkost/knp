@@ -7,11 +7,11 @@
 
 #pragma once
 
+#include <functional>
 #include <sstream>
 #include <string>
 #include <utility>
 
-#include <boost/container_hash/hash.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -88,10 +88,5 @@ inline ::std::istream &operator>>(std::istream &s, UID &uid)
     s >> uid.tag;
     return s;
 }
-
-struct UID_hash
-{
-    auto operator()(const UID &value) { return boost::hash<boost::uuids::uuid>()(boost::uuids::uuid(value)); }
-};
 
 }  // namespace knp::core
