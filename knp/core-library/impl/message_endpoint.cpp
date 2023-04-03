@@ -17,7 +17,7 @@
 namespace knp::core
 {
 
-UID get_receiver(const MessageEndpoint::SubscriptionVariant &subscription)
+UID MessageEndpoint::get_receiver_uid(const MessageEndpoint::SubscriptionVariant &subscription)
 {
     return std::visit([](auto &v) { return std::decay_t<decltype(v)>(v).get_receiver_uid(); }, subscription);
 }
@@ -29,9 +29,9 @@ messaging::MessageHeader get_header(const MessageEndpoint::MessageVariant &messa
 }
 
 
-std::pair<UID, size_t> get_subscription_key(const MessageEndpoint::SubscriptionVariant &subscription)
+std::pair<UID, size_t> MessageEndpoint::get_subscription_key(const MessageEndpoint::SubscriptionVariant &subscription)
 {
-    return std::make_pair(get_receiver(subscription), subscription.index());
+    return std::make_pair(get_receiver_uid(subscription), subscription.index());
 }
 
 
@@ -86,7 +86,7 @@ void MessageEndpoint::remove_receiver(const UID &receiver)
 
     for (auto sub_iter = subscriptions_.begin(); sub_iter != subscriptions_.end(); ++sub_iter)
     {
-        if (get_receiver(*sub_iter) == receiver) subscriptions_.erase(sub_iter);
+        if (get_receiver_uid(*sub_iter) == receiver) subscriptions_.erase(sub_iter);
     }
 }
 
@@ -98,33 +98,41 @@ void MessageEndpoint::send_message(const MessageEndpoint::MessageVariant &messag
 }
 
 
-template <typename MessageType>
 bool MessageEndpoint::receive_message()
 {
     SPDLOG_TRACE("Receiving message...");
 
     std::optional<MessageVariant> message_var = impl_->receive_message();
-    if (!message_var) return false;
+    if (!message_var.has_value()) return false;
 
-    constexpr size_t index = get_type_index<SubscriptionVariant, MessageType>;
+    const UID &sender_uid = get_header(message_var.value()).sender_uid_;
 
-    auto message = std::get<MessageType>(message_var.value());
-    const UID &sender_uid = message.header_.sender_uid_;
+    auto const [iter_first, iter_second] = subscriptions_.get<by_type>().equal_range(message_var->index());
 
-    auto const [iter_first, iter_second] = subscriptions_.get<by_type>().equal_range(index);
-
-    // Find a subscription you need
+    // Find a subscription.
     for (auto iter = iter_first; iter != iter_second; ++iter)
     {
-        auto subscription = std::get<Subscription<MessageType>>(*iter);
-
-        if (subscription.has_sender(sender_uid))
-        {
-            subscription.add_message(message);
-        }
+        std::visit(
+            [&sender_uid, &message_var](auto &subscription)
+            {
+                if (subscription.has_sender(sender_uid))
+                {
+                    using PT = std::decay_t<decltype(subscription)>;
+                    static_cast<PT>(subscription).add_message(std::get<typename PT::MessageType>(*message_var));
+                }
+            },
+            *iter);
     }
 
     return true;
+}
+
+
+void MessageEndpoint::receive_all_messages()
+{
+    while (receive_message())
+    {
+    }
 }
 
 }  // namespace knp::core

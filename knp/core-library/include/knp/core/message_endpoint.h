@@ -102,8 +102,12 @@ public:
      * @brief Receive a message from the message bus.
      * @return true if nonempty message was received, false otherwise.
      */
-    template <typename MessageType>
     bool receive_message();
+
+    /**
+     * @brief Receive messages in the cycle.
+     */
+    void receive_all_messages();
 
 public:
     using SubscriptionContainer = mi::multi_index_container<

@@ -87,6 +87,7 @@ std::optional<MessageEndpoint::MessageVariant> MessageEndpoint::MessageEndpointI
     }
 
     // Always has value.
-    return (!result.value()) ? MessageVariant() : *msg.data<MessageVariant>();
+    if (!result.value()) return std::nullopt;
+    return *msg.data<MessageVariant>();
 }
 }  // namespace knp::core

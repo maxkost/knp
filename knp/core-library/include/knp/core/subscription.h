@@ -19,11 +19,14 @@ namespace knp::core
 
 /**
  * @brief A subscription class used for message exchange among network entities
- * @tparam MessageType type of messages
+ * @tparam T type of messages
  */
-template <class MessageType>
+template <class T>
 class Subscription
 {
+public:
+    using MessageType = T;
+
 public:
     Subscription(const UID &reciever, const std::vector<UID> &senders)
         : receiver_(reciever), senders_(senders.begin(), senders.end())
@@ -67,10 +70,11 @@ public:
      * @param uid sender UID
      * @return true if sender exists
      */
-    [[nodiscard]] bool has_sender(const UID &uid) const { return senders_.count(uid); }
+    [[nodiscard]] bool has_sender(const UID &uid) const { return 0; /*senders_.find(uid) != senders_.end();*/ }
 
 public:
-    void add_message(MessageType &&message) { return messages_.emplace_back(message); }
+    void add_message(MessageType &&message) { messages_.push_back(message); }
+    void add_message(const MessageType &message) { messages_.emplace_back(message); }
 
 private:
     /// Set of sender UIDs
