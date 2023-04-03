@@ -7,6 +7,8 @@
 
 #include "message_endpoint_impl.h"
 
+#include <spdlog/spdlog.h>
+
 #include <memory>
 
 #include <zmq.hpp>
@@ -38,21 +40,53 @@ MessageEndpoint::MessageEndpointImpl::MessageEndpointImpl(
 }
 
 
-void MessageEndpoint::MessageEndpointImpl::publish(const std::vector<uint8_t> &data)
+void MessageEndpoint::MessageEndpointImpl::send_message(const std::vector<uint8_t> &data)
 {
-    pub_socket_.send(zmq::buffer(data), zmq::send_flags::dontwait);
+    send_message(data.data(), data.size());
 }
+
+
 void MessageEndpoint::MessageEndpointImpl::send_message(const void *data, size_t size)
 {
-    pub_socket_.send(zmq::message_t(data, size), zmq::send_flags::dontwait);
+    // send_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
+    zmq::send_result_t result;
+    try
+    {
+        SPDLOG_DEBUG("Endpoint sending message");
+        do
+        {
+            result = pub_socket_.send(zmq::message_t(data, size), zmq::send_flags::dontwait);
+        } while (!result.has_value());
+    }
+    catch (const zmq::error_t &e)
+    {
+        SPDLOG_CRITICAL(e.what());
+        throw;
+    }
 }
 
 
 std::optional<MessageEndpoint::MessageVariant> MessageEndpoint::MessageEndpointImpl::receive_message()
 {
     zmq::message_t msg;
-    auto recv_result = sub_socket_.recv(msg, zmq::recv_flags::dontwait);
-    if (recv_result.has_value()) return std::optional<MessageVariant>{};
-    return *msg.data<MessageVariant>();
+    // recv_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
+    zmq::recv_result_t result;
+
+    try
+    {
+        SPDLOG_DEBUG("Endpoint sending message");
+        do
+        {
+            result = sub_socket_.recv(msg, zmq::recv_flags::dontwait);
+        } while (!result.has_value());
+    }
+    catch (const zmq::error_t &e)
+    {
+        SPDLOG_CRITICAL(e.what());
+        throw;
+    }
+
+    // Always has value.
+    return (!result.value()) ? MessageVariant() : *msg.data<MessageVariant>();
 }
 }  // namespace knp::core

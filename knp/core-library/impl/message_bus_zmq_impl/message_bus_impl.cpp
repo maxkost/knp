@@ -51,19 +51,31 @@ MessageBus::MessageBusImpl::MessageBusImpl()
 bool MessageBus::MessageBusImpl::step()
 {
     zmq::message_t message;
-    if (router_socket_.recv(message))
+
+    try
     {
-        const std::string e_msg = "Router socket can't receive message!";
-        SPDLOG_CRITICAL(e_msg);
-        throw std::logic_error(e_msg);
+        SPDLOG_DEBUG("Bus receiving message");
+        // recv_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
+        zmq::recv_result_t recv_result;
+        do
+        {
+            recv_result = router_socket_.recv(message);
+        } while (!recv_result.has_value());
+
+        SPDLOG_DEBUG("Bus sending message");
+        // send_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
+        zmq::send_result_t send_result;
+        do
+        {
+            send_result = publish_socket_.send(message, zmq::send_flags::dontwait);
+        } while (!send_result.has_value());
     }
-    SPDLOG_DEBUG("Received message");  //  message.
-    if (!publish_socket_.send(message, zmq::send_flags::dontwait))
+    catch (const zmq::error_t &e)
     {
-        const std::string e_msg = "Publication socket can't receive message!";
-        SPDLOG_CRITICAL(e_msg);
-        throw std::logic_error(e_msg);
+        SPDLOG_CRITICAL(e.what());
+        throw;
     }
+
     return true;
 }
 

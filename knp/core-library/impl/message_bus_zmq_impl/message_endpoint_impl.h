@@ -25,7 +25,7 @@ public:
     explicit MessageEndpointImpl(zmq::context_t &context, const std::string &sub_addr, const std::string &pub_addr);
 
 public:
-    void publish(const std::vector<uint8_t> &data);
+    void send_message(const std::vector<uint8_t> &data);
     void send_message(const void *data, size_t size);
     std::optional<MessageVariant> receive_message();
 
