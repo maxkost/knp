@@ -70,7 +70,7 @@ public:
     [[nodiscard]] bool has_sender(const UID &uid) const { return senders_.count(uid); }
 
 public:
-    size_t add_message(const MessageType &message) { return 0; }
+    void add_message(MessageType &&message) { return messages_.emplace_back(message); }
 
 private:
     /// Set of sender UIDs

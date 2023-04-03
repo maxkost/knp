@@ -23,40 +23,6 @@ UID get_receiver(const MessageEndpoint::SubscriptionVariant &subscription)
 }
 
 
-template <typename T, typename VT>
-typename std::vector<VT>::iterator find_elem(const knp::core::UID &uid, std::vector<VT> &container)
-{
-    auto result = std::find_if(
-        container.begin(), container.end(),
-        [&uid](VT &p_variant) -> bool
-        {
-            constexpr auto type_n = boost::mp11::mp_find<VT, T>();
-            if (p_variant.index() != type_n) return false;
-            return uid == (std::get<type_n>(p_variant)).get_uid();
-        });
-    return result;
-}
-
-
-template <typename VT, typename ContainerT = std::vector<VT>>
-typename ContainerT::iterator find_variant(const knp::core::UID &uid, ContainerT &container)
-{
-    auto result = std::find_if(
-        container.begin(), container.end(),
-        [&uid](VT &p_variant) -> bool
-        {
-            return std::visit(
-                [&](auto &v)
-                {
-                    // return uid == (std::get<std::decay_t<decltype(v)>>(p_variant)).get_uid();
-                    return uid == std::decay_t<decltype(v)>(v).get_uid();
-                },
-                p_variant);
-        });
-    return result;
-}
-
-
 messaging::MessageHeader get_header(const MessageEndpoint::MessageVariant &message)
 {
     return std::visit([](auto &v) { return std::decay_t<decltype(v)>(v).header_; }, message);
