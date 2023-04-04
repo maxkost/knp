@@ -17,7 +17,9 @@
 namespace knp::devices::cpu
 {
 
-// Need to store PCM instance pointer.
+/**
+* @brief The CpuPower class stores the power counter monitor (PCM) instance that monitors the state of a processor.
+*/
 class CpuPower;
 
 class CPU : public knp::core::Device
@@ -33,20 +35,20 @@ public:
 
 public:
     /**
-     * @brief Get current device type.
+     * @brief Get the device type.
      * @return device type.
      */
     [[nodiscard]] knp::core::DeviceType get_type() const override;
 
     /**
-     * @brief Get device name, i.e. CPU0.
+     * @brief Get the device name.
      * @return device name in the arbitrary format.
      */
     [[nodiscard]] const std::string &get_name() const override;
 
     /**
-     * @brief Get device power consumption.
-     * @return power consumption.
+     * @brief Get the power consumption details for the device.
+     * @return amount of consumed power.
      */
     [[nodiscard]] float get_power() const override;
 
