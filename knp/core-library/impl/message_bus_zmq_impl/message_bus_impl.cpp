@@ -45,9 +45,7 @@ MessageBus::MessageBusImpl::MessageBusImpl()
     // zmq::proxy(router_socket_, publish_socket_);
 }
 
-/**
- * @brief send a single message from one socket to another
- */
+
 bool MessageBus::MessageBusImpl::step()
 {
     zmq::message_t message;
@@ -78,6 +76,7 @@ bool MessageBus::MessageBusImpl::step()
 
     return true;
 }
+
 
 [[nodiscard]] MessageEndpoint MessageBus::MessageBusImpl::get_endpoint()
 {
