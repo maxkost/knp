@@ -1,9 +1,20 @@
 /**
-\mainpage Kaspersky Neuromorphic Platform code documentation
+\mainpage About Kaspersky Neuromorphic Platform
 
 \tableofcontents
 
-This Doxygen page offers code level documentation.
+Kaspersky Neuromorphic Platform (also referred to as "the platform") is a software and hardware platform designed to emulate spiking neural networks on CPUs and support them on various computers.
+You can use Kaspersky Neuromorphic Platform to do the following:
+\li Create and train neural networks based on the following types of input data: telemetry, events, images, 3D data, audio data and tactile data.
+\li Create neural networks based on their geometric structure (coordinates).
+\li Optimize the structure and hyperparameters of loaded neural networks.
+\li Conduct applied research in the field of spiking neural network topology, input data classification, and other application domains of spiking neural networks.
+\li Develop new topologies of neural networks, such as spike analogs of convolutional neural networks that imply convolution in space and time.
+\li Develop new models of synaptic plasticity, such as models for unsupervised machine learning tasks.
+\li Implement new neuron models.
+\li Implement application solutions based on neuromorphic machine learning and artificial intelligence in the field of robotic manipulators, Internet of Things, unmanned systems, human-machine interaction, wearable devices, and optimization planning.
+\li Implement application solutions on devices with low power consumption or using neural processing units (NPU).
+You can use the C++ and Python languages to accomplish the listed tasks. The platform supports single-threaded and multi-threaded CPUs. The Kaspersky Neuromorphic Platform framework can also be used as a backend for the PyNN API.
 
 \section modules Browse modules
 
