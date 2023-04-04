@@ -58,7 +58,7 @@ target_include_directories("${PROJECT_NAME}"
     PRIVATE "${GTEST_DIR}/googlemock/include"
 )
 
-target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main)
+target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main spdlog)
 target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Core KNP::BaseFramework::Core)
 
 if(KNP_ENABLE_COVERAGE)
