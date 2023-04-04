@@ -18,7 +18,7 @@ namespace knp::framework
 {
 
 /**
- * @brief The Model class is model containing network, I/O channels, monitor and backend.
+ * @brief The Model class defines a model that contains a network, input and output channels, a monitor and a backend.
  */
 class Model
 {

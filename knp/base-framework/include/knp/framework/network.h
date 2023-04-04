@@ -26,7 +26,7 @@ namespace knp::framework
 {
 
 /**
- * @brief The Network class is a neural network containing populations and projections.
+ * @brief The Network class defines a neural network that contains populations and projections.
  */
 class Network
 {
@@ -51,61 +51,69 @@ public:
 
 public:
     /**
-     * @brief add_population add population to network.
-     * @param population new population.
+     * @brief Add a population to the network.
+     * @param population population to add.
      */
     void add_population(AllPopulationVariants &&population);
     /**
-     * @copydoc add_population
+     * @brief Add a population to the network.
+     * @param population population to add.
      */
     template <typename PopulationType>
     void add_population(PopulationType &&population);
     /**
-     * @brief get_population get population from network.
+     * @brief Get a population with the given UID from the network.
      * @param population_uid population UID.
-     * @throw std::logic_error if population was not found.
-     * @return existing population.
+     * @throw std::logic_error if population is not found in the network.
+     * @return population.
      */
     template <typename PopulationType>
     PopulationType &get_population(const knp::core::UID &population_uid);
     /**
-     * @copydoc get_population
+     * @brief Get a population with the given UID from the network.
+     * @param population_uid population UID.
+     * @throw std::logic_error if population is not found in the network.
+     * @return population.
      */
     template <typename PopulationType>
     const PopulationType &get_population(const knp::core::UID &population_uid) const;
     /**
-     * @brief remove_population remove population from network.
-     * @param population_uid population UID.
+     * @brief Remove a population with the given UID from the network.
+     * @param population_uid UID of the population to remove.
      */
     void remove_population(const knp::core::UID &population_uid);
 
 public:
     /**
-     * @brief add_projection add projection to network.
-     * @param projection new projection.
+     * @brief Add a projection to the network.
+     * @param projection projection to add.
      */
     void add_projection(AllProjectionVariants &&projection);
     /**
-     * @copydoc add_projection
+     * @brief Add a projection to the network.
+     * @param projection projection to add.
      */
     template <typename ProjectionType>
     void add_projection(ProjectionType &&projection);
     /**
-     * @brief get_projection get projection from network.
+     * @brief Get a projection with the given UID from the network.
      * @param projection_uid projection UID.
-     * @throw std::logic_error if projection was not found.
-     * @return existing projection.
+     * @throw std::logic_error if projection is not found in the network.
+     * @return projection.
      */
     template <typename ProjectionType>
     ProjectionType &get_projection(const knp::core::UID &projection_uid);
     /**
-     * @copydoc get_projection
+     * @brief Get a projection with the given UID from the network.
+     * @param projection_uid projection UID.
+     * @throw std::logic_error if projection is not found in the network.
+     * @return projection.
      */
     template <typename ProjectionType>
     const ProjectionType &get_projection(const knp::core::UID &projection_uid) const;
     /**
-     * @brief remove_projection remove projection from network.
-     * @param projection_uid projection UID.
+     * @brief Remove a projection with the given UID from the network.
+     * @param projection_uid UID of the projection to remove.
      */
     void remove_projection(const knp::core::UID &projection_uid);
 

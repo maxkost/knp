@@ -8,7 +8,9 @@
 #pragma once
 
 
-/// Framework namespace.
+/**
+* @brief Namespace for framework coordinates.
+*/
 namespace knp::framework::coordinates
 {
 

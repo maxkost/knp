@@ -15,7 +15,9 @@
 #include <unordered_map>
 
 
-/// Framework namespace.
+/**
+ * @brief Framework namespace.
+ */
 namespace knp::framework
 {
 
