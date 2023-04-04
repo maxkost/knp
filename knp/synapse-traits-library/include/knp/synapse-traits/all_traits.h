@@ -15,8 +15,10 @@
 namespace knp::synapse_traits
 {
 
-// Comma-separated synapses list.
 #define ALL_SYNAPSES knp::synapse_traits::DeltaSynapse
+/**
+* @brief A comma-separated list of synapses.
+*/
 using AllSynapses = boost::mp11::mp_list<ALL_SYNAPSES>;
 
 }  // namespace knp::synapse_traits

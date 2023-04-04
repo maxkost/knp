@@ -58,7 +58,7 @@ public:
 
     /**
      * @brief Remove populations with given UIDs from the backend.
-     * @param uids UIDs of populations remove.
+     * @param uids UIDs of populations to remove.
      */
     virtual void remove_populations(const std::vector<UID> &uids) = 0;
 
