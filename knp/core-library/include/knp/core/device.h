@@ -11,7 +11,9 @@
 
 #include <string>
 
-
+/**
+* @brief Core library namespace.
+*/
 namespace knp::core
 {
 

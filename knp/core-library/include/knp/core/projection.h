@@ -18,7 +18,9 @@
 #include <utility>
 #include <vector>
 
-
+/**
+* @brief Core library namespace.
+*/
 namespace knp::core
 {
 /**
