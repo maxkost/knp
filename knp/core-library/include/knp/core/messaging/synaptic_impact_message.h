@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <map>
+#include <unordered_map>
 #include <vector>
 
 #include "message_header.h"
@@ -42,6 +43,8 @@ struct SynapticImpactMessage
     knp::synapse_traits::OutputType output_type;
     std::vector<SynapticImpact> impacts_;
 };
+
+typedef std::unordered_map<size_t, knp::core::messaging::SynapticImpactMessage> SynapticMessageQueue;
 
 std::istream &operator>>(std::istream &stream, SynapticImpact &impact);
 std::ostream &operator<<(std::ostream &stream, const SynapticImpact &impact);

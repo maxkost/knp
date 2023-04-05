@@ -60,6 +60,7 @@ void SingleThreadedCPUBackend::step()
     calculator<SupportedProjections, &SingleThreadedCPUBackend::calculate_projection>(projections_);
     // Calculate populations.
     calculator<SupportedPopulations, &SingleThreadedCPUBackend::calculate_population>(populations_);
+    ++step_;
 }
 
 
@@ -84,12 +85,14 @@ void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVari
     projections_.reserve(projections.size());
 
     for (const auto &p : projections) projections_.push_back(p);
+    projection_message_storage_.resize(projections.size());
 }
 
 
 void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVariants> &&projections)
 {
     projections_ = std::move(projections);
+    projection_message_storage_.resize(projections_.size());
 }
 
 
@@ -118,8 +121,8 @@ void SingleThreadedCPUBackend::calculate_population(knp::core::Population<knp::n
 
 
 void SingleThreadedCPUBackend::calculate_projection(
-    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection)
+    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, MessageQueue &message_queue)
 {
-    calculate_delta_synapse_projection(projection, message_endpoint_);
+    calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, step_);
 }
 }  // namespace knp::backends::single_threaded_cpu

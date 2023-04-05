@@ -26,7 +26,6 @@
 
 namespace knp::backends::single_threaded_cpu
 {
-
 class SingleThreadedCPUBackend : public knp::core::Backend
 {
 public:
@@ -116,7 +115,9 @@ protected:
      * @note Projection will be changed during calculation.
      * @param projection projection of Delta synapses to calculate.
      */
-    void calculate_projection(knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection);
+    void calculate_projection(
+        knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
+        core::messaging::SynapticMessageQueue &message_queue);
 
 private:
     template <typename TypeList, auto CalculateMethod, typename Container>
@@ -125,7 +126,10 @@ private:
 private:
     std::vector<PopulationVariants> populations_;
     std::vector<ProjectionVariants> projections_;
+    std::vector<knp::core::messaging::SynapticMessageQueue>
+        projection_message_storage_;  // TODO: unite with projections
     core::MessageEndpoint message_endpoint_;
+    size_t step_ = 0;
 };
 
 
