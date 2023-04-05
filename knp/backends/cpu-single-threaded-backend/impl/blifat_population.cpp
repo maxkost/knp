@@ -7,8 +7,94 @@
 
 #include "blifat_population.h"
 
+#include <knp/synapse-traits/output_types.h>
+
+#include <unordered_map>
+
 
 void calculate_blifat_population(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint)
 {
+    // This function might be optimizable
+    // TODO: get messages from an endpoint
+    std::vector<knp::core::messaging::SynapticImpactMessage> messages;
+    for (auto &neuron : population)
+    {
+        ++neuron.n_time_steps_since_last_firing_;
+        neuron.dynamic_threshold_ *= neuron.threshold_decay_;
+        neuron.postsynaptic_trace_ *= neuron.postsynaptic_trace_decay_;
+        neuron.inhibitory_conductance_ *= neuron.inhibitory_conductance_decay_;
+        neuron.potential_ *= neuron.potential_decay_;
+        if (neuron.bursting_phase_ != 0)
+        {
+            --neuron.bursting_phase_;
+            if (neuron.bursting_phase_ == 0)
+            {
+                neuron.potential_ += neuron.reflexive_weight_;
+            }
+        }
+    }
+
+    // Process inputs
+    for (const auto &message : messages)
+    {
+        auto synapse_type = message.output_type;
+        for (auto &impact : message.impacts_)
+        {
+            auto &neuron = population[impact.postsynaptic_neuron_index_];
+            switch (synapse_type)
+            {
+                case knp::synapse_traits::OutputType::EXCITATORY:
+                    neuron.potential_ += impact.impact_value_;
+                    break;
+                case knp::synapse_traits::OutputType::INHIBITORY_CONDUCTANCE:
+                    neuron.inhibitory_conductance_ += impact.impact_value_;
+                    break;
+                case knp::synapse_traits::OutputType::INHIBITORY_CURRENT:
+                    neuron.potential_ -= impact.impact_value_;
+                    break;
+                case knp::synapse_traits::OutputType::DOPAMINE:
+                    break;
+            }
+        }
+    }
+
+    std::vector<uint32_t> neuron_indexes;
+
+    // can be made parallel
+    for (size_t i = 0; i < population.size(); ++i)
+    {
+        auto &neuron = population[i];
+        if (neuron.inhibitory_conductance_ < 1.0f)
+        {
+            neuron.potential_ -=
+                (neuron.potential_ - neuron.reversive_inhibitory_potential_) * neuron.inhibitory_conductance_;
+        }
+        else
+        {
+            neuron.potential_ = neuron.reversive_inhibitory_potential_;
+        }
+
+        if (neuron.n_time_steps_since_last_firing_ > neuron.absolute_refractory_period_ &&
+            neuron.potential_ >= 1.0 + neuron.dynamic_threshold_)
+        {
+            // Spike
+            neuron.potential_ = neuron.potential_reset_value_;
+            neuron.dynamic_threshold_ += neuron.threshold_increment_;
+            neuron.n_time_steps_since_last_firing_ = 0;
+            neuron.bursting_phase_ = neuron.bursting_period;
+            neuron.postsynaptic_trace_ += neuron.postsynaptic_trace_increment_;
+            neuron_indexes.push_back(i);
+        }
+
+        if (neuron.potential_ < neuron.min_potential_)
+        {
+            neuron.potential_ = neuron.min_potential_;
+        }
+    }
+
+    // TODO: get time!
+    time_t time = 0;
+    knp::core::messaging::SpikeMessage res_message{{population.get_uid(), time}, neuron_indexes};
+    endpoint.send_message(res_message);
 }

@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include <knp/synapse-traits/output_types.h>
 
 #include <iostream>
 #include <map>
@@ -38,6 +39,7 @@ struct SynapticImpactMessage
     MessageHeader header_;
     UID postsynaptic_population_uid_;
     UID presynaptic_population_uid_;
+    knp::synapse_traits::OutputType output_type;
     std::vector<SynapticImpact> impacts_;
 };
 
