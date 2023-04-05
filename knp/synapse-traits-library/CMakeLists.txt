@@ -13,6 +13,7 @@ add_library("${PROJECT_NAME}"
     include/knp/synapse-traits/type_traits.h
     include/knp/synapse-traits/delta.h
     include/knp/synapse-traits/all_traits.h
+    include/knp/synapse-traits/output_types.h
 )
 add_library(KNP::Synapse::Traits ALIAS "${PROJECT_NAME}")
 

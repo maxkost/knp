@@ -114,6 +114,7 @@ protected:
      * @brief Calculate the projection of Delta synapses.
      * @note Projection will be changed during calculation.
      * @param projection projection of Delta synapses to calculate.
+     * @param message_queue message queue.
      */
     void calculate_projection(
         knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
