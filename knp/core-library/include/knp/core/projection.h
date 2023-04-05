@@ -9,6 +9,7 @@
 
 #include <knp/core/core.h>
 #include <knp/core/uid.h>
+#include <knp/synapse-traits/output_types.h>
 #include <knp/synapse-traits/type_traits.h>
 
 #include <algorithm>
@@ -99,6 +100,13 @@ public:
 
 public:
     /**
+     * Gets synapse output type for the population
+     * @return output type
+     */
+    [[nodiscard]] auto get_output_type() const { return output_type_; }
+    void set_output_type(knp::synapse_traits::OutputType type) { output_type_ = type; }
+
+    /**
      * @brief Count the number of synapses in the projection.
      * @return synapse count.
      */
@@ -124,6 +132,25 @@ public:
     [[nodiscard]] std::tuple<size_t, size_t, size_t> get_connection(size_t index) const
     {
         return std::make_tuple(parameters_[index].id_from, index, parameters_[index].id_to);
+    }
+
+    // TODO: VERY inefficient. Will need to optimize it to less than linear ASAP
+    /**
+     * @brief Find synapses for a given output neuron.
+     * @param neuron_index
+     * @return
+     */
+    [[nodiscard]] std::vector<size_t> get_by_presynaptic_neuron(size_t neuron_index) const
+    {
+        std::vector<size_t> res;
+        for (size_t i = 0; i < parameters_.size(); ++i)
+        {
+            if (parameters_[i].id_from == neuron_index)
+            {
+                res.push_back(i);
+            }
+        }
+        return res;
     }
 
     /**
@@ -263,10 +290,17 @@ private:
      */
     bool is_locked_ = false;
 
+    // TODO Change this container into something that searches efficiently by input index. A multiindex or
+    // unordered_multimap
     /**
      * @brief Container of synapse parameters.
      */
     std::vector<Synapse> parameters_;
+
+    /**
+     * @brief synapse type, by its interaction with neuron
+     */
+    synapse_traits::OutputType output_type_;
 };
 
 }  // namespace knp::core

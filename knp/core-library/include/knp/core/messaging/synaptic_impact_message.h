@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include <knp/synapse-traits/output_types.h>
 
 #include <map>
 #include <vector>
@@ -17,7 +18,7 @@ namespace knp::core::messaging
 {
 
 /**
- * @brief A structure that contains the synaptic impact value and indexes of presynaptic and posynaptic neurons. 
+ * @brief A structure that contains the synaptic impact value and indexes of presynaptic and posynaptic neurons.
  * @details Synaptic impact changes parameters of neurons after the synapses state was calculated.
  */
 struct SynapticImpact
@@ -37,6 +38,7 @@ struct SynapticImpactMessage
     MessageHeader header_;
     UID postsynaptic_population_uid_;
     UID presynaptic_population_uid_;
+    knp::synapse_traits::OutputType output_type;
     std::vector<SynapticImpact> impacts_;
 };
 

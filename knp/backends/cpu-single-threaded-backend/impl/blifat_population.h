@@ -11,6 +11,8 @@
 #include <knp/core/population.h>
 #include <knp/neuron-traits/blifat.h>
 
+#include <queue>
+#include <vector>
 
 void calculate_blifat_population(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &bus);
