@@ -19,7 +19,10 @@ namespace knp::synapse_traits
 #define ALL_SYNAPSES knp::synapse_traits::DeltaSynapse
 /**
 * @brief List of synapse types.
-* @details To add a new synapse type to the list, define it in the ALL_SYNAPSES macro.
+* @details To add a new synapse type to the list, define it in the ALL_SYNAPSES macro. For example, 
+* @code{.cpp}
+* #define ALL_SYNAPSES knp::synapse_traits::DeltaSynapse, knp::synapse_traits::AdditiveSTDPSynapse 
+* @endcode
 */
 using AllSynapses = boost::mp11::mp_list<ALL_SYNAPSES>;
 
