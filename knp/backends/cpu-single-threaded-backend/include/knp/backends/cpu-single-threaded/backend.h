@@ -114,11 +114,8 @@ protected:
      * @brief Calculate the projection of Delta synapses.
      * @note Projection will be changed during calculation.
      * @param projection projection of Delta synapses to calculate.
-     * @param message_queue message queue.
      */
-    void calculate_projection(
-        knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
-        core::messaging::SynapticMessageQueue &message_queue);
+    void calculate_projection(knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection);
 
 private:
     template <typename TypeList, auto CalculateMethod, typename Container>
@@ -127,8 +124,8 @@ private:
 private:
     std::vector<PopulationVariants> populations_;
     std::vector<ProjectionVariants> projections_;
-    std::vector<knp::core::messaging::SynapticMessageQueue>
-        projection_message_storage_;  // TODO: unite with projections
+    // TODO: unite with projections
+    std::vector<knp::core::messaging::SynapticMessageQueue> projection_message_storage_;
     core::MessageEndpoint message_endpoint_;
     size_t step_ = 0;
 };

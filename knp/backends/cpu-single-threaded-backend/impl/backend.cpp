@@ -121,8 +121,8 @@ void SingleThreadedCPUBackend::calculate_population(knp::core::Population<knp::n
 
 
 void SingleThreadedCPUBackend::calculate_projection(
-    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, MessageQueue &message_queue)
+    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection)
 {
-    calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, step_);
+    // calculate_delta_synapse_projection(projection, message_endpoint_, projection_message_storage_, step_);
 }
 }  // namespace knp::backends::single_threaded_cpu
