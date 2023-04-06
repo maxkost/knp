@@ -28,12 +28,10 @@ class Subscription
 {
 public:
     using MessageType = T;
+    using MessageContainerType = std::vector<MessageType>;
 
 public:
-    Subscription(const UID &reciever, const std::vector<UID> &senders)
-        : receiver_(reciever), senders_(senders.begin(), senders.end())
-    {
-    }
+    Subscription(const UID &reciever, const std::vector<UID> &senders) : receiver_(reciever) { add_senders(senders); }
 
     /// Get a set of sender UIDs
     [[nodiscard]] const auto &get_senders() const { return senders_; }
@@ -62,9 +60,10 @@ public:
      */
     size_t add_senders(const std::vector<UID> &senders)
     {
-        size_t size_before = senders_.size();
-        std::copy(senders.begin(), senders.end(), std::inserter(senders_, senders_.end()));
-        return senders_.size() - size_before;
+        // size_t size_before = senders_.size();
+        // std::copy(senders.begin(), senders.end(), std::inserter(senders_, senders_.end()));
+        //        return senders_.size() - size_before;
+        return 0;
     };
 
     /**
@@ -81,14 +80,17 @@ public:
     void add_message(MessageType &&message) { messages_.push_back(message); }
     void add_message(const MessageType &message) { messages_.emplace_back(message); }
 
+    MessageContainerType &get_messages() { return messages_; }
+    const MessageContainerType &get_messages() const { return messages_; }
+
 private:
+    /// Receiver UID
+    const UID receiver_;
     /// Set of sender UIDs
     // boost::hash<UID>.
     std::unordered_set<std::string> senders_;
-    /// Receiver UID
-    const UID receiver_;
     /// Message cache
-    std::vector<MessageType> messages_;
+    MessageContainerType messages_;
 };
 
 

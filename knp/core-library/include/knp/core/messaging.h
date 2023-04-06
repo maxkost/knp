@@ -17,7 +17,7 @@
 namespace knp::core::messaging
 {
 
-#define ALL_MESSAGES SpikeMessage, SynapticImpactMessage
+#define ALL_MESSAGES knp::core::messaging::SpikeMessage, knp::core::messaging::SynapticImpactMessage
 
 using AllMessages = boost::mp11::mp_list<ALL_MESSAGES>;
 

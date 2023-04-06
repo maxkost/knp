@@ -33,6 +33,10 @@ public:
      */
     [[nodiscard]] MessageEndpoint get_endpoint();
 
+    bool step();
+
+    size_t route_messages();
+
 private:
     /// Message bus implementation.
     class MessageBusImpl;

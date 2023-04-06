@@ -49,18 +49,17 @@ MessageEndpoint MessageBus::get_endpoint()
 }
 
 
-// bool MessageBus::step()
-//{
-//     return impl_->step();
-// }
+bool MessageBus::step()
+{
+    return impl_->step();
+}
 
 
-// size_t MessageBus::route_messages()
-//{
-//     size_t count = 0;
-//     while (step()) ++count;
-//     return count;
-// }
-
+size_t MessageBus::route_messages()
+{
+    size_t count = 0;
+    while (step()) ++count;
+    return count;
+}
 
 }  // namespace knp::core

@@ -22,6 +22,7 @@
 #include <boost/mp11.hpp>
 #include <boost/multi_index/composite_key.hpp>
 #include <boost/multi_index/global_fun.hpp>
+#include <boost/multi_index/hashed_index.hpp>
 #include <boost/multi_index/identity.hpp>
 #include <boost/multi_index/mem_fun.hpp>
 #include <boost/multi_index/ordered_index.hpp>
@@ -49,6 +50,11 @@ public:
     static UID get_receiver_uid(const SubscriptionVariant &subscription);
     static std::pair<UID, size_t> get_subscription_key(const SubscriptionVariant &subscription);
 
+    static UID get_receiver_uid1(MessageEndpoint::SubscriptionVariant subscription)
+    {
+        return std::visit([](auto &v) { return std::decay_t<decltype(v)>(v).get_receiver_uid(); }, subscription);
+    }
+
     template <typename Variant, typename Type>
     static constexpr size_t get_type_index = boost::mp11::mp_find<Variant, Type>::value;
 
@@ -58,15 +64,9 @@ public:
     virtual ~MessageEndpoint();
 
 public:
-    struct by_type
-    {
-    };
-    struct by_receiver
-    {
-    };
-    struct by_type_and_uid
-    {
-    };
+    struct by_type;
+    struct by_receiver;
+    struct by_type_and_uid;
 
 public:
     /**
@@ -77,7 +77,7 @@ public:
      * @return the number of senders added
      */
     template <typename MessageType>
-    size_t subscribe(const UID &receiver, const std::vector<UID> &senders);
+    Subscription<MessageType> subscribe(const UID &receiver, const std::vector<UID> &senders);
 
     /**
      * @brief Unsubscribe from messages of a certain type
@@ -113,17 +113,17 @@ public:
     using SubscriptionContainer = mi::multi_index_container<
         MessageEndpoint::SubscriptionVariant,
         mi::indexed_by<
-            mi::ordered_non_unique<
-                mi::tag<by_type>,
-                BOOST_MULTI_INDEX_CONST_MEM_FUN(MessageEndpoint::SubscriptionVariant, std::size_t, index)>,
-            mi::ordered_non_unique<
-                mi::tag<by_receiver>,
-                mi::global_fun<const SubscriptionVariant &, UID, MessageEndpoint::get_receiver_uid>>,
             mi::ordered_unique<
                 mi::tag<by_type_and_uid>,
                 mi::composite_key<
-                    mi::global_fun<const SubscriptionVariant &, UID, MessageEndpoint::get_receiver_uid>,
-                    BOOST_MULTI_INDEX_CONST_MEM_FUN(MessageEndpoint::SubscriptionVariant, std::size_t, index)>>>>;
+                    mi::global_fun<SubscriptionVariant, UID, MessageEndpoint::get_receiver_uid1>,
+                    BOOST_MULTI_INDEX_CONST_MEM_FUN(MessageEndpoint::SubscriptionVariant, std::size_t, index)>>,
+            mi::hashed_non_unique<
+                mi::tag<by_type>,
+                BOOST_MULTI_INDEX_CONST_MEM_FUN(MessageEndpoint::SubscriptionVariant, std::size_t, index)>,
+            mi::hashed_non_unique<
+                mi::tag<by_receiver>,
+                mi::global_fun<const SubscriptionVariant &, UID, MessageEndpoint::get_receiver_uid>>>>;
 
 protected:
     explicit MessageEndpoint(void *context, const std::string &sub_addr, const std::string &pub_addr);

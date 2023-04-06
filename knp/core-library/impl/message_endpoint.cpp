@@ -11,6 +11,8 @@
 
 #include <memory>
 
+#include <boost/preprocessor.hpp>
+
 #include "message_bus_zmq_impl/message_endpoint_impl.h"
 
 
@@ -26,6 +28,12 @@ UID MessageEndpoint::get_receiver_uid(const MessageEndpoint::SubscriptionVariant
 messaging::MessageHeader get_header(const MessageEndpoint::MessageVariant &message)
 {
     return std::visit([](auto &v) { return std::decay_t<decltype(v)>(v).header_; }, message);
+}
+
+
+bool operator<(const MessageEndpoint::SubscriptionVariant &sv1, const MessageEndpoint::SubscriptionVariant &sv2)
+{
+    return MessageEndpoint::get_receiver_uid(sv1) < MessageEndpoint::get_receiver_uid(sv2);
 }
 
 
@@ -48,23 +56,30 @@ MessageEndpoint::~MessageEndpoint() {}
 
 
 template <typename MessageType>
-size_t MessageEndpoint::subscribe(const UID &receiver, const std::vector<UID> &senders)
+Subscription<MessageType> MessageEndpoint::subscribe(const UID &receiver, const std::vector<UID> &senders)
 {
     SPDLOG_DEBUG("Subscribing {} to the list of senders...", std::string(receiver));
 
-    constexpr auto index = get_type_index<SubscriptionVariant, Subscription<MessageType>>();
+    //    constexpr auto index = get_type_index<MessageVariant, MessageType>;
 
-    auto iter = subscriptions_.get<by_type_and_uid>().find(std::make_pair(receiver, index));
-    if (iter != subscriptions_.get<by_type_and_uid>().end())
+    //    auto iter = subscriptions_.find(std::make_tuple(receiver, index));
+    //    (void)iter;
+    //    if (iter != subscriptions_.get<by_type_and_uid>().end())
+    //    {
+    //        auto &sub = *const_cast<Subscription<MessageType>*>(&std::get<index>(*iter));
+    //        sub.add_senders(senders);
+    //        return sub;
+    //    }
+    //    else
     {
-        return std::get<index>(*iter).add_senders(senders);
+        //        auto p = SubscriptionVariant(Subscription<MessageType>{receiver, senders});
+        //        auto e_res = subscriptions_.insert(p);
+        //        auto &sub = *const_cast<Subscription<MessageType>*>(&std::get<index>(*e_res.first));
     }
-    else
-    {
-        subscriptions_.emplace(Subscription<MessageType>(receiver, senders));
-        return senders.size();
-    }
-    return 0;
+
+    std::vector<UID> v;
+    UID ruid;
+    return Subscription<MessageType>(ruid, v);
 }
 
 
@@ -73,10 +88,10 @@ void MessageEndpoint::unsubscribe(const UID &receiver)
 {
     SPDLOG_DEBUG("Unsubscribing {}...", std::string(receiver));
 
-    constexpr auto index = get_type_index<MessageVariant, MessageType>();
+    //    constexpr auto index = get_type_index<MessageVariant, MessageType>;
 
-    auto &sub_list = subscriptions_.get<by_type_and_uid>();
-    sub_list.erase(sub_list.find(std::make_pair(receiver, index)));
+    //    auto &sub_list = subscriptions_.get<by_type_and_uid>();
+    //    sub_list.erase(sub_list.find(std::make_pair(receiver, index)));
 }
 
 
@@ -134,5 +149,15 @@ void MessageEndpoint::receive_all_messages()
     {
     }
 }
+
+
+#define INSTANCE_MESSAGES_FUNCTIONS(n, template_for_instance, message_type)       \
+    ;                                                                             \
+    template Subscription<message_type> MessageEndpoint::subscribe<message_type>( \
+        const UID &receiver, const std::vector<UID> &senders);                    \
+    template void MessageEndpoint::unsubscribe<message_type>(const UID &receiver);
+
+// cppcheck-suppress unknownMacro
+BOOST_PP_SEQ_FOR_EACH(INSTANCE_MESSAGES_FUNCTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES));
 
 }  // namespace knp::core
