@@ -26,7 +26,7 @@ namespace knp::framework
 {
 
 /**
- * @brief The Network class defines a neural network that contains populations and projections.
+ * @brief The Network class is a definition of a neural network that contains populations and projections.
  */
 class Network
 {
