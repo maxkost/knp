@@ -12,6 +12,7 @@
 #include <knp/core/uid.h>
 
 #include <functional>
+#include <map>
 #include <memory>
 #include <numeric>
 #include <string>
@@ -20,19 +21,10 @@
 #include <vector>
 
 #include <boost/mp11.hpp>
-#include <boost/multi_index/composite_key.hpp>
-#include <boost/multi_index/global_fun.hpp>
-#include <boost/multi_index/hashed_index.hpp>
-#include <boost/multi_index/identity.hpp>
-#include <boost/multi_index/mem_fun.hpp>
-#include <boost/multi_index/ordered_index.hpp>
-#include <boost/multi_index_container.hpp>
 
 
 namespace knp::core
 {
-namespace mi = boost::multi_index;
-
 /**
  * @brief The MessageEndpoint class is a definition of message endpoints.
  * @details You can use message endpoints to receive or send messages.
@@ -48,7 +40,7 @@ public:
 
 public:
     static UID get_receiver_uid(const SubscriptionVariant &subscription);
-    static std::pair<UID, size_t> get_subscription_key(const SubscriptionVariant &subscription);
+    static std::pair<size_t, UID> get_subscription_key(const SubscriptionVariant &subscription);
 
     static UID get_receiver_uid1(MessageEndpoint::SubscriptionVariant subscription)
     {
@@ -64,11 +56,6 @@ public:
     virtual ~MessageEndpoint();
 
 public:
-    struct by_type;
-    struct by_receiver;
-    struct by_type_and_uid;
-
-public:
     /**
      * @brief Add subscription to parameters or update an existing one
      * @tparam MessageType message type the receiver subscribes to
@@ -77,7 +64,7 @@ public:
      * @return the number of senders added
      */
     template <typename MessageType>
-    Subscription<MessageType> subscribe(const UID &receiver, const std::vector<UID> &senders);
+    Subscription<MessageType> &subscribe(const UID &receiver, const std::vector<UID> &senders);
 
     /**
      * @brief Unsubscribe from messages of a certain type
@@ -105,25 +92,24 @@ public:
     bool receive_message();
 
     /**
+     * @brief Get a subscription to a message type by its receiver uid
+     * @param receiver_uid UID of the receiving object
+     */
+    template <class MessageType>
+    Subscription<MessageType> &get_subscription(const knp::core::UID &receiver_uid)
+    {
+        constexpr size_t index = get_type_index<MessageVariant, MessageType>;
+        return subscriptions_[std::make_pair(index, receiver_uid)];
+    }
+
+
+    /**
      * @brief Receive messages in the cycle.
      */
     void receive_all_messages();
 
 public:
-    using SubscriptionContainer = mi::multi_index_container<
-        MessageEndpoint::SubscriptionVariant,
-        mi::indexed_by<
-            mi::ordered_unique<
-                mi::tag<by_type_and_uid>,
-                mi::composite_key<
-                    mi::global_fun<SubscriptionVariant, UID, MessageEndpoint::get_receiver_uid1>,
-                    BOOST_MULTI_INDEX_CONST_MEM_FUN(MessageEndpoint::SubscriptionVariant, std::size_t, index)>>,
-            mi::hashed_non_unique<
-                mi::tag<by_type>,
-                BOOST_MULTI_INDEX_CONST_MEM_FUN(MessageEndpoint::SubscriptionVariant, std::size_t, index)>,
-            mi::hashed_non_unique<
-                mi::tag<by_receiver>,
-                mi::global_fun<const SubscriptionVariant &, UID, MessageEndpoint::get_receiver_uid>>>>;
+    using SubscriptionContainer = std::map<std::pair<size_t, UID>, SubscriptionVariant>;
 
 protected:
     explicit MessageEndpoint(void *context, const std::string &sub_addr, const std::string &pub_addr);

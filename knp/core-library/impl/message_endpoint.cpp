@@ -37,9 +37,9 @@ bool operator<(const MessageEndpoint::SubscriptionVariant &sv1, const MessageEnd
 }
 
 
-std::pair<UID, size_t> MessageEndpoint::get_subscription_key(const MessageEndpoint::SubscriptionVariant &subscription)
+std::pair<size_t, UID> MessageEndpoint::get_subscription_key(const MessageEndpoint::SubscriptionVariant &subscription)
 {
-    return std::make_pair(get_receiver_uid(subscription), subscription.index());
+    return std::make_pair(subscription.index(), get_receiver_uid(subscription));
 }
 
 
@@ -56,30 +56,26 @@ MessageEndpoint::~MessageEndpoint() {}
 
 
 template <typename MessageType>
-Subscription<MessageType> MessageEndpoint::subscribe(const UID &receiver, const std::vector<UID> &senders)
+Subscription<MessageType> &MessageEndpoint::subscribe(const UID &receiver, const std::vector<UID> &senders)
 {
     SPDLOG_DEBUG("Subscribing {} to the list of senders...", std::string(receiver));
 
-    //    constexpr auto index = get_type_index<MessageVariant, MessageType>;
+    constexpr size_t index = get_type_index<MessageVariant, MessageType>;
 
-    //    auto iter = subscriptions_.find(std::make_tuple(receiver, index));
-    //    (void)iter;
-    //    if (iter != subscriptions_.get<by_type_and_uid>().end())
-    //    {
-    //        auto &sub = *const_cast<Subscription<MessageType>*>(&std::get<index>(*iter));
-    //        sub.add_senders(senders);
-    //        return sub;
-    //    }
-    //    else
+    auto iter = subscriptions_.find(std::make_pair(index, receiver));
+    if (iter != subscriptions_.end())
     {
-        //        auto p = SubscriptionVariant(Subscription<MessageType>{receiver, senders});
-        //        auto e_res = subscriptions_.insert(p);
-        //        auto &sub = *const_cast<Subscription<MessageType>*>(&std::get<index>(*e_res.first));
+        auto &sub = *const_cast<Subscription<MessageType> *>(&std::get<index>(iter->second));
+        sub.add_senders(senders);
+        return sub;
     }
-
-    std::vector<UID> v;
-    UID ruid;
-    return Subscription<MessageType>(ruid, v);
+    else
+    {
+        auto p = SubscriptionVariant(Subscription<MessageType>{receiver, senders});
+        auto insert_res = subscriptions_.insert(std::make_pair(std::make_pair(index, receiver), p));
+        auto &sub = *const_cast<Subscription<MessageType> *>(&std::get<index>(insert_res.first->second));
+        return sub;
+    }
 }
 
 
@@ -101,7 +97,7 @@ void MessageEndpoint::remove_receiver(const UID &receiver)
 
     for (auto sub_iter = subscriptions_.begin(); sub_iter != subscriptions_.end(); ++sub_iter)
     {
-        if (get_receiver_uid(*sub_iter) == receiver) subscriptions_.erase(sub_iter);
+        if (get_receiver_uid(sub_iter->second) == receiver) subscriptions_.erase(sub_iter);
     }
 }
 
@@ -121,12 +117,17 @@ bool MessageEndpoint::receive_message()
     if (!message_var.has_value()) return false;
 
     const UID &sender_uid = get_header(message_var.value()).sender_uid_;
-
-    auto const [iter_first, iter_second] = subscriptions_.get<by_type>().equal_range(message_var->index());
+    const size_t type_index = message_var->index();
 
     // Find a subscription.
-    for (auto iter = iter_first; iter != iter_second; ++iter)
+    for (auto &value : subscriptions_)  // _.begin(); iter != subscriptions_.end(); ++iter)
     {
+        SubscriptionVariant &sub_variant = value.second;
+        if (sub_variant.index() != type_index)
+        {
+            continue;
+        }
+
         std::visit(
             [&sender_uid, &message_var](auto &subscription)
             {
@@ -136,7 +137,7 @@ bool MessageEndpoint::receive_message()
                     static_cast<PT>(subscription).add_message(std::get<typename PT::MessageType>(*message_var));
                 }
             },
-            *iter);
+            value.second);
     }
 
     return true;
@@ -151,13 +152,12 @@ void MessageEndpoint::receive_all_messages()
 }
 
 
-#define INSTANCE_MESSAGES_FUNCTIONS(n, template_for_instance, message_type)       \
-    ;                                                                             \
-    template Subscription<message_type> MessageEndpoint::subscribe<message_type>( \
-        const UID &receiver, const std::vector<UID> &senders);                    \
+#define INSTANCE_MESSAGES_FUNCTIONS(n, template_for_instance, message_type)        \
+    ;                                                                              \
+    template Subscription<message_type> &MessageEndpoint::subscribe<message_type>( \
+        const UID &receiver, const std::vector<UID> &senders);                     \
     template void MessageEndpoint::unsubscribe<message_type>(const UID &receiver);
 
-// cppcheck-suppress unknownMacro
 BOOST_PP_SEQ_FOR_EACH(INSTANCE_MESSAGES_FUNCTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES));
 
 }  // namespace knp::core

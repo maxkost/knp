@@ -1,6 +1,6 @@
 /**
  * @file delta_synapse_projection.cpp
- * @brief DeltaSynapse calculation routines implementation.
+ * @brief DeltaSynapseand type index calculation routines implementation.
  * @author Artiom N.
  * @date 21.02.2023
  */
@@ -16,6 +16,7 @@ void calculate_delta_synapse_projection(
     MessageQueue &future_messages, size_t step_n)
 {
     // TODO: Get message
+
     const knp::core::messaging::SpikeMessage message_in{{knp::core::UID{}, 0}, {}};
 
     // TODO: Get time

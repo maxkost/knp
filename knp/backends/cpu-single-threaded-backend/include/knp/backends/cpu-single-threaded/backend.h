@@ -37,6 +37,18 @@ public:
     using PopulationVariants = boost::mp11::mp_rename<SupportedPopulations, std::variant>;
     using ProjectionVariants = boost::mp11::mp_rename<SupportedProjections, std::variant>;
 
+private:
+    struct ProjectionWrapper
+    {
+        ProjectionVariants arg;
+        core::messaging::SynapticMessageQueue messages;
+    };
+
+    struct PopulationWrapper
+    {
+        PopulationVariants arg;
+    };
+
 public:
     // TODO: set protected (in testing purposes).
     SingleThreadedCPUBackend();
@@ -108,24 +120,27 @@ protected:
      * @brief Calculate the population of BLIFAT neurons.
      * @note Population will be changed during calculation.
      * @param population population of BLIFAT neurons to calculate.
+     * @param wrapper population wrapper
      */
-    void calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population);
+    void calculate_population(
+        knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, PopulationWrapper &wrapper);
     /**
      * @brief Calculate the projection of Delta synapses.
      * @note Projection will be changed during calculation.
      * @param projection projection of Delta synapses to calculate.
+     * @param wrapper projection wrapper
      */
-    void calculate_projection(knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection);
+    void calculate_projection(
+        knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, ProjectionWrapper &wrapper);
 
 private:
     template <typename TypeList, auto CalculateMethod, typename Container>
     inline void calculator(Container &container);
 
+
 private:
-    std::vector<PopulationVariants> populations_;
-    std::vector<ProjectionVariants> projections_;
-    // TODO: unite with projections
-    std::vector<knp::core::messaging::SynapticMessageQueue> projection_message_storage_;
+    std::vector<PopulationWrapper> populations_;
+    std::vector<ProjectionWrapper> projections_;
     core::MessageEndpoint message_endpoint_;
     size_t step_ = 0;
 };

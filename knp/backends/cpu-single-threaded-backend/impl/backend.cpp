@@ -29,14 +29,14 @@ inline void SingleThreadedCPUBackend::calculator(Container &container)
     for (auto &e : container)
     {
         std::visit(
-            [this](auto &arg)
+            [this, &e](auto &arg)
             {
                 using T = std::decay_t<decltype(arg)>;
                 if constexpr (boost::mp11::mp_find<TypeList, T>{} == boost::mp11::mp_size<TypeList>{})
-                    static_assert(knp::core::always_false_v<T>, "Type doesn't supported by the CPU ST backend!");
-                std::invoke(CalculateMethod, this, arg);
+                    static_assert(knp::core::always_false_v<T>, "Type isn't supported by the CPU ST backend!");
+                std::invoke(CalculateMethod, this, arg, e);
             },
-            e);
+            e.arg);
     }
 }
 
@@ -60,7 +60,6 @@ void SingleThreadedCPUBackend::step()
     calculator<SupportedProjections, &SingleThreadedCPUBackend::calculate_projection>(projections_);
     // Calculate populations.
     calculator<SupportedPopulations, &SingleThreadedCPUBackend::calculate_population>(populations_);
-    ++step_;
 }
 
 
@@ -69,13 +68,7 @@ void SingleThreadedCPUBackend::load_populations(const std::vector<PopulationVari
     populations_.clear();
     populations_.reserve(populations.size());
 
-    for (const auto &p : populations) populations_.push_back(p);
-}
-
-
-void SingleThreadedCPUBackend::load_populations(std::vector<PopulationVariants> &&populations)
-{
-    populations_ = std::move(populations);
+    for (const auto &p : populations) populations_.push_back(PopulationWrapper{p});
 }
 
 
@@ -84,15 +77,7 @@ void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVari
     projections_.clear();
     projections_.reserve(projections.size());
 
-    for (const auto &p : projections) projections_.push_back(p);
-    projection_message_storage_.resize(projections.size());
-}
-
-
-void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVariants> &&projections)
-{
-    projections_ = std::move(projections);
-    projection_message_storage_.resize(projections_.size());
+    for (const auto &p : projections) projections_.push_back(ProjectionWrapper{p});
 }
 
 
@@ -114,15 +99,19 @@ std::vector<std::unique_ptr<knp::core::Device>> SingleThreadedCPUBackend::get_de
 }
 
 
-void SingleThreadedCPUBackend::calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population)
+void SingleThreadedCPUBackend::calculate_population(
+    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, PopulationWrapper &wrapper)
 {
-    calculate_blifat_population(population, message_endpoint_);
+    calculate_blifat_population(
+        std::get<knp::core::Population<neuron_traits::BLIFATNeuron>>(wrapper.arg), message_endpoint_);
 }
 
 
 void SingleThreadedCPUBackend::calculate_projection(
-    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection)
+    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, ProjectionWrapper &wrapper)
 {
-    // calculate_delta_synapse_projection(projection, message_endpoint_, projection_message_storage_, step_);
+    calculate_delta_synapse_projection(
+        std::get<knp::core::Projection<knp::synapse_traits::DeltaSynapse>>(wrapper.arg), message_endpoint_,
+        wrapper.messages, step_);
 }
 }  // namespace knp::backends::single_threaded_cpu
