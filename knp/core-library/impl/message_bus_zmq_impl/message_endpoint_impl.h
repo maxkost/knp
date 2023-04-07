@@ -27,7 +27,7 @@ public:
 public:
     void send_message(const std::vector<uint8_t> &data);
     void send_message(const void *data, size_t size);
-    std::optional<MessageVariant> receive_message();
+    std::optional<zmq::message_t> receive_message();
 
 private:
     // zmq::context_t &context_;

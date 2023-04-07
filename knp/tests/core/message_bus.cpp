@@ -22,7 +22,8 @@ TEST(MessageBusSuite, CreateBusAndEndpoint)
     auto subscription = ep2.subscribe<SpikeMessage>(knp::core::UID(), {msg.header_.sender_uid_});
 
     ep1.send_message(msg);
-    EXPECT_EQ(bus.route_messages(), 1);
+    // ID message and data message.
+    EXPECT_EQ(bus.route_messages(), 2);
     ep2.receive_all_messages();
 
     const auto &msgs = subscription.get_messages();

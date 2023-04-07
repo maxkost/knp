@@ -54,7 +54,7 @@ repos:
       #  name: clang-tidy
       #  args: ["--config-file=knp/.clang-tidy",  "-extra-arg-before=-xc++", "-extra-arg=-std=c++17", "-p=build"]
       - id: cppcheck
-        args: ["-x", "c++", "--inline-suppr", "--suppress-xml=knp/.cppcheck-suppress.xml"]  # --cppcheck-build-dir=build]
+        args: ["-x", "c++", "--inline-suppr", "--template=gcc", "--suppress-xml=knp/.cppcheck-suppress.xml"]  # --cppcheck-build-dir=build]
 
       - id: cpplint
         args: ["--root", "knp"]

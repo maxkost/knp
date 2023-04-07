@@ -113,11 +113,13 @@ bool MessageEndpoint::receive_message()
 {
     SPDLOG_TRACE("Receiving message...");
 
-    std::optional<MessageVariant> message_var = impl_->receive_message();
+    auto message_var = impl_->receive_message();
     if (!message_var.has_value()) return false;
 
-    const UID &sender_uid = get_header(message_var.value()).sender_uid_;
-    const size_t type_index = message_var->index();
+    auto message = message_var->data<MessageVariant>();
+
+    const UID &sender_uid = get_header(*message).sender_uid_;
+    const size_t type_index = message->index();
 
     // Find a subscription.
     for (auto &value : subscriptions_)  // _.begin(); iter != subscriptions_.end(); ++iter)
@@ -129,12 +131,12 @@ bool MessageEndpoint::receive_message()
         }
 
         std::visit(
-            [&sender_uid, &message_var](auto &subscription)
+            [&sender_uid, &message](auto &subscription)
             {
                 if (subscription.has_sender(sender_uid))
                 {
                     using PT = std::decay_t<decltype(subscription)>;
-                    static_cast<PT>(subscription).add_message(std::get<typename PT::MessageType>(*message_var));
+                    static_cast<PT>(subscription).add_message(std::get<typename PT::MessageType>(*message));
                 }
             },
             value.second);
@@ -153,7 +155,6 @@ void MessageEndpoint::receive_all_messages()
 
 
 #define INSTANCE_MESSAGES_FUNCTIONS(n, template_for_instance, message_type)        \
-    ;                                                                              \
     template Subscription<message_type> &MessageEndpoint::subscribe<message_type>( \
         const UID &receiver, const std::vector<UID> &senders);                     \
     template void MessageEndpoint::unsubscribe<message_type>(const UID &receiver);

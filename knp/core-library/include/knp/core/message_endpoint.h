@@ -102,7 +102,6 @@ public:
         return subscriptions_[std::make_pair(index, receiver_uid)];
     }
 
-
     /**
      * @brief Receive messages in the cycle.
      */
