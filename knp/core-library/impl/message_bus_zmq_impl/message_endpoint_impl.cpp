@@ -75,10 +75,10 @@ std::optional<MessageEndpoint::MessageVariant> MessageEndpoint::MessageEndpointI
     try
     {
         SPDLOG_DEBUG("Endpoint sending message");
-        do
-        {
-            result = sub_socket_.recv(msg, zmq::recv_flags::dontwait);
-        } while (!result.has_value());
+        //        do
+        //        {
+        result = sub_socket_.recv(msg, zmq::recv_flags::dontwait);
+        //        } while (!result.has_value());
     }
     catch (const zmq::error_t &e)
     {
@@ -87,7 +87,7 @@ std::optional<MessageEndpoint::MessageVariant> MessageEndpoint::MessageEndpointI
     }
 
     // Always has value.
-    if (!result.value()) return std::nullopt;
+    if (!result.has_value() || !result.value()) return std::nullopt;
     return *msg.data<MessageVariant>();
 }
 }  // namespace knp::core

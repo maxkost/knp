@@ -56,7 +56,7 @@ public:
      * @param presynaptic_uid presynaptic population UID.
      * @param postsynaptic_uid postsynaptic population UID.
      */
-    Projection(UID presynaptic_uid, UID postsynaptic_uid, size_t num_iterations, const SynapseGenerator &generator)
+    Projection(UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator &generator, size_t num_iterations)
         : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
     {
         for (size_t i = 0; i < num_iterations; ++i)

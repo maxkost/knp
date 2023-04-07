@@ -26,7 +26,7 @@ file(GLOB_RECURSE COMMON_SOURCE CONFIGURE_DEPENDS
      "*.cpp"
      "*.h")
 
-add_executable("${PROJECT_NAME}" ${COMMON_SOURCE})
+add_executable("${PROJECT_NAME}" ${COMMON_SOURCE} backend/single_thread_cpu.cpp)
 
 
 #file(GLOB BACKENDS LIST_DIRECTORIES yes "${CMAKE_CURRENT_SOURCE_DIR}/../include/snn-library/backends/*")
@@ -59,7 +59,7 @@ target_include_directories("${PROJECT_NAME}"
 )
 
 target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main spdlog)
-target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Core KNP::BaseFramework::Core)
+target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Core KNP::BaseFramework::Core KNP::Core::Backend::CPUSingleThreaded)
 
 if(KNP_ENABLE_COVERAGE)
     include(codecoverage)

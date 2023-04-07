@@ -16,16 +16,16 @@ TEST(MessageBusSuite, CreateBusAndEndpoint)
     auto ep1{bus.get_endpoint()};
     auto ep2{bus.get_endpoint()};
 
-    SpikeMessage msg{.header_{.sender_uid_{knp::core::UID()}}, .neuron_indexes_{1, 2, 3, 4, 5}};
+    // SpikeMessage msg{.header_{.sender_uid_{knp::core::UID()}}, .neuron_indexes_{1, 2, 3, 4, 5}};
+    SpikeMessage msg{{knp::core::UID{}}, {1, 2, 3, 4, 5}};
 
     auto subscription = ep2.subscribe<SpikeMessage>(knp::core::UID(), {msg.header_.sender_uid_});
 
-    EXPECT_NO_THROW(ep1.send_message(msg));
-
+    ep1.send_message(msg);
     EXPECT_EQ(bus.route_messages(), 1);
     ep2.receive_all_messages();
 
     const auto &msgs = subscription.get_messages();
 
-    std::cout << msgs.size() << std::endl;
+    EXPECT_EQ(msgs.size(), 1);
 }

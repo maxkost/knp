@@ -49,16 +49,16 @@ MessageBus::MessageBusImpl::MessageBusImpl()
 bool MessageBus::MessageBusImpl::step()
 {
     zmq::message_t message;
+    zmq::recv_result_t recv_result;
 
     try
     {
         SPDLOG_DEBUG("Bus receiving message");
         // recv_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
-        zmq::recv_result_t recv_result;
-        do
-        {
-            recv_result = router_socket_.recv(message);
-        } while (!recv_result.has_value());
+        //        do
+        //        {
+        recv_result = router_socket_.recv(message, zmq::recv_flags::dontwait);
+        //        } while (!recv_result.has_value());
 
         SPDLOG_DEBUG("Bus sending message");
         // send_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
@@ -74,7 +74,7 @@ bool MessageBus::MessageBusImpl::step()
         throw;
     }
 
-    return true;
+    return recv_result.has_value() && recv_result.value() != 0;
 }
 
 

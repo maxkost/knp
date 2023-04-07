@@ -28,13 +28,14 @@ auto create_entities()
         neurons_count);
 
     DeltaProjection projection1(
-        knp::core::UID{}, knp::core::UID{}, synapses_count,
+        knp::core::UID{}, knp::core::UID{},
         [=](size_t index) -> std::optional<Synapse>
         {
             const size_t id_from = index;
             const size_t id_to = index;
             return Synapse{{}, id_from, id_to};
-        });
+        },
+        synapses_count);
 
     return std::make_tuple(population1, projection1);
 }

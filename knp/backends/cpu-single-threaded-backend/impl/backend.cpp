@@ -56,10 +56,16 @@ std::shared_ptr<SingleThreadedCPUBackend> SingleThreadedCPUBackend::create()
 
 void SingleThreadedCPUBackend::step()
 {
-    // Calculate projections.
-    calculator<SupportedProjections, &SingleThreadedCPUBackend::calculate_projection>(projections_);
+    message_bus_.route_messages();
+    message_endpoint_.receive_all_messages();
     // Calculate populations.
     calculator<SupportedPopulations, &SingleThreadedCPUBackend::calculate_population>(populations_);
+    message_bus_.route_messages();
+    message_endpoint_.receive_all_messages();
+    // Calculate projections.
+    calculator<SupportedProjections, &SingleThreadedCPUBackend::calculate_projection>(projections_);
+    message_bus_.route_messages();
+    message_endpoint_.receive_all_messages();
 }
 
 

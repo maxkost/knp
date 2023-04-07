@@ -58,7 +58,10 @@ bool MessageBus::step()
 size_t MessageBus::route_messages()
 {
     size_t count = 0;
-    while (step()) ++count;
+    while (step())
+    {
+        ++count;
+    }
     return count;
 }
 

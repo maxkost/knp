@@ -57,7 +57,7 @@ TEST(ProjectionSuite, Generation)
         return std::optional(Synapse{params, id_from, id_to});
     };
 
-    DeltaProjection projection(knc::UID{}, knc::UID{}, presynaptic_size * postsynaptic_size, generator);
+    DeltaProjection projection(knc::UID{}, knc::UID{}, generator, presynaptic_size * postsynaptic_size);
     ASSERT_EQ(projection.size(), presynaptic_size * postsynaptic_size);
     ASSERT_EQ(projection[1000].params.delay_, 11);
     ASSERT_EQ(std::get<0>(projection.get_connection(1000)), 1000u / postsynaptic_size);
@@ -117,7 +117,7 @@ TEST(ProjectionSuite, DeletePresynapticTest)
     const size_t synapses_per_neuron = 5;
     const size_t neuron_index = 10;
     auto generator = make_cyclic_generator({size_from, size_to}, {0.0F, 1});
-    DeltaProjection projection{knc::UID{}, knc::UID{}, size_from * synapses_per_neuron, generator};
+    DeltaProjection projection{knc::UID{}, knc::UID{}, generator, size_from * synapses_per_neuron};
     const size_t count = projection.disconnect_presynaptic_neuron(neuron_index);
     ASSERT_EQ(count, synapses_per_neuron);
     ASSERT_EQ(projection.size(), (size_from - 1) * synapses_per_neuron);  // the size of projection is correct
@@ -136,7 +136,7 @@ TEST(ProjectionSuite, DeletePostsynapticTest)
     const size_t synapses_per_neuron = 10;
     const size_t neuron_index = 15;
     auto generator = make_cyclic_generator({size_from, size_to}, {0.0F, 1});
-    DeltaProjection projection{knc::UID{}, knc::UID{}, size_from * synapses_per_neuron, generator};
+    DeltaProjection projection{knc::UID{}, knc::UID{}, generator, size_from * synapses_per_neuron};
     const size_t count = projection.disconnect_postsynaptic_neuron(neuron_index);
     ASSERT_EQ(count, synapses_per_neuron);
     ASSERT_EQ(projection.size(), (size_from - 1) * synapses_per_neuron);  // the size of projection is correct
@@ -193,7 +193,7 @@ TEST(ProjectionSuite, DisconnectNeurons)
     const size_t presynaptic_size = 9;
     const size_t postsynaptic_size = 11;
     auto generator = make_dense_generator({presynaptic_size, postsynaptic_size}, {0.0, 1});
-    DeltaProjection projection{knc::UID{}, knc::UID{}, presynaptic_size * postsynaptic_size, generator};
+    DeltaProjection projection{knc::UID{}, knc::UID{}, generator, presynaptic_size * postsynaptic_size};
     const size_t count = projection.disconnect_neurons(0, 1);
     ASSERT_EQ(count, 1);
     ASSERT_EQ(
@@ -213,7 +213,7 @@ TEST(ProjectionSuite, GetUIDTest)
 
     ASSERT_NE(uid_from, uid_to);
     auto generator = make_dense_generator({10, 10}, {0, 1});
-    const DeltaProjection projection(uid_from, uid_to, 100, generator);
+    const DeltaProjection projection(uid_from, uid_to, generator, 100);
     ASSERT_EQ(projection.get_presynaptic(), uid_from);
     ASSERT_EQ(projection.get_postsynaptic(), uid_to);
 }
