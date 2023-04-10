@@ -57,7 +57,8 @@ struct UID
     explicit UID(::boost::uuids::uuid &&guid) : tag(std::move(guid)) {}
     UID(const UID &) = default;
 
-    explicit operator const ::boost::uuids::uuid &() const { return tag; }
+    operator const ::boost::uuids::uuid &() const { return tag; }
+    operator ::boost::uuids::uuid &() { return tag; }
     explicit operator ::std::string() const
     {
         std::stringstream ss;

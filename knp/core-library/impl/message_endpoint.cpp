@@ -119,26 +119,28 @@ bool MessageEndpoint::receive_message()
     const size_t type_index = message->index();
 
     // Find a subscription.
-    for (auto &value : subscriptions_)  // _.begin(); iter != subscriptions_.end(); ++iter)
+    for (auto &[k, sub_variant] : subscriptions_)
     {
-        SubscriptionVariant &sub_variant = value.second;
         if (sub_variant.index() != type_index)
         {
+            SPDLOG_TRACE(
+                "Subscription message type index != message type index [{} != {}]", sub_variant.index(), type_index);
             continue;
         }
 
         std::visit(
-            [&sender_uid, &message](auto &subscription)
+            [&sender_uid, &message](auto &&subscription)
             {
                 SPDLOG_TRACE("Sender UID = {}...", std::string(sender_uid));
                 if (subscription.has_sender(sender_uid))
                 {
                     SPDLOG_TRACE("Subscription has sender with UID = {}", std::string(sender_uid));
-                    using PT = std::decay_t<decltype(subscription)>;
-                    static_cast<PT>(subscription).add_message(std::get<typename PT::MessageType>(*message));
+                    subscription.add_message(
+                        std::get<typename std::decay_t<decltype(subscription)>::MessageType>(*message));
+                    SPDLOG_TRACE("Message was added to the subscription {}", std::string(sender_uid));
                 }
             },
-            value.second);
+            sub_variant);
     }
 
     return true;
@@ -158,6 +160,6 @@ void MessageEndpoint::receive_all_messages()
         const UID &receiver, const std::vector<UID> &senders);                     \
     template void MessageEndpoint::unsubscribe<message_type>(const UID &receiver);
 
-BOOST_PP_SEQ_FOR_EACH(INSTANCE_MESSAGES_FUNCTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES));
+BOOST_PP_SEQ_FOR_EACH(INSTANCE_MESSAGES_FUNCTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES))
 
 }  // namespace knp::core

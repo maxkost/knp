@@ -43,11 +43,6 @@ public:
     static UID get_receiver_uid(const SubscriptionVariant &subscription);
     static std::pair<size_t, UID> get_subscription_key(const SubscriptionVariant &subscription);
 
-    static UID get_receiver_uid1(MessageEndpoint::SubscriptionVariant subscription)
-    {
-        return std::visit([](auto &v) { return std::decay_t<decltype(v)>(v).get_receiver_uid(); }, subscription);
-    }
-
     template <typename Variant, typename Type>
     static constexpr size_t get_type_index = boost::mp11::mp_find<Variant, Type>::value;
 
@@ -97,7 +92,7 @@ public:
      * @param receiver_uid UID of the receiving object
      */
     template <class MessageType>
-    Subscription<MessageType> &get_subscription(const knp::core::UID &receiver_uid)
+    SubscriptionVariant &get_subscription(const knp::core::UID &receiver_uid)
     {
         constexpr size_t index = get_type_index<MessageVariant, MessageType>;
         return subscriptions_[std::make_pair(index, receiver_uid)];

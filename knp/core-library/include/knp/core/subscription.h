@@ -44,14 +44,14 @@ public:
      * @param uid sender UID
      * @return 1 if unsubscribed, 0 if no sender was found
      */
-    size_t remove_sender(const UID &uid) { return senders_.erase(static_cast<std::string>(uid)); }
+    size_t remove_sender(const UID &uid) { return senders_.erase(static_cast<boost::uuids::uuid>(uid)); }
 
     /**
      * @brief Add an additional sender to the subscription
      * @param uid new sender UID
      * @return number of senders added (0 if already subscribed, 1 otherwise)
      */
-    size_t add_sender(const UID &uid) { return senders_.insert(static_cast<std::string>(uid)).second; }
+    size_t add_sender(const UID &uid) { return senders_.insert(static_cast<boost::uuids::uuid>(uid)).second; }
 
     /**
      * @brief Add a number of senders to the subscription
@@ -60,11 +60,10 @@ public:
      */
     size_t add_senders(const std::vector<UID> &senders)
     {
-        // size_t size_before = senders_.size();
-        // std::copy(senders.begin(), senders.end(), std::inserter(senders_, senders_.end()));
-        //        return senders_.size() - size_before;
-        return 0;
-    };
+        size_t size_before = senders_.size();
+        std::copy(senders.begin(), senders.end(), std::inserter(senders_, senders_.end()));
+        return senders_.size() - size_before;
+    }
 
     /**
      * @brief Checks if a sender exists
@@ -73,12 +72,12 @@ public:
      */
     [[nodiscard]] bool has_sender(const UID &uid) const
     {
-        return senders_.find(static_cast<std::string>(uid)) != senders_.end();
+        return senders_.find(static_cast<boost::uuids::uuid>(uid)) != senders_.end();
     }
 
 public:
     void add_message(MessageType &&message) { messages_.push_back(message); }
-    void add_message(const MessageType &message) { messages_.emplace_back(message); }
+    void add_message(const MessageType &message) { messages_.push_back(message); }
 
     MessageContainerType &get_messages() { return messages_; }
     const MessageContainerType &get_messages() const { return messages_; }
@@ -87,11 +86,9 @@ private:
     /// Receiver UID
     const UID receiver_;
     /// Set of sender UIDs
-    // boost::hash<UID>.
-    std::unordered_set<std::string> senders_;
+    std::unordered_set<::boost::uuids::uuid, boost::hash<boost::uuids::uuid>> senders_;
     /// Message cache
     MessageContainerType messages_;
 };
-
 
 }  // namespace knp::core
