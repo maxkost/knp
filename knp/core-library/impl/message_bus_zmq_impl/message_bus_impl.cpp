@@ -44,9 +44,9 @@ MessageBus::MessageBusImpl::MessageBusImpl()
       router_socket_(context_, zmq::socket_type::router),
       publish_socket_(context_, zmq::socket_type::pub)
 {
-    SPDLOG_INFO("Router socket binding to {}", router_sock_address_);
+    SPDLOG_DEBUG("Router socket binding to {}", router_sock_address_);
     router_socket_.bind(router_sock_address_);
-    SPDLOG_INFO("Publish socket binding to {}", publish_sock_address_);
+    SPDLOG_DEBUG("Publish socket binding to {}", publish_sock_address_);
     publish_socket_.bind(publish_sock_address_);
     // zmq::proxy(router_socket_, publish_socket_);
 }
@@ -63,41 +63,41 @@ bool MessageBus::MessageBusImpl::step()
         // recv_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
         std::array<zmq_pollitem_t, 1> items = {zmq_pollitem_t{.socket = router_socket_.handle(), .events = ZMQ_POLLIN}};
 
-        SPDLOG_INFO("Running poll()");
+        SPDLOG_DEBUG("Running poll()");
         if (zmq::poll<1>(items, 1ms))
         {
-            SPDLOG_INFO("Poll() successfull, receiving data");
+            SPDLOG_TRACE("Poll() successfull, receiving data");
             do
             {
                 recv_result = router_socket_.recv(message, zmq::recv_flags::dontwait);
 
                 if (recv_result.has_value())
-                    SPDLOG_INFO("Bus recieved {} bytes", recv_result.value());
+                    SPDLOG_TRACE("Bus recieved {} bytes", recv_result.value());
                 else
-                    SPDLOG_INFO("Bus receiving error [EAGAIN]!");
+                    SPDLOG_WARN("Bus receiving error [EAGAIN]!");
             } while (!recv_result.has_value());
         }
         else
         {
-            SPDLOG_INFO("Poll() returned 0, exiting");
+            SPDLOG_DEBUG("Poll() returned 0, exiting");
             return false;
         }
 
         // TODO: Remove this.
         if (recv_result.value() == 5)
         {
-            SPDLOG_INFO("ID was received...");
+            SPDLOG_TRACE("ID was received...");
             return true;
         }
 
-        SPDLOG_INFO("Data was received, bus will re-send the message");
+        SPDLOG_DEBUG("Data was received, bus will re-send the message");
         // send_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
         zmq::send_result_t send_result;
         do
         {
             send_result = publish_socket_.send(message, zmq::send_flags::none);
         } while (!send_result.has_value());
-        SPDLOG_INFO("Bus sent {} bytes...", send_result.value());
+        SPDLOG_TRACE("Bus sent {} bytes...", send_result.value());
     }
     catch (const zmq::error_t &e)
     {
@@ -127,9 +127,9 @@ MessageEndpoint MessageBus::MessageBusImpl::get_endpoint()
     sub_socket.setsockopt(ZMQ_SUBSCRIBE, nullptr, 0);
 #pragma GCC diagnostic pop
     // #endif
-    SPDLOG_INFO("Pub socket connecting to {}", router_sock_address_);
+    SPDLOG_DEBUG("Pub socket connecting to {}", router_sock_address_);
     pub_socket.connect(router_sock_address_);
-    SPDLOG_INFO("Sub socket connecting to {}", publish_sock_address_);
+    SPDLOG_DEBUG("Sub socket connecting to {}", publish_sock_address_);
     sub_socket.connect(publish_sock_address_);
 
     return MessageEndpointConstructible(std::move(sub_socket), std::move(pub_socket));

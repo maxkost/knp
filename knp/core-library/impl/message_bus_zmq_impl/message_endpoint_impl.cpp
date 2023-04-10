@@ -39,9 +39,9 @@ void MessageEndpoint::MessageEndpointImpl::send_message(const void *data, size_t
         SPDLOG_DEBUG("Endpoint sending message");
         do
         {
-            SPDLOG_INFO("Sending {} bytes", size);
+            SPDLOG_TRACE("Sending {} bytes", size);
             result = pub_socket_.send(zmq::message_t(data, size), zmq::send_flags::dontwait);
-            SPDLOG_INFO("{} bytes was sent", size);
+            SPDLOG_TRACE("{} bytes was sent", size);
         } while (!result.has_value());
     }
     catch (const zmq::error_t &e)
@@ -61,27 +61,27 @@ std::optional<zmq::message_t> MessageEndpoint::MessageEndpointImpl::receive_mess
 
     try
     {
-        SPDLOG_INFO("Endpoint receiving message");
+        SPDLOG_DEBUG("Endpoint receiving message");
 
         std::array<zmq_pollitem_t, 1> items = {zmq_pollitem_t{.socket = sub_socket_.handle(), .events = ZMQ_POLLIN}};
 
-        SPDLOG_INFO("Running poll()");
+        SPDLOG_DEBUG("Running poll()");
         if (zmq::poll<1>(items, 1ms))
         {
-            SPDLOG_INFO("Poll() successful, receiving data");
+            SPDLOG_TRACE("Poll() successful, receiving data");
             do
             {
                 result = sub_socket_.recv(msg, zmq::recv_flags::dontwait);
 
                 if (result.has_value())
-                    SPDLOG_INFO("Endpoint recieved {} bytes", result.value());
+                    SPDLOG_TRACE("Endpoint recieved {} bytes", result.value());
                 else
-                    SPDLOG_INFO("Endpoint receiving error [EAGAIN]!");
+                    SPDLOG_WARN("Endpoint receiving error [EAGAIN]!");
             } while (!result.has_value());
         }
         else
         {
-            SPDLOG_INFO("Poll() returned 0, exiting");
+            SPDLOG_DEBUG("Poll() returned 0, exiting");
             return std::nullopt;
         }
     }

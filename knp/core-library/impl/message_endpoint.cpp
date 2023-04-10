@@ -55,7 +55,7 @@ MessageEndpoint::~MessageEndpoint() {}
 template <typename MessageType>
 Subscription<MessageType> &MessageEndpoint::subscribe(const UID &receiver, const std::vector<UID> &senders)
 {
-    SPDLOG_INFO("Subscribing {} to the list of senders...", std::string(receiver));
+    SPDLOG_DEBUG("Subscribing {} to the list of senders...", std::string(receiver));
 
     constexpr size_t index = get_type_index<MessageVariant, MessageType>;
 
@@ -108,7 +108,7 @@ void MessageEndpoint::send_message(const MessageEndpoint::MessageVariant &messag
 
 bool MessageEndpoint::receive_message()
 {
-    SPDLOG_TRACE("Receiving message...");
+    SPDLOG_DEBUG("Receiving message...");
 
     auto message_var = impl_->receive_message();
     if (!message_var.has_value()) return false;
@@ -130,7 +130,7 @@ bool MessageEndpoint::receive_message()
         std::visit(
             [&sender_uid, &message](auto &subscription)
             {
-                SPDLOG_INFO("Sender UID = {}...", std::string(sender_uid));
+                SPDLOG_TRACE("Sender UID = {}...", std::string(sender_uid));
                 if (subscription.has_sender(sender_uid))
                 {
                     using PT = std::decay_t<decltype(subscription)>;
