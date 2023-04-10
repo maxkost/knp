@@ -22,6 +22,10 @@ if(NOT KNP_MAINTAINER_BUILD)
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 endif()
 
+if(KNP_BUILD_TESTS)
+    add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)
+endif()
+
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 

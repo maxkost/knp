@@ -21,7 +21,6 @@ enable_testing()
 
 include(GoogleTest)
 
-
 file(GLOB_RECURSE COMMON_SOURCE CONFIGURE_DEPENDS
      "*.cpp"
      "*.h")
