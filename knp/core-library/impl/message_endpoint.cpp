@@ -43,11 +43,8 @@ std::pair<size_t, UID> MessageEndpoint::get_subscription_key(const MessageEndpoi
 }
 
 
-MessageEndpoint::MessageEndpoint(MessageEndpoint &&endpoint) : impl_(std::move(endpoint.impl_)) {}
-
-
-MessageEndpoint::MessageEndpoint(void *context, const std::string &sub_addr, const std::string &pub_addr)
-    : impl_(std::make_unique<MessageEndpointImpl>(*static_cast<zmq::context_t *>(context), sub_addr, pub_addr))
+MessageEndpoint::MessageEndpoint(MessageEndpoint &&endpoint)
+    : impl_(std::move(endpoint.impl_)), subscriptions_(std::move(endpoint.subscriptions_))
 {
 }
 
@@ -58,7 +55,7 @@ MessageEndpoint::~MessageEndpoint() {}
 template <typename MessageType>
 Subscription<MessageType> &MessageEndpoint::subscribe(const UID &receiver, const std::vector<UID> &senders)
 {
-    SPDLOG_DEBUG("Subscribing {} to the list of senders...", std::string(receiver));
+    SPDLOG_INFO("Subscribing {} to the list of senders...", std::string(receiver));
 
     constexpr size_t index = get_type_index<MessageVariant, MessageType>;
 
@@ -133,6 +130,7 @@ bool MessageEndpoint::receive_message()
         std::visit(
             [&sender_uid, &message](auto &subscription)
             {
+                SPDLOG_INFO("Sender UID = {}...", std::string(sender_uid));
                 if (subscription.has_sender(sender_uid))
                 {
                     using PT = std::decay_t<decltype(subscription)>;

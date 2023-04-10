@@ -22,7 +22,7 @@ namespace knp::core
 class MessageEndpoint::MessageEndpointImpl
 {
 public:
-    explicit MessageEndpointImpl(zmq::context_t &context, const std::string &sub_addr, const std::string &pub_addr);
+    explicit MessageEndpointImpl(zmq::socket_t &&sub_socket, zmq::socket_t &&pub_socket);
 
 public:
     void send_message(const std::vector<uint8_t> &data);
@@ -33,8 +33,6 @@ private:
     // zmq::context_t &context_;
     zmq::socket_t sub_socket_;
     zmq::socket_t pub_socket_;
-    std::string sub_addr_;
-    std::string pub_addr_;
 };
 
 }  // namespace knp::core

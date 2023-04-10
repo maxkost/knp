@@ -11,6 +11,7 @@
 #include <knp/core/subscription.h>
 #include <knp/core/uid.h>
 
+#include <any>
 #include <functional>
 #include <map>
 #include <memory>
@@ -111,17 +112,15 @@ public:
     using SubscriptionContainer = std::map<std::pair<size_t, UID>, SubscriptionVariant>;
 
 protected:
-    explicit MessageEndpoint(void *context, const std::string &sub_addr, const std::string &pub_addr);
-
-private:
-    MessageEndpoint() = delete;
-
-private:
     /// Message endpoint implementation.
     class MessageEndpointImpl;
-
-    SubscriptionContainer subscriptions_;
     std::unique_ptr<MessageEndpointImpl> impl_;
+
+protected:
+    MessageEndpoint() = default;
+
+private:
+    SubscriptionContainer subscriptions_;
 };
 
 }  // namespace knp::core

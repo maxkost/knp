@@ -15,22 +15,6 @@
 #include "message_bus_zmq_impl/message_bus_impl.h"
 
 
-namespace
-{
-
-class MessageEndpointConstructible : public knp::core::MessageEndpoint
-{
-public:
-    explicit MessageEndpointConstructible(
-        zmq::context_t *context, const std::string &sub_addr, const std::string &pub_addr)
-        : MessageEndpoint(context, sub_addr, pub_addr)
-    {
-    }
-};
-
-}  // namespace
-
-
 namespace knp::core
 {
 
