@@ -66,7 +66,7 @@ bool MessageBus::MessageBusImpl::step()
         SPDLOG_DEBUG("Running poll()");
         if (zmq::poll<1>(items, 1ms))
         {
-            SPDLOG_TRACE("Poll() successfull, receiving data");
+            SPDLOG_TRACE("Poll() successful, receiving data");
             do
             {
                 recv_result = router_socket_.recv(message, zmq::recv_flags::dontwait);

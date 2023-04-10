@@ -133,6 +133,7 @@ bool MessageEndpoint::receive_message()
                 SPDLOG_TRACE("Sender UID = {}...", std::string(sender_uid));
                 if (subscription.has_sender(sender_uid))
                 {
+                    SPDLOG_TRACE("Subscription has sender with UID = {}", std::string(sender_uid));
                     using PT = std::decay_t<decltype(subscription)>;
                     static_cast<PT>(subscription).add_message(std::get<typename PT::MessageType>(*message));
                 }
