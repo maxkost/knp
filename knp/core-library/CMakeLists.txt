@@ -32,6 +32,7 @@ knp_add_library("${PROJECT_NAME}"
     impl/message_bus_zmq_impl/message_endpoint_impl.cpp
     impl/message_header.cpp
     impl/spike_message.cpp
+    impl/subscription.cpp
     impl/synaptic_impact_message.cpp
 
     ${${PROJECT_NAME}_headers}
