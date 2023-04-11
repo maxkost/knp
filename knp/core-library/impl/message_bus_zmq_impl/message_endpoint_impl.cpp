@@ -74,7 +74,7 @@ std::optional<zmq::message_t> MessageEndpoint::MessageEndpointImpl::receive_mess
                 result = sub_socket_.recv(msg, zmq::recv_flags::dontwait);
 
                 if (result.has_value())
-                    SPDLOG_TRACE("Endpoint recieved {} bytes", result.value());
+                    SPDLOG_TRACE("Endpoint received {} bytes", result.value());
                 else
                     SPDLOG_WARN("Endpoint receiving error [EAGAIN]!");
             } while (!result.has_value());

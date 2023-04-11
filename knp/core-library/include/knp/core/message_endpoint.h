@@ -94,8 +94,7 @@ public:
     template <class MessageType>
     SubscriptionVariant &get_subscription(const knp::core::UID &receiver_uid)
     {
-        constexpr size_t index = get_type_index<MessageVariant, MessageType>;
-        return subscriptions_[std::make_pair(index, receiver_uid)];
+        return subscriptions_[std::make_pair(get_type_index<MessageVariant, MessageType>, receiver_uid)];
     }
 
     /**
