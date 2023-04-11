@@ -31,7 +31,7 @@ public:
      * @see MessageEndpoint.
      * @return endpoint that uses the message bus.
      */
-    [[nodiscard]] MessageEndpoint get_endpoint();
+    [[nodiscard]] MessageEndpoint create_endpoint();
 
     bool step();
 

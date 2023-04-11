@@ -49,6 +49,7 @@ public:
 public:
     MessageEndpoint(MessageEndpoint &&endpoint);
     MessageEndpoint &operator=(MessageEndpoint &&endpoint) = default;
+    MessageEndpoint &operator=(MessageEndpoint &endpoint) = delete;
     virtual ~MessageEndpoint();
 
 public:

@@ -41,7 +41,7 @@ inline void SingleThreadedCPUBackend::calculator(Container &container)
 }
 
 
-SingleThreadedCPUBackend::SingleThreadedCPUBackend() : message_endpoint_{message_bus_.get_endpoint()}
+SingleThreadedCPUBackend::SingleThreadedCPUBackend() : message_endpoint_{message_bus_.create_endpoint()}
 {
     SPDLOG_INFO("CPU backend instance created...");
 }

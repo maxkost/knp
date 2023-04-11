@@ -30,7 +30,7 @@ public:
      */
     bool step();
 
-    [[nodiscard]] MessageEndpoint get_endpoint();
+    [[nodiscard]] MessageEndpoint create_endpoint();
 
 private:
     std::string router_sock_address_;

@@ -111,7 +111,7 @@ bool MessageBus::MessageBusImpl::step()
 }
 
 
-MessageEndpoint MessageBus::MessageBusImpl::get_endpoint()
+MessageEndpoint MessageBus::MessageBusImpl::create_endpoint()
 {
     zmq::socket_t sub_socket{context_, zmq::socket_type::sub};
     zmq::socket_t pub_socket{context_, zmq::socket_type::dealer};

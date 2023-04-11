@@ -65,22 +65,10 @@ public:
     void load_populations(const std::vector<PopulationVariants> &populations);
 
     /**
-     * @brief Load populations to the backend.
-     * @param populations vector of population to load.
-     */
-    void load_populations(std::vector<PopulationVariants> &&populations);
-
-    /**
      * @brief Load projections to the backend.
      * @param projections vector of projections to load.
      */
     void load_projections(const std::vector<ProjectionVariants> &projections);
-
-    /**
-     * @brief Load projections to the backend.
-     * @param projections vector of projections to load.
-     */
-    void load_projections(const std::vector<ProjectionVariants> &&projections);
 
 public:
     /**

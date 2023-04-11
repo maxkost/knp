@@ -27,9 +27,9 @@ MessageBus::MessageBus() : impl_(std::make_unique<MessageBusImpl>())
 MessageBus::~MessageBus() {}
 
 
-MessageEndpoint MessageBus::get_endpoint()
+MessageEndpoint MessageBus::create_endpoint()
 {
-    return impl_->get_endpoint();
+    return impl_->create_endpoint();
 }
 
 
