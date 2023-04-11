@@ -17,6 +17,8 @@ TEST(MessageBusSuite, AddSubscriptionMessage)
     std::vector<knp::core::UID> senders = {msg.header_.sender_uid_};
     knp::core::Subscription<SpikeMessage> sub{knp::core::UID(), senders};
 
+    EXPECT_EQ(sub.get_messages().size(), 0);
+
     sub.add_message(std::move(msg));
 
     const auto &msgs = sub.get_messages();
