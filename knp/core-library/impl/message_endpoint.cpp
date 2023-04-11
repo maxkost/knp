@@ -21,13 +21,13 @@ namespace knp::core
 
 UID MessageEndpoint::get_receiver_uid(const MessageEndpoint::SubscriptionVariant &subscription)
 {
-    return std::visit([](auto &v) { return std::decay_t<decltype(v)>(v).get_receiver_uid(); }, subscription);
+    return std::visit([](const auto &v) { return v.get_receiver_uid(); }, subscription);
 }
 
 
 messaging::MessageHeader get_header(const MessageEndpoint::MessageVariant &message)
 {
-    return std::visit([](auto &v) { return std::decay_t<decltype(v)>(v).header_; }, message);
+    return std::visit([](const auto &v) { return v.header_; }, message);
 }
 
 
