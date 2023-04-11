@@ -38,7 +38,7 @@ TEST(MessageBusSuite, CreateBusAndEndpoint)
     // SpikeMessage msg{.header_{.sender_uid_{knp::core::UID()}}, .neuron_indexes_{1, 2, 3, 4, 5}};
     SpikeMessage msg{{knp::core::UID{}}, {1, 2, 3, 4, 5}};
 
-    auto subscription = ep2.subscribe<SpikeMessage>(knp::core::UID(), {msg.header_.sender_uid_});
+    auto &subscription = ep2.subscribe<SpikeMessage>(knp::core::UID(), {msg.header_.sender_uid_});
 
     ep1.send_message(msg);
     // ID message and data message.

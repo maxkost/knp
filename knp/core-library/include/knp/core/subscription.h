@@ -29,6 +29,7 @@ class Subscription
 public:
     using MessageType = T;
     using MessageContainerType = std::vector<MessageType>;
+    // Subscription(const Subscription &) = delete;
 
 public:
     Subscription(const UID &reciever, const std::vector<UID> &senders) : receiver_(reciever) { add_senders(senders); }

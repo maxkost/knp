@@ -128,7 +128,7 @@ bool MessageEndpoint::receive_message()
             continue;
         }
 
-        auto v = std::visit(
+        std::visit(
             [&sender_uid, &message](auto &&subscription)
             {
                 SPDLOG_TRACE("Sender UID = {}...", std::string(sender_uid));
@@ -139,7 +139,6 @@ bool MessageEndpoint::receive_message()
                         std::get<typename std::decay_t<decltype(subscription)>::MessageType>(*message));
                     SPDLOG_TRACE("Message was added to the subscription {}", std::string(sender_uid));
                 }
-                return SubscriptionVariant(subscription);
             },
             sub_variant);
 
