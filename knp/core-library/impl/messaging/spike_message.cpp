@@ -17,6 +17,7 @@ std::ostream &operator<<(std::ostream &stream, const SpikeMessage &msg)
     return stream;
 }
 
+
 std::istream &operator>>(std::istream &stream, SpikeMessage &msg)
 {
     size_t n = 0;

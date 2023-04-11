@@ -17,6 +17,7 @@ std::istream &operator>>(std::istream &stream, SynapticImpact &impact)
     return stream;
 }
 
+
 std::ostream &operator<<(std::ostream &stream, const SynapticImpact &impact)
 {
     stream << impact.connection_index_ << impact.impact_value_ << impact.presynaptic_neuron_index_
@@ -24,12 +25,14 @@ std::ostream &operator<<(std::ostream &stream, const SynapticImpact &impact)
     return stream;
 }
 
+
 std::ostream &operator<<(std::ostream &stream, const SynapticImpactMessage &msg)
 {
     stream << msg.header_ << msg.postsynaptic_population_uid_ << msg.presynaptic_population_uid_ << msg.impacts_.size();
     for (auto v : msg.impacts_) stream << v;
     return stream;
 }
+
 
 std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg)
 {
