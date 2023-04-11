@@ -63,7 +63,7 @@ std::optional<zmq::message_t> MessageEndpoint::MessageEndpointImpl::receive_mess
     {
         SPDLOG_DEBUG("Endpoint receiving message");
 
-        std::array<zmq_pollitem_t, 1> items = {zmq_pollitem_t{.socket = sub_socket_.handle(), .events = ZMQ_POLLIN}};
+        std::vector<zmq_pollitem_t> items = {zmq_pollitem_t{.socket = sub_socket_.handle(), .events = ZMQ_POLLIN}};
 
         SPDLOG_DEBUG("Running poll()");
         if (zmq::poll(items, 1ms))

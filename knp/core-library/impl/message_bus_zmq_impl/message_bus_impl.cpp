@@ -13,6 +13,7 @@
 
 #include <memory>
 #include <utility>
+#include <vector>
 
 #include <zmq.hpp>
 
@@ -37,6 +38,9 @@ public:
 namespace knp::core
 {
 
+using std::chrono_literals::operator""ms;
+const auto poll_timeout = 1ms;
+
 MessageBus::MessageBusImpl::MessageBusImpl()
     :  // TODO: replace with std::format.
       router_sock_address_("inproc://route_" + std::string(UID())),
@@ -56,15 +60,14 @@ bool MessageBus::MessageBusImpl::step()
 {
     zmq::message_t message;
     zmq::recv_result_t recv_result;
-    using std::chrono_literals::operator""ms;
 
     try
     {
         // recv_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
-        std::array<zmq_pollitem_t, 1> items = {zmq_pollitem_t{.socket = router_socket_.handle(), .events = ZMQ_POLLIN}};
+        std::vector<zmq_pollitem_t> items = {zmq_pollitem_t{.socket = router_socket_.handle(), .events = ZMQ_POLLIN}};
 
         SPDLOG_DEBUG("Running poll()");
-        if (zmq::poll(items, 1ms))
+        if (zmq::poll(items, poll_timeout))
         {
             SPDLOG_TRACE("Poll() successful, receiving data");
             do

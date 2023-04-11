@@ -5,4 +5,10 @@
     <id>unusedStructMember</id>
     <fileName>knp/core-library/include/*</fileName>
   </suppress>
+  <suppress>
+    <!-- Skip "internal error" on the chrono literals -->
+    <id>cppcheckError</id>
+    <fileName>knp/core-library/impl/message_bus_zmq_impl/message_endpoint_impl.cpp</fileName>
+  </suppress>
+
 </suppressions>
