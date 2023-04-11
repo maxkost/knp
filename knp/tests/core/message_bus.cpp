@@ -8,6 +8,23 @@
 #include <tests_common.h>
 
 
+TEST(MessageBusSuite, AddSubscriptionMessage)
+{
+    using SpikeMessage = knp::core::messaging::SpikeMessage;
+
+    SpikeMessage msg{{knp::core::UID{}}, {1, 2, 3, 4, 5}};
+
+    std::vector<knp::core::UID> senders = {msg.header_.sender_uid_};
+    knp::core::Subscription<SpikeMessage> sub{knp::core::UID(), senders};
+
+    sub.add_message(std::move(msg));
+
+    const auto &msgs = sub.get_messages();
+
+    EXPECT_EQ(msgs.size(), 1);
+}
+
+
 TEST(MessageBusSuite, CreateBusAndEndpoint)
 {
     using SpikeMessage = knp::core::messaging::SpikeMessage;
