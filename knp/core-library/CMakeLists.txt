@@ -44,7 +44,7 @@ source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "includ
 
 target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS})
 
-target_link_libraries("${PROJECT_NAME}" PRIVATE spdlog::spdlog_header_only zmq)
+target_link_libraries("${PROJECT_NAME}" PRIVATE spdlog::spdlog_header_only zmq flatbuffers)
 target_link_libraries("${PROJECT_NAME}" PUBLIC KNP::Neuron::Traits KNP::Synapse::Traits)
 
 # add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
