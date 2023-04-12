@@ -48,5 +48,6 @@ set(SPDLOG_BUILD_PIC ON)
 add_third_party(spdlog)
 add_third_party(pybind11)
 add_third_party(pcm)
+add_third_party(flatbuffers)
 
 add_subdirectory(knp)
