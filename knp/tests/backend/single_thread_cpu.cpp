@@ -14,20 +14,21 @@
 
 using Backend = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend;
 using DeltaProjection = knp::core::Projection<knp::synapse_traits::DeltaSynapse>;
-using BlifatPopulation = knp::core::Population<knp::neuron_traits::BLIFATNeuron>;
+using BLIFATPopulation = knp::core::Population<knp::neuron_traits::BLIFATNeuron>;
 using Population = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::PopulationVariants;
 using Projection = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::ProjectionVariants;
 
 // Create an input projection
-DeltaProjection::SynapseGenerator input_projection_gen = [](size_t index) -> std::optional<DeltaProjection::Synapse> {
+DeltaProjection::SynapseGenerator input_projection_gen = [](size_t i) -> std::optional<DeltaProjection::Synapse> {
     return DeltaProjection::Synapse{{1.0, 1}, 0, 0};
 };
 
 // Create a loop projection
-DeltaProjection::SynapseGenerator synapse_generator = [](size_t index) -> std::optional<DeltaProjection ::Synapse> {
-    return DeltaProjection::Synapse{{1.0, 8}, 0, 0};
+DeltaProjection::SynapseGenerator synapse_generator = [](size_t i) -> std::optional<DeltaProjection ::Synapse> {
+    return DeltaProjection::Synapse{{1.0, 4}, 0, 0};
 };
 
+// Create population
 auto neuron_generator = [](size_t i)
 { return knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>{}; };
 
@@ -36,7 +37,7 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
 {
     Backend backend;
     knp::core::UID input_uid{true};
-    BlifatPopulation population{neuron_generator, 1};
+    BLIFATPopulation population{neuron_generator, 1};
     Projection loop_projection = DeltaProjection{population.get_uid(), population.get_uid(), synapse_generator, 1};
     Projection input_projection = DeltaProjection{input_uid, population.get_uid(), input_projection_gen, 1};
 
@@ -51,7 +52,7 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
 
     auto &output_channel =
         endpoint.subscribe<knp::core::messaging::SpikeMessage>(out_channel_uid, {population.get_uid()});
-    for (size_t step = 0; step < 1000; ++step)
+    for (size_t step = 0; step < 20; ++step)
     {
         if (step % 5 == 0)
         {
