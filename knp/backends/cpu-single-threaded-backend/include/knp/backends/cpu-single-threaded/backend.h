@@ -125,7 +125,6 @@ private:
     template <typename TypeList, auto CalculateMethod, typename Container>
     inline void calculator(Container &container);
 
-
 private:
     std::vector<PopulationWrapper> populations_;
     std::vector<ProjectionWrapper> projections_;

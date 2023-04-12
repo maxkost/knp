@@ -40,7 +40,7 @@ struct SynapticImpactMessage
     MessageHeader header_;
     UID postsynaptic_population_uid_;
     UID presynaptic_population_uid_;
-    knp::synapse_traits::OutputType output_type;
+    knp::synapse_traits::OutputType output_type_;
     std::vector<SynapticImpact> impacts_;
 };
 
