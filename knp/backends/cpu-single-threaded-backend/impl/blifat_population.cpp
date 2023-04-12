@@ -11,13 +11,14 @@
 
 #include <unordered_map>
 
+using knp::core::messaging::SynapticImpactMessage;
 
 void calculate_blifat_population(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint)
 {
-    // This function might be optimizable
-    // TODO: get messages from an endpoint
-    std::vector<knp::core::messaging::SynapticImpactMessage> messages;
+    // This whole function might be optimizable if we find a way to not loop over the whole population
+    std::vector<SynapticImpactMessage> messages = endpoint.unload_messages<SynapticImpactMessage>(population.get_uid());
+
     for (auto &neuron : population)
     {
         ++neuron.n_time_steps_since_last_firing_;
@@ -71,9 +72,7 @@ void calculate_blifat_population(
                 (neuron.potential_ - neuron.reversive_inhibitory_potential_) * neuron.inhibitory_conductance_;
         }
         else
-        {
             neuron.potential_ = neuron.reversive_inhibitory_potential_;
-        }
 
         if (neuron.n_time_steps_since_last_firing_ > neuron.absolute_refractory_period_ &&
             neuron.potential_ >= 1.0 + neuron.dynamic_threshold_)
@@ -87,14 +86,12 @@ void calculate_blifat_population(
             neuron_indexes.push_back(i);
         }
 
-        if (neuron.potential_ < neuron.min_potential_)
-        {
-            neuron.potential_ = neuron.min_potential_;
-        }
+        if (neuron.potential_ < neuron.min_potential_) neuron.potential_ = neuron.min_potential_;
     }
 
-    // TODO: get time!
+    // TODO: get time or step!
     time_t time = 0;
+    if (neuron_indexes.empty()) return;
     knp::core::messaging::SpikeMessage res_message{{population.get_uid(), time}, neuron_indexes};
     endpoint.send_message(res_message);
 }

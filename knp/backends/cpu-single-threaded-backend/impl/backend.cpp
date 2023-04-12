@@ -13,6 +13,7 @@
 #include <spdlog/spdlog.h>
 
 #include <functional>
+#include <vector>
 
 #include <boost/mp11.hpp>
 
@@ -66,6 +67,7 @@ void SingleThreadedCPUBackend::step()
     calculator<SupportedProjections, &SingleThreadedCPUBackend::calculate_projection>(projections_);
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
+    ++step_;
 }
 
 

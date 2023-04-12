@@ -89,13 +89,19 @@ public:
     bool receive_message();
 
     /**
-     * @brief Get a subscription to a message type by its receiver uid
+     * @brief Read messages from subscription as a vector, clear them all after reading
      * @param receiver_uid UID of the receiving object
      */
     template <class MessageType>
-    SubscriptionVariant &get_subscription(const knp::core::UID &receiver_uid)
+    std::vector<MessageType> unload_messages(const knp::core::UID &receiver_uid)
     {
-        return subscriptions_[std::make_pair(get_type_index<MessageVariant, MessageType>, receiver_uid)];
+        constexpr size_t index = get_type_index<MessageVariant, MessageType>;
+        auto iter = subscriptions_.find(std::make_pair(index, receiver_uid));
+        if (iter == subscriptions_.end()) return {};
+        Subscription<MessageType> &subscription = std::get<index>(iter->second);
+        auto result = std::move(subscription.get_messages());
+        subscription.clear_messages();
+        return result;
     }
 
     /**

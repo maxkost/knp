@@ -9,15 +9,17 @@
 
 #include <unordered_map>
 #include <utility>
+#include <vector>
 
+using knp::core::UID;
+using knp::core::messaging::SpikeMessage;
 
 void calculate_delta_synapse_projection(
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, knp::core::MessageEndpoint &endpoint,
     MessageQueue &future_messages, size_t step_n)
 {
-    // TODO: Get message
-
-    const knp::core::messaging::SpikeMessage message_in{{knp::core::UID{}, 0}, {}};
+    std::vector<SpikeMessage> messages = endpoint.unload_messages<SpikeMessage>(projection.get_uid());
+    SpikeMessage message_in = messages.empty() ? SpikeMessage{{UID{}, 0}, {}} : messages[0];
 
     // TODO: Get time
     time_t time = 0;

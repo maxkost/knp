@@ -34,6 +34,7 @@ public:
 public:
     Subscription(const UID &reciever, const std::vector<UID> &senders) : receiver_(reciever) { add_senders(senders); }
 
+
     /// Get a set of sender UIDs
     [[nodiscard]] const auto &get_senders() const { return senders_; }
 
@@ -82,6 +83,8 @@ public:
 
     MessageContainerType &get_messages() { return messages_; }
     const MessageContainerType &get_messages() const { return messages_; }
+
+    void clear_messages() { messages_.clear(); }
 
 private:
     /// Receiver UID
