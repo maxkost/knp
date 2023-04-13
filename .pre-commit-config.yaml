@@ -33,7 +33,7 @@ repos:
       # - id: no-commit-to-branch
 
   - repo: https://github.com/jorisroovers/gitlint
-    rev: "v0.18.0"
+    rev: "v0.19.1"
     hooks:
       - id: gitlint
 
@@ -125,7 +125,7 @@ repos:
       - id: requirements-txt-fixer
 
   - repo: https://github.com/PyCQA/autoflake
-    rev: v2.0.0
+    rev: v2.0.2
     hooks:
       - id: autoflake
         exclude: &fixtures tests(/\w*)*/functional/|tests/input|doc/data/messages|tests(/\w*)*data/
@@ -137,7 +137,7 @@ repos:
           - --remove-unused-variables
 
   - repo: https://github.com/pycqa/pylint
-    rev: "v2.15.9"  # pylint-2.14.5
+    rev: "v3.0.0a6"  # pylint-2.14.5
     hooks:
       - id: pylint
         args: ["-rn", "-sn", "--rcfile=knp/.pylintrc", "--fail-on=I", "--load-plugins=pylint.extensions.docparams"]
@@ -164,12 +164,12 @@ repos:
   #      language_version: python3
 
   - repo: https://github.com/pre-commit/pre-commit
-    rev: v2.20.0
+    rev: v3.2.2
     hooks:
       - id: validate_manifest
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.991
+    rev: v1.2.0
     hooks:
       - id: mypy
         args: ["--config-file", "knp/.mypy.ini", "--install-types"]
@@ -196,20 +196,20 @@ repos:
       - id: pyupgrade
 
   - repo: https://github.com/ambv/black
-    rev: "22.12.0"
+    rev: "23.3.0"
     hooks:
       - id: black
         args: ["-l", "120", "--skip-string-normalization"]
 
   - repo: https://github.com/DanielNoord/pydocstringformatter
-    rev: v0.7.2
+    rev: v0.7.3
     hooks:
       - id: pydocstringformatter
         exclude: *fixtures
         args: ["--max-summary-lines=2", "--linewrap-full-docstring"]
 
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.4
+    rev: 1.7.5
     hooks:
       - id: bandit
         args: ["-r", "-lll"]
