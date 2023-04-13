@@ -25,10 +25,10 @@ namespace knp::core::messaging
  */
 struct SynapticImpact
 {
-    size_t connection_index_;
-    double impact_value_;
-    size_t presynaptic_neuron_index_;
-    size_t postsynaptic_neuron_index_;
+    uint64_t connection_index_;
+    float impact_value_;
+    uint32_t presynaptic_neuron_index_;
+    uint32_t postsynaptic_neuron_index_;
 };
 
 
@@ -38,17 +38,21 @@ struct SynapticImpact
 struct SynapticImpactMessage
 {
     MessageHeader header_;
-    UID postsynaptic_population_uid_;
     UID presynaptic_population_uid_;
+    UID postsynaptic_population_uid_;
     knp::synapse_traits::OutputType output_type_;
     std::vector<SynapticImpact> impacts_;
 };
 
-typedef std::unordered_map<size_t, knp::core::messaging::SynapticImpactMessage> SynapticMessageQueue;
+typedef std::unordered_map<size_t, SynapticImpactMessage> SynapticMessageQueue;
 
 std::istream &operator>>(std::istream &stream, SynapticImpact &impact);
 std::ostream &operator<<(std::ostream &stream, const SynapticImpact &impact);
 std::ostream &operator<<(std::ostream &stream, const SynapticImpactMessage &msg);
 std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg);
+
+std::vector<uint8_t> pack(const SynapticImpactMessage &msg);
+template <>
+SynapticImpactMessage unpack<SynapticImpactMessage>(std::vector<uint8_t> &buffer);
 
 }  // namespace knp::core::messaging

@@ -10,6 +10,7 @@
 #include <knp/core/uid.h>
 
 #include <iostream>
+#include <vector>
 
 
 namespace knp::core::messaging
@@ -26,5 +27,8 @@ struct MessageHeader
 
 std::istream &operator>>(std::istream &stream, MessageHeader &header);
 std::ostream &operator<<(std::ostream &stream, const MessageHeader &header);
+
+template <typename T>
+T unpack(std::vector<uint8_t> &buffer);
 
 }  // namespace knp::core::messaging

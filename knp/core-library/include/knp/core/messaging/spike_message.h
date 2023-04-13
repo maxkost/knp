@@ -30,6 +30,8 @@ std::ostream &operator<<(std::ostream &stream, const SpikeMessage &msg);
 std::istream &operator>>(std::istream &stream, SpikeMessage &msg);
 
 std::vector<uint8_t> pack(const SpikeMessage &msg);
-SpikeMessage unpack(std::vector<uint8_t> &buffer);
+
+template <>
+SpikeMessage unpack<SpikeMessage>(std::vector<uint8_t> &buffer);
 
 }  // namespace knp::core::messaging

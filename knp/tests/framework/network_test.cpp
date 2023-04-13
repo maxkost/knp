@@ -29,10 +29,10 @@ auto create_entities()
 
     DeltaProjection projection1(
         knp::core::UID{}, knp::core::UID{},
-        [=](size_t index) -> std::optional<Synapse>
+        [=](uint32_t index) -> std::optional<Synapse>
         {
-            const size_t id_from = index;
-            const size_t id_to = index;
+            const uint32_t id_from = index;
+            const uint32_t id_to = index;
             return Synapse{{}, id_from, id_to};
         },
         synapses_count);

@@ -20,9 +20,9 @@ template <>
 struct synapse_parameters<DeltaSynapse>
 {
     synapse_parameters() : weight_(0.0F), delay_(1) {}
-    synapse_parameters(float weight, std::size_t delay) : weight_(weight), delay_(delay) {}
+    synapse_parameters(float weight, uint32_t delay) : weight_(weight), delay_(delay) {}
     float weight_;
-    std::size_t delay_;
+    uint32_t delay_;
 };
 
 }  // namespace knp::synapse_traits

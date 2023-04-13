@@ -34,10 +34,10 @@ public:
     struct Synapse
     {
         SynapseParameters params;
-        size_t id_from;
-        size_t id_to;
+        uint32_t id_from;
+        uint32_t id_to;
     };
-    using SynapseGenerator = std::function<std::optional<Synapse>(size_t)>;
+    using SynapseGenerator = std::function<std::optional<Synapse>(uint32_t)>;
 
     /**
      * @brief Construct an empty projection.

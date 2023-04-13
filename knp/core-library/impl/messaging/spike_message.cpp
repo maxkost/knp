@@ -46,7 +46,8 @@ std::vector<uint8_t> pack(const SpikeMessage &msg)
 }
 
 
-SpikeMessage unpack(std::vector<uint8_t> &buffer)
+template <>
+SpikeMessage unpack<SpikeMessage>(std::vector<uint8_t> &buffer)
 {
     const marshal::SpikeMessage *const s_msg{marshal::GetSpikeMessage(buffer.data())};
     const marshal::MessageHeader *const s_msg_header{s_msg->header()};
