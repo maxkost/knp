@@ -15,6 +15,14 @@
 namespace knp::core::messaging
 {
 
+bool SynapticImpact::operator==(const SynapticImpact &other) const
+{
+    return connection_index_ == other.connection_index_ &&
+           presynaptic_neuron_index_ == other.presynaptic_neuron_index_ &&
+           postsynaptic_neuron_index_ == other.postsynaptic_neuron_index_ && impact_value_ == other.impact_value_;
+}
+
+
 std::istream &operator>>(std::istream &stream, SynapticImpact &impact)
 {
     stream >> impact.connection_index_ >> impact.impact_value_ >> impact.presynaptic_neuron_index_ >>

@@ -20,6 +20,27 @@ TEST(MessageBusSuite, SpikeMessagePackUnpack)
 }
 
 
+TEST(MessageBusSuite, SynapticImpactMessagePackUnpack)
+{
+    knp::core::messaging::SynapticImpactMessage msg{
+        {knp::core::UID{}},
+        knp::core::UID{},
+        knp::core::UID{},
+        knp::synapse_traits::OutputType::INHIBITORY_CONDUCTANCE,
+        {{1, 2, 3, 4}, {4, 3, 2, 1}, {5, 6, 7, 8}}};
+
+    auto packed_msg = std::move(knp::core::messaging::pack(msg));
+    auto unpacked_msg =
+        std::move(knp::core::messaging::unpack<knp::core::messaging::SynapticImpactMessage>(packed_msg));
+
+    ASSERT_EQ(unpacked_msg.impacts_, msg.impacts_);
+    ASSERT_EQ(unpacked_msg.output_type_, msg.output_type_);
+    ASSERT_EQ(unpacked_msg.presynaptic_population_uid_, msg.presynaptic_population_uid_);
+    ASSERT_EQ(unpacked_msg.postsynaptic_population_uid_, msg.postsynaptic_population_uid_);
+    ASSERT_EQ(unpacked_msg.header_.sender_uid_, msg.header_.sender_uid_);
+}
+
+
 TEST(MessageBusSuite, AddSubscriptionMessage)
 {
     using SpikeMessage = knp::core::messaging::SpikeMessage;

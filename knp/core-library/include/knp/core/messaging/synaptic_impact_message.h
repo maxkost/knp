@@ -29,6 +29,8 @@ struct SynapticImpact
     float impact_value_;
     uint32_t presynaptic_neuron_index_;
     uint32_t postsynaptic_neuron_index_;
+
+    bool operator==(const SynapticImpact &) const;
 };
 
 
