@@ -15,6 +15,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_subdirectory(neuron-traits-library)
 add_subdirectory(synapse-traits-library)
+add_subdirectory(messaging)
 add_subdirectory(core-library)
 add_subdirectory(devices-library)
 add_subdirectory(backends)

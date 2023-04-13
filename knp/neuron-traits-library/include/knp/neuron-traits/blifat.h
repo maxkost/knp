@@ -49,7 +49,7 @@ struct neuron_parameters<BLIFATNeuron>
 
     unsigned bursting_phase_ = 0;
     /// 0 means no bursting.
-    unsigned bursting_period = 0;
+    unsigned bursting_period_ = 0;
     double reflexive_weight_ = 0;
     double reversive_inhibitory_potential_ = default_values<BLIFATNeuron>::reverse_inhibitory_potential;
     unsigned absolute_refractory_period_ = 0;

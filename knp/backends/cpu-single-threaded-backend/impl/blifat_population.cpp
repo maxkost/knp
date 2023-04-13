@@ -11,14 +11,12 @@
 
 #include <unordered_map>
 
+
 using knp::core::messaging::SynapticImpactMessage;
 
-void calculate_blifat_population(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint)
-{
-    // This whole function might be optimizable if we find a way to not loop over the whole population
-    std::vector<SynapticImpactMessage> messages = endpoint.unload_messages<SynapticImpactMessage>(population.get_uid());
 
+void calculate_neurons_state(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population)
+{
     for (auto &neuron : population)
     {
         ++neuron.n_time_steps_since_last_firing_;
@@ -35,33 +33,49 @@ void calculate_blifat_population(
             }
         }
     }
+}
 
-    // Process inputs
+
+void impact_neuron(
+    knp::core::Population<knp::neuron_traits::BLIFATNeuron>::NeuronParameters &neuron,
+    knp::synapse_traits::OutputType synapse_type, float impact_value)
+{
+    switch (synapse_type)
+    {
+        case knp::synapse_traits::OutputType::EXCITATORY:
+            neuron.potential_ += impact_value;
+            break;
+        case knp::synapse_traits::OutputType::INHIBITORY_CONDUCTANCE:
+            neuron.inhibitory_conductance_ += impact_value;
+            break;
+        case knp::synapse_traits::OutputType::INHIBITORY_CURRENT:
+            neuron.potential_ -= impact_value;
+            break;
+        case knp::synapse_traits::OutputType::DOPAMINE:
+            break;
+    }
+}
+
+
+void process_inputs(
+    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population,
+    const std::vector<SynapticImpactMessage> &messages)
+{
     for (const auto &message : messages)
     {
-        auto synapse_type = message.output_type;
-        for (auto &impact : message.impacts_)
+        auto synapse_type = message.output_type_;
+        for (const auto &impact : message.impacts_)
         {
             auto &neuron = population[impact.postsynaptic_neuron_index_];
-            switch (synapse_type)
-            {
-                case knp::synapse_traits::OutputType::EXCITATORY:
-                    neuron.potential_ += impact.impact_value_;
-                    break;
-                case knp::synapse_traits::OutputType::INHIBITORY_CONDUCTANCE:
-                    neuron.inhibitory_conductance_ += impact.impact_value_;
-                    break;
-                case knp::synapse_traits::OutputType::INHIBITORY_CURRENT:
-                    neuron.potential_ -= impact.impact_value_;
-                    break;
-                case knp::synapse_traits::OutputType::DOPAMINE:
-                    break;
-            }
+            impact_neuron(neuron, synapse_type, impact.impact_value_);
         }
     }
+}
 
-    std::vector<uint32_t> neuron_indexes;
 
+void calculate_neurons_post_input_state(
+    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, std::vector<uint32_t> &neuron_indexes)
+{
     // can be made parallel
     for (size_t i = 0; i < population.size(); ++i)
     {
@@ -72,7 +86,9 @@ void calculate_blifat_population(
                 (neuron.potential_ - neuron.reversive_inhibitory_potential_) * neuron.inhibitory_conductance_;
         }
         else
+        {
             neuron.potential_ = neuron.reversive_inhibitory_potential_;
+        }
 
         if (neuron.n_time_steps_since_last_firing_ > neuron.absolute_refractory_period_ &&
             neuron.potential_ >= 1.0 + neuron.dynamic_threshold_)
@@ -81,13 +97,27 @@ void calculate_blifat_population(
             neuron.potential_ = neuron.potential_reset_value_;
             neuron.dynamic_threshold_ += neuron.threshold_increment_;
             neuron.n_time_steps_since_last_firing_ = 0;
-            neuron.bursting_phase_ = neuron.bursting_period;
+            neuron.bursting_phase_ = neuron.bursting_period_;
             neuron.postsynaptic_trace_ += neuron.postsynaptic_trace_increment_;
             neuron_indexes.push_back(i);
         }
 
         if (neuron.potential_ < neuron.min_potential_) neuron.potential_ = neuron.min_potential_;
     }
+}
+
+
+void calculate_blifat_population(
+    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint)
+{
+    // This whole function might be optimizable if we find a way to not loop over the whole population
+    std::vector<SynapticImpactMessage> messages = endpoint.unload_messages<SynapticImpactMessage>(population.get_uid());
+
+    calculate_neurons_state(population);
+    process_inputs(population, messages);
+
+    std::vector<uint32_t> neuron_indexes;
+    calculate_neurons_post_input_state(population, neuron_indexes);
 
     // TODO: get time or step!
     time_t time = 0;
