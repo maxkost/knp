@@ -13,6 +13,8 @@ include(knp-functions)
 find_package(flatbuffers)
 
 set(${PROJECT_NAME}_SOURCES
+    message_header.fbs
+    synapse_traits.fbs
     spike_message.fbs
     synaptic_impact_message.fbs
 )
