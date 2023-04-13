@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <functional>
 #include <sstream>
 #include <string>
@@ -55,6 +56,12 @@ struct UID
     explicit UID(bool random = true) : tag(random ? uid_generator()() : ::boost::uuids::nil_uuid()) {}
     explicit UID(const ::boost::uuids::uuid &guid) : tag(guid) {}
     explicit UID(::boost::uuids::uuid &&guid) : tag(std::move(guid)) {}
+    explicit UID(const std::array<
+                 boost::uuids::uuid::value_type, sizeof(boost::uuids::uuid::data) / sizeof(boost::uuids::uuid::data[0])>
+                     &guid_value)
+    {
+        std::copy(guid_value.begin(), guid_value.end(), tag.data);
+    }
     UID(const UID &) = default;
 
     operator const ::boost::uuids::uuid &() const { return tag; }

@@ -120,7 +120,7 @@ void calculate_blifat_population(
     calculate_neurons_post_input_state(population, neuron_indexes);
 
     // TODO: get time or step!
-    time_t time = 0;
+    uint64_t time = 0;
     if (neuron_indexes.empty()) return;
     knp::core::messaging::SpikeMessage res_message{{population.get_uid(), time}, neuron_indexes};
     endpoint.send_message(res_message);

@@ -1,4 +1,4 @@
-namespace knp.synapse_traits;
+namespace knp.synapse_traits.marshal;
 
 
 // Types of synapses, used for projection-population interaction

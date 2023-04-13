@@ -22,7 +22,7 @@ void calculate_delta_synapse_projection(
     SpikeMessage message_in = messages.empty() ? SpikeMessage{{UID{}, 0}, {}} : messages[0];
 
     // TODO: Get time
-    time_t time = 0;
+    uint64_t time = 0;
     for (auto &neuron_index : message_in.neuron_indexes_)
     {
         auto synapses = projection.get_by_presynaptic_neuron(neuron_index);

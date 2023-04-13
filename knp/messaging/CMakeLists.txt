@@ -10,7 +10,7 @@ project(knp-messaging VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 
 include(knp-functions)
 
-find_package(flatbuffers)
+find_package(flatbuffers REQUIRED)
 
 set(${PROJECT_NAME}_SOURCES
     message_header.fbs
@@ -24,6 +24,7 @@ flatbuffers_generate_headers(
     INCLUDE_PREFIX "knp_gen_headers"
     SCHEMAS ${${PROJECT_NAME}_SOURCES}
     # BINARY_SCHEMAS_DIR "${CMAKE_BINARY_DIR}/gen_includes"
-    FLAGS --gen-object-api)
+    # FLAGS --gen-object-api
+)
 
 add_library(KNP::Messaging ALIAS "${PROJECT_NAME}")

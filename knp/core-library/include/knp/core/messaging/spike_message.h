@@ -25,4 +25,11 @@ struct SpikeMessage
     std::vector<uint32_t> neuron_indexes_;
 };
 
+
+std::ostream &operator<<(std::ostream &stream, const SpikeMessage &msg);
+std::istream &operator>>(std::istream &stream, SpikeMessage &msg);
+
+std::vector<uint8_t> pack(const SpikeMessage &msg);
+SpikeMessage unpack(std::vector<uint8_t> &buffer);
+
 }  // namespace knp::core::messaging

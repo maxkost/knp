@@ -21,7 +21,7 @@ namespace knp::core::messaging
 struct MessageHeader
 {
     knp::core::UID sender_uid_;
-    time_t send_time_;
+    uint64_t send_time_;
 };
 
 std::istream &operator>>(std::istream &stream, MessageHeader &header);

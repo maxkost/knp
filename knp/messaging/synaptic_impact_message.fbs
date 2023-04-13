@@ -2,24 +2,24 @@ include "message_header.fbs";
 include "synapse_traits.fbs";
 
 
-namespace knp.core.messaging;
+namespace knp.core.messaging.marshal;
 
 struct SynapticImpact
 {
-    connection_index_: uint64;
-    impact_value_: float;
-    presynaptic_neuron_index_: uint32;
-    postsynaptic_neuron_index_: uint32;
+    connection_index: uint64;
+    impact_value: float;
+    presynaptic_neuron_index: uint32;
+    postsynaptic_neuron_index: uint32;
 }
 
 
 table SynapticImpactMessage
 {
-    header_: MessageHeader;
-    postsynaptic_population_uid_: UID;
-    presynaptic_population_uid_: UID;
-    output_type_: knp.synapse_traits.OutputType;
-    impacts_: [SynapticImpact];
+    header: MessageHeader;
+    postsynaptic_population_uid: UID;
+    presynaptic_population_uid: UID;
+    output_type: knp.synapse_traits.marshal.OutputType;
+    impacts: [SynapticImpact];
 }
 
 root_type SynapticImpactMessage;

@@ -1,4 +1,4 @@
-namespace knp.core.messaging;
+namespace knp.core.messaging.marshal;
 
 
 struct UID
@@ -8,6 +8,6 @@ struct UID
 
 struct MessageHeader
 {
-    sender_uid_: UID;
-    send_time_: uint64;
+    sender_uid: UID;
+    send_time: uint64;
 }
