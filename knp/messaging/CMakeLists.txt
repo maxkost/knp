@@ -12,10 +12,16 @@ include(knp-functions)
 
 find_package(flatbuffers)
 
-build_flatbuffers("spike_message.fbs;synaptic_impact_message.fbs"
-                  "${CMAKE_CURRENT_LIST_DIR}"
-                  "${PROJECT_NAME}"
-                  ""
-                  "${CMAKE_BINARY_DIR}"
-                  ""
-                  "")
+set(${PROJECT_NAME}_SOURCES
+    spike_message.fbs
+    synaptic_impact_message.fbs
+)
+
+flatbuffers_generate_headers(
+    TARGET "${PROJECT_NAME}"
+    INCLUDE_PREFIX "knp_gen_headers"
+    SCHEMAS ${${PROJECT_NAME}_SOURCES}
+    # BINARY_SCHEMAS_DIR "${CMAKE_BINARY_DIR}/gen_includes"
+    FLAGS --gen-object-api)
+
+add_library(KNP::Messaging ALIAS "${PROJECT_NAME}")
