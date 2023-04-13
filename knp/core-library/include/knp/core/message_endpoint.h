@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <knp/core/messaging.h>
+#include <knp/core/messaging/messaging.h>
 #include <knp/core/subscription.h>
 #include <knp/core/uid.h>
 

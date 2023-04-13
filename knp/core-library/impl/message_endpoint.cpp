@@ -6,6 +6,7 @@
  */
 
 #include <knp/core/message_endpoint.h>
+#include <knp/core/messaging/message_envelope.h>
 
 #include <spdlog/spdlog.h>
 
@@ -102,7 +103,8 @@ void MessageEndpoint::remove_receiver(const UID &receiver)
 void MessageEndpoint::send_message(const MessageEndpoint::MessageVariant &message)
 {
     SPDLOG_TRACE("Sending message from the {}...", std::string(get_header(message).sender_uid_));
-    impl_->send_message(&message, sizeof(MessageVariant));
+    auto packed_msg = knp::core::messaging::pack_to_envelope(message);
+    impl_->send_message(packed_msg.data(), packed_msg.size());
 }
 
 
@@ -113,10 +115,10 @@ bool MessageEndpoint::receive_message()
     auto message_var = impl_->receive_message();
     if (!message_var.has_value()) return false;
 
-    auto message = message_var->data<MessageVariant>();
+    auto message = knp::core::messaging::extract_from_envelope(message_var->data());
 
-    const UID &sender_uid = get_header(*message).sender_uid_;
-    const size_t type_index = message->index();
+    const UID &sender_uid = get_header(message).sender_uid_;
+    const size_t type_index = message.index();
 
     // Find a subscription.
     for (auto &&[k, sub_variant] : subscriptions_)
@@ -136,7 +138,7 @@ bool MessageEndpoint::receive_message()
                 {
                     SPDLOG_TRACE("Subscription has sender with UID = {}", std::string(sender_uid));
                     subscription.add_message(
-                        std::get<typename std::decay_t<decltype(subscription)>::MessageType>(*message));
+                        std::get<typename std::decay_t<decltype(subscription)>::MessageType>(message));
                     SPDLOG_TRACE("Message was added to the subscription {}", std::string(sender_uid));
                 }
             },

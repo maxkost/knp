@@ -5,11 +5,9 @@
  * @date 23.03.2023
  */
 
-#include <knp/core/messaging/synaptic_impact_message.h>
-
-#include <knp_gen_headers/synaptic_impact_message_generated.h>
-
 #include <algorithm>
+
+#include "synaptic_impact_message_impl.h"
 
 
 namespace knp::core::messaging
@@ -60,10 +58,8 @@ std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg)
 }
 
 
-std::vector<uint8_t> pack(const SynapticImpactMessage &msg)
+::flatbuffers::uoffset_t pack_internal(::flatbuffers::FlatBufferBuilder &builder, const SynapticImpactMessage &msg)
 {
-    // TODO: doesn't create instance every time.
-    ::flatbuffers::FlatBufferBuilder builder;
     marshal::MessageHeader header{marshal::UID{msg.header_.sender_uid_.tag.data}, msg.header_.send_time_};
 
     std::vector<knp::core::messaging::marshal::SynapticImpact> impacts;
@@ -80,18 +76,29 @@ std::vector<uint8_t> pack(const SynapticImpactMessage &msg)
     auto pre_synaptic_uid = std::move(marshal::UID{msg.presynaptic_population_uid_.tag.data});
     auto post_synaptic_uid = std::move(marshal::UID{msg.postsynaptic_population_uid_.tag.data});
 
-    auto s_msg = std::move(marshal::CreateSynapticImpactMessageDirect(
-        builder, &header, &pre_synaptic_uid, &post_synaptic_uid,
-        static_cast<knp::synapse_traits::marshal::OutputType>(msg.output_type_), &impacts));
-    marshal::FinishSynapticImpactMessageBuffer(builder, s_msg);
+    auto res = marshal::CreateSynapticImpactMessageDirect(
+                   builder, &header, &pre_synaptic_uid, &post_synaptic_uid,
+                   static_cast<knp::synapse_traits::marshal::OutputType>(msg.output_type_), &impacts)
+                   .o;
+    return res;
+}
+
+
+std::vector<uint8_t> pack(const SynapticImpactMessage &msg)
+{
+    // TODO: don't create instance every time.
+    ::flatbuffers::FlatBufferBuilder builder;
+    auto s_msg = std::move(pack_internal(builder, msg));
+    marshal::FinishSynapticImpactMessageBuffer(
+        builder, static_cast<::flatbuffers::Offset<marshal::SynapticImpactMessage>>(s_msg));
     return std::vector<uint8_t>(builder.GetBufferPointer(), builder.GetBufferPointer() + builder.GetSize());
 }
 
 
 template <>
-SynapticImpactMessage unpack<SynapticImpactMessage>(std::vector<uint8_t> &buffer)
+SynapticImpactMessage unpack<SynapticImpactMessage>(const void *buffer)
 {
-    const marshal::SynapticImpactMessage *const s_msg{marshal::GetSynapticImpactMessage(buffer.data())};
+    const marshal::SynapticImpactMessage *const s_msg{marshal::GetSynapticImpactMessage(buffer)};
     const marshal::MessageHeader *const s_msg_header{s_msg->header()};
 
     UID sender_uid{false};
@@ -125,6 +132,13 @@ SynapticImpactMessage unpack<SynapticImpactMessage>(std::vector<uint8_t> &buffer
         postsynaptic_uid,
         static_cast<knp::synapse_traits::OutputType>(s_msg->output_type()),
         std::move(impacts)};
+}
+
+
+template <>
+SynapticImpactMessage unpack<SynapticImpactMessage>(std::vector<uint8_t> &buffer)
+{
+    return unpack<SynapticImpactMessage>(buffer.data());
 }
 
 }  // namespace knp::core::messaging

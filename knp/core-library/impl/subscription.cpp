@@ -5,7 +5,7 @@
  * @date 11.04.2023
  */
 
-#include <knp/core/messaging.h>
+#include <knp/core/messaging/messaging.h>
 #include <knp/core/subscription.h>
 
 #include <boost/preprocessor.hpp>

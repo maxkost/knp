@@ -3,7 +3,7 @@
  */
 
 #include <knp/core/message_bus.h>
-#include <knp/core/messaging.h>
+#include <knp/core/messaging/messaging.h>
 
 #include <tests_common.h>
 
@@ -80,4 +80,6 @@ TEST(MessageBusSuite, CreateBusAndEndpoint)
     const auto &msgs = subscription.get_messages();
 
     EXPECT_EQ(msgs.size(), 1);
+    EXPECT_EQ(msgs[0].header_.sender_uid_, msg.header_.sender_uid_);
+    EXPECT_EQ(msgs[0].neuron_indexes_, msg.neuron_indexes_);
 }

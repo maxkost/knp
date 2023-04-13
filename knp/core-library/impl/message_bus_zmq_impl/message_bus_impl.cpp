@@ -7,8 +7,6 @@
 
 #include "message_bus_impl.h"
 
-#include <knp/core/messaging.h>
-
 #include <spdlog/spdlog.h>
 
 #include <memory>

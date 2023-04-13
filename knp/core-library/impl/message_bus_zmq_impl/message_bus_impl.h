@@ -8,7 +8,6 @@
 #pragma once
 
 #include <knp/core/message_bus.h>
-#include <knp/core/messaging.h>
 
 #include <spdlog/spdlog.h>
 

@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "message_header.h"
+#include "pack_message.h"
 
 
 namespace knp::core::messaging

@@ -5,9 +5,7 @@
  * @date 23.03.2023
  */
 
-#include <knp/core/messaging/spike_message.h>
-
-#include <knp_gen_headers/spike_message_generated.h>
+#include "spike_message_impl.h"
 
 
 namespace knp::core::messaging
@@ -34,22 +32,28 @@ std::istream &operator>>(std::istream &stream, SpikeMessage &msg)
 }
 
 
-std::vector<uint8_t> pack(const SpikeMessage &msg)
+::flatbuffers::uoffset_t pack_internal(::flatbuffers::FlatBufferBuilder &builder, const SpikeMessage &msg)
 {
-    // TODO: doesn't create instance every time.
-    ::flatbuffers::FlatBufferBuilder builder;
     marshal::MessageHeader header{marshal::UID{msg.header_.sender_uid_.tag.data}, msg.header_.send_time_};
 
-    auto s_msg = std::move(marshal::CreateSpikeMessageDirect(builder, &header, &msg.neuron_indexes_));
-    marshal::FinishSpikeMessageBuffer(builder, s_msg);
+    return marshal::CreateSpikeMessageDirect(builder, &header, &msg.neuron_indexes_).o;
+}
+
+
+std::vector<uint8_t> pack(const SpikeMessage &msg)
+{
+    // TODO: don't create instance every time.
+    ::flatbuffers::FlatBufferBuilder builder;
+    auto s_msg = std::move(pack_internal(builder, msg));
+    marshal::FinishSpikeMessageBuffer(builder, ::flatbuffers::Offset<marshal::SpikeMessage>(s_msg));
     return std::vector<uint8_t>(builder.GetBufferPointer(), builder.GetBufferPointer() + builder.GetSize());
 }
 
 
 template <>
-SpikeMessage unpack<SpikeMessage>(std::vector<uint8_t> &buffer)
+SpikeMessage unpack<SpikeMessage>(const void *buffer)
 {
-    const marshal::SpikeMessage *const s_msg{marshal::GetSpikeMessage(buffer.data())};
+    const marshal::SpikeMessage *const s_msg{marshal::GetSpikeMessage(buffer)};
     const marshal::MessageHeader *const s_msg_header{s_msg->header()};
 
     UID u1{false};
@@ -57,6 +61,13 @@ SpikeMessage unpack<SpikeMessage>(std::vector<uint8_t> &buffer)
 
     return SpikeMessage{
         {u1, s_msg_header->send_time()}, {s_msg->neuron_indexes()->begin(), s_msg->neuron_indexes()->end()}};
+}
+
+
+template <>
+SpikeMessage unpack<SpikeMessage>(std::vector<uint8_t> &buffer)
+{
+    return unpack<SpikeMessage>(buffer.data());
 }
 
 }  // namespace knp::core::messaging
