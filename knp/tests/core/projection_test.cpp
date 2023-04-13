@@ -1,6 +1,6 @@
-//
-// Projection tests
-//
+/**
+ * Projection tests
+ */
 #include "knp/core/projection.h"
 
 #include <tests_common.h>

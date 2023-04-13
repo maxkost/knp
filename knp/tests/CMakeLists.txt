@@ -22,10 +22,10 @@ enable_testing()
 include(GoogleTest)
 
 file(GLOB_RECURSE COMMON_SOURCE CONFIGURE_DEPENDS
-     "*.cpp"
+     "*_test.cpp"
      "*.h")
 
-add_executable("${PROJECT_NAME}" ${COMMON_SOURCE} backend/single_thread_cpu.cpp)
+add_executable("${PROJECT_NAME}" ${COMMON_SOURCE} tester.cpp utility.cpp)
 
 
 #file(GLOB BACKENDS LIST_DIRECTORIES yes "${CMAKE_CURRENT_SOURCE_DIR}/../include/snn-library/backends/*")

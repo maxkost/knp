@@ -1,6 +1,7 @@
-//
-// Created by Vartenkov An. on 07.04.23.
-//
+/**
+ * Created by Vartenkov An. on 07.04.23.
+ */
+
 #include <knp/backends/cpu-single-threaded/backend.h>
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
