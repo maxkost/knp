@@ -10,7 +10,7 @@ project(knp-messaging VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 
 include(knp-functions)
 
-find_package(flatbuffers REQUIRED)
+#find_package(flatbuffers REQUIRED)
 
 set(${PROJECT_NAME}_SOURCES
     fbs/message_envelope.fbs

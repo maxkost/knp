@@ -101,6 +101,20 @@ public:
 public:
     void step() override;
 
+    /**
+     * @brief Subscribe internal endpoint to messages. Needed to send messages into the network
+     * @tparam MessageType Message type
+     * @param receiver Receiving object UID
+     * @param senders a list of possible senders
+     * @return subscription
+     */
+    template <typename MessageType>
+    knp::core::Subscription<MessageType> &subscribe(
+        const knp::core::UID &receiver, const std::vector<knp::core::UID> &senders)
+    {
+        return message_endpoint_.subscribe<MessageType>(receiver, senders);
+    }
+
 protected:
     void init();
 

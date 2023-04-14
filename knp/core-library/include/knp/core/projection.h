@@ -44,8 +44,10 @@ public:
      * @param presynaptic_uid UID of the presynaptic population.
      * @param postsynaptic_uid UID of the postsynaptic population.
      */
-    Projection(UID presynaptic_uid, UID postsynaptic_uid)
-        : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
+    Projection(
+        UID presynaptic_uid, UID postsynaptic_uid,
+        synapse_traits::OutputType output_type = synapse_traits::OutputType::EXCITATORY)
+        : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid), output_type_(output_type)
     {
     }
 
@@ -56,8 +58,10 @@ public:
      * @param presynaptic_uid presynaptic population UID.
      * @param postsynaptic_uid postsynaptic population UID.
      */
-    Projection(UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator &generator, size_t num_iterations)
-        : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
+    Projection(
+        UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator &generator, size_t num_iterations,
+        synapse_traits::OutputType output_type = synapse_traits::OutputType::EXCITATORY)
+        : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid), output_type_(output_type)
     {
         for (size_t i = 0; i < num_iterations; ++i)
         {

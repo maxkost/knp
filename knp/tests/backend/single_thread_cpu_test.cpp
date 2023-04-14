@@ -37,10 +37,10 @@ auto neuron_generator = [](size_t i)
 TEST(SingleThreadCpuSuite, SmallestNetwork)
 {
     Backend backend;
-    knp::core::UID input_uid{true};
     BLIFATPopulation population{neuron_generator, 1};
     Projection loop_projection = DeltaProjection{population.get_uid(), population.get_uid(), synapse_generator, 1};
-    Projection input_projection = DeltaProjection{input_uid, population.get_uid(), input_projection_gen, 1};
+    Projection input_projection = DeltaProjection{knp::core::UID{false}, population.get_uid(), input_projection_gen, 1};
+    knp::core::UID input_uid = std::visit([](const auto &proj) { return proj.get_uid(); }, input_projection);
 
     backend.load_populations({population});
     backend.load_projections({input_projection, loop_projection});
@@ -49,10 +49,10 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
 
     knp::core::UID in_channel_uid{true};
     knp::core::UID out_channel_uid{true};
-    endpoint.subscribe<knp::core::messaging::SpikeMessage>(input_uid, {in_channel_uid});
 
-    auto &output_channel =
-        endpoint.subscribe<knp::core::messaging::SpikeMessage>(out_channel_uid, {population.get_uid()});
+    backend.subscribe<knp::core::messaging::SpikeMessage>(input_uid, {in_channel_uid});
+    endpoint.subscribe<knp::core::messaging::SpikeMessage>(out_channel_uid, {population.get_uid()});
+
     for (size_t step = 0; step < 20; ++step)
     {
         if (step % 5 == 0)
@@ -62,8 +62,8 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
         }
         backend.step();
         endpoint.receive_all_messages();
-        auto output = output_channel.get_messages();
-        if (output.size() != 0)
+        auto output = endpoint.unload_messages<knp::core::messaging::SpikeMessage>(out_channel_uid);
+        if (!output.empty())
         {
             SPDLOG_DEBUG("Got spikes on step " + std::to_string(step));
         }

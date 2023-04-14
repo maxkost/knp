@@ -12,8 +12,8 @@ TEST(MessageBusSuite, SpikeMessagePackUnpack)
 {
     knp::core::messaging::SpikeMessage msg{{knp::core::UID{}}, {1, 2, 3, 4, 5}};
 
-    auto packed_msg = std::move(knp::core::messaging::pack(msg));
-    auto unpacked_msg = std::move(knp::core::messaging::unpack<knp::core::messaging::SpikeMessage>(packed_msg));
+    auto packed_msg = knp::core::messaging::pack(msg);
+    auto unpacked_msg = knp::core::messaging::unpack<knp::core::messaging::SpikeMessage>(packed_msg);
 
     ASSERT_EQ(unpacked_msg.neuron_indexes_, msg.neuron_indexes_);
     ASSERT_EQ(unpacked_msg.header_.sender_uid_, msg.header_.sender_uid_);
@@ -29,9 +29,8 @@ TEST(MessageBusSuite, SynapticImpactMessagePackUnpack)
         knp::synapse_traits::OutputType::INHIBITORY_CONDUCTANCE,
         {{1, 2, 3, 4}, {4, 3, 2, 1}, {5, 6, 7, 8}}};
 
-    auto packed_msg = std::move(knp::core::messaging::pack(msg));
-    auto unpacked_msg =
-        std::move(knp::core::messaging::unpack<knp::core::messaging::SynapticImpactMessage>(packed_msg));
+    auto packed_msg = knp::core::messaging::pack(msg);
+    auto unpacked_msg = knp::core::messaging::unpack<knp::core::messaging::SynapticImpactMessage>(packed_msg);
 
     ASSERT_EQ(unpacked_msg.impacts_, msg.impacts_);
     ASSERT_EQ(unpacked_msg.output_type_, msg.output_type_);

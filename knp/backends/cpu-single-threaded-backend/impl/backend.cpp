@@ -85,7 +85,15 @@ void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVari
     projections_.clear();
     projections_.reserve(projections.size());
 
-    for (const auto &p : projections) projections_.push_back(ProjectionWrapper{p});
+    for (const auto &p : projections)
+    {
+        projections_.push_back(ProjectionWrapper{p});
+        knp::core::UID pre_uid = std::visit([](const auto &proj) { return proj.get_presynaptic(); }, p);
+        knp::core::UID post_uid = std::visit([](const auto &proj) { return proj.get_postsynaptic(); }, p);
+        knp::core::UID this_uid = std::visit([](const auto &proj) { return proj.get_uid(); }, p);
+        if (pre_uid) message_endpoint_.subscribe<knp::core::messaging::SpikeMessage>(this_uid, {pre_uid});
+        if (post_uid) message_endpoint_.subscribe<knp::core::messaging::SynapticImpactMessage>(post_uid, {this_uid});
+    }
 }
 
 
