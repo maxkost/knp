@@ -108,11 +108,6 @@ void MessageEndpoint::send_message(const knp::core::messaging::MessageVariant &m
     auto packed_msg = knp::core::messaging::pack_to_envelope(message);
     SPDLOG_TRACE("Packed message size = {}...", packed_msg.size());
 
-    std::fstream mf;
-    mf.open("./message.bin", std::ios::app | std::ios::binary);
-    mf.write(reinterpret_cast<char *>(packed_msg.data()), packed_msg.size());
-    mf.close();
-
     impl_->send_message(packed_msg.data(), packed_msg.size());
 }
 
