@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <knp/core/messaging/message_envelope.h>
 #include <knp/core/messaging/messaging.h>
 #include <knp/core/subscription.h>
 #include <knp/core/uid.h>
@@ -33,11 +34,9 @@ namespace knp::core
 class MessageEndpoint
 {
 public:
-    using SupportedMessages = messaging::AllMessages;
-    using AllSubscriptions = boost::mp11::mp_transform<Subscription, SupportedMessages>;
+    using AllSubscriptions = boost::mp11::mp_transform<Subscription, messaging::AllMessages>;
 
     using SubscriptionVariant = boost::mp11::mp_rename<AllSubscriptions, std::variant>;
-    using MessageVariant = boost::mp11::mp_rename<SupportedMessages, std::variant>;
 
 public:
     static UID get_receiver_uid(const SubscriptionVariant &subscription);
@@ -80,7 +79,7 @@ public:
      * @brief Send a message to the message bus.
      * @param message message to send.
      */
-    void send_message(const MessageVariant &message);
+    void send_message(const knp::core::messaging::MessageVariant &message);
 
     /**
      * @brief Receive a message from the message bus.
@@ -95,7 +94,7 @@ public:
     template <class MessageType>
     std::vector<MessageType> unload_messages(const knp::core::UID &receiver_uid)
     {
-        constexpr size_t index = get_type_index<MessageVariant, MessageType>;
+        constexpr size_t index = get_type_index<knp::core::messaging::MessageVariant, MessageType>;
         auto iter = subscriptions_.find(std::make_pair(index, receiver_uid));
         if (iter == subscriptions_.end()) return {};
         Subscription<MessageType> &subscription = std::get<index>(iter->second);

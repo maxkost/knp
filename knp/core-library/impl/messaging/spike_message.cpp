@@ -5,6 +5,8 @@
  * @date 23.03.2023
  */
 
+#include <spdlog/spdlog.h>
+
 #include "spike_message_impl.h"
 
 
@@ -34,6 +36,7 @@ std::istream &operator>>(std::istream &stream, SpikeMessage &msg)
 
 ::flatbuffers::uoffset_t pack_internal(::flatbuffers::FlatBufferBuilder &builder, const SpikeMessage &msg)
 {
+    SPDLOG_TRACE("Packing spike message...");
     marshal::MessageHeader header{marshal::UID{msg.header_.sender_uid_.tag.data}, msg.header_.send_time_};
 
     return marshal::CreateSpikeMessageDirect(builder, &header, &msg.neuron_indexes_).o;
@@ -50,10 +53,8 @@ std::vector<uint8_t> pack(const SpikeMessage &msg)
 }
 
 
-template <>
-SpikeMessage unpack<SpikeMessage>(const void *buffer)
+SpikeMessage unpack(const marshal::SpikeMessage *s_msg)
 {
-    const marshal::SpikeMessage *const s_msg{marshal::GetSpikeMessage(buffer)};
     const marshal::MessageHeader *const s_msg_header{s_msg->header()};
 
     UID u1{false};
@@ -61,6 +62,14 @@ SpikeMessage unpack<SpikeMessage>(const void *buffer)
 
     return SpikeMessage{
         {u1, s_msg_header->send_time()}, {s_msg->neuron_indexes()->begin(), s_msg->neuron_indexes()->end()}};
+}
+
+
+template <>
+SpikeMessage unpack<SpikeMessage>(const void *buffer)
+{
+    const marshal::SpikeMessage *const s_msg{marshal::GetSpikeMessage(buffer)};
+    return unpack(s_msg);
 }
 
 

@@ -18,4 +18,6 @@ namespace knp::core::messaging
 
 template <>
 SpikeMessage unpack<SpikeMessage>(const void *buffer);
+
+SpikeMessage unpack(const marshal::SpikeMessage *s_msg);
 }  // namespace knp::core::messaging

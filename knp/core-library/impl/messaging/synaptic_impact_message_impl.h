@@ -18,4 +18,5 @@ namespace knp::core::messaging
 
 template <>
 SynapticImpactMessage unpack<SynapticImpactMessage>(const void *buffer);
+SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg);
 }  // namespace knp::core::messaging

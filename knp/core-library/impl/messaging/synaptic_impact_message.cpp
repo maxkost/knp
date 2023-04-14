@@ -5,6 +5,8 @@
  * @date 23.03.2023
  */
 
+#include <spdlog/spdlog.h>
+
 #include <algorithm>
 
 #include "synaptic_impact_message_impl.h"
@@ -60,6 +62,7 @@ std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg)
 
 ::flatbuffers::uoffset_t pack_internal(::flatbuffers::FlatBufferBuilder &builder, const SynapticImpactMessage &msg)
 {
+    SPDLOG_TRACE("Packing synaptic impact message...");
     marshal::MessageHeader header{marshal::UID{msg.header_.sender_uid_.tag.data}, msg.header_.send_time_};
 
     std::vector<knp::core::messaging::marshal::SynapticImpact> impacts;
@@ -80,6 +83,8 @@ std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg)
                    builder, &header, &pre_synaptic_uid, &post_synaptic_uid,
                    static_cast<knp::synapse_traits::marshal::OutputType>(msg.output_type_), &impacts)
                    .o;
+    marshal::FinishSynapticImpactMessageBuffer(
+        builder, static_cast<::flatbuffers::Offset<marshal::SynapticImpactMessage>>(res));
     return res;
 }
 
@@ -95,10 +100,8 @@ std::vector<uint8_t> pack(const SynapticImpactMessage &msg)
 }
 
 
-template <>
-SynapticImpactMessage unpack<SynapticImpactMessage>(const void *buffer)
+SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg)
 {
-    const marshal::SynapticImpactMessage *const s_msg{marshal::GetSynapticImpactMessage(buffer)};
     const marshal::MessageHeader *const s_msg_header{s_msg->header()};
 
     UID sender_uid{false};
@@ -132,6 +135,14 @@ SynapticImpactMessage unpack<SynapticImpactMessage>(const void *buffer)
         postsynaptic_uid,
         static_cast<knp::synapse_traits::OutputType>(s_msg->output_type()),
         std::move(impacts)};
+}
+
+
+template <>
+SynapticImpactMessage unpack<SynapticImpactMessage>(const void *buffer)
+{
+    const marshal::SynapticImpactMessage *const s_msg{marshal::GetSynapticImpactMessage(buffer)};
+    return unpack(s_msg);
 }
 
 

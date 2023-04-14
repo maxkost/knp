@@ -15,6 +15,7 @@ namespace knp::core::messaging
 
 template <typename T>
 T unpack(std::vector<uint8_t>& buffer);
+
 template <typename T>
 T unpack(const void* buffer);
 

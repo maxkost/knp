@@ -6,10 +6,10 @@
  */
 
 #include <knp/core/message_endpoint.h>
-#include <knp/core/messaging/message_envelope.h>
 
 #include <spdlog/spdlog.h>
 
+#include <fstream>
 #include <memory>
 
 #include <boost/preprocessor.hpp>
@@ -26,7 +26,7 @@ UID MessageEndpoint::get_receiver_uid(const MessageEndpoint::SubscriptionVariant
 }
 
 
-messaging::MessageHeader get_header(const MessageEndpoint::MessageVariant &message)
+messaging::MessageHeader get_header(const knp::core::messaging::MessageVariant &message)
 {
     return std::visit([](const auto &v) { return v.header_; }, message);
 }
@@ -58,7 +58,7 @@ Subscription<MessageType> &MessageEndpoint::subscribe(const UID &receiver, const
 {
     SPDLOG_DEBUG("Subscribing {} to the list of senders...", std::string(receiver));
 
-    constexpr size_t index = get_type_index<MessageVariant, MessageType>;
+    constexpr size_t index = get_type_index<knp::core::messaging::MessageVariant, MessageType>;
 
     auto iter = subscriptions_.find(std::make_pair(index, receiver));
     if (iter != subscriptions_.end())
@@ -100,10 +100,19 @@ void MessageEndpoint::remove_receiver(const UID &receiver)
 }
 
 
-void MessageEndpoint::send_message(const MessageEndpoint::MessageVariant &message)
+void MessageEndpoint::send_message(const knp::core::messaging::MessageVariant &message)
 {
-    SPDLOG_TRACE("Sending message from the {}...", std::string(get_header(message).sender_uid_));
+    SPDLOG_TRACE(
+        "Sending message from the {}, index = {}...", std::string(get_header(message).sender_uid_), message.index());
+
     auto packed_msg = knp::core::messaging::pack_to_envelope(message);
+    SPDLOG_TRACE("Packed message size = {}...", packed_msg.size());
+
+    std::fstream mf;
+    mf.open("./message.bin", std::ios::app | std::ios::binary);
+    mf.write(reinterpret_cast<char *>(packed_msg.data()), packed_msg.size());
+    mf.close();
+
     impl_->send_message(packed_msg.data(), packed_msg.size());
 }
 
