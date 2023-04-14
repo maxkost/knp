@@ -51,7 +51,7 @@ MessageVariant extract_from_envelope(const void *buffer)
             return unpack(msg_ev->message_as_SpikeMessage());
         case marshal::Message_SynapticImpactMessage:
             SPDLOG_TRACE("Unpacking synaptic impact message from the envelope");
-            return unpack<SynapticImpactMessage>(msg_ev->message_as_SynapticImpactMessage());
+            return unpack(msg_ev->message_as_SynapticImpactMessage());
         default:
             SPDLOG_ERROR("Unknown message type {}!", static_cast<int>(msg_ev->message_type()));
             throw std::logic_error("Unknown message type!");

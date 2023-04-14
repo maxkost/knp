@@ -55,6 +55,7 @@ std::vector<uint8_t> pack(const SpikeMessage &msg)
 
 SpikeMessage unpack(const marshal::SpikeMessage *s_msg)
 {
+    SPDLOG_TRACE("Unpacking spike message FlatBuffers class");
     const marshal::MessageHeader *const s_msg_header{s_msg->header()};
 
     UID u1{false};
@@ -68,6 +69,7 @@ SpikeMessage unpack(const marshal::SpikeMessage *s_msg)
 template <>
 SpikeMessage unpack<SpikeMessage>(const void *buffer)
 {
+    SPDLOG_TRACE("Unpacking spike message buffer");
     const marshal::SpikeMessage *const s_msg{marshal::GetSpikeMessage(buffer)};
     return unpack(s_msg);
 }
@@ -76,6 +78,7 @@ SpikeMessage unpack<SpikeMessage>(const void *buffer)
 template <>
 SpikeMessage unpack<SpikeMessage>(std::vector<uint8_t> &buffer)
 {
+    SPDLOG_TRACE("Unpacking spike message vector buffer");
     return unpack<SpikeMessage>(buffer.data());
 }
 

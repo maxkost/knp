@@ -79,13 +79,10 @@ std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg)
     auto pre_synaptic_uid = std::move(marshal::UID{msg.presynaptic_population_uid_.tag.data});
     auto post_synaptic_uid = std::move(marshal::UID{msg.postsynaptic_population_uid_.tag.data});
 
-    auto res = marshal::CreateSynapticImpactMessageDirect(
-                   builder, &header, &pre_synaptic_uid, &post_synaptic_uid,
-                   static_cast<knp::synapse_traits::marshal::OutputType>(msg.output_type_), &impacts)
-                   .o;
-    marshal::FinishSynapticImpactMessageBuffer(
-        builder, static_cast<::flatbuffers::Offset<marshal::SynapticImpactMessage>>(res));
-    return res;
+    return marshal::CreateSynapticImpactMessageDirect(
+               builder, &header, &pre_synaptic_uid, &post_synaptic_uid,
+               static_cast<knp::synapse_traits::marshal::OutputType>(msg.output_type_), &impacts)
+        .o;
 }
 
 
@@ -102,6 +99,7 @@ std::vector<uint8_t> pack(const SynapticImpactMessage &msg)
 
 SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg)
 {
+    SPDLOG_TRACE("Unpacking synaptic impact message FlatBuffers class");
     const marshal::MessageHeader *const s_msg_header{s_msg->header()};
 
     UID sender_uid{false};
@@ -141,6 +139,7 @@ SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg)
 template <>
 SynapticImpactMessage unpack<SynapticImpactMessage>(const void *buffer)
 {
+    SPDLOG_TRACE("Unpacking synaptic impact message buffer");
     const marshal::SynapticImpactMessage *const s_msg{marshal::GetSynapticImpactMessage(buffer)};
     return unpack(s_msg);
 }
@@ -149,6 +148,7 @@ SynapticImpactMessage unpack<SynapticImpactMessage>(const void *buffer)
 template <>
 SynapticImpactMessage unpack<SynapticImpactMessage>(std::vector<uint8_t> &buffer)
 {
+    SPDLOG_TRACE("Unpacking synaptic impact message vector buffer");
     return unpack<SynapticImpactMessage>(buffer.data());
 }
 
