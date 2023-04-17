@@ -11,7 +11,6 @@
 #include <vector>
 
 #include "message_header.h"
-#include "pack_message.h"
 
 
 namespace knp::core::messaging
@@ -29,10 +28,5 @@ struct SpikeMessage
 
 std::ostream &operator<<(std::ostream &stream, const SpikeMessage &msg);
 std::istream &operator>>(std::istream &stream, SpikeMessage &msg);
-
-std::vector<uint8_t> pack(const SpikeMessage &msg);
-
-template <>
-SpikeMessage unpack<SpikeMessage>(std::vector<uint8_t> &buffer);
 
 }  // namespace knp::core::messaging

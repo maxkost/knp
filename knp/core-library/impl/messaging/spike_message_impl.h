@@ -15,9 +15,5 @@
 namespace knp::core::messaging
 {
 ::flatbuffers::uoffset_t pack_internal(::flatbuffers::FlatBufferBuilder &builder, const SpikeMessage &msg);
-
-template <>
-SpikeMessage unpack<SpikeMessage>(const void *buffer);
-
 SpikeMessage unpack(const marshal::SpikeMessage *s_msg);
 }  // namespace knp::core::messaging

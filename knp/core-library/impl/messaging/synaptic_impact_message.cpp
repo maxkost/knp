@@ -135,9 +135,8 @@ SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg)
         std::move(impacts)};
 }
 
-
-template <>
-SynapticImpactMessage unpack<SynapticImpactMessage>(const void *buffer)
+/*
+SynapticImpactMessage unpack(const void *buffer)
 {
     SPDLOG_TRACE("Unpacking synaptic impact message buffer");
     const marshal::SynapticImpactMessage *const s_msg{marshal::GetSynapticImpactMessage(buffer)};
@@ -145,11 +144,11 @@ SynapticImpactMessage unpack<SynapticImpactMessage>(const void *buffer)
 }
 
 
-template <>
-SynapticImpactMessage unpack<SynapticImpactMessage>(std::vector<uint8_t> &buffer)
+SynapticImpactMessage unpack(std::vector<uint8_t> &buffer)
 {
     SPDLOG_TRACE("Unpacking synaptic impact message vector buffer");
-    return unpack<SynapticImpactMessage>(buffer.data());
+    return unpack(buffer.data());
 }
+*/
 
 }  // namespace knp::core::messaging

@@ -14,7 +14,6 @@
 #include <vector>
 
 #include "message_header.h"
-#include "pack_message.h"
 
 
 namespace knp::core::messaging
@@ -53,9 +52,5 @@ std::istream &operator>>(std::istream &stream, SynapticImpact &impact);
 std::ostream &operator<<(std::ostream &stream, const SynapticImpact &impact);
 std::ostream &operator<<(std::ostream &stream, const SynapticImpactMessage &msg);
 std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg);
-
-std::vector<uint8_t> pack(const SynapticImpactMessage &msg);
-template <>
-SynapticImpactMessage unpack<SynapticImpactMessage>(std::vector<uint8_t> &buffer);
 
 }  // namespace knp::core::messaging

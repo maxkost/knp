@@ -66,8 +66,8 @@ SpikeMessage unpack(const marshal::SpikeMessage *s_msg)
 }
 
 
-template <>
-SpikeMessage unpack<SpikeMessage>(const void *buffer)
+/*
+SpikeMessage unpack(const void *buffer)
 {
     SPDLOG_TRACE("Unpacking spike message buffer");
     const marshal::SpikeMessage *const s_msg{marshal::GetSpikeMessage(buffer)};
@@ -75,11 +75,11 @@ SpikeMessage unpack<SpikeMessage>(const void *buffer)
 }
 
 
-template <>
-SpikeMessage unpack<SpikeMessage>(std::vector<uint8_t> &buffer)
+SpikeMessage unpack(std::vector<uint8_t> &buffer)
 {
     SPDLOG_TRACE("Unpacking spike message vector buffer");
-    return unpack<SpikeMessage>(buffer.data());
+    return unpack(buffer.data());
 }
+*/
 
 }  // namespace knp::core::messaging

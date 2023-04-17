@@ -15,8 +15,5 @@
 namespace knp::core::messaging
 {
 ::flatbuffers::uoffset_t pack_internal(::flatbuffers::FlatBufferBuilder &builder, const SynapticImpactMessage &msg);
-
-template <>
-SynapticImpactMessage unpack<SynapticImpactMessage>(const void *buffer);
 SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg);
 }  // namespace knp::core::messaging
