@@ -35,16 +35,17 @@ std::istream &operator>>(std::istream &stream, SynapticImpact &impact)
 
 std::ostream &operator<<(std::ostream &stream, const SynapticImpact &impact)
 {
-    stream << impact.connection_index_ << impact.impact_value_ << static_cast<int>(impact.synapse_type_)
-           << impact.presynaptic_neuron_index_ << impact.postsynaptic_neuron_index_;
+    stream << impact.connection_index_ << " " << impact.impact_value_ << " " << static_cast<int>(impact.synapse_type_)
+           << " " << impact.presynaptic_neuron_index_ << " " << impact.postsynaptic_neuron_index_;
     return stream;
 }
 
 
 std::ostream &operator<<(std::ostream &stream, const SynapticImpactMessage &msg)
 {
-    stream << msg.header_ << msg.postsynaptic_population_uid_ << msg.presynaptic_population_uid_ << msg.impacts_.size();
-    for (auto v : msg.impacts_) stream << v;
+    stream << msg.header_ << " " << msg.postsynaptic_population_uid_ << " " << msg.presynaptic_population_uid_ << " "
+           << msg.impacts_.size();
+    for (auto v : msg.impacts_) stream << " " << v;
     return stream;
 }
 
@@ -79,8 +80,8 @@ std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg)
                 e.connection_index_, e.impact_value_, type, e.presynaptic_neuron_index_, e.postsynaptic_neuron_index_};
         });
 
-    auto pre_synaptic_uid = std::move(marshal::UID{msg.presynaptic_population_uid_.tag.data});
-    auto post_synaptic_uid = std::move(marshal::UID{msg.postsynaptic_population_uid_.tag.data});
+    auto pre_synaptic_uid = marshal::UID{msg.presynaptic_population_uid_.tag.data};
+    auto post_synaptic_uid = marshal::UID{msg.postsynaptic_population_uid_.tag.data};
 
     return marshal::CreateSynapticImpactMessageDirect(builder, &header, &pre_synaptic_uid, &post_synaptic_uid, &impacts)
         .o;
@@ -132,21 +133,5 @@ SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg)
     return SynapticImpactMessage{
         {sender_uid, s_msg_header->send_time()}, presynaptic_uid, postsynaptic_uid, std::move(impacts)};
 }
-
-/*
-SynapticImpactMessage unpack(const void *buffer)
-{
-    SPDLOG_TRACE("Unpacking synaptic impact message buffer");
-    const marshal::SynapticImpactMessage *const s_msg{marshal::GetSynapticImpactMessage(buffer)};
-    return unpack(s_msg);
-}
-
-
-SynapticImpactMessage unpack(std::vector<uint8_t> &buffer)
-{
-    SPDLOG_TRACE("Unpacking synaptic impact message vector buffer");
-    return unpack(buffer.data());
-}
-*/
 
 }  // namespace knp::core::messaging
