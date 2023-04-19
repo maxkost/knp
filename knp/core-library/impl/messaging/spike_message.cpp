@@ -15,8 +15,8 @@ namespace knp::core::messaging
 
 std::ostream &operator<<(std::ostream &stream, const SpikeMessage &msg)
 {
-    stream << msg.header_.sender_uid_ << msg.header_.send_time_ << msg.neuron_indexes_.size();
-    for (auto n : msg.neuron_indexes_) stream << n;
+    stream << " " << msg.header_.sender_uid_ << " " << msg.header_.send_time_ << " " << msg.neuron_indexes_.size();
+    for (auto n : msg.neuron_indexes_) stream << " " << n;
     return stream;
 }
 
@@ -47,9 +47,9 @@ std::vector<uint8_t> pack(const SpikeMessage &msg)
 {
     // TODO: don't create instance every time.
     ::flatbuffers::FlatBufferBuilder builder;
-    auto s_msg = std::move(pack_internal(builder, msg));
+    auto s_msg = pack_internal(builder, msg);
     marshal::FinishSpikeMessageBuffer(builder, ::flatbuffers::Offset<marshal::SpikeMessage>(s_msg));
-    return std::vector<uint8_t>(builder.GetBufferPointer(), builder.GetBufferPointer() + builder.GetSize());
+    return {builder.GetBufferPointer(), builder.GetBufferPointer() + builder.GetSize()};
 }
 
 
