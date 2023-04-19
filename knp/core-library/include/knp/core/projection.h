@@ -26,11 +26,11 @@ namespace knp::core
  * @brief The Projection class is a definition of similar connections between the neurons of two populations.
  * @note This class should later be divided to interface and implementation classes.
  */
-template <class ItemClass>
+template <class SynapseType>
 class Projection
 {
 public:
-    using SynapseParameters = typename synapse_traits::synapse_parameters<ItemClass>;
+    using SynapseParameters = typename synapse_traits::synapse_parameters<SynapseType>;
     struct Synapse
     {
         SynapseParameters params;
@@ -47,7 +47,7 @@ public:
     Projection(
         UID presynaptic_uid, UID postsynaptic_uid,
         synapse_traits::OutputType output_type = synapse_traits::OutputType::EXCITATORY)
-        : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid), output_type_(output_type)
+        : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
     {
     }
 
@@ -58,10 +58,8 @@ public:
      * @param presynaptic_uid presynaptic population UID.
      * @param postsynaptic_uid postsynaptic population UID.
      */
-    Projection(
-        UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator &generator, size_t num_iterations,
-        synapse_traits::OutputType output_type = synapse_traits::OutputType::EXCITATORY)
-        : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid), output_type_(output_type)
+    Projection(UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator &generator, size_t num_iterations)
+        : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
     {
         for (size_t i = 0; i < num_iterations; ++i)
         {
@@ -103,13 +101,6 @@ public:
     [[nodiscard]] auto end() { return parameters_.end(); }
 
 public:
-    /**
-     * Gets synapse output type for the population
-     * @return output type
-     */
-    [[nodiscard]] auto get_output_type() const { return output_type_; }
-    void set_output_type(knp::synapse_traits::OutputType type) { output_type_ = type; }
-
     /**
      * @brief Count the number of synapses in the projection.
      * @return synapse count.
@@ -300,11 +291,6 @@ private:
      * @brief Container of synapse parameters.
      */
     std::vector<Synapse> parameters_;
-
-    /**
-     * @brief synapse type, by its interaction with neuron
-     */
-    synapse_traits::OutputType output_type_;
 };
 
 }  // namespace knp::core

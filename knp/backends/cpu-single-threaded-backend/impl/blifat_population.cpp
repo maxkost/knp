@@ -63,11 +63,10 @@ void process_inputs(
 {
     for (const auto &message : messages)
     {
-        auto synapse_type = message.output_type_;
         for (const auto &impact : message.impacts_)
         {
             auto &neuron = population[impact.postsynaptic_neuron_index_];
-            impact_neuron(neuron, synapse_type, impact.impact_value_);
+            impact_neuron(neuron, impact.synapse_type_, impact.impact_value_);
         }
     }
 }

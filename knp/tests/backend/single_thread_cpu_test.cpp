@@ -21,12 +21,12 @@ using Projection = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend:
 
 // Create an input projection
 DeltaProjection::SynapseGenerator input_projection_gen = [](size_t i) -> std::optional<DeltaProjection::Synapse> {
-    return DeltaProjection::Synapse{{1.0, 1}, 0, 0};
+    return DeltaProjection::Synapse{{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};
 };
 
 // Create a loop projection
 DeltaProjection::SynapseGenerator synapse_generator = [](size_t i) -> std::optional<DeltaProjection ::Synapse> {
-    return DeltaProjection::Synapse{{1.0, 4}, 0, 0};
+    return DeltaProjection::Synapse{{1.0, 3, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};
 };
 
 // Create population

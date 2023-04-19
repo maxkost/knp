@@ -30,8 +30,9 @@ void calculate_delta_synapse_projection(
         for (const auto &synapse_index : synapses)
         {
             auto &syn = projection[synapse_index];
-            size_t key = syn.params.delay_ + step_n;
-            knp::core::messaging::SynapticImpact impact{synapse_index, syn.params.weight_, syn.id_from, syn.id_to};
+            size_t key = syn.params.delay_ + step_n - 1;  // the message is sent on step N-1, received on N.
+            knp::core::messaging::SynapticImpact impact{
+                synapse_index, syn.params.weight_, syn.params.output_type_, syn.id_from, syn.id_to};
 
             auto iter = future_messages.find(key);
             if (iter == future_messages.end())
@@ -40,7 +41,6 @@ void calculate_delta_synapse_projection(
                     {projection.get_uid(), time},
                     projection.get_postsynaptic(),
                     projection.get_presynaptic(),
-                    projection.get_output_type(),
                     {impact}};
                 future_messages.insert(std::make_pair(key, message_out));
             }

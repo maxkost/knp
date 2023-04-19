@@ -27,6 +27,7 @@ struct SynapticImpact
 {
     uint64_t connection_index_;
     float impact_value_;
+    knp::synapse_traits::OutputType synapse_type_;
     uint32_t presynaptic_neuron_index_;
     uint32_t postsynaptic_neuron_index_;
 
@@ -42,7 +43,6 @@ struct SynapticImpactMessage
     MessageHeader header_;
     UID presynaptic_population_uid_;
     UID postsynaptic_population_uid_;
-    knp::synapse_traits::OutputType output_type_;
     std::vector<SynapticImpact> impacts_;
 };
 

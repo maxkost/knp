@@ -58,13 +58,12 @@ TEST(MessageBusSuite, SynapticImpactMessageSend)
     knp::core::MessageBus bus;
 
     auto ep1{bus.create_endpoint()};
-
+    knp::synapse_traits::OutputType synapse_type = knp::synapse_traits::OutputType::EXCITATORY;
     SynapticImpactMessage msg{
         {knp::core::UID{}},
         knp::core::UID{},
         knp::core::UID{},
-        knp::synapse_traits::OutputType::INHIBITORY_CONDUCTANCE,
-        {{1, 2, 3, 4}, {4, 3, 2, 1}, {7, 8, 9, 10}}};
+        {{1, 2, synapse_type, 3, 4}, {4, 3, synapse_type, 2, 1}, {7, 8, synapse_type, 9, 10}}};
 
     auto &subscription = ep1.subscribe<SynapticImpactMessage>(knp::core::UID(), {msg.header_.sender_uid_});
 
@@ -77,7 +76,6 @@ TEST(MessageBusSuite, SynapticImpactMessageSend)
 
     EXPECT_EQ(msgs.size(), 1);
     EXPECT_EQ(msgs[0].header_.sender_uid_, msg.header_.sender_uid_);
-    ASSERT_EQ(msgs[0].output_type_, msg.output_type_);
     ASSERT_EQ(msgs[0].presynaptic_population_uid_, msg.presynaptic_population_uid_);
     ASSERT_EQ(msgs[0].postsynaptic_population_uid_, msg.postsynaptic_population_uid_);
     ASSERT_EQ(msgs[0].impacts_, msg.impacts_);

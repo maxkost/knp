@@ -53,7 +53,8 @@ TEST(ProjectionSuite, Generation)
     {
         const uint32_t id_from = iter / postsynaptic_size;
         const uint32_t id_to = iter % postsynaptic_size;
-        const SynapseParameters params(weight_constant * iter, iter / 100 + 1);
+        float weight = weight_constant * static_cast<float>(iter);
+        const SynapseParameters params(weight, iter / 100 + 1, knp::synapse_traits::OutputType::EXCITATORY);
         return std::optional(Synapse{params, id_from, id_to});
     };
 
@@ -67,6 +68,7 @@ TEST(ProjectionSuite, Generation)
 
 TEST(ProjectionSuite, SynapseAddition)
 {
+    using SynapseType = knp::synapse_traits::OutputType;
     // TODO: add_synapses, remove_presynaptic_neuron, remove_postsynaptic_neuron, disconnect,
     const uint32_t presynaptic_size = 1000;
     const uint32_t postsynaptic_size = presynaptic_size;
@@ -76,16 +78,20 @@ TEST(ProjectionSuite, SynapseAddition)
     DeltaProjection projection(knc::UID{}, knc::UID{});
 
     // Add synapses to an empty projection using a generator
-    SynapseGenerator generator1 = [](uint32_t index) { return Synapse{{0.0F, 1}, index, index}; };
+    SynapseGenerator generator1 = [](uint32_t index) {
+        return Synapse{{0.0F, 1, SynapseType::EXCITATORY}, index, index};
+    };
     projection.add_synapses(presynaptic_size, generator1);  // Add 1-to-1 synapses
     ASSERT_EQ(projection.size(), presynaptic_size);
-    size_t count = projection.add_synapses(
-        {Synapse{{1.F, 2}, neuron_index, neuron_index + 2}});  // Add a synapse from neuron 10 to neuron 12
+    size_t count = projection.add_synapses({Synapse{
+        {1.F, 2, SynapseType ::EXCITATORY},
+        neuron_index,
+        neuron_index + 2}});  // Add a synapse from neuron 10 to neuron 12
     ASSERT_EQ(count, 1);
 
     // Add synapses to nonempty projection using a generator
     SynapseGenerator generator2 = [](uint32_t index) {
-        return Synapse{{0.1F, 2}, index, (index + 1) % postsynaptic_size};
+        return Synapse{{0.1F, 2, SynapseType::EXCITATORY}, index, (index + 1) % postsynaptic_size};
     };
     count = projection.add_synapses(presynaptic_size, generator2);  // Add synapses from pre neuron N to post neuron N+1
     ASSERT_EQ(count, presynaptic_size);
@@ -116,7 +122,8 @@ TEST(ProjectionSuite, DeletePresynapticTest)
     const size_t size_to = 101;
     const size_t synapses_per_neuron = 5;
     const size_t neuron_index = 10;
-    auto generator = make_cyclic_generator({size_from, size_to}, {0.0F, 1});
+    auto generator =
+        make_cyclic_generator({size_from, size_to}, {0.0F, 1, knp::synapse_traits::OutputType::EXCITATORY});
     DeltaProjection projection{knc::UID{}, knc::UID{}, generator, size_from * synapses_per_neuron};
     const size_t count = projection.disconnect_presynaptic_neuron(neuron_index);
     ASSERT_EQ(count, synapses_per_neuron);
@@ -135,7 +142,8 @@ TEST(ProjectionSuite, DeletePostsynapticTest)
     const size_t size_to = 101;
     const size_t synapses_per_neuron = 10;
     const size_t neuron_index = 15;
-    auto generator = make_cyclic_generator({size_from, size_to}, {0.0F, 1});
+    auto generator =
+        make_cyclic_generator({size_from, size_to}, {0.0F, 1, knp::synapse_traits::OutputType::EXCITATORY});
     DeltaProjection projection{knc::UID{}, knc::UID{}, generator, size_from * synapses_per_neuron};
     const size_t count = projection.disconnect_postsynaptic_neuron(neuron_index);
     ASSERT_EQ(count, synapses_per_neuron);
@@ -163,7 +171,9 @@ TEST(ProjectionSuite, SynapseRemoval)
 
     // If we run this generator N * presynaptic size, we'll have 1 to N connections of x->x, x->x+1, ... x->x+N, cycled
     count = projection.add_synapses(
-        total_connections, make_cyclic_generator({presynaptic_size, postsynaptic_size}, {0, 1}));
+        total_connections,
+        make_cyclic_generator(
+            {presynaptic_size, postsynaptic_size}, {0, 1, knp::synapse_traits::OutputType::EXCITATORY}));
     ASSERT_EQ(count, total_connections);
 
     // Delete a single synapse
@@ -192,7 +202,8 @@ TEST(ProjectionSuite, DisconnectNeurons)
 {
     const size_t presynaptic_size = 9;
     const size_t postsynaptic_size = 11;
-    auto generator = make_dense_generator({presynaptic_size, postsynaptic_size}, {0.0, 1});
+    auto generator = make_dense_generator(
+        {presynaptic_size, postsynaptic_size}, {0.0, 1, knp::synapse_traits::OutputType::EXCITATORY});
     DeltaProjection projection{knc::UID{}, knc::UID{}, generator, presynaptic_size * postsynaptic_size};
     const size_t count = projection.disconnect_neurons(0, 1);
     ASSERT_EQ(count, 1);
@@ -212,7 +223,7 @@ TEST(ProjectionSuite, GetUIDTest)
     const knc::UID uid_to(true);
 
     ASSERT_NE(uid_from, uid_to);
-    auto generator = make_dense_generator({10, 10}, {0, 1});
+    auto generator = make_dense_generator({10, 10}, {0, 1, knp::synapse_traits::OutputType::EXCITATORY});
     const DeltaProjection projection(uid_from, uid_to, generator, 100);
     ASSERT_EQ(projection.get_presynaptic(), uid_from);
     ASSERT_EQ(projection.get_postsynaptic(), uid_to);
