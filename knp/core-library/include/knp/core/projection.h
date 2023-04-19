@@ -45,10 +45,9 @@ public:
      * @brief Construct an empty projection.
      * @param presynaptic_uid UID of the presynaptic population.
      * @param postsynaptic_uid UID of the postsynaptic population.
+     * @
      */
-    Projection(
-        UID presynaptic_uid, UID postsynaptic_uid,
-        synapse_traits::OutputType output_type = synapse_traits::OutputType::EXCITATORY)
+    Projection(UID presynaptic_uid, UID postsynaptic_uid)
         : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
     {
     }
