@@ -12,12 +12,14 @@
 #include <functional>
 #include <memory>
 
-
+/**
+ * @brief Core library namespace.
+ */
 namespace knp::core
 {
 
 /**
- * @brief The MessageBus class defines an interafce to the message bus.
+ * @brief The MessageBus class is a definition of an interafce to a message bus.
  */
 class MessageBus
 {

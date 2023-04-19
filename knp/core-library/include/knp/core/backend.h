@@ -17,7 +17,9 @@
 
 #include <boost/config.hpp>
 
-
+/**
+* @brief Core library namespace.
+*/
 namespace knp::core
 {
 

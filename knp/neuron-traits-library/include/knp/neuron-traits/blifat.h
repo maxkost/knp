@@ -33,7 +33,9 @@ struct default_values<BLIFATNeuron>
 template <>
 struct neuron_parameters<BLIFATNeuron>
 {
-    // It means that the neuron never fired (= fired long time ago).
+    /**
+     * @brief The parameter takes the default value of number of steps before firing defined for a BLIFAT neuron.
+     */
     std::size_t n_time_steps_since_last_firing_ = default_values<BLIFATNeuron>::steps_before_firing;
     double dynamic_threshold_ = 0.;
     double threshold_decay_ = 0.;
@@ -48,6 +50,7 @@ struct neuron_parameters<BLIFATNeuron>
     double potential_decay_ = 0;
 
     unsigned bursting_phase_ = 0;
+
     /// 0 means no bursting.
     unsigned bursting_period_ = 0;
     double reflexive_weight_ = 0;

@@ -55,7 +55,7 @@ private:
 
 
 /**
- * @brief Common parameters for the several different entities.
+ * @brief Common parameters for several different entities.
  * @details For example, BaseData is used in entities of Backend, Device, Population and Projection classes.
  */
 struct BaseData
