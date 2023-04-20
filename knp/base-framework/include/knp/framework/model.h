@@ -13,6 +13,7 @@
 #include <knp/framework/network.h>
 
 #include <memory>
+#include <utility>
 
 
 /**
@@ -28,10 +29,20 @@ namespace knp::framework
 class Model
 {
 public:
+    explicit Model(knp::framework::Network &&network) : network_(std::move(network)) {}
+
 public:
+    const UID &get_uid() const { return base_.uid_; }
+
+    const TagMap &get_tags() const { return base_.tags_; }
+    TagMap &get_tags() { return base_.tags_; }
+
+public:
+    knp::framework::Network &get_network() { return network_; }
+    const knp::framework::Network &get_network() const { return network_; }
+
 private:
     knp::core::BaseData base_;
-    std::shared_ptr<knp::core::Backend> backend_;
     knp::framework::Network network_;
 };
 
