@@ -28,9 +28,13 @@ public:
     }
 
 public:
+    /**
+     * @brief run the model.
+     */
     void run();
 
 private:
+    knp::core::BaseData base_;
     knp::framework::BackendLoader backend_loader_;
     knp::framework::Model &model_;
 };

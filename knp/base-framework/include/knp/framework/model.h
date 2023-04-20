@@ -32,14 +32,25 @@ public:
     explicit Model(knp::framework::Network &&network) : network_(std::move(network)) {}
 
 public:
-    const UID &get_uid() const { return base_.uid_; }
-
-    const TagMap &get_tags() const { return base_.tags_; }
-    TagMap &get_tags() { return base_.tags_; }
+    /**
+     * @brief Get the model UID.
+     * @return UID.
+     */
+    [[nodiscard]] const UID &get_uid() const { return base_.uid_; }
+    /**
+     * @brief Get tags used by the model.
+     * @return tag map.
+     * @see TagMap.
+     */
+    [[nodiscard]] auto &get_tags() { return base_.tags_; }
 
 public:
-    knp::framework::Network &get_network() { return network_; }
-    const knp::framework::Network &get_network() const { return network_; }
+    /**
+     * @brief Get model's network.
+     * @return network.
+     */
+    [[nodiscard]] knp::framework::Network &get_network() { return network_; }
+    [[nodiscard]] const knp::framework::Network &get_network() const { return network_; }
 
 private:
     knp::core::BaseData base_;
