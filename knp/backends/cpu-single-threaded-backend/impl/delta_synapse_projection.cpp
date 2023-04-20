@@ -7,22 +7,27 @@
 
 #include "delta_synapse_projection.h"
 
+#include <spdlog/spdlog.h>
+
 #include <unordered_map>
 #include <utility>
 #include <vector>
 
+
 using knp::core::UID;
 using knp::core::messaging::SpikeMessage;
 
+
+// TODO: Split it up into reusable code fragments
 void calculate_delta_synapse_projection(
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, knp::core::MessageEndpoint &endpoint,
     MessageQueue &future_messages, size_t step_n)
 {
+    SPDLOG_DEBUG("Calculating delta synapse projection");
     std::vector<SpikeMessage> messages = endpoint.unload_messages<SpikeMessage>(projection.get_uid());
     SpikeMessage message_in = messages.empty() ? SpikeMessage{{UID{}, 0}, {}} : messages[0];
 
-    // TODO: Get time
-    uint64_t time = 0;
+    uint64_t time = step_n;
     for (auto &neuron_index : message_in.neuron_indexes_)
     {
         auto synapses = projection.get_by_presynaptic_neuron(neuron_index);
@@ -30,7 +35,10 @@ void calculate_delta_synapse_projection(
         for (const auto &synapse_index : synapses)
         {
             auto &syn = projection[synapse_index];
-            size_t key = syn.params.delay_ + step_n - 1;  // the message is sent on step N-1, received on N.
+
+            // the message is sent on step N-1, received on N.
+            size_t key = syn.params.delay_ + step_n - 1;
+
             knp::core::messaging::SynapticImpact impact{
                 synapse_index, syn.params.weight_, syn.params.output_type_, syn.id_from, syn.id_to};
 
@@ -46,14 +54,14 @@ void calculate_delta_synapse_projection(
             }
             else
             {
-                (*iter).second.impacts_.push_back(impact);
+                iter->second.impacts_.push_back(impact);
             }
         }
     }
     auto out_iter = future_messages.find(step_n);
     if (out_iter != future_messages.end())
     {
-        // Send message and remove it from queue
+        // Send a message and remove it from the queue
         endpoint.send_message(out_iter->second);
         future_messages.erase(out_iter);
     }
