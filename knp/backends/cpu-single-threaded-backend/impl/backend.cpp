@@ -57,6 +57,7 @@ std::shared_ptr<SingleThreadedCPUBackend> SingleThreadedCPUBackend::create()
 
 void SingleThreadedCPUBackend::step()
 {
+    SPDLOG_INFO(std::string("Starting step #") + std::to_string(step_));
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
     // Calculate populations.
@@ -68,20 +69,24 @@ void SingleThreadedCPUBackend::step()
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
     ++step_;
+    SPDLOG_INFO("Step finished");
 }
 
 
 void SingleThreadedCPUBackend::load_populations(const std::vector<PopulationVariants> &populations)
 {
+    SPDLOG_DEBUG("Loading populations");
     populations_.clear();
     populations_.reserve(populations.size());
 
     for (const auto &p : populations) populations_.push_back(PopulationWrapper{p});
+    SPDLOG_DEBUG("All populations loaded");
 }
 
 
 void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVariants> &projections)
 {
+    SPDLOG_DEBUG("Loading projections");
     projections_.clear();
     projections_.reserve(projections.size());
 
@@ -94,6 +99,7 @@ void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVari
         if (pre_uid) message_endpoint_.subscribe<knp::core::messaging::SpikeMessage>(this_uid, {pre_uid});
         if (post_uid) message_endpoint_.subscribe<knp::core::messaging::SynapticImpactMessage>(post_uid, {this_uid});
     }
+    SPDLOG_DEBUG("All projections loaded");
 }
 
 
@@ -118,6 +124,7 @@ std::vector<std::unique_ptr<knp::core::Device>> SingleThreadedCPUBackend::get_de
 void SingleThreadedCPUBackend::calculate_population(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, PopulationWrapper &wrapper)
 {
+    SPDLOG_TRACE(std::string("Calculate population") + std::string(population.get_uid()));
     calculate_blifat_population(
         std::get<knp::core::Population<neuron_traits::BLIFATNeuron>>(wrapper.arg), message_endpoint_);
 }
@@ -126,6 +133,7 @@ void SingleThreadedCPUBackend::calculate_population(
 void SingleThreadedCPUBackend::calculate_projection(
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, ProjectionWrapper &wrapper)
 {
+    SPDLOG_TRACE(std::string("Calculate projection ") + std::string(projection.get_uid()));
     calculate_delta_synapse_projection(
         std::get<knp::core::Projection<knp::synapse_traits::DeltaSynapse>>(wrapper.arg), message_endpoint_,
         wrapper.messages, step_);

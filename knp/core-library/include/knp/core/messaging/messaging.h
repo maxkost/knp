@@ -14,8 +14,12 @@
 #include <boost/mp11.hpp>
 
 
+/**
+ * @brief Messaging namespace
+ */
 namespace knp::core::messaging
 {
+
 
 #define ALL_MESSAGES knp::core::messaging::SpikeMessage, knp::core::messaging::SynapticImpactMessage
 

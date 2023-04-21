@@ -54,7 +54,7 @@ public:
 public:
     /**
      * @brief Add subscription to parameters or update an existing one
-     * @tparam MessageType message type the receiver subscribes to
+     * @tparam MessageType type of messages to which the receiver subscribes.
      * @param receiver receiver UID
      * @param senders a vector of sender UIDs
      * @return the number of senders added

@@ -12,6 +12,9 @@
 #include <knp_gen_headers/spike_message_generated.h>
 
 
+/**
+ * @brief Messaging namespace
+ */
 namespace knp::core::messaging
 {
 ::flatbuffers::uoffset_t pack_internal(::flatbuffers::FlatBufferBuilder &builder, const SpikeMessage &msg);

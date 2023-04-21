@@ -13,6 +13,9 @@
 #include <vector>
 
 
+/**
+ * @brief Messaging namespace
+ */
 namespace knp::core::messaging
 {
 
@@ -21,7 +24,13 @@ namespace knp::core::messaging
  */
 struct MessageHeader
 {
+    /**
+     * @brief UID of the object that sent the message
+     */
     knp::core::UID sender_uid_;
+    /**
+     * @brief network step index
+     */
     uint64_t send_time_;
 };
 

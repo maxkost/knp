@@ -16,6 +16,9 @@
 #include "message_header.h"
 
 
+/**
+ * @brief Messaging namespace
+ */
 namespace knp::core::messaging
 {
 
@@ -25,10 +28,29 @@ namespace knp::core::messaging
  */
 struct SynapticImpact
 {
+    /**
+     * @brief synapse index in the population
+     */
     uint64_t connection_index_;
+
+    /**
+     * @brief value used to change neuron membrane potential
+     */
     float impact_value_;
+
+    /**
+     * @brief the role of the value inside the neuron function might depend on synapse type
+     */
     knp::synapse_traits::OutputType synapse_type_;
+
+    /**
+     * @brief index of the presynaptic neuron connected to this synapse
+     */
     uint32_t presynaptic_neuron_index_;
+
+    /**
+     * @brief index of the postsynaptic neuron connected to this synapse
+     */
     uint32_t postsynaptic_neuron_index_;
 
     bool operator==(const SynapticImpact &) const;
@@ -41,8 +63,20 @@ struct SynapticImpact
 struct SynapticImpactMessage
 {
     MessageHeader header_;
+
+    /**
+     * @brief UID of the population sending spikes to this projection
+     */
     UID presynaptic_population_uid_;
+
+    /**
+     * @brief UID of the population receiving impacts from this projection
+     */
     UID postsynaptic_population_uid_;
+
+    /**
+     * @brief impact values
+     */
     std::vector<SynapticImpact> impacts_;
 };
 

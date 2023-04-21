@@ -16,6 +16,9 @@
 #include "messaging.h"
 
 
+/**
+ * @brief Messaging namespace
+ */
 namespace knp::core::messaging
 {
 
