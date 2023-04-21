@@ -126,7 +126,7 @@ void SingleThreadedCPUBackend::calculate_population(
 {
     SPDLOG_TRACE(std::string("Calculate population") + std::string(population.get_uid()));
     calculate_blifat_population(
-        std::get<knp::core::Population<neuron_traits::BLIFATNeuron>>(wrapper.arg), message_endpoint_);
+        std::get<knp::core::Population<neuron_traits::BLIFATNeuron>>(wrapper.arg), message_endpoint_, step_);
 }
 
 

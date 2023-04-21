@@ -13,7 +13,7 @@
 
 
 /**
- * @brief Messaging namespace
+ * @brief Messaging namespace.
  */
 namespace knp::core::messaging
 {

@@ -14,7 +14,7 @@
 
 
 /**
- * @brief Messaging namespace
+ * @brief Messaging namespace.
  */
 namespace knp::core::messaging
 {
@@ -25,12 +25,12 @@ namespace knp::core::messaging
 struct SpikeMessage
 {
     /**
-     * @brief message header
+     * @brief Message header.
      */
     MessageHeader header_;
 
     /**
-     * @brief indexes of the recently spiked neurons
+     * @brief Indexes of the recently spiked neurons.
      */
     std::vector<uint32_t> neuron_indexes_;
 };

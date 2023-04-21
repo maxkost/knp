@@ -20,45 +20,49 @@ namespace knp::core
 {
 
 /**
- * @brief A subscription class used for message exchange among network entities
- * @tparam T type of messages
+ * @brief The Subscription class is used for message exchange between the network entities.
+ * @tparam MessageT type of messages that are exchanged via the subscription.
  */
-template <class T>
+template <class MessageT>
 class Subscription
 {
 public:
-    using MessageType = T;
+    using MessageType = MessageT;
     using MessageContainerType = std::vector<MessageType>;
     // Subscription(const Subscription &) = delete;
 
 public:
-    Subscription(const UID &reciever, const std::vector<UID> &senders) : receiver_(reciever) { add_senders(senders); }
+    Subscription(const UID &receiver, const std::vector<UID> &senders) : receiver_(receiver) { add_senders(senders); }
 
 
-    /// Get a set of sender UIDs
+    /**
+     * @brief Get a set of sender UIDs.
+     */
     [[nodiscard]] const auto &get_senders() const { return senders_; }
 
-    /// Get receiver UID
+    /**
+     * @brief Get receiver UID.
+     */
     [[nodiscard]] UID get_receiver_uid() const { return receiver_; }
 
     /**
      * @brief Unsubscribe from a sender. If not subscribed to the sender, do nothing.
-     * @param uid sender UID
-     * @return 1 if unsubscribed, 0 if no sender was found
+     * @param uid sender UID.
+     * @return 1 if unsubscribed, 0 if no sender was found.
      */
     size_t remove_sender(const UID &uid) { return senders_.erase(static_cast<boost::uuids::uuid>(uid)); }
 
     /**
-     * @brief Add an additional sender to the subscription
-     * @param uid new sender UID
-     * @return number of senders added (0 if already subscribed, 1 otherwise)
+     * @brief Add an additional sender to the subscription.
+     * @param uid new sender UID.
+     * @return number of senders added (0 if already subscribed, 1 otherwise).
      */
     size_t add_sender(const UID &uid) { return senders_.insert(static_cast<boost::uuids::uuid>(uid)).second; }
 
     /**
-     * @brief Add a number of senders to the subscription
-     * @param senders a vector of sender UIDs
-     * @return number of new senders added
+     * @brief Add a number of senders to the subscription.
+     * @param senders a vector of sender UIDs.
+     * @return number of new senders added.
      */
     size_t add_senders(const std::vector<UID> &senders)
     {
@@ -68,9 +72,9 @@ public:
     }
 
     /**
-     * @brief Checks if a sender exists
-     * @param uid sender UID
-     * @return true if sender exists
+     * @brief Checks if a sender exists.
+     * @param uid sender UID.
+     * @return true if sender exists.
      */
     [[nodiscard]] bool has_sender(const UID &uid) const
     {
@@ -78,20 +82,38 @@ public:
     }
 
 public:
+    /**
+     * @brief Add message to the subscription.
+     * @param message the message to add.
+     */
     void add_message(MessageType &&message) { messages_.push_back(message); }
     void add_message(const MessageType &message) { messages_.push_back(message); }
 
+    /**
+     * @brief Get all messages.
+     * @return messages.
+     */
     MessageContainerType &get_messages() { return messages_; }
     const MessageContainerType &get_messages() const { return messages_; }
 
+    /**
+     * @brief Remove all stored messages.
+     */
     void clear_messages() { messages_.clear(); }
 
 private:
-    /// Receiver UID
+    /**
+     * @brief Receiver UID.
+     */
     const UID receiver_;
-    /// Set of sender UIDs
+
+    /**
+     * @brief Set of sender UIDs.
+     */
     std::unordered_set<::boost::uuids::uuid, boost::hash<boost::uuids::uuid>> senders_;
-    /// Message cache
+    /**
+     * @brief Message storage.
+     */
     MessageContainerType messages_;
 };
 

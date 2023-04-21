@@ -17,7 +17,7 @@
 
 
 /**
- * @brief Messaging namespace
+ * @brief Messaging namespace.
  */
 namespace knp::core::messaging
 {
@@ -29,27 +29,27 @@ namespace knp::core::messaging
 struct SynapticImpact
 {
     /**
-     * @brief synapse index in the population
+     * @brief Synapse index in the population.
      */
     uint64_t connection_index_;
 
     /**
-     * @brief value used to change neuron membrane potential
+     * @brief Value used to change neuron membrane potential.
      */
     float impact_value_;
 
     /**
-     * @brief the role of the value inside the neuron function might depend on synapse type
+     * @brief The role of the value inside the neuron function might depend on synapse type.
      */
     knp::synapse_traits::OutputType synapse_type_;
 
     /**
-     * @brief index of the presynaptic neuron connected to this synapse
+     * @brief Index of the presynaptic neuron connected to this synapse.
      */
     uint32_t presynaptic_neuron_index_;
 
     /**
-     * @brief index of the postsynaptic neuron connected to this synapse
+     * @brief Index of the postsynaptic neuron connected to this synapse.
      */
     uint32_t postsynaptic_neuron_index_;
 
@@ -75,7 +75,7 @@ struct SynapticImpactMessage
     UID postsynaptic_population_uid_;
 
     /**
-     * @brief impact values
+     * @brief Impact values.
      */
     std::vector<SynapticImpact> impacts_;
 };

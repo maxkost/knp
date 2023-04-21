@@ -35,8 +35,19 @@ public:
     using SynapseParameters = typename synapse_traits::synapse_parameters<SynapseType>;
     struct Synapse
     {
+        /**
+         * @brief Synapse parameters, most commonly contain weight and delay, among others.
+         */
         SynapseParameters params;
+
+        /**
+         * @brief Index of a neuron that this synapse influences.
+         */
         uint32_t id_from;
+
+        /**
+         * @brief Index of a neuron that this synapse gets spikes from.
+         */
         uint32_t id_to;
     };
     using SynapseGenerator = std::function<std::optional<Synapse>(uint32_t)>;
@@ -45,7 +56,6 @@ public:
      * @brief Construct an empty projection.
      * @param presynaptic_uid UID of the presynaptic population.
      * @param postsynaptic_uid UID of the postsynaptic population.
-     * @
      */
     Projection(UID presynaptic_uid, UID postsynaptic_uid)
         : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
@@ -54,10 +64,10 @@ public:
 
     /**
      * @brief Construct a projection by running a synapse generator a given number of times.
-     * @param num_iterations number of iterations to run the synapse generator.
-     * @param generator a function that generates a synapse.
      * @param presynaptic_uid presynaptic population UID.
      * @param postsynaptic_uid postsynaptic population UID.
+     * @param generator a function that generates a synapse.
+     * @param num_iterations number of iterations to run the synapse generator.
      */
     Projection(UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator &generator, size_t num_iterations)
         : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
@@ -132,9 +142,9 @@ public:
 
     // TODO: VERY inefficient. Will need to optimize it to less than linear ASAP
     /**
-     * @brief Find synapses for a given output neuron.
-     * @param neuron_index
-     * @return
+     * @brief Find synapses that originate from a given neuron.
+     * @param neuron_index an index of a presynaptic neuron.
+     * @return indexes of all synapses that start at the given neuron.
      */
     [[nodiscard]] std::vector<size_t> get_by_presynaptic_neuron(size_t neuron_index) const
     {

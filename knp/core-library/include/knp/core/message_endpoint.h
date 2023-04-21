@@ -34,14 +34,30 @@ namespace knp::core
 class MessageEndpoint
 {
 public:
+    /**
+     * @brief type list for subscriptions to messages in the same order as AllMessages.
+     */
     using AllSubscriptions = boost::mp11::mp_transform<Subscription, messaging::AllMessages>;
 
+    /**
+     * @brief subscription variant that can contain any possible subscription.
+     */
     using SubscriptionVariant = boost::mp11::mp_rename<AllSubscriptions, std::variant>;
 
 public:
+    /**
+     * Gets receiver UID from a subscription variant.
+     * @param subscription subscription variant.
+     * @return receiver UID.
+     */
     static UID get_receiver_uid(const SubscriptionVariant &subscription);
     static std::pair<size_t, UID> get_subscription_key(const SubscriptionVariant &subscription);
 
+    /**
+     * @brief Find the index of a type in a variant.
+     * @tparam Variant a variant of one or more types.
+     * @tparam Type the type to search.
+     */
     template <typename Variant, typename Type>
     static constexpr size_t get_type_index = boost::mp11::mp_find<Variant, Type>::value;
 
@@ -53,25 +69,28 @@ public:
 
 public:
     /**
-     * @brief Add subscription to parameters or update an existing one
-     * @tparam MessageType type of messages to which the receiver subscribes.
-     * @param receiver receiver UID
-     * @param senders a vector of sender UIDs
-     * @return the number of senders added
+     * @brief Add a subscription for a receiver to messages of the specified type from senders with given UIDs.
+     * @note If the subscription for the specified receiver and message type already exists, update the list of senders
+     * in the subscription.
+     * @tparam MessageType type of messages to which the receiver subscribes via the subscription.
+     * @param receiver receiver UID.
+     * @param senders vector of sender UIDs.
+     * @return number of senders added to the subscription.
      */
     template <typename MessageType>
     Subscription<MessageType> &subscribe(const UID &receiver, const std::vector<UID> &senders);
 
     /**
-     * @brief Unsubscribe from messages of a certain type
+     * @brief Unsubscribe from messages of a specified type.
+     * @tparam MessageType type of messages to which the receiver is subscribed.
      * @param receiver receiver UID.
      */
     template <typename MessageType>
     void unsubscribe(const UID &receiver);
 
     /**
-     * @brief Remove all subscriptions with given reciever id
-     * @param receiver UID of the receiver
+     * @brief Remove all subscriptions for a receiver with given UID.
+     * @param receiver receiver UID.
      */
     void remove_receiver(const UID &receiver);
 
@@ -83,13 +102,15 @@ public:
 
     /**
      * @brief Receive a message from the message bus.
-     * @return true if nonempty message was received, false otherwise.
+     * @return true if nonempty message was received. false otherwise.
      */
     bool receive_message();
 
     /**
-     * @brief Read messages from subscription as a vector, clear them all after reading
-     * @param receiver_uid UID of the receiving object
+     * @brief Read messages of the specified type received via subscription as a vector.
+     * @note After reading the messages, the method clears them from the subscription.
+     * @tparam MessageType type of messages to be unloaded.
+     * @param receiver_uid receiver UID.
      */
     template <class MessageType>
     std::vector<MessageType> unload_messages(const knp::core::UID &receiver_uid)
@@ -104,7 +125,7 @@ public:
     }
 
     /**
-     * @brief Receive messages in the cycle.
+     * @brief Receive all messages that were sent.
      */
     void receive_all_messages();
 
@@ -112,7 +133,9 @@ public:
     using SubscriptionContainer = std::map<std::pair<size_t, UID>, SubscriptionVariant>;
 
 protected:
-    /// Message endpoint implementation.
+    /**
+     * @brief Message endpoint implementation.
+     */
     class MessageEndpointImpl;
     std::unique_ptr<MessageEndpointImpl> impl_;
 
@@ -120,6 +143,9 @@ protected:
     MessageEndpoint() = default;
 
 private:
+    /**
+     * @brief Container that stores all the subscriptions for the current endpoint.
+     */
     SubscriptionContainer subscriptions_;
 };
 

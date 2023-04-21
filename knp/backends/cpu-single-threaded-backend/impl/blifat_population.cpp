@@ -9,6 +9,9 @@
 
 #include <knp/synapse-traits/output_types.h>
 
+#include <spdlog/spdlog.h>
+
+#include <string>
 #include <unordered_map>
 
 
@@ -17,6 +20,7 @@ using knp::core::messaging::SynapticImpactMessage;
 
 void calculate_neurons_state(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population)
 {
+    SPDLOG_TRACE("Calculate neurons state");
     for (auto &neuron : population)
     {
         ++neuron.n_time_steps_since_last_firing_;
@@ -61,6 +65,7 @@ void process_inputs(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population,
     const std::vector<SynapticImpactMessage> &messages)
 {
+    SPDLOG_TRACE("Process inputs");
     for (const auto &message : messages)
     {
         for (const auto &impact : message.impacts_)
@@ -75,6 +80,7 @@ void process_inputs(
 void calculate_neurons_post_input_state(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, std::vector<uint32_t> &neuron_indexes)
 {
+    SPDLOG_TRACE("Calculate neurons post input state");
     // can be made parallel
     for (size_t i = 0; i < population.size(); ++i)
     {
@@ -107,8 +113,10 @@ void calculate_neurons_post_input_state(
 
 
 void calculate_blifat_population(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint)
+    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint,
+    size_t step_n)
 {
+    SPDLOG_DEBUG(std::string{"Calculating BLIFAT population "} + std::string{population.get_uid()});
     // This whole function might be optimizable if we find a way to not loop over the whole population
     std::vector<SynapticImpactMessage> messages = endpoint.unload_messages<SynapticImpactMessage>(population.get_uid());
 
@@ -118,9 +126,11 @@ void calculate_blifat_population(
     std::vector<uint32_t> neuron_indexes;
     calculate_neurons_post_input_state(population, neuron_indexes);
 
-    // TODO: get time or step!
-    uint64_t time = 0;
-    if (neuron_indexes.empty()) return;
-    knp::core::messaging::SpikeMessage res_message{{population.get_uid(), time}, neuron_indexes};
-    endpoint.send_message(res_message);
+    uint64_t time = step_n;
+    if (!neuron_indexes.empty())
+    {
+        knp::core::messaging::SpikeMessage res_message{{population.get_uid(), time}, neuron_indexes};
+        endpoint.send_message(res_message);
+        SPDLOG_DEBUG(std::string{"Sent "} + std::to_string(res_message.neuron_indexes_.size()) + " spike(s)");
+    }
 }

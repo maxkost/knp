@@ -9,7 +9,7 @@
 namespace knp::synapse_traits
 {
 /**
- * @brief Types of synapses, used for projection-population interaction
+ * @brief Types of synapses. This parameter is used for projection-population interaction.
  */
 enum class OutputType
 {

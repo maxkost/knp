@@ -11,11 +11,19 @@
 
 #include "type_traits.h"
 
-
+/**
+ * @brief Synapse traits namespace.
+ */
 namespace knp::synapse_traits
 {
+/**
+ * @brief Delta synapse. Use as a template parameter only.
+ */
 struct DeltaSynapse;
 
+/**
+ * @brief Structure for delta synapse parameters.
+ */
 template <>
 struct synapse_parameters<DeltaSynapse>
 {
@@ -26,8 +34,20 @@ struct synapse_parameters<DeltaSynapse>
     {
     }
 
+    /**
+     * @brief Synaptic weight.
+     */
     float weight_;
+
+    /**
+     * @brief Synaptic delay. Delay N means that a spike sent on step X will be received on step X+N.
+     */
     uint32_t delay_;
+
+    /**
+     * @brief Synapse type. Various types have different influences on neuron parameters, as defined by neuron
+     * function.
+     */
     knp::synapse_traits::OutputType output_type_;
 };
 

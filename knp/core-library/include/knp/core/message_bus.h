@@ -19,7 +19,7 @@ namespace knp::core
 {
 
 /**
- * @brief The MessageBus class is a definition of an interafce to a message bus.
+ * @brief The MessageBus class is a definition of an interface to a message bus.
  */
 class MessageBus
 {
@@ -35,12 +35,22 @@ public:
      */
     [[nodiscard]] MessageEndpoint create_endpoint();
 
+    /**
+     * @brief Route a single message.
+     * @return true if a message has been routed, false otherwise.
+     */
     bool step();
 
+    /**
+     * @brief Route messages.
+     * @return number of messages routed.
+     */
     size_t route_messages();
 
 private:
-    /// Message bus implementation.
+    /**
+     * @brief Message bus implementation.
+     */
     class MessageBusImpl;
 
     std::unique_ptr<MessageBusImpl> impl_;
