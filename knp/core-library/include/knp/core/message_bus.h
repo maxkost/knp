@@ -29,7 +29,7 @@ public:
 
 public:
     /**
-     * @brief Get endpoint that sends and receives messages through the message bus.
+     * @brief Create a new endpoint that sends and receives messages through the message bus.
      * @see MessageEndpoint.
      * @return endpoint that uses the message bus.
      */
