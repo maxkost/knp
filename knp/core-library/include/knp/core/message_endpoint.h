@@ -69,7 +69,8 @@ public:
 
 public:
     /**
-     * @brief Add a subscription for a receiver to messages of the specified type from senders with given UIDs.
+     * @brief Add a subscription for a receiver with given UID to messages of the specified type from senders with given
+     * UIDs.
      * @note If the subscription for the specified receiver and message type already exists, update the list of senders
      * in the subscription.
      * @tparam MessageType type of messages to which the receiver subscribes via the subscription.
@@ -102,7 +103,8 @@ public:
 
     /**
      * @brief Receive a message from the message bus.
-     * @return true if nonempty message was received. false otherwise.
+     * @return true if a message was received
+     *         false if no message.
      */
     bool receive_message();
 
@@ -125,11 +127,14 @@ public:
     }
 
     /**
-     * @brief Receive all messages that were sent.
+     * @brief Receive all messages that were sent to the endpoint.
      */
     void receive_all_messages();
 
 public:
+    /**
+     * @brief Container type for subscriptions.
+     */
     using SubscriptionContainer = std::map<std::pair<size_t, UID>, SubscriptionVariant>;
 
 protected:

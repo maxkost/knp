@@ -27,12 +27,21 @@ namespace knp::core
 /**
  * @brief The Projection class is a definition of similar connections between the neurons of two populations.
  * @note This class should later be divided to interface and implementation classes.
+ * @param SynapseType type of synapses this projection contains.
+ * @see ALL_SYNAPSES.
  */
 template <class SynapseType>
 class Projection
 {
 public:
+    /**
+     * @brief Parameters of the specified synapse type.
+     */
     using SynapseParameters = typename synapse_traits::synapse_parameters<SynapseType>;
+
+    /**
+     * Synapse description structure that contains synapse direction and its parameters.
+     */
     struct Synapse
     {
         /**
@@ -50,6 +59,10 @@ public:
          */
         uint32_t id_to;
     };
+
+    /**
+     * @brief Synapse generation function.
+     */
     using SynapseGenerator = std::function<std::optional<Synapse>(uint32_t)>;
 
     /**
@@ -142,9 +155,9 @@ public:
 
     // TODO: VERY inefficient. Will need to optimize it to less than linear ASAP
     /**
-     * @brief Find synapses that originate from a given neuron.
-     * @param neuron_index an index of a presynaptic neuron.
-     * @return indexes of all synapses that start at the given neuron.
+     * @brief Find synapses that originate from a neuron with the given index.
+     * @param neuron_index index of a presynaptic neuron.
+     * @return indexes of all synapses associated with the specified presynaptic neuron.
      */
     [[nodiscard]] std::vector<size_t> get_by_presynaptic_neuron(size_t neuron_index) const
     {

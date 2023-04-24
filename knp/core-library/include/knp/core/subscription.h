@@ -27,19 +27,28 @@ template <class MessageT>
 class Subscription
 {
 public:
+    /**
+     * @brief Message type.
+     */
     using MessageType = MessageT;
+    /**
+     * @brief Internal container for messages.
+     */
     using MessageContainerType = std::vector<MessageType>;
+
+    /**
+     * @brief Internal container for UIDs.
+     */
     using UidSet = std::unordered_set<::boost::uuids::uuid, boost::hash<boost::uuids::uuid>>;
     // Subscription(const Subscription &) = delete;
 
 public:
     /**
-     * @brief Subscription constructor
-     * @param receiver UID of the receiving object
-     * @param senders a list of senders
+     * @brief Subscription constructor.
+     * @param receiver receiver UID.
+     * @param senders list of sender UIDs.
      */
     Subscription(const UID &receiver, const std::vector<UID> &senders) : receiver_(receiver) { add_senders(senders); }
-
 
     /**
      * @brief Get a list of sender UIDs.
@@ -47,29 +56,28 @@ public:
     [[nodiscard]] const UidSet &get_senders() const { return senders_; }
 
     /**
-     * @brief Get receiver UID.
+     * @brief Get the UID of the entity that receives messages via the subscription.
      */
     [[nodiscard]] UID get_receiver_uid() const { return receiver_; }
 
     /**
      * @brief Unsubscribe from a sender. If not subscribed to the sender, do nothing.
      * @param uid sender UID.
-     * @return number of senders deleted from subscription, either 1 or 0.
+     * @return number of senders deleted from subscription.
      */
     size_t remove_sender(const UID &uid) { return senders_.erase(static_cast<boost::uuids::uuid>(uid)); }
 
     /**
-     * @brief Add a sender with the given UID to the subscription.
+     * @brief Add a sender with the given UID to the subscription. If already subscribed to the sender, do nothing.
      * @param uid UID of the new sender.
-     * @return 1 if the sender was added to the subscription successfully.
-     *         0 if the sender with the given UID is already using the subscription.
+     * @return number of senders added.
      */
     size_t add_sender(const UID &uid) { return senders_.insert(static_cast<boost::uuids::uuid>(uid)).second; }
 
     /**
-     * @brief Add a number of senders to the subscription.
-     * @param senders a vector of sender UIDs.
-     * @return number of new senders added.
+     * @brief Add several senders to the subscription.
+     * @param senders vector of sender UIDs.
+     * @return number of senders added.
      */
     size_t add_senders(const std::vector<UID> &senders)
     {

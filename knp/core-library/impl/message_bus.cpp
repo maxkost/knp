@@ -40,7 +40,7 @@ bool MessageBus::step()
 
 size_t MessageBus::route_messages()
 {
-    SPDLOG_INFO("Message routing cycle started...");
+    SPDLOG_DEBUG("Message routing cycle started...");
     size_t count = 0;
     while (step())
     {

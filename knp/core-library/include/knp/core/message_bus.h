@@ -31,7 +31,7 @@ public:
     /**
      * @brief Create a new endpoint that sends and receives messages through the message bus.
      * @see MessageEndpoint.
-     * @return endpoint that uses the message bus.
+     * @return new endpoint.
      */
     [[nodiscard]] MessageEndpoint create_endpoint();
 

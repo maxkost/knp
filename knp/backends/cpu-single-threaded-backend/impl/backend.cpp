@@ -57,7 +57,7 @@ std::shared_ptr<SingleThreadedCPUBackend> SingleThreadedCPUBackend::create()
 
 void SingleThreadedCPUBackend::step()
 {
-    SPDLOG_INFO(std::string("Starting step #") + std::to_string(step_));
+    SPDLOG_DEBUG(std::string("Starting step #") + std::to_string(step_));
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
     // Calculate populations.
@@ -69,7 +69,7 @@ void SingleThreadedCPUBackend::step()
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
     ++step_;
-    SPDLOG_INFO("Step finished");
+    SPDLOG_DEBUG("Step finished");
 }
 
 
