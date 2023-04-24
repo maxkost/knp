@@ -29,16 +29,22 @@ class Subscription
 public:
     using MessageType = MessageT;
     using MessageContainerType = std::vector<MessageType>;
+    using UidSet = std::unordered_set<::boost::uuids::uuid, boost::hash<boost::uuids::uuid>>;
     // Subscription(const Subscription &) = delete;
 
 public:
+    /**
+     * @brief Subscription constructor
+     * @param receiver UID of the receiving object
+     * @param senders a list of senders
+     */
     Subscription(const UID &receiver, const std::vector<UID> &senders) : receiver_(receiver) { add_senders(senders); }
 
 
     /**
-     * @brief Get a set of sender UIDs.
+     * @brief Get a list of sender UIDs.
      */
-    [[nodiscard]] const auto &get_senders() const { return senders_; }
+    [[nodiscard]] const UidSet &get_senders() const { return senders_; }
 
     /**
      * @brief Get receiver UID.
@@ -48,14 +54,15 @@ public:
     /**
      * @brief Unsubscribe from a sender. If not subscribed to the sender, do nothing.
      * @param uid sender UID.
-     * @return 1 if unsubscribed, 0 if no sender was found.
+     * @return number of senders deleted from subscription, either 1 or 0.
      */
     size_t remove_sender(const UID &uid) { return senders_.erase(static_cast<boost::uuids::uuid>(uid)); }
 
     /**
-     * @brief Add an additional sender to the subscription.
-     * @param uid new sender UID.
-     * @return number of senders added (0 if already subscribed, 1 otherwise).
+     * @brief Add a sender with the given UID to the subscription.
+     * @param uid UID of the new sender.
+     * @return 1 if the sender was added to the subscription successfully.
+     *         0 if the sender with the given UID is already using the subscription.
      */
     size_t add_sender(const UID &uid) { return senders_.insert(static_cast<boost::uuids::uuid>(uid)).second; }
 
@@ -72,9 +79,10 @@ public:
     }
 
     /**
-     * @brief Checks if a sender exists.
+     * @brief Check if a sender with the given UID exists.
      * @param uid sender UID.
-     * @return true if sender exists.
+     * @return true if the sender with the given UID exists.
+     *         false if the sender with the given UID doesn't exist.
      */
     [[nodiscard]] bool has_sender(const UID &uid) const
     {

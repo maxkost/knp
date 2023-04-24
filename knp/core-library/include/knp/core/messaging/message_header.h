@@ -29,7 +29,7 @@ struct MessageHeader
      */
     knp::core::UID sender_uid_;
     /**
-     * @brief Network step index.
+     * @brief Index of the network execution step.
      */
     uint64_t send_time_;
 };
