@@ -27,7 +27,7 @@ namespace knp::core
 /**
  * @brief The Projection class is a definition of similar connections between the neurons of two populations.
  * @note This class should later be divided to interface and implementation classes.
- * @param SynapseType type of synapses this projection contains.
+ * @tparam SynapseType type of synapses this projection contains.
  * @see ALL_SYNAPSES.
  */
 template <class SynapseType>

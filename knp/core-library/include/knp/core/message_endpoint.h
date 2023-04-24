@@ -69,15 +69,15 @@ public:
 
 public:
     /**
-     * @brief Add a subscription for a receiver with given UID to messages of the specified type from senders with given
-     * UIDs.
-     * @note If the subscription for the specified receiver and message type already exists, update the list of senders
-     * in the subscription.
+     * @brief Add a subscription to messages of the specified type from senders with given UIDs.
+     * @note If the subscription for the specified receiver and message type already exists, the method updates the list
+     * of senders in the subscription.
      * @tparam MessageType type of messages to which the receiver subscribes via the subscription.
      * @param receiver receiver UID.
      * @param senders vector of sender UIDs.
      * @return number of senders added to the subscription.
      */
+
     template <typename MessageType>
     Subscription<MessageType> &subscribe(const UID &receiver, const std::vector<UID> &senders);
 
@@ -104,7 +104,7 @@ public:
     /**
      * @brief Receive a message from the message bus.
      * @return true if a message was received
-     *         false if no message.
+     *         false if no message was received.
      */
     bool receive_message();
 

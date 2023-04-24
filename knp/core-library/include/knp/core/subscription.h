@@ -61,14 +61,16 @@ public:
     [[nodiscard]] UID get_receiver_uid() const { return receiver_; }
 
     /**
-     * @brief Unsubscribe from a sender. If not subscribed to the sender, do nothing.
+     * @brief Unsubscribe from a sender.
+     * @details  If a sender is not associated with the subscription, the method does not do anything.
      * @param uid sender UID.
      * @return number of senders deleted from subscription.
      */
     size_t remove_sender(const UID &uid) { return senders_.erase(static_cast<boost::uuids::uuid>(uid)); }
 
     /**
-     * @brief Add a sender with the given UID to the subscription. If already subscribed to the sender, do nothing.
+     * @brief Add a sender with the given UID to the subscription.
+     * @details If a sender is already associated with the subscription, the method does not do anything.
      * @param uid UID of the new sender.
      * @return number of senders added.
      */
