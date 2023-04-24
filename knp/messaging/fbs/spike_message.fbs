@@ -1,0 +1,12 @@
+include "message_header.fbs";
+
+
+namespace knp.core.messaging.marshal;
+
+table SpikeMessage
+{
+    header: MessageHeader;
+    neuron_indexes: [uint32];
+}
+
+root_type SpikeMessage;

@@ -16,7 +16,7 @@ namespace knp::core
 
 Backend::~Backend()
 {
-    SPDLOG_INFO("Backend {} unloaded", base_.uid_);
+    SPDLOG_INFO("Backend {} unloaded", std::string(base_.uid_));
 }
 
 
@@ -24,7 +24,7 @@ void Backend::select_devices(const std::set<UID>& uids)
 {
     for (auto&& device : get_devices())
     {
-        SPDLOG_DEBUG("Trying UID {}", std::string(device->get_uid));
+        SPDLOG_DEBUG("Trying UID {}", std::string(device->get_uid()));
         if (uids.find(device->get_uid()) != uids.end())
         {
             SPDLOG_INFO("Device with UID {} was selected", std::string(device->get_uid()));

@@ -34,8 +34,8 @@ template <>
 struct neuron_parameters<BLIFATNeuron>
 {
     /**
-    * @brief The parameter takes the default value of number of steps before firing defined for a BLIFAT neuron.
-    */
+     * @brief The parameter takes the default value of number of steps before firing defined for a BLIFAT neuron.
+     */
     std::size_t n_time_steps_since_last_firing_ = default_values<BLIFATNeuron>::steps_before_firing;
     double dynamic_threshold_ = 0.;
     double threshold_decay_ = 0.;
@@ -50,10 +50,11 @@ struct neuron_parameters<BLIFATNeuron>
     double potential_decay_ = 0;
 
     unsigned bursting_phase_ = 0;
+
     /**
-    * @brief 0 means no bursting period.
-    */
-    unsigned bursting_period = 0;
+     * @brief value of 0 means that no bursting occurs at all.
+     */
+    unsigned bursting_period_ = 0;
     double reflexive_weight_ = 0;
     double reversive_inhibitory_potential_ = default_values<BLIFATNeuron>::reverse_inhibitory_potential;
     unsigned absolute_refractory_period_ = 0;
