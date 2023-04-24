@@ -29,27 +29,35 @@ namespace knp::framework
 class Model
 {
 public:
+    /**
+     * @brief Model constructor.
+     * @param network network to use in the model.
+     */
     explicit Model(knp::framework::Network &&network) : network_(std::move(network)) {}
 
 public:
     /**
      * @brief Get the model UID.
-     * @return UID.
+     * @return model UID.
      */
     [[nodiscard]] const knp::core::UID &get_uid() const { return base_.uid_; }
     /**
      * @brief Get tags used by the model.
-     * @return tag map.
+     * @return model tag map.
      * @see TagMap.
      */
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
 
 public:
     /**
-     * @brief Get model's network.
+     * @brief Get network associated with the model.
      * @return network.
      */
     [[nodiscard]] knp::framework::Network &get_network() { return network_; }
+    /**
+     * @copybrief get_network
+     * @note Constant method version.
+     */
     [[nodiscard]] const knp::framework::Network &get_network() const { return network_; }
 
 private:

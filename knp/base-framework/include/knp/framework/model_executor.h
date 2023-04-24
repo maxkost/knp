@@ -12,6 +12,10 @@
 
 #include <filesystem>
 
+
+/**
+ * @brief Framework namespace.
+ */
 namespace knp::framework
 {
 
@@ -21,6 +25,11 @@ namespace knp::framework
 class ModelExecutor
 {
 public:
+    /**
+     * @brief ModelExecutor constructor.
+     * @param model Model to run.
+     * @param backend_path backend path to load.
+     */
     ModelExecutor(knp::framework::Model &model, const std::filesystem::path backend_path)
         : backend_loader_(), model_(model)
     {
@@ -29,7 +38,7 @@ public:
 
 public:
     /**
-     * @brief run the model.
+     * @brief Run model.
      */
     void run();
 
