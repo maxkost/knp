@@ -1,0 +1,13 @@
+namespace knp.core.messaging.marshal;
+
+
+struct UID
+{
+    data: [ubyte:16];
+}
+
+struct MessageHeader
+{
+    sender_uid: UID;
+    send_time: uint64;
+}

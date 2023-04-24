@@ -120,7 +120,7 @@ PopulationType &Network::get_population(const knp::core::UID &population_uid)
         boost::mp11::mp_contains<AllPopulations, PopulationType>(),
         "This population type doesn't supported by the Network class! Add type to the population types list.");
 
-    SPDLOG_DEBUG("Get population {}", population_uid);
+    SPDLOG_DEBUG("Get population {}", std::string(population_uid));
     auto r = find_elem<PopulationType, AllPopulationVariants>(population_uid, populations_);
     if (r != populations_.end()) return std::get<PopulationType>(*r);
     throw std::runtime_error("Can't find population!");
@@ -136,7 +136,7 @@ const PopulationType &Network::get_population(const knp::core::UID &population_u
 
 void Network::remove_population(const core::UID &population_uid)
 {
-    SPDLOG_DEBUG("Remove population with uid {}", population_uid);
+    SPDLOG_DEBUG("Remove population with uid {}", std::string(population_uid));
     auto result = find_variant<AllPopulations, AllPopulationVariants>(population_uid, populations_);
 
     if (result == populations_.end()) throw std::runtime_error("Can't find population!");
@@ -154,7 +154,7 @@ void Network::add_projection(Network::AllProjectionVariants &&projection)
 template <typename ProjectionType>
 void Network::add_projection(ProjectionType &&projection)
 {
-    SPDLOG_DEBUG("Add projection {}", projection.uid);
+    SPDLOG_DEBUG("Add projection {}", std::string(projection.get_uid()));
     add_projection(Network::AllProjectionVariants(projection));
 }
 
@@ -166,7 +166,7 @@ ProjectionType &Network::get_projection(const knp::core::UID &projection_uid)
         boost::mp11::mp_contains<AllProjections, ProjectionType>(),
         "This projection type doesn't supported by the Network class! Add type to the projection types list.");
 
-    SPDLOG_DEBUG("Get projection {}", projection_uid);
+    SPDLOG_DEBUG("Get projection {}", std::string(projection_uid));
 
     auto r = find_elem<ProjectionType, AllProjectionVariants>(projection_uid, projections_);
     if (r != projections_.end()) return std::get<ProjectionType>(*r);
@@ -183,7 +183,7 @@ const ProjectionType &Network::get_projection(const knp::core::UID &projection_u
 
 void Network::remove_projection(const core::UID &projection_uid)
 {
-    SPDLOG_DEBUG("Remove projection with uid {}", population_uid);
+    SPDLOG_DEBUG("Remove projection with uid {}", std::string(projection_uid));
     auto result = find_variant<AllProjections, AllProjectionVariants>(projection_uid, projections_);
 
     if (result == projections_.end()) throw std::runtime_error("Can't find projection!");

@@ -26,7 +26,6 @@
 
 namespace knp::backends::single_threaded_cpu
 {
-
 class SingleThreadedCPUBackend : public knp::core::Backend
 {
 public:
@@ -37,6 +36,18 @@ public:
 
     using PopulationVariants = boost::mp11::mp_rename<SupportedPopulations, std::variant>;
     using ProjectionVariants = boost::mp11::mp_rename<SupportedProjections, std::variant>;
+
+private:
+    struct ProjectionWrapper
+    {
+        ProjectionVariants arg;
+        core::messaging::SynapticMessageQueue messages;
+    };
+
+    struct PopulationWrapper
+    {
+        PopulationVariants arg;
+    };
 
 public:
     // TODO: set protected (in testing purposes).
@@ -54,22 +65,10 @@ public:
     void load_populations(const std::vector<PopulationVariants> &populations);
 
     /**
-     * @brief Load populations to the backend.
-     * @param populations vector of population to load.
-     */
-    void load_populations(std::vector<PopulationVariants> &&populations);
-
-    /**
      * @brief Load projections to the backend.
      * @param projections vector of projections to load.
      */
     void load_projections(const std::vector<ProjectionVariants> &projections);
-
-    /**
-     * @brief Load projections to the backend.
-     * @param projections vector of projections to load.
-     */
-    void load_projections(const std::vector<ProjectionVariants> &&projections);
 
 public:
     /**
@@ -102,6 +101,20 @@ public:
 public:
     void step() override;
 
+    /**
+     * @brief Subscribe internal endpoint to messages. Needed to send messages into the network
+     * @tparam MessageType Message type
+     * @param receiver Receiving object UID
+     * @param senders a list of possible senders
+     * @return subscription
+     */
+    template <typename MessageType>
+    knp::core::Subscription<MessageType> &subscribe(
+        const knp::core::UID &receiver, const std::vector<knp::core::UID> &senders)
+    {
+        return message_endpoint_.subscribe<MessageType>(receiver, senders);
+    }
+
 protected:
     void init();
 
@@ -109,23 +122,28 @@ protected:
      * @brief Calculate the population of BLIFAT neurons.
      * @note Population will be changed during calculation.
      * @param population population of BLIFAT neurons to calculate.
+     * @param wrapper population wrapper
      */
-    void calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population);
+    void calculate_population(
+        knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, PopulationWrapper &wrapper);
     /**
      * @brief Calculate the projection of Delta synapses.
      * @note Projection will be changed during calculation.
      * @param projection projection of Delta synapses to calculate.
+     * @param wrapper projection wrapper
      */
-    void calculate_projection(knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection);
+    void calculate_projection(
+        knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, ProjectionWrapper &wrapper);
 
 private:
     template <typename TypeList, auto CalculateMethod, typename Container>
     inline void calculator(Container &container);
 
 private:
-    std::vector<PopulationVariants> populations_;
-    std::vector<ProjectionVariants> projections_;
+    std::vector<PopulationWrapper> populations_;
+    std::vector<ProjectionWrapper> projections_;
     core::MessageEndpoint message_endpoint_;
+    size_t step_ = 0;
 };
 
 

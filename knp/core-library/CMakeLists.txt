@@ -26,6 +26,17 @@ knp_add_library("${PROJECT_NAME}"
     impl/projection.cpp
     impl/message_bus.cpp
     impl/message_endpoint.cpp
+    impl/message_bus_zmq_impl/message_bus_impl.h
+    impl/message_bus_zmq_impl/message_endpoint_impl.h
+    impl/message_bus_zmq_impl/message_bus_impl.cpp
+    impl/message_bus_zmq_impl/message_endpoint_impl.cpp
+    impl/message_header.cpp
+    impl/messaging/message_envelope.cpp
+    impl/messaging/spike_message_impl.h
+    impl/messaging/spike_message.cpp
+    impl/messaging/synaptic_impact_message_impl.h
+    impl/messaging/synaptic_impact_message.cpp
+    impl/subscription.cpp
 
     ${${PROJECT_NAME}_headers}
     )
@@ -36,8 +47,8 @@ source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "includ
 
 target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS})
 
-target_link_libraries("${PROJECT_NAME}" PRIVATE spdlog zmq)
-target_link_libraries("${PROJECT_NAME}" PUBLIC knp-neuron-traits knp-synapse-traits)
+target_link_libraries("${PROJECT_NAME}" PRIVATE spdlog::spdlog_header_only zmq flatbuffers KNP::Messaging)
+target_link_libraries("${PROJECT_NAME}" PUBLIC KNP::Neuron::Traits KNP::Synapse::Traits)
 
 # add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
 

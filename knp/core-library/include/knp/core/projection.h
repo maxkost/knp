@@ -9,6 +9,7 @@
 
 #include <knp/core/core.h>
 #include <knp/core/uid.h>
+#include <knp/synapse-traits/output_types.h>
 #include <knp/synapse-traits/type_traits.h>
 
 #include <algorithm>
@@ -19,26 +20,50 @@
 #include <vector>
 
 /**
-* @brief Core library namespace.
-*/
+ * @brief Core library namespace.
+ */
 namespace knp::core
 {
 /**
  * @brief The Projection class is a definition of similar connections between the neurons of two populations.
  * @note This class should later be divided to interface and implementation classes.
+ * @tparam SynapseType type of synapses this projection contains.
+ * @see ALL_SYNAPSES.
  */
-template <class ItemClass>
+template <class SynapseType>
 class Projection
 {
 public:
-    using SynapseParameters = typename synapse_traits::synapse_parameters<ItemClass>;
+    /**
+     * @brief Parameters of the specified synapse type.
+     */
+    using SynapseParameters = typename synapse_traits::synapse_parameters<SynapseType>;
+
+    /**
+     * Synapse description structure that contains synapse direction and its parameters.
+     */
     struct Synapse
     {
+        /**
+         * @brief Synapse parameters, most commonly contain weight and delay, among others.
+         */
         SynapseParameters params;
-        size_t id_from;
-        size_t id_to;
+
+        /**
+         * @brief Index of a neuron that this synapse influences.
+         */
+        uint32_t id_from;
+
+        /**
+         * @brief Index of a neuron that this synapse gets spikes from.
+         */
+        uint32_t id_to;
     };
-    using SynapseGenerator = std::function<std::optional<Synapse>(size_t)>;
+
+    /**
+     * @brief Synapse generation function.
+     */
+    using SynapseGenerator = std::function<std::optional<Synapse>(uint32_t)>;
 
     /**
      * @brief Construct an empty projection.
@@ -52,12 +77,12 @@ public:
 
     /**
      * @brief Construct a projection by running a synapse generator a given number of times.
-     * @param num_iterations number of iterations to run the synapse generator.
-     * @param generator a function that generates a synapse.
      * @param presynaptic_uid presynaptic population UID.
      * @param postsynaptic_uid postsynaptic population UID.
+     * @param generator a function that generates a synapse.
+     * @param num_iterations number of iterations to run the synapse generator.
      */
-    Projection(UID presynaptic_uid, UID postsynaptic_uid, size_t num_iterations, const SynapseGenerator &generator)
+    Projection(UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator &generator, size_t num_iterations)
         : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
     {
         for (size_t i = 0; i < num_iterations; ++i)
@@ -126,6 +151,25 @@ public:
     [[nodiscard]] std::tuple<size_t, size_t, size_t> get_connection(size_t index) const
     {
         return std::make_tuple(parameters_[index].id_from, index, parameters_[index].id_to);
+    }
+
+    // TODO: VERY inefficient. Will need to optimize it to less than linear ASAP
+    /**
+     * @brief Find synapses that originate from a neuron with the given index.
+     * @param neuron_index index of a presynaptic neuron.
+     * @return indexes of all synapses associated with the specified presynaptic neuron.
+     */
+    [[nodiscard]] std::vector<size_t> get_by_presynaptic_neuron(size_t neuron_index) const
+    {
+        std::vector<size_t> res;
+        for (size_t i = 0; i < parameters_.size(); ++i)
+        {
+            if (parameters_[i].id_from == neuron_index)
+            {
+                res.push_back(i);
+            }
+        }
+        return res;
     }
 
     /**
@@ -265,6 +309,8 @@ private:
      */
     bool is_locked_ = false;
 
+    // TODO Change this container into something that searches efficiently by input index. A multiindex or
+    // unordered_multimap
     /**
      * @brief Container of synapse parameters.
      */

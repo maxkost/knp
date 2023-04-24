@@ -1,3 +1,7 @@
+/**
+ * @brief Some common test functions.
+ */
+
 #include <tests_common.h>
 
 

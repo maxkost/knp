@@ -1,0 +1,26 @@
+include "spike_message.fbs";
+include "synaptic_impact_message.fbs";
+
+
+namespace knp.core.messaging.marshal;
+
+union Message
+{
+    SpikeMessage,
+    SynapticImpactMessage
+}
+
+
+//table MessageHolder
+//{
+//    content: Message;
+//}
+
+
+table MessageEnvelope
+{
+    // message: [ubyte](nested_flatbuffer: "MessageHolder");
+    message: Message;
+}
+
+root_type MessageEnvelope;
