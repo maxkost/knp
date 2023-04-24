@@ -5,7 +5,7 @@
  * @date 21.04.2023
  */
 
-#include <knp/framework/model_executor.h>.h>
+#include <knp/framework/model_executor.h>
 
 #include <spdlog/spdlog.h>
 

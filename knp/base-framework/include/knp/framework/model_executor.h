@@ -22,7 +22,7 @@ class ModelExecutor
 {
 public:
     ModelExecutor(knp::framework::Model &model, const std::filesystem::path backend_path)
-        : model_(model), backend_loader_()
+        : backend_loader_(), model_(model)
     {
         backend_loader_.load(backend_path);
     }

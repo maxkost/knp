@@ -36,7 +36,7 @@ public:
      * @brief Get the model UID.
      * @return UID.
      */
-    [[nodiscard]] const UID &get_uid() const { return base_.uid_; }
+    [[nodiscard]] const knp::core::UID &get_uid() const { return base_.uid_; }
     /**
      * @brief Get tags used by the model.
      * @return tag map.
