@@ -37,7 +37,7 @@ public:
 
 public:
     /**
-     * @brief Get the model UID.
+     * @brief Get model UID.
      * @return model UID.
      */
     [[nodiscard]] const knp::core::UID &get_uid() const { return base_.uid_; }
@@ -55,8 +55,9 @@ public:
      */
     [[nodiscard]] knp::framework::Network &get_network() { return network_; }
     /**
-     * @copybrief get_network
-     * @note Constant method version.
+     * @brief Get network associated with the model.
+     * @note Constant method.
+     * @return network.
      */
     [[nodiscard]] const knp::framework::Network &get_network() const { return network_; }
 

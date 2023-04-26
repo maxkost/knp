@@ -20,15 +20,15 @@ namespace knp::framework
 {
 
 /**
- * @brief The ModelExecutor class.
+ * @brief The ModelExecutor class is a definition of an executor that runs the uploaded model on the specified backend.
  */
 class ModelExecutor
 {
 public:
     /**
      * @brief ModelExecutor constructor.
-     * @param model Model to run.
-     * @param backend_path backend path to load.
+     * @param model model to run.
+     * @param backend_path filepath to backend on which you want to run the model.
      */
     ModelExecutor(knp::framework::Model &model, const std::filesystem::path backend_path)
         : backend_loader_(), model_(model)
