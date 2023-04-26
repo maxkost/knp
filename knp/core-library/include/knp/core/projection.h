@@ -27,7 +27,7 @@ namespace knp::core
 /**
  * @brief The Projection class is a definition of similar connections between the neurons of two populations.
  * @note This class should later be divided to interface and implementation classes.
- * @tparam SynapseType type of synapses this projection contains.
+ * @tparam SynapseType type of synapses the projection contains.
  * @see ALL_SYNAPSES.
  */
 template <class SynapseType>
@@ -40,22 +40,22 @@ public:
     using SynapseParameters = typename synapse_traits::synapse_parameters<SynapseType>;
 
     /**
-     * Synapse description structure that contains synapse direction and its parameters.
+     * @brief Synapse description structure that contains synapse parameters and indexes of the associated neurons.
      */
     struct Synapse
     {
         /**
-         * @brief Synapse parameters, most commonly contain weight and delay, among others.
+         * @brief Synapse parameters. For example, parameters can contain synapse weight and delay.
          */
         SynapseParameters params;
 
         /**
-         * @brief Index of a neuron that this synapse influences.
+         * @brief Index of a neuron from which the synapse receives spikes (presynaptic neuron).
          */
         uint32_t id_from;
 
         /**
-         * @brief Index of a neuron that this synapse gets spikes from.
+         * @brief Index of a neuron that the synapse influences (postsynaptic neuron).
          */
         uint32_t id_to;
     };
@@ -79,7 +79,7 @@ public:
      * @brief Construct a projection by running a synapse generator a given number of times.
      * @param presynaptic_uid presynaptic population UID.
      * @param postsynaptic_uid postsynaptic population UID.
-     * @param generator a function that generates a synapse.
+     * @param generator function that generates a synapse.
      * @param num_iterations number of iterations to run the synapse generator.
      */
     Projection(UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator &generator, size_t num_iterations)
@@ -96,23 +96,27 @@ public:
 
 public:
     /**
-     * @brief Get the projection UID.
-     * @return UID.
+     * @brief Get projection UID.
+     * @return projection UID.
      */
     [[nodiscard]] const UID &get_uid() const { return base_.uid_; }
 
     /**
      * @brief Get tags used by the projection.
-     * @return tag map.
+     * @return projection tag map.
      * @see TagMap.
      */
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
 
 public:
     /**
-     * @brief Get parameter values of a synaose with the given index.
+     * @brief Get parameter values of a synapse with the given index.
      */
     [[nodiscard]] Synapse &operator[](size_t index) { return parameters_[index]; }
+    /**
+     * @brief Get parameter values of a synapse with the given index.
+     * @details Constant method. 
+     */
     [[nodiscard]] const Synapse &operator[](size_t index) const { return parameters_[index]; }
 
     // TODO: add custom iterator class
@@ -126,19 +130,19 @@ public:
 
 public:
     /**
-     * @brief Count the number of synapses in the projection.
+     * @brief Count number of synapses in the projection.
      * @return synapse count.
      */
     [[nodiscard]] size_t size() { return parameters_.size(); }
 
     /**
-     * @brief Get the UID of the associated population from which this projection receives spikes.
+     * @brief Get UID of the associated population from which this projection receives spikes.
      * @return UID of the presynaptic population.
      */
     [[nodiscard]] UID get_presynaptic() const { return presynaptic_uid_; }
 
     /**
-     * @brief Get the UID of the associated population to which this projection sends signals.
+     * @brief Get UID of the associated population to which this projection sends signals.
      * @return UID of the postsynaptic population.
      */
     [[nodiscard]] UID get_postsynaptic() const { return postsynaptic_uid_; }
@@ -189,7 +193,7 @@ public:
     /**
      * @brief Append connections to the existing projection.
      * @param num_iterations number of iterations to run the synapse generator.
-     * @param generator a function that generates a synapse.
+     * @param generator synapse generation function.
      * @return number of synapses added to the projection, which can be less or equal to the num_iterations value.
      */
     size_t add_synapses(size_t num_iterations, const SynapseGenerator &generator)

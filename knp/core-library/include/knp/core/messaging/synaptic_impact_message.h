@@ -24,12 +24,12 @@ namespace knp::core::messaging
 
 /**
  * @brief Structure that contains the synaptic impact value and indexes of presynaptic and posynaptic neurons.
- * @details Synaptic impact changes parameters of neurons after the synapses state was calculated.
+ * @details Synaptic impact changes parameters of neurons after the synapses state is calculated.
  */
 struct SynapticImpact
 {
     /**
-     * @brief Synapse index in the population.
+     * @brief Index of the population synapse.
      */
     uint64_t connection_index_;
 
@@ -39,17 +39,17 @@ struct SynapticImpact
     float impact_value_;
 
     /**
-     * @brief The role of the value inside the neuron function might depend on synapse type.
+     * @brief Synapse type that might define the value role inside the neuron function.
      */
     knp::synapse_traits::OutputType synapse_type_;
 
     /**
-     * @brief Index of the presynaptic neuron connected to this synapse.
+     * @brief Index of the presynaptic neuron connected to the synapse.
      */
     uint32_t presynaptic_neuron_index_;
 
     /**
-     * @brief Index of the postsynaptic neuron connected to this synapse.
+     * @brief Index of the postsynaptic neuron connected to the synapse.
      */
     uint32_t postsynaptic_neuron_index_;
 
@@ -65,12 +65,12 @@ struct SynapticImpactMessage
     MessageHeader header_;
 
     /**
-     * @brief UID of the population sending spikes to this projection
+     * @brief UID of the population that sends spikes to the projection.
      */
     UID presynaptic_population_uid_;
 
     /**
-     * @brief UID of the population receiving impacts from this projection
+     * @brief UID of the population that receives impacts from the projection.
      */
     UID postsynaptic_population_uid_;
 

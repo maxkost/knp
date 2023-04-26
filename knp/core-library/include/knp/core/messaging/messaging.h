@@ -26,7 +26,7 @@ namespace knp::core::messaging
 #define ALL_MESSAGES knp::core::messaging::SpikeMessage, knp::core::messaging::SynapticImpactMessage
 
 /**
- * @brief Boost::mp11 types list. Used for type manipulations.
+ * @brief List of boost::mp11 types. You can use the list to manage your message types.
  */
 using AllMessages = boost::mp11::mp_list<ALL_MESSAGES>;
 

@@ -35,18 +35,18 @@ class MessageEndpoint
 {
 public:
     /**
-     * @brief type list for subscriptions to messages in the same order as AllMessages.
+     * @brief List of subscription types based on message types specified in messaging::AllMessages.
      */
     using AllSubscriptions = boost::mp11::mp_transform<Subscription, messaging::AllMessages>;
 
     /**
-     * @brief subscription variant that can contain any possible subscription.
+     * @brief Subscription variant that contains any subscription type specified in AllSubscriptions.
      */
     using SubscriptionVariant = boost::mp11::mp_rename<AllSubscriptions, std::variant>;
 
 public:
     /**
-     * Gets receiver UID from a subscription variant.
+     * @brief Get receiver UID from a subscription variant.
      * @param subscription subscription variant.
      * @return receiver UID.
      */
@@ -54,9 +54,10 @@ public:
     static std::pair<size_t, UID> get_subscription_key(const SubscriptionVariant &subscription);
 
     /**
-     * @brief Find the index of a type in a variant.
-     * @tparam Variant a variant of one or more types.
-     * @tparam Type the type to search.
+     * @brief Find index of an entity type in its variant.
+     * @details For example, you can use the method to find an index of a message type in a message variant or an index of a subscription type in a subscription variant. 
+     * @tparam Variant variant of one or more entity types.
+     * @tparam Type entity type to search.
      */
     template <typename Variant, typename Type>
     static constexpr size_t get_type_index = boost::mp11::mp_find<Variant, Type>::value;
@@ -103,15 +104,14 @@ public:
 
     /**
      * @brief Receive a message from the message bus.
-     * @return true if a message was received
-     *         false if no message was received.
+     * @return true if a message was received, false if no message was received.
      */
     bool receive_message();
 
     /**
-     * @brief Read messages of the specified type received via subscription as a vector.
+     * @brief Read messages of the specified type received via subscription.
      * @note After reading the messages, the method clears them from the subscription.
-     * @tparam MessageType type of messages to be unloaded.
+     * @tparam MessageType type of messages to read.
      * @param receiver_uid receiver UID.
      */
     template <class MessageType>
@@ -133,15 +133,16 @@ public:
 
 public:
     /**
-     * @brief Container type for subscriptions.
+     * @brief Type of subscription container.
      */
     using SubscriptionContainer = std::map<std::pair<size_t, UID>, SubscriptionVariant>;
 
 protected:
+    
+    class MessageEndpointImpl;
     /**
      * @brief Message endpoint implementation.
      */
-    class MessageEndpointImpl;
     std::unique_ptr<MessageEndpointImpl> impl_;
 
 protected:

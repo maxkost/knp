@@ -35,13 +35,13 @@ public:
 public:
     /**
      * @brief Get the device UID.
-     * @return UID.
+     * @return device UID.
      */
     [[nodiscard]] const UID &get_uid() const { return base_.uid_; }
 
     /**
      * @brief Get tags used by the device.
-     * @return tag map.
+     * @return device tag map.
      * @see TagMap.
      */
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
@@ -66,6 +66,9 @@ public:
     [[nodiscard]] virtual float get_power() const = 0;
 
 protected:
+    /**
+    * @brief Device base data.
+    */
     BaseData base_;
 };
 
