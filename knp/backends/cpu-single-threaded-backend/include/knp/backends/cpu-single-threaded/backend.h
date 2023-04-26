@@ -40,13 +40,8 @@ public:
 private:
     struct ProjectionWrapper
     {
-        ProjectionVariants arg;
-        core::messaging::SynapticMessageQueue messages;
-    };
-
-    struct PopulationWrapper
-    {
-        PopulationVariants arg;
+        ProjectionVariants arg_;
+        core::messaging::SynapticMessageQueue messages_;
     };
 
 public:
@@ -122,25 +117,20 @@ protected:
      * @brief Calculate the population of BLIFAT neurons.
      * @note Population will be changed during calculation.
      * @param population population of BLIFAT neurons to calculate.
-     * @param wrapper population wrapper
      */
-    void calculate_population(
-        knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, PopulationWrapper &wrapper);
+    void calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population);
     /**
      * @brief Calculate the projection of Delta synapses.
      * @note Projection will be changed during calculation.
      * @param projection projection of Delta synapses to calculate.
-     * @param wrapper projection wrapper
+     * @param message_queue message queue for the projection.
      */
     void calculate_projection(
-        knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, ProjectionWrapper &wrapper);
+        knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
+        core::messaging::SynapticMessageQueue &message_queue);
 
 private:
-    template <typename TypeList, auto CalculateMethod, typename Container>
-    inline void calculator(Container &container);
-
-private:
-    std::vector<PopulationWrapper> populations_;
+    std::vector<PopulationVariants> populations_;
     std::vector<ProjectionWrapper> projections_;
     core::MessageEndpoint message_endpoint_;
     size_t step_ = 0;
