@@ -62,12 +62,12 @@ struct UID
     explicit UID(bool random = true) : tag(random ? uid_generator()() : ::boost::uuids::nil_uuid()) {}
 
     /**
-     * @brief Create a UID from boost::uuids::uuid.
+     * @brief Create a UID from `boost::uuids::uuid`.
      * @param guid constant value to copy to UID.
      */
     explicit UID(const ::boost::uuids::uuid &guid) : tag(guid) {}
     /**
-     * @brief Create a UID from boost::uuids::uuid.
+     * @brief Create a UID from `boost::uuids::uuid`.
      * @param guid value to store as a UID.
      */
     explicit UID(::boost::uuids::uuid &&guid) : tag(std::move(guid)) {}
@@ -90,13 +90,13 @@ struct UID
     UID(const UID &) = default;
 
     /**
-     * @brief Convert UID to boost::uuids::uuid.
+     * @brief Convert UID to `boost::uuids::uuid`.
      * @details Constant method.
      * @return stored UID value.
      */
     operator const ::boost::uuids::uuid &() const { return tag; }
     /**
-     * @brief Convert UID to boost::uuids::uuid.
+     * @brief Convert UID to `boost::uuids::uuid`.
      * @return stored UID value.
      */
     operator ::boost::uuids::uuid &() { return tag; }
