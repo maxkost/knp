@@ -194,7 +194,7 @@ public:
      * @brief Append connections to the existing projection.
      * @param num_iterations number of iterations to run the synapse generator.
      * @param generator synapse generation function.
-     * @return number of synapses added to the projection, which can be less or equal to the num_iterations value.
+     * @return number of synapses added to the projection, which can be less or equal to the `num_iterations` value.
      */
     size_t add_synapses(size_t num_iterations, const SynapseGenerator &generator)
     {

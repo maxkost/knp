@@ -35,12 +35,12 @@ class MessageEndpoint
 {
 public:
     /**
-     * @brief List of subscription types based on message types specified in messaging::AllMessages.
+     * @brief List of subscription types based on message types specified in `messaging::AllMessages`.
      */
     using AllSubscriptions = boost::mp11::mp_transform<Subscription, messaging::AllMessages>;
 
     /**
-     * @brief Subscription variant that contains any subscription type specified in AllSubscriptions.
+     * @brief Subscription variant that contains any subscription type specified in `AllSubscriptions`.
      */
     using SubscriptionVariant = boost::mp11::mp_rename<AllSubscriptions, std::variant>;
 
