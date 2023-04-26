@@ -119,12 +119,8 @@ void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVari
     for (const auto &p : projections)
     {
         projections_.push_back(ProjectionWrapper{p});
-        knp::core::UID pre_uid = std::visit([](const auto &proj) { return proj.get_presynaptic(); }, p);
-        knp::core::UID post_uid = std::visit([](const auto &proj) { return proj.get_postsynaptic(); }, p);
-        knp::core::UID this_uid = std::visit([](const auto &proj) { return proj.get_uid(); }, p);
-        if (pre_uid) message_endpoint_.subscribe<knp::core::messaging::SpikeMessage>(this_uid, {pre_uid});
-        if (post_uid) message_endpoint_.subscribe<knp::core::messaging::SynapticImpactMessage>(post_uid, {this_uid});
     }
+
     SPDLOG_DEBUG("All projections loaded");
 }
 
@@ -146,6 +142,23 @@ std::vector<std::unique_ptr<knp::core::Device>> SingleThreadedCPUBackend::get_de
     return result;
 }
 
+
+void SingleThreadedCPUBackend::init()
+{
+    SPDLOG_DEBUG("Initializing...");
+
+    for (const auto &p : projections_)
+    {
+        const auto [pre_uid, post_uid, this_uid] = std::visit(
+            [](const auto &proj)
+            { return std::make_tuple(proj.get_presynaptic(), proj.get_postsynaptic(), proj.get_uid()); },
+            p.arg_);
+
+        if (pre_uid) message_endpoint_.subscribe<knp::core::messaging::SpikeMessage>(this_uid, {pre_uid});
+        if (post_uid) message_endpoint_.subscribe<knp::core::messaging::SynapticImpactMessage>(post_uid, {this_uid});
+    }
+    SPDLOG_DEBUG("Initializing finished...");
+}
 
 void SingleThreadedCPUBackend::calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population)
 {

@@ -111,7 +111,7 @@ public:
     }
 
 protected:
-    void init();
+    void init() override;
 
     /**
      * @brief Calculate the population of BLIFAT neurons.

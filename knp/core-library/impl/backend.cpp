@@ -20,6 +20,49 @@ Backend::~Backend()
 }
 
 
+void Backend::start()
+{
+    if (started_) return;
+
+    SPDLOG_INFO("Starting backend {}...", std::string(base_.uid_));
+
+    if (!initialized_)
+    {
+        init();
+        initialized_ = true;
+    }
+
+    started_ = true;
+
+    try
+    {
+        while (started_) step();
+    }
+    catch (...)
+    {
+        started_ = false;
+        throw;
+    }
+    SPDLOG_INFO("Backend {} stopped.", std::string(base_.uid_));
+}
+
+
+void Backend::stop()
+{
+    if (started_) return;
+
+    SPDLOG_INFO("Stopping backend {}...", std::string(base_.uid_));
+    started_ = false;
+}
+
+
+void Backend::uninit()
+{
+    stop();
+    initialized_ = false;
+}
+
+
 void Backend::select_devices(const std::set<UID>& uids)
 {
     for (auto&& device : get_devices())

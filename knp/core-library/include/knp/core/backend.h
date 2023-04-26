@@ -11,6 +11,7 @@
 #include <knp/core/device.h>
 #include <knp/core/message_bus.h>
 
+#include <atomic>
 #include <memory>
 #include <set>
 #include <vector>
@@ -18,8 +19,8 @@
 #include <boost/config.hpp>
 
 /**
-* @brief Core library namespace.
-*/
+ * @brief Core library namespace.
+ */
 namespace knp::core
 {
 
@@ -110,11 +111,20 @@ public:
      */
     virtual void step() = 0;
 
+protected:
+    /**
+     * @brief Init network before starting.
+     */
+    virtual void init() = 0;
+    void uninit();
+
 public:
     MessageBus message_bus_;
 
 private:
-    BaseData base_;
+    const BaseData base_;
+    std::atomic<bool> initialized_ = false;
+    std::atomic<bool> started_ = false;
     std::vector<std::unique_ptr<Device>> devices_;
 };
 

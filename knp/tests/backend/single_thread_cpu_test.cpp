@@ -13,7 +13,6 @@
 
 #include <vector>
 
-using Backend = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend;
 using DeltaProjection = knp::core::Projection<knp::synapse_traits::DeltaSynapse>;
 using BLIFATPopulation = knp::core::Population<knp::neuron_traits::BLIFATNeuron>;
 using Population = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::PopulationVariants;
@@ -34,10 +33,17 @@ auto neuron_generator = [](size_t index)
 { return knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>{}; };
 
 
+class TestingBack : public knp::backends::single_threaded_cpu::SingleThreadedCPUBackend
+{
+public:
+    void init() override { knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::init(); }
+};
+
+
 TEST(SingleThreadCpuSuite, SmallestNetwork)
 {
     // Create a single neuron network: input -> input_projection -> population <=> loop_projection
-    Backend backend;
+    TestingBack backend;
     BLIFATPopulation population{neuron_generator, 1};
     Projection loop_projection = DeltaProjection{population.get_uid(), population.get_uid(), synapse_generator, 1};
     Projection input_projection = DeltaProjection{knp::core::UID{false}, population.get_uid(), input_projection_gen, 1};
@@ -56,6 +62,9 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
     endpoint.subscribe<knp::core::messaging::SpikeMessage>(out_channel_uid, {population.get_uid()});
 
     std::vector<size_t> results;
+
+    backend.init();
+
     for (size_t step = 0; step < 20; ++step)
     {
         // Send inputs on steps 0, 5, 10, 15
