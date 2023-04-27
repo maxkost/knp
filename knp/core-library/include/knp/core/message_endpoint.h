@@ -41,7 +41,12 @@ public:
 
     /**
      * @brief Subscription variant that contains any subscription type specified in `AllSubscriptions`.
+     * @details `SubscriptionVariant` takes the value of `std::variant<SubscriptionType_1,..., SubscriptionType_n>`, where `SubscriptionType_[1..n]` is the subscription type specified in `AllSubscriptions`. 
+     * \n For example, if `AllSubscriptions` containes SpikeMessage and SynapticImpactMessage types, then `SubscriptionVariant = std::variant<SpikeMessage, SynapticImpactMessage>`. 
+     * \n `SubscriptionVariant` retains the same order of message types as defined in `AllSubscriptions`.
+     * @see ALL_MESSAGES.
      */
+    
     using SubscriptionVariant = boost::mp11::mp_rename<AllSubscriptions, std::variant>;
 
 public:

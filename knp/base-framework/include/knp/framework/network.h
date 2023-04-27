@@ -34,7 +34,21 @@ public:
     using AllPopulations = boost::mp11::mp_transform<knp::core::Population, knp::neuron_traits::AllNeurons>;
     using AllProjections = boost::mp11::mp_transform<knp::core::Projection, knp::synapse_traits::AllSynapses>;
 
+    /**
+     * @brief Population variant that contains any population type specified in `AllPopulations`.
+     * @details `AllPopulationVariants` takes the value of `std::variant<PopulationType_1,..., PopulationType_n>`, where `PopulationType_[1..n]` is the population type specified in `AllPopulations`. 
+     * \n For example, if `AllPopulations` containes BLIFATNeuron and IzhikevichNeuron types, then `AllPopulationVariants = std::variant<BLIFATNeuron, IzhikevichNeuron>`. 
+     * \n `AllPopulationVariants` retains the same order of message types as defined in `AllPopulations`.
+     * @see ALL_NEURONS.
+     */
     using AllPopulationVariants = boost::mp11::mp_rename<AllPopulations, std::variant>;
+    /**
+     * @brief Projection variant that contains any projection type specified in `AllProjections`.
+     * @details `AllProjectionVariants` takes the value of `std::variant<ProjectionType_1,..., ProjectionType_n>`, where `ProjectionType_[1..n]` is the projection type specified in `AllProjections`. 
+     * \n For example, if `AllProjections` containes DeltaSynapse and AdditiveSTDPSynapse types, then `AllProjectionVariants = std::variant<DeltaSynapse, AdditiveSTDPSynapse>`. 
+     * \n `AllProjectionVariants` retains the same order of message types as defined in `AllProjections`.
+     * @see ALL_SYNAPSES.
+     */
     using AllProjectionVariants = boost::mp11::mp_rename<AllProjections, std::variant>;
 
 public:
