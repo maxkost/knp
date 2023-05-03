@@ -56,8 +56,8 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
 
     auto endpoint = backend.message_bus_.create_endpoint();
 
-    knp::core::UID in_channel_uid{true};
-    knp::core::UID out_channel_uid{true};
+    knp::core::UID in_channel_uid;
+    knp::core::UID out_channel_uid;
 
     // Create input and output
     backend.subscribe<knp::core::messaging::SpikeMessage>(input_uid, {in_channel_uid});
