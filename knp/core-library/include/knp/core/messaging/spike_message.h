@@ -20,6 +20,11 @@ namespace knp::core::messaging
 {
 
 /**
+ * @brief List of spike indexes.
+ */
+using SpikeData = std::vector<uint32_t>;
+
+/**
  * @brief Structure of the spike message.
  */
 struct SpikeMessage
@@ -32,7 +37,7 @@ struct SpikeMessage
     /**
      * @brief Indexes of the recently spiked neurons.
      */
-    std::vector<uint32_t> neuron_indexes_;
+    SpikeData neuron_indexes_;
 };
 
 

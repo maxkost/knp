@@ -19,6 +19,8 @@
 namespace knp::core::messaging
 {
 
+using TimeType = uint64_t;
+
 /**
  * @brief Common header for messages.
  */
@@ -31,7 +33,7 @@ struct MessageHeader
     /**
      * @brief Index of the network execution step.
      */
-    uint64_t send_time_;
+    TimeType send_time_;
 };
 
 std::istream &operator>>(std::istream &stream, MessageHeader &header);

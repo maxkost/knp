@@ -1,15 +1,17 @@
 /**
- * @brief Input channel header
+ * @brief Input converter header
  * @author Vartenkov Andrey
  * @date 25.04.2023
  */
 #pragma once
 
-#include <knp/core/messaging/messaging.h>
+#include <knp/core/message_endpoint.h>
+#include <knp/core/messaging/spike_message.h>
 #include <knp/core/uid.h>
 
 #include <spdlog/spdlog.h>
 
+#include <functional>
 #include <sstream>
 #include <string>
 #include <type_traits>
@@ -22,51 +24,6 @@
 namespace knp::core::input
 {
 /**
- * @brief Base class for all data converters. It has a stream-like interface.
- */
-class DataConverter
-{
-public:
-    /**
-     * @brief Constructor for the base class, initialize input size.
-     * @param input_size expected size of an input projection.
-     */
-    explicit DataConverter(size_t input_size) : input_size_(input_size) {}
-
-    /**
-     * @brief Default virtual destructor.
-     */
-    virtual ~DataConverter() = default;
-
-    /**
-     * @brief output stream operator. It allows user to get messages from the stream.
-     * @param out_message the resulting spike message. You should initialize sending time out of this function.
-     * @return reference to the stream.
-     */
-    virtual DataConverter &operator>>(messaging::SpikeMessage &out_message) = 0;
-
-    /**
-     * @brief Update expected target projection size.
-     * @param new_size new size of the input projection.
-     */
-    void set_input_size(size_t new_size) { input_size_ = new_size; }
-
-    /**
-     * @brief Call this function to switch off non-critical error notifications.
-     * @param skip true: skip errors, false: don't skip errors.
-     */
-    void set_skip_errors(bool skip = true) { skip_errors_ = skip; }
-
-protected:
-    /**
-     * @brief expected target projection size.
-     */
-    size_t input_size_;
-    bool skip_errors_ = false;
-};
-
-
-/**
  * @brief A very simple function to turn values to spike or not. Casts a value to boolean type.
  * @tparam value_type input value type. Something that can be cast to bool implicitly. Usually an arithmetic type.
  * @param v input value
@@ -78,26 +35,34 @@ bool interpret_as_bool(value_type v)
     return v;
 }
 
-
 /**
- * @brief Stream-like converter class that converts a list of values into spike messages.
- * @tparam value_type the type of values this class reads from the input stream.
+ * @brief Construct a function to turn values to spikes.
+ * @tparam value_type input value type, should have a defined operator "less than".
+ * @param threshold threshold value, spikes when greater or equal than threshold.
+ * @return a simple function to determine if a value causes a spike or not.
  */
 template <class value_type>
-class SequenceConverter : public DataConverter
+auto interpret_with_threshold(value_type threshold)
+{
+    // We're using !(a < b) instead of (a >= b) because of the values which only have operator "less than".
+    return [threshold](value_type v) -> bool { return !(v < threshold); };
+}
+
+/**
+ * @brief Stream-like converter functor class that converts a list of values into spike messages.
+ * @tparam value_type the type of values this class reads from the input stream.
+ * @details construction example : SequenceConverter<float> converter{interpreter_with_threshold<float>(1.0f)};
+ */
+template <class value_type>
+class SequenceConverter
 {
 public:
     /**
      * @brief Class constructor.
-     * @param input_stream stream that contains unprocessed data.
-     * @param sender_uid "Sender UID" for output message header.
-     * @param input_size expected target projection size.
      * @param interpret function that decides if the unprocessed value is a spike or not.
      */
-    SequenceConverter(
-        std::istream &input_stream, UID sender_uid, size_t input_size,
-        std::function<bool(value_type)> interpret = interpret_as_bool<value_type>)
-        : DataConverter(input_size), stream_(input_stream), uid_(sender_uid), interpret_(std::move(interpret))
+    explicit SequenceConverter(std::function<bool(value_type)> interpret = interpret_as_bool<value_type>)
+        : interpret_(std::move(interpret))
     {
     }
 
@@ -106,39 +71,26 @@ public:
      * @param out_message output spike message. This function doesn't change its sending time, as it's not sent yet.
      * @return reference to the stream.
      */
-    DataConverter &operator>>(messaging::SpikeMessage &out_message) override
+    std::vector<uint32_t> operator()(std::istream &stream, size_t data_size)
     {
         SPDLOG_TRACE("Getting message from a stream using sequence converter.");
-        out_message.header_.sender_uid_ = uid_;
 
         std::vector<uint32_t> message_data;
-        for (size_t i = 0; i < input_size_; ++i)
+        for (size_t i = 0; i < data_size; ++i)
         {
             value_type value;
-            stream_ >> value;
+            stream >> value;
             if (interpret_(value))
             {
                 message_data.push_back(i);
             }
         }
-        out_message.neuron_indexes_ = std::move(message_data);
         SPDLOG_TRACE(
-            std::string("Finished loading a message, it contains ") +
-            std::to_string(out_message.neuron_indexes_.size()) + " spikes.");
-        return *this;
+            std::string("Finished loading a message, it contains ") + std::to_string(message_data.size()) + " spikes.");
+        return message_data;
     }
 
 private:
-    /**
-     * @brief Input stream for raw data.
-     */
-    std::istream &stream_;
-
-    /**
-     * @brief "Sender" UID for messages.
-     */
-    UID uid_;
-
     /**
      * @brief interpretation function, should return "true" for spike and "false" for no spike. Any "wrong symbol"
      * error processing logic also goes here.
