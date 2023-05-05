@@ -16,37 +16,23 @@ You can use Kaspersky Neuromorphic Platform to do the following:
 \li Implement application solutions on devices with low power consumption or using neural processing units (NPU).
 You can use the C++ and Python languages to accomplish the listed tasks. The platform supports single-threaded and multi-threaded CPUs. The Kaspersky Neuromorphic Platform framework can also be used as a backend for the PyNN API.
 
-\section distribution Distribution kit
+\section doxygen About this guide
 
-The distribution kit of Kaspersky Neuromorphic Platform depends on the operating system used and the platform scope of application. Kaspersky Neuromorphic Platform can be used as part of another solution (for example, for computer vision implementation), for development and extended use (for example, by a researcher for the implementation of new neuron models), and as part of PyNN.
+The API Reference Guide for Kaspersky Neuromorphic Platform is intended for specialists engaged in the development of secure solutions based on the platform and in the development of the Kaspersky neuromorphic Platform code base.
 
-\par Distribution kit of Kaspersky Neuromorphic Platform as part of a solution using the platform on the Linux operating system
-
-The distribution kit includes the following files:
-
-\par Distribution kit of Kaspersky Neuromorphic Platform for the solution development and extended use on the Linux operating system
-
-The distribution kit includes the following files:
-
-\par Distribution kit of Kaspersky Neuromorphic Platform for the platform development on th Linux operating system
-
-The distribution kit includes the following files:
-
-\par Distribution kit of Kaspersky Neuromorphic Platform as part of a solution using the platform on the Windows operating system
-
-The distribution kit includes the following files:
-
-\par Distribution kit of Kaspersky Neuromorphic Platform for the solution development and extended use on the Windows operating system
-
-The distribution kit includes the following files:
-
-\section requirements Hardware and software requirements
-
-Kaspersky Neuromorphic Platform has the following minimum hardware requirements for computers on which the platform will be installed:
-
-\section support Contacting Technical support
+For information on the platform concepts and architecture, installation instructions and platform use cases, see <a href="">Kaspersky Neuromorphic Platform Online Help</a>.
 
 \section thirdparty Information about third-party code 
 
 \section trademark Trademark notices
+
+Registered trademarks and service marks are the property of their respective owners.
+
+Debian is a registered trademark of Software in the Public Interest, Inc.
+
+Linux is the registered trademark of Linus Torvalds in the U.S. and other countries.
+
+Python is a trademark or registered trademark of the Python Software Foundation.
+
+Windows is a trademark of the Microsoft group of companies.
 */
