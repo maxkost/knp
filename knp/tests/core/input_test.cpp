@@ -1,5 +1,5 @@
 //
-// Data converter tests.
+// Input channels and converters tests.
 //
 
 #include <knp/core/input_channel.h>
