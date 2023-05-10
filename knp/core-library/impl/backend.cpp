@@ -22,7 +22,7 @@ Backend::~Backend()
 
 void Backend::start()
 {
-    if (started_) return;
+    if (running()) return;
 
     SPDLOG_INFO("Starting backend {}...", std::string(base_.uid_));
 
@@ -36,7 +36,7 @@ void Backend::start()
 
     try
     {
-        while (started_) step();
+        while (running()) step();
     }
     catch (...)
     {
@@ -49,7 +49,7 @@ void Backend::start()
 
 void Backend::stop()
 {
-    if (started_) return;
+    if (!running()) return;
 
     SPDLOG_INFO("Stopping backend {}...", std::string(base_.uid_));
     started_ = false;
@@ -58,6 +58,7 @@ void Backend::stop()
 
 void Backend::uninit()
 {
+    if (!initialized_) return;
     stop();
     initialized_ = false;
 }

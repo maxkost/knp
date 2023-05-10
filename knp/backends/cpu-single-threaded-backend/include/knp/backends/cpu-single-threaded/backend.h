@@ -11,10 +11,11 @@
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 #include <knp/devices/cpu.h>
-#include <knp/neuron-traits/blifat.h>
-#include <knp/synapse-traits/delta.h>
+#include <knp/neuron-traits/all_traits.h>
+#include <knp/synapse-traits/all_traits.h>
 
 #include <memory>
+#include <string>
 #include <utility>
 #include <variant>
 #include <vector>
@@ -45,12 +46,25 @@ private:
     };
 
 public:
-    // TODO: set protected (in testing purposes).
-    SingleThreadedCPUBackend();
+    using PopulationContainer = std::vector<PopulationVariants>;
+    using ProjectionContainer = std::vector<ProjectionWrapper>;
+
+    // TODO: Make custom iterators.
+    using PopulationIterator = PopulationContainer::iterator;
+    using PopulationConstIterator = PopulationContainer::const_iterator;
+    using ProjectionIterator = ProjectionContainer::iterator;
+    using ProjectionConstIterator = ProjectionContainer::const_iterator;
+
+public:
     ~SingleThreadedCPUBackend() = default;
 
 public:
     static std::shared_ptr<SingleThreadedCPUBackend> create();
+
+public:
+    [[nodiscard]] bool plasticity_supported() const override { return true; }
+    [[nodiscard]] std::vector<std::string> get_supported_neurons() const override;
+    [[nodiscard]] std::vector<std::string> get_supported_synapses() const override;
 
 public:
     /**
@@ -66,18 +80,22 @@ public:
     void load_projections(const std::vector<ProjectionVariants> &projections);
 
 public:
+    PopulationIterator begin_populations();
+    PopulationConstIterator begin_populations() const;
+    PopulationIterator end_populations();
+    PopulationConstIterator end_populations() const;
+
+    ProjectionIterator begin_projections();
+    ProjectionConstIterator begin_projections() const;
+    ProjectionIterator end_projections();
+    ProjectionConstIterator end_projections() const;
+
+public:
     /**
      * @brief Remove projections with given UIDs from the backend.
      * @param uids UIDs of projections to remove.
      */
     void remove_projections(const std::vector<knp::core::UID> &uids) override {}
-
-    /**
-     * @brief Remove synapses of the projection with the given UID from the backend.
-     * @param projection_uid projection UID.
-     * @param indexes indexes of synapses to remove.
-     */
-    void remove_synapses(const knp::core::UID &projection_uid, const std::vector<size_t> &indexes) override {}
 
     /**
      * @brief Remove populations with given UIDs from the backend.
@@ -110,6 +128,9 @@ public:
         return message_endpoint_.subscribe<MessageType>(receiver, senders);
     }
 
+public:
+    SingleThreadedCPUBackend();
+
 protected:
     void init() override;
 
@@ -130,8 +151,8 @@ protected:
         core::messaging::SynapticMessageQueue &message_queue);
 
 private:
-    std::vector<PopulationVariants> populations_;
-    std::vector<ProjectionWrapper> projections_;
+    PopulationContainer populations_;
+    ProjectionContainer projections_;
     core::MessageEndpoint message_endpoint_;
     size_t step_ = 0;
 };

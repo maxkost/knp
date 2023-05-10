@@ -14,6 +14,7 @@
 #include <atomic>
 #include <memory>
 #include <set>
+#include <string>
 #include <vector>
 
 #include <boost/config.hpp>
@@ -46,6 +47,11 @@ public:
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
 
 public:
+    [[nodiscard]] virtual bool plasticity_supported() const = 0;
+    [[nodiscard]] virtual std::vector<std::string> get_supported_neurons() const = 0;
+    [[nodiscard]] virtual std::vector<std::string> get_supported_synapses() const = 0;
+
+public:
     /**
      * @brief Remove projections with given UIDs from the backend.
      * @param uids UIDs of projections to remove.
@@ -53,24 +59,10 @@ public:
     virtual void remove_projections(const std::vector<UID> &uids) = 0;
 
     /**
-     * @brief Remove synapses of the projection with the given UID from the backend.
-     * @param projection_uid projection UID.
-     * @param indexes indexes of synapses to remove.
-     */
-    virtual void remove_synapses(const UID &projection_uid, const std::vector<size_t> &indexes) = 0;
-
-    /**
      * @brief Remove populations with given UIDs from the backend.
      * @param uids UIDs of populations to remove.
      */
     virtual void remove_populations(const std::vector<UID> &uids) = 0;
-
-    /**
-     * @brief Remove neurons of the population with the given UID from the backend.
-     * @param population_uid population UID.
-     * @param indexes indexes of neurons to remove.
-     */
-    void remove_neurons(const UID &population_uid, const std::vector<size_t> &indexes);
 
 public:
     /**
@@ -110,6 +102,9 @@ public:
      * @details You can use this method for debugging purposes.
      */
     virtual void step() = 0;
+
+public:
+    bool running() const { return started_; }
 
 protected:
     /**

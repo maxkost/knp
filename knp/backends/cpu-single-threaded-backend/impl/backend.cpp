@@ -9,6 +9,7 @@
 #include <knp/backends/cpu-single-threaded/backend.h>
 #include <knp/core/core.h>
 #include <knp/devices/cpu.h>
+#include <knp/meta/stringify.h>
 
 #include <spdlog/spdlog.h>
 
@@ -52,6 +53,20 @@ std::shared_ptr<SingleThreadedCPUBackend> SingleThreadedCPUBackend::create()
 {
     SPDLOG_DEBUG("Creating CPU backend instance...");
     return std::make_shared<SingleThreadedCPUBackend>();
+}
+
+
+std::vector<std::string> SingleThreadedCPUBackend::get_supported_neurons() const
+{
+    return knp::meta::get_supported_type_names<knp::neuron_traits::AllNeurons, SupportedNeurons>(
+        knp::neuron_traits::neurons_names);
+}
+
+
+std::vector<std::string> SingleThreadedCPUBackend::get_supported_synapses() const
+{
+    return knp::meta::get_supported_type_names<knp::synapse_traits::AllSynapses, SupportedSynapses>(
+        knp::synapse_traits::synapses_names);
 }
 
 
@@ -160,6 +175,7 @@ void SingleThreadedCPUBackend::init()
     SPDLOG_DEBUG("Initializing finished...");
 }
 
+
 void SingleThreadedCPUBackend::calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population)
 {
     SPDLOG_TRACE(std::string("Calculate population") + std::string(population.get_uid()));
@@ -174,4 +190,54 @@ void SingleThreadedCPUBackend::calculate_projection(
     SPDLOG_TRACE(std::string("Calculate projection ") + std::string(projection.get_uid()));
     calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, step_);
 }
+
+
+SingleThreadedCPUBackend::PopulationIterator SingleThreadedCPUBackend::begin_populations()
+{
+    return populations_.begin();
+}
+
+
+SingleThreadedCPUBackend::PopulationConstIterator SingleThreadedCPUBackend::begin_populations() const
+{
+    return populations_.cbegin();
+}
+
+
+SingleThreadedCPUBackend::PopulationIterator SingleThreadedCPUBackend::end_populations()
+{
+    return populations_.end();
+}
+
+
+SingleThreadedCPUBackend::PopulationConstIterator SingleThreadedCPUBackend::end_populations() const
+{
+    return populations_.cend();
+}
+
+
+SingleThreadedCPUBackend::ProjectionIterator SingleThreadedCPUBackend::begin_projections()
+{
+    return projections_.begin();
+}
+
+
+SingleThreadedCPUBackend::ProjectionConstIterator SingleThreadedCPUBackend::begin_projections() const
+{
+    return projections_.cbegin();
+}
+
+
+SingleThreadedCPUBackend::ProjectionIterator SingleThreadedCPUBackend::end_projections()
+{
+    return projections_.end();
+}
+
+
+SingleThreadedCPUBackend::ProjectionConstIterator SingleThreadedCPUBackend::end_projections() const
+{
+    return projections_.cend();
+}
+
+
 }  // namespace knp::backends::single_threaded_cpu

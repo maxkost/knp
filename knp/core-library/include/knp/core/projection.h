@@ -115,7 +115,7 @@ public:
     [[nodiscard]] Synapse &operator[](size_t index) { return parameters_[index]; }
     /**
      * @brief Get parameter values of a synapse with the given index.
-     * @details Constant method. 
+     * @details Constant method.
      */
     [[nodiscard]] const Synapse &operator[](size_t index) const { return parameters_[index]; }
 
@@ -232,6 +232,12 @@ public:
      * @param index index of the synapse to remove.
      */
     void remove_synapse(size_t index) { parameters_.erase(parameters_.begin() + index); }
+
+    /**
+     * @brief Remove synapses with the given indexes from the projection.
+     * @param indexes indexes of synapses to remove.
+     */
+    void remove_synapses(const std::vector<size_t> &indexes) {}  // TODO: implement this.
 
     /**
      * @brief Remove synapses according to a given criterion.

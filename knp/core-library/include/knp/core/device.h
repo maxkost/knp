@@ -12,8 +12,8 @@
 #include <string>
 
 /**
-* @brief Core library namespace.
-*/
+ * @brief Core library namespace.
+ */
 namespace knp::core
 {
 
@@ -23,6 +23,7 @@ enum class DeviceType
     GPU,
     AltAI1_NPU
 };
+
 
 /**
  * @brief The Device class is the base class for devices supported by the device library.
@@ -67,8 +68,8 @@ public:
 
 protected:
     /**
-    * @brief Device base data.
-    */
+     * @brief Device base data.
+     */
     BaseData base_;
 };
 

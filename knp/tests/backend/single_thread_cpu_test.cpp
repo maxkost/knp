@@ -24,7 +24,7 @@ DeltaProjection::SynapseGenerator input_projection_gen = [](size_t index) -> std
 };
 
 // Create a loop projection
-DeltaProjection::SynapseGenerator synapse_generator = [](size_t index) -> std::optional<DeltaProjection ::Synapse> {
+DeltaProjection::SynapseGenerator synapse_generator = [](size_t index) -> std::optional<DeltaProjection::Synapse> {
     return DeltaProjection::Synapse{{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};
 };
 
@@ -36,6 +36,7 @@ auto neuron_generator = [](size_t index)
 class TestingBack : public knp::backends::single_threaded_cpu::SingleThreadedCPUBackend
 {
 public:
+    TestingBack() = default;
     void init() override { knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::init(); }
 };
 
@@ -44,6 +45,7 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
 {
     // Create a single neuron network: input -> input_projection -> population <=> loop_projection
     TestingBack backend;
+
     BLIFATPopulation population{neuron_generator, 1};
     Projection loop_projection = DeltaProjection{population.get_uid(), population.get_uid(), synapse_generator, 1};
     Projection input_projection = DeltaProjection{knp::core::UID{false}, population.get_uid(), input_projection_gen, 1};
@@ -83,4 +85,20 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
     // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
     const std::vector<size_t> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
     ASSERT_EQ(results, expected_results);
+}
+
+
+TEST(SingleThreadCpuSuite, NeuronsGettingTest)
+{
+    TestingBack backend;
+
+    auto s_neurons = backend.get_supported_neurons();
+}
+
+
+TEST(SingleThreadCpuSuite, SynapsesGettingTest)
+{
+    TestingBack backend;
+
+    auto s_synapses = backend.get_supported_synapses();
 }
