@@ -4,6 +4,7 @@
  * @date 04.05.2023
  */
 #pragma once
+
 #include <knp/core/input_converter.h>
 
 #include <memory>
@@ -77,7 +78,7 @@ public:
     UID get_uid() { return uid_; }
 
     /**
-     *
+     * @brief Get stream.
      */
     std::istream &get_stream() { return *stream_; }
 
