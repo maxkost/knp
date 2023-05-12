@@ -66,16 +66,10 @@ public:
     void set_size(size_t new_size) { size_ = new_size; }
 
     /**
-     * @brief Set a new UID to the channel. Can be used to switch between different receivers.
-     * @param new_uid new sender UID.
-     */
-    void set_uid(UID new_uid) { uid_ = new_uid; }
-
-    /**
      * @brief Get channel UID.
      * @return channel UID.
      */
-    UID get_uid() { return uid_; }
+    [[nodiscard]] const UID &get_uid() const { return uid_; }
 
     /**
      * @brief Get stream.
@@ -117,7 +111,7 @@ private:
     /**
      * @brief Channel own UID, used as a sender UID for messages.
      */
-    UID uid_;
+    const UID uid_;
 
     /**
      * @brief Input size, as used by converter.

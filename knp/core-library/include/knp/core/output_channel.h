@@ -36,13 +36,7 @@ public:
      * @brief Get channel UID.
      * @return channel UID.
      */
-    UID get_uid() { return uid_; }
-
-    /**
-     * @brief Set channel UID.
-     * @param uid new channel UID.
-     */
-    void set_uid(const UID &uid) { uid_ = uid; }
+    [[nodiscard]] const UID &get_uid() const { return uid_; }
 
 protected:
     /**
