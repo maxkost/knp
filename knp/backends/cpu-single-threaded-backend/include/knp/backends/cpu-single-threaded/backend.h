@@ -33,8 +33,21 @@ public:
     using SupportedSynapses = boost::mp11::mp_list<knp::synapse_traits::DeltaSynapse>;
     using SupportedPopulations = boost::mp11::mp_transform<knp::core::Population, SupportedNeurons>;
     using SupportedProjections = boost::mp11::mp_transform<knp::core::Projection, SupportedSynapses>;
-
+    /**
+     * @brief Population variant that contains any population type specified in `SupportedPopulations`.
+     * @details `PopulationVariants` takes the value of `std::variant<PopulationType_1,..., PopulationType_n>`, where `PopulationType_[1..n]` is the population type specified in `SupportedPopulations`. 
+     * \n For example, if `SupportedPopulations` containes BLIFATNeuron and IzhikevichNeuron types, then `PopulationVariants = std::variant<BLIFATNeuron, IzhikevichNeuron>`. 
+     * \n `PopulationVariants` retains the same order of message types as defined in `SupportedPopulations`.
+     * @see ALL_NEURONS.
+     */
     using PopulationVariants = boost::mp11::mp_rename<SupportedPopulations, std::variant>;
+    /**
+     * @brief Projection variant that contains any projection type specified in `SupportedProjections`.
+     * @details `ProjectionVariants` takes the value of `std::variant<ProjectionType_1,..., ProjectionType_n>`, where `ProjectionType_[1..n]` is the projection type specified in `SupportedProjections`. 
+     * \n For example, if `SupportedProjections` containes DeltaSynapse and AdditiveSTDPSynapse types, then `ProjectionVariants = std::variant<DeltaSynapse, AdditiveSTDPSynapse>`. 
+     * \n `ProjectionVariants` retains the same order of message types as defined in `SupportedProjections`.
+     * @see ALL_SYNAPSES.
+     */
     using ProjectionVariants = boost::mp11::mp_rename<SupportedProjections, std::variant>;
 
 private:

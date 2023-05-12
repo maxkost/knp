@@ -58,13 +58,13 @@ public:
 public:
     /**
      * @brief Get the population UID.
-     * @return UID.
+     * @return population UID.
      */
     [[nodiscard]] const UID &get_uid() const { return base_.uid_; }
 
     /**
      * @brief Get tags used by the population.
-     * @return tag map.
+     * @return population tag map.
      * @see TagMap.
      */
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
@@ -167,7 +167,7 @@ public:
 
 public:
     /**
-     * @brief Count the number of neurons in the population.
+     * @brief Count number of neurons in the population.
      * @return neuron count.
      */
     size_t size() const { return neurons_.size(); }

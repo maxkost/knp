@@ -30,14 +30,14 @@ public:
 public:
     /**
      * @brief Create a new endpoint that sends and receives messages through the message bus.
-     * @see MessageEndpoint.
      * @return new endpoint.
+     * @see MessageEndpoint.
      */
     [[nodiscard]] MessageEndpoint create_endpoint();
 
     /**
      * @brief Route a single message.
-     * @return true if a message has been routed, false otherwise.
+     * @return true if a message was routed, false if no message was routed.
      */
     bool step();
 

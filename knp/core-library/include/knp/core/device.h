@@ -34,38 +34,41 @@ public:
 
 public:
     /**
-     * @brief Get the device UID.
-     * @return UID.
+     * @brief Get device UID.
+     * @return device UID.
      */
     [[nodiscard]] const UID &get_uid() const { return base_.uid_; }
 
     /**
      * @brief Get tags used by the device.
-     * @return tag map.
+     * @return device tag map.
      * @see TagMap.
      */
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
 
 public:
     /**
-     * @brief Get the device type.
+     * @brief Get device type.
      * @return device type.
      */
     [[nodiscard]] virtual DeviceType get_type() const = 0;
 
     /**
-     * @brief Get the device name.
+     * @brief Get device name.
      * @return device name in the arbitrary format.
      */
     [[nodiscard]] virtual const std::string &get_name() const = 0;
 
     /**
-     * @brief Get the power consumption details for the device.
+     * @brief Get power consumption details for the device.
      * @return amount of consumed power.
      */
     [[nodiscard]] virtual float get_power() const = 0;
 
 protected:
+    /**
+    * @brief Device base data.
+    */
     BaseData base_;
 };
 

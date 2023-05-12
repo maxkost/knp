@@ -32,7 +32,7 @@ public:
      */
     using MessageType = MessageT;
     /**
-     * @brief Internal container for messages.
+     * @brief Internal container for messages of the specified message type.
      */
     using MessageContainerType = std::vector<MessageType>;
 
@@ -51,18 +51,18 @@ public:
     Subscription(const UID &receiver, const std::vector<UID> &senders) : receiver_(receiver) { add_senders(senders); }
 
     /**
-     * @brief Get a list of sender UIDs.
+     * @brief Get list of sender UIDs.
      */
     [[nodiscard]] const UidSet &get_senders() const { return senders_; }
 
     /**
-     * @brief Get the UID of the entity that receives messages via the subscription.
+     * @brief Get UID of the entity that receives messages via the subscription.
      */
     [[nodiscard]] UID get_receiver_uid() const { return receiver_; }
 
     /**
      * @brief Unsubscribe from a sender.
-     * @details  If a sender is not associated with the subscription, the method does not do anything.
+     * @details If a sender is not associated with the subscription, the method does not do anything.
      * @param uid sender UID.
      * @return number of senders deleted from subscription.
      */
@@ -91,8 +91,7 @@ public:
     /**
      * @brief Check if a sender with the given UID exists.
      * @param uid sender UID.
-     * @return true if the sender with the given UID exists.
-     *         false if the sender with the given UID doesn't exist.
+     * @return true if the sender with the given UID exists, false if the sender with the given UID doesn't exist.
      */
     [[nodiscard]] bool has_sender(const UID &uid) const
     {
@@ -101,17 +100,25 @@ public:
 
 public:
     /**
-     * @brief Add message to the subscription.
-     * @param message the message to add.
+     * @brief Add a message to the subscription.
+     * @param message message to add.
      */
     void add_message(MessageType &&message) { messages_.push_back(message); }
+    /**
+     * @brief Add a message to the subscription.
+     * @param message constant message to add.
+     */
     void add_message(const MessageType &message) { messages_.push_back(message); }
 
     /**
      * @brief Get all messages.
-     * @return messages.
+     * @return reference to message container.
      */
     MessageContainerType &get_messages() { return messages_; }
+    /**
+     * @brief Get all messages.
+     * @return constant reference to message container.
+     */
     const MessageContainerType &get_messages() const { return messages_; }
 
     /**

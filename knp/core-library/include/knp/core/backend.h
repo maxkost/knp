@@ -34,12 +34,12 @@ public:
 public:
     /**
      * @brief Get the backend UID.
-     * @return UID.
+     * @return backend UID.
      */
     [[nodiscard]] const UID &get_uid() const { return base_.uid_; }
     /**
      * @brief Get tags used by the backend.
-     * @return tag map.
+     * @return backend tag map.
      * @see TagMap.
      */
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
