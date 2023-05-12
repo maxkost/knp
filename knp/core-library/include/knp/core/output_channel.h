@@ -11,6 +11,10 @@
 
 #include <utility>
 
+
+/**
+ * @brief Network output processing namespace.
+ */
 namespace knp::core::output
 {
 class OutputChannelBase
@@ -45,8 +49,20 @@ protected:
      * @brief All messages older than this step will be discarded. Might as well do it public.
      */
     messaging::TimeType oldest_step_ = 0;
+
+    /**
+     * @brief Endpoint reference for message processing.
+     */
     MessageEndpoint &endpoint_;
+
+    /**
+     * @brief Channel UID.
+     */
     UID uid_;
+
+    /**
+     * @brief Expected size of the output projection.
+     */
     size_t output_size_;
 };
 
@@ -59,6 +75,13 @@ template <class ResultType>
 class OutputChannel : public OutputChannelBase
 {
 public:
+    /**
+     * @brief Output channel constructor.
+     * @param endpoint endpoint for message exchange.
+     * @param converter data converter.
+     * @param sender_uid UID of the sender population.
+     * @param output_size expected population size.
+     */
     OutputChannel(MessageEndpoint &endpoint, OutputConverter<ResultType> converter, UID sender_uid, size_t output_size)
         : OutputChannelBase(endpoint, sender_uid, output_size), converter_(std::move(converter))
     {
@@ -83,6 +106,9 @@ public:
     }
 
 private:
+    /**
+     * @brief Data converter function.
+     */
     OutputConverter<ResultType> converter_;
 };
 

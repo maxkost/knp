@@ -12,7 +12,7 @@
 #include <vector>
 
 /**
- * @brief network output processing namespace
+ * @brief Network output processing namespace.
  */
 namespace knp::core::output
 {
