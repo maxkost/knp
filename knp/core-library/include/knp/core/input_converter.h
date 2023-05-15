@@ -68,7 +68,7 @@ public:
 
     /**
      * @brief Output stream operator.
-     * @param streak input stream.
+     * @param stream input stream.
      * @param data_size expected size of the input projection.
      * @return list of neuron indexes.
      */
