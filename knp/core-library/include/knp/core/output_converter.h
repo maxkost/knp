@@ -58,7 +58,7 @@ std::vector<size_t> converter_count(
 /**
  * @brief Convert messages to bool vector where an element is true if a corresponding neuron sent at least one spike.
  * @param message_list spike messages.
- * @param out_size output population size.
+ * @param output_size output population size.
  * @param oldest_step if a message is older than this, it's skipped.
  *                    Zero means that all messages since last call are used for counting.
  * @return a function that converts spike messages to a bool vector of "true if the corresponding neuron spiked".
