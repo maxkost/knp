@@ -68,8 +68,9 @@ public:
 
     /**
      * @brief Output stream operator.
-     * @param out_message output spike message. This function doesn't change its sending time, as it's not sent yet.
-     * @return reference to the stream.
+     * @param streak input stream.
+     * @param data_size expected size of the input projection.
+     * @return list of neuron indexes.
      */
     std::vector<uint32_t> operator()(std::istream &stream, size_t data_size)
     {
