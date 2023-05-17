@@ -157,6 +157,9 @@ public:
     }
 
 public:
+    /**
+     * @brief SingleThreadedCPUBackend default backend constructor.
+     */
     SingleThreadedCPUBackend();
 
 protected:

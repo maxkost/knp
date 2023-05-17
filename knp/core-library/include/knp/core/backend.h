@@ -116,13 +116,20 @@ public:
     virtual void step() = 0;
 
 public:
+    /**
+     * @brief running return network run execution status.
+     * @return true if backend started.
+     */
     bool running() const { return started_; }
 
 protected:
     /**
-     * @brief Init network before starting.
+     * @brief Init backend before starting network execution.
      */
     virtual void init() = 0;
+    /**
+     * @brief uninit set uninitialized state in the backend.
+     */
     void uninit();
 
 public:
