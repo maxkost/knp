@@ -62,8 +62,20 @@ public:
     static std::shared_ptr<SingleThreadedCPUBackend> create();
 
 public:
+    /**
+     * @brief plasticity_supported true if plasticity supported.
+     * @return plasticiy supported flag.
+     */
     [[nodiscard]] bool plasticity_supported() const override { return true; }
+    /**
+     * @brief get_supported_neurons return supported neurons names.
+     * @return vector with supported neurons names.
+     */
     [[nodiscard]] std::vector<std::string> get_supported_neurons() const override;
+    /**
+     * @brief get_supported_synapses return supported synapses names.
+     * @return vector with supported synapses names.
+     */
     [[nodiscard]] std::vector<std::string> get_supported_synapses() const override;
 
 public:
@@ -80,13 +92,29 @@ public:
     void load_projections(const std::vector<ProjectionVariants> &projections);
 
 public:
+    /**
+     * @brief begin_populations return iterator for populations loaded in backend.
+     * @return iterator.
+     */
     PopulationIterator begin_populations();
     PopulationConstIterator begin_populations() const;
+    /**
+     * @brief end_populations return finsh iterator for populations.
+     * @return iterator.
+     */
     PopulationIterator end_populations();
     PopulationConstIterator end_populations() const;
 
+    /**
+     * @brief begin_projections return iterator for projections loaded in backend.
+     * @return iterator.
+     */
     ProjectionIterator begin_projections();
     ProjectionConstIterator begin_projections() const;
+    /**
+     * @brief end_projections return finish iterator for projections.
+     * @return iterator.
+     */
     ProjectionIterator end_projections();
     ProjectionConstIterator end_projections() const;
 

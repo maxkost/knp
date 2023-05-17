@@ -47,8 +47,20 @@ public:
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
 
 public:
+    /**
+     * @brief plasticity_supported true if plasticity supported.
+     * @return plasticiy supported flag.
+     */
     [[nodiscard]] virtual bool plasticity_supported() const = 0;
+    /**
+     * @brief get_supported_neurons return supported neurons names.
+     * @return vector with supported neurons names.
+     */
     [[nodiscard]] virtual std::vector<std::string> get_supported_neurons() const = 0;
+    /**
+     * @brief get_supported_synapses return supported synapses names.
+     * @return vector with supported synapses names.
+     */
     [[nodiscard]] virtual std::vector<std::string> get_supported_synapses() const = 0;
 
 public:
@@ -77,8 +89,8 @@ public:
      * @return list of devices.
      * @see Device.
      */
-    const std::vector<std::unique_ptr<Device>> &get_current_devices() const { return devices_; }
     std::vector<std::unique_ptr<Device>> &get_current_devices() { return devices_; }
+    const std::vector<std::unique_ptr<Device>> &get_current_devices() const { return devices_; }
 
     /**
      * @brief Select devices on which to run the backend.

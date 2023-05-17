@@ -27,6 +27,9 @@ namespace knp::neuron_traits
  */
 using AllNeurons = boost::mp11::mp_list<ALL_NEURONS>;
 
+/**
+ * @brief tuple contains strings with neuron types names.
+ */
 constexpr auto neurons_names = KNP_MAKE_TUPLE(ALL_NEURONS);
 
 }  // namespace knp::neuron_traits
