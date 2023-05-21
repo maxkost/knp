@@ -141,7 +141,7 @@ public:
     MessageBus message_bus_;
 
 private:
-    const BaseData base_;
+    BaseData base_;
     std::atomic<bool> initialized_ = false;
     std::atomic<bool> started_ = false;
     std::vector<std::unique_ptr<Device>> devices_;

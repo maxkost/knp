@@ -59,8 +59,10 @@ SpikeMessage unpack(const marshal::SpikeMessage *s_msg)
     const marshal::MessageHeader *const s_msg_header{s_msg->header()};
 
     UID uid1{false};
+    // clang_sa_ignore [core.CallAndMessage]
     std::copy(s_msg_header->sender_uid().data()->begin(), s_msg_header->sender_uid().data()->end(), uid1.tag.data);
 
+    // clang_sa_ignore [core.CallAndMessage]
     return SpikeMessage{
         {uid1, s_msg_header->send_time()}, {s_msg->neuron_indexes()->begin(), s_msg->neuron_indexes()->end()}};
 }
