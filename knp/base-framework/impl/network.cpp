@@ -89,10 +89,10 @@ typename std::vector<VT>::iterator Network::find_variant(const knp::core::UID &u
         [&uid](VT &p_variant) -> bool
         {
             return std::visit(
-                [&](auto &v)
+                [&](auto &var_val)
                 {
                     // return uid == (std::get<std::decay_t<decltype(v)>>(p_variant)).get_uid();
-                    return uid == std::decay_t<decltype(v)>(v).get_uid();
+                    return uid == std::decay_t<decltype(var_val)>(var_val).get_uid();
                 },
                 p_variant);
         });
@@ -121,8 +121,8 @@ PopulationType &Network::get_population(const knp::core::UID &population_uid)
         "This population type doesn't supported by the Network class! Add type to the population types list.");
 
     SPDLOG_DEBUG("Get population {}", std::string(population_uid));
-    auto r = find_elem<PopulationType, AllPopulationVariants>(population_uid, populations_);
-    if (r != populations_.end()) return std::get<PopulationType>(*r);
+    auto pop_iterator = find_elem<PopulationType, AllPopulationVariants>(population_uid, populations_);
+    if (pop_iterator != populations_.end()) return std::get<PopulationType>(*pop_iterator);
     throw std::runtime_error("Can't find population!");
 }
 
@@ -168,8 +168,8 @@ ProjectionType &Network::get_projection(const knp::core::UID &projection_uid)
 
     SPDLOG_DEBUG("Get projection {}", std::string(projection_uid));
 
-    auto r = find_elem<ProjectionType, AllProjectionVariants>(projection_uid, projections_);
-    if (r != projections_.end()) return std::get<ProjectionType>(*r);
+    auto proj_iterator = find_elem<ProjectionType, AllProjectionVariants>(projection_uid, projections_);
+    if (proj_iterator != projections_.end()) return std::get<ProjectionType>(*proj_iterator);
     throw std::runtime_error("Can't find projection!");
 }
 

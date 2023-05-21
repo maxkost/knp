@@ -93,6 +93,9 @@ TEST(SingleThreadCpuSuite, NeuronsGettingTest)
     TestingBack backend;
 
     auto s_neurons = backend.get_supported_neurons();
+
+    ASSERT_GE(s_neurons.size(), 1);
+    ASSERT_EQ(s_neurons[0], "knp::neuron_traits::BLIFATNeuron");
 }
 
 
@@ -101,4 +104,7 @@ TEST(SingleThreadCpuSuite, SynapsesGettingTest)
     TestingBack backend;
 
     auto s_synapses = backend.get_supported_synapses();
+
+    ASSERT_GE(s_synapses.size(), 1);
+    ASSERT_EQ(s_synapses[0], "knp::synapse_traits::DeltaSynapse");
 }

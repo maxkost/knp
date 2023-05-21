@@ -14,6 +14,15 @@
 namespace knp::framework
 {
 
-void ModelExecutor::run() {}
+void ModelExecutor::run()
+{
+    const auto &network = model_.get_network();
+
+    for (const auto &population = network.begin_populations(); population != network.end_populations();
+         /*++population*/)
+    {
+        // backend_->
+    }
+}
 
 }  // namespace knp::framework

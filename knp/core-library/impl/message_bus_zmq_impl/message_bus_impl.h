@@ -39,6 +39,9 @@ public:
     [[nodiscard]] MessageEndpoint create_endpoint();
 
 private:
+    bool remove_id(const zmq::recv_result_t &recv_result);
+
+private:
     /**
      * @brief Router socket address.
      */

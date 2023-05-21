@@ -75,10 +75,7 @@ void Backend::select_devices(const std::set<UID>& uids)
             devices_.push_back(std::move(device));
             return;
         }
-        else
-        {
-            SPDLOG_TRACE("Device with UID {} was not selected", std::string(device->get_uid()));
-        }
+        SPDLOG_TRACE("Device with UID {} was not selected", std::string(device->get_uid()));
     }
 
     if (uids.size() != devices_.size())

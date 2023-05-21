@@ -26,7 +26,7 @@ class MessageEndpointConstructible : public knp::core::MessageEndpoint
 public:
     explicit MessageEndpointConstructible(zmq::socket_t &&sub_socket, zmq::socket_t &&pub_socket)
     {
-        impl_ = std::move(std::make_unique<MessageEndpointImpl>(std::move(sub_socket), std::move(pub_socket)));
+        impl_ = std::make_unique<MessageEndpointImpl>(std::move(sub_socket), std::move(pub_socket));
     }
 };
 
@@ -48,6 +48,19 @@ MessageBus::MessageBusImpl::MessageBusImpl()
     SPDLOG_DEBUG("Publish socket binding to {}", publish_sock_address_);
     publish_socket_.bind(publish_sock_address_);
     // zmq::proxy(router_socket_, publish_socket_);
+}
+
+
+bool MessageBus::MessageBusImpl::remove_id(const zmq::recv_result_t &recv_result)
+{
+    // TODO: Remove this.
+    if (recv_result.value() == 5)
+    {
+        SPDLOG_TRACE("ID was received...");
+        return true;
+    }
+
+    return false;
 }
 
 
@@ -83,12 +96,7 @@ bool MessageBus::MessageBusImpl::step()
             return false;
         }
 
-        // TODO: Remove this.
-        if (recv_result.value() == 5)
-        {
-            SPDLOG_TRACE("ID was received...");
-            return true;
-        }
+        if (remove_id(recv_result)) return true;
 
         SPDLOG_DEBUG("Data was received, bus will re-send the message");
         // send_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.

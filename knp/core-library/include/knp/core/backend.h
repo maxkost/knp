@@ -125,6 +125,10 @@ public:
 
 protected:
     /**
+     * @brief Backend default constructor.
+     */
+    Backend() = default;
+    /**
      * @brief Initialize backend before starting network execution.
      */
     virtual void init() = 0;

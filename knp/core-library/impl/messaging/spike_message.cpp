@@ -23,10 +23,10 @@ std::ostream &operator<<(std::ostream &stream, const SpikeMessage &msg)
 
 std::istream &operator>>(std::istream &stream, SpikeMessage &msg)
 {
-    size_t n = 0;
-    stream >> msg.header_.sender_uid_ >> msg.header_.send_time_ >> n;
-    msg.neuron_indexes_.resize(n);
-    for (size_t i = 0; i < n; ++i)
+    size_t neurons_count = 0;
+    stream >> msg.header_.sender_uid_ >> msg.header_.send_time_ >> neurons_count;
+    msg.neuron_indexes_.resize(neurons_count);
+    for (size_t i = 0; i < neurons_count; ++i)
     {
         stream >> msg.neuron_indexes_[i];
     }
@@ -58,11 +58,11 @@ SpikeMessage unpack(const marshal::SpikeMessage *s_msg)
     SPDLOG_TRACE("Unpacking spike message FlatBuffers class");
     const marshal::MessageHeader *const s_msg_header{s_msg->header()};
 
-    UID u1{false};
-    std::copy(s_msg_header->sender_uid().data()->begin(), s_msg_header->sender_uid().data()->end(), u1.tag.data);
+    UID uid1{false};
+    std::copy(s_msg_header->sender_uid().data()->begin(), s_msg_header->sender_uid().data()->end(), uid1.tag.data);
 
     return SpikeMessage{
-        {u1, s_msg_header->send_time()}, {s_msg->neuron_indexes()->begin(), s_msg->neuron_indexes()->end()}};
+        {uid1, s_msg_header->send_time()}, {s_msg->neuron_indexes()->begin(), s_msg->neuron_indexes()->end()}};
 }
 
 
