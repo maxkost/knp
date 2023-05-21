@@ -31,7 +31,7 @@ public:
     typedef std::shared_ptr<core::Backend>(BackendCreateFunction)();
 
 protected:
-    std::function<BackendCreateFunction> make_creator(const std::filesystem::path &p);
+    std::function<BackendCreateFunction> make_creator(const std::filesystem::path &backend_path);
 
 private:
     // std::filesystem::path doesn't work on any compilers.

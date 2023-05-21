@@ -51,19 +51,6 @@ MessageBus::MessageBusImpl::MessageBusImpl()
 }
 
 
-bool MessageBus::MessageBusImpl::remove_id(const zmq::recv_result_t &recv_result)
-{
-    // TODO: Remove this.
-    if (recv_result.value() == 5)
-    {
-        SPDLOG_TRACE("ID was received...");
-        return true;
-    }
-
-    return false;
-}
-
-
 bool MessageBus::MessageBusImpl::step()
 {
     zmq::message_t message;
@@ -96,7 +83,7 @@ bool MessageBus::MessageBusImpl::step()
             return false;
         }
 
-        if (remove_id(recv_result)) return true;
+        if (isit_id(recv_result)) return true;
 
         SPDLOG_DEBUG("Data was received, bus will re-send the message");
         // send_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
