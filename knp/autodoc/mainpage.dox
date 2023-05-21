@@ -24,6 +24,8 @@ For information on the platform concepts and architecture, installation instruct
 
 \section thirdparty Information about third-party code
 
+Information about third-party code is contained in the file legal_notices.txt located in the application installation folder (in the 'legal' subfolder).
+
 \section trademark Trademark notices
 
 Registered trademarks and service marks are the property of their respective owners.
