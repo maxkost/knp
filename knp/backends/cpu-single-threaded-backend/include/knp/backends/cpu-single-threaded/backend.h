@@ -36,17 +36,21 @@ public:
     using SupportedProjections = boost::mp11::mp_transform<knp::core::Projection, SupportedSynapses>;
     /**
      * @brief Population variant that contains any population type specified in `SupportedPopulations`.
-     * @details `PopulationVariants` takes the value of `std::variant<PopulationType_1,..., PopulationType_n>`, where `PopulationType_[1..n]` is the population type specified in `SupportedPopulations`. 
-     * \n For example, if `SupportedPopulations` containes BLIFATNeuron and IzhikevichNeuron types, then `PopulationVariants = std::variant<BLIFATNeuron, IzhikevichNeuron>`. 
-     * \n `PopulationVariants` retains the same order of message types as defined in `SupportedPopulations`.
+     * @details `PopulationVariants` takes the value of `std::variant<PopulationType_1,..., PopulationType_n>`, where
+     * `PopulationType_[1..n]` is the population type specified in `SupportedPopulations`. \n For example, if
+     * `SupportedPopulations` containes BLIFATNeuron and IzhikevichNeuron types, then `PopulationVariants =
+     * std::variant<BLIFATNeuron, IzhikevichNeuron>`. \n `PopulationVariants` retains the same order of message types as
+     * defined in `SupportedPopulations`.
      * @see ALL_NEURONS.
      */
     using PopulationVariants = boost::mp11::mp_rename<SupportedPopulations, std::variant>;
     /**
      * @brief Projection variant that contains any projection type specified in `SupportedProjections`.
-     * @details `ProjectionVariants` takes the value of `std::variant<ProjectionType_1,..., ProjectionType_n>`, where `ProjectionType_[1..n]` is the projection type specified in `SupportedProjections`. 
-     * \n For example, if `SupportedProjections` containes DeltaSynapse and AdditiveSTDPSynapse types, then `ProjectionVariants = std::variant<DeltaSynapse, AdditiveSTDPSynapse>`. 
-     * \n `ProjectionVariants` retains the same order of message types as defined in `SupportedProjections`.
+     * @details `ProjectionVariants` takes the value of `std::variant<ProjectionType_1,..., ProjectionType_n>`, where
+     * `ProjectionType_[1..n]` is the projection type specified in `SupportedProjections`. \n For example, if
+     * `SupportedProjections` containes DeltaSynapse and AdditiveSTDPSynapse types, then `ProjectionVariants =
+     * std::variant<DeltaSynapse, AdditiveSTDPSynapse>`. \n `ProjectionVariants` retains the same order of message types
+     * as defined in `SupportedProjections`.
      * @see ALL_SYNAPSES.
      */
     using ProjectionVariants = boost::mp11::mp_rename<SupportedProjections, std::variant>;
@@ -59,12 +63,26 @@ private:
     };
 
 public:
+    /**
+     * @brief Type of the container contains populations.
+     */
     using PopulationContainer = std::vector<PopulationVariants>;
+    /**
+     * @brief Type of the container contains projections.
+     */
     using ProjectionContainer = std::vector<ProjectionWrapper>;
 
     // TODO: Make custom iterators.
+
+    /**
+     * Populations iterator types.
+     */
     using PopulationIterator = PopulationContainer::iterator;
     using PopulationConstIterator = PopulationContainer::const_iterator;
+
+    /**
+     * Projections iterator types.
+     */
     using ProjectionIterator = ProjectionContainer::iterator;
     using ProjectionConstIterator = ProjectionContainer::const_iterator;
 
@@ -76,18 +94,18 @@ public:
 
 public:
     /**
-     * @brief plasticity_supported true if plasticity supported.
-     * @return plasticiy supported flag.
+     * @brief Define if plasticity is supported.
+     * @return true if plasticity is supported, false if plasticity is not supported.
      */
     [[nodiscard]] bool plasticity_supported() const override { return true; }
     /**
-     * @brief get_supported_neurons return supported neurons names.
-     * @return vector with supported neurons names.
+     * @brief Get type names of supported neurons.
+     * @return vector of supported neuron type names.
      */
     [[nodiscard]] std::vector<std::string> get_supported_neurons() const override;
     /**
-     * @brief get_supported_synapses return supported synapses names.
-     * @return vector with supported synapses names.
+     * @brief Get type names of supported synapses.
+     * @return vector of supported synapse type names.
      */
     [[nodiscard]] std::vector<std::string> get_supported_synapses() const override;
 
@@ -106,23 +124,32 @@ public:
 
 public:
     /**
-     * @brief begin_populations return iterator for populations loaded in backend.
-     * @return iterator.
+     * @brief Iterate populations loaded to backend.
+     * @return population iterator.
      */
     PopulationIterator begin_populations();
+
+    /**
+     * @brief Iterate populations loaded to backend.
+     * @return constant population iterator.
+     */
     PopulationConstIterator begin_populations() const;
     /**
-     * @brief end_populations return finsh iterator for populations.
+     * @brief end_populations return finish iterator for populations.
      * @return iterator.
      */
     PopulationIterator end_populations();
     PopulationConstIterator end_populations() const;
 
     /**
-     * @brief begin_projections return iterator for projections loaded in backend.
-     * @return iterator.
+     * @brief Iterate projections loaded to backend.
+     * @return projection iterator.
      */
     ProjectionIterator begin_projections();
+    /**
+     * @brief Iterate projections loaded to backend.
+     * @return constant projection iterator.
+     */
     ProjectionConstIterator begin_projections() const;
     /**
      * @brief end_projections return finish iterator for projections.
@@ -171,7 +198,7 @@ public:
 
 public:
     /**
-     * @brief SingleThreadedCPUBackend default backend constructor.
+     * @brief Default constructor for single-threaded CPU backend.
      */
     SingleThreadedCPUBackend();
 
@@ -188,7 +215,7 @@ protected:
      * @brief Calculate the projection of Delta synapses.
      * @note Projection will be changed during calculation.
      * @param projection projection of Delta synapses to calculate.
-     * @param message_queue message queue for the projection.
+     * @param message_queue message queue to send to projection for calculation.
      */
     void calculate_projection(
         knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,

@@ -48,18 +48,18 @@ public:
 
 public:
     /**
-     * @brief plasticity_supported true if plasticity supported.
-     * @return plasticiy supported flag.
+     * @brief Define if plasticity is supported.
+     * @return true if plasticity is supported, false if plasticity is not supported.
      */
     [[nodiscard]] virtual bool plasticity_supported() const = 0;
     /**
-     * @brief get_supported_neurons return supported neurons names.
-     * @return vector with supported neurons names.
+     * @brief Get type names of supported neurons.
+     * @return vector of supported neuron type names.
      */
     [[nodiscard]] virtual std::vector<std::string> get_supported_neurons() const = 0;
     /**
-     * @brief get_supported_synapses return supported synapses names.
-     * @return vector with supported synapses names.
+     * @brief Get type names of supported synapses.
+     * @return vector of supported synapse type names.
      */
     [[nodiscard]] virtual std::vector<std::string> get_supported_synapses() const = 0;
 
@@ -78,7 +78,8 @@ public:
 
 public:
     /**
-     * @brief Get a list of devices supported by the backend.
+     * @brief Get a list of devices on which the backend runs a network.
+     * @note Constant method.
      * @return list of devices.
      * @see Device.
      */
@@ -117,18 +118,18 @@ public:
 
 public:
     /**
-     * @brief running return network run execution status.
-     * @return true if backend started.
+     * @brief Get network execution status.
+     * @return true if backend is initiated, false if backend is not initiated.
      */
     bool running() const { return started_; }
 
 protected:
     /**
-     * @brief Init backend before starting network execution.
+     * @brief Initialize backend before starting network execution.
      */
     virtual void init() = 0;
     /**
-     * @brief uninit set uninitialized state in the backend.
+     * @brief set uninitialized state in the backend.
      */
     void uninit();
 
