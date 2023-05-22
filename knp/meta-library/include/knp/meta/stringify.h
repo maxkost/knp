@@ -25,6 +25,7 @@ namespace knp::meta
  * @brief Template used to compare two arbitrary types at the compile stage.
  * @tparam T1 first arbitrary type to compare.
  * @tparam T2 second arbitrary type to compare.
+ * @result std::integral_constant with true or false value.
  */
 template <class T1, class T2>
 using mp_neq = boost::mp11::mp_bool<T1::value != T2::value>;
@@ -33,7 +34,7 @@ using mp_neq = boost::mp11::mp_bool<T1::value != T2::value>;
  * @brief Get types from the global type list that are used in the local type list.
  * @tparam AllList global list of types.
  * @tparam L local list of types (subset of AllList).
- * @return type list.
+ * @result type list.
  */
 template <class AllList, class L>
 using mp_flt = boost::mp11::mp_filter_q<boost::mp11::mp_bind_front<mp_neq, boost::mp11::mp_size<AllList>>, L>;
