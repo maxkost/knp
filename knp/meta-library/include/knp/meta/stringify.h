@@ -22,7 +22,7 @@ namespace knp::meta
 {
 
 /**
- * @brief Template used to compare two arbitrary types at the compilation stage.
+ * @brief Template used to compare two arbitrary types at the compile stage.
  * @tparam T1 first arbitrary type to compare.
  * @tparam T2 second arbitrary type to compare.
  */
