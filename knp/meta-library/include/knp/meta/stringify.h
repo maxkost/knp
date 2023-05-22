@@ -22,27 +22,27 @@ namespace knp::meta
 {
 
 /**
- * @brief Template "not equal" function.
- * @tparam T1 first type to compare.
- * @tparam T2 second type to compare.
+ * @brief Template used to compare two arbitrary types at the compilation stage.
+ * @tparam T1 first arbitrary type to compare.
+ * @tparam T2 second arbitrary type to compare.
  */
 template <class T1, class T2>
 using mp_neq = boost::mp11::mp_bool<T1::value != T2::value>;
 
 /**
- * @brief Get types from the global list only contained in the local list.
- * @tparam AllList global types list.
- * @tparam L local types list.
- * @result types list.
+ * @brief Get types from the global type list that are used in the local type list.
+ * @tparam AllList global list of types.
+ * @tparam L local list of types (subset of AllList).
+ * @return type list.
  */
 template <class AllList, class L>
 using mp_flt = boost::mp11::mp_filter_q<boost::mp11::mp_bind_front<mp_neq, boost::mp11::mp_size<AllList>>, L>;
 
 /**
- * @brief Get type indexes from the global list which contained in the local list.
- * @tparam AllList global types list.
- * @tparam L local types list.
- * @result indexes array.
+ * @brief Get indexes of types from the global type list that are used in the local type list.
+ * @tparam AllList global list of types.
+ * @tparam L local list of types.
+ * @return array of type indexes.
  */
 template <class AllList, class L>
 using mp_supported_indexes =
@@ -61,11 +61,11 @@ using mp_supported_indexes =
         BOOST_PP_SEQ_ENUM(BOOST_PP_SEQ_FOR_EACH(KNP_MAKE_TUPLE_INTERNAL, "", BOOST_PP_VARIADIC_TO_SEQ(tuple_elems))));
 
 /**
- * @brief Return supported type names (i.e. of the neurons and synapses).
- * @tparam AllTypes global types list.
- * @tparam SupportedTypes local types list.
- * @tparam Names container type. Doesn't necessary. Will be derived automatically.
- * @result vector of strings.
+ * @brief Get names of supported object types.
+ * @tparam AllTypes global list of types.
+ * @tparam SupportedTypes local list of types.
+ * @tparam Names container type (automatically derived if not specified).
+ * @result vector of type names.
  */
 template <typename AllTypes, typename SupportedTypes, typename NamesType>
 std::vector<std::string> get_supported_type_names(const NamesType &type_names)

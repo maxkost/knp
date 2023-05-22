@@ -78,12 +78,18 @@ public:
      * @brief Types of population iterators.
      */
     using PopulationIterator = PopulationContainer::iterator;
+    /**
+     * @brief Types of constant population iterators.
+     */
     using PopulationConstIterator = PopulationContainer::const_iterator;
 
     /**
      * @brief Types of projection iterators.
      */
     using ProjectionIterator = ProjectionContainer::iterator;
+    /**
+     * @brief Types of constant projection iterators.
+     */
     using ProjectionConstIterator = ProjectionContainer::const_iterator;
 
 public:
