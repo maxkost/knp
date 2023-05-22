@@ -91,6 +91,12 @@ public:
      * @see Device.
      */
     std::vector<std::unique_ptr<Device>> &get_current_devices() { return devices_; }
+    /**
+     * @brief Get a list of devices on which the backend runs a network.
+     * @note Constant method.
+     * @return list of devices.
+     * @see Device.
+     */
     const std::vector<std::unique_ptr<Device>> &get_current_devices() const { return devices_; }
 
     /**

@@ -13,20 +13,24 @@
 
 #include <vector>
 
+
 using DeltaProjection = knp::core::Projection<knp::synapse_traits::DeltaSynapse>;
 using BLIFATPopulation = knp::core::Population<knp::neuron_traits::BLIFATNeuron>;
 using Population = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::PopulationVariants;
 using Projection = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::ProjectionVariants;
+
 
 // Create an input projection
 DeltaProjection::SynapseGenerator input_projection_gen = [](size_t index) -> std::optional<DeltaProjection::Synapse> {
     return DeltaProjection::Synapse{{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};
 };
 
+
 // Create a loop projection
 DeltaProjection::SynapseGenerator synapse_generator = [](size_t index) -> std::optional<DeltaProjection::Synapse> {
     return DeltaProjection::Synapse{{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};
 };
+
 
 // Create population
 auto neuron_generator = [](size_t index)
