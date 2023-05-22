@@ -141,10 +141,14 @@ public:
      */
     PopulationConstIterator begin_populations() const;
     /**
-     * @brief end_populations return finish iterator for populations.
+     * @brief Get an iterator pointing to the last element of the population.
      * @return iterator.
      */
     PopulationIterator end_populations();
+    /**
+     * @brief Get a constant iterator pointing to the last element of the population.
+     * @return iterator.
+     */
     PopulationConstIterator end_populations() const;
 
     /**
@@ -158,10 +162,14 @@ public:
      */
     ProjectionConstIterator begin_projections() const;
     /**
-     * @brief end_projections return finish iterator for projections.
+     * @brief Get an iterator pointing to the last element of the projection.
      * @return iterator.
      */
     ProjectionIterator end_projections();
+    /**
+     * @brief Get a constant iterator pointing to the last element of the projection.
+     * @return iterator.
+     */
     ProjectionConstIterator end_projections() const;
 
 public:
