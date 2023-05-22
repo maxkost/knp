@@ -78,7 +78,7 @@ public:
 
 public:
     /**
-     * @brief Get a list of devices on which the backend runs a network.
+     * @brief Get a list of devices supported by the backend.
      * @note Constant method.
      * @return list of devices.
      * @see Device.
@@ -133,7 +133,7 @@ protected:
      */
     virtual void init() = 0;
     /**
-     * @brief set uninitialized state in the backend.
+     * @brief Set backend to the uninitialized state.
      */
     void uninit();
 

@@ -64,24 +64,24 @@ private:
 
 public:
     /**
-     * @brief Type of the container contains populations.
+     * @brief Type of the container that contains populations.
      */
     using PopulationContainer = std::vector<PopulationVariants>;
     /**
-     * @brief Type of the container contains projections.
+     * @brief Type of the container that contains projections.
      */
     using ProjectionContainer = std::vector<ProjectionWrapper>;
 
     // TODO: Make custom iterators.
 
     /**
-     * Populations iterator types.
+     * @brief Types of population iterators.
      */
     using PopulationIterator = PopulationContainer::iterator;
     using PopulationConstIterator = PopulationContainer::const_iterator;
 
     /**
-     * Projections iterator types.
+     * @brief Types of projection iterators.
      */
     using ProjectionIterator = ProjectionContainer::iterator;
     using ProjectionConstIterator = ProjectionContainer::const_iterator;
@@ -203,6 +203,9 @@ public:
     SingleThreadedCPUBackend();
 
 protected:
+    /**
+     * @copydoc Backend
+     */
     void init() override;
 
     /**
