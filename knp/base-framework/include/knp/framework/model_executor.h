@@ -11,6 +11,7 @@
 #include <knp/framework/model.h>
 
 #include <filesystem>
+#include <memory>
 
 
 /**
@@ -33,7 +34,7 @@ public:
     ModelExecutor(knp::framework::Model &model, const std::filesystem::path backend_path)
         : backend_loader_(), model_(model)
     {
-        backend_loader_.load(backend_path);
+        backend_ = backend_loader_.load(backend_path);
     }
 
 public:
@@ -45,6 +46,7 @@ public:
 private:
     knp::core::BaseData base_;
     knp::framework::BackendLoader backend_loader_;
+    std::shared_ptr<core::Backend> backend_;
     knp::framework::Model &model_;
 };
 

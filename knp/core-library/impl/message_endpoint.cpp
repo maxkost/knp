@@ -12,6 +12,9 @@
 #include <fstream>
 #include <memory>
 
+// sleep_for.
+#include <thread>
+
 #include <boost/preprocessor.hpp>
 
 #include "message_bus_zmq_impl/message_endpoint_impl.h"
@@ -22,13 +25,13 @@ namespace knp::core
 
 UID MessageEndpoint::get_receiver_uid(const MessageEndpoint::SubscriptionVariant &subscription)
 {
-    return std::visit([](const auto &v) { return v.get_receiver_uid(); }, subscription);
+    return std::visit([](const auto &subscr) { return subscr.get_receiver_uid(); }, subscription);
 }
 
 
 messaging::MessageHeader get_header(const knp::core::messaging::MessageVariant &message)
 {
-    return std::visit([](const auto &v) { return v.header_; }, message);
+    return std::visit([](const auto &msg) { return msg.header_; }, message);
 }
 
 
@@ -67,13 +70,11 @@ Subscription<MessageType> &MessageEndpoint::subscribe(const UID &receiver, const
         sub.add_senders(senders);
         return sub;
     }
-    else
-    {
-        auto p = SubscriptionVariant{Subscription<MessageType>{receiver, senders}};
-        auto insert_res = subscriptions_.insert(std::make_pair(std::make_pair(index, receiver), p));
-        auto &sub = *const_cast<Subscription<MessageType> *>(&std::get<index>(insert_res.first->second));
-        return sub;
-    }
+
+    auto sub_variant = SubscriptionVariant{Subscription<MessageType>{receiver, senders}};
+    auto insert_res = subscriptions_.insert(std::make_pair(std::make_pair(index, receiver), sub_variant));
+    auto &sub = *const_cast<Subscription<MessageType> *>(&std::get<index>(insert_res.first->second));
+    return sub;
 }
 
 
@@ -155,10 +156,11 @@ bool MessageEndpoint::receive_message()
 }
 
 
-void MessageEndpoint::receive_all_messages()
+void MessageEndpoint::receive_all_messages(const std::chrono::milliseconds &sleep_duration)
 {
     while (receive_message())
     {
+        if (sleep_duration.count()) std::this_thread::sleep_for(sleep_duration);
     }
 }
 

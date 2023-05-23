@@ -22,7 +22,7 @@ The API Reference Guide for Kaspersky Neuromorphic Platform is intended for spec
 
 For information on the platform concepts and architecture, installation instructions and platform use cases, see <a href="https://stage.help.kaspersky.com/KNP/1.0/ru-RU/232786.htm">Kaspersky Neuromorphic Platform Online Help</a>.
 
-\section thirdparty Information about third-party code 
+\section thirdparty Information about third-party code
 
 Information about third-party code is contained in the file legal_notices.txt located in the application installation folder (in the 'legal' subfolder).
 

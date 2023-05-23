@@ -20,3 +20,5 @@ add_library(KNP::Synapse::Traits ALIAS "${PROJECT_NAME}")
 target_include_directories("${PROJECT_NAME}" INTERFACE
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+
+target_link_libraries("${PROJECT_NAME}" INTERFACE KNP::Meta)

@@ -13,6 +13,7 @@
 #include <knp/core/uid.h>
 
 #include <any>
+#include <chrono>
 #include <functional>
 #include <map>
 #include <memory>
@@ -41,12 +42,14 @@ public:
 
     /**
      * @brief Subscription variant that contains any subscription type specified in `AllSubscriptions`.
-     * @details `SubscriptionVariant` takes the value of `std::variant<SubscriptionType_1,..., SubscriptionType_n>`, where `SubscriptionType_[1..n]` is the subscription type specified in `AllSubscriptions`. 
-     * \n For example, if `AllSubscriptions` containes SpikeMessage and SynapticImpactMessage types, then `SubscriptionVariant = std::variant<SpikeMessage, SynapticImpactMessage>`. 
-     * \n `SubscriptionVariant` retains the same order of message types as defined in `AllSubscriptions`.
+     * @details `SubscriptionVariant` takes the value of `std::variant<SubscriptionType_1,..., SubscriptionType_n>`,
+     * where `SubscriptionType_[1..n]` is the subscription type specified in `AllSubscriptions`. \n For example, if
+     * `AllSubscriptions` containes SpikeMessage and SynapticImpactMessage types, then `SubscriptionVariant =
+     * std::variant<SpikeMessage, SynapticImpactMessage>`. \n `SubscriptionVariant` retains the same order of message
+     * types as defined in `AllSubscriptions`.
      * @see ALL_MESSAGES.
      */
-    
+
     using SubscriptionVariant = boost::mp11::mp_rename<AllSubscriptions, std::variant>;
 
 public:
@@ -60,7 +63,8 @@ public:
 
     /**
      * @brief Find index of an entity type in its variant.
-     * @details For example, you can use the method to find an index of a message type in a message variant or an index of a subscription type in a subscription variant. 
+     * @details For example, you can use the method to find an index of a message type in a message variant or an index
+     * of a subscription type in a subscription variant.
      * @tparam Variant variant of one or more entity types.
      * @tparam Type entity type to search.
      */
@@ -133,8 +137,9 @@ public:
 
     /**
      * @brief Receive all messages that were sent to the endpoint.
+     * @param sleep_duration time interval in milliseconds between the moments of receiving messages.
      */
-    void receive_all_messages();
+    void receive_all_messages(const std::chrono::milliseconds &sleep_duration = std::chrono::milliseconds(0));
 
 public:
     /**
@@ -143,7 +148,6 @@ public:
     using SubscriptionContainer = std::map<std::pair<size_t, UID>, SubscriptionVariant>;
 
 protected:
-    
     class MessageEndpointImpl;
     /**
      * @brief Message endpoint implementation.

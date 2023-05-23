@@ -52,10 +52,10 @@ std::ostream &operator<<(std::ostream &stream, const SynapticImpactMessage &msg)
 
 std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg)
 {
-    size_t n = 0;
-    stream >> msg.header_ >> msg.postsynaptic_population_uid_ >> msg.presynaptic_population_uid_ >> n;
-    msg.impacts_.resize(n);
-    for (size_t i = 0; i < n; ++i)
+    size_t impacts_count = 0;
+    stream >> msg.header_ >> msg.postsynaptic_population_uid_ >> msg.presynaptic_population_uid_ >> impacts_count;
+    msg.impacts_.resize(impacts_count);
+    for (size_t i = 0; i < impacts_count; ++i)
     {
         stream >> msg.impacts_[i];
     }
@@ -73,11 +73,12 @@ std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg)
 
     std::transform(
         msg.impacts_.begin(), msg.impacts_.end(), std::back_inserter(impacts),
-        [](const auto &e)
+        [](const auto &msg_val)
         {
-            auto type = static_cast<knp::synapse_traits::marshal::OutputType>(e.synapse_type_);
+            auto type = static_cast<knp::synapse_traits::marshal::OutputType>(msg_val.synapse_type_);
             return knp::core::messaging::marshal::SynapticImpact{
-                e.connection_index_, e.impact_value_, type, e.presynaptic_neuron_index_, e.postsynaptic_neuron_index_};
+                msg_val.connection_index_, msg_val.impact_value_, type, msg_val.presynaptic_neuron_index_,
+                msg_val.postsynaptic_neuron_index_};
         });
 
     auto pre_synaptic_uid = marshal::UID{msg.presynaptic_population_uid_.tag.data};
@@ -107,9 +108,9 @@ SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg)
     UID sender_uid{false};
     UID presynaptic_uid{false};
     UID postsynaptic_uid{false};
-
     std::copy(
-        s_msg_header->sender_uid().data()->begin(), s_msg_header->sender_uid().data()->end(), sender_uid.tag.data);
+        s_msg_header->sender_uid().data()->begin(), s_msg_header->sender_uid().data()->end(),
+        sender_uid.tag.data);  // clang_sa_ignore [core.CallAndMessage]
     std::copy(
         s_msg->presynaptic_population_uid()->data()->begin(), s_msg->presynaptic_population_uid()->data()->end(),
         presynaptic_uid.tag.data);
@@ -122,12 +123,12 @@ SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg)
 
     std::transform(
         s_msg->impacts()->begin(), s_msg->impacts()->end(), std::back_inserter(impacts),
-        [](const auto &e)
+        [](const auto &msg_val)
         {
-            const auto type = static_cast<knp::synapse_traits::OutputType>(e->output_type());
+            const auto type = static_cast<knp::synapse_traits::OutputType>(msg_val->output_type());
             return SynapticImpact{
-                e->connection_index(), e->impact_value(), type, e->presynaptic_neuron_index(),
-                e->postsynaptic_neuron_index()};
+                msg_val->connection_index(), msg_val->impact_value(), type, msg_val->presynaptic_neuron_index(),
+                msg_val->postsynaptic_neuron_index()};
         });
 
     return SynapticImpactMessage{

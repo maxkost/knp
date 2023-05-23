@@ -17,20 +17,21 @@
 namespace knp::framework
 {
 
-std::function<BackendLoader::BackendCreateFunction> BackendLoader::make_creator(const std::filesystem::path &p)
+std::function<BackendLoader::BackendCreateFunction> BackendLoader::make_creator(
+    const std::filesystem::path &backend_path)
 {
-    auto creator_iter = creators_.find(p.string());
+    auto creator_iter = creators_.find(backend_path.string());
 
     if (creator_iter != creators_.end()) return creator_iter->second;
 
-    SPDLOG_INFO("Loading backend by path \"{}\"", p.string());
+    SPDLOG_INFO("Loading backend by path \"{}\"", backend_path.string());
 
     auto creator = boost::dll::import_alias<BackendCreateFunction>(
-        boost::filesystem::path(p), "create_knp_backend", boost::dll::load_mode::append_decorations);
+        boost::filesystem::path(backend_path), "create_knp_backend", boost::dll::load_mode::append_decorations);
 
     SPDLOG_DEBUG("Created backend creator...");
 
-    creators_[p.string()] = creator;
+    creators_[backend_path.string()] = creator;
 
     return creator;
 }

@@ -13,31 +13,43 @@
 
 #include <vector>
 
-using Backend = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend;
+
 using DeltaProjection = knp::core::Projection<knp::synapse_traits::DeltaSynapse>;
 using BLIFATPopulation = knp::core::Population<knp::neuron_traits::BLIFATNeuron>;
 using Population = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::PopulationVariants;
 using Projection = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::ProjectionVariants;
+
 
 // Create an input projection
 DeltaProjection::SynapseGenerator input_projection_gen = [](size_t index) -> std::optional<DeltaProjection::Synapse> {
     return DeltaProjection::Synapse{{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};
 };
 
+
 // Create a loop projection
-DeltaProjection::SynapseGenerator synapse_generator = [](size_t index) -> std::optional<DeltaProjection ::Synapse> {
+DeltaProjection::SynapseGenerator synapse_generator = [](size_t index) -> std::optional<DeltaProjection::Synapse> {
     return DeltaProjection::Synapse{{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};
 };
+
 
 // Create population
 auto neuron_generator = [](size_t index)
 { return knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>{}; };
 
 
+class TestingBack : public knp::backends::single_threaded_cpu::SingleThreadedCPUBackend
+{
+public:
+    TestingBack() = default;
+    void init() override { knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::init(); }
+};
+
+
 TEST(SingleThreadCpuSuite, SmallestNetwork)
 {
     // Create a single neuron network: input -> input_projection -> population <=> loop_projection
-    Backend backend;
+    TestingBack backend;
+
     BLIFATPopulation population{neuron_generator, 1};
     Projection loop_projection = DeltaProjection{population.get_uid(), population.get_uid(), synapse_generator, 1};
     Projection input_projection = DeltaProjection{knp::core::UID{false}, population.get_uid(), input_projection_gen, 1};
@@ -56,6 +68,9 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
     endpoint.subscribe<knp::core::messaging::SpikeMessage>(out_channel_uid, {population.get_uid()});
 
     std::vector<size_t> results;
+
+    backend.init();
+
     for (size_t step = 0; step < 20; ++step)
     {
         // Send inputs on steps 0, 5, 10, 15
@@ -74,4 +89,26 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
     // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
     const std::vector<size_t> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
     ASSERT_EQ(results, expected_results);
+}
+
+
+TEST(SingleThreadCpuSuite, NeuronsGettingTest)
+{
+    TestingBack backend;
+
+    auto s_neurons = backend.get_supported_neurons();
+
+    ASSERT_GE(s_neurons.size(), 1);
+    ASSERT_EQ(s_neurons[0], "knp::neuron_traits::BLIFATNeuron");
+}
+
+
+TEST(SingleThreadCpuSuite, SynapsesGettingTest)
+{
+    TestingBack backend;
+
+    auto s_synapses = backend.get_supported_synapses();
+
+    ASSERT_GE(s_synapses.size(), 1);
+    ASSERT_EQ(s_synapses[0], "knp::synapse_traits::DeltaSynapse");
 }

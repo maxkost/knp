@@ -20,6 +20,50 @@ Backend::~Backend()
 }
 
 
+void Backend::start()
+{
+    if (running()) return;
+
+    SPDLOG_INFO("Starting backend {}...", std::string(base_.uid_));
+
+    if (!initialized_)
+    {
+        init();
+        initialized_ = true;
+    }
+
+    started_ = true;
+
+    try
+    {
+        while (running()) step();
+    }
+    catch (...)
+    {
+        started_ = false;
+        throw;
+    }
+    SPDLOG_INFO("Backend {} stopped.", std::string(base_.uid_));
+}
+
+
+void Backend::stop()
+{
+    if (!running()) return;
+
+    SPDLOG_INFO("Stopping backend {}...", std::string(base_.uid_));
+    started_ = false;
+}
+
+
+void Backend::uninit()
+{
+    if (!initialized_) return;
+    stop();
+    initialized_ = false;
+}
+
+
 void Backend::select_devices(const std::set<UID>& uids)
 {
     for (auto&& device : get_devices())
@@ -31,10 +75,7 @@ void Backend::select_devices(const std::set<UID>& uids)
             devices_.push_back(std::move(device));
             return;
         }
-        else
-        {
-            SPDLOG_TRACE("Device with UID {} was not selected", std::string(device->get_uid()));
-        }
+        SPDLOG_TRACE("Device with UID {} was not selected", std::string(device->get_uid()));
     }
 
     if (uids.size() != devices_.size())
