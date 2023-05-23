@@ -63,9 +63,10 @@ using mp_supported_indexes =
 
 /**
  * @brief Get names of supported object types.
+ * @param type_names container (usually tuple) with type names.
  * @tparam AllTypes global list of types.
  * @tparam SupportedTypes local list of types.
- * @tparam Names container type (automatically derived if not specified).
+ * @tparam NamesType container type (automatically derived if not specified).
  * @result vector of type names.
  */
 template <typename AllTypes, typename SupportedTypes, typename NamesType>
