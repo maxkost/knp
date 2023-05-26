@@ -31,11 +31,15 @@ namespace knp::core
 class BOOST_SYMBOL_VISIBLE Backend
 {
 public:
+    
+    /**
+     * @brief Pure virtual backend destructor.
+    */
     virtual ~Backend() = 0;
 
 public:
     /**
-     * @brief Get the backend UID.
+     * @brief Get backend UID.
      * @return backend UID.
      */
     [[nodiscard]] const UID &get_uid() const { return base_.uid_; }
@@ -125,7 +129,7 @@ public:
 public:
     /**
      * @brief Get network execution status.
-     * @return true if backend is initiated, false if backend is not initiated.
+     * @return true if network is being executed, false if network is not being executed.
      */
     bool running() const { return started_; }
 
@@ -144,6 +148,10 @@ protected:
     void uninit();
 
 public:
+
+    /**
+     * @brief Message bus used by backend.
+    */
     MessageBus message_bus_;
 
 private:

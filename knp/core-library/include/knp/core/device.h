@@ -31,6 +31,10 @@ enum class DeviceType
 class Device
 {
 public:
+
+    /**
+     * @brief Device destructor. 
+    */
     virtual ~Device() = default;
 
 public:

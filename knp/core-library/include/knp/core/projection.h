@@ -241,6 +241,7 @@ public:
 
     /**
      * @brief Remove synapses according to a given criterion.
+     * @tparam Predicate functor that determines if the synapse must be deleted (derived automatically from `predicate` if not specified).
      * @param predicate functor that receives a synapse and returns true if the synapse must be deleted.
      * @return number of deleted synapses.
      */
@@ -297,7 +298,7 @@ public:
 
     /**
      * @brief Determine if the synapse weight change is locked.
-     * @return true if the synapse weight changes is locked; false if the synapse weight change is unlocked.
+     * @return true if the synapse weight change is locked, false if the synapse weight change is not locked.
      */
     bool is_locked() { return is_locked_; }
 
@@ -315,7 +316,7 @@ private:
     UID postsynaptic_uid_;
 
     /**
-     * @brief Return false if the weight change for synapses is locked.
+     * @brief Return false if the weight change for synapses is not locked.
      */
     bool is_locked_ = false;
 

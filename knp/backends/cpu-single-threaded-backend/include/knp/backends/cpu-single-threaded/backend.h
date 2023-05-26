@@ -25,14 +25,37 @@
 #include <boost/mp11.hpp>
 
 
+/**
+ * @brief Backend namespace.
+*/
 namespace knp::backends::single_threaded_cpu
 {
+
+/**
+ * @brief The SingleThreadedCPUBackend class is a definition of an interface to the single-threaded CPU backend.
+*/
 class SingleThreadedCPUBackend : public knp::core::Backend
 {
 public:
+
+    /**
+     * @brief List of neuron types supported by the single-threaded CPU backend.
+    */
     using SupportedNeurons = boost::mp11::mp_list<knp::neuron_traits::BLIFATNeuron>;
+
+    /**
+     * @brief List of synapse types supported by the single-threaded CPU backend.
+    */
     using SupportedSynapses = boost::mp11::mp_list<knp::synapse_traits::DeltaSynapse>;
+
+    /**
+     * @brief List of supported population types based on neuron types specified in `SupportedNeurons`.
+    */
     using SupportedPopulations = boost::mp11::mp_transform<knp::core::Population, SupportedNeurons>;
+
+    /**
+     * @brief List of supported projection types based on synapse types specified in `SupportedSynapses`.
+    */
     using SupportedProjections = boost::mp11::mp_transform<knp::core::Projection, SupportedSynapses>;
     /**
      * @brief Population variant that contains any population type specified in `SupportedPopulations`.
@@ -64,11 +87,11 @@ private:
 
 public:
     /**
-     * @brief Type of the container that contains populations.
+     * @brief Type of population container.
      */
     using PopulationContainer = std::vector<PopulationVariants>;
     /**
-     * @brief Type of the container that contains projections.
+     * @brief Type of projection container.
      */
     using ProjectionContainer = std::vector<ProjectionWrapper>;
 
@@ -93,6 +116,10 @@ public:
     using ProjectionConstIterator = ProjectionContainer::const_iterator;
 
 public:
+
+    /**
+     * @brief Destructor for single-threaded CPU backend.
+    */
     ~SingleThreadedCPUBackend() = default;
 
 public:
@@ -194,14 +221,18 @@ public:
     [[nodiscard]] std::vector<std::unique_ptr<knp::core::Device>> get_devices() const override;
 
 public:
+    /**
+     * @copydoc knp::core::Backend::step()
+     */
     void step() override;
 
     /**
-     * @brief Subscribe internal endpoint to messages. Needed to send messages into the network
-     * @tparam MessageType Message type
-     * @param receiver Receiving object UID
-     * @param senders a list of possible senders
-     * @return subscription
+     * @brief Subscribe internal endpoint to messages. 
+     * @details The method is used to get a subscription neccessary for receiving messages of the specified type.
+     * @tparam MessageType message type.
+     * @param receiver receiver UID. 
+     * @param senders list of possible sender UIDs.
+     * @return subscription.
      */
     template <typename MessageType>
     knp::core::Subscription<MessageType> &subscribe(
@@ -218,18 +249,18 @@ public:
 
 protected:
     /**
-     * @copydoc Backend
+     * @copydoc knp::core::Backend::init()
      */
     void init() override;
 
     /**
-     * @brief Calculate the population of BLIFAT neurons.
+     * @brief Calculate population of BLIFAT neurons.
      * @note Population will be changed during calculation.
      * @param population population of BLIFAT neurons to calculate.
      */
     void calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population);
     /**
-     * @brief Calculate the projection of Delta synapses.
+     * @brief Calculate projection of Delta synapses.
      * @note Projection will be changed during calculation.
      * @param projection projection of Delta synapses to calculate.
      * @param message_queue message queue to send to projection for calculation.

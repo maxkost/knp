@@ -15,11 +15,20 @@
 
 #include "type_traits.h"
 
-
+/**
+ * @brief Neuron traits namespace.
+*/
 namespace knp::neuron_traits
 {
+
+/**
+ * @brief BLIFAT neuron. Use as a template parameter only.
+ */
 struct BLIFATNeuron;
 
+/**
+ * @brief Structure for BLIFAT neuron defualt values.
+ */
 template <>
 struct default_values<BLIFATNeuron>
 {
@@ -29,12 +38,14 @@ struct default_values<BLIFATNeuron>
     constexpr static double min_potential = -1.0e9;
 };
 
-
+/**
+ * @brief Structure for BLIFAT neuron parameters.
+*/
 template <>
 struct neuron_parameters<BLIFATNeuron>
 {
     /**
-     * @brief The parameter takes the default value of number of steps before firing defined for a BLIFAT neuron.
+     * @brief The parameter takes the default value of `steps_before_firing` defined for a BLIFAT neuron.
      */
     std::size_t n_time_steps_since_last_firing_ = default_values<BLIFATNeuron>::steps_before_firing;
     double dynamic_threshold_ = 0.;
@@ -52,13 +63,21 @@ struct neuron_parameters<BLIFATNeuron>
     unsigned bursting_phase_ = 0;
 
     /**
-     * @brief value of 0 means that no bursting occurs at all.
+     * @brief Value of 0 means that no bursting occurs.
      */
     unsigned bursting_period_ = 0;
     double reflexive_weight_ = 0;
+
+    /**
+     * @brief The parameter takes the default value of `reverse_inhibitory_potential` defined for a BLIFAT neuron.
+     */
     double reversive_inhibitory_potential_ = default_values<BLIFATNeuron>::reverse_inhibitory_potential;
     unsigned absolute_refractory_period_ = 0;
     double potential_reset_value_ = 0.;
+
+    /**
+     * @brief The parameter takes the default value of `min_potential` defined for a BLIFAT neuron.
+     */
     double min_potential_ = default_values<BLIFATNeuron>::min_potential;
 };
 

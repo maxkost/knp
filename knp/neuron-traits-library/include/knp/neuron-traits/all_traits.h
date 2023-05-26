@@ -13,7 +13,9 @@
 
 #include "blifat.h"
 
-
+/**
+ * @brief Neuron traits namespace.
+*/
 namespace knp::neuron_traits
 {
 // Comma-separated list of neurons.

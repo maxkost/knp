@@ -13,7 +13,9 @@
 
 #include "delta.h"
 
-
+/**
+ * @brief Synapse traits namespace.
+*/
 namespace knp::synapse_traits
 {
 

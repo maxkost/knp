@@ -57,7 +57,7 @@ public:
 
 public:
     /**
-     * @brief Get the population UID.
+     * @brief Get population UID.
      * @return population UID.
      */
     [[nodiscard]] const UID &get_uid() const { return base_.uid_; }
@@ -150,6 +150,7 @@ public:
 public:
     /**
      * @brief Get parameter values of a neuron with the given index.
+     * @note Constant method.
      */
     const auto &operator[](const size_t index) const { return get_neuron_parameters(index); }
     /**

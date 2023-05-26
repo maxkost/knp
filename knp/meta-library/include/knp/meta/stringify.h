@@ -22,28 +22,26 @@ namespace knp::meta
 {
 
 /**
- * @brief Template used to compare two arbitrary types at the compile stage.
+ * @brief Template used to determine if two arbitrary types are not the same at the compile stage.
+ * @details `mp_neq` takes the value of `true` if the types are not the same, otherwise `mp_neq` takes the value of `false`.
  * @tparam T1 first arbitrary type to compare.
  * @tparam T2 second arbitrary type to compare.
- * @result std::integral_constant with true or false value.
  */
 template <class T1, class T2>
 using mp_neq = boost::mp11::mp_bool<T1::value != T2::value>;
 
 /**
- * @brief Get types from the global type list that are used in the local type list.
+ * @brief List of types from the global type list that are used in the local type list.
  * @tparam AllList global list of types.
- * @tparam L local list of types (subset of AllList).
- * @result type list.
+ * @tparam L local list of types (subset of `AllList`).
  */
 template <class AllList, class L>
 using mp_flt = boost::mp11::mp_filter_q<boost::mp11::mp_bind_front<mp_neq, boost::mp11::mp_size<AllList>>, L>;
 
 /**
- * @brief Get indexes of types from the global type list that are used in the local type list.
+ * @brief Index array for types from the global type list that are used in the local type list.
  * @tparam AllList global list of types.
- * @tparam L local list of types.
- * @return array of type indexes.
+ * @tparam L local list of types (subset of `AllList`).
  */
 template <class AllList, class L>
 using mp_supported_indexes =
@@ -63,11 +61,11 @@ using mp_supported_indexes =
 
 /**
  * @brief Get names of supported object types.
- * @param type_names container (usually tuple) with type names.
+ * @param type_names container (usually a tuple) of type names.
  * @tparam AllTypes global list of types.
  * @tparam SupportedTypes local list of types.
- * @tparam NamesType container type (automatically derived if not specified).
- * @result vector of type names.
+ * @tparam NamesType container type (automatically derived from `type_names` if not specified).
+ * @return vector of type names.
  */
 template <typename AllTypes, typename SupportedTypes, typename NamesType>
 std::vector<std::string> get_supported_type_names(const NamesType &type_names)

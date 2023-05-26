@@ -40,7 +40,7 @@ struct synapse_parameters<DeltaSynapse>
     float weight_;
 
     /**
-     * @brief Synaptic delay. Delay N means that a spike sent on step X will be received on step X+N.
+     * @brief Synaptic delay. Delay of `N` means that a spike sent on step `X` will be received on step `X + N`.
      */
     uint32_t delay_;
 

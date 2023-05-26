@@ -14,6 +14,9 @@
 #include <vector>
 
 
+/**
+ * @brief Device namespace.
+*/
 namespace knp::devices::cpu
 {
 
@@ -22,32 +25,53 @@ namespace knp::devices::cpu
 */
 class CpuPower;
 
+/**
+ * @brief The CPU class is a definition of an interface to the CPU device.
+*/
 class CPU : public knp::core::Device
 {
 public:
+
+    /**
+     * @brief CPU device constructor.
+    */
     CPU();
+
+    /**
+     * @brief CPU device destructor.
+    */
     ~CPU();
 
+    /**
+     * @brief Avoid copy assignement of a CPU device.
+    */
     CPU(const CPU &) = delete;
 
+    /**
+     * @brief CPU device move constructor.
+     */
     CPU(CPU &&);
+
+    /**
+     * @brief CPU device copy operator.
+    */
     CPU &operator=(CPU &&);
 
 public:
     /**
-     * @brief Get the device type.
+     * @brief Get device type.
      * @return device type.
      */
     [[nodiscard]] knp::core::DeviceType get_type() const override;
 
     /**
-     * @brief Get the device name.
+     * @brief Get device name.
      * @return device name in the arbitrary format.
      */
     [[nodiscard]] const std::string &get_name() const override;
 
     /**
-     * @brief Get the power consumption details for the device.
+     * @brief Get power consumption details for the device.
      * @return amount of consumed power.
      */
     [[nodiscard]] float get_power() const override;

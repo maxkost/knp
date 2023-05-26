@@ -35,8 +35,18 @@ struct SpikeMessage
     std::vector<uint32_t> neuron_indexes_;
 };
 
-
+/**
+ * @brief Send spike message to an output stream.
+ * @param stream output stream.
+ * @param msg spike message to send to the output stream.
+*/
 std::ostream &operator<<(std::ostream &stream, const SpikeMessage &msg);
+
+/**
+ * @brief Get spike message from an input stream.
+ * @param stream input stream.
+ * @param msg spike message to get from the input stream.
+*/
 std::istream &operator>>(std::istream &stream, SpikeMessage &msg);
 
 }  // namespace knp::core::messaging
