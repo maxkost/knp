@@ -18,6 +18,9 @@ option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development p
 if(NOT KNP_MAINTAINER_BUILD)
     execute_process(COMMAND pre-commit install
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+    if(ret AND NOT ret EQUAL 0)
+        message(FATAL_ERROR "Can't install pre-commit hooks!")
+    endif()
     execute_process(COMMAND pre-commit install -t commit-msg
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 endif()

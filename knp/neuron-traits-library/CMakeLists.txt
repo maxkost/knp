@@ -19,6 +19,8 @@ target_include_directories("${PROJECT_NAME}" INTERFACE
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
+target_link_libraries("${PROJECT_NAME}" INTERFACE KNP::Meta)
+
 #set_property(
 #    TARGET "${PROJECT_NAME}" PROPERTY
 #    EXPORT_NAME neuron_traits

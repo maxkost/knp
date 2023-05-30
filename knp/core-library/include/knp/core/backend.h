@@ -11,15 +11,17 @@
 #include <knp/core/device.h>
 #include <knp/core/message_bus.h>
 
+#include <atomic>
 #include <memory>
 #include <set>
+#include <string>
 #include <vector>
 
 #include <boost/config.hpp>
 
 /**
-* @brief Core library namespace.
-*/
+ * @brief Core library namespace.
+ */
 namespace knp::core
 {
 
@@ -29,11 +31,15 @@ namespace knp::core
 class BOOST_SYMBOL_VISIBLE Backend
 {
 public:
+    
+    /**
+     * @brief Pure virtual backend destructor.
+    */
     virtual ~Backend() = 0;
 
 public:
     /**
-     * @brief Get the backend UID.
+     * @brief Get backend UID.
      * @return backend UID.
      */
     [[nodiscard]] const UID &get_uid() const { return base_.uid_; }
@@ -46,17 +52,27 @@ public:
 
 public:
     /**
+     * @brief Define if plasticity is supported.
+     * @return true if plasticity is supported, false if plasticity is not supported.
+     */
+    [[nodiscard]] virtual bool plasticity_supported() const = 0;
+    /**
+     * @brief Get type names of supported neurons.
+     * @return vector of supported neuron type names.
+     */
+    [[nodiscard]] virtual std::vector<std::string> get_supported_neurons() const = 0;
+    /**
+     * @brief Get type names of supported synapses.
+     * @return vector of supported synapse type names.
+     */
+    [[nodiscard]] virtual std::vector<std::string> get_supported_synapses() const = 0;
+
+public:
+    /**
      * @brief Remove projections with given UIDs from the backend.
      * @param uids UIDs of projections to remove.
      */
     virtual void remove_projections(const std::vector<UID> &uids) = 0;
-
-    /**
-     * @brief Remove synapses of the projection with the given UID from the backend.
-     * @param projection_uid projection UID.
-     * @param indexes indexes of synapses to remove.
-     */
-    virtual void remove_synapses(const UID &projection_uid, const std::vector<size_t> &indexes) = 0;
 
     /**
      * @brief Remove populations with given UIDs from the backend.
@@ -64,16 +80,10 @@ public:
      */
     virtual void remove_populations(const std::vector<UID> &uids) = 0;
 
-    /**
-     * @brief Remove neurons of the population with the given UID from the backend.
-     * @param population_uid population UID.
-     * @param indexes indexes of neurons to remove.
-     */
-    void remove_neurons(const UID &population_uid, const std::vector<size_t> &indexes);
-
 public:
     /**
      * @brief Get a list of devices supported by the backend.
+     * @note Constant method.
      * @return list of devices.
      * @see Device.
      */
@@ -84,8 +94,14 @@ public:
      * @return list of devices.
      * @see Device.
      */
-    const std::vector<std::unique_ptr<Device>> &get_current_devices() const { return devices_; }
     std::vector<std::unique_ptr<Device>> &get_current_devices() { return devices_; }
+    /**
+     * @brief Get a list of devices on which the backend runs a network.
+     * @note Constant method.
+     * @return list of devices.
+     * @see Device.
+     */
+    const std::vector<std::unique_ptr<Device>> &get_current_devices() const { return devices_; }
 
     /**
      * @brief Select devices on which to run the backend.
@@ -111,10 +127,37 @@ public:
     virtual void step() = 0;
 
 public:
+    /**
+     * @brief Get network execution status.
+     * @return true if network is being executed, false if network is not being executed.
+     */
+    bool running() const { return started_; }
+
+protected:
+    /**
+     * @brief Backend default constructor.
+     */
+    Backend() = default;
+    /**
+     * @brief Initialize backend before starting network execution.
+     */
+    virtual void init() = 0;
+    /**
+     * @brief Set backend to the uninitialized state.
+     */
+    void uninit();
+
+public:
+
+    /**
+     * @brief Message bus used by backend.
+    */
     MessageBus message_bus_;
 
 private:
     BaseData base_;
+    std::atomic<bool> initialized_ = false;
+    std::atomic<bool> started_ = false;
     std::vector<std::unique_ptr<Device>> devices_;
 };
 

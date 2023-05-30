@@ -147,7 +147,7 @@ struct UID
 
 
 /**
- * @brief Send UID to an output  stream.
+ * @brief Send UID to an output stream.
  * @param s output stream.
  * @param uid UID to send to the output stream.
  * @return modified stream.

@@ -6,6 +6,10 @@
  */
 
 #pragma once
+
+/**
+ * @brief Synapse traits namespace.
+*/
 namespace knp::synapse_traits
 {
 // TODO: Improve descriptions.

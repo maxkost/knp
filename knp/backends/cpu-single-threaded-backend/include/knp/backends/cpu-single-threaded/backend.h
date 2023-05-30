@@ -11,10 +11,11 @@
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 #include <knp/devices/cpu.h>
-#include <knp/neuron-traits/blifat.h>
-#include <knp/synapse-traits/delta.h>
+#include <knp/neuron-traits/all_traits.h>
+#include <knp/synapse-traits/all_traits.h>
 
 #include <memory>
+#include <string>
 #include <utility>
 #include <variant>
 #include <vector>
@@ -24,28 +25,55 @@
 #include <boost/mp11.hpp>
 
 
+/**
+ * @brief Backend namespace.
+*/
 namespace knp::backends::single_threaded_cpu
 {
+
+/**
+ * @brief The SingleThreadedCPUBackend class is a definition of an interface to the single-threaded CPU backend.
+*/
 class SingleThreadedCPUBackend : public knp::core::Backend
 {
 public:
+
+    /**
+     * @brief List of neuron types supported by the single-threaded CPU backend.
+    */
     using SupportedNeurons = boost::mp11::mp_list<knp::neuron_traits::BLIFATNeuron>;
+
+    /**
+     * @brief List of synapse types supported by the single-threaded CPU backend.
+    */
     using SupportedSynapses = boost::mp11::mp_list<knp::synapse_traits::DeltaSynapse>;
+
+    /**
+     * @brief List of supported population types based on neuron types specified in `SupportedNeurons`.
+    */
     using SupportedPopulations = boost::mp11::mp_transform<knp::core::Population, SupportedNeurons>;
+
+    /**
+     * @brief List of supported projection types based on synapse types specified in `SupportedSynapses`.
+    */
     using SupportedProjections = boost::mp11::mp_transform<knp::core::Projection, SupportedSynapses>;
     /**
      * @brief Population variant that contains any population type specified in `SupportedPopulations`.
-     * @details `PopulationVariants` takes the value of `std::variant<PopulationType_1,..., PopulationType_n>`, where `PopulationType_[1..n]` is the population type specified in `SupportedPopulations`. 
-     * \n For example, if `SupportedPopulations` containes BLIFATNeuron and IzhikevichNeuron types, then `PopulationVariants = std::variant<BLIFATNeuron, IzhikevichNeuron>`. 
-     * \n `PopulationVariants` retains the same order of message types as defined in `SupportedPopulations`.
+     * @details `PopulationVariants` takes the value of `std::variant<PopulationType_1,..., PopulationType_n>`, where
+     * `PopulationType_[1..n]` is the population type specified in `SupportedPopulations`. \n
+     * For example, if `SupportedPopulations` containes BLIFATNeuron and IzhikevichNeuron types,
+     * then `PopulationVariants = std::variant<BLIFATNeuron, IzhikevichNeuron>`. \n
+     * `PopulationVariants` retains the same order of message types as defined in `SupportedPopulations`.
      * @see ALL_NEURONS.
      */
     using PopulationVariants = boost::mp11::mp_rename<SupportedPopulations, std::variant>;
     /**
      * @brief Projection variant that contains any projection type specified in `SupportedProjections`.
-     * @details `ProjectionVariants` takes the value of `std::variant<ProjectionType_1,..., ProjectionType_n>`, where `ProjectionType_[1..n]` is the projection type specified in `SupportedProjections`. 
-     * \n For example, if `SupportedProjections` containes DeltaSynapse and AdditiveSTDPSynapse types, then `ProjectionVariants = std::variant<DeltaSynapse, AdditiveSTDPSynapse>`. 
-     * \n `ProjectionVariants` retains the same order of message types as defined in `SupportedProjections`.
+     * @details `ProjectionVariants` takes the value of `std::variant<ProjectionType_1,..., ProjectionType_n>`, where
+     * `ProjectionType_[1..n]` is the projection type specified in `SupportedProjections`. \n
+     * For example, if `SupportedProjections` containes DeltaSynapse and AdditiveSTDPSynapse types,
+     * then `ProjectionVariants = std::variant<DeltaSynapse, AdditiveSTDPSynapse>`. \n
+     * `ProjectionVariants` retains the same order of message types as defined in `SupportedProjections`.
      * @see ALL_SYNAPSES.
      */
     using ProjectionVariants = boost::mp11::mp_rename<SupportedProjections, std::variant>;
@@ -53,22 +81,66 @@ public:
 private:
     struct ProjectionWrapper
     {
-        ProjectionVariants arg;
-        core::messaging::SynapticMessageQueue messages;
-    };
-
-    struct PopulationWrapper
-    {
-        PopulationVariants arg;
+        ProjectionVariants arg_;
+        core::messaging::SynapticMessageQueue messages_;
     };
 
 public:
-    // TODO: set protected (in testing purposes).
-    SingleThreadedCPUBackend();
+    /**
+     * @brief Type of population container.
+     */
+    using PopulationContainer = std::vector<PopulationVariants>;
+    /**
+     * @brief Type of projection container.
+     */
+    using ProjectionContainer = std::vector<ProjectionWrapper>;
+
+    // TODO: Make custom iterators.
+
+    /**
+     * @brief Types of population iterators.
+     */
+    using PopulationIterator = PopulationContainer::iterator;
+    /**
+     * @brief Types of constant population iterators.
+     */
+    using PopulationConstIterator = PopulationContainer::const_iterator;
+
+    /**
+     * @brief Types of projection iterators.
+     */
+    using ProjectionIterator = ProjectionContainer::iterator;
+    /**
+     * @brief Types of constant projection iterators.
+     */
+    using ProjectionConstIterator = ProjectionContainer::const_iterator;
+
+public:
+
+    /**
+     * @brief Destructor for single-threaded CPU backend.
+    */
     ~SingleThreadedCPUBackend() = default;
 
 public:
     static std::shared_ptr<SingleThreadedCPUBackend> create();
+
+public:
+    /**
+     * @brief Define if plasticity is supported.
+     * @return true if plasticity is supported, false if plasticity is not supported.
+     */
+    [[nodiscard]] bool plasticity_supported() const override { return true; }
+    /**
+     * @brief Get type names of supported neurons.
+     * @return vector of supported neuron type names.
+     */
+    [[nodiscard]] std::vector<std::string> get_supported_neurons() const override;
+    /**
+     * @brief Get type names of supported synapses.
+     * @return vector of supported synapse type names.
+     */
+    [[nodiscard]] std::vector<std::string> get_supported_synapses() const override;
 
 public:
     /**
@@ -85,17 +157,54 @@ public:
 
 public:
     /**
+     * @brief Iterate populations loaded to backend.
+     * @return population iterator.
+     */
+    PopulationIterator begin_populations();
+
+    /**
+     * @brief Iterate populations loaded to backend.
+     * @return constant population iterator.
+     */
+    PopulationConstIterator begin_populations() const;
+    /**
+     * @brief Get an iterator pointing to the last element of the population.
+     * @return iterator.
+     */
+    PopulationIterator end_populations();
+    /**
+     * @brief Get a constant iterator pointing to the last element of the population.
+     * @return iterator.
+     */
+    PopulationConstIterator end_populations() const;
+
+    /**
+     * @brief Iterate projections loaded to backend.
+     * @return projection iterator.
+     */
+    ProjectionIterator begin_projections();
+    /**
+     * @brief Iterate projections loaded to backend.
+     * @return constant projection iterator.
+     */
+    ProjectionConstIterator begin_projections() const;
+    /**
+     * @brief Get an iterator pointing to the last element of the projection.
+     * @return iterator.
+     */
+    ProjectionIterator end_projections();
+    /**
+     * @brief Get a constant iterator pointing to the last element of the projection.
+     * @return iterator.
+     */
+    ProjectionConstIterator end_projections() const;
+
+public:
+    /**
      * @brief Remove projections with given UIDs from the backend.
      * @param uids UIDs of projections to remove.
      */
     void remove_projections(const std::vector<knp::core::UID> &uids) override {}
-
-    /**
-     * @brief Remove synapses of the projection with the given UID from the backend.
-     * @param projection_uid projection UID.
-     * @param indexes indexes of synapses to remove.
-     */
-    void remove_synapses(const knp::core::UID &projection_uid, const std::vector<size_t> &indexes) override {}
 
     /**
      * @brief Remove populations with given UIDs from the backend.
@@ -112,14 +221,18 @@ public:
     [[nodiscard]] std::vector<std::unique_ptr<knp::core::Device>> get_devices() const override;
 
 public:
+    /**
+     * @copydoc knp::core::Backend::step()
+     */
     void step() override;
 
     /**
-     * @brief Subscribe internal endpoint to messages. Needed to send messages into the network
-     * @tparam MessageType Message type
-     * @param receiver Receiving object UID
-     * @param senders a list of possible senders
-     * @return subscription
+     * @brief Subscribe internal endpoint to messages. 
+     * @details The method is used to get a subscription neccessary for receiving messages of the specified type.
+     * @tparam MessageType message type.
+     * @param receiver receiver UID. 
+     * @param senders list of possible sender UIDs.
+     * @return subscription.
      */
     template <typename MessageType>
     knp::core::Subscription<MessageType> &subscribe(
@@ -128,33 +241,37 @@ public:
         return message_endpoint_.subscribe<MessageType>(receiver, senders);
     }
 
+public:
+    /**
+     * @brief Default constructor for single-threaded CPU backend.
+     */
+    SingleThreadedCPUBackend();
+
 protected:
-    void init();
+    /**
+     * @copydoc knp::core::Backend::init()
+     */
+    void init() override;
 
     /**
-     * @brief Calculate the population of BLIFAT neurons.
+     * @brief Calculate population of BLIFAT neurons.
      * @note Population will be changed during calculation.
      * @param population population of BLIFAT neurons to calculate.
-     * @param wrapper population wrapper
      */
-    void calculate_population(
-        knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, PopulationWrapper &wrapper);
+    void calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population);
     /**
-     * @brief Calculate the projection of Delta synapses.
+     * @brief Calculate projection of Delta synapses.
      * @note Projection will be changed during calculation.
      * @param projection projection of Delta synapses to calculate.
-     * @param wrapper projection wrapper
+     * @param message_queue message queue to send to projection for calculation.
      */
     void calculate_projection(
-        knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, ProjectionWrapper &wrapper);
+        knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
+        core::messaging::SynapticMessageQueue &message_queue);
 
 private:
-    template <typename TypeList, auto CalculateMethod, typename Container>
-    inline void calculator(Container &container);
-
-private:
-    std::vector<PopulationWrapper> populations_;
-    std::vector<ProjectionWrapper> projections_;
+    PopulationContainer populations_;
+    ProjectionContainer projections_;
     core::MessageEndpoint message_endpoint_;
     size_t step_ = 0;
 };

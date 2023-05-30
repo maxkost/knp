@@ -33,14 +33,14 @@ class TagMap
 {
 public:
     /**
-     * @brief Get the tag value by tag name.
+     * @brief Get tag value by tag name.
      * @param name tag name.
      * @return tag value.
      */
     [[nodiscard]] std::any &get_tag(const std::string &name) { return tags_[name]; }
 
     /**
-     * @brief Get the tag value by tag name and value type.
+     * @brief Get tag value by tag name and value type.
      * @tparam T tag value type.
      * @param name tag name.
      * @return tag value.

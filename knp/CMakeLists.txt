@@ -13,6 +13,7 @@ project(knp VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 # set(Boost_USE_STATIC_LIBS ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+add_subdirectory(meta-library)
 add_subdirectory(neuron-traits-library)
 add_subdirectory(synapse-traits-library)
 add_subdirectory(messaging)

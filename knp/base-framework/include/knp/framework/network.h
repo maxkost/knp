@@ -31,7 +31,19 @@ namespace knp::framework
 class Network
 {
 public:
+
+    /**
+     * @brief List of population types based on neuron types specified in `knp::neuron_traits::AllNeurons`.
+     * @details `AllPopulations` takes the value of `Population<NeuronType_1>, Population<NeuronType_2>, ..., Population<NeuronType_n>`, where `NeuronType_[1..n]` is the neuron type specified in `knp::neuron_traits::AllNeurons`.
+     * \n For example, if `knp::neuron_traits::AllNeurons` containes BLIFATNeuron and IzhikevichNeuron types, then `AllPopulations` = `Population<BLIFATNeuron>, Population<IzhikevichNeuron>`.
+    */
     using AllPopulations = boost::mp11::mp_transform<knp::core::Population, knp::neuron_traits::AllNeurons>;
+
+    /**
+     * @brief List of projection types based on synapse types specified in `knp::synapse_traits::AllSynapses`.
+     * @details `AllProjections` takes the value of `Projection<SynapseType_1>, Projection<SynapseType_2>, ..., Projection<SynapseType_n>`, where `SynapseType_[1..n]` is the synapse type specified in `knp::synapse_traits::AllSynapses`.
+     * \n For example, if `knp::synapse_traits::AllSynapses` containes DeltaSynapse and AdditiveSTDPSynapse types, then `AllProjections` = `Population<DeltaSynapse>, Population<AdditiveSTDPSynapse>`.
+    */
     using AllProjections = boost::mp11::mp_transform<knp::core::Projection, knp::synapse_traits::AllSynapses>;
 
     /**
@@ -52,15 +64,39 @@ public:
     using AllProjectionVariants = boost::mp11::mp_rename<AllProjections, std::variant>;
 
 public:
+
+    /**
+     * @brief Type of population container.
+     */
     using PopulationContainer = std::vector<AllPopulationVariants>;
+    /**
+     * @brief Type of projection container.
+     */
     using ProjectionContainer = std::vector<AllProjectionVariants>;
 
+    /**
+     * @brief Types of population iterators.
+     */
     using PopulationIterator = PopulationContainer::iterator;
+    /**
+     * @brief Types of constant population iterators.
+     */
     using PopulationConstIterator = PopulationContainer::const_iterator;
+
+    /**
+     * @brief Types of projection iterators.
+     */
     using ProjectionIterator = ProjectionContainer::iterator;
+    /**
+     * @brief Types of constant projection iterators.
+     */
     using ProjectionConstIterator = ProjectionContainer::const_iterator;
 
 public:
+
+    /**
+     * @brief Default network constructor.
+    */
     Network() = default;
 
 public:
@@ -71,22 +107,26 @@ public:
     void add_population(AllPopulationVariants &&population);
     /**
      * @brief Add a population to the network.
+     * @tparam PopulationType type of population to add (derived automatically from `population` if not specified).
      * @param population population to add.
      */
     template <typename PopulationType>
     void add_population(PopulationType &&population);
     /**
      * @brief Get a population with the given UID from the network.
+     * @tparam PopulationType type of population to get.
      * @param population_uid population UID.
-     * @throw std::logic_error if population is not found in the network.
+     * @throw `std::logic_error` if population is not found in the network.
      * @return population.
      */
     template <typename PopulationType>
     PopulationType &get_population(const knp::core::UID &population_uid);
     /**
      * @brief Get a population with the given UID from the network.
+     * @note Constant method.
+     * @tparam PopulationType type of population to get.
      * @param population_uid population UID.
-     * @throw std::logic_error if population is not found in the network.
+     * @throw `std::logic_error` if population is not found in the network.
      * @return population.
      */
     template <typename PopulationType>
@@ -105,22 +145,26 @@ public:
     void add_projection(AllProjectionVariants &&projection);
     /**
      * @brief Add a projection to the network.
+     * @tparam ProjectionType type of projection to add (derived automatically from `projection` if not specified).
      * @param projection projection to add.
      */
     template <typename ProjectionType>
     void add_projection(ProjectionType &&projection);
     /**
      * @brief Get a projection with the given UID from the network.
+     * @tparam ProjectionType type of projection to get.
      * @param projection_uid projection UID.
-     * @throw std::logic_error if projection is not found in the network.
+     * @throw `std::logic_error` if projection is not found in the network.
      * @return projection.
      */
     template <typename ProjectionType>
     ProjectionType &get_projection(const knp::core::UID &projection_uid);
     /**
      * @brief Get a projection with the given UID from the network.
+     * @note Constant method.
+     * @tparam ProjectionType type of projection to get.
      * @param projection_uid projection UID.
-     * @throw std::logic_error if projection is not found in the network.
+     * @throw `std::logic_error` if projection is not found in the network.
      * @return projection.
      */
     template <typename ProjectionType>

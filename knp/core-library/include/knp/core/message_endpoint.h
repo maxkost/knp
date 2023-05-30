@@ -13,6 +13,7 @@
 #include <knp/core/uid.h>
 
 #include <any>
+#include <chrono>
 #include <functional>
 #include <map>
 #include <memory>
@@ -48,7 +49,6 @@ public:
      * types as defined in `AllSubscriptions`.
      * @see ALL_MESSAGES.
      */
-
     using SubscriptionVariant = boost::mp11::mp_rename<AllSubscriptions, std::variant>;
 
 public:
@@ -71,9 +71,26 @@ public:
     static constexpr size_t get_type_index = boost::mp11::mp_find<Variant, Type>::value;
 
 public:
+    /**
+     * @brief Move constructor for message endpoints.
+     * @param endpoint endpoint to move.
+     */
     MessageEndpoint(MessageEndpoint &&endpoint);
+
+    /**
+     * @brief Default copy operator.
+     * @param endpoint endpoint to copy.
+     */
     MessageEndpoint &operator=(MessageEndpoint &&endpoint) = default;
+
+    /**
+     * @brief Avoid copy assignment of an endpoint.
+     */
     MessageEndpoint &operator=(MessageEndpoint &) = delete;
+
+    /**
+     * @brief Message endpoint destructor.
+     */
     virtual ~MessageEndpoint();
 
 public:
@@ -136,8 +153,9 @@ public:
 
     /**
      * @brief Receive all messages that were sent to the endpoint.
+     * @param sleep_duration time interval in milliseconds between the moments of receiving messages.
      */
-    void receive_all_messages();
+    void receive_all_messages(const std::chrono::milliseconds &sleep_duration = std::chrono::milliseconds(0));
 
 public:
     /**
@@ -153,6 +171,9 @@ protected:
     std::unique_ptr<MessageEndpointImpl> impl_;
 
 protected:
+    /**
+     * @brief Message endpoint default constructor.
+     */
     MessageEndpoint() = default;
 
 private:

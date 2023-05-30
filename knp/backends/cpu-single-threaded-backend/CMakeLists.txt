@@ -34,4 +34,4 @@ knp_add_library("${PROJECT_NAME}"
 add_library(KNP::Core::Backend::CPUSingleThreaded ALIAS "${PROJECT_NAME}")
 
 target_link_libraries("${PROJECT_NAME}" PRIVATE Boost::headers spdlog::spdlog_header_only)
-target_link_libraries("${PROJECT_NAME}" PUBLIC KNP::Core KNP::Devices::CPU KNP::Neuron::Traits KNP::Synapse::Traits)
+target_link_libraries("${PROJECT_NAME}" PUBLIC KNP::Core KNP::Devices::CPU)

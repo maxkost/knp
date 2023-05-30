@@ -115,7 +115,7 @@ public:
     [[nodiscard]] Synapse &operator[](size_t index) { return parameters_[index]; }
     /**
      * @brief Get parameter values of a synapse with the given index.
-     * @details Constant method. 
+     * @details Constant method.
      */
     [[nodiscard]] const Synapse &operator[](size_t index) const { return parameters_[index]; }
 
@@ -234,7 +234,14 @@ public:
     void remove_synapse(size_t index) { parameters_.erase(parameters_.begin() + index); }
 
     /**
+     * @brief Remove synapses with the given indexes from the projection.
+     * @param indexes indexes of synapses to remove.
+     */
+    void remove_synapses(const std::vector<size_t> &indexes) {}  // TODO: implement this.
+
+    /**
      * @brief Remove synapses according to a given criterion.
+     * @tparam Predicate functor that determines if the synapse must be deleted (derived automatically from `predicate` if not specified).
      * @param predicate functor that receives a synapse and returns true if the synapse must be deleted.
      * @return number of deleted synapses.
      */
@@ -291,7 +298,7 @@ public:
 
     /**
      * @brief Determine if the synapse weight change is locked.
-     * @return true if the synapse weight changes is locked; false if the synapse weight change is unlocked.
+     * @return true if the synapse weight change is locked, false if the synapse weight change is not locked.
      */
     bool is_locked() { return is_locked_; }
 
@@ -309,7 +316,7 @@ private:
     UID postsynaptic_uid_;
 
     /**
-     * @brief Return false if the weight change for synapses is locked.
+     * @brief Return false if the weight change for synapses is not locked.
      */
     bool is_locked_ = false;
 
