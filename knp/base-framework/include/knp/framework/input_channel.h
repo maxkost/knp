@@ -96,6 +96,7 @@ private:
 /**
  * @brief Connect input channel to a target object.
  * @param channel input channel.
+ * @param target_endpoint receiving endpoint.
  * @param receiver_uid object UID.
  * @note target object should be able to receive spikes.
  */
