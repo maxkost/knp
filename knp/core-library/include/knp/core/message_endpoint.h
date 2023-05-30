@@ -41,12 +41,14 @@ public:
 
     /**
      * @brief Subscription variant that contains any subscription type specified in `AllSubscriptions`.
-     * @details `SubscriptionVariant` takes the value of `std::variant<SubscriptionType_1,..., SubscriptionType_n>`, where `SubscriptionType_[1..n]` is the subscription type specified in `AllSubscriptions`. 
-     * \n For example, if `AllSubscriptions` containes SpikeMessage and SynapticImpactMessage types, then `SubscriptionVariant = std::variant<SpikeMessage, SynapticImpactMessage>`. 
-     * \n `SubscriptionVariant` retains the same order of message types as defined in `AllSubscriptions`.
+     * @details `SubscriptionVariant` takes the value of `std::variant<SubscriptionType_1,..., SubscriptionType_n>`,
+     * where `SubscriptionType_[1..n]` is the subscription type specified in `AllSubscriptions`. \n For example, if
+     * `AllSubscriptions` containes SpikeMessage and SynapticImpactMessage types, then `SubscriptionVariant =
+     * std::variant<SpikeMessage, SynapticImpactMessage>`. \n `SubscriptionVariant` retains the same order of message
+     * types as defined in `AllSubscriptions`.
      * @see ALL_MESSAGES.
      */
-    
+
     using SubscriptionVariant = boost::mp11::mp_rename<AllSubscriptions, std::variant>;
 
 public:
@@ -60,7 +62,8 @@ public:
 
     /**
      * @brief Find index of an entity type in its variant.
-     * @details For example, you can use the method to find an index of a message type in a message variant or an index of a subscription type in a subscription variant. 
+     * @details For example, you can use the method to find an index of a message type in a message variant or an index
+     * of a subscription type in a subscription variant.
      * @tparam Variant variant of one or more entity types.
      * @tparam Type entity type to search.
      */
@@ -70,7 +73,7 @@ public:
 public:
     MessageEndpoint(MessageEndpoint &&endpoint);
     MessageEndpoint &operator=(MessageEndpoint &&endpoint) = default;
-    MessageEndpoint &operator=(MessageEndpoint &endpoint) = delete;
+    MessageEndpoint &operator=(MessageEndpoint &) = delete;
     virtual ~MessageEndpoint();
 
 public:
@@ -143,7 +146,6 @@ public:
     using SubscriptionContainer = std::map<std::pair<size_t, UID>, SubscriptionVariant>;
 
 protected:
-    
     class MessageEndpointImpl;
     /**
      * @brief Message endpoint implementation.

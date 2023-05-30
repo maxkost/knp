@@ -5,12 +5,13 @@
  */
 #pragma once
 
-#include <knp/core/input_converter.h>
-
 #include <memory>
 #include <utility>
+#include <vector>
 
-namespace knp::core::input
+#include "input_converter.h"
+
+namespace knp::framework::input
 {
 /**
  * @brief Input channel class. It provides an object it's connected to with spikes.
@@ -24,7 +25,7 @@ public:
     /**
      * @brief Functor used for converting stream data to spikes.
      */
-    using DataConverter = std::function<messaging::SpikeData(std::istream &, size_t)>;
+    using DataConverter = std::function<core::messaging::SpikeData(std::istream &)>;
 
     /**
      * @brief Channel constructor.
@@ -35,41 +36,20 @@ public:
      * @param size input size.
      */
     InputChannel(
-        MessageEndpoint &endpoint, std::unique_ptr<std::istream> &&stream, DataConverter converter, UID channel_uid,
-        size_t size)
-        : endpoint_(endpoint),
-          stream_(std::move(stream)),
+        std::unique_ptr<std::istream> &&stream, core::MessageEndpoint &&endpoint, DataConverter converter,
+        core::UID channel_uid = core::UID{true})
+        : stream_(std::move(stream)),
+          endpoint_(std::move(endpoint)),
           converter_(std::move(converter)),
-          uid_(channel_uid),
-          size_(size)
+          uid_(channel_uid)
     {
     }
-
-    /**
-     * @brief Connect channel to a target object.
-     * @param receiver_uid object UID.
-     * @note target object should be able to receive spikes.
-     */
-    void connect(const UID &receiver_uid) { endpoint_.subscribe<messaging::SpikeMessage>(receiver_uid, {uid_}); }
-
-    /**
-     * @brief Change the channel data converter.
-     * @param converter
-     */
-    void set_converter(const DataConverter &converter) { converter_ = converter; }
-
-    /**
-     * @brief Sets a different input size for a channel.
-     * @param new_size new input size value.
-     * @note size value is a converter parameter, it might have different meanings for different converters.
-     */
-    void set_size(size_t new_size) { size_ = new_size; }
 
     /**
      * @brief Get channel UID.
      * @return channel UID.
      */
-    [[nodiscard]] const UID &get_uid() const { return uid_; }
+    [[nodiscard]] const core::UID &get_uid() const { return uid_; }
 
     /**
      * @brief Get stream.
@@ -82,26 +62,26 @@ public:
      * @return true if message was sent, false if no message sent.
      * @note throws exceptions if stream is set to throw.
      */
-    bool send(messaging::TimeType time)
+    bool send(core::messaging::TimeType time)
     {
-        messaging::SpikeData spikes = converter_(*stream_, size_);
+        core::messaging::SpikeData spikes = converter_(*stream_);
         if (spikes.empty()) return false;
 
-        messaging::SpikeMessage message{{uid_, time}, std::move(spikes)};
+        core::messaging::SpikeMessage message{{uid_, time}, std::move(spikes)};
         endpoint_.send_message(message);
         return true;
     }
 
 private:
     /**
-     * @brief A reference to the endpoint used by channel to send messages.
-     */
-    MessageEndpoint &endpoint_;
-
-    /**
      * @brief A reference to the stream from which to read data.
      */
     std::unique_ptr<std::istream> stream_;
+
+    /**
+     * @brief A reference to the endpoint used by channel to send messages.
+     */
+    core::MessageEndpoint endpoint_;
 
     /**
      * @brief Converter functor: gets stream and input size, returns a list of spikes.
@@ -111,12 +91,18 @@ private:
     /**
      * @brief Channel own UID, used as a sender UID for messages.
      */
-    const UID uid_;
-
-    /**
-     * @brief Input size, as used by converter.
-     */
-    size_t size_;
+    const core::UID uid_;
 };
 
-}  // namespace knp::core::input
+/**
+ * @brief Connect input channel to a target object.
+ * @param channel input channel.
+ * @param receiver_uid object UID.
+ * @note target object should be able to receive spikes.
+ */
+void connect_input(const InputChannel &channel, core::MessageEndpoint &target_endpoint, const core::UID &receiver_uid)
+{
+    target_endpoint.subscribe<core::messaging::SpikeMessage>(receiver_uid, {channel.get_uid()});
+}
+
+}  // namespace knp::framework::input

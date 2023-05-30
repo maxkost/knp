@@ -5,12 +5,6 @@
  */
 #pragma once
 
-#include <knp/core/message_endpoint.h>
-#include <knp/core/messaging/spike_message.h>
-#include <knp/core/uid.h>
-
-#include <spdlog/spdlog.h>
-
 #include <functional>
 #include <sstream>
 #include <string>
@@ -18,10 +12,15 @@
 #include <utility>
 #include <vector>
 
+#include "knp/core/message_endpoint.h"
+#include "knp/core/messaging/spike_message.h"
+#include "knp/core/uid.h"
+#include "spdlog/include/spdlog/spdlog.h"
+
 /**
  * @brief Input channels namespace.
  */
-namespace knp::core::input
+namespace knp::framework::input
 {
 /**
  * @brief A very simple function to turn values to spike or not. Casts a value to boolean type.
@@ -60,9 +59,10 @@ public:
     /**
      * @brief Class constructor.
      * @param interpret function that decides if the unprocessed value is a spike or not.
+     * @param data_size size of input projection
      */
-    explicit SequenceConverter(std::function<bool(value_type)> interpret = interpret_as_bool<value_type>)
-        : interpret_(std::move(interpret))
+    SequenceConverter(std::function<bool(value_type)> interpret, size_t data_size)
+        : interpret_(std::move(interpret)), data_size_(data_size)
     {
     }
 
@@ -72,12 +72,12 @@ public:
      * @param data_size expected size of the input projection.
      * @return list of neuron indexes.
      */
-    std::vector<uint32_t> operator()(std::istream &stream, size_t data_size)
+    std::vector<uint32_t> operator()(std::istream &stream)
     {
         SPDLOG_TRACE("Getting message from a stream using sequence converter.");
 
         std::vector<uint32_t> message_data;
-        for (size_t i = 0; i < data_size; ++i)
+        for (size_t i = 0; i < data_size_; ++i)
         {
             value_type value;
             stream >> value;
@@ -91,12 +91,18 @@ public:
         return message_data;
     }
 
+    void set_size(size_t size) { data_size_ = size; }
+
 private:
     /**
      * @brief interpretation function, should return "true" for spike and "false" for no spike. Any "wrong symbol"
      * error processing logic also goes here.
      */
     std::function<bool(value_type)> interpret_;
+    /**
+     * @brief input projection size.
+     */
+    size_t data_size_;
 };
 
-}  // namespace knp::core::input
+}  // namespace knp::framework::input

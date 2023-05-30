@@ -5,28 +5,26 @@
  */
 
 #pragma once
-#include <knp/core/messaging/spike_message.h>
-
 #include <functional>
 #include <set>
 #include <vector>
 
+#include "knp/core/messaging/spike_message.h"
+
 /**
  * @brief Network output processing namespace.
  */
-namespace knp::core::output
+namespace knp::framework::output
 {
-using MessageList = std::vector<messaging::SpikeMessage>;
+using MessageList = std::vector<core::messaging::SpikeMessage>;
 
 /**
  * @brief a function to convert messages into data.
  * @tparam ResultType resulting data type.
  * @param MessageList list of spike messages.
- * @param TimeType step index of the oldest messages that are considered.
- * @note use 0 for "any message" or current step value for current step messages only.
  */
 template <class ResultType>
-using OutputConverter = std::function<ResultType(const MessageList &, size_t, messaging::TimeType)>;
+using OutputConverter = std::function<ResultType(const MessageList &)>;
 
 
 /**
@@ -38,14 +36,11 @@ using OutputConverter = std::function<ResultType(const MessageList &, size_t, me
  * @return vector of number of emitted spikes per neuron.
  * @details this converter(out_size = 6) will convert messages {0, 2}, {2, 4}, {1, 2} to (1, 1, 3, 0, 1, 0}.
  */
-std::vector<size_t> converter_count(
-    const MessageList &message_list, size_t output_size, messaging::TimeType oldest_step = 0)
+std::vector<size_t> converter_count(const MessageList &message_list, size_t output_size)
 {
     std::vector<size_t> result(output_size, 0);
     for (auto &message : message_list)
     {
-        if (message.header_.send_time_ < oldest_step) continue;
-
         for (auto index : message.neuron_indexes_)
         {
             if (index < output_size) ++result[index];
@@ -64,14 +59,11 @@ std::vector<size_t> converter_count(
  * @return a function that converts spike messages to a bool vector of "true if the corresponding neuron spiked".
  * @details this converter(out_size=6) will convert messages {0, 2}, {2, 4}, {1, 2} to boolean vector {111010}.
  */
-std::vector<bool> converter_bitwise(
-    const MessageList &message_list, size_t output_size, messaging::TimeType oldest_step = 0)
+std::vector<bool> converter_bitwise(const MessageList &message_list, size_t output_size)
 {
     std::vector<bool> result(output_size, false);
     for (auto &message : message_list)
     {
-        if (message.header_.send_time_ < oldest_step) continue;
-
         for (auto index : message.neuron_indexes_)
         {
             if (index < output_size) result[index] = true;
@@ -89,13 +81,11 @@ std::vector<bool> converter_bitwise(
  *                    Zero means that all messages since last call are used.
  * @return set of all neurons that spiked at a period defined by message_list and oldest_step.
  */
-std::set<messaging::SpikeIndexType> converter_to_set(
-    const MessageList &message_list, size_t output_size, messaging::TimeType oldest_step = 0)
+std::set<core::messaging::SpikeIndexType> converter_to_set(const MessageList &message_list, size_t output_size)
 {
-    std::set<messaging::SpikeIndexType> result;
+    std::set<core::messaging::SpikeIndexType> result;
     for (auto &message : message_list)
     {
-        if (message.header_.send_time_ < oldest_step) continue;
         result.insert(message.neuron_indexes_.cbegin(), message.neuron_indexes_.cend());
     }
 
@@ -105,4 +95,5 @@ std::set<messaging::SpikeIndexType> converter_to_set(
     return result;
 }
 
-}  // namespace knp::core::output
+
+}  // namespace knp::framework::output
