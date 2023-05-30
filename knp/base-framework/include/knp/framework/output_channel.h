@@ -25,12 +25,23 @@ namespace knp::framework::output
 class OutputChannelBase
 {
 public:
+    /**
+     * Base channel constructor.
+     * @param channel_uid channel UID.
+     * @param endpoint the endpoint channel uses for message exchange. Not owned.
+     * @param sender_uid UID of the sender entity.
+     */
     OutputChannelBase(const core::UID &channel_uid, core::MessageEndpoint &endpoint, core::UID sender_uid)
         : uid_{channel_uid}, endpoint_(endpoint)
     {
         endpoint_.subscribe<core::messaging::SpikeMessage>(uid_, {sender_uid});
     }
 
+    /**
+     * Base channel constructor.
+     * @param endpoint the endpoint channel uses for message exchange. Not owned.
+     * @param sender_uid UID of the sender entity.
+     */
     OutputChannelBase(core::MessageEndpoint &endpoint, core::UID sender_uid) : uid_{true}, endpoint_(endpoint)
     {
         endpoint_.subscribe<core::messaging::SpikeMessage>(uid_, {sender_uid});
@@ -70,18 +81,22 @@ class OutputChannel : public OutputChannelBase
 public:
     /**
      * @brief Output channel constructor.
-     * @param channel_uid channel UID.
      * @param endpoint endpoint for message exchange.
      * @param converter data converter.
      * @param sender_uid UID of the sender population.
-     * @param output_size expected population size.
-     * @param starting_step the step when this channel was created.
      */
     OutputChannel(core::MessageEndpoint &endpoint, OutputConverter<ResultType> converter, core::UID sender_uid)
         : OutputChannelBase(endpoint, sender_uid), converter_(std::move(converter))
     {
     }
 
+    /**
+     * @brief Output channel constructor.
+     * @param channel_uid channel UID.
+     * @param endpoint endpoint for message exchange.
+     * @param converter data converter.
+     * @param sender_uid UID of the sender population.
+     */
     OutputChannel(
         const core::UID &channel_uid, core::MessageEndpoint &endpoint, OutputConverter<ResultType> converter,
         core::UID sender_uid)
@@ -109,7 +124,6 @@ private:
 
     /**
      * @brief updates message buffer. Should be done before reading data from the channel.
-     * @param step current network step.
      */
     void update()
     {
