@@ -33,7 +33,6 @@ public:
      * @param converter functor that generate spike indices from stream data.
      * @param channel_uid sender UID for message headers.
      * @param endpoint endpoint used for sending messages.
-     * @param size input size.
      */
     InputChannel(
         std::unique_ptr<std::istream> &&stream, core::MessageEndpoint &&endpoint, DataConverter converter,
@@ -84,7 +83,7 @@ private:
     core::MessageEndpoint endpoint_;
 
     /**
-     * @brief Converter functor: gets stream and input size, returns a list of spikes.
+     * @brief Converter functor: gets stream, returns a list of spikes.
      */
     DataConverter converter_;
 
