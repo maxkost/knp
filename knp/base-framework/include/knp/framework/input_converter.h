@@ -59,7 +59,7 @@ public:
     /**
      * @brief Class constructor.
      * @param interpret function that decides if the unprocessed value is a spike or not.
-     * @param data_size size of input projection
+     * @param data_size size of input projection.
      */
     SequenceConverter(std::function<bool(value_type)> interpret, size_t data_size)
         : interpret_(std::move(interpret)), data_size_(data_size)
@@ -69,7 +69,6 @@ public:
     /**
      * @brief Output stream operator.
      * @param stream input stream.
-     * @param data_size expected size of the input projection.
      * @return list of neuron indexes.
      */
     std::vector<uint32_t> operator()(std::istream &stream)
@@ -91,6 +90,10 @@ public:
         return message_data;
     }
 
+    /**
+     * Change size parameter.
+     * @param size new size.
+     */
     void set_size(size_t size) { data_size_ = size; }
 
 private:
