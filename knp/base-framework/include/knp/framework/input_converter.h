@@ -67,9 +67,9 @@ public:
     }
 
     /**
-     * @brief Output stream operator.
-     * @param stream input stream.
-     * @return list of neuron indexes.
+     * @brief Call conversion function to get indexes from stream.
+     * @param stream data stream.
+     * @return index vector.
      */
     std::vector<uint32_t> operator()(std::istream &stream)
     {
