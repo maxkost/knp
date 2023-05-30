@@ -102,6 +102,7 @@ private:
      * error processing logic also goes here.
      */
     std::function<bool(value_type)> interpret_;
+
     /**
      * @brief input projection size.
      */
