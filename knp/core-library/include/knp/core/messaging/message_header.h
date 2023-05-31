@@ -21,7 +21,7 @@ namespace knp::core::messaging
 /**
  * Type used to store step number.
  */
-using TimeType = uint64_t;
+using Step = uint64_t;
 
 /**
  * @brief Common header for messages.
@@ -35,7 +35,7 @@ struct MessageHeader
     /**
      * @brief Index of the network execution step.
      */
-    TimeType send_time_;
+    Step send_time_;
 };
 
 /**

@@ -71,11 +71,11 @@ public:
      * @param stream data stream.
      * @return index vector.
      */
-    std::vector<uint32_t> operator()(std::istream &stream)
+    core::messaging::SpikeData operator()(std::istream &stream)
     {
         SPDLOG_TRACE("Getting message from a stream using sequence converter.");
 
-        std::vector<uint32_t> message_data;
+        core::messaging::SpikeData message_data;
         for (size_t i = 0; i < data_size_; ++i)
         {
             value_type value;

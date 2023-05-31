@@ -40,8 +40,8 @@ TEST(InputSuite, ChannelTest)
 
     // Send data to stream
     stream << "1 0 1 1 0 1 1 1 1 0 1 1";  // 12 integers, a test that the final ones don't get into the message
-    std::vector<uint32_t> expected_indexes = {0, 2, 3, 5, 6, 7, 8};
-    const knp::core::messaging::TimeType send_time = 77;
+    knp::core::messaging::SpikeData expected_indexes = {0, 2, 3, 5, 6, 7, 8};
+    const knp::core::messaging::Step send_time = 77;
 
     // Tell channel to send a message
     channel.send(send_time);

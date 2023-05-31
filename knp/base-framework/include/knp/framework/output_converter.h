@@ -75,9 +75,9 @@ std::vector<bool> converter_bitwise(const MessageList &message_list, size_t outp
  * @param output_size output population size, neuron indexes greater than output_size are ignored.
  * @return set of all neurons that spiked at a period defined by message_list.
  */
-std::set<core::messaging::SpikeIndexType> converter_to_set(const MessageList &message_list, size_t output_size)
+std::set<core::messaging::SpikeIndex> converter_to_set(const MessageList &message_list, size_t output_size)
 {
-    std::set<core::messaging::SpikeIndexType> result;
+    std::set<core::messaging::SpikeIndex> result;
     for (auto &message : message_list)
     {
         result.insert(message.neuron_indexes_.cbegin(), message.neuron_indexes_.cend());

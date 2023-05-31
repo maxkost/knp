@@ -22,12 +22,12 @@ namespace knp::core::messaging
 /**
  * @brief Spike index type.
  */
-using SpikeIndexType = uint32_t;
+using SpikeIndex = uint32_t;
 
 /**
  * @brief List of spike indexes.
  */
-using SpikeData = std::vector<SpikeIndexType>;
+using SpikeData = std::vector<SpikeIndex>;
 
 /**
  * @brief Structure of the spike message.

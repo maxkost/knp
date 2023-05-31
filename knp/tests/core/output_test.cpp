@@ -57,7 +57,7 @@ TEST(OutputSuite, ChannelTest)
     knp::framework::output::OutputChannel<std::vector<size_t>> channel_count{endpoint, count_converter, sender_uid};
 
     // Initialize neuron set channel
-    knp::framework::output::OutputChannel<std::set<knp::core::messaging::SpikeIndexType>> channel_set{
+    knp::framework::output::OutputChannel<std::set<knp::core::messaging::SpikeIndex>> channel_set{
         endpoint, set_converter, sender_uid};
 
     // Create a custom "max activations by neuron" channel
@@ -80,7 +80,7 @@ TEST(OutputSuite, ChannelTest)
     decltype(count_result) expected_count{0, 3, 0, 1, 2, 0, 0, 1};  // Expected result
     count_result = channel_count.get(1, 5);
 
-    std::set<knp::core::messaging::SpikeIndexType> set_result;
+    std::set<knp::core::messaging::SpikeIndex> set_result;
     decltype(set_result) expected_set{1, 3, 4, 7};  // Expected result
     set_result = channel_set.get(1, 5);
 

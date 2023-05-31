@@ -61,7 +61,7 @@ public:
      * @return true if message was sent, false if no message sent.
      * @note throws exceptions if stream is set to throw.
      */
-    bool send(core::messaging::TimeType time)
+    bool send(core::messaging::Step time)
     {
         core::messaging::SpikeData spikes = converter_(*stream_);
         if (spikes.empty()) return false;

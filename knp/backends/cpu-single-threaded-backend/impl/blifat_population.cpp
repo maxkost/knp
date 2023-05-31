@@ -78,7 +78,8 @@ void process_inputs(
 
 
 void calculate_neurons_post_input_state(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, std::vector<uint32_t> &neuron_indexes)
+    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population,
+    knp::core::messaging::SpikeData &neuron_indexes)
 {
     SPDLOG_TRACE("Calculate neurons post input state");
     // can be made parallel
@@ -123,7 +124,7 @@ void calculate_blifat_population(
     calculate_neurons_state(population);
     process_inputs(population, messages);
 
-    std::vector<uint32_t> neuron_indexes;
+    knp::core::messaging::SpikeData neuron_indexes;
     calculate_neurons_post_input_state(population, neuron_indexes);
 
     uint64_t time = step_n;

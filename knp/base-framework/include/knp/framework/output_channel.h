@@ -110,7 +110,7 @@ public:
      * @param step_to final step for messages. Messages send at this step are also included.
      * @return data in required format.
      */
-    ResultType get(core::messaging::TimeType step_from, core::messaging::TimeType step_to)
+    ResultType get(core::messaging::Step step_from, core::messaging::Step step_to)
     {
         update();
         return converter_(read_some_from_buffer(step_from, step_to));
@@ -143,7 +143,7 @@ private:
      * @return a vector of messages with send_time values in [starting_step, final_step].
      */
     std::vector<core::messaging::SpikeMessage> read_some_from_buffer(
-        core::messaging::TimeType starting_step, core::messaging::TimeType final_step)
+        core::messaging::Step starting_step, core::messaging::Step final_step)
     {
         std::vector<core::messaging::SpikeMessage> result;
         result.reserve(starting_step + final_step + 1);
