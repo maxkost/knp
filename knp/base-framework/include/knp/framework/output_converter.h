@@ -17,17 +17,12 @@
 namespace knp::framework::output
 {
 /**
- * @brief container for s.
- */
-using MessageList = std::vector<core::messaging::SpikeMessage>;
-
-/**
  * @brief a function to convert messages into data.
  * @tparam ResultType resulting data type.
- * @param MessageList list of spike messages.
+ * @param messages list of spike messages.
  */
 template <class ResultType>
-using OutputConverter = std::function<ResultType(const std::vector<core::messaging::SpikeMessage> &)>;
+using OutputConverter = std::function<ResultType(const std::vector<core::messaging::SpikeMessage> &messages)>;
 
 
 /**
