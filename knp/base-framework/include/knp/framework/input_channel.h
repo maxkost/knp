@@ -11,6 +11,7 @@
 
 #include "input_converter.h"
 
+
 namespace knp::framework::input
 {
 /**

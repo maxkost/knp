@@ -148,18 +148,14 @@ private:
         std::vector<core::messaging::SpikeMessage> result;
         result.reserve(starting_step + final_step + 1);
         // Here we suppose that buffer is sorted by sending step as it should be
-        auto begin_iter = message_buffer_.begin();
-        while (begin_iter < message_buffer_.end() && begin_iter->header_.send_time_ < starting_step)
-        {
-            ++begin_iter;
-        }
-        auto end_iter = begin_iter;
-        while (end_iter < message_buffer_.end() && end_iter->header_.send_time_ <= final_step)
-        {
-            ++end_iter;
-        }
-        // Between begin_iter and final_iter there are the messages we need. Move them to result then remove from
-        // buffer.
+        auto comp_lower = [](const core::messaging::SpikeMessage &message, core::messaging::Step step)
+        { return message.header_.send_time_ < step; };
+        auto begin_iter = std::lower_bound(message_buffer_.begin(), message_buffer_.end(), starting_step, comp_lower);
+
+        auto comp_upper = [](core::messaging::Step step, const core::messaging::SpikeMessage &message)
+        { return step < message.header_.send_time_; };
+        auto end_iter = std::upper_bound(message_buffer_.begin(), message_buffer_.end(), final_step, comp_upper);
+
         std::move(begin_iter, end_iter, std::back_inserter(result));
         message_buffer_.erase(begin_iter, end_iter);
         return result;

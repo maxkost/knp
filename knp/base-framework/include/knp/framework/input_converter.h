@@ -85,8 +85,7 @@ public:
                 message_data.push_back(i);
             }
         }
-        SPDLOG_TRACE(
-            std::string("Finished loading a message, it contains ") + std::to_string(message_data.size()) + " spikes.");
+        SPDLOG_TRACE("Finished loading a message, it contains {} spikes", message_data.size());
         return message_data;
     }
 

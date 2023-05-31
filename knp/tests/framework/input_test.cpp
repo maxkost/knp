@@ -2,17 +2,17 @@
 // Input channels and converters tests.
 //
 
-#include <knp/core/message_bus.h>
-#include <knp/core/messaging/messaging.h>
-
-#include <tests_common.h>
-
+#include "knp/core/message_bus.h"
+#include "knp/core/messaging/messaging.h"
 #include "knp/framework/input_channel.h"
+#include "tests_common.h"
+
 
 TEST(InputSuite, ConverterTest)
 {
     std::stringstream stream;
-    stream << "0.7 1.1 1.0 -0.2 0.1 3 2 0.7 11 -1";  // float values equivalent to (0 1 1 0 0 1 1 0 1 0)
+    // float values equivalent to (0 1 1 0 0 1 1 0 1 0)
+    stream << "0.7 1.1 1.0 -0.2 0.1 3 2 0.7 11 -1";
     knp::framework::input::SequenceConverter<float> converter(
         knp::framework::input::interpret_with_threshold<float>(1.0f), 10);
 
@@ -38,7 +38,7 @@ TEST(InputSuite, ChannelTest)
     knp::core::UID output_uid;
     knp::framework::input::connect_input(channel, endpoint, output_uid);
 
-    // Send data to stream
+    // Send data to stream: 12 integers, a test that the final ones don't get into the message
     stream << "1 0 1 1 0 1 1 1 1 0 1 1";  // 12 integers, a test that the final ones don't get into the message
     knp::core::messaging::SpikeData expected_indexes = {0, 2, 3, 5, 6, 7, 8};
     const knp::core::messaging::Step send_time = 77;

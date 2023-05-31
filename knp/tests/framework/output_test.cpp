@@ -2,15 +2,13 @@
 // Output channels and converters tests.
 //
 
-#include <knp/core/message_bus.h>
-
-#include <tests_common.h>
-
 #include <set>
 #include <vector>
 
+#include "knp/core/message_bus.h"
 #include "knp/framework/output_channel.h"
 #include "knp/framework/output_converter.h"
+#include "tests_common.h"
 
 
 TEST(OutputSuite, ConverterTest)
@@ -65,9 +63,10 @@ TEST(OutputSuite, ChannelTest)
 
     // Do message exchange.
     knp::core::messaging::SpikeMessage msg_0{{sender_uid, 0}, {0, 1, 2, 3, 4, 5}};  // Will ignore this.
-    knp::core::messaging::SpikeMessage msg_1{{sender_uid, 1}, {1, 3, 8}};  // All indexes over 7 should also be ignored
+    knp::core::messaging::SpikeMessage msg_1{{sender_uid, 1}, {1, 3, 8}};  // All indexes over 7 should also be ignored.
     knp::core::messaging::SpikeMessage msg_2{{sender_uid, 3}, {1, 4, 10}};
     knp::core::messaging::SpikeMessage msg_3{{sender_uid, 5}, {1, 4, 7, 12}};
+    knp::core::messaging::SpikeMessage msg_4{{sender_uid, 6}, {1, 2, 4, 7, 10}};  // Will ignore this.
     endpoint.send_message(msg_0);
     endpoint.send_message(msg_1);
     endpoint.send_message(msg_2);
