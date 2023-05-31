@@ -110,7 +110,7 @@ public:
      * @param step_to final step for messages. Messages send at this step are also included.
      * @return data in required format.
      */
-    ResultType get(core::messaging::Step step_from, core::messaging::Step step_to)
+    [[nodiscard]] ResultType get(core::messaging::Step step_from, core::messaging::Step step_to)
     {
         update();
         return converter_(read_some_from_buffer(step_from, step_to));

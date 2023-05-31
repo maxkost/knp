@@ -16,6 +16,9 @@
  */
 namespace knp::framework::output
 {
+/**
+ * @brief container for s.
+ */
 using MessageList = std::vector<core::messaging::SpikeMessage>;
 
 /**
@@ -24,7 +27,7 @@ using MessageList = std::vector<core::messaging::SpikeMessage>;
  * @param MessageList list of spike messages.
  */
 template <class ResultType>
-using OutputConverter = std::function<ResultType(const MessageList &)>;
+using OutputConverter = std::function<ResultType(const std::vector<core::messaging::SpikeMessage> &)>;
 
 
 /**
@@ -34,7 +37,7 @@ using OutputConverter = std::function<ResultType(const MessageList &)>;
  * @return vector of number of emitted spikes per neuron.
  * @details this converter(out_size = 6) will convert messages {0, 2}, {2, 4}, {1, 2} to (1, 1, 3, 0, 1, 0}.
  */
-std::vector<size_t> converter_count(const MessageList &message_list, size_t output_size)
+std::vector<size_t> converter_count(const std::vector<core::messaging::SpikeMessage> &message_list, size_t output_size)
 {
     std::vector<size_t> result(output_size, 0);
     for (auto &message : message_list)
@@ -55,7 +58,7 @@ std::vector<size_t> converter_count(const MessageList &message_list, size_t outp
  * @return a function that converts spike messages to a bool vector of "true if the corresponding neuron spiked".
  * @details this converter(out_size=6) will convert messages {0, 2}, {2, 4}, {1, 2} to boolean vector {111010}.
  */
-std::vector<bool> converter_bitwise(const MessageList &message_list, size_t output_size)
+std::vector<bool> converter_bitwise(const std::vector<core::messaging::SpikeMessage> &message_list, size_t output_size)
 {
     std::vector<bool> result(output_size, false);
     for (auto &message : message_list)
@@ -75,7 +78,8 @@ std::vector<bool> converter_bitwise(const MessageList &message_list, size_t outp
  * @param output_size output population size, neuron indexes greater than output_size are ignored.
  * @return set of all neurons that spiked at a period defined by message_list.
  */
-std::set<core::messaging::SpikeIndex> converter_to_set(const MessageList &message_list, size_t output_size)
+std::set<core::messaging::SpikeIndex> converter_to_set(
+    const std::vector<core::messaging::SpikeMessage> &message_list, size_t output_size)
 {
     std::set<core::messaging::SpikeIndex> result;
     for (auto &message : message_list)
