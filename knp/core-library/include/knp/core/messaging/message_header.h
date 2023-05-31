@@ -18,7 +18,9 @@
  */
 namespace knp::core::messaging
 {
-
+/**
+ * Type used to store step number.
+ */
 using TimeType = uint64_t;
 
 /**
