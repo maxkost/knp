@@ -5,10 +5,11 @@
 #include "knp/core/message_bus.h"
 #include "knp/core/messaging/messaging.h"
 #include "knp/framework/io/input_channel.h"
+#include "knp/framework/io/input_interpreters.h"
 #include "tests_common.h"
 
 
-TEST(InputSuite, ConverterTest)
+TEST(InputSuite, SequenceConverterTest)
 {
     std::stringstream stream;
     // float values equivalent to (0 1 1 0 0 1 1 0 1 0)
@@ -20,6 +21,23 @@ TEST(InputSuite, ConverterTest)
     knp::core::messaging::SpikeData expected{1, 2, 5, 6, 8};
 
     ASSERT_EQ(result, expected);
+}
+
+
+TEST(InputSuite, IndexConverterTest)
+{
+    std::stringstream stream;
+    stream << "1,3, 5 \n1  ,2 , 5\n3,5";
+    knp::framework::input::IndexConverter converter(',');
+    auto result = converter(stream);
+    knp::core::messaging::SpikeData expected_result{1, 3, 5};
+    ASSERT_EQ(result, expected_result);
+    result = converter(stream);
+    expected_result = {1, 2, 5};
+    ASSERT_EQ(result, expected_result);
+    result = converter(stream);
+    expected_result = {3, 5};
+    ASSERT_EQ(result, expected_result);
 }
 
 

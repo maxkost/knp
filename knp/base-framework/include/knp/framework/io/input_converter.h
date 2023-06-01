@@ -23,31 +23,6 @@
 namespace knp::framework::input
 {
 /**
- * @brief A very simple function to turn values to spike or not. Casts a value to boolean type.
- * @tparam value_type input value type. Something that can be cast to bool implicitly. Usually an arithmetic type.
- * @param v input value
- * @return bool(v)
- */
-template <class value_type>
-bool interpret_as_bool(value_type v)
-{
-    return v;
-}
-
-/**
- * @brief Construct a function to turn values to spikes.
- * @tparam value_type input value type, should have a defined operator "less than".
- * @param threshold threshold value, spikes when greater or equal than threshold.
- * @return a simple function to determine if a value causes a spike or not.
- */
-template <class value_type>
-auto interpret_with_threshold(value_type threshold)
-{
-    // We're using !(a < b) instead of (a >= b) because of the values which only have operator "less than".
-    return [threshold](value_type v) -> bool { return !(v < threshold); };
-}
-
-/**
  * @brief Stream-like converter functor class that converts a list of values into spike messages.
  * @tparam value_type the type of values this class reads from the input stream.
  * @details construction example : SequenceConverter<float> converter{interpreter_with_threshold<float>(1.0f)};
@@ -106,6 +81,47 @@ private:
      * @brief input projection size.
      */
     size_t data_size_;
+};
+
+
+/**
+ * @brief A functor class that converts lines of integers into spike indexes.
+ */
+class IndexConverter
+{
+public:
+    /**
+     * @brief Create converter with a delimiter.
+     * @param delim a symbol that delimits spike indexes.
+     */
+    explicit IndexConverter(char delim = ',') : delim_(delim) {}
+    /**
+     * @brief Call conversion function to get indexes from stream.
+     * @param stream data stream.
+     * @return index vector.
+     */
+    core::messaging::SpikeData operator()(std::istream &stream) const
+    {
+        core::messaging::SpikeData result;
+
+        std::string buffer_string;
+        std::getline(stream, buffer_string);
+
+        auto iter_first = buffer_string.begin();
+        auto iter_second = iter_first;
+
+        while (iter_first < buffer_string.end())
+        {
+            iter_second = std::find(iter_second + 1, buffer_string.end(), delim_);
+            result.push_back(std::stoul(
+                buffer_string.substr(iter_first - buffer_string.begin(), iter_second - buffer_string.begin())));
+            iter_first = iter_second + 1;
+        }
+        return result;
+    }
+
+private:
+    char delim_ = ',';
 };
 
 }  // namespace knp::framework::input
