@@ -4,7 +4,7 @@
 
 #include "knp/core/message_bus.h"
 #include "knp/core/messaging/messaging.h"
-#include "knp/framework/input_channel.h"
+#include "knp/framework/io/input_channel.h"
 #include "tests_common.h"
 
 

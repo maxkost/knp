@@ -6,8 +6,8 @@
 #include <vector>
 
 #include "knp/core/message_bus.h"
-#include "knp/framework/output_channel.h"
-#include "knp/framework/output_converter.h"
+#include "knp/framework/io/output_channel.h"
+#include "knp/framework/io/output_converter.h"
 #include "tests_common.h"
 
 
