@@ -95,6 +95,7 @@ public:
      * @param delim a symbol that delimits spike indexes.
      */
     explicit IndexConverter(char delim = ',') : delim_(delim) {}
+
     /**
      * @brief Call conversion function to get indexes from stream.
      * @param stream data stream.
@@ -121,6 +122,9 @@ public:
     }
 
 private:
+    /**
+     * @brief delimiter character.
+     */
     char delim_ = ',';
 };
 
