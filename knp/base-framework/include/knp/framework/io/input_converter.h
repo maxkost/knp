@@ -17,6 +17,7 @@
 #include "knp/core/uid.h"
 #include "spdlog/include/spdlog/spdlog.h"
 
+
 /**
  * @brief Input channels namespace.
  */
@@ -125,7 +126,7 @@ private:
     /**
      * @brief delimiter character.
      */
-    char delim_ = ',';
+    const char delim_ = ',';
 };
 
 }  // namespace knp::framework::input

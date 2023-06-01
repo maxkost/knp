@@ -1,6 +1,6 @@
-//
-// Input channels and converters tests.
-//
+/**
+ * Input channels and converters tests.
+ */
 
 #include "knp/core/message_bus.h"
 #include "knp/core/messaging/messaging.h"

@@ -1,13 +1,15 @@
-//
-// Output channels and converters tests.
-//
+/**
+ * Output channels and converters tests.
+ */
 
 #include <set>
 #include <vector>
 
 #include "knp/core/message_bus.h"
+#include "knp/framework/io/out_converters/convert_bitwise.h"
+#include "knp/framework/io/out_converters/convert_count.h"
+#include "knp/framework/io/out_converters/convert_set.h"
 #include "knp/framework/io/output_channel.h"
-#include "knp/framework/io/output_converter.h"
 #include "tests_common.h"
 
 
