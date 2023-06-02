@@ -162,7 +162,4 @@ private:
     }
 };
 
-
-// TODO: Add instantiation for most frequently used result types: int, float, vector<uint>, vector<bool>, mb set<uint>.
-
 }  // namespace knp::framework::output

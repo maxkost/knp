@@ -10,6 +10,7 @@
 
 #include "knp/core/messaging/spike_message.h"
 
+
 /**
  * @brief Network output processing namespace.
  */
