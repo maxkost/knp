@@ -13,7 +13,7 @@ TEST(MessageSuite, SpikeToChannelTest)
 {
     const knp::core::UID uid(true);
     const size_t time = 7;
-    const std::vector<uint32_t> indices = {1, 2, 3, 4, 5};
+    const knp::core::messaging::SpikeData indices = {1, 2, 3, 4, 5};
 
     knp::core::messaging::SpikeMessage message_in{{uid, time}, indices};
     knp::core::messaging::SpikeMessage message_out;

@@ -18,6 +18,10 @@
  */
 namespace knp::core::messaging
 {
+/**
+ * Type used to store step number.
+ */
+using Step = uint64_t;
 
 /**
  * @brief Common header for messages.
@@ -31,21 +35,21 @@ struct MessageHeader
     /**
      * @brief Index of the network execution step.
      */
-    uint64_t send_time_;
+    Step send_time_;
 };
 
 /**
  * @brief Get message header from an input stream.
  * @param stream input stream.
  * @param header message header to get from the input stream.
-*/
+ */
 std::istream &operator>>(std::istream &stream, MessageHeader &header);
 
 /**
  * @brief Send message header to an output stream.
  * @param stream output stream.
  * @param header message header to send to the output stream.
-*/
+ */
 std::ostream &operator<<(std::ostream &stream, const MessageHeader &header);
 
 }  // namespace knp::core::messaging

@@ -71,28 +71,26 @@ public:
     static constexpr size_t get_type_index = boost::mp11::mp_find<Variant, Type>::value;
 
 public:
-    
     /**
      * @brief Move constructor for message endpoints.
      * @param endpoint endpoint to move.
-    */
+     */
     MessageEndpoint(MessageEndpoint &&endpoint);
 
     /**
      * @brief Default copy operator.
      * @param endpoint endpoint to copy.
-    */
+     */
     MessageEndpoint &operator=(MessageEndpoint &&endpoint) = default;
 
     /**
-     * @brief Avoid copy assignement of an endpoint.
-     * @param endpoint formal parameter for an endpoint that cannot be copied. 
-    */
-    MessageEndpoint &operator=(MessageEndpoint &endpoint) = delete;
+     * @brief Avoid copy assignment of an endpoint.
+     */
+    MessageEndpoint &operator=(MessageEndpoint &) = delete;
 
     /**
      * @brief Message endpoint destructor.
-    */
+     */
     virtual ~MessageEndpoint();
 
 public:
@@ -173,10 +171,9 @@ protected:
     std::unique_ptr<MessageEndpointImpl> impl_;
 
 protected:
-
     /**
      * @brief Message endpoint default constructor.
-    */
+     */
     MessageEndpoint() = default;
 
 private:

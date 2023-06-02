@@ -20,6 +20,16 @@ namespace knp::core::messaging
 {
 
 /**
+ * @brief Spike index type.
+ */
+using SpikeIndex = uint32_t;
+
+/**
+ * @brief List of spike indexes.
+ */
+using SpikeData = std::vector<SpikeIndex>;
+
+/**
  * @brief Structure of the spike message.
  */
 struct SpikeMessage
@@ -32,21 +42,21 @@ struct SpikeMessage
     /**
      * @brief Indexes of the recently spiked neurons.
      */
-    std::vector<uint32_t> neuron_indexes_;
+    SpikeData neuron_indexes_;
 };
 
 /**
  * @brief Send spike message to an output stream.
  * @param stream output stream.
  * @param msg spike message to send to the output stream.
-*/
+ */
 std::ostream &operator<<(std::ostream &stream, const SpikeMessage &msg);
 
 /**
  * @brief Get spike message from an input stream.
  * @param stream input stream.
  * @param msg spike message to get from the input stream.
-*/
+ */
 std::istream &operator>>(std::istream &stream, SpikeMessage &msg);
 
 }  // namespace knp::core::messaging
