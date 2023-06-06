@@ -1,5 +1,5 @@
 /**
- * @file spike_message.h.
+ * @file spike_message.h
  * @brief Synaptic impact class.
  * @author Artiom N.
  * @date 26.01.2023
