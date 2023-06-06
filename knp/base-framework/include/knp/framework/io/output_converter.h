@@ -12,13 +12,13 @@
 
 
 /**
- * @brief Network output processing namespace.
+ * @brief Output channel namespace.
  */
 namespace knp::framework::output
 {
 /**
- * @brief a function to convert messages into data.
- * @tparam ResultType resulting data type.
+ * @brief Function used to convert spike messages into output data.
+ * @tparam ResultType output data type.
  * @param messages list of spike messages.
  */
 template <class ResultType>

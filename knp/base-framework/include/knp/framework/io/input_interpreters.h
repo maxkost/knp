@@ -6,13 +6,16 @@
 #pragma once
 
 
+/**
+ * @brief Input channel namespace.
+*/
 namespace knp::framework::input
 {
 /**
- * @brief A very simple function to turn values to spike or not. Casts a value to boolean type.
- * @tparam value_type input value type. Something that can be cast to bool implicitly. Usually an arithmetic type.
- * @param v input value
- * @return bool(v)
+ * @brief Determine if an input value is a spike and convert an input value to boolean.
+ * @tparam value_type input value type (usually an arithmetic type) that can be cast to bool implicitly.
+ * @param v input value.
+ * @return `true` if an input value is a spike, `false` if an input value is not a spike.
  */
 template <class value_type>
 bool interpret_as_bool(value_type v)
@@ -22,10 +25,10 @@ bool interpret_as_bool(value_type v)
 
 
 /**
- * @brief Construct a function to turn values to spikes.
- * @tparam value_type input value type, should have a defined operator "less than".
- * @param threshold threshold value, spikes when greater or equal than threshold.
- * @return a simple function to determine if a value causes a spike or not.
+ * @brief Interpret an input value as a spike if an input value is equal or greater than a threshold value.
+ * @tparam value_type input value type that should have a defined operator "less than".
+ * @param threshold threshold value.
+ * @return boolean function that determines if a value causes a spike or not.
  */
 template <class value_type>
 auto interpret_with_threshold(value_type threshold)
