@@ -25,7 +25,7 @@
     src:url('Kaspersky_Sans_Display_Medium');
     src:url('Kaspersky_Sans_Display_Medium.eot?#iefix') format('embedded-opentype'),
         url('Kaspersky_Sans_Display_Medium.ttf') format('truetype'),
-        url('Kaspersky_Sans Display_Medium.woff') format('woff');
+        url('Kaspersky_Sans_Display_Medium.woff') format('woff');
 }
 @font-face {
     font-family:'Kaspersky Sans Display Bold';
