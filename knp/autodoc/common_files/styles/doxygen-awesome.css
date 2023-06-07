@@ -29,9 +29,9 @@ SOFTWARE.
 
 html {
     /* primary theme color. This will affect the entire websites color scheme: links, arrows, labels, ... */
-    --primary-color: #1779c4;
-    --primary-dark-color: #335c80;
-    --primary-light-color: #70b1e9;
+    --primary-color: #00a88e;
+    --primary-dark-color: #0a7665;
+    --primary-light-color: #91d2c4;
 
     /* page base colors */
     --page-background-color: #ffffff;
@@ -60,7 +60,7 @@ html {
      * font-family: the normal font for text, headlines, menus
      * font-family-monospace: used for preformatted text in memtitle, code, fragments
      */
-    --font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+    --font-family: Kaspersky Sans Display,sans-serif;
     --font-family-monospace: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
 
     /* font sizes */
@@ -75,9 +75,11 @@ html {
     /* The content is centered and constraint in it's width. To make the content fill the whole page, set the variable to auto.*/
     --content-maxwidth: 1050px;
     --table-line-height: 24px;
-    --toc-sticky-top: var(--spacing-medium);
+    --toc-sticky-top: var(
+    --spacing-medium);
     --toc-width: 200px;
-    --toc-max-height: calc(100vh - 2 * var(--spacing-medium) - 85px);
+    --toc-max-height: calc(100vh - 2 * var(
+    --spacing-medium) - 85px);
 
     /* colors for various content boxes: @warning, @note, @deprecated @bug */
     --warning-color: #f8d1cc;
@@ -105,7 +107,8 @@ html {
 
     /* table colors */
     --tablehead-background: #f1f1f1;
-    --tablehead-foreground: var(--page-foreground-color);
+    --tablehead-foreground: var(
+    --page-foreground-color);
 
     /* menu-display: block | none
      * Visibility of the top navigation on screens >= 768px. On smaller screen the menu is always visible.
@@ -113,28 +116,36 @@ html {
      */
     --menu-display: block;
 
-    --menu-focus-foreground: var(--page-background-color);
-    --menu-focus-background: var(--primary-color);
+    --menu-focus-foreground: var(
+    --page-background-color);
+    --menu-focus-background: var(
+    --primary-color);
     --menu-selected-background: rgba(0,0,0,.05);
 
 
-    --header-background: var(--page-background-color);
-    --header-foreground: var(--page-foreground-color);
+    --header-background: var(
+    --page-background-color);
+    --header-foreground: var(
+    --page-foreground-color);
 
     /* searchbar colors */
-    --searchbar-background: var(--side-nav-background);
-    --searchbar-foreground: var(--page-foreground-color);
+    --searchbar-background: var(
+    --side-nav-background);
+    --searchbar-foreground: var(
+    --page-foreground-color);
 
     /* searchbar size
      * (`searchbar-width` is only applied on screens >= 768px.
      * on smaller screens the searchbar will always fill the entire screen width) */
     --searchbar-height: 33px;
     --searchbar-width: 210px;
-    --searchbar-border-radius: var(--searchbar-height);
+    --searchbar-border-radius: var(
+    --searchbar-height);
 
     /* code block colors */
     --code-background: #f5f5f5;
-    --code-foreground: var(--page-foreground-color);
+    --code-foreground: var(
+    --page-foreground-color);
 
     /* fragment colors */
     --fragment-background: #F8F9FA;
@@ -153,22 +164,27 @@ html {
 
     /* sidebar navigation (treeview) colors */
     --side-nav-background: #fbfbfb;
-    --side-nav-foreground: var(--page-foreground-color);
+    --side-nav-foreground: var(
+    --page-foreground-color);
     --side-nav-arrow-opacity: 0;
     --side-nav-arrow-hover-opacity: 0.9;
 
-    --toc-background: var(--side-nav-background);
-    --toc-foreground: var(--side-nav-foreground);
+    --toc-background: var(
+    --side-nav-background);
+    --toc-foreground: var(
+    --side-nav-foreground);
 
     /* height of an item in any tree / collapsible table */
     --tree-item-height: 30px;
 
-    --memname-font-size: var(--code-font-size);
+    --memname-font-size: var(
+    --code-font-size);
     --memtitle-font-size: 18px;
 
     --webkit-scrollbar-size: 7px;
     --webkit-scrollbar-padding: 4px;
-    --webkit-scrollbar-color: var(--separator-color);
+    --webkit-scrollbar-color: var(
+    --separator-color);
 }
 
 @media screen and (max-width: 767px) {
@@ -241,14 +257,19 @@ html {
         --fragment-linenumber-border: #1f1f1f;
     }
 }
-
+.directory .levels span {
+    cursor: pointer;
+    padding-left: 2px;
+    padding-right: 2px;
+    color: #06a78e;
+}
 /* dark mode variables are defined twice, to support both the dark-mode without and with doxygen-awesome-darkmode-toggle.js */
 html.dark-mode {
     color-scheme: dark;
 
-    --primary-color: #1982d2;
+    --primary-color: #00a88e;
     --primary-dark-color: #86a9c4;
-    --primary-light-color: #4779ac;
+    --primary-light-color: #06a78e;
 
     --box-shadow: 0 2px 8px 0 rgba(0,0,0,.30);
 
