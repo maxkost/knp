@@ -18,8 +18,8 @@
 namespace knp::framework::input
 {
 /**
- * @brief The InputChannel is a definition of an interface to an input channel that provides a connected entity (for example, an input projection) 
- * with indexes of spiked neurons based on the input stream data.
+ * @brief The InputChannel defines an input channel that provides a connected entity (for example, an input projection) 
+ * with spike messages based on the input stream data.
  * @details You need to create an input channel, associate it with an input stream and provide the stream with input data.
  * After constructing an input channel, connect it with an input entity (for example, a projection) using the `connect_input(channel, target_endpoint, receiver_uid)` method. 
  * To send the input data to a connected entity, call the `send(time)` method. 
@@ -35,7 +35,7 @@ public:
     /**
      * @brief Input channel constructor.
      * @param stream stream from which to receive data.
-     * @param converter functor that generates indexes of spiked neurons based on data from the input stream.
+     * @param converter functor that generates spike messages based on data from the input stream.
      * @param channel_uid sender UID to put into the message header.
      * @param endpoint endpoint used to send messages.
      */
@@ -61,7 +61,7 @@ public:
     std::istream &get_stream() { return *stream_; }
 
     /**
-     * @brief Read data from input stream, form spike message and send them to an endpoint.
+     * @brief Read data from input stream, form a spike message and send it to an endpoint.
      * @note The method throws exceptions if an input stream is set to throw exceptions.
      * @param time current step.
      * @return true if message was sent, false if no message was sent.
