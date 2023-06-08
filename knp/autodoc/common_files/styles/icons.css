@@ -1,13 +1,14 @@
 /* Icons for the classes and namespaces */
 
 span.icon-N {
-    content: url(symbol-namespace.svg);
+    content: url(symbol-namespace_white.svg);
     display: inline-block;
     vertical-align: middle;
+    color: white;
 }
 
 span.icon-C {
-    content: url(symbol-class.svg);
+    content: url(symbol-class_white.svg);
     display: inline-block;
     vertical-align: middle;
 }
