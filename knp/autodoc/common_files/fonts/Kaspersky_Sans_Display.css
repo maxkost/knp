@@ -1,43 +1,44 @@
-
 @font-face {
-    font-family:'Kaspersky Sans Display Light';
+    font-family:'KasperskySansDisplay';
     src:url('Kaspersky_Sans_Display_Light.eot');
     src:url('Kaspersky_Sans_Display_Light.eot?#iefix') format('embedded-opentype'),
         url('Kaspersky_Sans_Display_Light.ttf') format('truetype'),
         url('Kaspersky_Sans_Display_Light.woff') format('woff');
+    font-weight: 300;
 }
+
 @font-face {
-    font-family:'Kaspersky Sans Display Regular';
+    font-family:'KasperskySansDisplay';
     src:url('Kaspersky_Sans_Display_Regular.eot');
     src:url('Kaspersky_Sans_Display_Regular.eot?#iefix') format('embedded-opentype'),
         url('Kaspersky_Sans_Display_Regular.ttf') format('truetype'),
         url('Kaspersky_Sans_Display_Regular.woff') format('woff');
+    font-weight: 400;
 }
+
 @font-face {
-    font-family:'Kaspersky Sans Display SemiBold';
+    font-family:'KasperskySansDisplay';
     src:url('Kaspersky_Sans_Display_SemiBold.eot');
     src:url('Kaspersky_Sans_Display_SemiBold.eot?#iefix') format('embedded-opentype'),
         url('Kaspersky_Sans_Display_SemiBold.ttf') format('truetype'),
         url('Kaspersky_Sans_Display_SemiBold.woff') format('woff');
+    font-weight: 600;
 }
+
 @font-face {
-    font-family:'Kaspersky Sans Display Medium';
+    font-family:'KasperskySansDisplay';
     src:url('Kaspersky_Sans_Display_Medium');
     src:url('Kaspersky_Sans_Display_Medium.eot?#iefix') format('embedded-opentype'),
         url('Kaspersky_Sans_Display_Medium.ttf') format('truetype'),
-        url('Kaspersky_Sans_Display_Medium.woff') format('woff');
+        url('Kaspersky_Sans Display_Medium.woff') format('woff');
+    font-weight: 500;
 }
+
 @font-face {
-    font-family:'Kaspersky Sans Display Bold';
+    font-family:'KasperskySansDisplay';
     src:url('Kaspersky_Sans_Display_Bold');
     src:url('Kaspersky_Sans_Display_Bold.eot?#iefix') format('embedded-opentype'),
         url('Kaspersky_Sans_Display_Bold.ttf') format('truetype'),
         url('Kaspersky_Sans_Display_Bold.woff') format('woff');
-}
-@font-face {
-    font-family:'Kaspersky Sans Display Medium';
-    src:url('Kaspersky_Sans_Display_Bold');
-    src:url('Kaspersky_Sans_Display_Bold.eot?#iefix') format('embedded-opentype'),
-        url('Kaspersky_Sans_Display_Bold.ttf') format('truetype'),
-        url('Kaspersky_Sans_Display_Bold.woff') format('woff');
+    font-weight: 700;
 }
