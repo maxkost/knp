@@ -14,7 +14,7 @@
 
 /**
  * @brief Input channel namespace. 
-*/
+ */
 namespace knp::framework::input
 {
 /**
