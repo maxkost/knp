@@ -15,20 +15,20 @@
 
 
 /**
- * @brief Network output processing namespace.
+ * @brief Output channel namespace.
  */
 namespace knp::framework::output
 {
 /**
- * @brief Base class for output channels.
+ * @brief The OutputChannelBase class is a base class for output channels.
  */
 class OutputChannelBase
 {
 public:
     /**
-     * Base channel constructor.
-     * @param channel_uid channel UID.
-     * @param endpoint the endpoint channel uses for message exchange. Not owned.
+     * @brief Base output channel constructor.
+     * @param channel_uid output channel UID.
+     * @param endpoint endpoint to use for message exchange.
      * @param sender_uid UID of the sender entity.
      */
     OutputChannelBase(const core::UID &channel_uid, core::MessageEndpoint &endpoint, core::UID sender_uid)
@@ -38,8 +38,8 @@ public:
     }
 
     /**
-     * Base channel constructor.
-     * @param endpoint the endpoint channel uses for message exchange. Not owned.
+     * @brief Base output channel constructor.
+     * @param endpoint endpoint to use for message exchange.
      * @param sender_uid UID of the sender entity.
      */
     OutputChannelBase(core::MessageEndpoint &endpoint, core::UID sender_uid) : uid_{true}, endpoint_(endpoint)
@@ -48,32 +48,32 @@ public:
     }
 
     /**
-     * @brief Get channel UID.
-     * @return channel UID.
+     * @brief Get output channel UID.
+     * @return output channel UID.
      */
     [[nodiscard]] const core::UID &get_uid() const { return uid_; }
 
 protected:
     /**
-     * @brief Channel UID.
+     * @brief Output channel UID.
      */
     core::UID uid_;
 
     /**
-     * @brief Endpoint reference for message processing.
+     * @brief Reference to an endpoint used for message exchange.
      */
     core::MessageEndpoint &endpoint_;
 
     /**
-     * @brief Messages the channel has got from
+     * @brief Messages received from output population.
      */
     std::vector<core::messaging::SpikeMessage> message_buffer_;
 };
 
 
 /**
- * @brief Output channel class that uses stream interface.
- * @tparam ResultType type of return values
+ * @brief The OutputChannel class is a definition of an interface to output channels.
+ * @tparam ResultType output data type.
  */
 template <class ResultType>
 class OutputChannel : public OutputChannelBase
@@ -81,9 +81,9 @@ class OutputChannel : public OutputChannelBase
 public:
     /**
      * @brief Output channel constructor.
-     * @param endpoint endpoint for message exchange.
+     * @param endpoint endpoint to use for message exchange.
      * @param converter data converter.
-     * @param sender_uid UID of the sender population.
+     * @param sender_uid UID of the population that sends spike messages.
      */
     OutputChannel(core::MessageEndpoint &endpoint, OutputConverter<ResultType> converter, core::UID sender_uid)
         : OutputChannelBase(endpoint, sender_uid), converter_(std::move(converter))
@@ -92,10 +92,10 @@ public:
 
     /**
      * @brief Output channel constructor.
-     * @param channel_uid channel UID.
-     * @param endpoint endpoint for message exchange.
+     * @param channel_uid output channel UID.
+     * @param endpoint endpoint to use for message exchange.
      * @param converter data converter.
-     * @param sender_uid UID of the sender population.
+     * @param sender_uid UID of the population that sends spike messages.
      */
     OutputChannel(
         const core::UID &channel_uid, core::MessageEndpoint &endpoint, OutputConverter<ResultType> converter,
@@ -105,10 +105,10 @@ public:
     }
 
     /**
-     * @brief Read all accumulated messages from subscription, then convert them to data.
-     * @param step_from starting step.
-     * @param step_to final step for messages. Messages send at this step are also included.
-     * @return data in required format.
+     * @brief Read all accumulated spike messages from subscription and convert them to output data.
+     * @param step_from network step from which the method starts reading spike messages.
+     * @param step_to network step after which the method stops reading spike messages.
+     * @return output data in the required format.
      */
     [[nodiscard]] ResultType get(core::messaging::Step step_from, core::messaging::Step step_to)
     {
@@ -123,7 +123,8 @@ private:
     OutputConverter<ResultType> converter_;
 
     /**
-     * @brief updates message buffer. Should be done before reading data from the channel.
+     * @brief Unload spike messages from the endpoint into the message buffer. 
+     * @details You should call the method before reading data from the channel.
      */
     void update()
     {
@@ -137,10 +138,10 @@ private:
     }
 
     /**
-     * @brief Read a (closed) interval of messages from sorted internal buffer.
-     * @param starting_step left interval border.
-     * @param final_step right interval border. Messages sent at this step are also included.
-     * @return a vector of messages with send_time values in [starting_step, final_step].
+     * @brief Read a specified interval of messages from sorted internal message buffer.
+     * @param starting_step step from which the method starts reading spike messages.
+     * @param final_step step after which the method stops reading spike messages.
+     * @return a vector of messages sent on the specified interval of steps.
      */
     std::vector<core::messaging::SpikeMessage> read_some_from_buffer(
         core::messaging::Step starting_step, core::messaging::Step final_step)

@@ -13,15 +13,16 @@
 
 
 /**
- * @brief Network output processing namespace.
+ * @brief Output channel namespace.
  */
 namespace knp::framework::output
 {
 /**
- * @brief Get a set of all recently spiked neurons.
- * @param message_list spike messages.
- * @param output_size output population size, neuron indexes greater than output_size are ignored.
- * @return set of all neurons that spiked at a period defined by message_list.
+ * @brief Get a set of recently spiked neuron indexes from the `message_list`.
+ * @details The method ignores neuron indexes that are greater than the `output_size` value. 
+ * @param message_list list of spike messages that contain indexes of spiked neurons.
+ * @param output_size output vector size (usually corresponds to the size of an output population).
+ * @return set of spiked neuron indexes.
  */
 std::set<core::messaging::SpikeIndex> converter_to_set(
     const std::vector<core::messaging::SpikeMessage> &message_list, size_t output_size)
