@@ -6,6 +6,8 @@
  */
 
 
+#include <knp/backends/cpu-library/blifat_population.h>
+#include <knp/backends/cpu-library/delta_synapse_projection.h>
 #include <knp/backends/cpu-multi-threaded/backend.h>
 #include <knp/core/core.h>
 #include <knp/devices/cpu.h>
@@ -17,9 +19,6 @@
 #include <vector>
 
 #include <boost/mp11.hpp>
-
-#include "blifat_population.h"
-#include "delta_synapse_projection.h"
 
 
 namespace knp::backends::multi_threaded_cpu
