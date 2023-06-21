@@ -45,13 +45,13 @@ namespace knp::backends::single_threaded_cpu
 
 SingleThreadedCPUBackend::SingleThreadedCPUBackend() : message_endpoint_{message_bus_.create_endpoint()}
 {
-    SPDLOG_INFO("CPU backend instance created...");
+    SPDLOG_INFO("ST CPU backend instance created...");
 }
 
 
 std::shared_ptr<SingleThreadedCPUBackend> SingleThreadedCPUBackend::create()
 {
-    SPDLOG_DEBUG("Creating CPU backend instance...");
+    SPDLOG_DEBUG("Creating ST CPU backend instance...");
     return std::make_shared<SingleThreadedCPUBackend>();
 }
 
