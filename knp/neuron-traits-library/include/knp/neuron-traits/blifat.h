@@ -27,7 +27,7 @@ namespace knp::neuron_traits
 struct BLIFATNeuron;
 
 /**
- * @brief Structure for BLIFAT neuron defualt values.
+ * @brief Structure for BLIFAT neuron default values.
  */
 template <>
 struct default_values<BLIFATNeuron>

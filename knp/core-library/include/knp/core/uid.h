@@ -85,7 +85,7 @@ struct UID
 
     /**
      * @brief Constructor that creates a copy of an existing UID.
-     * @details The constructor copies all attribute values of the exisiting UID to the new UID.
+     * @details The constructor copies all attribute values of the existing UID to the new UID.
      */
     UID(const UID &) = default;
 
