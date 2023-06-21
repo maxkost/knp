@@ -2,7 +2,7 @@
  * @file blifat_population.h
  * @brief BLIFAT neurons calculation routines definition.
  * @author Artiom N.
- * @date 21.03.2023
+ * @date 21.02.2023
  */
 
 #pragma once

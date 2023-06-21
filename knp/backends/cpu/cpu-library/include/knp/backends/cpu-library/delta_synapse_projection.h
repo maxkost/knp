@@ -2,7 +2,7 @@
  * @file delta_synapse_projection.h
  * @brief DeltaSynapse calculation routines definition.
  * @author Artiom N.
- * @date 21.03.2023
+ * @date 21.02.2023
  */
 
 #pragma once

@@ -2,7 +2,7 @@
  * @file blifat_population.cpp
  * @brief BLIFAT neurons calculation routines implementation.
  * @author Artiom N.
- * @date 21.03.2023
+ * @date 21.02.2023
  */
 
 #include <knp/backends/cpu-library/blifat_population.h>
