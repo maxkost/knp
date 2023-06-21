@@ -58,7 +58,7 @@ target_include_directories("${PROJECT_NAME}"
 )
 
 target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main spdlog)
-target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Core KNP::BaseFramework::Core KNP::Core::Backend::CPUSingleThreaded)
+target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Core KNP::BaseFramework::Core KNP::Backends::CPUSingleThreaded)
 
 if(KNP_ENABLE_COVERAGE)
     include(codecoverage)
