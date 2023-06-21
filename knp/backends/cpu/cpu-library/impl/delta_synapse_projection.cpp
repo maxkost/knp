@@ -2,7 +2,7 @@
  * @file delta_synapse_projection.cpp
  * @brief DeltaSynapse and type index calculation routines implementation.
  * @author Artiom N.
- * @date 21.06.2023
+ * @date 21.03.2023
  */
 
 #include <knp/backends/cpu-library/delta_synapse_projection.h>
