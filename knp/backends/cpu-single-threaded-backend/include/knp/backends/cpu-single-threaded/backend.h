@@ -27,35 +27,34 @@
 
 /**
  * @brief Backend namespace.
-*/
+ */
 namespace knp::backends::single_threaded_cpu
 {
 
 /**
  * @brief The SingleThreadedCPUBackend class is a definition of an interface to the single-threaded CPU backend.
-*/
+ */
 class SingleThreadedCPUBackend : public knp::core::Backend
 {
 public:
-
     /**
      * @brief List of neuron types supported by the single-threaded CPU backend.
-    */
+     */
     using SupportedNeurons = boost::mp11::mp_list<knp::neuron_traits::BLIFATNeuron>;
 
     /**
      * @brief List of synapse types supported by the single-threaded CPU backend.
-    */
+     */
     using SupportedSynapses = boost::mp11::mp_list<knp::synapse_traits::DeltaSynapse>;
 
     /**
      * @brief List of supported population types based on neuron types specified in `SupportedNeurons`.
-    */
+     */
     using SupportedPopulations = boost::mp11::mp_transform<knp::core::Population, SupportedNeurons>;
 
     /**
      * @brief List of supported projection types based on synapse types specified in `SupportedSynapses`.
-    */
+     */
     using SupportedProjections = boost::mp11::mp_transform<knp::core::Projection, SupportedSynapses>;
     /**
      * @brief Population variant that contains any population type specified in `SupportedPopulations`.
@@ -116,10 +115,9 @@ public:
     using ProjectionConstIterator = ProjectionContainer::const_iterator;
 
 public:
-
     /**
      * @brief Destructor for single-threaded CPU backend.
-    */
+     */
     ~SingleThreadedCPUBackend() = default;
 
 public:
@@ -227,10 +225,10 @@ public:
     void step() override;
 
     /**
-     * @brief Subscribe internal endpoint to messages. 
+     * @brief Subscribe internal endpoint to messages.
      * @details The method is used to get a subscription neccessary for receiving messages of the specified type.
      * @tparam MessageType message type.
-     * @param receiver receiver UID. 
+     * @param receiver receiver UID.
      * @param senders list of possible sender UIDs.
      * @return subscription.
      */

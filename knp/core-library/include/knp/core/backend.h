@@ -31,10 +31,9 @@ namespace knp::core
 class BOOST_SYMBOL_VISIBLE Backend
 {
 public:
-    
     /**
      * @brief Pure virtual backend destructor.
-    */
+     */
     virtual ~Backend() = 0;
 
 public:
@@ -148,10 +147,9 @@ protected:
     void uninit();
 
 public:
-
     /**
      * @brief Message bus used by backend.
-    */
+     */
     MessageBus message_bus_;
 
 private:

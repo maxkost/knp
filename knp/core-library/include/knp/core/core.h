@@ -16,13 +16,13 @@
 
 
 /**
-* @brief Core library namespace.
-*/ 
+ * @brief Core library namespace.
+ */
 namespace knp::core
 {
 /**
-* @brief Template used to generate a fixed false value for static asserts.
-*/
+ * @brief Template used to generate a fixed false value for static asserts.
+ */
 template <class>
 inline constexpr bool always_false_v = false;
 
@@ -63,12 +63,12 @@ private:
 struct BaseData
 {
     /**
-    * @brief Entity unique identifier.
-    */ 
+     * @brief Entity unique identifier.
+     */
     UID uid_;
     /**
-    * @brief Entity tags.
-    */ 
+     * @brief Entity tags.
+     */
     TagMap tags_;
 };
 

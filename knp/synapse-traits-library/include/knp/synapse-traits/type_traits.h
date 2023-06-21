@@ -9,14 +9,14 @@
 
 /**
  * @brief Synapse traits namespace.
-*/
+ */
 namespace knp::synapse_traits
 {
 
-    /**
-    * @brief Structure for synapse parameters.
-    * @tparam SynapseType type of synapses.
-    */
-    template <typename SynapseType>
-    struct synapse_parameters;
+/**
+ * @brief Structure for synapse parameters.
+ * @tparam SynapseType type of synapses.
+ */
+template <typename SynapseType>
+struct synapse_parameters;
 }  // namespace knp::synapse_traits
