@@ -42,7 +42,7 @@ public:
     ~CPU();
 
     /**
-     * @brief Avoid copy assignement of a CPU device.
+     * @brief Avoid copy assignment of a CPU device.
      */
     CPU(const CPU &) = delete;
 

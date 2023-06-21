@@ -60,7 +60,7 @@ public:
      * @brief Population variant that contains any population type specified in `SupportedPopulations`.
      * @details `PopulationVariants` takes the value of `std::variant<PopulationType_1,..., PopulationType_n>`, where
      * `PopulationType_[1..n]` is the population type specified in `SupportedPopulations`. \n
-     * For example, if `SupportedPopulations` containes BLIFATNeuron and IzhikevichNeuron types,
+     * For example, if `SupportedPopulations` contains BLIFATNeuron and IzhikevichNeuron types,
      * then `PopulationVariants = std::variant<BLIFATNeuron, IzhikevichNeuron>`. \n
      * `PopulationVariants` retains the same order of message types as defined in `SupportedPopulations`.
      * @see ALL_NEURONS.
@@ -70,7 +70,7 @@ public:
      * @brief Projection variant that contains any projection type specified in `SupportedProjections`.
      * @details `ProjectionVariants` takes the value of `std::variant<ProjectionType_1,..., ProjectionType_n>`, where
      * `ProjectionType_[1..n]` is the projection type specified in `SupportedProjections`. \n
-     * For example, if `SupportedProjections` containes DeltaSynapse and AdditiveSTDPSynapse types,
+     * For example, if `SupportedProjections` contains DeltaSynapse and AdditiveSTDPSynapse types,
      * then `ProjectionVariants = std::variant<DeltaSynapse, AdditiveSTDPSynapse>`. \n
      * `ProjectionVariants` retains the same order of message types as defined in `SupportedProjections`.
      * @see ALL_SYNAPSES.
@@ -226,7 +226,7 @@ public:
 
     /**
      * @brief Subscribe internal endpoint to messages.
-     * @details The method is used to get a subscription neccessary for receiving messages of the specified type.
+     * @details The method is used to get a subscription necessary for receiving messages of the specified type.
      * @tparam MessageType message type.
      * @param receiver receiver UID.
      * @param senders list of possible sender UIDs.
