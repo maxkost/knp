@@ -66,7 +66,7 @@ void MultiThreadedCPUBackend::step()
                 using T = std::decay_t<decltype(arg)>;
                 if constexpr (
                     boost::mp11::mp_find<SupportedPopulations, T>{} == boost::mp11::mp_size<SupportedPopulations>{})
-                    static_assert(knp::core::always_false_v<T>, "Population isn't supported by the CPU ST backend!");
+                    static_assert(knp::core::always_false_v<T>, "Population isn't supported by the CPU MT backend!");
                 std::invoke(&MultiThreadedCPUBackend::calculate_population, this, arg);
             },
             e);
@@ -83,7 +83,7 @@ void MultiThreadedCPUBackend::step()
                 using T = std::decay_t<decltype(arg)>;
                 if constexpr (
                     boost::mp11::mp_find<SupportedProjections, T>{} == boost::mp11::mp_size<SupportedProjections>{})
-                    static_assert(knp::core::always_false_v<T>, "Projection isn't supported by the CPU ST backend!");
+                    static_assert(knp::core::always_false_v<T>, "Projection isn't supported by the CPU MT backend!");
                 std::invoke(&MultiThreadedCPUBackend::calculate_projection, this, arg, e.messages_);
             },
             e.arg_);

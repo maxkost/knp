@@ -27,8 +27,11 @@ void calculate_delta_synapse_projection(
     std::vector<SpikeMessage> messages = endpoint.unload_messages<SpikeMessage>(projection.get_uid());
     SpikeMessage message_in = messages.empty() ? SpikeMessage{{UID{}, 0}, {}} : messages[0];
 
-    uint64_t time = step_n;
-    for (auto &neuron_index : message_in.neuron_indexes_)
+    const auto projection_uid = projection.get_uid();
+    const auto projection_presynaptic = projection.get_presynaptic();
+    const auto projection_postsynaptic = projection.get_postsynaptic();
+
+    for (const auto &neuron_index : message_in.neuron_indexes_)
     {
         auto synapses = projection.get_by_presynaptic_neuron(neuron_index);
         // Add new impacts
@@ -36,25 +39,22 @@ void calculate_delta_synapse_projection(
         {
             auto &syn = projection[synapse_index];
 
-            // the message is sent on step N-1, received on N.
+            // the message is sent on step N - 1, received on N.
             size_t key = syn.params.delay_ + step_n - 1;
 
             knp::core::messaging::SynapticImpact impact{
                 synapse_index, syn.params.weight_, syn.params.output_type_, syn.id_from, syn.id_to};
 
             auto iter = future_messages.find(key);
-            if (iter == future_messages.end())
+            if (iter != future_messages.end())
             {
-                knp::core::messaging::SynapticImpactMessage message_out{
-                    {projection.get_uid(), time},
-                    projection.get_postsynaptic(),
-                    projection.get_presynaptic(),
-                    {impact}};
-                future_messages.insert(std::make_pair(key, message_out));
+                iter->second.impacts_.push_back(impact);
             }
             else
             {
-                iter->second.impacts_.push_back(impact);
+                knp::core::messaging::SynapticImpactMessage message_out{
+                    {projection_uid, step_n}, projection_postsynaptic, projection_presynaptic, {impact}};
+                future_messages.insert(std::make_pair(key, message_out));
             }
         }
     }
