@@ -2,7 +2,7 @@
  * Created by Vartenkov An. on 07.04.23.
  */
 
-#include <knp/backends/cpu-single-threaded/backend.h>
+#include <knp/backends/cpu-multi-threaded/backend.h>
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 #include <knp/neuron-traits/blifat.h>
@@ -16,19 +16,18 @@
 #include "generators.h"
 
 
-using Population = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::PopulationVariants;
-using Projection = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::ProjectionVariants;
+using Population = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::PopulationVariants;
+using Projection = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::ProjectionVariants;
 
-
-class TestingBack : public knp::backends::single_threaded_cpu::SingleThreadedCPUBackend
+class TestingBack : public knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend
 {
 public:
     TestingBack() = default;
-    void init() override { knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::init(); }
+    void init() override { knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::init(); }
 };
 
 
-TEST(SingleThreadCpuSuite, SmallestNetwork)
+TEST(MultiThreadCpuSuite, SmallestNetwork)
 {
     // Create a single neuron network: input -> input_projection -> population <=> loop_projection
     TestingBack backend;
@@ -79,7 +78,7 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
 }
 
 
-TEST(SingleThreadCpuSuite, NeuronsGettingTest)
+TEST(MultiThreadCpuSuite, NeuronsGettingTest)
 {
     TestingBack backend;
 
@@ -90,7 +89,7 @@ TEST(SingleThreadCpuSuite, NeuronsGettingTest)
 }
 
 
-TEST(SingleThreadCpuSuite, SynapsesGettingTest)
+TEST(MultiThreadCpuSuite, SynapsesGettingTest)
 {
     TestingBack backend;
 
