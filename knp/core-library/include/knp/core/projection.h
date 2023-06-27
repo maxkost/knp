@@ -87,7 +87,7 @@ public:
     {
         for (size_t i = 0; i < num_iterations; ++i)
         {
-            if (auto params = std::move(generator(i)))
+            if (auto params = generator(i))
             {
                 parameters_.emplace_back(std::move(params.value()));
             }
@@ -201,7 +201,7 @@ public:
         const size_t starting_size = parameters_.size();
         for (size_t i = 0; i < num_iterations; ++i)
         {
-            if (auto data = std::move(generator(i)))
+            if (auto data = generator(i))
             {
                 parameters_.emplace_back(std::move(data.value()));
             }
@@ -241,7 +241,8 @@ public:
 
     /**
      * @brief Remove synapses according to a given criterion.
-     * @tparam Predicate functor that determines if the synapse must be deleted (derived automatically from `predicate` if not specified).
+     * @tparam Predicate functor that determines if the synapse must be deleted (derived automatically from `predicate`
+     * if not specified).
      * @param predicate functor that receives a synapse and returns true if the synapse must be deleted.
      * @return number of deleted synapses.
      */

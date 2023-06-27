@@ -102,13 +102,23 @@ typename std::vector<VT>::iterator Network::find_variant(const knp::core::UID &u
 
 void Network::add_population(Network::AllPopulationVariants &&population)
 {
+    SPDLOG_DEBUG("Add population variant");
     populations_.emplace_back(population);
 }
 
 
 template <typename PopulationType>
-void Network::add_population(PopulationType &&population)
+void Network::add_population(typename std::decay<PopulationType>::type &&population)
 {
+    SPDLOG_DEBUG("Add population");
+    add_population(Network::AllPopulationVariants(population));
+}
+
+
+template <typename PopulationType>
+void Network::add_population(typename std::decay<PopulationType>::type &population)
+{
+    SPDLOG_DEBUG("Add population");
     add_population(Network::AllPopulationVariants(population));
 }
 
@@ -152,7 +162,15 @@ void Network::add_projection(Network::AllProjectionVariants &&projection)
 
 
 template <typename ProjectionType>
-void Network::add_projection(ProjectionType &&projection)
+void Network::add_projection(typename std::decay<ProjectionType>::type &&projection)
+{
+    SPDLOG_DEBUG("Add projection {}", std::string(projection.get_uid()));
+    add_projection(Network::AllProjectionVariants(projection));
+}
+
+
+template <typename ProjectionType>
+void Network::add_projection(typename std::decay<ProjectionType>::type &projection)
 {
     SPDLOG_DEBUG("Add projection {}", std::string(projection.get_uid()));
     add_projection(Network::AllProjectionVariants(projection));
@@ -192,17 +210,19 @@ void Network::remove_projection(const core::UID &projection_uid)
 
 #define INSTANCE_POPULATION_FUNCTIONS(n, template_for_instance, neuron_type)                                          \
     template void Network::add_population<knp::core::Population<neuron_type>>(knp::core::Population<neuron_type> &&); \
+    template void Network::add_population<knp::core::Population<neuron_type>>(knp::core::Population<neuron_type> &);  \
     template knp::core::Population<neuron_type> &Network::get_population<knp::core::Population<neuron_type>>(         \
         const knp::core::UID &);                                                                                      \
     template const knp::core::Population<neuron_type> &Network::get_population<knp::core::Population<neuron_type>>(   \
         const knp::core::UID &) const;
 
-#define INSTANCE_PROJECTION_FUNCTIONS(n, template_for_instance, synapse_type)                                         \
-    template void Network::add_projection<knp::core::Projection<synapse_type>>(                                       \
-        knp::core::Projection<synapse_type> &&);                                                                      \
-    template knp::core::Projection<synapse_type> &Network::get_projection<knp::core::Projection<synapse_type>>(       \
-        const knp::core::UID &);                                                                                      \
-    template const knp::core::Projection<synapse_type> &Network::get_projection<knp::core::Projection<synapse_type>>( \
+#define INSTANCE_PROJECTION_FUNCTIONS(n, template_for_instance, synapse_type)                                          \
+    template void Network::add_projection<knp::core::Projection<synapse_type>>(                                        \
+        knp::core::Projection<synapse_type> &&);                                                                       \
+    template void Network::add_projection<knp::core::Projection<synapse_type>>(knp::core::Projection<synapse_type> &); \
+    template knp::core::Projection<synapse_type> &Network::get_projection<knp::core::Projection<synapse_type>>(        \
+        const knp::core::UID &);                                                                                       \
+    template const knp::core::Projection<synapse_type> &Network::get_projection<knp::core::Projection<synapse_type>>(  \
         const knp::core::UID &) const;
 
 // cppcheck-suppress unknownMacro
