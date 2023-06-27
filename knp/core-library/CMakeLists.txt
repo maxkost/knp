@@ -17,6 +17,22 @@ include(knp-functions)
 
 file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/core/*.h)
 
+set(${PROJECT_NAME}_FB_SOURCES
+    impl/messaging/fbs/message_envelope.fbs
+    impl/messaging/fbs/message_header.fbs
+    impl/messaging/fbs/synapse_traits.fbs
+    impl/messaging/fbs/spike_message.fbs
+    impl/messaging/fbs/synaptic_impact_message.fbs
+)
+
+flatbuffers_generate_headers(
+    TARGET "${PROJECT_NAME}_messaging"
+    INCLUDE_PREFIX "knp_gen_headers"
+    SCHEMAS ${${PROJECT_NAME}_FB_SOURCES}
+    # BINARY_SCHEMAS_DIR "${CMAKE_BINARY_DIR}/gen_includes"
+    # FLAGS --gen-object-api
+)
+
 knp_add_library("${PROJECT_NAME}"
     STATIC
     impl/backend.cpp
@@ -47,7 +63,10 @@ source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "includ
 
 target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS})
 
-target_link_libraries("${PROJECT_NAME}" PRIVATE spdlog::spdlog_header_only zmq flatbuffers KNP::Messaging)
+# Flatbuffers headers must be generated before core compilation started.
+add_dependencies("${PROJECT_NAME}" "${PROJECT_NAME}_messaging")
+
+target_link_libraries("${PROJECT_NAME}" PRIVATE spdlog::spdlog_header_only zmq flatbuffers "${PROJECT_NAME}_messaging")
 # This is using in the library for message parameters.
 target_link_libraries("${PROJECT_NAME}" PUBLIC KNP::Neuron::Traits KNP::Synapse::Traits)
 

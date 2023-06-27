@@ -4,6 +4,10 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 project(knp-doc)
 
+file(REAL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../knp" KNP_DIR)
+
+message(DEBUG "KNP directory: ${KNP_DIR}")
+
 
 if(KNP_BUILD_DOCUMENTATION)
     include("doxygen")
@@ -13,7 +17,7 @@ if(KNP_BUILD_DOCUMENTATION)
             devices-library
             backends/cpu-single-threaded-backend
         )
-        list(APPEND _strip_list "${CMAKE_SOURCE_DIR}/knp/${_i}/include")
+        list(APPEND _strip_list "${KNP_DIR}/${_i}/include")
     endforeach()
 
     add_doxygen(knp-doc "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in"
@@ -21,8 +25,8 @@ if(KNP_BUILD_DOCUMENTATION)
         PROJECT_VERSION "1.0.0"
         PROJECT_BRIEF "API Reference Guide"
         OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/doc_doxygen"
-        INPUT "${CMAKE_SOURCE_DIR}/knp"
-        EXAMPLE_PATH "${CMAKE_SOURCE_DIR}/knp/tests"
+        INPUT "${KNP_DIR}"
+        EXAMPLE_PATH "${KNP_DIR}/tests"
         SOURCE_BROWSER YES
         BUNDLE_ID "com.kaspersky.KNP"
         PUBLISHER_NAME "Kaspersky Lab"
