@@ -47,6 +47,9 @@ source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "includ
 
 target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS})
 
+# Flatbuffers headers must be generated before core compilation started.
+add_dependencies("${PROJECT_NAME}" KNP::Messaging)
+
 target_link_libraries("${PROJECT_NAME}" PRIVATE spdlog::spdlog_header_only zmq flatbuffers KNP::Messaging)
 # This is using in the library for message parameters.
 target_link_libraries("${PROJECT_NAME}" PUBLIC KNP::Neuron::Traits KNP::Synapse::Traits)
