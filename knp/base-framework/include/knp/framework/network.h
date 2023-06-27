@@ -118,10 +118,10 @@ public:
      * @param population population to add.
      */
     template <typename PopulationType>
-    void add_population(std::decay<PopulationType>::type &&population);
+    void add_population(typename std::decay<PopulationType>::type &&population);
 
     template <typename PopulationType>
-    void add_population(std::decay<PopulationType>::type &population);
+    void add_population(typename std::decay<PopulationType>::type &population);
 
     /**
      * @brief Get a population with the given UID from the network.
@@ -160,10 +160,10 @@ public:
      * @param projection projection to add.
      */
     template <typename ProjectionType>
-    void add_projection(std::decay<ProjectionType>::type &&projection);
+    void add_projection(typename std::decay<ProjectionType>::type &&projection);
 
     template <typename ProjectionType>
-    void add_projection(std::decay<ProjectionType>::type &projection);
+    void add_projection(typename std::decay<ProjectionType>::type &projection);
 
     /**
      * @brief Get a projection with the given UID from the network.

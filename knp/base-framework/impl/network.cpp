@@ -108,7 +108,7 @@ void Network::add_population(Network::AllPopulationVariants &&population)
 
 
 template <typename PopulationType>
-void Network::add_population(knp::decay<PopulationType>::type &&population)
+void Network::add_population(typename std::decay<PopulationType>::type &&population)
 {
     SPDLOG_DEBUG("Add population");
     add_population(Network::AllPopulationVariants(population));
@@ -116,7 +116,7 @@ void Network::add_population(knp::decay<PopulationType>::type &&population)
 
 
 template <typename PopulationType>
-void Network::add_population(knp::decay<PopulationType>::type &population)
+void Network::add_population(typename std::decay<PopulationType>::type &population)
 {
     SPDLOG_DEBUG("Add population");
     add_population(Network::AllPopulationVariants(population));
@@ -162,7 +162,7 @@ void Network::add_projection(Network::AllProjectionVariants &&projection)
 
 
 template <typename ProjectionType>
-void Network::add_projection(std::decay<ProjectionType>::type &&projection)
+void Network::add_projection(typename std::decay<ProjectionType>::type &&projection)
 {
     SPDLOG_DEBUG("Add projection {}", std::string(projection.get_uid()));
     add_projection(Network::AllProjectionVariants(projection));
@@ -170,7 +170,7 @@ void Network::add_projection(std::decay<ProjectionType>::type &&projection)
 
 
 template <typename ProjectionType>
-void Network::add_projection(std::decay<ProjectionType>::type &projection)
+void Network::add_projection(typename std::decay<ProjectionType>::type &projection)
 {
     SPDLOG_DEBUG("Add projection {}", std::string(projection.get_uid()));
     add_projection(Network::AllProjectionVariants(projection));
