@@ -20,7 +20,6 @@
  */
 namespace knp::framework
 {
-
 class BackendLoader
 {
 public:

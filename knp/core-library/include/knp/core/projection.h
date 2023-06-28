@@ -9,8 +9,7 @@
 
 #include <knp/core/core.h>
 #include <knp/core/uid.h>
-#include <knp/synapse-traits/output_types.h>
-#include <knp/synapse-traits/type_traits.h>
+#include <knp/synapse-traits/all_traits.h>
 
 #include <algorithm>
 #include <functional>
@@ -241,7 +240,8 @@ public:
 
     /**
      * @brief Remove synapses according to a given criterion.
-     * @tparam Predicate functor that determines if the synapse must be deleted (derived automatically from `predicate` if not specified).
+     * @tparam Predicate functor that determines if the synapse must be deleted (derived automatically from `predicate`
+     * if not specified).
      * @param predicate functor that receives a synapse and returns true if the synapse must be deleted.
      * @return number of deleted synapses.
      */
@@ -327,5 +327,26 @@ private:
      */
     std::vector<Synapse> parameters_;
 };
+
+
+/**
+ * @brief List of projection types based on synapse types specified in `knp::synapse_traits::AllSynapses`.
+ * @details `AllProjections` takes the value of `Projection<SynapseType_1>, Projection<SynapseType_2>, ...,
+ * Projection<SynapseType_n>`, where `SynapseType_[1..n]` is the synapse type specified in
+ * `knp::synapse_traits::AllSynapses`. \n For example, if `knp::synapse_traits::AllSynapses` containes DeltaSynapse and
+ * AdditiveSTDPSynapse types, then `AllProjections` = `Population<DeltaSynapse>, Population<AdditiveSTDPSynapse>`.
+ */
+using AllProjections = boost::mp11::mp_transform<knp::core::Projection, knp::synapse_traits::AllSynapses>;
+
+/**
+ * @brief Projection variant that contains any projection type specified in `AllProjections`.
+ * @details `AllProjectionVariants` takes the value of `std::variant<ProjectionType_1,..., ProjectionType_n>`, where
+ * `ProjectionType_[1..n]` is the projection type specified in `AllProjections`. \n For example, if `AllProjections`
+ * containes DeltaSynapse and AdditiveSTDPSynapse types, then `AllProjectionVariants = std::variant<DeltaSynapse,
+ * AdditiveSTDPSynapse>`. \n `AllProjectionVariants` retains the same order of message types as defined in
+ * `AllProjections`.
+ * @see ALL_SYNAPSES.
+ */
+using AllProjectionsVariant = boost::mp11::mp_rename<AllProjections, std::variant>;
 
 }  // namespace knp::core

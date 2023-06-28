@@ -14,14 +14,30 @@
 namespace knp::framework
 {
 
+void ModelExecutor::init()
+{
+    // TODO: UNCOMMENT THIS!
+    /*
+    const auto &network = model_.get_network();
+    for (auto iter = network.begin_populations(); iter != network.end_populations(); ++iter)
+        backend_->add_population(*iter);
+
+    for (auto iter = network.begin_projections(); iter != network.end_projections(); ++iter)
+        backend_->add_projection(*iter);
+
+    */
+    // network.get_population<>()
+}
+
 void ModelExecutor::run()
 {
-    const auto &network = model_.get_network();
+    // const auto &network = model_.get_network();
 
-    for (const auto &population = network.begin_populations(); population != network.end_populations();
-         /*++population*/)
+    is_stop_.store(false);
+
+    while (!is_stop_)
     {
-        // backend_->
+        backend_->step();
     }
 }
 

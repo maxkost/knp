@@ -43,11 +43,17 @@ public:
      */
     void run();
 
+    /**
+     * @brief Write model to backend.
+     */
+    void init();
+
 private:
     knp::core::BaseData base_;
     knp::framework::BackendLoader backend_loader_;
     std::shared_ptr<core::Backend> backend_;
     knp::framework::Model &model_;
+    volatile std::atomic<bool> is_stop_;
 };
 
 }  // namespace knp::framework

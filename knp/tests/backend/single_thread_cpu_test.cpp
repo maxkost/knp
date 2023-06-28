@@ -58,6 +58,9 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
     backend.load_populations({population});
     backend.load_projections({input_projection, loop_projection});
 
+    std::cout << "AAAA: " << backend.get_supported_projection_indexes().size() << std::endl;
+
+    backend.init();
     auto endpoint = backend.message_bus_.create_endpoint();
 
     knp::core::UID in_channel_uid;
@@ -68,8 +71,6 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
     endpoint.subscribe<knp::core::messaging::SpikeMessage>(out_channel_uid, {population.get_uid()});
 
     std::vector<size_t> results;
-
-    backend.init();
 
     for (size_t step = 0; step < 20; ++step)
     {

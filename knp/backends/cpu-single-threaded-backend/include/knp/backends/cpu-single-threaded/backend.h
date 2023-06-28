@@ -27,35 +27,33 @@
 
 /**
  * @brief Backend namespace.
-*/
+ */
 namespace knp::backends::single_threaded_cpu
 {
-
 /**
  * @brief The SingleThreadedCPUBackend class is a definition of an interface to the single-threaded CPU backend.
-*/
+ */
 class SingleThreadedCPUBackend : public knp::core::Backend
 {
 public:
-
     /**
      * @brief List of neuron types supported by the single-threaded CPU backend.
-    */
+     */
     using SupportedNeurons = boost::mp11::mp_list<knp::neuron_traits::BLIFATNeuron>;
 
     /**
      * @brief List of synapse types supported by the single-threaded CPU backend.
-    */
+     */
     using SupportedSynapses = boost::mp11::mp_list<knp::synapse_traits::DeltaSynapse>;
 
     /**
      * @brief List of supported population types based on neuron types specified in `SupportedNeurons`.
-    */
+     */
     using SupportedPopulations = boost::mp11::mp_transform<knp::core::Population, SupportedNeurons>;
 
     /**
      * @brief List of supported projection types based on synapse types specified in `SupportedSynapses`.
-    */
+     */
     using SupportedProjections = boost::mp11::mp_transform<knp::core::Projection, SupportedSynapses>;
     /**
      * @brief Population variant that contains any population type specified in `SupportedPopulations`.
@@ -67,6 +65,7 @@ public:
      * @see ALL_NEURONS.
      */
     using PopulationVariants = boost::mp11::mp_rename<SupportedPopulations, std::variant>;
+
     /**
      * @brief Projection variant that contains any projection type specified in `SupportedProjections`.
      * @details `ProjectionVariants` takes the value of `std::variant<ProjectionType_1,..., ProjectionType_n>`, where
@@ -100,26 +99,25 @@ public:
     /**
      * @brief Types of population iterators.
      */
-    using PopulationIterator = PopulationContainer::iterator;
+    using PopulationIterator = typename PopulationContainer::iterator;
     /**
      * @brief Types of constant population iterators.
      */
-    using PopulationConstIterator = PopulationContainer::const_iterator;
+    using PopulationConstIterator = typename PopulationContainer::const_iterator;
 
     /**
      * @brief Types of projection iterators.
      */
-    using ProjectionIterator = ProjectionContainer::iterator;
+    using ProjectionIterator = typename ProjectionContainer::iterator;
     /**
      * @brief Types of constant projection iterators.
      */
-    using ProjectionConstIterator = ProjectionContainer::const_iterator;
+    using ProjectionConstIterator = typename ProjectionContainer::const_iterator;
 
 public:
-
     /**
      * @brief Destructor for single-threaded CPU backend.
-    */
+     */
     ~SingleThreadedCPUBackend() = default;
 
 public:
@@ -141,6 +139,25 @@ public:
      * @return vector of supported synapse type names.
      */
     [[nodiscard]] std::vector<std::string> get_supported_synapses() const override;
+
+    /**
+     * @brief Get indexes of supported projections.
+     */
+    [[nodiscard]] std::vector<size_t> get_supported_projection_indexes() const override
+    {
+        return knp::meta::get_supported_type_indexes<core::AllProjections, SupportedProjections>();
+    }
+
+    /**
+     * @brief Get indexes of supported populations.
+     */
+    [[nodiscard]] std::vector<size_t> get_supported_population_indexes() const override
+    {
+        return knp::meta::get_supported_type_indexes<core::AllPopulations, SupportedPopulations>();
+    }
+
+    void add_projections_all(const std::vector<core::AllProjectionsVariant> &projections) override;
+    void add_populations_all(const std::vector<core::AllPopulationsVariant> &populations) override;
 
 public:
     /**
@@ -227,10 +244,10 @@ public:
     void step() override;
 
     /**
-     * @brief Subscribe internal endpoint to messages. 
+     * @brief Subscribe internal endpoint to messages.
      * @details The method is used to get a subscription neccessary for receiving messages of the specified type.
      * @tparam MessageType message type.
-     * @param receiver receiver UID. 
+     * @param receiver receiver UID.
      * @param senders list of possible sender UIDs.
      * @return subscription.
      */
@@ -270,12 +287,14 @@ protected:
         core::messaging::SynapticMessageQueue &message_queue);
 
 private:
+    void append_projection(const std::variant<SupportedProjections> &projection);
+    void append_population(const std::variant<SupportedPopulations> &population);
+
     PopulationContainer populations_;
     ProjectionContainer projections_;
     core::MessageEndpoint message_endpoint_;
     size_t step_ = 0;
 };
-
 
 BOOST_DLL_ALIAS(knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::create, create_knp_backend)
 

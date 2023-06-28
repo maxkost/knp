@@ -100,7 +100,7 @@ typename std::vector<VT>::iterator Network::find_variant(const knp::core::UID &u
 }
 
 
-void Network::add_population(Network::AllPopulationVariants &&population)
+void Network::add_population(core::AllPopulationsVariant &&population)
 {
     populations_.emplace_back(population);
 }
@@ -109,7 +109,7 @@ void Network::add_population(Network::AllPopulationVariants &&population)
 template <typename PopulationType>
 void Network::add_population(PopulationType &&population)
 {
-    add_population(Network::AllPopulationVariants(population));
+    add_population(core::AllPopulationsVariant(population));
 }
 
 
@@ -121,7 +121,7 @@ PopulationType &Network::get_population(const knp::core::UID &population_uid)
         "This population type doesn't supported by the Network class! Add type to the population types list.");
 
     SPDLOG_DEBUG("Get population {}", std::string(population_uid));
-    auto pop_iterator = find_elem<PopulationType, AllPopulationVariants>(population_uid, populations_);
+    auto pop_iterator = find_elem<PopulationType, core::AllPopulationsVariant>(population_uid, populations_);
     if (pop_iterator != populations_.end()) return std::get<PopulationType>(*pop_iterator);
     throw std::runtime_error("Can't find population!");
 }
@@ -137,14 +137,14 @@ const PopulationType &Network::get_population(const knp::core::UID &population_u
 void Network::remove_population(const core::UID &population_uid)
 {
     SPDLOG_DEBUG("Remove population with uid {}", std::string(population_uid));
-    auto result = find_variant<AllPopulations, AllPopulationVariants>(population_uid, populations_);
+    auto result = find_variant<AllPopulations, core::AllPopulationsVariant>(population_uid, populations_);
 
     if (result == populations_.end()) throw std::runtime_error("Can't find population!");
     populations_.erase(result);
 }
 
 
-void Network::add_projection(Network::AllProjectionVariants &&projection)
+void Network::add_projection(core::AllProjectionsVariant &&projection)
 {
     SPDLOG_DEBUG("Add projection variant");
     projections_.emplace_back(projection);
@@ -155,7 +155,7 @@ template <typename ProjectionType>
 void Network::add_projection(ProjectionType &&projection)
 {
     SPDLOG_DEBUG("Add projection {}", std::string(projection.get_uid()));
-    add_projection(Network::AllProjectionVariants(projection));
+    add_projection(core::AllProjectionsVariant(projection));
 }
 
 
@@ -163,12 +163,12 @@ template <typename ProjectionType>
 ProjectionType &Network::get_projection(const knp::core::UID &projection_uid)
 {
     static_assert(
-        boost::mp11::mp_contains<AllProjections, ProjectionType>(),
+        boost::mp11::mp_contains<core::AllProjections, ProjectionType>(),
         "This projection type doesn't supported by the Network class! Add type to the projection types list.");
 
     SPDLOG_DEBUG("Get projection {}", std::string(projection_uid));
 
-    auto proj_iterator = find_elem<ProjectionType, AllProjectionVariants>(projection_uid, projections_);
+    auto proj_iterator = find_elem<ProjectionType, core::AllProjectionsVariant>(projection_uid, projections_);
     if (proj_iterator != projections_.end()) return std::get<ProjectionType>(*proj_iterator);
     throw std::runtime_error("Can't find projection!");
 }
@@ -184,7 +184,7 @@ const ProjectionType &Network::get_projection(const knp::core::UID &projection_u
 void Network::remove_projection(const core::UID &projection_uid)
 {
     SPDLOG_DEBUG("Remove projection with uid {}", std::string(projection_uid));
-    auto result = find_variant<AllProjections, AllProjectionVariants>(projection_uid, projections_);
+    auto result = find_variant<core::AllProjections, core::AllProjectionsVariant>(projection_uid, projections_);
 
     if (result == projections_.end()) throw std::runtime_error("Can't find projection!");
     projections_.erase(result);
@@ -204,10 +204,5 @@ void Network::remove_projection(const core::UID &projection_uid)
         const knp::core::UID &);                                                                                      \
     template const knp::core::Projection<synapse_type> &Network::get_projection<knp::core::Projection<synapse_type>>( \
         const knp::core::UID &) const;
-
-// cppcheck-suppress unknownMacro
-BOOST_PP_SEQ_FOR_EACH(INSTANCE_POPULATION_FUNCTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_NEURONS))
-// cppcheck-suppress unknownMacro
-BOOST_PP_SEQ_FOR_EACH(INSTANCE_PROJECTION_FUNCTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_SYNAPSES))
 
 }  // namespace knp::framework

@@ -101,7 +101,8 @@ private:
  * @param receiver_uid object UID.
  * @note target object should be able to receive spikes.
  */
-void connect_input(const InputChannel &channel, core::MessageEndpoint &target_endpoint, const core::UID &receiver_uid)
+inline void connect_input(
+    const InputChannel &channel, core::MessageEndpoint &target_endpoint, const core::UID &receiver_uid)
 {
     target_endpoint.subscribe<core::messaging::SpikeMessage>(receiver_uid, {channel.get_uid()});
 }

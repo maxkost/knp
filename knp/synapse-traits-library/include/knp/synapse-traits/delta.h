@@ -9,6 +9,7 @@
 
 #include <numeric>
 
+#include "output_types.h"
 #include "type_traits.h"
 
 /**

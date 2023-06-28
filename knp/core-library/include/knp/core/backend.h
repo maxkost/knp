@@ -10,6 +10,8 @@
 #include <knp/core/core.h>
 #include <knp/core/device.h>
 #include <knp/core/message_bus.h>
+#include <knp/core/population.h>
+#include <knp/core/projection.h>
 
 #include <atomic>
 #include <memory>
@@ -24,17 +26,15 @@
  */
 namespace knp::core
 {
-
 /**
  * @brief The Backend class is the base class for backends.
  */
 class BOOST_SYMBOL_VISIBLE Backend
 {
 public:
-    
     /**
      * @brief Pure virtual backend destructor.
-    */
+     */
     virtual ~Backend() = 0;
 
 public:
@@ -66,8 +66,31 @@ public:
      * @return vector of supported synapse type names.
      */
     [[nodiscard]] virtual std::vector<std::string> get_supported_synapses() const = 0;
+    /**
+     * @brief Get indexes of supported populations.
+     * @return vector of indexes of supported populations.
+     */
+    [[nodiscard]] virtual std::vector<size_t> get_supported_population_indexes() const = 0;
+    /**
+     * @brief Get indexes of supported projections.
+     * @return vector of indexes of supported projections.
+     */
+    [[nodiscard]] virtual std::vector<size_t> get_supported_projection_indexes() const = 0;
+
 
 public:
+    /**
+     * @brief Add projections to backend. Throw exception if there are unsupported projection types.
+     * @param projections projections to add.
+     */
+    virtual void add_projections_all(const std::vector<AllProjectionsVariant> &projections) = 0;
+
+    /**
+     * @brief Add populations to backend. Throw exception if there are unsupported population types.
+     * @param projections populations to add.
+     */
+    virtual void add_populations_all(const std::vector<AllPopulationsVariant> &populations) = 0;
+
     /**
      * @brief Remove projections with given UIDs from the backend.
      * @param uids UIDs of projections to remove.
@@ -138,26 +161,28 @@ protected:
      * @brief Backend default constructor.
      */
     Backend() = default;
+
     /**
      * @brief Initialize backend before starting network execution.
      */
     virtual void init() = 0;
+
     /**
      * @brief Set backend to the uninitialized state.
      */
     void uninit();
 
-public:
 
+public:
     /**
      * @brief Message bus used by backend.
-    */
+     */
     MessageBus message_bus_;
 
 private:
     BaseData base_;
     std::atomic<bool> initialized_ = false;
-    std::atomic<bool> started_ = false;
+    volatile std::atomic<bool> started_ = false;
     std::vector<std::unique_ptr<Device>> devices_;
 };
 

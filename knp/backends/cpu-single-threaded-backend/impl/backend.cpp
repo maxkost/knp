@@ -24,25 +24,6 @@
 
 namespace knp::backends::single_threaded_cpu
 {
-
-// template <typename TypeList, auto CalculateMethod, typename Container>
-// inline void SingleThreadedCPUBackend::calculator(Container &container)
-//{
-//     for (auto &e : container)
-//     {
-//         std::visit(
-//             [this, &e](auto &arg)
-//             {
-//                 using T = std::decay_t<decltype(arg)>;
-//                 if constexpr (boost::mp11::mp_find<TypeList, T>{} == boost::mp11::mp_size<TypeList>{})
-//                     static_assert(knp::core::always_false_v<T>, "Type isn't supported by the CPU ST backend!");
-//                 std::invoke(CalculateMethod, this, arg, e);
-//             },
-//             e.arg_);
-//     }
-// }
-
-
 SingleThreadedCPUBackend::SingleThreadedCPUBackend() : message_endpoint_{message_bus_.create_endpoint()}
 {
     SPDLOG_INFO("CPU backend instance created...");
@@ -68,6 +49,30 @@ std::vector<std::string> SingleThreadedCPUBackend::get_supported_synapses() cons
     return knp::meta::get_supported_type_names<knp::synapse_traits::AllSynapses, SupportedSynapses>(
         knp::synapse_traits::synapses_names);
 }
+
+template <typename AllVariants, typename SupportedVariants>
+SupportedVariants convert_variant(const AllVariants &input)
+{
+    SupportedVariants result = std::visit([](auto &&arg) -> SupportedVariants { return arg; }, input);
+    return result;
+}
+
+void SingleThreadedCPUBackend::add_projections_all(const std::vector<core::AllProjectionsVariant> &projections)
+{
+    std::vector<size_t> indexes = get_supported_projection_indexes();
+    for (auto &projection : projections)
+    {
+        if (std::find(indexes.begin(), indexes.end(), projection.index()) == indexes.end())
+            throw(std::runtime_error("Not supported projection type"));
+
+
+        projections_.push_back(ProjectionWrapper{
+            convert_variant<core::AllProjectionsVariant, SingleThreadedCPUBackend::ProjectionVariants>(projection)});
+    }
+}
+
+
+void SingleThreadedCPUBackend::add_populations_all(const std::vector<core::AllPopulationsVariant> &populations) {}
 
 
 void SingleThreadedCPUBackend::step()
