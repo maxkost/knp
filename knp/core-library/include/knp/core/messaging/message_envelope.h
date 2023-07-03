@@ -25,7 +25,7 @@ namespace knp::core::messaging
 /**
 * @brief Message variant that contains any message type specified in `AllMessages`.
 * @details `MessageVariant` takes the value of `std::variant<MessageType_1,..., MessageType_n>`, where `MessageType_[1..n]` is the message type specified in `AllMessages`. 
-* \n For example, if `AllMessages` containes SpikeMessage and SynapticImpactMessage types, then `MessageVariant = std::variant<SpikeMessage, SynapticImpactMessage>`. 
+* \n For example, if `AllMessages` contains SpikeMessage and SynapticImpactMessage types, then `MessageVariant = std::variant<SpikeMessage, SynapticImpactMessage>`. 
 * \n `MessageVariant` retains the same order of message types as defined in `AllMessages`.
 * @see ALL_MESSAGES.
 */

@@ -36,7 +36,7 @@ public:
      * @brief List of population types based on neuron types specified in `knp::neuron_traits::AllNeurons`.
      * @details `AllPopulations` takes the value of `Population<NeuronType_1>, Population<NeuronType_2>, ...,
      * Population<NeuronType_n>`, where `NeuronType_[1..n]` is the neuron type specified in
-     * `knp::neuron_traits::AllNeurons`. \n For example, if `knp::neuron_traits::AllNeurons` containes BLIFATNeuron and
+     * `knp::neuron_traits::AllNeurons`. \n For example, if `knp::neuron_traits::AllNeurons` contains BLIFATNeuron and
      * IzhikevichNeuron types, then `AllPopulations` = `Population<BLIFATNeuron>, Population<IzhikevichNeuron>`.
      */
     using AllPopulations = boost::mp11::mp_transform<knp::core::Population, knp::neuron_traits::AllNeurons>;
@@ -45,7 +45,7 @@ public:
      * @brief List of projection types based on synapse types specified in `knp::synapse_traits::AllSynapses`.
      * @details `AllProjections` takes the value of `Projection<SynapseType_1>, Projection<SynapseType_2>, ...,
      * Projection<SynapseType_n>`, where `SynapseType_[1..n]` is the synapse type specified in
-     * `knp::synapse_traits::AllSynapses`. \n For example, if `knp::synapse_traits::AllSynapses` containes DeltaSynapse
+     * `knp::synapse_traits::AllSynapses`. \n For example, if `knp::synapse_traits::AllSynapses` contains DeltaSynapse
      * and AdditiveSTDPSynapse types, then `AllProjections` = `Population<DeltaSynapse>,
      * Population<AdditiveSTDPSynapse>`.
      */
@@ -55,7 +55,7 @@ public:
      * @brief Population variant that contains any population type specified in `AllPopulations`.
      * @details `AllPopulationVariants` takes the value of `std::variant<PopulationType_1,..., PopulationType_n>`, where
      * `PopulationType_[1..n]` is the population type specified in `AllPopulations`. \n For example, if `AllPopulations`
-     * containes BLIFATNeuron and IzhikevichNeuron types, then `AllPopulationVariants = std::variant<BLIFATNeuron,
+     * contains BLIFATNeuron and IzhikevichNeuron types, then `AllPopulationVariants = std::variant<BLIFATNeuron,
      * IzhikevichNeuron>`. \n `AllPopulationVariants` retains the same order of message types as defined in
      * `AllPopulations`.
      * @see ALL_NEURONS.
@@ -65,7 +65,7 @@ public:
      * @brief Projection variant that contains any projection type specified in `AllProjections`.
      * @details `AllProjectionVariants` takes the value of `std::variant<ProjectionType_1,..., ProjectionType_n>`, where
      * `ProjectionType_[1..n]` is the projection type specified in `AllProjections`. \n For example, if `AllProjections`
-     * containes DeltaSynapse and AdditiveSTDPSynapse types, then `AllProjectionVariants = std::variant<DeltaSynapse,
+     * contains DeltaSynapse and AdditiveSTDPSynapse types, then `AllProjectionVariants = std::variant<DeltaSynapse,
      * AdditiveSTDPSynapse>`. \n `AllProjectionVariants` retains the same order of message types as defined in
      * `AllProjections`.
      * @see ALL_SYNAPSES.
