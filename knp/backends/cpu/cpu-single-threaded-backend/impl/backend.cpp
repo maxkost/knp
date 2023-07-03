@@ -177,7 +177,7 @@ void SingleThreadedCPUBackend::init()
 
 void SingleThreadedCPUBackend::calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population)
 {
-    SPDLOG_TRACE(std::string("Calculate population") + std::string(population.get_uid()));
+    SPDLOG_TRACE("Calculate population {}", std::string(population.get_uid()));
     calculate_blifat_population(population, message_endpoint_, step_);
 }
 
@@ -186,7 +186,7 @@ void SingleThreadedCPUBackend::calculate_projection(
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
     core::messaging::SynapticMessageQueue &message_queue)
 {
-    SPDLOG_TRACE(std::string("Calculate projection ") + std::string(projection.get_uid()));
+    SPDLOG_TRACE("Calculate projection {}", std::string(projection.get_uid()));
     calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, step_);
 }
 

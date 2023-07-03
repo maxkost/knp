@@ -116,6 +116,10 @@ public:
 
 public:
     /**
+     * @brief Default constructor for single-threaded CPU backend.
+     */
+    SingleThreadedCPUBackend();
+    /**
      * @brief Destructor for single-threaded CPU backend.
      */
     ~SingleThreadedCPUBackend() = default;
@@ -238,12 +242,6 @@ public:
     {
         return message_endpoint_.subscribe<MessageType>(receiver, senders);
     }
-
-public:
-    /**
-     * @brief Default constructor for single-threaded CPU backend.
-     */
-    SingleThreadedCPUBackend();
 
 protected:
     /**
