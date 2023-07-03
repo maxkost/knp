@@ -18,8 +18,7 @@ using knp::core::UID;
 using knp::core::messaging::SpikeMessage;
 
 
-// TODO: Split it up into reusable code fragments
-void calculate_delta_synapse_projection(
+MessageQueue::const_iterator calculate_delta_synapse_projection_data(
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, knp::core::MessageEndpoint &endpoint,
     MessageQueue &future_messages, size_t step_n)
 {
@@ -58,11 +57,33 @@ void calculate_delta_synapse_projection(
             }
         }
     }
-    auto out_iter = future_messages.find(step_n);
+    return future_messages.find(step_n);
+}
+
+
+void calculate_delta_synapse_projection(
+    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, knp::core::MessageEndpoint &endpoint,
+    MessageQueue &future_messages, size_t step_n)
+{
+    auto out_iter = calculate_delta_synapse_projection_data(projection, endpoint, future_messages, step_n);
     if (out_iter != future_messages.end())
     {
         SPDLOG_TRACE("Projection is sending an impact message");
         // Send a message and remove it from the queue
+        endpoint.send_message(out_iter->second);
+        future_messages.erase(out_iter);
+    }
+}
+
+
+void calculate_delta_synapse_projection(
+    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, knp::core::MessageEndpoint &endpoint,
+    MessageQueue &future_messages, size_t step_n, std::mutex &m)
+{
+    auto out_iter = calculate_delta_synapse_projection_data(projection, endpoint, future_messages, step_n);
+    if (out_iter != future_messages.end())
+    {
+        std::lock_guard<std::mutex> lg(m);
         endpoint.send_message(out_iter->second);
         future_messages.erase(out_iter);
     }

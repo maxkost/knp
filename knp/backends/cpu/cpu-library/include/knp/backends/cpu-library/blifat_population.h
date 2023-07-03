@@ -11,6 +11,8 @@
 #include <knp/core/population.h>
 #include <knp/neuron-traits/blifat.h>
 
+#include <mutex>
+#include <optional>
 #include <queue>
 #include <vector>
 
@@ -23,3 +25,8 @@
 void calculate_blifat_population(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint,
     size_t step_n);
+
+
+void calculate_blifat_population(
+    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint,
+    size_t step_n, std::mutex &m);

@@ -16,6 +16,7 @@
 #include <spdlog/spdlog.h>
 
 #include <functional>
+#include <optional>
 #include <vector>
 
 #include <boost/mp11.hpp>
@@ -25,9 +26,16 @@ namespace knp::backends::multi_threaded_cpu
 {
 
 
-MultiThreadedCPUBackend::MultiThreadedCPUBackend() : message_endpoint_{message_bus_.create_endpoint()}
+MultiThreadedCPUBackend::MultiThreadedCPUBackend(size_t thread_count)
+    : message_endpoint_{message_bus_.create_endpoint()}, calc_pool_{thread_count}
 {
-    SPDLOG_INFO("MT CPU backend instance created...");
+    SPDLOG_INFO("MT CPU backend instance created, threads count = {}...", thread_count);
+}
+
+
+MultiThreadedCPUBackend::~MultiThreadedCPUBackend()
+{
+    // stop() and join() will be called in the thread_pool desctructor.
 }
 
 
@@ -67,13 +75,18 @@ void MultiThreadedCPUBackend::step()
                 if constexpr (
                     boost::mp11::mp_find<SupportedPopulations, T>{} == boost::mp11::mp_size<SupportedPopulations>{})
                     static_assert(knp::core::always_false_v<T>, "Population isn't supported by the CPU MT backend!");
-                std::invoke(&MultiThreadedCPUBackend::calculate_population, this, arg);
+                boost::asio::post(
+                    calc_pool_,
+                    [this, &arg]() { std::invoke(&MultiThreadedCPUBackend::calculate_population, this, arg); });
             },
             e);
     }
 
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
+
+    //    calc_pool_.join();
+
     // Calculate projections.
     for (auto &e : projections_)
     {
@@ -84,13 +97,19 @@ void MultiThreadedCPUBackend::step()
                 if constexpr (
                     boost::mp11::mp_find<SupportedProjections, T>{} == boost::mp11::mp_size<SupportedProjections>{})
                     static_assert(knp::core::always_false_v<T>, "Projection isn't supported by the CPU MT backend!");
-                std::invoke(&MultiThreadedCPUBackend::calculate_projection, this, arg, e.messages_);
+                // Quick and dirty.
+                boost::asio::post(
+                    calc_pool_, [this, &arg, &e]()
+                    { std::invoke(&MultiThreadedCPUBackend::calculate_projection, this, arg, e.messages_); });
             },
             e.arg_);
     }
 
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
+
+    //    calc_pool_.join();
+
     ++step_;
     SPDLOG_DEBUG("Step finished");
 }
@@ -160,8 +179,8 @@ void MultiThreadedCPUBackend::init()
 
 void MultiThreadedCPUBackend::calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population)
 {
-    SPDLOG_TRACE(std::string("Calculate population") + std::string(population.get_uid()));
-    calculate_blifat_population(population, message_endpoint_, step_);
+    SPDLOG_TRACE("Calculate population {}", std::string(population.get_uid()));
+    calculate_blifat_population(population, message_endpoint_, step_, ep_mutex_);
 }
 
 
@@ -169,8 +188,8 @@ void MultiThreadedCPUBackend::calculate_projection(
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
     core::messaging::SynapticMessageQueue &message_queue)
 {
-    SPDLOG_TRACE(std::string("Calculate projection ") + std::string(projection.get_uid()));
-    calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, step_);
+    SPDLOG_TRACE("Calculate projection {}", std::string(projection.get_uid()));
+    calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, step_, ep_mutex_);
 }
 
 

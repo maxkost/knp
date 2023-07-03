@@ -20,6 +20,7 @@
 #include <variant>
 #include <vector>
 
+#include <boost/asio.hpp>
 #include <boost/config.hpp>
 #include <boost/dll/alias.hpp>
 #include <boost/mp11.hpp>
@@ -116,9 +117,13 @@ public:
 
 public:
     /**
+     * @brief Default constructor for multi-threaded CPU backend.
+     */
+    explicit MultiThreadedCPUBackend(size_t thread_count = boost::asio::detail::default_thread_pool_size());
+    /**
      * @brief Destructor for multi-threaded CPU backend.
      */
-    ~MultiThreadedCPUBackend() = default;
+    ~MultiThreadedCPUBackend();
 
 public:
     static std::shared_ptr<MultiThreadedCPUBackend> create();
@@ -239,12 +244,6 @@ public:
         return message_endpoint_.subscribe<MessageType>(receiver, senders);
     }
 
-public:
-    /**
-     * @brief Default constructor for multi-threaded CPU backend.
-     */
-    MultiThreadedCPUBackend();
-
 protected:
     /**
      * @copydoc knp::core::Backend::init()
@@ -272,6 +271,8 @@ private:
     ProjectionContainer projections_;
     core::MessageEndpoint message_endpoint_;
     size_t step_ = 0;
+    boost::asio::thread_pool calc_pool_;
+    std::mutex ep_mutex_;
 };
 
 

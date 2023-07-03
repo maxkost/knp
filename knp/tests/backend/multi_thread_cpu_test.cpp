@@ -19,10 +19,10 @@
 using Population = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::PopulationVariants;
 using Projection = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::ProjectionVariants;
 
-class TestingBack : public knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend
+class MTestingBack : public knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend
 {
 public:
-    TestingBack() = default;
+    MTestingBack() = default;
     void init() override { knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::init(); }
 };
 
@@ -30,7 +30,7 @@ public:
 TEST(MultiThreadCpuSuite, SmallestNetwork)
 {
     // Create a single neuron network: input -> input_projection -> population <=> loop_projection
-    TestingBack backend;
+    MTestingBack backend;
 
     namespace kt = knp::testing;
 
@@ -80,7 +80,7 @@ TEST(MultiThreadCpuSuite, SmallestNetwork)
 
 TEST(MultiThreadCpuSuite, NeuronsGettingTest)
 {
-    TestingBack backend;
+    MTestingBack backend;
 
     auto s_neurons = backend.get_supported_neurons();
 
@@ -91,7 +91,7 @@ TEST(MultiThreadCpuSuite, NeuronsGettingTest)
 
 TEST(MultiThreadCpuSuite, SynapsesGettingTest)
 {
-    TestingBack backend;
+    MTestingBack backend;
 
     auto s_synapses = backend.get_supported_synapses();
 

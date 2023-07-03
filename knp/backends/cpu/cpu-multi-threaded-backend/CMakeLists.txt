@@ -12,7 +12,7 @@ include(GNUInstallDirs)
 include(clang-tidy)
 include(knp-functions)
 
-find_package(Boost 1.66.0 REQUIRED)
+find_package(Boost 1.66.0 COMPONENTS system REQUIRED)
 
 file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/backends/cpu-multi-threaded/*.h)
 source_group(source REGULAR_EXPRESSION "impl/.*")
@@ -26,6 +26,6 @@ knp_add_library("${PROJECT_NAME}"
 
 add_library(KNP::Backends::CPUMultiThreaded ALIAS "${PROJECT_NAME}")
 
-target_link_libraries("${PROJECT_NAME}" PRIVATE Boost::headers spdlog::spdlog_header_only)
+target_link_libraries("${PROJECT_NAME}" PRIVATE Boost::headers Boost::system spdlog::spdlog_header_only)
 target_link_libraries("${PROJECT_NAME}" PUBLIC KNP::Core KNP::Devices::CPU)
 target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Backends::CPU::Library)

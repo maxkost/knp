@@ -129,9 +129,8 @@ void calculate_neurons_post_input_state(
 }
 
 
-void calculate_blifat_population(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint,
-    size_t step_n)
+knp::core::messaging::SpikeData calculate_blifat_population_data(
+    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint)
 {
     SPDLOG_DEBUG("Calculating BLIFAT population {}", std::string{population.get_uid()});
     // This whole function might be optimizable if we find a way to not loop over the whole population
@@ -141,10 +140,35 @@ void calculate_blifat_population(
     knp::core::messaging::SpikeData neuron_indexes;
     calculate_neurons_post_input_state(population, neuron_indexes);
 
-    uint64_t time = step_n;
+    return neuron_indexes;
+}
+
+
+void calculate_blifat_population(
+    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint,
+    size_t step_n)
+{
+    auto neuron_indexes{calculate_blifat_population_data(population, endpoint)};
+
     if (!neuron_indexes.empty())
     {
-        knp::core::messaging::SpikeMessage res_message{{population.get_uid(), time}, neuron_indexes};
+        knp::core::messaging::SpikeMessage res_message{{population.get_uid(), step_n}, neuron_indexes};
+        endpoint.send_message(res_message);
+        SPDLOG_DEBUG("Sent {} spike(s)", res_message.neuron_indexes_.size());
+    }
+}
+
+
+void calculate_blifat_population(
+    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint,
+    size_t step_n, std::mutex &m)
+{
+    auto neuron_indexes{calculate_blifat_population_data(population, endpoint)};
+
+    if (!neuron_indexes.empty())
+    {
+        knp::core::messaging::SpikeMessage res_message{{population.get_uid(), step_n}, neuron_indexes};
+        std::lock_guard<std::mutex> lg(m);
         endpoint.send_message(res_message);
         SPDLOG_DEBUG("Sent {} spike(s)", res_message.neuron_indexes_.size());
     }
