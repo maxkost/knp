@@ -16,35 +16,34 @@
 
 /**
  * @brief Device namespace.
-*/
+ */
 namespace knp::devices::cpu
 {
 
 /**
-* @brief The CpuPower class stores the power counter monitor (PCM) instance that monitors the state of a processor.
-*/
+ * @brief The CpuPower class stores the power counter monitor (PCM) instance that monitors the state of a processor.
+ */
 class CpuPower;
 
 /**
  * @brief The CPU class is a definition of an interface to the CPU device.
-*/
+ */
 class CPU : public knp::core::Device
 {
 public:
-
     /**
      * @brief CPU device constructor.
-    */
+     */
     CPU();
 
     /**
      * @brief CPU device destructor.
-    */
+     */
     ~CPU();
 
     /**
      * @brief Avoid copy assignment of a CPU device.
-    */
+     */
     CPU(const CPU &) = delete;
 
     /**
@@ -54,7 +53,7 @@ public:
 
     /**
      * @brief CPU device copy operator.
-    */
+     */
     CPU &operator=(CPU &&);
 
 public:

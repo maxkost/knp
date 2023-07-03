@@ -22,8 +22,8 @@ enable_testing()
 include(GoogleTest)
 
 file(GLOB_RECURSE COMMON_SOURCE CONFIGURE_DEPENDS
-     "*_test.cpp"
-     "*.h")
+     "*.h"
+     "*_test.cpp")
 
 add_executable("${PROJECT_NAME}" ${COMMON_SOURCE} tester.cpp utility.cpp)
 
@@ -58,7 +58,7 @@ target_include_directories("${PROJECT_NAME}"
 )
 
 target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main spdlog)
-target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Core KNP::BaseFramework::Core KNP::Core::Backend::CPUSingleThreaded)
+target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Core KNP::BaseFramework::Core KNP::Backends::CPUSingleThreaded KNP::Backends::CPUMultiThreaded)
 
 if(KNP_ENABLE_COVERAGE)
     include(codecoverage)

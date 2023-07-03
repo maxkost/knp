@@ -10,7 +10,7 @@
 
 /**
  * @brief Neuron traits namespace.
-*/
+ */
 namespace knp::neuron_traits
 {
 

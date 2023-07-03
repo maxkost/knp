@@ -24,15 +24,14 @@ namespace knp::core
 class MessageBus
 {
 public:
-    
     /**
      * @brief Default message bus constructor.
-    */
+     */
     MessageBus();
 
     /**
      * @brief Message bus destructor.
-    */
+     */
     ~MessageBus();
 
 public:

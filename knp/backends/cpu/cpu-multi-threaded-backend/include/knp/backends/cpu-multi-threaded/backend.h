@@ -1,8 +1,8 @@
 /**
  * @file backend.h
- * @brief Single threaded CPU backend class definition.
+ * @brief Multi threaded CPU backend class definition.
  * @author Artiom N.
- * @date 30.01.2023
+ * @date 21.06.2023
  */
 
 #pragma once
@@ -20,48 +20,48 @@
 #include <variant>
 #include <vector>
 
+#include <boost/asio.hpp>
 #include <boost/config.hpp>
 #include <boost/dll/alias.hpp>
 #include <boost/mp11.hpp>
 
 
 /**
- * @brief Backend namespace.
-*/
-namespace knp::backends::single_threaded_cpu
+ * @brief Multi-threaded backend namespace.
+ */
+namespace knp::backends::multi_threaded_cpu
 {
 
 /**
- * @brief The SingleThreadedCPUBackend class is a definition of an interface to the single-threaded CPU backend.
-*/
-class SingleThreadedCPUBackend : public knp::core::Backend
+ * @brief The MultiThreadedCPUBackend class is a definition of an interface to the single-threaded CPU backend.
+ */
+class MultiThreadedCPUBackend : public knp::core::Backend
 {
 public:
-
     /**
-     * @brief List of neuron types supported by the single-threaded CPU backend.
-    */
+     * @brief List of neuron types supported by the multi-threaded CPU backend.
+     */
     using SupportedNeurons = boost::mp11::mp_list<knp::neuron_traits::BLIFATNeuron>;
 
     /**
-     * @brief List of synapse types supported by the single-threaded CPU backend.
-    */
+     * @brief List of synapse types supported by the multi-threaded CPU backend.
+     */
     using SupportedSynapses = boost::mp11::mp_list<knp::synapse_traits::DeltaSynapse>;
 
     /**
      * @brief List of supported population types based on neuron types specified in `SupportedNeurons`.
-    */
+     */
     using SupportedPopulations = boost::mp11::mp_transform<knp::core::Population, SupportedNeurons>;
 
     /**
      * @brief List of supported projection types based on synapse types specified in `SupportedSynapses`.
-    */
+     */
     using SupportedProjections = boost::mp11::mp_transform<knp::core::Projection, SupportedSynapses>;
     /**
      * @brief Population variant that contains any population type specified in `SupportedPopulations`.
      * @details `PopulationVariants` takes the value of `std::variant<PopulationType_1,..., PopulationType_n>`, where
      * `PopulationType_[1..n]` is the population type specified in `SupportedPopulations`. \n
-     * For example, if `SupportedPopulations` contains BLIFATNeuron and IzhikevichNeuron types,
+     * For example, if `SupportedPopulations` containes BLIFATNeuron and IzhikevichNeuron types,
      * then `PopulationVariants = std::variant<BLIFATNeuron, IzhikevichNeuron>`. \n
      * `PopulationVariants` retains the same order of message types as defined in `SupportedPopulations`.
      * @see ALL_NEURONS.
@@ -71,7 +71,7 @@ public:
      * @brief Projection variant that contains any projection type specified in `SupportedProjections`.
      * @details `ProjectionVariants` takes the value of `std::variant<ProjectionType_1,..., ProjectionType_n>`, where
      * `ProjectionType_[1..n]` is the projection type specified in `SupportedProjections`. \n
-     * For example, if `SupportedProjections` contains DeltaSynapse and AdditiveSTDPSynapse types,
+     * For example, if `SupportedProjections` containes DeltaSynapse and AdditiveSTDPSynapse types,
      * then `ProjectionVariants = std::variant<DeltaSynapse, AdditiveSTDPSynapse>`. \n
      * `ProjectionVariants` retains the same order of message types as defined in `SupportedProjections`.
      * @see ALL_SYNAPSES.
@@ -116,14 +116,17 @@ public:
     using ProjectionConstIterator = ProjectionContainer::const_iterator;
 
 public:
-
     /**
-     * @brief Destructor for single-threaded CPU backend.
-    */
-    ~SingleThreadedCPUBackend() = default;
+     * @brief Default constructor for multi-threaded CPU backend.
+     */
+    explicit MultiThreadedCPUBackend(size_t thread_count = boost::asio::detail::default_thread_pool_size());
+    /**
+     * @brief Destructor for multi-threaded CPU backend.
+     */
+    ~MultiThreadedCPUBackend();
 
 public:
-    static std::shared_ptr<SingleThreadedCPUBackend> create();
+    static std::shared_ptr<MultiThreadedCPUBackend> create();
 
 public:
     /**
@@ -227,10 +230,10 @@ public:
     void step() override;
 
     /**
-     * @brief Subscribe internal endpoint to messages. 
+     * @brief Subscribe internal endpoint to messages.
      * @details The method is used to get a subscription necessary for receiving messages of the specified type.
      * @tparam MessageType message type.
-     * @param receiver receiver UID. 
+     * @param receiver receiver UID.
      * @param senders list of possible sender UIDs.
      * @return subscription.
      */
@@ -240,12 +243,6 @@ public:
     {
         return message_endpoint_.subscribe<MessageType>(receiver, senders);
     }
-
-public:
-    /**
-     * @brief Default constructor for single-threaded CPU backend.
-     */
-    SingleThreadedCPUBackend();
 
 protected:
     /**
@@ -274,9 +271,11 @@ private:
     ProjectionContainer projections_;
     core::MessageEndpoint message_endpoint_;
     size_t step_ = 0;
+    boost::asio::thread_pool calc_pool_;
+    std::mutex ep_mutex_;
 };
 
 
-BOOST_DLL_ALIAS(knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::create, create_knp_backend)
+BOOST_DLL_ALIAS(knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::create, create_knp_backend)
 
-}  // namespace knp::backends::single_threaded_cpu
+}  // namespace knp::backends::multi_threaded_cpu

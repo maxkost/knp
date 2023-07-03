@@ -16,6 +16,7 @@ namespace knp::core
 
 Backend::~Backend()
 {
+    stop();
     SPDLOG_INFO("Backend {} unloaded", std::string(base_.uid_));
 }
 

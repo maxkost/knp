@@ -15,6 +15,8 @@ option(KNP_ENABLE_COVERAGE "Enable coverage test" ON)
 option(KNP_BUILD_DOCUMENTATION "Build doxygen auto documentation" ON)
 option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
 
+set(ENABLE_FAST_MATH ON)
+
 if(NOT KNP_MAINTAINER_BUILD)
     execute_process(COMMAND pre-commit install
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")

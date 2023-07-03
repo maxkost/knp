@@ -6,6 +6,8 @@
  */
 
 
+#include <knp/backends/cpu-library/blifat_population.h>
+#include <knp/backends/cpu-library/delta_synapse_projection.h>
 #include <knp/backends/cpu-single-threaded/backend.h>
 #include <knp/core/core.h>
 #include <knp/devices/cpu.h>
@@ -17,9 +19,6 @@
 #include <vector>
 
 #include <boost/mp11.hpp>
-
-#include "blifat_population.h"
-#include "delta_synapse_projection.h"
 
 
 namespace knp::backends::single_threaded_cpu
@@ -45,13 +44,13 @@ namespace knp::backends::single_threaded_cpu
 
 SingleThreadedCPUBackend::SingleThreadedCPUBackend() : message_endpoint_{message_bus_.create_endpoint()}
 {
-    SPDLOG_INFO("CPU backend instance created...");
+    SPDLOG_INFO("ST CPU backend instance created...");
 }
 
 
 std::shared_ptr<SingleThreadedCPUBackend> SingleThreadedCPUBackend::create()
 {
-    SPDLOG_DEBUG("Creating CPU backend instance...");
+    SPDLOG_DEBUG("Creating ST CPU backend instance...");
     return std::make_shared<SingleThreadedCPUBackend>();
 }
 
@@ -178,7 +177,7 @@ void SingleThreadedCPUBackend::init()
 
 void SingleThreadedCPUBackend::calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population)
 {
-    SPDLOG_TRACE(std::string("Calculate population") + std::string(population.get_uid()));
+    SPDLOG_TRACE("Calculate population {}", std::string(population.get_uid()));
     calculate_blifat_population(population, message_endpoint_, step_);
 }
 
@@ -187,7 +186,7 @@ void SingleThreadedCPUBackend::calculate_projection(
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
     core::messaging::SynapticMessageQueue &message_queue)
 {
-    SPDLOG_TRACE(std::string("Calculate projection ") + std::string(projection.get_uid()));
+    SPDLOG_TRACE("Calculate projection {}", std::string(projection.get_uid()));
     calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, step_);
 }
 
