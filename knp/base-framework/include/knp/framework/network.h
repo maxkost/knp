@@ -119,7 +119,11 @@ public:
      */
     template <typename PopulationType>
     void add_population(typename std::decay<PopulationType>::type &&population);
-
+    /**
+     * @brief Add a population to the network.
+     * @tparam PopulationType type of population to add (derived automatically from `population` if not specified).
+     * @param population population to add.
+     */
     template <typename PopulationType>
     void add_population(typename std::decay<PopulationType>::type &population);
 
@@ -161,7 +165,11 @@ public:
      */
     template <typename ProjectionType>
     void add_projection(typename std::decay<ProjectionType>::type &&projection);
-
+    /**
+     * @brief Add a projection to the network.
+     * @tparam ProjectionType type of projection to add (derived automatically from `projection` if not specified).
+     * @param projection projection to add.
+     */
     template <typename ProjectionType>
     void add_projection(typename std::decay<ProjectionType>::type &projection);
 
