@@ -26,7 +26,7 @@
 
 
 /**
- * @brief Single-threaded backend namespace.
+ * @brief Namespace for single-threaded backend.
  */
 namespace knp::backends::single_threaded_cpu
 {

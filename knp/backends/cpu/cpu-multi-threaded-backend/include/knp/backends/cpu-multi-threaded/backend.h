@@ -27,13 +27,13 @@
 
 
 /**
- * @brief Multi-threaded backend namespace.
+ * @brief Namespace for multi-threaded backend.
  */
 namespace knp::backends::multi_threaded_cpu
 {
 
 /**
- * @brief The MultiThreadedCPUBackend class is a definition of an interface to the single-threaded CPU backend.
+ * @brief The MultiThreadedCPUBackend class is a definition of an interface to the multi-threaded CPU backend.
  */
 class MultiThreadedCPUBackend : public knp::core::Backend
 {

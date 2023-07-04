@@ -18,12 +18,21 @@ namespace knp::core
 {
 
 /**
- * @brief The DeviceType enum contains supported device type ids.
+ * @brief The DeviceType class defines IDs of supported device types.
  */
 enum class DeviceType
 {
+    /**
+     * @brief CPU device.
+    */
     CPU,
+    /**
+     * @brief GPU device.
+    */
     GPU,
+    /**
+     * @brief NPU device.
+    */
     AltAI1_NPU
 };
 
