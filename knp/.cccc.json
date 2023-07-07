@@ -1,6 +1,6 @@
 {
   "locf_max": 200,
-  "mvg_function_max": 20,
+  "mvg_function_max": 25,
   "mvg_file_max": 100,
   "rejected": 10
 }

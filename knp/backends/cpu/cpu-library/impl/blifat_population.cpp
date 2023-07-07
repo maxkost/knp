@@ -33,13 +33,19 @@ void impact_neuron(
             break;
         case knp::synapse_traits::OutputType::DOPAMINE:
             break;
+        case knp::synapse_traits::OutputType::BLOCKING:
+            neuron.total_blocking_period_ = impact_value;
+            break;
+        default:
+            const auto error_message = "Unknown synapse type: " + std::to_string(static_cast<int>(synapse_type));
+            SPDLOG_ERROR(error_message);
+            throw std::runtime_error(error_message);
     }
 }
 
 
 void calculate_neuron_state(knp::core::Population<knp::neuron_traits::BLIFATNeuron>::NeuronParameters &neuron)
 {
-    ++neuron.n_time_steps_since_last_firing_;
     neuron.dynamic_threshold_ *= neuron.threshold_decay_;
     neuron.postsynaptic_trace_ *= neuron.postsynaptic_trace_decay_;
     neuron.inhibitory_conductance_ *= neuron.inhibitory_conductance_decay_;
@@ -76,7 +82,15 @@ void calculate_neurons_state(
     SPDLOG_TRACE("Calculate neurons state");
     for (auto &neuron : population)
     {
-        calculate_neuron_state(neuron);
+        ++neuron.n_time_steps_since_last_firing_;
+        if (neuron.total_blocking_period_)
+        {
+            --neuron.total_blocking_period_;
+        }
+        else
+        {
+            calculate_neuron_state(neuron);
+        }
     }
 
     process_inputs(population, messages);
@@ -87,6 +101,7 @@ bool calculate_neuron_post_input_state(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron>::NeuronParameters &neuron)
 {
     bool spike = false;
+
     if (neuron.inhibitory_conductance_ < 1.0f)
     {
         neuron.potential_ -=
@@ -124,7 +139,8 @@ void calculate_neurons_post_input_state(
     // can be made parallel
     for (size_t i = 0; i < population.size(); ++i)
     {
-        if (calculate_neuron_post_input_state(population[i])) neuron_indexes.push_back(i);
+        if (!population[i].total_blocking_period_ && calculate_neuron_post_input_state(population[i]))
+            neuron_indexes.push_back(i);
     }
 }
 

@@ -13,6 +13,7 @@
 namespace knp::synapse_traits
 {
 // TODO: Improve descriptions.
+// TODO: Split this enum?
 /**
  * @brief Types of synapses. This parameter is used for projection-population interaction.
  */
@@ -36,7 +37,12 @@ enum class OutputType
     /**
      * @brief Dopamine synapse type.
      */
-    DOPAMINE = 3
+    DOPAMINE = 3,
+
+    /**
+     * @brief Neuron blocking synapse type.
+     */
+    BLOCKING = 4
 };
 
 }  // namespace knp::synapse_traits

@@ -79,6 +79,10 @@ struct neuron_parameters<BLIFATNeuron>
      * @brief The parameter takes the default value of `min_potential` defined for a BLIFAT neuron.
      */
     double min_potential_ = default_values<BLIFATNeuron>::min_potential;
+    /**
+     * @brief total_blocking_period_ steps count when neuron is totally blocked.
+     */
+    unsigned total_blocking_period_ = 0;
 };
 
 }  // namespace knp::neuron_traits

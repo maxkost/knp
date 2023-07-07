@@ -82,10 +82,10 @@ void MultiThreadedCPUBackend::step()
             e);
     }
 
+    //    calc_pool_.join();
+
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
-
-    //    calc_pool_.join();
 
     // Calculate projections.
     for (auto &e : projections_)
@@ -105,10 +105,9 @@ void MultiThreadedCPUBackend::step()
             e.arg_);
     }
 
+    //    calc_pool_.join();
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
-
-    //    calc_pool_.join();
 
     ++step_;
     SPDLOG_DEBUG("Step finished");
