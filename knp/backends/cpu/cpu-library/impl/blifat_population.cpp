@@ -139,7 +139,7 @@ void calculate_neurons_post_input_state(
     // can be made parallel
     for (size_t i = 0; i < population.size(); ++i)
     {
-        if (population[i].total_blocking_period_ && calculate_neuron_post_input_state(population[i]))
+        if (!population[i].total_blocking_period_ && calculate_neuron_post_input_state(population[i]))
             neuron_indexes.push_back(i);
     }
 }
