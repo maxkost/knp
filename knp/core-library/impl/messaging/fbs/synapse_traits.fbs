@@ -7,5 +7,6 @@ enum OutputType : byte
     EXCITATORY = 0,
     INHIBITORY_CURRENT = 1,
     INHIBITORY_CONDUCTANCE = 2,
-    DOPAMINE = 3
+    DOPAMINE = 3,
+    BLOCKING = 4
 }
