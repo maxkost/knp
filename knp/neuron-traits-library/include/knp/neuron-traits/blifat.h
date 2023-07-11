@@ -80,7 +80,7 @@ struct neuron_parameters<BLIFATNeuron>
      */
     double min_potential_ = default_values<BLIFATNeuron>::min_potential;
     /**
-     * @brief total_blocking_period_ steps count when neuron is totally blocked.
+     * @brief The parameter defines the number of netwrok execution steps, during which the neuron activity is totally blocked.
      */
     unsigned total_blocking_period_ = 0;
 };

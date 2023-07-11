@@ -40,7 +40,7 @@ enum class OutputType
     DOPAMINE = 3,
 
     /**
-     * @brief Neuron blocking synapse type.
+     * @brief Neuron-blocking synapse type.
      */
     BLOCKING = 4
 };
