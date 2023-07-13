@@ -60,6 +60,18 @@ std::vector<std::string> MultiThreadedCPUBackend::get_supported_synapses() const
 }
 
 
+std::vector<size_t> MultiThreadedCPUBackend::get_supported_projection_indexes() const
+{
+    return knp::meta::get_supported_type_indexes<core::AllProjections, SupportedProjections>();
+}
+
+
+std::vector<size_t> MultiThreadedCPUBackend::get_supported_population_indexes() const
+{
+    return knp::meta::get_supported_type_indexes<core::AllPopulations, SupportedPopulations>();
+}
+
+
 void MultiThreadedCPUBackend::step()
 {
     SPDLOG_DEBUG(std::string("Starting step #") + std::to_string(step_));

@@ -49,6 +49,19 @@ std::vector<std::string> SingleThreadedCPUBackend::get_supported_synapses() cons
         knp::synapse_traits::synapses_names);
 }
 
+
+std::vector<size_t> SingleThreadedCPUBackend::get_supported_projection_indexes() const
+{
+    return knp::meta::get_supported_type_indexes<core::AllProjections, SupportedProjections>();
+}
+
+
+std::vector<size_t> SingleThreadedCPUBackend::get_supported_population_indexes() const
+{
+    return knp::meta::get_supported_type_indexes<core::AllPopulations, SupportedPopulations>();
+}
+
+
 template <typename AllVariants, typename SupportedVariants>
 SupportedVariants convert_variant(const AllVariants &input)
 {
@@ -56,22 +69,22 @@ SupportedVariants convert_variant(const AllVariants &input)
     return result;
 }
 
-void SingleThreadedCPUBackend::add_projections_all(const std::vector<core::AllProjectionsVariant> &projections)
-{
-    std::vector<size_t> indexes = get_supported_projection_indexes();
-    for (auto &projection : projections)
-    {
-        if (std::find(indexes.begin(), indexes.end(), projection.index()) == indexes.end())
-            throw(std::runtime_error("Not supported projection type"));
+// void SingleThreadedCPUBackend::add_projections_all(const std::vector<core::AllProjectionsVariant> &projections)
+//{
+//     std::vector<size_t> indexes = get_supported_projection_indexes();
+//     for (auto &projection : projections)
+//     {
+//         if (std::find(indexes.begin(), indexes.end(), projection.index()) == indexes.end())
+//             throw(std::runtime_error("Not supported projection type"));
 
 
-        projections_.push_back(ProjectionWrapper{
-            convert_variant<core::AllProjectionsVariant, SingleThreadedCPUBackend::ProjectionVariants>(projection)});
-    }
-}
+//        projections_.push_back(ProjectionWrapper{
+//            convert_variant<core::AllProjectionsVariant, SingleThreadedCPUBackend::ProjectionVariants>(projection)});
+//    }
+//}
 
 
-void SingleThreadedCPUBackend::add_populations_all(const std::vector<core::AllPopulationsVariant> &populations) {}
+// void SingleThreadedCPUBackend::add_populations_all(const std::vector<core::AllPopulationsVariant> &populations) {}
 
 
 void SingleThreadedCPUBackend::step()

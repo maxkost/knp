@@ -39,9 +39,14 @@ public:
 
 public:
     /**
-     * @brief Run model.
+     * @brief Start model execution.
      */
-    void run();
+    void start();
+
+    /**
+     * @brief Stop model execution.
+     */
+    void stop();
 
     /**
      * @brief Write model to backend.
@@ -53,7 +58,6 @@ private:
     knp::framework::BackendLoader backend_loader_;
     std::shared_ptr<core::Backend> backend_;
     knp::framework::Model &model_;
-    volatile std::atomic<bool> is_stop_;
 };
 
 }  // namespace knp::framework

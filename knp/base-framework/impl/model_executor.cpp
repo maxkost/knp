@@ -16,29 +16,22 @@ namespace knp::framework
 
 void ModelExecutor::init()
 {
-    // TODO: UNCOMMENT THIS!
-    /*
     const auto &network = model_.get_network();
-    for (auto iter = network.begin_populations(); iter != network.end_populations(); ++iter)
-        backend_->add_population(*iter);
 
-    for (auto iter = network.begin_projections(); iter != network.end_projections(); ++iter)
-        backend_->add_projection(*iter);
-
-    */
-    // network.get_population<>()
+    backend_->load_all_populations(network.get_populations());
+    backend_->load_all_projections(network.get_projections());
 }
 
-void ModelExecutor::run()
+
+void ModelExecutor::start()
 {
-    // const auto &network = model_.get_network();
+    backend_->start();
+}
 
-    is_stop_.store(false);
 
-    while (!is_stop_)
-    {
-        backend_->step();
-    }
+void ModelExecutor::stop()
+{
+    backend_->stop();
 }
 
 }  // namespace knp::framework

@@ -144,6 +144,14 @@ public:
      * @return vector of supported synapse type names.
      */
     [[nodiscard]] std::vector<std::string> get_supported_synapses() const override;
+    /**
+     * @brief Get indexes of supported projections.
+     */
+    [[nodiscard]] std::vector<size_t> get_supported_projection_indexes() const override;
+    /**
+     * @brief Get indexes of supported populations.
+     */
+    [[nodiscard]] std::vector<size_t> get_supported_population_indexes() const override;
 
 public:
     /**
@@ -157,6 +165,24 @@ public:
      * @param projections vector of projections to load.
      */
     void load_projections(const std::vector<ProjectionVariants> &projections);
+
+    /**
+     * @brief Add projections to backend. Throw exception if there are unsupported projection types.
+     * @param projections projections to add.
+     */
+    void load_all_projections(const std::vector<knp::core::AllProjectionsVariant> &projections) override
+    {
+        load_projections(projections);
+    }
+
+    /**
+     * @brief Add populations to backend. Throw exception if there are unsupported population types.
+     * @param populations populations to add.
+     */
+    void load_all_populations(const std::vector<knp::core::AllPopulationsVariant> &populations) override
+    {
+        load_populations(populations);
+    }
 
 public:
     /**

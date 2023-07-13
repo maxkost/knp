@@ -83,13 +83,13 @@ public:
      * @brief Add projections to backend. Throw exception if there are unsupported projection types.
      * @param projections projections to add.
      */
-    virtual void add_projections_all(const std::vector<AllProjectionsVariant> &projections) = 0;
+    virtual void load_all_projections(const std::vector<AllProjectionsVariant> &projections) = 0;
 
     /**
      * @brief Add populations to backend. Throw exception if there are unsupported population types.
-     * @param projections populations to add.
+     * @param populations populations to add.
      */
-    virtual void add_populations_all(const std::vector<AllPopulationsVariant> &populations) = 0;
+    virtual void load_all_populations(const std::vector<AllPopulationsVariant> &populations) = 0;
 
     /**
      * @brief Remove projections with given UIDs from the backend.

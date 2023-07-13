@@ -45,8 +45,6 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
     backend.load_populations({population});
     backend.load_projections({input_projection, loop_projection});
 
-    std::cout << "AAAA: " << backend.get_supported_projection_indexes().size() << std::endl;
-
     backend.init();
     auto endpoint = backend.message_bus_.create_endpoint();
 

@@ -210,6 +210,10 @@ public:
     [[nodiscard]] ProjectionConstIterator end_projections() const;
 
 public:
+    const PopulationContainer &get_populations() const { return populations_; }
+    const ProjectionContainer &get_projections() const { return projections_; }
+
+public:
     [[nodiscard]] size_t populations_count() const { return populations_.size(); }
     [[nodiscard]] size_t projections_count() const { return projections_.size(); }
 
