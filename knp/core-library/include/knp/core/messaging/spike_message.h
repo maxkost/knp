@@ -20,7 +20,7 @@ namespace knp::core::messaging
 {
 
 /**
- * @brief Spike index type.
+ * @brief Spike index type in the form of a 32-bit unsigned integer.
  */
 using SpikeIndex = uint32_t;
 

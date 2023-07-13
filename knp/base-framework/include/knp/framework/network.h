@@ -15,6 +15,7 @@
 #include <knp/neuron-traits/all_traits.h>
 #include <knp/synapse-traits/all_traits.h>
 
+#include <type_traits>
 #include <variant>
 #include <vector>
 
@@ -35,10 +36,41 @@ public:
      * @brief List of population types based on neuron types specified in `knp::neuron_traits::AllNeurons`.
      * @details `AllPopulations` takes the value of `Population<NeuronType_1>, Population<NeuronType_2>, ...,
      * Population<NeuronType_n>`, where `NeuronType_[1..n]` is the neuron type specified in
-     * `knp::neuron_traits::AllNeurons`. \n For example, if `knp::neuron_traits::AllNeurons` containes BLIFATNeuron and
+     * `knp::neuron_traits::AllNeurons`. \n For example, if `knp::neuron_traits::AllNeurons` contains BLIFATNeuron and
      * IzhikevichNeuron types, then `AllPopulations` = `Population<BLIFATNeuron>, Population<IzhikevichNeuron>`.
      */
     using AllPopulations = boost::mp11::mp_transform<knp::core::Population, knp::neuron_traits::AllNeurons>;
+
+    /**
+     * @brief List of projection types based on synapse types specified in `knp::synapse_traits::AllSynapses`.
+     * @details `AllProjections` takes the value of `Projection<SynapseType_1>, Projection<SynapseType_2>, ...,
+     * Projection<SynapseType_n>`, where `SynapseType_[1..n]` is the synapse type specified in
+     * `knp::synapse_traits::AllSynapses`. \n For example, if `knp::synapse_traits::AllSynapses` contains DeltaSynapse
+     * and AdditiveSTDPSynapse types, then `AllProjections` = `Population<DeltaSynapse>,
+     * Population<AdditiveSTDPSynapse>`.
+     */
+    using AllProjections = boost::mp11::mp_transform<knp::core::Projection, knp::synapse_traits::AllSynapses>;
+
+    /**
+     * @brief Population variant that contains any population type specified in `AllPopulations`.
+     * @details `AllPopulationVariants` takes the value of `std::variant<PopulationType_1,..., PopulationType_n>`, where
+     * `PopulationType_[1..n]` is the population type specified in `AllPopulations`. \n For example, if `AllPopulations`
+     * contains BLIFATNeuron and IzhikevichNeuron types, then `AllPopulationVariants = std::variant<BLIFATNeuron,
+     * IzhikevichNeuron>`. \n `AllPopulationVariants` retains the same order of message types as defined in
+     * `AllPopulations`.
+     * @see ALL_NEURONS.
+     */
+    using AllPopulationVariants = boost::mp11::mp_rename<AllPopulations, std::variant>;
+    /**
+     * @brief Projection variant that contains any projection type specified in `AllProjections`.
+     * @details `AllProjectionVariants` takes the value of `std::variant<ProjectionType_1,..., ProjectionType_n>`, where
+     * `ProjectionType_[1..n]` is the projection type specified in `AllProjections`. \n For example, if `AllProjections`
+     * contains DeltaSynapse and AdditiveSTDPSynapse types, then `AllProjectionVariants = std::variant<DeltaSynapse,
+     * AdditiveSTDPSynapse>`. \n `AllProjectionVariants` retains the same order of message types as defined in
+     * `AllProjections`.
+     * @see ALL_SYNAPSES.
+     */
+    using AllProjectionVariants = boost::mp11::mp_rename<AllProjections, std::variant>;
 
 public:
     /**
@@ -86,7 +118,15 @@ public:
      * @param population population to add.
      */
     template <typename PopulationType>
-    void add_population(PopulationType &&population);
+    void add_population(typename std::decay<PopulationType>::type &&population);
+    /**
+     * @brief Add a population to the network.
+     * @tparam PopulationType type of population to add (derived automatically from `population` if not specified).
+     * @param population population to add.
+     */
+    template <typename PopulationType>
+    void add_population(typename std::decay<PopulationType>::type &population);
+
     /**
      * @brief Get a population with the given UID from the network.
      * @tparam PopulationType type of population to get.
@@ -124,7 +164,15 @@ public:
      * @param projection projection to add.
      */
     template <typename ProjectionType>
-    void add_projection(ProjectionType &&projection);
+    void add_projection(typename std::decay<ProjectionType>::type &&projection);
+    /**
+     * @brief Add a projection to the network.
+     * @tparam ProjectionType type of projection to add (derived automatically from `projection` if not specified).
+     * @param projection projection to add.
+     */
+    template <typename ProjectionType>
+    void add_projection(typename std::decay<ProjectionType>::type &projection);
+
     /**
      * @brief Get a projection with the given UID from the network.
      * @tparam ProjectionType type of projection to get.

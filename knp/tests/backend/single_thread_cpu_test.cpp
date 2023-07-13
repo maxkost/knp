@@ -13,34 +13,17 @@
 
 #include <vector>
 
+#include "generators.h"
 
-using DeltaProjection = knp::core::Projection<knp::synapse_traits::DeltaSynapse>;
-using BLIFATPopulation = knp::core::Population<knp::neuron_traits::BLIFATNeuron>;
+
 using Population = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::PopulationVariants;
 using Projection = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::ProjectionVariants;
 
 
-// Create an input projection
-DeltaProjection::SynapseGenerator input_projection_gen = [](size_t index) -> std::optional<DeltaProjection::Synapse> {
-    return DeltaProjection::Synapse{{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};
-};
-
-
-// Create a loop projection
-DeltaProjection::SynapseGenerator synapse_generator = [](size_t index) -> std::optional<DeltaProjection::Synapse> {
-    return DeltaProjection::Synapse{{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};
-};
-
-
-// Create population
-auto neuron_generator = [](size_t index)
-{ return knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>{}; };
-
-
-class TestingBack : public knp::backends::single_threaded_cpu::SingleThreadedCPUBackend
+class STestingBack : public knp::backends::single_threaded_cpu::SingleThreadedCPUBackend
 {
 public:
-    TestingBack() = default;
+    STestingBack() = default;
     void init() override { knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::init(); }
 };
 
@@ -48,11 +31,15 @@ public:
 TEST(SingleThreadCpuSuite, SmallestNetwork)
 {
     // Create a single neuron network: input -> input_projection -> population <=> loop_projection
-    TestingBack backend;
+    STestingBack backend;
 
-    BLIFATPopulation population{neuron_generator, 1};
-    Projection loop_projection = DeltaProjection{population.get_uid(), population.get_uid(), synapse_generator, 1};
-    Projection input_projection = DeltaProjection{knp::core::UID{false}, population.get_uid(), input_projection_gen, 1};
+    namespace kt = knp::testing;
+
+    kt::BLIFATPopulation population{kt::neuron_generator, 1};
+    Projection loop_projection =
+        kt::DeltaProjection{population.get_uid(), population.get_uid(), kt::synapse_generator, 1};
+    Projection input_projection =
+        kt::DeltaProjection{knp::core::UID{false}, population.get_uid(), kt::input_projection_gen, 1};
     knp::core::UID input_uid = std::visit([](const auto &proj) { return proj.get_uid(); }, input_projection);
 
     backend.load_populations({population});
@@ -95,7 +82,7 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
 
 TEST(SingleThreadCpuSuite, NeuronsGettingTest)
 {
-    TestingBack backend;
+    STestingBack backend;
 
     auto s_neurons = backend.get_supported_neurons();
 
@@ -106,7 +93,7 @@ TEST(SingleThreadCpuSuite, NeuronsGettingTest)
 
 TEST(SingleThreadCpuSuite, SynapsesGettingTest)
 {
-    TestingBack backend;
+    STestingBack backend;
 
     auto s_synapses = backend.get_supported_synapses();
 

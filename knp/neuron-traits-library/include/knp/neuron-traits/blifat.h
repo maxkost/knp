@@ -17,7 +17,7 @@
 
 /**
  * @brief Neuron traits namespace.
-*/
+ */
 namespace knp::neuron_traits
 {
 
@@ -27,7 +27,7 @@ namespace knp::neuron_traits
 struct BLIFATNeuron;
 
 /**
- * @brief Structure for BLIFAT neuron defualt values.
+ * @brief Structure for BLIFAT neuron default values.
  */
 template <>
 struct default_values<BLIFATNeuron>
@@ -40,7 +40,7 @@ struct default_values<BLIFATNeuron>
 
 /**
  * @brief Structure for BLIFAT neuron parameters.
-*/
+ */
 template <>
 struct neuron_parameters<BLIFATNeuron>
 {
@@ -79,6 +79,10 @@ struct neuron_parameters<BLIFATNeuron>
      * @brief The parameter takes the default value of `min_potential` defined for a BLIFAT neuron.
      */
     double min_potential_ = default_values<BLIFATNeuron>::min_potential;
+    /**
+     * @brief The parameter defines the number of network execution steps, during which the neuron activity is totally blocked.
+     */
+    unsigned total_blocking_period_ = 0;
 };
 
 }  // namespace knp::neuron_traits

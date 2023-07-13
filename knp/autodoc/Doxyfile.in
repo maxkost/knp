@@ -1367,13 +1367,13 @@ HTML_STYLESHEET        =
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
 HTML_EXTRA_STYLESHEET  = \
+    @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display.css \
     @DOXYGEN_SRCDIR@/common_files/styles/doxygen-awesome.css \
-    @DOXYGEN_SRCDIR@/common_files/styles/custom.css \
     @DOXYGEN_SRCDIR@/common_files/styles/doxygen-awesome-sidebar-only-darkmode-toggle.css \
     @DOXYGEN_SRCDIR@/common_files/styles/custom-alternative.css \
     @DOXYGEN_SRCDIR@/common_files/styles/search-height-fix.css \
-    @DOXYGEN_SRCDIR@/common_files/styles/icons.css \
-    @DOXYGEN_SRCDIR@/icons/logo_dark.svg \
+    @DOXYGEN_SRCDIR@/common_files/styles/custom.css \
+    @DOXYGEN_SRCDIR@/common_files/styles/icons.css
 # @DOXYGEN_SRCDIR@/common_files/styles/decapitalize.css \
 # @DOXYGEN_SRCDIR@/common_files/styles/doxygen-awesome-sidebar-only.css
 
@@ -1386,12 +1386,32 @@ HTML_EXTRA_STYLESHEET  = \
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
 HTML_EXTRA_FILES       = @DOXYGEN_HTML_EXTRA_FILES@ \
-                         @DOXYGEN_SRCDIR@/common_files/fonts/exljbris---MuseoSansCyrl-300Italic.otf \
-                         @DOXYGEN_SRCDIR@/common_files/fonts/exljbris---MuseoSansCyrl-300.otf \
-                         @DOXYGEN_SRCDIR@/common_files/fonts/exljbris---MuseoSansCyrl-500Italic.otf \
-                         @DOXYGEN_SRCDIR@/common_files/fonts/exljbris---MuseoSansCyrl-500.otf \
-                         @DOXYGEN_SRCDIR@/common_files/fonts/exljbris---MuseoSansCyrl-700.otf \
-                         @DOXYGEN_SRCDIR@/common_files/fonts/museo-sans.css \
+                         @DOXYGEN_SRCDIR@/icons/logo_dark.svg \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_Bold.eot \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_Bold.ttf \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_Bold.woff \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_Bold.woff2 \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display.css \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_ExtraBold.eot \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_ExtraBold.ttf \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_ExtraBold.woff \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_ExtraBold.woff2 \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_Light.eot \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_Light.ttf \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_Light.woff \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_Light.woff2 \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_Medium.eot \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_Medium.ttf \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_Medium.woff \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_Medium.woff2 \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_Regular.eot \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_Regular.ttf \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_Regular.woff \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_Regular.woff2 \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_SemiBold.eot \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_SemiBold.ttf \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_SemiBold.woff \
+                         @DOXYGEN_SRCDIR@/common_files/fonts/Kaspersky_Sans_Display_SemiBold.woff2 \
                          @DOXYGEN_SRCDIR@/common_files/js/doxygen-awesome-darkmode-toggle.js \
                          @DOXYGEN_SRCDIR@/common_files/js/doxygen-awesome-fragment-copy-button.js \
                          @DOXYGEN_SRCDIR@/common_files/js/doxygen-awesome-paragraph-link.js \
@@ -1400,7 +1420,9 @@ HTML_EXTRA_FILES       = @DOXYGEN_HTML_EXTRA_FILES@ \
                          @DOXYGEN_SRCDIR@/common_files/js/doxygen-awesome-tabs.js \
                          @DOXYGEN_SRCDIR@/common_files/js/icons-add-properties.js \
                          @DOXYGEN_SRCDIR@/common_files/icons/symbol-class.svg \
-                         @DOXYGEN_SRCDIR@/common_files/icons/symbol-namespace.svg
+                         @DOXYGEN_SRCDIR@/common_files/icons/symbol-namespace.svg \
+                         @DOXYGEN_SRCDIR@/common_files/icons/symbol-class_white.svg \
+                         @DOXYGEN_SRCDIR@/common_files/icons/symbol-namespace_white.svg
 
 # The HTML_COLORSTYLE tag can be used to specify if the generated HTML output
 # should be rendered with a dark or light theme.

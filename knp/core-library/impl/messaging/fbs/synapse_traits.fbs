@@ -1,0 +1,12 @@
+namespace knp.synapse_traits.marshal;
+
+
+// Types of synapses, used for projection-population interaction
+enum OutputType : byte
+{
+    EXCITATORY = 0,
+    INHIBITORY_CURRENT = 1,
+    INHIBITORY_CONDUCTANCE = 2,
+    DOPAMINE = 3,
+    BLOCKING = 4
+}

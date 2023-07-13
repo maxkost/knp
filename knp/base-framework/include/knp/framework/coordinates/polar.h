@@ -9,8 +9,8 @@
 
 
 /**
-* @brief Namespace for framework coordinates.
-*/
+ * @brief Namespace for framework coordinates.
+ */
 namespace knp::framework::coordinates
 {
 

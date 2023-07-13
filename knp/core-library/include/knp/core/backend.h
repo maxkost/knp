@@ -172,7 +172,6 @@ protected:
      */
     void uninit();
 
-
 public:
     /**
      * @brief Message bus used by backend.

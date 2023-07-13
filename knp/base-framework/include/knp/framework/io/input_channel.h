@@ -12,28 +12,33 @@
 #include "input_converter.h"
 
 
+/**
+ * @brief Input channel namespace.
+ */
 namespace knp::framework::input
 {
 /**
- * @brief Input channel class. It provides an object it's connected to with spikes.
- * @details a user would need to create a channel, associate it with a stream then provide stream with data.
- * The channel should be constructed, then connected with "connect(target_uid)", then call send() when a message
- * should be sent.
+ * @brief The InputChannel defines an input channel that provides a connected entity (for example, an input projection)
+ * with spike messages based on the input stream data.
+ * @details You need to create an input channel, associate it with an input stream and provide the stream with input
+ * data. After constructing an input channel, connect it with an input entity (for example, a projection) using the
+ * `connect_input(channel, target_endpoint, receiver_uid)` method. To send the input data to a connected entity, call
+ * the `send(time)` method.
  */
 class InputChannel
 {
 public:
     /**
-     * @brief Functor used for converting stream data to spikes.
+     * @brief Functor used for converting input stream data to spikes.
      */
     using DataConverter = std::function<core::messaging::SpikeData(std::istream &)>;
 
     /**
-     * @brief Channel constructor.
-     * @param stream stream to send data to.
-     * @param converter functor that generate spike indices from stream data.
-     * @param channel_uid sender UID for message headers.
-     * @param endpoint endpoint used for sending messages.
+     * @brief Input channel constructor.
+     * @param stream stream from which to receive data.
+     * @param converter functor that generates spike messages based on data from the input stream.
+     * @param channel_uid sender UID to put into the message header.
+     * @param endpoint endpoint used to send messages.
      */
     InputChannel(
         std::unique_ptr<std::istream> &&stream, core::MessageEndpoint &&endpoint, DataConverter converter,
@@ -46,21 +51,21 @@ public:
     }
 
     /**
-     * @brief Get channel UID.
-     * @return channel UID.
+     * @brief Get input channel UID.
+     * @return input channel UID.
      */
     [[nodiscard]] const core::UID &get_uid() const { return uid_; }
 
     /**
-     * @brief Get stream.
+     * @brief Get input stream.
      */
     std::istream &get_stream() { return *stream_; }
 
     /**
-     * @brief Read data from stream, form message and send it to endpoint.
+     * @brief Read data from input stream, form a spike message and send it to an endpoint.
+     * @note The method throws exceptions if an input stream is set to throw exceptions.
      * @param time current step.
-     * @return true if message was sent, false if no message sent.
-     * @note throws exceptions if stream is set to throw.
+     * @return true if message was sent, false if no message was sent.
      */
     bool send(core::messaging::Step time)
     {
@@ -95,11 +100,11 @@ private:
 };
 
 /**
- * @brief Connect input channel to a target object.
+ * @brief Connect input channel to a target entity.
+ * @note Target entity should be able to receive spikes.
  * @param channel input channel.
- * @param target_endpoint receiving endpoint.
- * @param receiver_uid object UID.
- * @note target object should be able to receive spikes.
+ * @param target_endpoint endpoint to use for message exchange.
+ * @param receiver_uid UID of an entity that receives spike messages.
  */
 inline void connect_input(
     const InputChannel &channel, core::MessageEndpoint &target_endpoint, const core::UID &receiver_uid)

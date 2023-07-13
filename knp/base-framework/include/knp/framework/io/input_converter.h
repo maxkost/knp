@@ -19,22 +19,23 @@
 
 
 /**
- * @brief Input channels namespace.
+ * @brief Input channel namespace.
  */
 namespace knp::framework::input
 {
 /**
- * @brief Stream-like converter functor class that converts a list of values into spike messages.
- * @tparam value_type the type of values this class reads from the input stream.
- * @details construction example : SequenceConverter<float> converter{interpreter_with_threshold<float>(1.0f)};
+ * @brief The SequenceConverter class is a definition of a stream-like converter that converts a list of input values into spike messages.
+ * @details For example, `SequenceConverter<float> converter{interpreter_with_threshold<float>(1.0f)}` 
+ * constructs a converter that interprets the input data as a spike if it is equal or greater than the threshold value.
+ * @tparam value_type type of values received from an input stream.
  */
 template <class value_type>
 class SequenceConverter
 {
 public:
     /**
-     * @brief Class constructor.
-     * @param interpret function that decides if the unprocessed value is a spike or not.
+     * @brief Sequence converter constructor.
+     * @param interpret function that determines if the unprocessed value is a spike or not.
      * @param data_size size of input projection.
      */
     SequenceConverter(std::function<bool(value_type)> interpret, size_t data_size)
@@ -43,9 +44,9 @@ public:
     }
 
     /**
-     * @brief Call conversion function to get indexes from stream.
-     * @param stream data stream.
-     * @return index vector.
+     * @brief Call a function that converts data from the input stream into spike messages with spiked neuron indexes.
+     * @param stream input stream.
+     * @return vector of spiked neuron indexes.
      */
     core::messaging::SpikeData operator()(std::istream &stream)
     {
@@ -66,41 +67,42 @@ public:
     }
 
     /**
-     * Change size parameter.
-     * @param size new size.
+     * @brief Set input data size.
+     * @details The `size` value must correspond to the size of an input projection.
+     * @param size input data size.
      */
     void set_size(size_t size) { data_size_ = size; }
 
 private:
     /**
-     * @brief interpretation function, should return "true" for spike and "false" for no spike. Any "wrong symbol"
+     * @brief Interpretation function that returns `true` if an input value is a spike, otherwise `false`. Any "wrong symbol"
      * error processing logic also goes here.
      */
     std::function<bool(value_type)> interpret_;
 
     /**
-     * @brief input projection size.
+     * @brief Input projection size.
      */
     size_t data_size_;
 };
 
 
 /**
- * @brief A functor class that converts lines of integers into spike indexes.
+ * @brief The IndexConverter class is a definition of a converter that converts lines of integers into spiked neuron indexes.
  */
 class IndexConverter
 {
 public:
     /**
      * @brief Create converter with a delimiter.
-     * @param delim a symbol that delimits spike indexes.
+     * @param delim character that delimits spiked neuron indexes.
      */
     explicit IndexConverter(char delim = ',') : delim_(delim) {}
 
     /**
-     * @brief Call conversion function to get indexes from stream.
-     * @param stream data stream.
-     * @return index vector.
+     * @brief Call a function that converts data from the input stream into spike messages with spiked neuron indexes.
+     * @param stream input stream.
+     * @return vector of spiked neuron indexes.
      */
     core::messaging::SpikeData operator()(std::istream &stream) const
     {
@@ -124,7 +126,7 @@ public:
 
 private:
     /**
-     * @brief delimiter character.
+     * @brief Delimiter character.
      */
     const char delim_ = ',';
 };

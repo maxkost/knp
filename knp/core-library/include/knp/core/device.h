@@ -17,10 +17,22 @@
 namespace knp::core
 {
 
+/**
+ * @brief The DeviceType class defines IDs of supported device types.
+ */
 enum class DeviceType
 {
+    /**
+     * @brief CPU device.
+    */
     CPU,
+    /**
+     * @brief GPU device.
+    */
     GPU,
+    /**
+     * @brief NPU device.
+    */
     AltAI1_NPU
 };
 
@@ -31,10 +43,9 @@ enum class DeviceType
 class Device
 {
 public:
-
     /**
-     * @brief Device destructor. 
-    */
+     * @brief Device destructor.
+     */
     virtual ~Device() = default;
 
 public:

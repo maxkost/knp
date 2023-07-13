@@ -19,7 +19,7 @@
 namespace knp::core::messaging
 {
 /**
- * Type used to store step number.
+ * @brief Type used to store a step number in the form of a 64-bit unsigned integer.
  */
 using Step = uint64_t;
 
