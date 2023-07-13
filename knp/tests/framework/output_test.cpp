@@ -16,7 +16,8 @@
 TEST(OutputSuite, ConverterTest)
 {
     knp::core::UID sender_uid;
-    knp::core::messaging::SpikeMessage msg_0{{sender_uid, 1}, {1, 3, 8}};  // All indexes over 7 should be ignored
+    // All indexes over 7 should be ignored.
+    knp::core::messaging::SpikeMessage msg_0{{sender_uid, 1}, {1, 3, 8}};
     knp::core::messaging::SpikeMessage msg_1{{sender_uid, 3}, {1, 4, 10}};
     knp::core::messaging::SpikeMessage msg_2{{sender_uid, 5}, {1, 4, 7, 12}};
 
@@ -40,7 +41,8 @@ TEST(OutputSuite, ChannelTest)
 {
     knp::core::MessageBus bus;
     knp::core::MessageEndpoint endpoint = bus.create_endpoint();
-    knp::core::UID sender_uid;  // New random UID.
+    // New random UID.
+    knp::core::UID sender_uid;
 
     const size_t out_size = 8;
     auto count_converter = [](const std::vector<knp::core::messaging::SpikeMessage> &messages)
