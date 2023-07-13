@@ -60,7 +60,9 @@ struct UID
      * @param random boolean value that takes the values true or false.
      *        If true, the constructor generates a random UID. If false, the constructor generates a null UID.
      */
-    explicit UID(bool random = true) : tag(random ? uid_generator()() : ::boost::uuids::nil_uuid()) {}
+    explicit UID(bool random) : tag(random ? uid_generator()() : ::boost::uuids::nil_uuid()) {}
+
+    UID() : UID(true) {}
 
     /**
      * @brief Create a UID from `boost::uuids::uuid`.

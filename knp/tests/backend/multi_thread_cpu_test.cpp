@@ -8,16 +8,19 @@
 #include <knp/neuron-traits/blifat.h>
 #include <knp/synapse-traits/delta.h>
 
+#include <generators.h>
 #include <spdlog/spdlog.h>
 #include <tests_common.h>
 
 #include <vector>
 
-#include "generators.h"
-
 
 using Population = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::PopulationVariants;
 using Projection = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::ProjectionVariants;
+
+
+namespace knp::testing
+{
 
 class MTestingBack : public knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend
 {
@@ -26,13 +29,15 @@ public:
     void init() override { knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::init(); }
 };
 
+}  // namespace knp::testing
+
 
 TEST(MultiThreadCpuSuite, SmallestNetwork)
 {
     // Create a single neuron network: input -> input_projection -> population <=> loop_projection
-    MTestingBack backend;
 
     namespace kt = knp::testing;
+    kt::MTestingBack backend;
 
     kt::BLIFATPopulation population{kt::neuron_generator, 1};
     Projection loop_projection =
@@ -80,7 +85,7 @@ TEST(MultiThreadCpuSuite, SmallestNetwork)
 
 TEST(MultiThreadCpuSuite, NeuronsGettingTest)
 {
-    MTestingBack backend;
+    knp::testing::MTestingBack backend;
 
     auto s_neurons = backend.get_supported_neurons();
 
@@ -91,7 +96,7 @@ TEST(MultiThreadCpuSuite, NeuronsGettingTest)
 
 TEST(MultiThreadCpuSuite, SynapsesGettingTest)
 {
-    MTestingBack backend;
+    knp::testing::MTestingBack backend;
 
     auto s_synapses = backend.get_supported_synapses();
 
