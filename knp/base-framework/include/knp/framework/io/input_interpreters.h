@@ -17,8 +17,8 @@ namespace knp::framework::input
  * @param v input value.
  * @return `true` if an input value is a spike, `false` if an input value is not a spike.
  */
-template <class value_type>
-bool interpret_as_bool(value_type v)
+template <class ValueType>
+bool interpret_as_bool(ValueType v)
 {
     return v;
 }
@@ -30,8 +30,8 @@ bool interpret_as_bool(value_type v)
  * @param threshold threshold value.
  * @return boolean function that determines if a value causes a spike or not.
  */
-template <class value_type>
-auto interpret_with_threshold(value_type threshold)
+template <class ValueType>
+auto interpret_with_threshold(ValueType threshold)
 {
     // We're using !(a < b) instead of (a >= b) because of the values which only have operator "less than".
     return [threshold](value_type v) -> bool { return !(v < threshold); };

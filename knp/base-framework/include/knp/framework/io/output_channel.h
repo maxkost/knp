@@ -5,12 +5,13 @@
  */
 #pragma once
 
+#include <knp/core/message_endpoint.h>
+#include <knp/core/messaging/messaging.h>
+
 #include <algorithm>
 #include <utility>
 #include <vector>
 
-#include "knp/core/message_endpoint.h"
-#include "knp/core/messaging/messaging.h"
 #include "output_converter.h"
 
 
@@ -123,7 +124,7 @@ private:
     OutputConverter<ResultType> converter_;
 
     /**
-     * @brief Unload spike messages from the endpoint into the message buffer. 
+     * @brief Unload spike messages from the endpoint into the message buffer.
      * @details You should call the method before reading data from the channel.
      */
     void update()
@@ -133,6 +134,7 @@ private:
         message_buffer_.reserve(message_buffer_.size() + messages.size());
         for (auto &&message : messages)
         {
+            // cppcheck-suppress useStlAlgorithm
             message_buffer_.push_back(std::move(message));
         }
     }

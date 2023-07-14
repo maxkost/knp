@@ -5,17 +5,18 @@
  */
 #pragma once
 
+#include <knp/core/message_endpoint.h>
+#include <knp/core/messaging/spike_message.h>
+#include <knp/core/uid.h>
+
+#include <spdlog/spdlog.h>
+
 #include <functional>
 #include <sstream>
 #include <string>
 #include <type_traits>
 #include <utility>
 #include <vector>
-
-#include "knp/core/message_endpoint.h"
-#include "knp/core/messaging/spike_message.h"
-#include "knp/core/uid.h"
-#include "spdlog/include/spdlog/spdlog.h"
 
 
 /**
@@ -24,12 +25,13 @@
 namespace knp::framework::input
 {
 /**
- * @brief The SequenceConverter class is a definition of a stream-like converter that converts a list of input values into spike messages.
- * @details For example, `SequenceConverter<float> converter{interpreter_with_threshold<float>(1.0f)}` 
+ * @brief The SequenceConverter class is a definition of a stream-like converter that converts a list of input values
+ * into spike messages.
+ * @details For example, `SequenceConverter<float> converter{interpreter_with_threshold<float>(1.0f)}`
  * constructs a converter that interprets the input data as a spike if it is equal or greater than the threshold value.
  * @tparam value_type type of values received from an input stream.
  */
-template <class value_type>
+template <class ValueType>
 class SequenceConverter
 {
 public:
@@ -75,8 +77,8 @@ public:
 
 private:
     /**
-     * @brief Interpretation function that returns `true` if an input value is a spike, otherwise `false`. Any "wrong symbol"
-     * error processing logic also goes here.
+     * @brief Interpretation function that returns `true` if an input value is a spike, otherwise `false`. Any "wrong
+     * symbol" error processing logic also goes here.
      */
     std::function<bool(value_type)> interpret_;
 
@@ -88,7 +90,8 @@ private:
 
 
 /**
- * @brief The IndexConverter class is a definition of a converter that converts lines of integers into spiked neuron indexes.
+ * @brief The IndexConverter class is a definition of a converter that converts lines of integers into spiked neuron
+ * indexes.
  */
 class IndexConverter
 {
@@ -104,25 +107,7 @@ public:
      * @param stream input stream.
      * @return vector of spiked neuron indexes.
      */
-    core::messaging::SpikeData operator()(std::istream &stream) const
-    {
-        core::messaging::SpikeData result;
-
-        std::string buffer_string;
-        std::getline(stream, buffer_string);
-
-        auto iter_first = buffer_string.begin();
-        auto iter_second = iter_first;
-
-        while (iter_first < buffer_string.end())
-        {
-            iter_second = std::find(iter_second + 1, buffer_string.end(), delim_);
-            result.push_back(std::stoul(
-                buffer_string.substr(iter_first - buffer_string.begin(), iter_second - buffer_string.begin())));
-            iter_first = iter_second + 1;
-        }
-        return result;
-    }
+    core::messaging::SpikeData operator()(std::istream &stream) const;
 
 private:
     /**
