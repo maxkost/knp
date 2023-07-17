@@ -34,7 +34,7 @@ TEST(FrameworkSuite, ModelExecutorLoad)
     network.add_projection(std::move(loop_projection));
 
     //    knp::core::UID input_uid = std::visit([](const auto &proj) { return proj.get_uid(); }, input_projection);
-    //    knp::framework::input::InputChannel input_channel;
+    //    knp::framework::input::InputGenChannel input_channel(ep, );
 
     //    knp::framework::Model model(std::move(network));
     //    model.add_input_channel(input_channel, input_uid);

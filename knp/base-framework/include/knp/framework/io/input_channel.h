@@ -17,33 +17,24 @@
  */
 namespace knp::framework::input
 {
+
 /**
- * @brief The InputChannel defines an input channel that provides a connected entity (for example, an input projection)
- * with spike messages based on the input stream data.
- * @details You need to create an input channel, associate it with an input stream and provide the stream with input
- * data. After constructing an input channel, connect it with an input entity (for example, a projection) using the
- * `connect_input(channel, target_endpoint, receiver_uid)` method. To send the input data to a connected entity, call
- * the `send(time)` method.
+ * @brief The InputChannel class is a base class for input channels.
  */
 class InputChannel
 {
 public:
     /**
      * @brief Input channel constructor.
-     * @param stream stream from which to receive data.
-     * @param converter functor that generates spike messages based on data from the input stream.
      * @param channel_uid sender UID to put into the message header.
      * @param endpoint endpoint used to send messages.
      */
-    InputChannel(
-        std::unique_ptr<std::istream> &&stream, core::MessageEndpoint &&endpoint, DataConverter converter,
-        core::UID channel_uid = core::UID{true})
-        : stream_(std::move(stream)),
-          endpoint_(std::move(endpoint)),
-          converter_(std::move(converter)),
-          uid_(channel_uid)
+    InputChannel(core::MessageEndpoint &&endpoint, core::UID channel_uid)
+        : endpoint_(std::move(endpoint)), uid_(channel_uid)
     {
     }
+
+    virtual ~InputChannel() = default;
 
     /**
      * @brief Get input channel UID.
@@ -52,25 +43,80 @@ public:
     [[nodiscard]] const core::UID &get_uid() const { return uid_; }
 
     /**
-     * @brief Get input stream.
+     * @brief Read data from input stream, form a spike message and send it to an endpoint.
+     * @note The method throws exceptions if an input stream is set to throw exceptions.
+     * @param step current step.
+     * @return true if message was sent, false if no message was sent.
      */
-    std::istream &get_stream() { return *stream_; }
+    virtual bool send(core::messaging::Step step) = 0;
+
+protected:
+    /**
+     * @brief Send spikes to the endpoint.
+     * @param spikes spikes to send.
+     * @param step current step.
+     * @return true if message was sent, false otherwise.
+     */
+    bool send_data(const core::messaging::SpikeData &spikes, core::messaging::Step step)
+    {
+        if (spikes.empty()) return false;
+
+        core::messaging::SpikeMessage message{{uid_, step}, std::move(spikes)};
+        endpoint_.send_message(message);
+        return true;
+    }
+
+private:
+    /**
+     * @brief A reference to the endpoint used by channel to send messages.
+     */
+    core::MessageEndpoint endpoint_;
+
+    /**
+     * @brief Channel own UID, used as a sender UID for messages.
+     */
+    const core::UID uid_;
+};
+
+
+/**
+ * @brief The InputStreamChannel defines an input channel that provides a connected entity (for example, an input
+ * projection) with spike messages based on the input stream data.
+ * @details You need to create an input stream channel, associate it with an input stream and provide the stream with
+ * input data. After constructing an input channel, connect it with an input entity (for example, a projection) using
+ * the `connect_input(channel, target_endpoint, receiver_uid)` method. To send the input data to a connected entity,
+ * call the `send(time)` method.
+ */
+class InputStreamChannel : public InputChannel
+{
+public:
+    /**
+     * @brief Input stream channel constructor.
+     * @param stream stream from which to receive data.
+     * @param converter functor that generates spike messages based on data from the input stream.
+     * @param channel_uid sender UID to put into the message header.
+     * @param endpoint endpoint used to send messages.
+     */
+    InputStreamChannel(
+        std::unique_ptr<std::istream> &&stream, core::MessageEndpoint &&endpoint, DataConverter converter,
+        core::UID channel_uid = core::UID{true})
+        : InputChannel(std::move(endpoint), channel_uid), stream_(std::move(stream)), converter_(std::move(converter))
+    {
+    }
+
+    /**
+     * @brief Get input stream.
+     * @return stream.
+     */
+    [[nodiscard]] std::istream &get_stream() { return *stream_; }
 
     /**
      * @brief Read data from input stream, form a spike message and send it to an endpoint.
      * @note The method throws exceptions if an input stream is set to throw exceptions.
-     * @param time current step.
+     * @param step current step.
      * @return true if message was sent, false if no message was sent.
      */
-    bool send(core::messaging::Step time)
-    {
-        core::messaging::SpikeData spikes = converter_(*stream_);
-        if (spikes.empty()) return false;
-
-        core::messaging::SpikeMessage message{{uid_, time}, std::move(spikes)};
-        endpoint_.send_message(message);
-        return true;
-    }
+    bool send(core::messaging::Step step) override { return send_data(converter_(*stream_), step); }
 
 private:
     /**
@@ -79,20 +125,45 @@ private:
     std::unique_ptr<std::istream> stream_;
 
     /**
-     * @brief A reference to the endpoint used by channel to send messages.
-     */
-    core::MessageEndpoint endpoint_;
-
-    /**
      * @brief Converter functor: gets stream, returns a list of spikes.
      */
     DataConverter converter_;
+};
+
+
+/**
+ * @brief The InputStreamChannel defines an input channel that provides a connected entity (for example, an input
+ * projection) with spike messages based on the input stream data
+ */
+class InputGenChannel : public InputChannel
+{
+public:
+    /**
+     * @brief Input generator channel constructor.
+     * @param generator functor that generates spike messages.
+     * @param channel_uid sender UID to put into the message header.
+     * @param endpoint endpoint used to send messages.
+     */
+    InputGenChannel(core::MessageEndpoint &&endpoint, DataGenerator generator, core::UID channel_uid = core::UID{true})
+        : InputChannel(std::move(endpoint), channel_uid), generator_(std::move(generator))
+    {
+    }
 
     /**
-     * @brief Channel own UID, used as a sender UID for messages.
+     * @brief Generate spike message and send it to an endpoint.
+     * @param step current step.
+     * @return true if message was sent, false if no message was sent.
      */
-    const core::UID uid_;
+    bool send(core::messaging::Step step) override { return send_data(generator_(), step); }
+
+private:
+    /**
+     * @brief Generator functor
+     * @return list of spikes.
+     */
+    DataGenerator generator_;
 };
+
 
 /**
  * @brief Connect input channel to a target entity.

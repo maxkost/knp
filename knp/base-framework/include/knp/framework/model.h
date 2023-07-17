@@ -72,7 +72,8 @@ public:
      * @param projection_uid UID of the projection which will be connected to the channel.
      * @return channel UID.
      */
-    core::UID add_input_channel(knp::framework::input::InputChannel &&channel, const core::UID &projection_uid);
+    core::UID add_input_channel(
+        std::unique_ptr<knp::framework::input::InputChannel> &&channel, const core::UID &projection_uid);
     /**
      * @brief Add an output channel to the network.
      * @param channel_ptr pointer to the channel object.
@@ -94,7 +95,7 @@ public:
      * @return reference to a channel.
      * @throw std::runtime_error if no channel with that UID exists.
      */
-    input::InputChannel &get_input_channel(const core::UID &channel_uid);
+    input::InputChannel *get_input_channel(const core::UID &channel_uid);
     /**
      * @brief Return all input channels.
      * @return input channels vector.
@@ -109,10 +110,13 @@ public:
 private:
     knp::core::BaseData base_;
     knp::framework::Network network_;
-    std::unordered_map<core::UID, std::tuple<knp::framework::input::InputChannel, core::UID>, core::uid_hash>
+    std::unordered_map<
+        core::UID, std::tuple<std::unique_ptr<knp::framework::input::InputChannel>, core::UID>, core::uid_hash>
+        // cppcheck-suppress unusedStructMember
         in_channels_;
     std::unordered_map<
         core::UID, std::tuple<std::unique_ptr<knp::framework::output::OutputChannelBase>, core::UID>, core::uid_hash>
+        // cppcheck-suppress unusedStructMember
         out_channels_;
 };
 

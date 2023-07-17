@@ -50,7 +50,7 @@ TEST(InputSuite, ChannelTest)
     auto endpoint = bus.create_endpoint();
 
     auto converter = knp::framework::input::SequenceConverter<int>{knp::framework::input::interpret_as_bool<int>, 10};
-    knp::framework::input::InputChannel channel{
+    knp::framework::input::InputStreamChannel channel{
         std::make_unique<std::stringstream>(), bus.create_endpoint(), converter};
 
     auto &stream = dynamic_cast<std::stringstream &>(channel.get_stream());
