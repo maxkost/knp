@@ -134,6 +134,14 @@ public:
 
 public:
     /**
+     * @brief Message endpoint getter.
+     * @return message endpoint.
+     */
+    virtual const core::MessageEndpoint &get_message_endpoint() const = 0;
+    virtual core::MessageEndpoint &get_message_endpoint() = 0;
+
+public:
+    /**
      * @brief Start network execution on the backend.
      */
     void start();

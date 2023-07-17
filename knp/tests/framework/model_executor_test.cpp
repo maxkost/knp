@@ -34,21 +34,16 @@ TEST(FrameworkSuite, ModelExecutorLoad)
     network.add_projection(std::move(loop_projection));
 
     //    knp::core::UID input_uid = std::visit([](const auto &proj) { return proj.get_uid(); }, input_projection);
-    //    knp::core::UID in_channel_uid;
-    //    knp::core::UID out_channel_uid;
+    //    knp::framework::input::InputChannel input_channel;
 
-    knp::framework::Model model(std::move(network));
+    //    knp::framework::Model model(std::move(network));
+    //    model.add_input_channel(input_channel, input_uid);
 
-    //    model.add_input_channel();
 
     //    backend.init();
     //    auto endpoint = backend.message_bus_.create_endpoint();
 
-    //    // Create input and output
-    //    backend.subscribe<knp::core::messaging::SpikeMessage>(input_uid, {in_channel_uid});
-    //    endpoint.subscribe<knp::core::messaging::SpikeMessage>(out_channel_uid, {population.get_uid()});
-
-    //    knp::framework::ModelExecutor me(knp::testing::get_backend_path());
+    // knp::framework::ModelExecutor me(model, knp::testing::get_backend_path());
 
     //    std::vector<size_t> results;
 

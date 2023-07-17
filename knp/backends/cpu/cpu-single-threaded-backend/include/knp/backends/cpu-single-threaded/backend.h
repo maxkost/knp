@@ -269,6 +269,13 @@ public:
         return message_endpoint_.subscribe<MessageType>(receiver, senders);
     }
 
+    /**
+     * @brief Message endpoint getter.
+     * @return message endpoint.
+     */
+    const core::MessageEndpoint &get_message_endpoint() const override { return message_endpoint_; }
+    core::MessageEndpoint &get_message_endpoint() override { return message_endpoint_; }
+
 protected:
     /**
      * @copydoc knp::core::Backend::init()
@@ -295,7 +302,9 @@ private:
     void append_projection(const std::variant<SupportedProjections> &projection);
     void append_population(const std::variant<SupportedPopulations> &population);
 
+    // cppcheck-suppress unusedStructMember
     PopulationContainer populations_;
+    // cppcheck-suppress unusedStructMember
     ProjectionContainer projections_;
     core::MessageEndpoint message_endpoint_;
     size_t step_ = 0;

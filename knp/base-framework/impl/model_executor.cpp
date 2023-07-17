@@ -20,6 +20,18 @@ void ModelExecutor::init()
 
     backend_->load_all_populations(network.get_populations());
     backend_->load_all_projections(network.get_projections());
+
+    // Create input.
+    for (auto [input_ch, proj_uid] : model_.get_input_channels())
+    {
+        backend_->get_message_endpoint().subscribe<knp::core::messaging::SpikeMessage>(proj_uid, {input_ch->get_uid()});
+    }
+
+    // Create output.
+    for (auto [output_ch, pop_uid] : model_.get_input_channels())
+    {
+        backend_->get_message_endpoint().subscribe<knp::core::messaging::SpikeMessage>(output_ch->get_uid(), {pop_uid});
+    }
 }
 
 
