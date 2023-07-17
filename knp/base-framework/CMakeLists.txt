@@ -22,6 +22,7 @@ knp_add_library("${PROJECT_NAME}-core"
     impl/network.cpp
     impl/model.cpp
     impl/model_executor.cpp
+    impl/input_converter.cpp
     impl/output_channel.cpp
 
     ${${PROJECT_NAME}_headers})

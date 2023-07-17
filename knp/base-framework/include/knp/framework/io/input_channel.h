@@ -29,11 +29,6 @@ class InputChannel
 {
 public:
     /**
-     * @brief Functor used for converting input stream data to spikes.
-     */
-    using DataConverter = std::function<core::messaging::SpikeData(std::istream &)>;
-
-    /**
      * @brief Input channel constructor.
      * @param stream stream from which to receive data.
      * @param converter functor that generates spike messages based on data from the input stream.

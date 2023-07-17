@@ -2,11 +2,14 @@
  * Input channels and converters tests.
  */
 
-#include "knp/core/message_bus.h"
-#include "knp/core/messaging/messaging.h"
-#include "knp/framework/io/input_channel.h"
-#include "knp/framework/io/input_interpreters.h"
-#include "tests_common.h"
+#include <knp/core/message_bus.h>
+#include <knp/core/messaging/messaging.h>
+#include <knp/framework/io/in_converters/index_converter.h>
+#include <knp/framework/io/in_converters/sequence_converter.h>
+#include <knp/framework/io/input_channel.h>
+#include <knp/framework/io/input_interpreters.h>
+
+#include <tests_common.h>
 
 
 TEST(InputSuite, SequenceConverterTest)

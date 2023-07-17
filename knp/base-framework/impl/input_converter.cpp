@@ -5,10 +5,13 @@
  * @date 14.07.2023
  */
 
+#include <knp/framework/io/in_converters/index_converter.h>
 #include <knp/framework/io/input_converter.h>
 
 // #include <spdlog/spdlog.h>
 
+namespace knp::framework::input
+{
 
 core::messaging::SpikeData IndexConverter::operator()(std::istream &stream) const
 {
@@ -29,3 +32,5 @@ core::messaging::SpikeData IndexConverter::operator()(std::istream &stream) cons
     }
     return result;
 }
+
+}  // namespace knp::framework::input

@@ -34,7 +34,7 @@ template <class ValueType>
 auto interpret_with_threshold(ValueType threshold)
 {
     // We're using !(a < b) instead of (a >= b) because of the values which only have operator "less than".
-    return [threshold](value_type v) -> bool { return !(v < threshold); };
+    return [threshold](ValueType v) -> bool { return !(v < threshold); };
 }
 
 }  // namespace knp::framework::input
