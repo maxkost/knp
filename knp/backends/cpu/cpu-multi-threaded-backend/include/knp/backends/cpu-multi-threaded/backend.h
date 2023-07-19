@@ -126,6 +126,9 @@ public:
     ~MultiThreadedCPUBackend();
 
 public:
+    /**
+     * @brief Create an entity for the multi-threaded CPU backend.
+    */
     static std::shared_ptr<MultiThreadedCPUBackend> create();
 
 public:

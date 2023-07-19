@@ -16,7 +16,10 @@
  */
 namespace knp::framework::coordinates
 {
-
+/**
+ * @brief Type of coordinate generator defined by a functor that returns a random value out of the specified range.
+ * @param index value defining a range of possible coordinate values.
+*/
 using CoordinateGenerator = std::function<std::any(size_t index)>;
 
 }  // namespace knp::framework::coordinates

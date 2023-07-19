@@ -125,6 +125,9 @@ public:
     ~SingleThreadedCPUBackend() = default;
 
 public:
+    /**
+     * @brief Create an entity for the single-threaded CPU backend.
+    */
     static std::shared_ptr<SingleThreadedCPUBackend> create();
 
 public:
