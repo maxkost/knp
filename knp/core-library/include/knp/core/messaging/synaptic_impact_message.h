@@ -62,6 +62,9 @@ struct SynapticImpact
  */
 struct SynapticImpactMessage
 {
+    /**
+     * @brief Message header.
+    */
     MessageHeader header_;
 
     /**
