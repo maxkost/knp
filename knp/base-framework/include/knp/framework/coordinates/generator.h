@@ -17,8 +17,8 @@
 namespace knp::framework::coordinates
 {
 /**
- * @brief Type of coordinate generator defined by a functor that returns a random value out of the specified range.
- * @param index value defining a range of possible coordinate values.
+ * @brief Type of coordinate generator.
+ * @param index neuron index.
 */
 using CoordinateGenerator = std::function<std::any(size_t index)>;
 
