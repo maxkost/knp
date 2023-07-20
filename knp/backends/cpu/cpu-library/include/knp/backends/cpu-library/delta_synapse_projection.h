@@ -15,7 +15,7 @@
 #include <unordered_map>
 
 /**
- * @brief Type of messages in a message queue.
+ * @brief Type of the message queue.
 */
 typedef std::unordered_map<size_t, knp::core::messaging::SynapticImpactMessage> MessageQueue;
 

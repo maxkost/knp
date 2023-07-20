@@ -126,7 +126,7 @@ public:
 
 public:
     /**
-     * @brief Create an entity for the single-threaded CPU backend.
+     * @brief Create an object of the single-threaded CPU backend.
     */
     static std::shared_ptr<SingleThreadedCPUBackend> create();
 
