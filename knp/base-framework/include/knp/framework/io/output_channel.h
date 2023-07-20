@@ -141,7 +141,7 @@ private:
      * @brief Read a specified interval of messages from sorted internal message buffer.
      * @param starting_step step from which the method starts reading spike messages.
      * @param final_step step after which the method stops reading spike messages.
-     * @return a vector of messages sent on the specified interval of steps.
+     * @return vector of messages sent on the specified interval of steps.
      */
     std::vector<core::messaging::SpikeMessage> read_some_from_buffer(
         core::messaging::Step starting_step, core::messaging::Step final_step)
