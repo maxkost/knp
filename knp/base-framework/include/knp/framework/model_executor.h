@@ -43,8 +43,8 @@ public:
      * @param out_gen output channels generator.
      */
     ModelExecutor(
-        knp::framework::Model &model, const std::filesystem::path backend_path, InputChannelGenerator &i_gen,
-        OutputChannelGenerator &out_gen)
+        knp::framework::Model &model, const std::filesystem::path backend_path, InputChannelGenerator i_gen,
+        OutputChannelGenerator out_gen)
         : backend_loader_(), model_(model), i_gen_(i_gen), out_gen_(out_gen)
     {
         backend_ = backend_loader_.load(backend_path);
