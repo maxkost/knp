@@ -21,7 +21,12 @@ namespace knp::framework::input
 {
 
 /**
- * @brief The InputChannel class is a base class for input channels.
+ * @brief The InputChannel class defines an input channel that provides a connected entity (for example, an input
+ * projection) with spike messages based on the input stream data.
+ * @details You need to create an input channel, associate it with an input stream and provide the stream with input
+ * data. After constructing an input channel, connect it with an input entity (for example, a projection) using the
+ * `connect_input(channel, target_endpoint, receiver_uid)` method. To send the input data to a connected entity, call
+ * the `send(time)` method.
  */
 class InputChannel
 {

@@ -164,6 +164,10 @@ public:
     using SubscriptionContainer = std::map<std::pair<size_t, UID>, SubscriptionVariant>;
 
 protected:
+
+    /**
+     * @brief The MessageEndpointImpl class defines the implementation of the message endpoint.
+    */
     class MessageEndpointImpl;
     /**
      * @brief Message endpoint implementation.
