@@ -68,56 +68,34 @@ public:
 
     /**
      * @brief Add an input channel to the network.
-     * @param channel input channel to be added.
+     * @param channel_uid UID of the input channel.
      * @param projection_uid UID of the projection which will be connected to the channel.
-     * @return channel UID.
      */
-    core::UID add_input_channel(
-        std::unique_ptr<knp::framework::input::InputChannel> &&channel, const core::UID &projection_uid);
+    void add_input_channel(const core::UID &channel_uid, const core::UID &projection_uid);
     /**
      * @brief Add an output channel to the network.
-     * @param channel_ptr pointer to the channel object.
+     * @param channel_uid UID of the channel object.
      * @param population_uid UID of the population which will be connected to the channel.
-     * @return channel UID.
      */
-    core::UID add_output_channel(
-        std::unique_ptr<knp::framework::output::OutputChannelBase> &&channel_ptr, const core::UID &population_uid);
-    /**
-     * @brief Get output channel reference. Cast it to the type you need.
-     * @param channel_uid channel UID.
-     * @return base output channel class reference. It should be cast to the right type before extracting data from it.
-     * @throw std::runtime_error if there is no channel with a given UID.
-     */
-    output::OutputChannelBase *get_output_channel(const core::UID &channel_uid);
-    /**
-     * @brief Get an input channel reference by its UID.
-     * @param channel_uid channel UID.
-     * @return reference to a channel.
-     * @throw std::runtime_error if no channel with that UID exists.
-     */
-    input::InputChannel *get_input_channel(const core::UID &channel_uid);
+    void add_output_channel(const core::UID &channel_uid, const core::UID &population_uid);
     /**
      * @brief Return all input channels.
      * @return input channels vector.
      */
-    std::vector<std::tuple<input::InputChannel *, core::UID>> get_input_channels() const;
+    const std::unordered_multimap<core::UID, core::UID, core::uid_hash> &get_input_channels() const;
     /**
      * @brief Return all output channels.
      * @return output channels bases vector.
      */
-    std::vector<std::tuple<output::OutputChannelBase *, core::UID>> get_output_channels() const;
+    const std::unordered_multimap<core::UID, core::UID, core::uid_hash> &get_output_channels() const;
 
 private:
     knp::core::BaseData base_;
     knp::framework::Network network_;
-    std::unordered_map<
-        core::UID, std::tuple<std::unique_ptr<knp::framework::input::InputChannel>, core::UID>, core::uid_hash>
-        // cppcheck-suppress unusedStructMember
-        in_channels_;
-    std::unordered_map<
-        core::UID, std::tuple<std::unique_ptr<knp::framework::output::OutputChannelBase>, core::UID>, core::uid_hash>
-        // cppcheck-suppress unusedStructMember
-        out_channels_;
+    // cppcheck-suppress unusedStructMember
+    std::unordered_multimap<core::UID, core::UID, core::uid_hash> in_channels_;
+    // cppcheck-suppress unusedStructMember
+    std::unordered_multimap<core::UID, core::UID, core::uid_hash> out_channels_;
 };
 
 }  // namespace knp::framework

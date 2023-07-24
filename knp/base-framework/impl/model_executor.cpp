@@ -14,6 +14,42 @@
 namespace knp::framework
 {
 
+template <typename GenType>
+void ModelExecutor::init_channels(
+    const std::unordered_multimap<core::UID, core::UID, core::uid_hash> &channels, GenType channel_gen)
+{
+    for (size_t i = 0; i < channels.bucket_count(); ++i)
+    {
+        auto bucket_iter = channels.begin(i);
+        if (bucket_iter == channels.end()) continue;
+        auto channel_uid = bucket_iter->first;
+
+        std::vector<core::UID> p_uids(channels.bucket_size(i));
+        std::transform(
+            bucket_iter, channels.end(i), std::back_inserter(p_uids), [](const auto &it) { return it.second; });
+
+        (this->*channel_gen)(channel_uid, p_uids);
+    }
+}
+
+
+void ModelExecutor::gen_input_channel(const core::UID &channel_uid, const std::vector<core::UID> &p_uids)
+{
+    auto channel = i_gen_(channel_uid, std::move(backend_->message_bus_.create_endpoint()));
+    in_channels_.push_back(std::move(channel));
+    backend_->get_message_endpoint().subscribe<knp::core::messaging::SpikeMessage>(channel_uid, p_uids);
+}
+
+
+void ModelExecutor::gen_output_channel(const core::UID &channel_uid, const std::vector<core::UID> &p_uids)
+{
+    auto endpoint = backend_->message_bus_.create_endpoint();
+    endpoint.subscribe<knp::core::messaging::SpikeMessage>(channel_uid, p_uids);
+    auto channel = out_gen_(channel_uid, std::move(endpoint));
+    out_channels_.push_back(std::move(channel));
+}
+
+
 void ModelExecutor::init()
 {
     const auto &network = model_.get_network();
@@ -22,17 +58,28 @@ void ModelExecutor::init()
     backend_->load_all_projections(network.get_projections());
 
     // Create input.
-    for (auto [input_ch, proj_uid] : model_.get_input_channels())
-    {
-        backend_->get_message_endpoint().subscribe<knp::core::messaging::SpikeMessage>(proj_uid, {input_ch->get_uid()});
-    }
+    init_channels(model_.get_input_channels(), &ModelExecutor::gen_input_channel);
 
     // Create output.
-    for (auto [output_ch, pop_uid] : model_.get_input_channels())
-    {
-        backend_->get_message_endpoint().subscribe<knp::core::messaging::SpikeMessage>(output_ch->get_uid(), {pop_uid});
-    }
+    init_channels(model_.get_output_channels(), &ModelExecutor::gen_output_channel);
 }
+
+
+// output::OutputChannelBase *ModelExecutor::get_output_channel(const core::UID &channel_uid)
+//{
+//     auto result = out_channels_.find(channel_uid);
+//     if (out_channels_.end() == result || !result.get())
+//         throw std::runtime_error("Wrong output channel UID");
+//     return result.get();
+// }
+
+
+// input::InputChannel *ModelExecutor::get_input_channel(const core::UID &channel_uid)
+//{
+//     auto result = in_channels_.find(channel_uid);
+//     if (in_channels_.end() == result) throw std::runtime_error("Wrong input channel UID");
+//     return result.get();
+// }
 
 
 void ModelExecutor::start()
