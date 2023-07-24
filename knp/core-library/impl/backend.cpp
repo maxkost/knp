@@ -77,6 +77,28 @@ void Backend::start(RunPredicate run_predicate)
 }
 
 
+void Backend::start(RunPredicate pre_step, RunPredicate post_step)
+{
+    pre_start();
+
+    try
+    {
+        while (running())
+        {
+            if (pre_step && !pre_step(step_)) break;
+            step();
+            if (post_step && !post_step(step_)) break;
+        }
+    }
+    catch (...)
+    {
+        started_ = false;
+        throw;
+    }
+    SPDLOG_INFO("Backend {} stopped.", std::string(base_.uid_));
+}
+
+
 void Backend::stop()
 {
     if (!running()) return;

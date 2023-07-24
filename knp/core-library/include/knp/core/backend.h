@@ -33,7 +33,7 @@ namespace knp::core
 class BOOST_SYMBOL_VISIBLE Backend
 {
 public:
-    using RunPredicate = std::function<bool(size_t)>;
+    using RunPredicate = std::function<bool(knp::core::messaging::Step)>;
 
 public:
     /**
@@ -149,6 +149,12 @@ public:
      * @brief Start network execution on the backend.
      */
     void start();
+    /**
+     * @brief Start network execution on the backend.
+     * @param pre_step function to run before step.
+     * @param post_step function to run after step.
+     */
+    void start(RunPredicate pre_step, RunPredicate post_step);
     /**
      * @brief Start network execution on the backend.
      * @param run_predicate if return true, execution will be continued, otherwise stopped. Predicate parameter - steps

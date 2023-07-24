@@ -41,11 +41,8 @@ TEST(FrameworkSuite, ModelExecutorLoad)
 
     auto input_gen = [](knp::core::messaging::Step step) -> knp::core::messaging::SpikeData
     {
-        std::cout << "IN" << std::endl;
         if (step % 5 == 0)
         {
-            std::cout << "INN1" << std::endl;
-
             knp::core::messaging::SpikeData s;
             s.push_back(0);
             return s;
@@ -72,14 +69,8 @@ TEST(FrameworkSuite, ModelExecutorLoad)
 
     me.init();
     auto out_channel = me.get_output_channel(o_channel_uid);
-    auto in_channel = me.get_input_channel(i_channel_uid);
-    me.start(
-        [&out_channel, &in_channel](size_t step)
-        {
-            in_channel->send(step);
-            out_channel->update();
-            return step < 20;
-        });
+
+    me.start([](size_t step) { return step < 20; });
 
     std::vector<knp::core::messaging::Step> results;
     const auto &spikes = out_channel->update();

@@ -90,13 +90,47 @@ output::OutputChannel *ModelExecutor::get_output_channel(const core::UID &channe
 
 void ModelExecutor::start()
 {
-    backend_->start();
+    backend_->start(
+        [this](knp::core::messaging::Step step)
+        {
+            for (auto &i_ch : in_channels_)
+            {
+                i_ch->send(step);
+            }
+            return true;
+        },
+        [this](knp::core::messaging::Step)
+        {
+            for (auto &o_ch : out_channels_)
+            {
+                o_ch->update();
+            }
+
+            return true;
+        });
 }
 
 
 void ModelExecutor::start(core::Backend::RunPredicate run_predicate)
 {
-    backend_->start(run_predicate);
+    backend_->start(
+        [this, run_predicate](knp::core::messaging::Step step)
+        {
+            for (auto &i_ch : in_channels_)
+            {
+                i_ch->send(step);
+            }
+            return run_predicate(step);
+        },
+        [this](knp::core::messaging::Step)
+        {
+            for (auto &o_ch : out_channels_)
+            {
+                o_ch->update();
+            }
+
+            return true;
+        });
 }
 
 
