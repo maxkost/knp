@@ -304,7 +304,6 @@ private:
     // cppcheck-suppress unusedStructMember
     ProjectionContainer projections_;
     core::MessageEndpoint message_endpoint_;
-    size_t step_ = 0;
     boost::asio::thread_pool calc_pool_;
     std::mutex ep_mutex_;
 };

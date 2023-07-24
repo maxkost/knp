@@ -21,7 +21,7 @@ Backend::~Backend()
 }
 
 
-void Backend::start()
+void Backend::pre_start()
 {
     if (running()) return;
 
@@ -34,10 +34,41 @@ void Backend::start()
     }
 
     started_ = true;
+}
+
+
+void Backend::start()
+{
+    pre_start();
 
     try
     {
-        while (running()) step();
+        while (running())
+        {
+            step();
+            ++step_;
+        }
+    }
+    catch (...)
+    {
+        started_ = false;
+        throw;
+    }
+    SPDLOG_INFO("Backend {} stopped.", std::string(base_.uid_));
+}
+
+
+void Backend::start(std::function<bool(size_t)> stop_predicate)
+{
+    pre_start();
+
+    try
+    {
+        while (running() && stop_predicate(step_))
+        {
+            step();
+            ++step_;
+        }
     }
     catch (...)
     {

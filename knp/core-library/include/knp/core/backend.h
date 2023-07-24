@@ -145,6 +145,12 @@ public:
      * @brief Start network execution on the backend.
      */
     void start();
+    /**
+     * @brief Start network execution on the backend.
+     * @param stop_predicate if return true, execution will be continued, otherwise stopped. Predicate parameter - steps
+     * counter.
+     */
+    void start(std::function<bool(size_t)> stop_predicate);
 
     /**
      * @brief Stop network execution on the backend.
@@ -156,6 +162,12 @@ public:
      * @details You can use this method for debugging purposes.
      */
     virtual void step() = 0;
+
+    /**
+     * @brief return current step.
+     * @return step counter.
+     */
+    size_t get_step() const { return step_; }
 
 public:
     /**
@@ -187,10 +199,14 @@ public:
     MessageBus message_bus_;
 
 private:
+    void pre_start();
+
+private:
     BaseData base_;
     std::atomic<bool> initialized_ = false;
     volatile std::atomic<bool> started_ = false;
     std::vector<std::unique_ptr<Device>> devices_;
+    size_t step_ = 0;
 };
 
 }  // namespace knp::core

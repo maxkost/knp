@@ -74,7 +74,7 @@ std::vector<size_t> MultiThreadedCPUBackend::get_supported_population_indexes() 
 
 void MultiThreadedCPUBackend::step()
 {
-    SPDLOG_DEBUG(std::string("Starting step #") + std::to_string(step_));
+    SPDLOG_DEBUG("Starting step #{}", get_step());
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
     // Calculate populations.
@@ -121,7 +121,6 @@ void MultiThreadedCPUBackend::step()
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
 
-    ++step_;
     SPDLOG_DEBUG("Step finished");
 }
 
@@ -191,7 +190,7 @@ void MultiThreadedCPUBackend::init()
 void MultiThreadedCPUBackend::calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population)
 {
     SPDLOG_TRACE("Calculate population {}", std::string(population.get_uid()));
-    calculate_blifat_population(population, message_endpoint_, step_, ep_mutex_);
+    calculate_blifat_population(population, message_endpoint_, get_step(), ep_mutex_);
 }
 
 
@@ -200,7 +199,7 @@ void MultiThreadedCPUBackend::calculate_projection(
     core::messaging::SynapticMessageQueue &message_queue)
 {
     SPDLOG_TRACE("Calculate projection {}", std::string(projection.get_uid()));
-    calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, step_, ep_mutex_);
+    calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, get_step(), ep_mutex_);
 }
 
 
