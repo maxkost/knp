@@ -171,7 +171,6 @@ public:
 private:
     /**
      * @brief Generator functor
-     * @return list of spikes.
      */
     DataGenerator generator_;
 };
