@@ -75,7 +75,7 @@ input::InputChannel *ModelExecutor::get_input_channel(const core::UID &channel_u
 }
 
 
-output::OutputChannelBase *ModelExecutor::get_output_channel(const core::UID &channel_uid)
+output::OutputChannel *ModelExecutor::get_output_channel(const core::UID &channel_uid)
 {
     auto result = std::find_if(
         out_channels_.cbegin(), out_channels_.cend(),
@@ -88,6 +88,12 @@ output::OutputChannelBase *ModelExecutor::get_output_channel(const core::UID &ch
 void ModelExecutor::start()
 {
     backend_->start();
+}
+
+
+void ModelExecutor::start(core::Backend::RunPredicate run_predicate)
+{
+    backend_->start(run_predicate);
 }
 
 

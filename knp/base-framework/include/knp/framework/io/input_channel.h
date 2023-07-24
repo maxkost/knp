@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <knp/core/core.h>
+
 #include <memory>
 #include <utility>
 #include <vector>
@@ -29,19 +31,27 @@ public:
      * @param channel_uid sender UID to put into the message header.
      * @param endpoint endpoint used to send messages.
      */
-    InputChannel(core::MessageEndpoint &&endpoint, core::UID channel_uid)
-        : endpoint_(std::move(endpoint)), uid_(channel_uid)
+    InputChannel(core::UID channel_uid, core::MessageEndpoint &&endpoint)
+        : base_{channel_uid}, endpoint_(std::move(endpoint))
     {
     }
 
     virtual ~InputChannel() = default;
 
+public:
     /**
-     * @brief Get input channel UID.
-     * @return input channel UID.
+     * @brief Get backend UID.
+     * @return backend UID.
      */
-    [[nodiscard]] const core::UID &get_uid() const { return uid_; }
+    [[nodiscard]] const auto &get_uid() const { return base_.uid_; }
+    /**
+     * @brief Get tags used by the backend.
+     * @return backend tag map.
+     * @see TagMap.
+     */
+    [[nodiscard]] auto &get_tags() { return base_.tags_; }
 
+public:
     /**
      * @brief Read data from input stream, form a spike message and send it to an endpoint.
      * @note The method throws exceptions if an input stream is set to throw exceptions.
@@ -61,21 +71,18 @@ protected:
     {
         if (spikes.empty()) return false;
 
-        core::messaging::SpikeMessage message{{uid_, step}, std::move(spikes)};
+        core::messaging::SpikeMessage message{{get_uid(), step}, std::move(spikes)};
         endpoint_.send_message(message);
         return true;
     }
 
 private:
+    core::BaseData base_;
+
     /**
      * @brief A reference to the endpoint used by channel to send messages.
      */
     core::MessageEndpoint endpoint_;
-
-    /**
-     * @brief Channel own UID, used as a sender UID for messages.
-     */
-    const core::UID uid_;
 };
 
 
@@ -98,9 +105,9 @@ public:
      * @param endpoint endpoint used to send messages.
      */
     InputStreamChannel(
-        std::unique_ptr<std::istream> &&stream, core::MessageEndpoint &&endpoint, DataConverter converter,
-        core::UID channel_uid = core::UID{true})
-        : InputChannel(std::move(endpoint), channel_uid), stream_(std::move(stream)), converter_(std::move(converter))
+        core::UID channel_uid, core::MessageEndpoint &&endpoint, std::unique_ptr<std::istream> &&stream,
+        DataConverter converter)
+        : InputChannel(channel_uid, std::move(endpoint)), stream_(std::move(stream)), converter_(std::move(converter))
     {
     }
 
@@ -144,8 +151,8 @@ public:
      * @param channel_uid sender UID to put into the message header.
      * @param endpoint endpoint used to send messages.
      */
-    InputGenChannel(DataGenerator generator, core::MessageEndpoint &&endpoint, core::UID channel_uid = core::UID{true})
-        : InputChannel(std::move(endpoint), channel_uid), generator_(std::move(generator))
+    InputGenChannel(core::UID channel_uid, core::MessageEndpoint &&endpoint, DataGenerator generator)
+        : InputChannel(channel_uid, std::move(endpoint)), generator_(std::move(generator))
     {
     }
 
@@ -154,7 +161,7 @@ public:
      * @param step current step.
      * @return true if message was sent, false if no message was sent.
      */
-    bool send(core::messaging::Step step) override { return send_data(generator_(), step); }
+    bool send(core::messaging::Step step) override { return send_data(generator_(step), step); }
 
 private:
     /**

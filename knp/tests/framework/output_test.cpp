@@ -56,16 +56,22 @@ TEST(OutputSuite, ChannelTest)
     };
 
     // Initialize counting channel
-    knp::framework::output::OutputChannel<std::vector<size_t>> channel_count{
-        std::move(bus.create_endpoint()), count_converter, sender_uid};
+    auto e1 = bus.create_endpoint();
+    auto c1_uid = knp::core::UID();
+    e1.subscribe<knp::core::messaging::SpikeMessage>(c1_uid, {sender_uid});
+    knp::framework::output::OutputChannel channel_count{c1_uid, std::move(e1)};
 
     // Initialize neuron set channel
-    knp::framework::output::OutputChannel<std::set<knp::core::messaging::SpikeIndex>> channel_set{
-        std::move(bus.create_endpoint()), set_converter, sender_uid};
+    auto e2 = bus.create_endpoint();
+    auto c2_uid = knp::core::UID();
+    e2.subscribe<knp::core::messaging::SpikeMessage>(c2_uid, {sender_uid});
+    knp::framework::output::OutputChannel channel_set{c2_uid, std::move(e2)};
 
     // Create a custom "max activations by neuron" channel
-    knp::framework::output::OutputChannel<size_t> channel_max{
-        std::move(bus.create_endpoint()), max_converter, sender_uid};
+    auto e3 = bus.create_endpoint();
+    auto c3_uid = knp::core::UID();
+    e3.subscribe<knp::core::messaging::SpikeMessage>(c3_uid, {sender_uid});
+    knp::framework::output::OutputChannel channel_max{c3_uid, std::move(e3)};
 
     //
     // Do message exchange.
@@ -84,23 +90,20 @@ TEST(OutputSuite, ChannelTest)
     endpoint.send_message(msg_2);
     endpoint.send_message(msg_3);
     bus.route_messages();
-    channel_count.receive();
-    channel_set.receive();
-    channel_max.receive();
     endpoint.receive_all_messages();
 
     // Use channels
-    std::vector<size_t> count_result;
+    std::vector<size_t> count_result =
+        knp::framework::output::output_channel_get<std::vector<size_t>>(channel_count, count_converter, 1, 5);
     decltype(count_result) expected_count{0, 3, 0, 1, 2, 0, 0, 1};  // Expected result
-    count_result = channel_count.get(1, 5);
 
-    std::set<knp::core::messaging::SpikeIndex> set_result;
+    std::set<knp::core::messaging::SpikeIndex> set_result =
+        knp::framework::output::output_channel_get<std::set<knp::core::messaging::SpikeIndex>>(
+            channel_set, set_converter, 1, 5);
     decltype(set_result) expected_set{1, 3, 4, 7};  // Expected result
-    set_result = channel_set.get(1, 5);
 
-    size_t index;
+    size_t index = knp::framework::output::output_channel_get<size_t>(channel_max, max_converter, 1, 5);
     decltype(index) expected_index = 1;  // Expected result
-    index = channel_max.get(1, 5);
 
     // Compare with expected
     ASSERT_EQ(count_result, expected_count);

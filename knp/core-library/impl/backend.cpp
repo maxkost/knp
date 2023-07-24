@@ -46,7 +46,6 @@ void Backend::start()
         while (running())
         {
             step();
-            ++step_;
         }
     }
     catch (...)
@@ -58,16 +57,15 @@ void Backend::start()
 }
 
 
-void Backend::start(std::function<bool(size_t)> stop_predicate)
+void Backend::start(RunPredicate run_predicate)
 {
     pre_start();
 
     try
     {
-        while (running() && stop_predicate(step_))
+        while (running() && run_predicate(step_))
         {
             step();
-            ++step_;
         }
     }
     catch (...)

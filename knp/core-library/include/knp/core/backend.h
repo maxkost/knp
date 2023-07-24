@@ -14,6 +14,7 @@
 #include <knp/core/projection.h>
 
 #include <atomic>
+#include <functional>
 #include <memory>
 #include <set>
 #include <string>
@@ -31,6 +32,9 @@ namespace knp::core
  */
 class BOOST_SYMBOL_VISIBLE Backend
 {
+public:
+    using RunPredicate = std::function<bool(size_t)>;
+
 public:
     /**
      * @brief Pure virtual backend destructor.
@@ -147,10 +151,10 @@ public:
     void start();
     /**
      * @brief Start network execution on the backend.
-     * @param stop_predicate if return true, execution will be continued, otherwise stopped. Predicate parameter - steps
+     * @param run_predicate if return true, execution will be continued, otherwise stopped. Predicate parameter - steps
      * counter.
      */
-    void start(std::function<bool(size_t)> stop_predicate);
+    void start(RunPredicate run_predicate);
 
     /**
      * @brief Stop network execution on the backend.
@@ -167,7 +171,7 @@ public:
      * @brief return current step.
      * @return step counter.
      */
-    size_t get_step() const { return step_; }
+    core::messaging::Step get_step() const { return step_; }
 
 public:
     /**
@@ -192,6 +196,12 @@ protected:
      */
     void uninit();
 
+    /**
+     * @brief return and increment current step.
+     * @return step counter.
+     */
+    core::messaging::Step gad_step() { return step_++; }
+
 public:
     /**
      * @brief Message bus used by backend.
@@ -206,7 +216,7 @@ private:
     std::atomic<bool> initialized_ = false;
     volatile std::atomic<bool> started_ = false;
     std::vector<std::unique_ptr<Device>> devices_;
-    size_t step_ = 0;
+    core::messaging::Step step_ = 0;
 };
 
 }  // namespace knp::core

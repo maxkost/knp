@@ -32,7 +32,7 @@ public:
     using InputChannelGenerator =
         std::function<std::unique_ptr<input::InputChannel>(const core::UID &, core::MessageEndpoint &&)>;
     using OutputChannelGenerator =
-        std::function<std::unique_ptr<output::OutputChannelBase>(const core::UID &, core::MessageEndpoint &&)>;
+        std::function<std::unique_ptr<output::OutputChannel>(const core::UID &, core::MessageEndpoint &&)>;
 
 public:
     /**
@@ -57,6 +57,12 @@ public:
     void start();
 
     /**
+     * @brief Start model execution.
+     * @param run_predicate predicate which will stop running if return false.
+     */
+    void start(core::Backend::RunPredicate run_predicate);
+
+    /**
      * @brief Stop model execution.
      */
     void stop();
@@ -74,7 +80,7 @@ public:
      from it.
      * @throw std::runtime_error if there is no channel with a given UID.
      */
-    output::OutputChannelBase *get_output_channel(const core::UID &channel_uid);
+    output::OutputChannel *get_output_channel(const core::UID &channel_uid);
     /**
      * @brief Get an input channel reference by its UID.
      * @param channel_uid channel UID.
@@ -101,7 +107,7 @@ private:
     // cppcheck-suppress unusedStructMember
     std::vector<std::unique_ptr<knp::framework::input::InputChannel>> in_channels_;
     // cppcheck-suppress unusedStructMember
-    std::vector<std::unique_ptr<knp::framework::output::OutputChannelBase>> out_channels_;
+    std::vector<std::unique_ptr<knp::framework::output::OutputChannel>> out_channels_;
 };
 
 }  // namespace knp::framework
