@@ -144,7 +144,7 @@ public:
      * @param channel_uid sender UID to put into the message header.
      * @param endpoint endpoint used to send messages.
      */
-    InputGenChannel(core::MessageEndpoint &&endpoint, DataGenerator generator, core::UID channel_uid = core::UID{true})
+    InputGenChannel(DataGenerator generator, core::MessageEndpoint &&endpoint, core::UID channel_uid = core::UID{true})
         : InputChannel(std::move(endpoint), channel_uid), generator_(std::move(generator))
     {
     }

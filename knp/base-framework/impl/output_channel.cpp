@@ -6,3 +6,8 @@
  */
 
 #include <knp/framework/io/output_channel.h>
+
+namespace knp::framework::output
+{
+
+}

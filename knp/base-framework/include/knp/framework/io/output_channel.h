@@ -32,8 +32,8 @@ public:
      * @param endpoint endpoint to use for message exchange.
      * @param sender_uid UID of the sender entity.
      */
-    OutputChannelBase(const core::UID &channel_uid, core::MessageEndpoint &endpoint, core::UID sender_uid)
-        : uid_{channel_uid}, endpoint_(endpoint)
+    OutputChannelBase(const core::UID &channel_uid, core::MessageEndpoint &&endpoint, const core::UID &sender_uid)
+        : uid_{channel_uid}, endpoint_(std::move(endpoint))
     {
         endpoint_.subscribe<core::messaging::SpikeMessage>(uid_, {sender_uid});
     }
@@ -43,7 +43,8 @@ public:
      * @param endpoint endpoint to use for message exchange.
      * @param sender_uid UID of the sender entity.
      */
-    OutputChannelBase(core::MessageEndpoint &endpoint, core::UID sender_uid) : uid_{true}, endpoint_(endpoint)
+    OutputChannelBase(core::MessageEndpoint &&endpoint, core::UID sender_uid)
+        : uid_{true}, endpoint_(std::move(endpoint))
     {
         endpoint_.subscribe<core::messaging::SpikeMessage>(uid_, {sender_uid});
     }
@@ -63,7 +64,7 @@ protected:
     /**
      * @brief Reference to an endpoint used for message exchange.
      */
-    core::MessageEndpoint &endpoint_;
+    core::MessageEndpoint endpoint_;
 
     /**
      * @brief Messages received from output population.
@@ -86,8 +87,8 @@ public:
      * @param converter data converter.
      * @param sender_uid UID of the population that sends spike messages.
      */
-    OutputChannel(core::MessageEndpoint &endpoint, OutputConverter<ResultType> converter, core::UID sender_uid)
-        : OutputChannelBase(endpoint, sender_uid), converter_(std::move(converter))
+    OutputChannel(core::MessageEndpoint &&endpoint, OutputConverter<ResultType> converter, core::UID sender_uid)
+        : OutputChannelBase(std::move(endpoint), sender_uid), converter_(std::move(converter))
     {
     }
 
@@ -99,9 +100,9 @@ public:
      * @param sender_uid UID of the population that sends spike messages.
      */
     OutputChannel(
-        const core::UID &channel_uid, core::MessageEndpoint &endpoint, OutputConverter<ResultType> converter,
+        const core::UID &channel_uid, core::MessageEndpoint &&endpoint, OutputConverter<ResultType> converter,
         core::UID sender_uid)
-        : OutputChannelBase(channel_uid, endpoint, sender_uid), converter_(std::move(converter))
+        : OutputChannelBase(channel_uid, std::move(endpoint), sender_uid), converter_(std::move(converter))
     {
     }
 
@@ -118,11 +119,6 @@ public:
     }
 
 private:
-    /**
-     * @brief Data converter function.
-     */
-    OutputConverter<ResultType> converter_;
-
     /**
      * @brief Unload spike messages from the endpoint into the message buffer.
      * @details You should call the method before reading data from the channel.
@@ -163,6 +159,12 @@ private:
         message_buffer_.erase(begin_iter, end_iter);
         return result;
     }
+
+private:
+    /**
+     * @brief Data converter function.
+     */
+    OutputConverter<ResultType> converter_;
 };
 
 }  // namespace knp::framework::output
