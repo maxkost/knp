@@ -55,6 +55,9 @@ public:
      */
     [[nodiscard]] const core::UID &get_uid() const { return uid_; }
 
+    // TODO: refactor this.
+    void receive() { endpoint_.receive_all_messages(); }
+
 protected:
     /**
      * @brief Output channel UID.

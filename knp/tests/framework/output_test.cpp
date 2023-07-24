@@ -84,6 +84,9 @@ TEST(OutputSuite, ChannelTest)
     endpoint.send_message(msg_2);
     endpoint.send_message(msg_3);
     bus.route_messages();
+    channel_count.receive();
+    channel_set.receive();
+    channel_max.receive();
     endpoint.receive_all_messages();
 
     // Use channels
