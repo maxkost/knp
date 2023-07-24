@@ -41,8 +41,11 @@ TEST(FrameworkSuite, ModelExecutorLoad)
 
     auto input_gen = [](knp::core::messaging::Step step) -> knp::core::messaging::SpikeData
     {
+        std::cout << "IN" << std::endl;
         if (step % 5 == 0)
         {
+            std::cout << "INN1" << std::endl;
+
             knp::core::messaging::SpikeData s;
             s.push_back(0);
             return s;
@@ -68,35 +71,24 @@ TEST(FrameworkSuite, ModelExecutorLoad)
         });
 
     me.init();
-    me.start([](size_t step) { return step < 20; });
-
     auto out_channel = me.get_output_channel(o_channel_uid);
+    auto in_channel = me.get_input_channel(i_channel_uid);
+    me.start(
+        [&out_channel, &in_channel](size_t step)
+        {
+            in_channel->send(step);
+            out_channel->update();
+            return step < 20;
+        });
 
-    //    for (size_t step = 0; step < 20; ++step)
-    //    {
-    //        // Send inputs on steps 0, 5, 10, 15
-    //        if (step % 5 == 0)
-    //        {
-    //            knp::core::messaging::SpikeMessage message{{in_channel_uid, 0}, {0}};
-    //            endpoint.send_message(message);
-    //        }
-    //        backend.step();
-    //        endpoint.receive_all_messages();
-    //        auto output = endpoint.unload_messages<knp::core::messaging::SpikeMessage>(out_channel_uid);
-    //        // Write up the steps where the network sends a spike
-    //        if (!output.empty()) results.push_back(step);
-    //    }
+    std::vector<knp::core::messaging::Step> results;
+    const auto &spikes = out_channel->update();
+    results.reserve(spikes.size());
 
-    knp::framework::output::ConvertToSet cts(1);
-
-    auto s = cts(out_channel->update());
-
-    for (auto i : s)
-    {
-        std::cout << i << " - ";
-    }
-    std::cout << std::endl;
+    std::transform(
+        spikes.cbegin(), spikes.cend(), std::back_inserter(results),
+        [](const auto &spike_msg) { return spike_msg.header_.send_time_; });
     // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
-    const std::vector<size_t> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
-    //    ASSERT_EQ(result, expected_results);
+    const std::vector<knp::core::messaging::Step> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
+    ASSERT_EQ(results, expected_results);
 }
