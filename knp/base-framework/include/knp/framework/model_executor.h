@@ -67,21 +67,21 @@ public:
     void init();
 
 public:
-    //    /**
-    //     * @brief Get output channel reference. Cast it to the type you need.
-    //     * @param channel_uid channel UID.
-    //     * @return base output channel class reference. It should be cast to the right type before extracting data
-    //     from it.
-    //     * @throw std::runtime_error if there is no channel with a given UID.
-    //     */
-    //    output::OutputChannelBase *get_output_channel(const core::UID &channel_uid);
-    //    /**
-    //     * @brief Get an input channel reference by its UID.
-    //     * @param channel_uid channel UID.
-    //     * @return reference to a channel.
-    //     * @throw std::runtime_error if no channel with that UID exists.
-    //     */
-    //    input::InputChannel *get_input_channel(const core::UID &channel_uid);
+    /**
+     * @brief Get output channel reference. Cast it to the type you need.
+     * @param channel_uid channel UID.
+     * @return base output channel class reference. It should be cast to the right type before extracting data
+     from it.
+     * @throw std::runtime_error if there is no channel with a given UID.
+     */
+    output::OutputChannelBase *get_output_channel(const core::UID &channel_uid);
+    /**
+     * @brief Get an input channel reference by its UID.
+     * @param channel_uid channel UID.
+     * @return reference to a channel.
+     * @throw std::runtime_error if no channel with that UID exists.
+     */
+    input::InputChannel *get_input_channel(const core::UID &channel_uid);
 
 private:
     template <typename GenType>
