@@ -70,7 +70,7 @@ protected:
     core::BaseData base_;
 
     /**
-     * @brief Reference to an endpoint used for message exchange.
+     * @brief Endpoint used for message exchange.
      */
     core::MessageEndpoint endpoint_;
 
