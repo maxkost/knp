@@ -33,6 +33,10 @@ namespace knp::core
 class BOOST_SYMBOL_VISIBLE Backend
 {
 public:
+    /**
+     * @brief Predicate type. If predicate return true, execution will be continued, otherwise stopped.
+     * Predicate gets step as a parameter.
+     */
     using RunPredicate = std::function<bool(knp::core::messaging::Step)>;
 
 public:

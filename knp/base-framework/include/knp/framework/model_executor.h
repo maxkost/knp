@@ -29,8 +29,14 @@ namespace knp::framework
 class ModelExecutor
 {
 public:
+    /**
+     * @brief Input channels generator type.
+     */
     using InputChannelGenerator =
         std::function<std::unique_ptr<input::InputChannel>(const core::UID &, core::MessageEndpoint &&)>;
+    /**
+     * @brief Output channels generator type.
+     */
     using OutputChannelGenerator =
         std::function<std::unique_ptr<output::OutputChannel>(const core::UID &, core::MessageEndpoint &&)>;
 

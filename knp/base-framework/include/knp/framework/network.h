@@ -199,22 +199,65 @@ public:
     void remove_projection(const knp::core::UID &projection_uid);
 
 public:
+    /**
+     * @brief Get starting iterator over network populations.
+     * @return populations iterator.
+     */
     [[nodiscard]] PopulationIterator begin_populations();
+    /**
+     * @copydoc Network::begin_populations
+     */
     [[nodiscard]] PopulationConstIterator begin_populations() const;
+    /**
+     * @brief Get finish iterator over populations.
+     * @return populations end iterator.
+     */
     [[nodiscard]] PopulationIterator end_populations();
+    /**
+     * @copydoc Network::end_populations
+     */
     [[nodiscard]] PopulationConstIterator end_populations() const;
-
+    /**
+     * @brief Get starting iterator over network projections.
+     * @return projections iterator.
+     */
     [[nodiscard]] ProjectionIterator begin_projections();
+    /**
+     * @copydoc Network::begin_projections
+     */
     [[nodiscard]] ProjectionConstIterator begin_projections() const;
+    /**
+     * @brief Get finish iterator over projections.
+     * @return projections end iterator.
+     */
     [[nodiscard]] ProjectionIterator end_projections();
+    /**
+     * @copydoc Network::end_projections
+     */
     [[nodiscard]] ProjectionConstIterator end_projections() const;
 
 public:
+    /**
+     * @brief Get populations container from the network.
+     * @return container with populations.
+     */
     const PopulationContainer &get_populations() const { return populations_; }
+    /**
+     * @brief Get projections container from the network.
+     * @return container with projections.
+     */
     const ProjectionContainer &get_projections() const { return projections_; }
 
 public:
+    /**
+     * @brief Get populations count in the network.
+     * @return populations count.
+     */
     [[nodiscard]] size_t populations_count() const { return populations_.size(); }
+    /**
+     * @brief Get projections count in the network.
+     * @return projections count.
+     */
     [[nodiscard]] size_t projections_count() const { return projections_.size(); }
 
 public:

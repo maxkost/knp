@@ -18,6 +18,9 @@
 namespace knp::framework::output
 {
 
+/**
+ * @brief Output converter spikes to set.
+ */
 class ConvertToSet
 {
 public:
