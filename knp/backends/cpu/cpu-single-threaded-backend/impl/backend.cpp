@@ -126,7 +126,8 @@ void SingleThreadedCPUBackend::step()
 
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
-    SPDLOG_DEBUG("Step finished #{}", gad_step());
+    auto step = gad_step();
+    SPDLOG_DEBUG("Step finished #{}", step);
 }
 
 
