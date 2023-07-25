@@ -21,7 +21,7 @@ void ModelExecutor::init_channels(
     for (size_t i = 0; i < channels.bucket_count(); ++i)
     {
         auto bucket_iter = channels.begin(i);
-        if (bucket_iter == channels.end()) continue;
+        if (channels.end(i) == bucket_iter) continue;
         auto channel_uid = bucket_iter->first;
 
         std::vector<core::UID> p_uids(channels.bucket_size(i));
@@ -35,7 +35,7 @@ void ModelExecutor::init_channels(
 
 void ModelExecutor::gen_input_channel(const core::UID &channel_uid, const std::vector<core::UID> &p_uids)
 {
-    auto channel = i_gen_(channel_uid, std::move(backend_->message_bus_.create_endpoint()));
+    auto channel = i_gen_(channel_uid, backend_->message_bus_.create_endpoint());
     in_channels_.push_back(std::move(channel));
     for (const auto &u : p_uids)
     {
