@@ -13,6 +13,7 @@
 #include <string>
 #include <utility>
 
+#include <boost/functional/hash.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -56,10 +57,12 @@ struct UID
     // TODO: Optimize it.
     /**
      * @brief Generate a random UID.
-     * @param random boolean value that takes the values true or false. 
+     * @param random boolean value that takes the values true or false.
      *        If true, the constructor generates a random UID. If false, the constructor generates a null UID.
      */
-    explicit UID(bool random = true) : tag(random ? uid_generator()() : ::boost::uuids::nil_uuid()) {}
+    explicit UID(bool random) : tag(random ? uid_generator()() : ::boost::uuids::nil_uuid()) {}
+
+    UID() : UID(true) {}
 
     /**
      * @brief Create a UID from `boost::uuids::uuid`.
@@ -169,5 +172,14 @@ inline ::std::istream &operator>>(std::istream &s, UID &uid)
     s >> uid.tag;
     return s;
 }
+
+
+/**
+ * @brief UID hash functor type.
+ */
+struct uid_hash
+{
+    auto operator()(const UID &uid) const { return boost::hash<boost::uuids::uuid>()(uid.tag); }
+};
 
 }  // namespace knp::core

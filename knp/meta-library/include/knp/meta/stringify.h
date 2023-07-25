@@ -23,7 +23,8 @@ namespace knp::meta
 
 /**
  * @brief Template used to determine if two arbitrary types are not the same at the compile stage.
- * @details `mp_neq` takes the value of `true` if the types are not the same, otherwise `mp_neq` takes the value of `false`.
+ * @details `mp_neq` takes the value of `true` if the types are not the same, otherwise `mp_neq` takes the value of
+ * `false`.
  * @tparam T1 first arbitrary type to compare.
  * @tparam T2 second arbitrary type to compare.
  */
@@ -58,6 +59,21 @@ using mp_supported_indexes =
 #define KNP_MAKE_TUPLE(tuple_elems) \
     ::std::make_tuple(              \
         BOOST_PP_SEQ_ENUM(BOOST_PP_SEQ_FOR_EACH(KNP_MAKE_TUPLE_INTERNAL, "", BOOST_PP_VARIADIC_TO_SEQ(tuple_elems))));
+
+/**
+ * @brief Get supported type indexes
+ */
+template <typename AllTypes, typename SupportedTypes>
+std::vector<size_t> get_supported_type_indexes()
+{
+    std::vector<size_t> result;
+    result.reserve(boost::mp11::mp_size<SupportedTypes>::value);
+
+    boost::mp11::mp_for_each<knp::meta::mp_supported_indexes<SupportedTypes, AllTypes>>([&result](auto i)
+                                                                                        { result.push_back(i); });
+
+    return result;
+}
 
 /**
  * @brief Get names of supported object types.

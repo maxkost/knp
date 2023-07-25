@@ -10,10 +10,15 @@
 #include <knp/core/core.h>
 #include <knp/core/impexp.h>
 #include <knp/framework/backend_loader.h>
+#include <knp/framework/io/input_channel.h>
+#include <knp/framework/io/output_channel.h>
 #include <knp/framework/network.h>
 
 #include <memory>
+#include <tuple>
+#include <unordered_map>
 #include <utility>
+#include <vector>
 
 
 /**
@@ -61,9 +66,36 @@ public:
      */
     [[nodiscard]] const knp::framework::Network &get_network() const { return network_; }
 
+    /**
+     * @brief Add an input channel to the network.
+     * @param channel_uid UID of the input channel.
+     * @param projection_uid UID of the projection which will be connected to the channel.
+     */
+    void add_input_channel(const core::UID &channel_uid, const core::UID &projection_uid);
+    /**
+     * @brief Add an output channel to the network.
+     * @param channel_uid UID of the channel object.
+     * @param population_uid UID of the population which will be connected to the channel.
+     */
+    void add_output_channel(const core::UID &channel_uid, const core::UID &population_uid);
+    /**
+     * @brief Return all input channels.
+     * @return input channels vector.
+     */
+    const std::unordered_multimap<core::UID, core::UID, core::uid_hash> &get_input_channels() const;
+    /**
+     * @brief Return all output channels.
+     * @return output channels bases vector.
+     */
+    const std::unordered_multimap<core::UID, core::UID, core::uid_hash> &get_output_channels() const;
+
 private:
     knp::core::BaseData base_;
     knp::framework::Network network_;
+    // cppcheck-suppress unusedStructMember
+    std::unordered_multimap<core::UID, core::UID, core::uid_hash> in_channels_;
+    // cppcheck-suppress unusedStructMember
+    std::unordered_multimap<core::UID, core::UID, core::uid_hash> out_channels_;
 };
 
 }  // namespace knp::framework

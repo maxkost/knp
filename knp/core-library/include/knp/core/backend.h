@@ -10,8 +10,11 @@
 #include <knp/core/core.h>
 #include <knp/core/device.h>
 #include <knp/core/message_bus.h>
+#include <knp/core/population.h>
+#include <knp/core/projection.h>
 
 #include <atomic>
+#include <functional>
 #include <memory>
 #include <set>
 #include <string>
@@ -24,12 +27,18 @@
  */
 namespace knp::core
 {
-
 /**
  * @brief The Backend class is the base class for backends.
  */
 class BOOST_SYMBOL_VISIBLE Backend
 {
+public:
+    /**
+     * @brief Predicate type. If predicate return true, execution will be continued, otherwise stopped.
+     * Predicate gets step as a parameter.
+     */
+    using RunPredicate = std::function<bool(knp::core::messaging::Step)>;
+
 public:
     /**
      * @brief Pure virtual backend destructor.
@@ -65,8 +74,31 @@ public:
      * @return vector of supported synapse type names.
      */
     [[nodiscard]] virtual std::vector<std::string> get_supported_synapses() const = 0;
+    /**
+     * @brief Get indexes of supported populations.
+     * @return vector of indexes of supported populations.
+     */
+    [[nodiscard]] virtual std::vector<size_t> get_supported_population_indexes() const = 0;
+    /**
+     * @brief Get indexes of supported projections.
+     * @return vector of indexes of supported projections.
+     */
+    [[nodiscard]] virtual std::vector<size_t> get_supported_projection_indexes() const = 0;
+
 
 public:
+    /**
+     * @brief Add projections to backend. Throw exception if there are unsupported projection types.
+     * @param projections projections to add.
+     */
+    virtual void load_all_projections(const std::vector<AllProjectionsVariant> &projections) = 0;
+
+    /**
+     * @brief Add populations to backend. Throw exception if there are unsupported population types.
+     * @param populations populations to add.
+     */
+    virtual void load_all_populations(const std::vector<AllPopulationsVariant> &populations) = 0;
+
     /**
      * @brief Remove projections with given UIDs from the backend.
      * @param uids UIDs of projections to remove.
@@ -110,9 +142,29 @@ public:
 
 public:
     /**
+     * @brief Message endpoint getter.
+     * @return message endpoint.
+     */
+    virtual const core::MessageEndpoint &get_message_endpoint() const = 0;
+    virtual core::MessageEndpoint &get_message_endpoint() = 0;
+
+public:
+    /**
      * @brief Start network execution on the backend.
      */
     void start();
+    /**
+     * @brief Start network execution on the backend.
+     * @param pre_step function to run before step.
+     * @param post_step function to run after step.
+     */
+    void start(RunPredicate pre_step, RunPredicate post_step);
+    /**
+     * @brief Start network execution on the backend.
+     * @param run_predicate if return true, execution will be continued, otherwise stopped. Predicate parameter - steps
+     * counter.
+     */
+    void start(RunPredicate run_predicate);
 
     /**
      * @brief Stop network execution on the backend.
@@ -124,6 +176,12 @@ public:
      * @details You can use this method for debugging purposes.
      */
     virtual void step() = 0;
+
+    /**
+     * @brief return current step.
+     * @return step counter.
+     */
+    core::messaging::Step get_step() const { return step_; }
 
 public:
     /**
@@ -137,14 +195,22 @@ protected:
      * @brief Backend default constructor.
      */
     Backend() = default;
+
     /**
      * @brief Initialize backend before starting network execution.
      */
     virtual void init() = 0;
+
     /**
      * @brief Set backend to the uninitialized state.
      */
     void uninit();
+
+    /**
+     * @brief return and increment current step.
+     * @return step counter.
+     */
+    core::messaging::Step gad_step() { return step_++; }
 
 public:
     /**
@@ -153,10 +219,14 @@ public:
     MessageBus message_bus_;
 
 private:
+    void pre_start();
+
+private:
     BaseData base_;
     std::atomic<bool> initialized_ = false;
-    std::atomic<bool> started_ = false;
+    volatile std::atomic<bool> started_ = false;
     std::vector<std::unique_ptr<Device>> devices_;
+    core::messaging::Step step_ = 0;
 };
 
 }  // namespace knp::core

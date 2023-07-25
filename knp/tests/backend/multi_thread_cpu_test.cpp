@@ -8,16 +8,19 @@
 #include <knp/neuron-traits/blifat.h>
 #include <knp/synapse-traits/delta.h>
 
+#include <generators.h>
 #include <spdlog/spdlog.h>
 #include <tests_common.h>
 
 #include <vector>
 
-#include "generators.h"
-
 
 using Population = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::PopulationVariants;
 using Projection = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::ProjectionVariants;
+
+
+namespace knp::testing
+{
 
 class MTestingBack : public knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend
 {
@@ -26,13 +29,15 @@ public:
     void init() override { knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::init(); }
 };
 
+}  // namespace knp::testing
+
 
 TEST(MultiThreadCpuSuite, SmallestNetwork)
 {
     // Create a single neuron network: input -> input_projection -> population <=> loop_projection
-    MTestingBack backend;
 
     namespace kt = knp::testing;
+    kt::MTestingBack backend;
 
     kt::BLIFATPopulation population{kt::neuron_generator, 1};
     Projection loop_projection =
@@ -53,11 +58,11 @@ TEST(MultiThreadCpuSuite, SmallestNetwork)
     backend.subscribe<knp::core::messaging::SpikeMessage>(input_uid, {in_channel_uid});
     endpoint.subscribe<knp::core::messaging::SpikeMessage>(out_channel_uid, {population.get_uid()});
 
-    std::vector<size_t> results;
+    std::vector<knp::core::messaging::Step> results;
 
     backend.init();
 
-    for (size_t step = 0; step < 20; ++step)
+    for (knp::core::messaging::Step step = 0; step < 20; ++step)
     {
         // Send inputs on steps 0, 5, 10, 15
         if (step % 5 == 0)
@@ -73,14 +78,14 @@ TEST(MultiThreadCpuSuite, SmallestNetwork)
     }
 
     // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
-    const std::vector<size_t> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
+    const std::vector<knp::core::messaging::Step> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
     ASSERT_EQ(results, expected_results);
 }
 
 
 TEST(MultiThreadCpuSuite, NeuronsGettingTest)
 {
-    MTestingBack backend;
+    knp::testing::MTestingBack backend;
 
     auto s_neurons = backend.get_supported_neurons();
 
@@ -91,7 +96,7 @@ TEST(MultiThreadCpuSuite, NeuronsGettingTest)
 
 TEST(MultiThreadCpuSuite, SynapsesGettingTest)
 {
-    MTestingBack backend;
+    knp::testing::MTestingBack backend;
 
     auto s_synapses = backend.get_supported_synapses();
 

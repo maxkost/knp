@@ -60,12 +60,13 @@ public:
     static UID get_receiver_uid(const SubscriptionVariant &subscription);
     static std::pair<size_t, UID> get_subscription_key(const SubscriptionVariant &subscription);
 
+    // tparams was temporarily disabled, because of the bug in the CLang documentation checker.
     /**
      * @brief Find index of an entity type in its variant.
      * @details For example, you can use the method to find an index of a message type in a message variant or an index
      * of a subscription type in a subscription variant.
-     * @tparam Variant variant of one or more entity types.
-     * @tparam Type entity type to search.
+     * tparam Variant variant of one or more entity types.
+     * tparam Type entity type to search.
      */
     template <typename Variant, typename Type>
     static constexpr size_t get_type_index = boost::mp11::mp_find<Variant, Type>::value;
@@ -164,10 +165,9 @@ public:
     using SubscriptionContainer = std::map<std::pair<size_t, UID>, SubscriptionVariant>;
 
 protected:
-
     /**
      * @brief The MessageEndpointImpl class defines the implementation of the message endpoint.
-    */
+     */
     class MessageEndpointImpl;
     /**
      * @brief Message endpoint implementation.
