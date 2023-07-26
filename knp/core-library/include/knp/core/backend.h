@@ -34,8 +34,9 @@ class BOOST_SYMBOL_VISIBLE Backend
 {
 public:
     /**
-     * @brief Predicate type. If predicate return true, execution will be continued, otherwise stopped.
-     * Predicate gets step as a parameter.
+     * @brief Predicate type. 
+     * @details If the predicate returns `true`, network execution continues. Otherwise network execution stops./n
+     * The predicate gets a step number as a parameter.
      */
     using RunPredicate = std::function<bool(knp::core::messaging::Step)>;
 
@@ -61,7 +62,7 @@ public:
 public:
     /**
      * @brief Define if plasticity is supported.
-     * @return true if plasticity is supported, false if plasticity is not supported.
+     * @return `true` if plasticity is supported, `false` if plasticity is not supported.
      */
     [[nodiscard]] virtual bool plasticity_supported() const = 0;
     /**
@@ -88,13 +89,15 @@ public:
 
 public:
     /**
-     * @brief Add projections to backend. Throw exception if there are unsupported projection types.
+     * @brief Add projections to backend. 
+     * @throw exception if the `projections` parameters contains unsupported projection types.
      * @param projections projections to add.
      */
     virtual void load_all_projections(const std::vector<AllProjectionsVariant> &projections) = 0;
 
     /**
-     * @brief Add populations to backend. Throw exception if there are unsupported population types.
+     * @brief Add populations to backend. 
+     * @throw exception if the `populations` parameter contains unsupported population types.
      * @param populations populations to add.
      */
     virtual void load_all_populations(const std::vector<AllPopulationsVariant> &populations) = 0;
@@ -142,7 +145,7 @@ public:
 
 public:
     /**
-     * @brief Message endpoint getter.
+     * @brief Get message endpoint.
      * @return message endpoint.
      */
     virtual const core::MessageEndpoint &get_message_endpoint() const = 0;
@@ -155,14 +158,15 @@ public:
     void start();
     /**
      * @brief Start network execution on the backend.
-     * @param pre_step function to run before step.
-     * @param post_step function to run after step.
+     * @param pre_step function to run before the current step.
+     * @param post_step function to run after the current step.
      */
     void start(RunPredicate pre_step, RunPredicate post_step);
     /**
      * @brief Start network execution on the backend.
-     * @param run_predicate if return true, execution will be continued, otherwise stopped. Predicate parameter - steps
-     * counter.
+     * @details If the predicate returns `true`, network execution continues. Otherwise network execution stops./n
+     * The predicate gets a step number as a parameter.
+     * @param run_predicate predicate function
      */
     void start(RunPredicate run_predicate);
 
@@ -178,15 +182,15 @@ public:
     virtual void step() = 0;
 
     /**
-     * @brief return current step.
-     * @return step counter.
+     * @brief Get current step.
+     * @return step number.
      */
     core::messaging::Step get_step() const { return step_; }
 
 public:
     /**
      * @brief Get network execution status.
-     * @return true if network is being executed, false if network is not being executed.
+     * @return `true` if network is being executed, `false` if network is not being executed.
      */
     bool running() const { return started_; }
 
@@ -207,8 +211,8 @@ protected:
     void uninit();
 
     /**
-     * @brief return and increment current step.
-     * @return step counter.
+     * @brief Get and increase the number of the  current step.
+     * @return step number.
      */
     core::messaging::Step gad_step() { return step_++; }
 

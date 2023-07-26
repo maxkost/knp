@@ -57,11 +57,14 @@ struct UID
     // TODO: Optimize it.
     /**
      * @brief Generate a random UID.
-     * @param random boolean value that takes the values true or false.
-     *        If true, the constructor generates a random UID. If false, the constructor generates a null UID.
+     * @param random boolean value that takes the values `true` or `false`.
+     *        If `true`, the constructor generates a random UID. If `false`, the constructor generates a null UID.
      */
     explicit UID(bool random) : tag(random ? uid_generator()() : ::boost::uuids::nil_uuid()) {}
 
+    /**
+     * @brief Default UID constructor.
+    */
     UID() : UID(true) {}
 
     /**
@@ -117,28 +120,28 @@ struct UID
 
     /**
      * @brief Check if UID is valid.
-     * @return true if UID is a non-zero value.
+     * @return `true` if UID is a non-zero value.
      */
     explicit operator bool() const { return !tag.is_nil(); }
 
     /**
      * @brief Comparison operator for sorting.
      * @param uid UID to compare to the current UID.
-     * @return true if the current UID is less than the specified UID.
+     * @return `true` if the current UID is less than the specified UID.
      */
     bool operator<(const UID &uid) const { return uid.tag < tag; }
 
     /**
      * @brief Check if two UIDs are the same.
      * @param uid UID to compare to the current UID.
-     * @return true if both UIDs are the same.
+     * @return `true` if both UIDs are the same.
      */
     bool operator==(const UID &uid) const { return uid.tag == tag; }
 
     /**
      * @brief Check if two UIDs are different.
      * @param uid UID to compare to the current UID.
-     * @return true if the UIDs are different.
+     * @return `true` if the UIDs are different.
      */
     bool operator!=(const UID &uid) const { return uid.tag != tag; }
 
@@ -179,6 +182,10 @@ inline ::std::istream &operator>>(std::istream &s, UID &uid)
  */
 struct uid_hash
 {
+    /**
+     * @brief Get a hash value of the specified UID.
+     * @param uid UID to convert to a hash value.
+    */
     auto operator()(const UID &uid) const { return boost::hash<boost::uuids::uuid>()(uid.tag); }
 };
 

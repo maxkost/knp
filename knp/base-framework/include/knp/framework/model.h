@@ -80,12 +80,12 @@ public:
     void add_output_channel(const core::UID &channel_uid, const core::UID &population_uid);
     /**
      * @brief Return all input channels.
-     * @return input channels vector.
+     * @return map of input channels.
      */
     const std::unordered_multimap<core::UID, core::UID, core::uid_hash> &get_input_channels() const;
     /**
      * @brief Return all output channels.
-     * @return output channels bases vector.
+     * @return map of output channels.
      */
     const std::unordered_multimap<core::UID, core::UID, core::uid_hash> &get_output_channels() const;
 

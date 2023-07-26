@@ -30,12 +30,12 @@ class ModelExecutor
 {
 public:
     /**
-     * @brief Input channels generator type.
+     * @brief Type of the input channel generator.
      */
     using InputChannelGenerator =
         std::function<std::unique_ptr<input::InputChannel>(const core::UID &, core::MessageEndpoint &&)>;
     /**
-     * @brief Output channels generator type.
+     * @brief Type of the output channel generator.
      */
     using OutputChannelGenerator =
         std::function<std::unique_ptr<output::OutputChannel>(const core::UID &, core::MessageEndpoint &&)>;
@@ -45,8 +45,8 @@ public:
      * @brief ModelExecutor constructor.
      * @param model model to run.
      * @param backend_path filepath to backend on which you want to run the model.
-     * @param i_gen input channels generator.
-     * @param out_gen output channels generator.
+     * @param i_gen input channel generator.
+     * @param out_gen output channel generator.
      */
     ModelExecutor(
         knp::framework::Model &model, const std::filesystem::path backend_path, InputChannelGenerator i_gen,
@@ -64,7 +64,7 @@ public:
 
     /**
      * @brief Start model execution.
-     * @param run_predicate predicate which will stop running if return false.
+     * @param run_predicate predicate that stops running if the `false` value is returned. 
      */
     void start(core::Backend::RunPredicate run_predicate);
 
@@ -80,18 +80,17 @@ public:
 
 public:
     /**
-     * @brief Get output channel reference. Cast it to the type you need.
+     * @brief Get reference to output channel and cast it to the required type.
      * @param channel_uid channel UID.
-     * @return base output channel class reference. It should be cast to the right type before extracting data
-     from it.
+     * @return reference to output channel (the reference should be cast to the required type before you extract data from it).
      * @throw std::runtime_error if there is no channel with a given UID.
      */
     output::OutputChannel *get_output_channel(const core::UID &channel_uid);
     /**
-     * @brief Get an input channel reference by its UID.
+     * @brief Get reference to input channel by its UID.
      * @param channel_uid channel UID.
-     * @return reference to a channel.
-     * @throw std::runtime_error if no channel with that UID exists.
+     * @return reference to input channel.
+     * @throw std::runtime_error if no channel with the given UID exists.
      */
     input::InputChannel *get_input_channel(const core::UID &channel_uid);
 

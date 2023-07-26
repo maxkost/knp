@@ -200,69 +200,73 @@ public:
 
 public:
     /**
-     * @brief Get starting iterator over network populations.
-     * @return populations iterator.
+     * @brief Get an iterator pointing to the first element of the population.
+     * @return population iterator.
      */
     [[nodiscard]] PopulationIterator begin_populations();
     /**
-     * @copydoc Network::begin_populations
+     * @brief Get an iterator pointing to the first element of the population.
+     * @return constant population iterator.
      */
     [[nodiscard]] PopulationConstIterator begin_populations() const;
     /**
-     * @brief Get finish iterator over populations.
-     * @return populations end iterator.
+     * @brief Get an iterator pointing to the last element of the population.
+     * @return iterator.
      */
     [[nodiscard]] PopulationIterator end_populations();
     /**
-     * @copydoc Network::end_populations
+     * @brief Get an iterator pointing to the last element of the population.
+     * @return constant iterator.
      */
     [[nodiscard]] PopulationConstIterator end_populations() const;
     /**
-     * @brief Get starting iterator over network projections.
-     * @return projections iterator.
+     * @brief Get an iterator pointing to the first element of the projection.
+     * @return projection iterator.
      */
     [[nodiscard]] ProjectionIterator begin_projections();
     /**
-     * @copydoc Network::begin_projections
+     * @brief Get an iterator pointing to the first element of the projection.
+     * @return constant projection iterator.
      */
     [[nodiscard]] ProjectionConstIterator begin_projections() const;
     /**
-     * @brief Get finish iterator over projections.
-     * @return projections end iterator.
+     * @brief Get an iterator pointing to the last element of the projection.
+     * @return iterator.
      */
     [[nodiscard]] ProjectionIterator end_projections();
     /**
-     * @copydoc Network::end_projections
+     * @brief Get an iterator pointing to the last element of the projection.
+     * @return constant iterator.
      */
     [[nodiscard]] ProjectionConstIterator end_projections() const;
 
 public:
     /**
-     * @brief Get populations container from the network.
-     * @return container with populations.
+     * @brief Get population container from the network.
+     * @return container of populations.
      */
     const PopulationContainer &get_populations() const { return populations_; }
     /**
-     * @brief Get projections container from the network.
-     * @return container with projections.
+     * @brief Get projection container from the network.
+     * @return container of projections.
      */
     const ProjectionContainer &get_projections() const { return projections_; }
 
 public:
     /**
-     * @brief Get populations count in the network.
-     * @return populations count.
+     * @brief Count populations in the network.
+     * @return number of populations.
      */
     [[nodiscard]] size_t populations_count() const { return populations_.size(); }
     /**
-     * @brief Get projections count in the network.
-     * @return projections count.
+     * @brief Count projections in the network.
+     * @return number of projections.
      */
     [[nodiscard]] size_t projections_count() const { return projections_.size(); }
 
 public:
     /**
-     * @brief Get the network UID.
+     * @brief Get network UID.
      * @return UID.
      */
     [[nodiscard]] const knp::core::UID &get_uid() const { return base_.uid_; }

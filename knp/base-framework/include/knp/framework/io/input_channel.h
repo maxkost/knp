@@ -21,12 +21,7 @@ namespace knp::framework::input
 {
 
 /**
- * @brief The InputChannel class defines an input channel that provides a connected entity (for example, an input
- * projection) with spike messages based on the input stream data.
- * @details You need to create an input channel, associate it with an input stream and provide the stream with input
- * data. After constructing an input channel, connect it with an input entity (for example, a projection) using the
- * `connect_input(channel, target_endpoint, receiver_uid)` method. To send the input data to a connected entity, call
- * the `send(time)` method.
+ * @brief The InputChannel class is the base class for input channels.
  */
 class InputChannel
 {
@@ -41,6 +36,9 @@ public:
     {
     }
 
+    /**
+     * @brief Virtual default destructor of input channel.
+    */
     virtual ~InputChannel() = default;
 
 public:
@@ -61,16 +59,16 @@ public:
      * @brief Read data from input stream, form a spike message and send it to an endpoint.
      * @note The method throws exceptions if an input stream is set to throw exceptions.
      * @param step current step.
-     * @return true if message was sent, false if no message was sent.
+     * @return `true` if message was sent, `false` if no message was sent.
      */
     virtual bool send(core::messaging::Step step) = 0;
 
 protected:
     /**
-     * @brief Send spikes to the endpoint.
-     * @param spikes spikes to send.
+     * @brief Send spike messages to message endpoint.
+     * @param spikes spike messages to send.
      * @param step current step.
-     * @return true if message was sent, false otherwise.
+     * @return `true` if messages were sent, `false` otherwise.
      */
     bool send_data(const core::messaging::SpikeData &spikes, core::messaging::Step step)
     {
@@ -126,7 +124,7 @@ public:
      * @brief Read data from input stream, form a spike message and send it to an endpoint.
      * @note The method throws exceptions if an input stream is set to throw exceptions.
      * @param step current step.
-     * @return true if message was sent, false if no message was sent.
+     * @return `true` if message was sent, `false` if no message was sent.
      */
     bool send(core::messaging::Step step) override { return send_data(converter_(*stream_), step); }
 
@@ -137,21 +135,20 @@ private:
     std::unique_ptr<std::istream> stream_;
 
     /**
-     * @brief Converter functor: gets stream, returns a list of spikes.
+     * @brief Converter functor that gets a stream as an input and returns a list of spike messages.
      */
     DataConverter converter_;
 };
 
 
 /**
- * @brief The InputStreamChannel defines an input channel that provides a connected entity (for example, an input
- * projection) with spike messages based on the input stream data
+ * @brief The InputGenChannel class defines an input channel that generates spikes messages.
  */
 class InputGenChannel : public InputChannel
 {
 public:
     /**
-     * @brief Input generator channel constructor.
+     * @brief Constructor for input channel that generates spike messages.
      * @param generator functor that generates spike messages.
      * @param channel_uid sender UID to put into the message header.
      * @param endpoint endpoint used to send messages.
@@ -162,15 +159,15 @@ public:
     }
 
     /**
-     * @brief Generate spike message and send it to an endpoint.
+     * @brief Generate a spike message and send it to an endpoint.
      * @param step current step.
-     * @return true if message was sent, false if no message was sent.
+     * @return `true` if message was sent, `false` if no message was sent.
      */
     bool send(core::messaging::Step step) override { return send_data(generator_(step), step); }
 
 private:
     /**
-     * @brief Generator functor
+     * @brief Generator functor.
      */
     DataGenerator generator_;
 };

@@ -65,8 +65,8 @@ public:
      * @brief Find index of an entity type in its variant.
      * @details For example, you can use the method to find an index of a message type in a message variant or an index
      * of a subscription type in a subscription variant.
-     * tparam Variant variant of one or more entity types.
-     * tparam Type entity type to search.
+     * @tparam Variant variant of one or more entity types.
+     * @tparam Type entity type to search.
      */
     template <typename Variant, typename Type>
     static constexpr size_t get_type_index = boost::mp11::mp_find<Variant, Type>::value;
@@ -130,7 +130,7 @@ public:
 
     /**
      * @brief Receive a message from the message bus.
-     * @return true if a message was received, false if no message was received.
+     * @return `true` if a message was received, `false` if no message was received.
      */
     bool receive_message();
 

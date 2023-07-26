@@ -134,7 +134,7 @@ public:
 public:
     /**
      * @brief Define if plasticity is supported.
-     * @return true if plasticity is supported, false if plasticity is not supported.
+     * @return `true` if plasticity is supported, `false` if plasticity is not supported.
      */
     [[nodiscard]] bool plasticity_supported() const override { return true; }
     /**
@@ -170,7 +170,8 @@ public:
     void load_projections(const std::vector<ProjectionVariants> &projections);
 
     /**
-     * @brief Add projections to backend. Throw exception if there are unsupported projection types.
+     * @brief Add projections to backend. 
+     * @throw exception if the `projections` parameter contains unsupported projection types.
      * @param projections projections to add.
      */
     void load_all_projections(const std::vector<knp::core::AllProjectionsVariant> &projections) override
@@ -179,7 +180,8 @@ public:
     }
 
     /**
-     * @brief Add populations to backend. Throw exception if there are unsupported population types.
+     * @brief Add populations to backend. 
+     * @throw exception if the `populations` parameter contains unsupported population types.
      * @param populations populations to add.
      */
     void load_all_populations(const std::vector<knp::core::AllPopulationsVariant> &populations) override
@@ -189,13 +191,13 @@ public:
 
 public:
     /**
-     * @brief Iterate populations loaded to backend.
+     * @brief Get an iterator pointing to the first element of the population loaded to backend.
      * @return population iterator.
      */
     PopulationIterator begin_populations();
 
     /**
-     * @brief Iterate populations loaded to backend.
+     * @brief Get an iterator pointing to the first element of the population loaded to backend.
      * @return constant population iterator.
      */
     PopulationConstIterator begin_populations() const;
@@ -211,12 +213,12 @@ public:
     PopulationConstIterator end_populations() const;
 
     /**
-     * @brief Iterate projections loaded to backend.
+     * @brief Get an iterator pointing to the first element of the projection loaded to backend.
      * @return projection iterator.
      */
     ProjectionIterator begin_projections();
     /**
-     * @brief Iterate projections loaded to backend.
+     * @brief Get an iterator pointing to the first element of the projection loaded to backend.
      * @return constant projection iterator.
      */
     ProjectionConstIterator begin_projections() const;
@@ -273,7 +275,7 @@ public:
         return message_endpoint_.subscribe<MessageType>(receiver, senders);
     }
     /**
-     * @brief Message endpoint getter.
+     * @brief Get message endpoint.
      * @return message endpoint.
      */
     const core::MessageEndpoint &get_message_endpoint() const override { return message_endpoint_; }

@@ -19,20 +19,20 @@ namespace knp::framework::output
 {
 
 /**
- * @brief Output converter spikes to set.
+ * @brief The ConvertToSet class is a definition of a converter that gets a set of spiked neuron indexes from spike messages.
  */
 class ConvertToSet
 {
 public:
     /**
-     * @brief ConvertToSet constructor.
+     * @brief Converter constructor.
      * @param output_size output vector size (usually corresponds to the size of an output population).
      */
     explicit ConvertToSet(size_t output_size) : output_size_(output_size) {}
     /**
      * @brief Get a set of recently spiked neuron indexes from the `message_list`.
      * @details The method ignores neuron indexes that are greater than the `output_size` value.
-     * @param message_list list of spike messages that contain indexes of spiked neurons.
+     * @param message_list list of spike messages that contains indexes of spiked neurons.
      * @return set of spiked neuron indexes.
      */
     std::set<core::messaging::SpikeIndex> operator()(const std::vector<core::messaging::SpikeMessage> &message_list)

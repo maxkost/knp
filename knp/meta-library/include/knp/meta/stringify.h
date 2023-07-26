@@ -61,7 +61,9 @@ using mp_supported_indexes =
         BOOST_PP_SEQ_ENUM(BOOST_PP_SEQ_FOR_EACH(KNP_MAKE_TUPLE_INTERNAL, "", BOOST_PP_VARIADIC_TO_SEQ(tuple_elems))));
 
 /**
- * @brief Get supported type indexes
+ * @brief Get supported type indexes.
+ * @tparam AllTypes global list of types.
+ * @tparam SupportedTypes local list of types.
  */
 template <typename AllTypes, typename SupportedTypes>
 std::vector<size_t> get_supported_type_indexes()

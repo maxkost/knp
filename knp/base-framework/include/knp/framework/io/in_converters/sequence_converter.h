@@ -29,7 +29,7 @@ namespace knp::framework::input
  * into spike messages.
  * @details For example, `SequenceConverter<float> converter{interpreter_with_threshold<float>(1.0f)}`
  * constructs a converter that interprets the input data as a spike if it is equal or greater than the threshold value.
- * @tparam value_type type of values received from an input stream.
+ * @tparam ValueType type of values received from an input stream.
  */
 template <class ValueType>
 class SequenceConverter
