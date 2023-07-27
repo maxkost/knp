@@ -119,7 +119,7 @@ public:
     /**
      * @brief Default constructor for multi-threaded CPU backend.
      */
-    explicit MultiThreadedCPUBackend(size_t thread_count = boost::asio::detail::default_thread_pool_size());
+    explicit MultiThreadedCPUBackend(size_t thread_count = std::thread::hardware_concurrency());
     /**
      * @brief Destructor for multi-threaded CPU backend.
      */
@@ -228,6 +228,7 @@ public:
      * @copydoc knp::core::Backend::step()
      */
     void step() override;
+    void step_old();
 
     /**
      * @brief Subscribe internal endpoint to messages.
@@ -243,6 +244,16 @@ public:
     {
         return message_endpoint_.subscribe<MessageType>(receiver, senders);
     }
+
+    /**
+     * @brief Calculates all populations.
+     */
+    void calculate_populations();
+
+    /**
+     * @brief Calculates all projections.
+     */
+    void calculate_projections();
 
 protected:
     /**
@@ -269,6 +280,8 @@ protected:
 private:
     PopulationContainer populations_;
     ProjectionContainer projections_;
+    const size_t neurons_per_thread_ = 1000;
+    const size_t spikes_per_thread_ = 1000;
     core::MessageEndpoint message_endpoint_;
     size_t step_ = 0;
     boost::asio::thread_pool calc_pool_;

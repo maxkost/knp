@@ -30,3 +30,38 @@ void calculate_blifat_population(
 void calculate_blifat_population(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint,
     size_t step_n, std::mutex &m);
+
+
+/**
+ * @brief partial pre impact population calculation.
+ * @param population the population to be updated.
+ * @param part_start first neuron index to be calculated.
+ * @param part_size number of neurons to be calculated in a single call.
+ * @note Used for parallelization.
+ */
+void calculate_neurons_state_part(
+    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, size_t part_start, size_t part_size);
+
+
+/**
+ * @brief Process messages sent to the current population.
+ * @param population the population to be updated.
+ * @param messages synaptic impacts sent to the population.
+ * @note Used for parallelization. See later if this function serves as a bottleneck.
+ */
+void process_inputs(
+    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population,
+    const std::vector<knp::core::messaging::SynapticImpactMessage> &messages);
+
+
+/**
+ * @brief Partially calculate neurons states after impact.
+ * @param population the population to be updated.
+ * @param part_start first neuron index to be updated.
+ * @param part_size number of neurons to be updated in a single call.
+ * @return indexes of spiked neurons.
+ * @note This function is used for parallelization.
+ */
+void calculate_neurons_post_input_state_part(
+    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population,
+    knp::core::messaging::SpikeData &neuron_indexes, size_t part_start, size_t part_size, std::mutex &mutex);
