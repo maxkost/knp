@@ -10,15 +10,15 @@
 #include <knp/core/core.h>
 #include <knp/core/messaging/synaptic_impact_message.h>
 #include <knp/core/uid.h>
-#include <knp/neuron-traits/type_traits.h>
+#include <knp/neuron-traits/all_traits.h>
 
 #include <functional>
 #include <utility>
 #include <vector>
 
 /**
-* @brief Core library namespace.
-*/
+ * @brief Core library namespace.
+ */
 namespace knp::core
 {
 
@@ -177,5 +177,26 @@ private:
     std::vector<NeuronParameters> neurons_;
     BaseData base_;
 };
+
+
+/**
+ * @brief List of population types based on neuron types specified in `knp::neuron_traits::AllNeurons`.
+ * @details `AllPopulations` takes the value of `Population<NeuronType_1>, Population<NeuronType_2>, ...,
+ * Population<NeuronType_n>`, where `NeuronType_[1..n]` is the neuron type specified in
+ * `knp::neuron_traits::AllNeurons`. \n For example, if `knp::neuron_traits::AllNeurons` contains BLIFATNeuron and
+ * IzhikevichNeuron types, then `AllPopulations` = `Population<BLIFATNeuron>, Population<IzhikevichNeuron>`.
+ */
+using AllPopulations = boost::mp11::mp_transform<knp::core::Population, knp::neuron_traits::AllNeurons>;
+
+/**
+ * @brief Population variant that contains any population type specified in `AllPopulations`.
+ * @details `AllPopulationVariants` takes the value of `std::variant<PopulationType_1,..., PopulationType_n>`, where
+ * `PopulationType_[1..n]` is the population type specified in `AllPopulations`. \n For example, if `AllPopulations`
+ * contains BLIFATNeuron and IzhikevichNeuron types, then `AllPopulationVariants = std::variant<BLIFATNeuron,
+ * IzhikevichNeuron>`. \n `AllPopulationVariants` retains the same order of message types as defined in
+ * `AllPopulations`.
+ * @see ALL_NEURONS.
+ */
+using AllPopulationsVariant = boost::mp11::mp_rename<AllPopulations, std::variant>;
 
 }  // namespace knp::core

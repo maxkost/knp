@@ -91,7 +91,7 @@ public:
     /**
      * @brief Check if a sender with the given UID exists.
      * @param uid sender UID.
-     * @return true if the sender with the given UID exists, false if the sender with the given UID doesn't exist.
+     * @return `true` if the sender with the given UID exists, `false` if the sender with the given UID doesn't exist.
      */
     [[nodiscard]] bool has_sender(const UID &uid) const
     {

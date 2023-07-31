@@ -10,8 +10,11 @@
 #include <knp/core/core.h>
 #include <knp/core/device.h>
 #include <knp/core/message_bus.h>
+#include <knp/core/population.h>
+#include <knp/core/projection.h>
 
 #include <atomic>
+#include <functional>
 #include <memory>
 #include <set>
 #include <string>
@@ -24,12 +27,19 @@
  */
 namespace knp::core
 {
-
 /**
  * @brief The Backend class is the base class for backends.
  */
 class BOOST_SYMBOL_VISIBLE Backend
 {
+public:
+    /**
+     * @brief Predicate type. 
+     * @details If the predicate returns `true`, network execution continues. Otherwise network execution stops./n
+     * The predicate gets a step number as a parameter.
+     */
+    using RunPredicate = std::function<bool(knp::core::messaging::Step)>;
+
 public:
     /**
      * @brief Pure virtual backend destructor.
@@ -52,7 +62,7 @@ public:
 public:
     /**
      * @brief Define if plasticity is supported.
-     * @return true if plasticity is supported, false if plasticity is not supported.
+     * @return `true` if plasticity is supported, `false` if plasticity is not supported.
      */
     [[nodiscard]] virtual bool plasticity_supported() const = 0;
     /**
@@ -65,8 +75,33 @@ public:
      * @return vector of supported synapse type names.
      */
     [[nodiscard]] virtual std::vector<std::string> get_supported_synapses() const = 0;
+    /**
+     * @brief Get indexes of supported populations.
+     * @return vector of indexes of supported populations.
+     */
+    [[nodiscard]] virtual std::vector<size_t> get_supported_population_indexes() const = 0;
+    /**
+     * @brief Get indexes of supported projections.
+     * @return vector of indexes of supported projections.
+     */
+    [[nodiscard]] virtual std::vector<size_t> get_supported_projection_indexes() const = 0;
+
 
 public:
+    /**
+     * @brief Add projections to backend. 
+     * @throw exception if the `projections` parameters contains unsupported projection types.
+     * @param projections projections to add.
+     */
+    virtual void load_all_projections(const std::vector<AllProjectionsVariant> &projections) = 0;
+
+    /**
+     * @brief Add populations to backend. 
+     * @throw exception if the `populations` parameter contains unsupported population types.
+     * @param populations populations to add.
+     */
+    virtual void load_all_populations(const std::vector<AllPopulationsVariant> &populations) = 0;
+
     /**
      * @brief Remove projections with given UIDs from the backend.
      * @param uids UIDs of projections to remove.
@@ -110,9 +145,30 @@ public:
 
 public:
     /**
+     * @brief Get message endpoint.
+     * @return message endpoint.
+     */
+    virtual const core::MessageEndpoint &get_message_endpoint() const = 0;
+    virtual core::MessageEndpoint &get_message_endpoint() = 0;
+
+public:
+    /**
      * @brief Start network execution on the backend.
      */
     void start();
+    /**
+     * @brief Start network execution on the backend.
+     * @param pre_step function to run before the current step.
+     * @param post_step function to run after the current step.
+     */
+    void start(RunPredicate pre_step, RunPredicate post_step);
+    /**
+     * @brief Start network execution on the backend.
+     * @details If the predicate returns `true`, network execution continues. Otherwise network execution stops./n
+     * The predicate gets a step number as a parameter.
+     * @param run_predicate predicate function
+     */
+    void start(RunPredicate run_predicate);
 
     /**
      * @brief Stop network execution on the backend.
@@ -125,10 +181,16 @@ public:
      */
     virtual void step() = 0;
 
+    /**
+     * @brief Get current step.
+     * @return step number.
+     */
+    core::messaging::Step get_step() const { return step_; }
+
 public:
     /**
      * @brief Get network execution status.
-     * @return true if network is being executed, false if network is not being executed.
+     * @return `true` if network is being executed, `false` if network is not being executed.
      */
     bool running() const { return started_; }
 
@@ -137,14 +199,22 @@ protected:
      * @brief Backend default constructor.
      */
     Backend() = default;
+
     /**
      * @brief Initialize backend before starting network execution.
      */
     virtual void init() = 0;
+
     /**
      * @brief Set backend to the uninitialized state.
      */
     void uninit();
+
+    /**
+     * @brief Get and increase the number of the  current step.
+     * @return step number.
+     */
+    core::messaging::Step gad_step() { return step_++; }
 
 public:
     /**
@@ -153,10 +223,14 @@ public:
     MessageBus message_bus_;
 
 private:
+    void pre_start();
+
+private:
     BaseData base_;
     std::atomic<bool> initialized_ = false;
-    std::atomic<bool> started_ = false;
+    volatile std::atomic<bool> started_ = false;
     std::vector<std::unique_ptr<Device>> devices_;
+    core::messaging::Step step_ = 0;
 };
 
 }  // namespace knp::core

@@ -5,10 +5,11 @@
  */
 
 #pragma once
+
+#include <knp/core/messaging/spike_message.h>
+
 #include <functional>
 #include <vector>
-
-#include "knp/core/messaging/spike_message.h"
 
 
 /**

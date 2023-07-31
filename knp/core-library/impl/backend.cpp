@@ -21,7 +21,7 @@ Backend::~Backend()
 }
 
 
-void Backend::start()
+void Backend::pre_start()
 {
     if (running()) return;
 
@@ -34,10 +34,61 @@ void Backend::start()
     }
 
     started_ = true;
+}
+
+
+void Backend::start()
+{
+    pre_start();
 
     try
     {
-        while (running()) step();
+        while (running())
+        {
+            step();
+        }
+    }
+    catch (...)
+    {
+        started_ = false;
+        throw;
+    }
+    SPDLOG_INFO("Backend {} stopped.", std::string(base_.uid_));
+}
+
+
+void Backend::start(RunPredicate run_predicate)
+{
+    pre_start();
+
+    try
+    {
+        while (running() && run_predicate(step_))
+        {
+            step();
+        }
+    }
+    catch (...)
+    {
+        started_ = false;
+        throw;
+    }
+    SPDLOG_INFO("Backend {} stopped.", std::string(base_.uid_));
+}
+
+
+void Backend::start(RunPredicate pre_step, RunPredicate post_step)
+{
+    pre_start();
+
+    try
+    {
+        while (running())
+        {
+            if (pre_step && !pre_step(step_)) break;
+            step();
+            if (post_step && !post_step(step_)) break;
+        }
     }
     catch (...)
     {

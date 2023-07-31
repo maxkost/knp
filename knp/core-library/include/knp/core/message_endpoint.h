@@ -60,6 +60,7 @@ public:
     static UID get_receiver_uid(const SubscriptionVariant &subscription);
     static std::pair<size_t, UID> get_subscription_key(const SubscriptionVariant &subscription);
 
+    // tparams was temporarily disabled, because of the bug in the CLang documentation checker.
     /**
      * @brief Find index of an entity type in its variant.
      * @details For example, you can use the method to find an index of a message type in a message variant or an index
@@ -129,7 +130,7 @@ public:
 
     /**
      * @brief Receive a message from the message bus.
-     * @return true if a message was received, false if no message was received.
+     * @return `true` if a message was received, `false` if no message was received.
      */
     bool receive_message();
 
@@ -164,6 +165,9 @@ public:
     using SubscriptionContainer = std::map<std::pair<size_t, UID>, SubscriptionVariant>;
 
 protected:
+    /**
+     * @brief The MessageEndpointImpl class defines the implementation of the message endpoint.
+     */
     class MessageEndpointImpl;
     /**
      * @brief Message endpoint implementation.

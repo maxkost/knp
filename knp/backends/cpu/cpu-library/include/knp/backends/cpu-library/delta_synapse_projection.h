@@ -14,7 +14,9 @@
 #include <mutex>
 #include <unordered_map>
 
-
+/**
+ * @brief Type of the message queue.
+ */
 typedef std::unordered_map<uint64_t, knp::core::messaging::SynapticImpactMessage> MessageQueue;
 
 
@@ -33,10 +35,26 @@ void calculate_projection_part(
     const knp::core::messaging::SpikeMessage &message_in, MessageQueue &future_messages, u_int64_t step_n,
     size_t part_start, size_t part_size, std::mutex &mutex);
 
+
+/**
+ * @brief Make one execution step for a projection of Delta synapses.
+ * @param projection projection to update.
+ * @param endpoint message endpoint used for message exchange.
+ * @param future_messages message queue to process via endpoint.
+ * @param step_n execution step.
+ */
 void calculate_delta_synapse_projection(
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, knp::core::MessageEndpoint &endpoint,
     MessageQueue &future_messages, size_t step_n);
 
+/**
+ * @brief Make one execution step for a projection of Delta synapses.
+ * @param projection projection to update.
+ * @param endpoint message endpoint used for message exchange.
+ * @param future_messages message queue to process via endpoint.
+ * @param step_n execution step.
+ * @param m mutex.
+ */
 void calculate_delta_synapse_projection(
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, knp::core::MessageEndpoint &endpoint,
     MessageQueue &future_messages, size_t step_n, std::mutex &m);

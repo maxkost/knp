@@ -8,17 +8,19 @@
 #include <knp/neuron-traits/blifat.h>
 #include <knp/synapse-traits/delta.h>
 
+#include <generators.h>
 #include <spdlog/spdlog.h>
 #include <tests_common.h>
 
 #include <vector>
 
-#include "generators.h"
-
 
 using Population = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::PopulationVariants;
 using Projection = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::ProjectionVariants;
 
+
+namespace knp::testing
+{
 
 class STestingBack : public knp::backends::single_threaded_cpu::SingleThreadedCPUBackend
 {
@@ -27,13 +29,15 @@ public:
     void init() override { knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::init(); }
 };
 
+}  // namespace knp::testing
+
 
 TEST(SingleThreadCpuSuite, SmallestNetwork)
 {
-    // Create a single neuron network: input -> input_projection -> population <=> loop_projection
-    STestingBack backend;
-
     namespace kt = knp::testing;
+
+    // Create a single neuron network: input -> input_projection -> population <=> loop_projection
+    knp::testing::STestingBack backend;
 
     kt::BLIFATPopulation population{kt::neuron_generator, 1};
     Projection loop_projection =
@@ -45,6 +49,7 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
     backend.load_populations({population});
     backend.load_projections({input_projection, loop_projection});
 
+    backend.init();
     auto endpoint = backend.message_bus_.create_endpoint();
 
     knp::core::UID in_channel_uid;
@@ -54,11 +59,9 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
     backend.subscribe<knp::core::messaging::SpikeMessage>(input_uid, {in_channel_uid});
     endpoint.subscribe<knp::core::messaging::SpikeMessage>(out_channel_uid, {population.get_uid()});
 
-    std::vector<size_t> results;
+    std::vector<knp::core::messaging::Step> results;
 
-    backend.init();
-
-    for (size_t step = 0; step < 20; ++step)
+    for (knp::core::messaging::Step step = 0; step < 20; ++step)
     {
         // Send inputs on steps 0, 5, 10, 15
         if (step % 5 == 0)
@@ -74,14 +77,14 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
     }
 
     // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
-    const std::vector<size_t> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
+    const std::vector<knp::core::messaging::Step> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
     ASSERT_EQ(results, expected_results);
 }
 
 
 TEST(SingleThreadCpuSuite, NeuronsGettingTest)
 {
-    STestingBack backend;
+    knp::testing::STestingBack backend;
 
     auto s_neurons = backend.get_supported_neurons();
 
@@ -92,7 +95,7 @@ TEST(SingleThreadCpuSuite, NeuronsGettingTest)
 
 TEST(SingleThreadCpuSuite, SynapsesGettingTest)
 {
-    STestingBack backend;
+    knp::testing::STestingBack backend;
 
     auto s_synapses = backend.get_supported_synapses();
 

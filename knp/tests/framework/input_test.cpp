@@ -2,11 +2,14 @@
  * Input channels and converters tests.
  */
 
-#include "knp/core/message_bus.h"
-#include "knp/core/messaging/messaging.h"
-#include "knp/framework/io/input_channel.h"
-#include "knp/framework/io/input_interpreters.h"
-#include "tests_common.h"
+#include <knp/core/message_bus.h>
+#include <knp/core/messaging/messaging.h>
+#include <knp/framework/io/in_converters/index_converter.h>
+#include <knp/framework/io/in_converters/sequence_converter.h>
+#include <knp/framework/io/input_channel.h>
+#include <knp/framework/io/input_interpreters.h>
+
+#include <tests_common.h>
 
 
 TEST(InputSuite, SequenceConverterTest)
@@ -47,8 +50,8 @@ TEST(InputSuite, ChannelTest)
     auto endpoint = bus.create_endpoint();
 
     auto converter = knp::framework::input::SequenceConverter<int>{knp::framework::input::interpret_as_bool<int>, 10};
-    knp::framework::input::InputChannel channel{
-        std::make_unique<std::stringstream>(), bus.create_endpoint(), converter};
+    knp::framework::input::InputStreamChannel channel{
+        knp::core::UID(), bus.create_endpoint(), std::make_unique<std::stringstream>(), converter};
 
     auto &stream = dynamic_cast<std::stringstream &>(channel.get_stream());
 

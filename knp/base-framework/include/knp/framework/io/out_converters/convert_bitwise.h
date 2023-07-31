@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include <vector>
+#include <knp/core/messaging/spike_message.h>
 
-#include "knp/core/messaging/spike_message.h"
+#include <vector>
 
 
 /**
@@ -17,8 +17,10 @@
 namespace knp::framework::output
 {
 /**
- * @brief Convert a set of spike messages to a bool vector where an element value is `true` if a neuron with the corresponding index sent at least one spike.
- * @details For example, a method, where `output_size` equals 6 and `message_list` contains messages `{0, 2}`, `{2, 4}`, `{1, 2}`, returns a boolean vector `{true, true, true, false, true, false}`.
+ * @brief Convert a set of spike messages to a bool vector where an element value is `true` if a neuron with the
+ * corresponding index sent at least one spike.
+ * @details For example, a method, where `output_size` equals 6 and `message_list` contains messages `{0, 2}`, `{2, 4}`,
+ * `{1, 2}`, returns a boolean vector `{true, true, true, false, true, false}`.
  * @param message_list list of spike messages that contain indexes of spiked neurons.
  * @param output_size output vector size (usually corresponds to the size of an output population).
  * @return bool vector.
@@ -26,7 +28,7 @@ namespace knp::framework::output
 std::vector<bool> converter_bitwise(const std::vector<core::messaging::SpikeMessage> &message_list, size_t output_size)
 {
     std::vector<bool> result(output_size, false);
-    for (auto &message : message_list)
+    for (const auto &message : message_list)
     {
         for (auto index : message.neuron_indexes_)
         {

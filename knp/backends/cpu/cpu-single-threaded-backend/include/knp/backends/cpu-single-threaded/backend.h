@@ -30,7 +30,6 @@
  */
 namespace knp::backends::single_threaded_cpu
 {
-
 /**
  * @brief The SingleThreadedCPUBackend class is a definition of an interface to the single-threaded CPU backend.
  */
@@ -66,6 +65,7 @@ public:
      * @see ALL_NEURONS.
      */
     using PopulationVariants = boost::mp11::mp_rename<SupportedPopulations, std::variant>;
+
     /**
      * @brief Projection variant that contains any projection type specified in `SupportedProjections`.
      * @details `ProjectionVariants` takes the value of `std::variant<ProjectionType_1,..., ProjectionType_n>`, where
@@ -99,20 +99,20 @@ public:
     /**
      * @brief Types of population iterators.
      */
-    using PopulationIterator = PopulationContainer::iterator;
+    using PopulationIterator = typename PopulationContainer::iterator;
     /**
      * @brief Types of constant population iterators.
      */
-    using PopulationConstIterator = PopulationContainer::const_iterator;
+    using PopulationConstIterator = typename PopulationContainer::const_iterator;
 
     /**
      * @brief Types of projection iterators.
      */
-    using ProjectionIterator = ProjectionContainer::iterator;
+    using ProjectionIterator = typename ProjectionContainer::iterator;
     /**
      * @brief Types of constant projection iterators.
      */
-    using ProjectionConstIterator = ProjectionContainer::const_iterator;
+    using ProjectionConstIterator = typename ProjectionContainer::const_iterator;
 
 public:
     /**
@@ -125,12 +125,15 @@ public:
     ~SingleThreadedCPUBackend() = default;
 
 public:
+    /**
+     * @brief Create an object of the single-threaded CPU backend.
+     */
     static std::shared_ptr<SingleThreadedCPUBackend> create();
 
 public:
     /**
      * @brief Define if plasticity is supported.
-     * @return true if plasticity is supported, false if plasticity is not supported.
+     * @return `true` if plasticity is supported, `false` if plasticity is not supported.
      */
     [[nodiscard]] bool plasticity_supported() const override { return true; }
     /**
@@ -143,6 +146,14 @@ public:
      * @return vector of supported synapse type names.
      */
     [[nodiscard]] std::vector<std::string> get_supported_synapses() const override;
+    /**
+     * @brief Get indexes of supported projections.
+     */
+    [[nodiscard]] std::vector<size_t> get_supported_projection_indexes() const override;
+    /**
+     * @brief Get indexes of supported populations.
+     */
+    [[nodiscard]] std::vector<size_t> get_supported_population_indexes() const override;
 
 public:
     /**
@@ -157,15 +168,35 @@ public:
      */
     void load_projections(const std::vector<ProjectionVariants> &projections);
 
+    /**
+     * @brief Add projections to backend. 
+     * @throw exception if the `projections` parameter contains unsupported projection types.
+     * @param projections projections to add.
+     */
+    void load_all_projections(const std::vector<knp::core::AllProjectionsVariant> &projections) override
+    {
+        load_projections(projections);
+    }
+
+    /**
+     * @brief Add populations to backend. 
+     * @throw exception if the `populations` parameter contains unsupported population types.
+     * @param populations populations to add.
+     */
+    void load_all_populations(const std::vector<knp::core::AllPopulationsVariant> &populations) override
+    {
+        load_populations(populations);
+    }
+
 public:
     /**
-     * @brief Iterate populations loaded to backend.
+     * @brief Get an iterator pointing to the first element of the population loaded to backend.
      * @return population iterator.
      */
     PopulationIterator begin_populations();
 
     /**
-     * @brief Iterate populations loaded to backend.
+     * @brief Get an iterator pointing to the first element of the population loaded to backend.
      * @return constant population iterator.
      */
     PopulationConstIterator begin_populations() const;
@@ -181,12 +212,12 @@ public:
     PopulationConstIterator end_populations() const;
 
     /**
-     * @brief Iterate projections loaded to backend.
+     * @brief Get an iterator pointing to the first element of the projection loaded to backend.
      * @return projection iterator.
      */
     ProjectionIterator begin_projections();
     /**
-     * @brief Iterate projections loaded to backend.
+     * @brief Get an iterator pointing to the first element of the projection loaded to backend.
      * @return constant projection iterator.
      */
     ProjectionConstIterator begin_projections() const;
@@ -243,6 +274,13 @@ public:
         return message_endpoint_.subscribe<MessageType>(receiver, senders);
     }
 
+    /**
+     * @brief Get message endpoint.
+     * @return message endpoint.
+     */
+    const core::MessageEndpoint &get_message_endpoint() const override { return message_endpoint_; }
+    core::MessageEndpoint &get_message_endpoint() override { return message_endpoint_; }
+
 protected:
     /**
      * @copydoc knp::core::Backend::init()
@@ -266,12 +304,15 @@ protected:
         core::messaging::SynapticMessageQueue &message_queue);
 
 private:
+    void append_projection(const std::variant<SupportedProjections> &projection);
+    void append_population(const std::variant<SupportedPopulations> &population);
+
+    // cppcheck-suppress unusedStructMember
     PopulationContainer populations_;
+    // cppcheck-suppress unusedStructMember
     ProjectionContainer projections_;
     core::MessageEndpoint message_endpoint_;
-    size_t step_ = 0;
 };
-
 
 BOOST_DLL_ALIAS(knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::create, create_knp_backend)
 

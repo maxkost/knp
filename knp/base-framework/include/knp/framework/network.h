@@ -76,11 +76,11 @@ public:
     /**
      * @brief Type of population container.
      */
-    using PopulationContainer = std::vector<AllPopulationVariants>;
+    using PopulationContainer = std::vector<core::AllPopulationsVariant>;
     /**
      * @brief Type of projection container.
      */
-    using ProjectionContainer = std::vector<AllProjectionVariants>;
+    using ProjectionContainer = std::vector<core::AllProjectionsVariant>;
 
     /**
      * @brief Types of population iterators.
@@ -111,7 +111,7 @@ public:
      * @brief Add a population to the network.
      * @param population population to add.
      */
-    void add_population(AllPopulationVariants &&population);
+    void add_population(core::AllPopulationsVariant &&population);
     /**
      * @brief Add a population to the network.
      * @tparam PopulationType type of population to add (derived automatically from `population` if not specified).
@@ -135,7 +135,7 @@ public:
      * @return population.
      */
     template <typename PopulationType>
-    PopulationType &get_population(const knp::core::UID &population_uid);
+    [[nodiscard]] PopulationType &get_population(const knp::core::UID &population_uid);
     /**
      * @brief Get a population with the given UID from the network.
      * @note Constant method.
@@ -145,7 +145,7 @@ public:
      * @return population.
      */
     template <typename PopulationType>
-    const PopulationType &get_population(const knp::core::UID &population_uid) const;
+    [[nodiscard]] const PopulationType &get_population(const knp::core::UID &population_uid) const;
     /**
      * @brief Remove a population with the given UID from the network.
      * @param population_uid UID of the population to remove.
@@ -157,7 +157,7 @@ public:
      * @brief Add a projection to the network.
      * @param projection projection to add.
      */
-    void add_projection(AllProjectionVariants &&projection);
+    void add_projection(core::AllProjectionsVariant &&projection);
     /**
      * @brief Add a projection to the network.
      * @tparam ProjectionType type of projection to add (derived automatically from `projection` if not specified).
@@ -181,7 +181,7 @@ public:
      * @return projection.
      */
     template <typename ProjectionType>
-    ProjectionType &get_projection(const knp::core::UID &projection_uid);
+    [[nodiscard]] ProjectionType &get_projection(const knp::core::UID &projection_uid);
     /**
      * @brief Get a projection with the given UID from the network.
      * @note Constant method.
@@ -191,7 +191,7 @@ public:
      * @return projection.
      */
     template <typename ProjectionType>
-    const ProjectionType &get_projection(const knp::core::UID &projection_uid) const;
+    [[nodiscard]] const ProjectionType &get_projection(const knp::core::UID &projection_uid) const;
     /**
      * @brief Remove a projection with the given UID from the network.
      * @param projection_uid UID of the projection to remove.
@@ -199,23 +199,74 @@ public:
     void remove_projection(const knp::core::UID &projection_uid);
 
 public:
-    PopulationIterator begin_populations();
-    PopulationConstIterator begin_populations() const;
-    PopulationIterator end_populations();
-    PopulationConstIterator end_populations() const;
-
-    ProjectionIterator begin_projections();
-    ProjectionConstIterator begin_projections() const;
-    ProjectionIterator end_projections();
-    ProjectionConstIterator end_projections() const;
-
-public:
-    size_t populations_count() const { return populations_.size(); }
-    size_t projections_count() const { return projections_.size(); }
+    /**
+     * @brief Get an iterator pointing to the first element of the population.
+     * @return population iterator.
+     */
+    [[nodiscard]] PopulationIterator begin_populations();
+    /**
+     * @brief Get an iterator pointing to the first element of the population.
+     * @return constant population iterator.
+     */
+    [[nodiscard]] PopulationConstIterator begin_populations() const;
+    /**
+     * @brief Get an iterator pointing to the last element of the population.
+     * @return iterator.
+     */
+    [[nodiscard]] PopulationIterator end_populations();
+    /**
+     * @brief Get an iterator pointing to the last element of the population.
+     * @return constant iterator.
+     */
+    [[nodiscard]] PopulationConstIterator end_populations() const;
+    /**
+     * @brief Get an iterator pointing to the first element of the projection.
+     * @return projection iterator.
+     */
+    [[nodiscard]] ProjectionIterator begin_projections();
+    /**
+     * @brief Get an iterator pointing to the first element of the projection.
+     * @return constant projection iterator.
+     */
+    [[nodiscard]] ProjectionConstIterator begin_projections() const;
+    /**
+     * @brief Get an iterator pointing to the last element of the projection.
+     * @return iterator.
+     */
+    [[nodiscard]] ProjectionIterator end_projections();
+    /**
+     * @brief Get an iterator pointing to the last element of the projection.
+     * @return constant iterator.
+     */
+    [[nodiscard]] ProjectionConstIterator end_projections() const;
 
 public:
     /**
-     * @brief Get the network UID.
+     * @brief Get population container from the network.
+     * @return container of populations.
+     */
+    const PopulationContainer &get_populations() const { return populations_; }
+    /**
+     * @brief Get projection container from the network.
+     * @return container of projections.
+     */
+    const ProjectionContainer &get_projections() const { return projections_; }
+
+public:
+    /**
+     * @brief Count populations in the network.
+     * @return number of populations.
+     */
+    [[nodiscard]] size_t populations_count() const { return populations_.size(); }
+    /**
+     * @brief Count projections in the network.
+     * @return number of projections.
+     */
+    [[nodiscard]] size_t projections_count() const { return projections_.size(); }
+
+public:
+    /**
+     * @brief Get network UID.
      * @return UID.
      */
     [[nodiscard]] const knp::core::UID &get_uid() const { return base_.uid_; }

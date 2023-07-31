@@ -28,4 +28,7 @@ namespace knp::testing
 /// Return tester executable path.
 std::filesystem::path get_exe_path();
 
+/// Return backend path.
+std::filesystem::path get_backend_path(const std::string &backend_name = "knp-cpu-single-threaded-backend");
+
 }  // namespace knp::testing

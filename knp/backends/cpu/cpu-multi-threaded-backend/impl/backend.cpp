@@ -127,7 +127,7 @@ void MultiThreadedCPUBackend::calculate_populations()
     {
         if (spike_container[i].empty()) continue;
         auto sender_uid = std::visit([](auto &pop) { return pop.get_uid(); }, populations_[i]);
-        knp::core::messaging::SpikeMessage message{{sender_uid, step_}, std::move(spike_container[i])};
+        knp::core::messaging::SpikeMessage message{{sender_uid, get_step()}, std::move(spike_container[i])};
         message_endpoint_.send_message(message);
     }
 }
@@ -145,7 +145,8 @@ void MultiThreadedCPUBackend::calculate_projections()
             auto uid = std::visit([](auto &proj) { return proj.get_uid(); }, projection.arg_);
             auto msg_buf = message_endpoint_.unload_messages<knp::core::messaging::SpikeMessage>(uid);
             messages.push_back(
-                msg_buf.empty() ? core::messaging::SpikeMessage{{core::UID{false}, step_}, {}} : std::move(msg_buf[0]));
+                msg_buf.empty() ? core::messaging::SpikeMessage{{core::UID{false}, get_step()}, {}}
+                                : std::move(msg_buf[0]));
             msg_buf.clear();
             auto &msg = messages[i];
             // Looping over spikes.
@@ -158,7 +159,8 @@ void MultiThreadedCPUBackend::calculate_projections()
                     {
                         auto work = [&]() {
                             calculate_projection_part(
-                                proj, msg, projection.messages_, step_, spike_index, spikes_per_thread_, ep_mutex_);
+                                proj, msg, projection.messages_, get_step(), spike_index, spikes_per_thread_,
+                                ep_mutex_);
                         };
                         boost::asio::post(calc_pool_, work);
                     },
@@ -171,7 +173,7 @@ void MultiThreadedCPUBackend::calculate_projections()
     for (auto &projection : projections_)
     {
         auto &msg_queue = projection.messages_;
-        auto msg_iter = msg_queue.find(step_);
+        auto msg_iter = msg_queue.find(get_step());
         if (msg_iter != msg_queue.end())
         {
             message_endpoint_.send_message(std::move(msg_iter->second));
@@ -181,22 +183,34 @@ void MultiThreadedCPUBackend::calculate_projections()
 }
 
 
+std::vector<size_t> MultiThreadedCPUBackend::get_supported_projection_indexes() const
+{
+    return knp::meta::get_supported_type_indexes<core::AllProjections, SupportedProjections>();
+}
+
+
+std::vector<size_t> MultiThreadedCPUBackend::get_supported_population_indexes() const
+{
+    return knp::meta::get_supported_type_indexes<core::AllPopulations, SupportedPopulations>();
+}
+
+
 void MultiThreadedCPUBackend::step()
 {
-    SPDLOG_DEBUG(std::string("Starting step #{}"), step_);
+    SPDLOG_DEBUG(std::string("Starting step #{}"), get_step());
     calculate_populations();
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
     calculate_projections();
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
-    ++step_;
+    gad_step();
     SPDLOG_DEBUG("Step finished");
 }
 
 void MultiThreadedCPUBackend::step_old()
 {
-    SPDLOG_DEBUG(std::string("Starting step #") + std::to_string(step_));
+    SPDLOG_DEBUG("Starting step #{}", get_step());
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
 
@@ -244,8 +258,8 @@ void MultiThreadedCPUBackend::step_old()
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
 
-    ++step_;
-    SPDLOG_DEBUG("Step finished");
+    auto step = gad_step();
+    SPDLOG_DEBUG("Step finished #{}", step);
 }
 
 
@@ -314,7 +328,7 @@ void MultiThreadedCPUBackend::init()
 void MultiThreadedCPUBackend::calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population)
 {
     SPDLOG_TRACE("Calculate population {}", std::string(population.get_uid()));
-    calculate_blifat_population(population, message_endpoint_, step_, ep_mutex_);
+    calculate_blifat_population(population, message_endpoint_, get_step(), ep_mutex_);
 }
 
 
@@ -323,7 +337,7 @@ void MultiThreadedCPUBackend::calculate_projection(
     core::messaging::SynapticMessageQueue &message_queue)
 {
     SPDLOG_TRACE("Calculate projection {}", std::string(projection.get_uid()));
-    calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, step_, ep_mutex_);
+    calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, get_step(), ep_mutex_);
 }
 
 
