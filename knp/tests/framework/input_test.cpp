@@ -14,13 +14,13 @@
 
 TEST(InputSuite, SequenceConverterTest)
 {
-    std::stringstream stream;
+    auto stream = std::make_unique<std::stringstream>();
     // float values equivalent to (0 1 1 0 0 1 1 0 1 0)
-    stream << "0.7 1.1 1.0 -0.2 0.1 3 2 0.7 11 -1";
+    *stream << "0.7 1.1 1.0 -0.2 0.1 3 2 0.7 11 -1";
     knp::framework::input::SequenceConverter<float> converter(
-        knp::framework::input::interpret_with_threshold<float>(1.0f), 10);
+        std::move(stream), knp::framework::input::interpret_with_threshold<float>(1.0f), 10);
 
-    auto result = converter(stream);
+    auto result = converter();
     knp::core::messaging::SpikeData expected{1, 2, 5, 6, 8};
 
     ASSERT_EQ(result, expected);
@@ -29,16 +29,16 @@ TEST(InputSuite, SequenceConverterTest)
 
 TEST(InputSuite, IndexConverterTest)
 {
-    std::stringstream stream;
-    stream << "1,3, 5 \n1  ,2 , 5\n3,5";
-    knp::framework::input::IndexConverter converter(',');
-    auto result = converter(stream);
+    auto stream = std::make_unique<std::stringstream>();
+    *stream << "1,3, 5 \n1  ,2 , 5\n3,5";
+    knp::framework::input::IndexConverter converter(std::move(stream), ',');
+    auto result = converter();
     knp::core::messaging::SpikeData expected_result{1, 3, 5};
     ASSERT_EQ(result, expected_result);
-    result = converter(stream);
+    result = converter();
     expected_result = {1, 2, 5};
     ASSERT_EQ(result, expected_result);
-    result = converter(stream);
+    result = converter();
     expected_result = {3, 5};
     ASSERT_EQ(result, expected_result);
 }
@@ -49,18 +49,20 @@ TEST(InputSuite, ChannelTest)
     knp::core::MessageBus bus;
     auto endpoint = bus.create_endpoint();
 
-    auto converter = knp::framework::input::SequenceConverter<int>{knp::framework::input::interpret_as_bool<int>, 10};
-    knp::framework::input::InputStreamChannel channel{
-        knp::core::UID(), bus.create_endpoint(), std::make_unique<std::stringstream>(), converter};
+    auto converter = knp::framework::input::SequenceConverter<int>{
+        std::make_unique<std::stringstream>(), knp::framework::input::interpret_as_bool<int>, 10};
+    knp::framework::input::InputChannel channel{
+        knp::core::UID(), bus.create_endpoint(), [&converter](auto size) { return converter(); }};
 
-    auto &stream = dynamic_cast<std::stringstream &>(channel.get_stream());
+    auto &stream = dynamic_cast<std::stringstream &>(converter.get_stream());
 
     // Connect to output
     knp::core::UID output_uid;
     knp::framework::input::connect_input(channel, endpoint, output_uid);
 
-    // Send data to stream: 12 integers, a test that the final ones don't get into the message
-    stream << "1 0 1 1 0 1 1 1 1 0 1 1";  // 12 integers, a test that the final ones don't get into the message
+    // Send data to stream: 12 integers, a test that the final ones don't get into the message.
+    // 12 integers, a test that the final ones don't get into the message.
+    stream << "1 0 1 1 0 1 1 1 1 0 1 1";
     knp::core::messaging::SpikeData expected_indexes = {0, 2, 3, 5, 6, 7, 8};
     const knp::core::messaging::Step send_time = 77;
 

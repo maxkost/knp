@@ -56,7 +56,7 @@ TEST(FrameworkSuite, ModelExecutorLoad)
             -> std::unique_ptr<knp::framework::input::InputChannel>
         {
             EXPECT_EQ(i_channel_uid, ic_uid);
-            auto ich = std::make_unique<knp::framework::input::InputGenChannel>(ic_uid, std::move(ep), input_gen);
+            auto ich = std::make_unique<knp::framework::input::InputChannel>(ic_uid, std::move(ep), input_gen);
             return ich;
         },
         [&o_channel_uid](const knp::core::UID &oc_uid, knp::core::MessageEndpoint &&ep)
