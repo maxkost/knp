@@ -66,6 +66,16 @@ void ModelExecutor::init()
 }
 
 
+const input::InputChannel &ModelExecutor::get_input_channel(const core::UID &channel_uid) const
+{
+    auto result = std::find_if(
+        in_channels_.cbegin(), in_channels_.cend(),
+        [&channel_uid](const auto &ic) { return ic.get_uid() == channel_uid; });
+    if (in_channels_.cend() == result) throw std::runtime_error("Wrong input channel UID");
+    return *result;
+}
+
+
 input::InputChannel &ModelExecutor::get_input_channel(const core::UID &channel_uid)
 {
     auto result = std::find_if(
@@ -82,6 +92,16 @@ output::OutputChannel &ModelExecutor::get_output_channel(const core::UID &channe
         out_channels_.begin(), out_channels_.end(),
         [&channel_uid](const auto &oc) { return oc.get_uid() == channel_uid; });
     if (out_channels_.end() == result) throw std::runtime_error("Wrong output channel UID");
+    return *result;
+}
+
+
+const output::OutputChannel &ModelExecutor::get_output_channel(const core::UID &channel_uid) const
+{
+    auto result = std::find_if(
+        out_channels_.cbegin(), out_channels_.cend(),
+        [&channel_uid](const auto &oc) { return oc.get_uid() == channel_uid; });
+    if (out_channels_.cend() == result) throw std::runtime_error("Wrong output channel UID");
     return *result;
 }
 

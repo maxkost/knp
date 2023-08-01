@@ -79,6 +79,7 @@ public:
      * @throw std::runtime_error if there is no channel with a given UID.
      */
     output::OutputChannel &get_output_channel(const core::UID &channel_uid);
+    const output::OutputChannel &get_output_channel(const core::UID &channel_uid) const;
     /**
      * @brief Get reference to input channel by its UID.
      * @param channel_uid channel UID.
@@ -86,6 +87,7 @@ public:
      * @throw std::runtime_error if no channel with the given UID exists.
      */
     input::InputChannel &get_input_channel(const core::UID &channel_uid);
+    const input::InputChannel &get_input_channel(const core::UID &channel_uid) const;
 
 private:
     template <typename GenType>
