@@ -50,30 +50,18 @@ TEST(FrameworkSuite, ModelExecutorLoad)
         return knp::core::messaging::SpikeData();
     };
 
-    knp::framework::ModelExecutor me(
-        model, knp::testing::get_backend_path(),
-        [&i_channel_uid, input_gen](const knp::core::UID &ic_uid, knp::core::MessageEndpoint &&ep)
-            -> std::unique_ptr<knp::framework::input::InputChannel>
-        {
-            EXPECT_EQ(i_channel_uid, ic_uid);
-            auto ich = std::make_unique<knp::framework::input::InputChannel>(ic_uid, std::move(ep), input_gen);
-            return ich;
-        },
-        [&o_channel_uid](const knp::core::UID &oc_uid, knp::core::MessageEndpoint &&ep)
-            -> std::unique_ptr<knp::framework::output::OutputChannel>
-        {
-            EXPECT_EQ(o_channel_uid, oc_uid);
-            auto och = std::make_unique<knp::framework::output::OutputChannel>(oc_uid, std::move(ep));
-            return och;
-        });
+    knp::framework::ModelExecutor::InputChannelMap icm;
+    icm.insert(std::make_pair(i_channel_uid, input_gen));
+
+    knp::framework::ModelExecutor me(model, knp::testing::get_backend_path(), icm);
 
     me.init();
-    auto out_channel = me.get_output_channel(o_channel_uid);
+    auto &out_channel = me.get_output_channel(o_channel_uid);
 
     me.start([](size_t step) { return step < 20; });
 
     std::vector<knp::core::messaging::Step> results;
-    const auto &spikes = out_channel->update();
+    const auto &spikes = out_channel.update();
     results.reserve(spikes.size());
 
     std::transform(

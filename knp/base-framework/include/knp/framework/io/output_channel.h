@@ -37,6 +37,11 @@ public:
     {
     }
 
+    /**
+     * @brief Move constructor.
+     */
+    OutputChannel(OutputChannel &&) = default;
+
 public:
     /**
      * @brief Get backend UID.

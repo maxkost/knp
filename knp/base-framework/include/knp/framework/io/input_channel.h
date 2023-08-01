@@ -7,7 +7,6 @@
 
 #include <knp/core/core.h>
 
-#include <memory>
 #include <utility>
 #include <vector>
 
@@ -44,6 +43,11 @@ public:
         : base_{channel_uid}, endpoint_(std::move(endpoint)), generator_(std::move(generator))
     {
     }
+
+    /**
+     * @brief Move constructor.
+     */
+    InputChannel(InputChannel &&) = default;
 
     /**
      * @brief Virtual default destructor of input channel.

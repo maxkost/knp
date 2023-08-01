@@ -35,8 +35,7 @@ void ModelExecutor::init_channels(
 
 void ModelExecutor::gen_input_channel(const core::UID &channel_uid, const std::vector<core::UID> &p_uids)
 {
-    auto channel = i_gen_(channel_uid, backend_->message_bus_.create_endpoint());
-    in_channels_.push_back(std::move(channel));
+    in_channels_.emplace_back(channel_uid, backend_->message_bus_.create_endpoint(), i_map_.at(channel_uid));
     for (const auto &u : p_uids)
     {
         backend_->get_message_endpoint().subscribe<knp::core::messaging::SpikeMessage>(u, {channel_uid});
@@ -48,8 +47,7 @@ void ModelExecutor::gen_output_channel(const core::UID &channel_uid, const std::
 {
     auto endpoint = backend_->message_bus_.create_endpoint();
     endpoint.subscribe<knp::core::messaging::SpikeMessage>(channel_uid, p_uids);
-    auto channel = out_gen_(channel_uid, std::move(endpoint));
-    out_channels_.push_back(std::move(channel));
+    out_channels_.emplace_back(channel_uid, std::move(endpoint));
 }
 
 
@@ -68,23 +66,23 @@ void ModelExecutor::init()
 }
 
 
-input::InputChannel *ModelExecutor::get_input_channel(const core::UID &channel_uid)
+input::InputChannel &ModelExecutor::get_input_channel(const core::UID &channel_uid)
 {
     auto result = std::find_if(
-        in_channels_.cbegin(), in_channels_.cend(),
-        [&channel_uid](const auto &ic) { return ic->get_uid() == channel_uid; });
+        in_channels_.begin(), in_channels_.end(),
+        [&channel_uid](const auto &ic) { return ic.get_uid() == channel_uid; });
     if (in_channels_.end() == result) throw std::runtime_error("Wrong input channel UID");
-    return result->get();
+    return *result;
 }
 
 
-output::OutputChannel *ModelExecutor::get_output_channel(const core::UID &channel_uid)
+output::OutputChannel &ModelExecutor::get_output_channel(const core::UID &channel_uid)
 {
     auto result = std::find_if(
-        out_channels_.cbegin(), out_channels_.cend(),
-        [&channel_uid](const auto &oc) { return oc->get_uid() == channel_uid; });
+        out_channels_.begin(), out_channels_.end(),
+        [&channel_uid](const auto &oc) { return oc.get_uid() == channel_uid; });
     if (out_channels_.end() == result) throw std::runtime_error("Wrong output channel UID");
-    return result->get();
+    return *result;
 }
 
 
@@ -95,7 +93,7 @@ void ModelExecutor::start()
         {
             for (auto &i_ch : in_channels_)
             {
-                i_ch->send(step);
+                i_ch.send(step);
             }
             return true;
         },
@@ -103,7 +101,7 @@ void ModelExecutor::start()
         {
             for (auto &o_ch : out_channels_)
             {
-                o_ch->update();
+                o_ch.update();
             }
 
             return true;
@@ -118,7 +116,7 @@ void ModelExecutor::start(core::Backend::RunPredicate run_predicate)
         {
             for (auto &i_ch : in_channels_)
             {
-                i_ch->send(step);
+                i_ch.send(step);
             }
             return run_predicate(step);
         },
@@ -126,7 +124,7 @@ void ModelExecutor::start(core::Backend::RunPredicate run_predicate)
         {
             for (auto &o_ch : out_channels_)
             {
-                o_ch->update();
+                o_ch.update();
             }
 
             return true;
