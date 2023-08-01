@@ -22,7 +22,7 @@
 namespace knp::framework::output
 {
 /**
- * @brief The OutputChannel class is a base class for output channels.
+ * @brief The OutputChannel class is a definition of an output channel.
  */
 class OutputChannel
 {

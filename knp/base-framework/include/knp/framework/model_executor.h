@@ -72,13 +72,19 @@ public:
 
 public:
     /**
-     * @brief Get reference to output channel and cast it to the required type.
+     * @brief Get reference to output channel.
      * @param channel_uid channel UID.
-     * @return reference to output channel (the reference should be cast to the required type before you extract data
-     * from it).
+     * @return reference to output channel.
      * @throw std::runtime_error if there is no channel with a given UID.
      */
     output::OutputChannel &get_output_channel(const core::UID &channel_uid);
+    /**
+     * @brief Get reference to output channel.
+     * @note Constant method.
+     * @param channel_uid channel UID.
+     * @return reference to output channel.
+     * @throw std::runtime_error if there is no channel with a given UID.
+     */
     const output::OutputChannel &get_output_channel(const core::UID &channel_uid) const;
     /**
      * @brief Get reference to input channel by its UID.
@@ -87,6 +93,13 @@ public:
      * @throw std::runtime_error if no channel with the given UID exists.
      */
     input::InputChannel &get_input_channel(const core::UID &channel_uid);
+    /**
+     * @brief Get reference to input channel by its UID.
+     * @note Constant method.
+     * @param channel_uid channel UID.
+     * @return reference to input channel.
+     * @throw std::runtime_error if no channel with the given UID exists.
+     */
     const input::InputChannel &get_input_channel(const core::UID &channel_uid) const;
 
 private:

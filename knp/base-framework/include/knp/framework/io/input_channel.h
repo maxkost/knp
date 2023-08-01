@@ -20,7 +20,7 @@ namespace knp::framework::input
 {
 
 /**
- * @brief The InputChannel class is the base class for input channels.
+ * @brief The InputChannel class is a definition of an input channel.
  */
 class InputChannel
 {

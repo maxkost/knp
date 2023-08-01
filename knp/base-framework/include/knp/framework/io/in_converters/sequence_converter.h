@@ -50,7 +50,7 @@ public:
 
     /**
      * @brief Call a function that converts data from the input stream into spike messages with spiked neuron indexes.
-     * @param step current step. Doesn't used.
+     * @param step current step (not used in the converter).
      * @return vector of spiked neuron indexes.
      */
     core::messaging::SpikeData operator()(core::messaging::Step step = 0)
@@ -87,7 +87,7 @@ public:
 
 private:
     /**
-     * @brief A reference to the stream from which to read data.
+     * @brief A reference to the stream from which to receive data.
      */
     std::unique_ptr<std::istream> stream_;
     /**
