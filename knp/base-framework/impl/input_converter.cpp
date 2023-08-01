@@ -13,12 +13,12 @@
 namespace knp::framework::input
 {
 
-core::messaging::SpikeData IndexConverter::operator()(std::istream &stream) const
+core::messaging::SpikeData IndexConverter::operator()(core::messaging::Step) const
 {
     core::messaging::SpikeData result;
 
     std::string buffer_string;
-    std::getline(stream, buffer_string);
+    std::getline(*stream_, buffer_string);
 
     auto iter_first = buffer_string.begin();
     auto iter_second = iter_first;

@@ -14,6 +14,7 @@
 #include <functional>
 #include <memory>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 
@@ -30,28 +31,19 @@ class ModelExecutor
 {
 public:
     /**
-     * @brief Type of the input channel generator.
+     * @brief Type of the input channel map.
      */
-    using InputChannelGenerator =
-        std::function<std::unique_ptr<input::InputChannel>(const core::UID &, core::MessageEndpoint &&)>;
-    /**
-     * @brief Type of the output channel generator.
-     */
-    using OutputChannelGenerator =
-        std::function<std::unique_ptr<output::OutputChannel>(const core::UID &, core::MessageEndpoint &&)>;
+    using InputChannelMap = std::unordered_map<core::UID, input::DataGenerator, core::uid_hash>;
 
 public:
     /**
      * @brief ModelExecutor constructor.
      * @param model model to run.
      * @param backend_path filepath to backend on which you want to run the model.
-     * @param i_gen input channel generator.
-     * @param out_gen output channel generator.
+     * @param i_map input channel map.
      */
-    ModelExecutor(
-        knp::framework::Model &model, const std::filesystem::path backend_path, InputChannelGenerator i_gen,
-        OutputChannelGenerator out_gen)
-        : backend_loader_(), model_(model), i_gen_(i_gen), out_gen_(out_gen)
+    ModelExecutor(knp::framework::Model &model, const std::filesystem::path &backend_path, InputChannelMap i_map)
+        : backend_loader_(), model_(model), i_map_(std::move(i_map))
     {
         backend_ = backend_loader_.load(backend_path);
     }
@@ -64,7 +56,7 @@ public:
 
     /**
      * @brief Start model execution.
-     * @param run_predicate predicate that stops running if the `false` value is returned. 
+     * @param run_predicate predicate that stops running if the `false` value is returned.
      */
     void start(core::Backend::RunPredicate run_predicate);
 
@@ -82,17 +74,20 @@ public:
     /**
      * @brief Get reference to output channel and cast it to the required type.
      * @param channel_uid channel UID.
-     * @return reference to output channel (the reference should be cast to the required type before you extract data from it).
+     * @return reference to output channel (the reference should be cast to the required type before you extract data
+     * from it).
      * @throw std::runtime_error if there is no channel with a given UID.
      */
-    output::OutputChannel *get_output_channel(const core::UID &channel_uid);
+    output::OutputChannel &get_output_channel(const core::UID &channel_uid);
+    const output::OutputChannel &get_output_channel(const core::UID &channel_uid) const;
     /**
      * @brief Get reference to input channel by its UID.
      * @param channel_uid channel UID.
      * @return reference to input channel.
      * @throw std::runtime_error if no channel with the given UID exists.
      */
-    input::InputChannel *get_input_channel(const core::UID &channel_uid);
+    input::InputChannel &get_input_channel(const core::UID &channel_uid);
+    const input::InputChannel &get_input_channel(const core::UID &channel_uid) const;
 
 private:
     template <typename GenType>
@@ -107,12 +102,12 @@ private:
     knp::framework::BackendLoader backend_loader_;
     std::shared_ptr<core::Backend> backend_;
     knp::framework::Model &model_;
-    InputChannelGenerator i_gen_;
-    OutputChannelGenerator out_gen_;
+    InputChannelMap i_map_;
     // cppcheck-suppress unusedStructMember
-    std::vector<std::unique_ptr<knp::framework::input::InputChannel>> in_channels_;
+    std::vector<knp::framework::input::InputChannel> in_channels_;
+
     // cppcheck-suppress unusedStructMember
-    std::vector<std::unique_ptr<knp::framework::output::OutputChannel>> out_channels_;
+    std::vector<knp::framework::output::OutputChannel> out_channels_;
 };
 
 }  // namespace knp::framework
