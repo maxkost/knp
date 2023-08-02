@@ -166,7 +166,7 @@ public:
      * @brief Start network execution on the backend.
      * @details If the predicate returns `true`, network execution continues. Otherwise network execution stops./n
      * The predicate gets a step number as a parameter.
-     * @param run_predicate predicate function
+     * @param run_predicate predicate function.
      */
     void start(RunPredicate run_predicate);
 

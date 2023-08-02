@@ -110,11 +110,13 @@ public:
 public:
     /**
      * @brief Get parameter values of a synapse with the given index.
+     * @param index synapse index.
      */
     [[nodiscard]] Synapse &operator[](size_t index) { return parameters_[index]; }
     /**
      * @brief Get parameter values of a synapse with the given index.
      * @details Constant method.
+     * @param index synapse index.
      */
     [[nodiscard]] const Synapse &operator[](size_t index) const { return parameters_[index]; }
 

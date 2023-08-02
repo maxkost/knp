@@ -53,6 +53,9 @@ struct SynapticImpact
      */
     uint32_t postsynaptic_neuron_index_;
 
+    /**
+     * @brief Compare synaptic impact messages.
+    */
     bool operator==(const SynapticImpact &) const;
 };
 
