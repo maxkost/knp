@@ -120,13 +120,25 @@ public:
      */
     [[nodiscard]] const Synapse &operator[](size_t index) const { return parameters_[index]; }
 
-    // TODO: add custom iterator class
+    /**
+     * @brief Get an iterator pointing to the first element of the projection.
+     * @return constant projection iterator.
+    */
     [[nodiscard]] auto begin() const { return parameters_.cbegin(); }
-    // TODO: add custom iterator class
+    /**
+     * @brief Get an iterator pointing to the first element of the projection.
+     * @return projection iterator.
+    */
     [[nodiscard]] auto begin() { return parameters_.begin(); }
-    // TODO: add custom iterator class
+    /**
+     * @brief Get an iterator pointing to the last element of the projection.
+     * @return constant iterator.
+    */
     [[nodiscard]] auto end() const { return parameters_.cend(); }
-    // TODO: add custom iterator class
+    /**
+     * @brief Get an iterator pointing to the last element of the projection.
+     * @return iterator.
+    */
     [[nodiscard]] auto end() { return parameters_.end(); }
 
 public:

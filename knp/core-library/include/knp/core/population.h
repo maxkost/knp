@@ -161,13 +161,26 @@ public:
      * @param index neuron index.
      */
     auto &operator[](const size_t index) { return neurons_[index]; }
-    /// TODO: make iterator class.
+    
+    /**
+     * @brief Get an iterator pointing to the first element of the population.
+     * @return constant population iterator.
+    */
     auto begin() const { return neurons_.cbegin(); }
-    /// TODO: make iterator class.
+    /**
+     * @brief Get an iterator pointing to the first element of the population.
+     * @return population iterator.
+    */
     auto begin() { return neurons_.begin(); }
-    /// TODO: make iterator class.
+    /**
+     * @brief Get an iterator pointing to the last element of the population.
+     * @return constant iterator.
+    */
     auto end() const { return neurons_.cend(); }
-    /// TODO: make iterator class.
+    /**
+     * @brief Get an iterator pointing to the last element of the population.
+     * @return iterator.
+    */
     auto end() { return neurons_.end(); }
 
 public:
