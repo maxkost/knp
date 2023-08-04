@@ -64,11 +64,12 @@ void process_inputs(
 /**
  * @brief Partially calculate neurons states after impact.
  * @param population the population to be updated.
+ * @param message output spike message that this function updates.
  * @param part_start first neuron index to be updated.
  * @param part_size number of neurons to be updated in a single call.
- * @return indexes of spiked neurons.
+ * @param mutex mutex that is locked to update a message.
  * @note This function is used for parallelization.
  */
 void calculate_neurons_post_input_state_part(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population,
-    knp::core::messaging::SpikeMessage &neuron_indexes, size_t part_start, size_t part_size, std::mutex &mutex);
+    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::messaging::SpikeMessage &message,
+    size_t part_start, size_t part_size, std::mutex &mutex);
