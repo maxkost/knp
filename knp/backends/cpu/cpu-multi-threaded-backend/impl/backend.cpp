@@ -24,7 +24,7 @@
 namespace knp::backends::multi_threaded_cpu
 {
 MultiThreadedCPUBackend::MultiThreadedCPUBackend(size_t thread_count)
-    : message_endpoint_{message_bus_.create_endpoint()}, calc_pool_{thread_count}
+    : message_endpoint_{message_bus_.create_endpoint()}, thread_context_(thread_count), calc_pool_{thread_context_}
 {
     SPDLOG_INFO("MT CPU backend instance created, threads count = {}...", thread_count);
 }
@@ -92,8 +92,8 @@ void MultiThreadedCPUBackend::calculate_populations()
         auto uid = std::visit([](auto &population) { return population.get_uid(); }, population);
         auto messages = message_endpoint_.unload_messages<knp::core::messaging::SynapticImpactMessage>(uid);
         std::visit(
-            [this, messages](auto &pop)
-            { boost::asio::post(calc_pool_, [&pop, &messages]() { process_inputs(pop, messages); }); },
+            [this, &messages](auto &pop)
+            { boost::asio::post(calc_pool_, [&pop, messages]() { process_inputs(pop, messages); }); },
             population);
     }
     calc_pool_.join();

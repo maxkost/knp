@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <knp/backends/cpu-multi-threaded/thread_pool.h>
 #include <knp/core/backend.h>
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
@@ -320,7 +321,8 @@ private:
     const size_t neurons_per_thread_ = 1000;
     const size_t spikes_per_thread_ = 1000;
     core::MessageEndpoint message_endpoint_;
-    boost::asio::thread_pool calc_pool_;
+    ThreadPool thread_context_;
+    ThreadPoolExecutor calc_pool_;
     std::mutex ep_mutex_;
 };
 

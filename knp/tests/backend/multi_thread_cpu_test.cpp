@@ -3,6 +3,7 @@
  */
 
 #include <knp/backends/cpu-multi-threaded/backend.h>
+#include <knp/backends/cpu-multi-threaded/thread_pool.h>
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 #include <knp/neuron-traits/blifat.h>
@@ -13,6 +14,8 @@
 #include <tests_common.h>
 
 #include <vector>
+
+#include <boost/bind.hpp>
 
 
 using Population = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::PopulationVariants;
@@ -102,4 +105,48 @@ TEST(MultiThreadCpuSuite, SynapsesGettingTest)
 
     ASSERT_GE(s_synapses.size(), 1);
     ASSERT_EQ(s_synapses[0], "knp::synapse_traits::DeltaSynapse");
+}
+
+
+static void fibonacci(const uint64_t begin, uint64_t iterations, uint64_t *result)
+{
+    uint64_t prev[] = {begin, 0};
+    for (uint64_t i = 0; i < iterations; ++i)
+    {
+        const auto tmp = (prev[0] + prev[1]) % 1000;
+        prev[1] = prev[0];
+        prev[0] = tmp;
+    }
+    *result = prev[0];
+}
+
+
+void batch(
+    knp::ThreadPool &pool, uint64_t iterations, const std::vector<uint64_t> &start_values,
+    std::vector<uint64_t> &result)
+{
+    knp::ThreadPoolExecutor executor(pool);
+    result.resize(start_values.size(), 0);
+    for (size_t i = 0; i < start_values.size(); ++i)
+        boost::asio::post(executor, boost::bind(fibonacci, start_values[i], iterations, &result[i]));
+}
+
+
+TEST(MultiThreadCpuSuite, ThreadPoolTest)
+{
+    knp::ThreadPool pool;
+    std::vector<uint64_t> result;
+    batch(pool, 10, {2, 4, 5, 7, 9}, result);
+    ASSERT_EQ(result.size(), 5);
+    ASSERT_EQ(result[0], 178);
+    ASSERT_EQ(result[1], 356);
+    batch(pool, 10, {7, 5, 5, 7, 9, 11}, result);
+    ASSERT_EQ(result.size(), 6);
+    ASSERT_EQ(result[0], 623);
+    ASSERT_EQ(result[1], 445);
+    batch(pool, 10, {3, 9, 5, 7, 7, 11, 9}, result);
+    ASSERT_EQ(result.size(), 7);
+    ASSERT_EQ(result[0], 267);
+    ASSERT_EQ(result[1], 801);
+    ASSERT_EQ(result[1], result[6]);
 }

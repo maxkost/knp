@@ -1,6 +1,6 @@
 /**
  * @file thread_pool.h
- * @brief Reusable thread pool class
+ * @brief Reusable thread pool class, a modified example from asio documentation.
  * @author Vartenkov A.
  * @date 27.07.2023
  */
@@ -45,6 +45,13 @@ public:
             pool_.join();
         }
     }
+
+    ~ThreadPool()
+    {
+        stop();
+        pool_.join();
+    }
+
     // Move and assignment are implicitly deleted because of mutex.
 
 
@@ -69,9 +76,8 @@ private:
         usage_state_ = Usage::WORKING;
     }
 
-    void do_work_finished(std::unique_lock<std::mutex> &lock, const std::shared_ptr<size_t> &task_count)  // done
+    void do_work_finished(const std::shared_ptr<size_t> &task_count)  // done
     {
-        lock.lock();
         // Check if this was the final task.
         if (--(*task_count) == 0)
         {
@@ -79,10 +85,10 @@ private:
             if (usage_state_ == Usage::STOPPING)
             {
                 usage_state_ = Usage::FINISHED;
-                condition_.notify_all();
             }
             else
                 usage_state_ = Usage::READY;
+            condition_.notify_all();
         }
     }
 
@@ -92,11 +98,13 @@ private:
         try
         {
             work->execute_(work);
-            do_work_finished(lock, work_count);
+            lock.lock();
+            do_work_finished(work_count);
         }
         catch (...)
         {
-            do_work_finished(lock, work_count);
+            lock.lock();
+            do_work_finished(work_count);
             throw;
         }
     }
@@ -114,7 +122,10 @@ private:
     void stop()  // done
     {
         std::lock_guard lock_guard(mutex_);  // Not sure if we need it.
-        usage_state_ = Usage::STOPPING;
+        if (usage_state_ == Usage::READY)
+            usage_state_ = Usage::FINISHED;
+        else
+            usage_state_ = Usage::STOPPING;
         condition_.notify_all();
     }
 
@@ -127,7 +138,7 @@ private:
     }
 
 private:
-    friend class Executor;
+    friend class ThreadPoolExecutor;
     std::mutex mutex_;
     std::condition_variable condition_;
     Usage usage_state_ = Usage::READY;
@@ -136,10 +147,10 @@ private:
 };
 
 
-class Executor
+class ThreadPoolExecutor
 {
 public:
-    explicit Executor(ThreadPool &context) : context_(context), task_count_(std::make_shared<size_t>(0)) {}
+    explicit ThreadPoolExecutor(ThreadPool &context) : context_(context), task_count_(std::make_shared<size_t>(0)) {}
 
     [[nodiscard]] ThreadPool &context() { return context_; }
 
@@ -151,9 +162,8 @@ public:
 
     void on_work_finished()
     {
-        std::unique_lock lock(context_.mutex_);
-        context_.do_work_finished(lock, task_count_);  // locks
-        lock.unlock();
+        std::lock_guard lock(context_.mutex_);
+        context_.do_work_finished(task_count_);  // locks
     }
 
     template <class Func, class Alloc>
@@ -165,11 +175,20 @@ public:
         context_.post(new_task, task_count_);
     }
 
+    void join() const
+    {
+        std::unique_lock<std::mutex> lock(context_.mutex_);
+        while (*task_count_ > 0)
+            if (!context_.execute_next(lock)) context_.condition_.wait(lock);
+    }
+
+    ~ThreadPoolExecutor() { join(); }
+
 private:
     template <class Func>
     struct Task : ThreadPool::Function
     {
-        explicit Task(Func function, const std::shared_ptr<size_t> &task_count) : function_(std::move(function))
+        explicit Task(Func func, const std::shared_ptr<size_t> &task_count) : function(std::move(func))
         {
             work_count_ = task_count;
             execute_ = [](std::shared_ptr<ThreadPool::Function> &p)
@@ -179,12 +198,23 @@ private:
                 tmp();
             };
         }
-        Func function_;
+        Func function;
     };
+
+    template <class Func, class Alloc>
+    // cppcheck-suppress unusedPrivateFunction
+    [[maybe_unused]] void dispatch(Func, const Alloc &) const
+    {
+    }
+
+    template <class Func, class Alloc>
+    // cppcheck-suppress unusedPrivateFunction
+    [[maybe_unused]] void defer(Func, const Alloc &) const
+    {
+    }
 
     ThreadPool &context_;
     std::shared_ptr<size_t> task_count_;
 };
-
 
 }  // namespace knp
