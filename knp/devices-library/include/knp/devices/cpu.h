@@ -82,6 +82,9 @@ private:
 };
 
 
+/**
+ * @brief List all processors on which backend can be initialized. 
+*/
 std::vector<CPU> list_processors();
 
 }  // namespace knp::devices::cpu

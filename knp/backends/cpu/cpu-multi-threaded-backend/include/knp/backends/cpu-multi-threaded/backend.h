@@ -118,6 +118,7 @@ public:
 public:
     /**
      * @brief Default constructor for multi-threaded CPU backend.
+     * @param thread_count number of threads.
      */
     explicit MultiThreadedCPUBackend(size_t thread_count = boost::asio::detail::default_thread_pool_size());
     /**

@@ -38,6 +38,7 @@ public:
     ::boost::uuids::uuid operator()() const;
     /**
      * @brief Reset UID counter.
+     * @param initial_value UID value from which to restart the counter.
      */
     void reset(uint64_t initial_value = 1);
 };
