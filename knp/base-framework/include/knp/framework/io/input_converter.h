@@ -25,11 +25,6 @@
 namespace knp::framework::input
 {
 /**
- * @brief Functor used for converting input stream data to spike messages.
- */
-using DataConverter = std::function<core::messaging::SpikeData(std::istream &)>;
-
-/**
  * @brief Functor used for generating input spike messages.
  */
 using DataGenerator = std::function<core::messaging::SpikeData(core::messaging::Step)>;

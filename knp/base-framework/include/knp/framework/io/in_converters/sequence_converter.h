@@ -12,6 +12,7 @@
 #include <spdlog/spdlog.h>
 
 #include <functional>
+#include <memory>
 #include <sstream>
 #include <string>
 #include <type_traits>
@@ -38,19 +39,21 @@ public:
     /**
      * @brief Sequence converter constructor.
      * @param interpret function that determines if the unprocessed value is a spike or not.
+     * @param stream stream from which to receive data.
      * @param data_size size of input projection.
      */
-    SequenceConverter(std::function<bool(ValueType)> interpret, size_t data_size)
-        : interpret_(std::move(interpret)), data_size_(data_size)
+    SequenceConverter(
+        std::unique_ptr<std::istream> &&stream, std::function<bool(ValueType)> interpret, size_t data_size)
+        : stream_(std::move(stream)), interpret_(std::move(interpret)), data_size_(data_size)
     {
     }
 
     /**
      * @brief Call a function that converts data from the input stream into spike messages with spiked neuron indexes.
-     * @param stream input stream.
+     * @param step current step (not used in the converter).
      * @return vector of spiked neuron indexes.
      */
-    core::messaging::SpikeData operator()(std::istream &stream)
+    core::messaging::SpikeData operator()(core::messaging::Step step = 0)
     {
         SPDLOG_TRACE("Getting message from a stream using sequence converter.");
 
@@ -58,7 +61,7 @@ public:
         for (size_t i = 0; i < data_size_; ++i)
         {
             ValueType value;
-            stream >> value;
+            *stream_ >> value;
             if (interpret_(value))
             {
                 message_data.push_back(i);
@@ -68,6 +71,13 @@ public:
         return message_data;
     }
 
+public:
+    /**
+     * @brief Get input stream.
+     * @return stream.
+     */
+    [[nodiscard]] std::istream &get_stream() { return *stream_; }
+
     /**
      * @brief Set input data size.
      * @details The `size` value must correspond to the size of an input projection.
@@ -76,6 +86,10 @@ public:
     void set_size(size_t size) { data_size_ = size; }
 
 private:
+    /**
+     * @brief A reference to the stream from which to receive data.
+     */
+    std::unique_ptr<std::istream> stream_;
     /**
      * @brief Interpretation function that returns `true` if an input value is a spike, otherwise `false`. Any "wrong
      * symbol" error processing logic also goes here.

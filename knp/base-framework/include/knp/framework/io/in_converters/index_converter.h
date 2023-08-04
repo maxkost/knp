@@ -12,7 +12,8 @@
 #include <spdlog/spdlog.h>
 
 #include <functional>
-#include <sstream>
+#include <istream>
+#include <memory>
 #include <string>
 #include <type_traits>
 #include <utility>
@@ -33,18 +34,33 @@ class IndexConverter
 public:
     /**
      * @brief Create converter with a delimiter.
+     * @param stream stream from which to receive data.
      * @param delim character that delimits spiked neuron indexes.
      */
-    explicit IndexConverter(char delim = ',') : delim_(delim) {}
+    explicit IndexConverter(std::unique_ptr<std::istream> &&stream, char delim = ',')
+        : stream_(std::move(stream)), delim_(delim)
+    {
+    }
 
     /**
      * @brief Call a function that converts data from the input stream into spike messages with spiked neuron indexes.
-     * @param stream input stream.
+     * @param step current step (not used in the converter).
      * @return vector of spiked neuron indexes.
      */
-    core::messaging::SpikeData operator()(std::istream &stream) const;
+    core::messaging::SpikeData operator()(core::messaging::Step step = 0) const;
+
+public:
+    /**
+     * @brief Get input stream.
+     * @return stream.
+     */
+    [[nodiscard]] std::istream &get_stream() { return *stream_; }
 
 private:
+    /**
+     * @brief A reference to the stream from which to receive data.
+     */
+    std::unique_ptr<std::istream> stream_;
     /**
      * @brief Delimiter character.
      */

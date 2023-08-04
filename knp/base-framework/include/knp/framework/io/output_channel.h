@@ -22,7 +22,7 @@
 namespace knp::framework::output
 {
 /**
- * @brief The OutputChannel class is a base class for output channels.
+ * @brief The OutputChannel class is a definition of an output channel.
  */
 class OutputChannel
 {
@@ -36,6 +36,11 @@ public:
         : base_{channel_uid}, endpoint_(std::move(endpoint))
     {
     }
+
+    /**
+     * @brief Move constructor.
+     */
+    OutputChannel(OutputChannel &&) = default;
 
 public:
     /**
