@@ -137,8 +137,8 @@ bool calculate_neuron_post_input_state(
 
 
 void calculate_neurons_post_input_state_part(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population,
-    knp::core::messaging::SpikeData &neuron_indexes, size_t part_start, size_t part_size, std::mutex &mutex)
+    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::messaging::SpikeMessage &message,
+    size_t part_start, size_t part_size, std::mutex &mutex)
 {
     SPDLOG_TRACE("Calculate neurons post input state part");
     size_t part_end = std::min(part_start + part_size, population.size());
@@ -149,8 +149,8 @@ void calculate_neurons_post_input_state_part(
 
     // Updating common neuron indexes.
     std::lock_guard<std::mutex> lock(mutex);
-    neuron_indexes.reserve(neuron_indexes.size() + output.size());
-    neuron_indexes.insert(neuron_indexes.end(), output.begin(), output.end());
+    message.neuron_indexes_.reserve(message.neuron_indexes_.size() + output.size());
+    message.neuron_indexes_.insert(message.neuron_indexes_.end(), output.begin(), output.end());
 }
 
 

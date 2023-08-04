@@ -57,10 +57,8 @@ std::vector<std::string> MultiThreadedCPUBackend::get_supported_synapses() const
 }
 
 
-void MultiThreadedCPUBackend::calculate_populations()
+void MultiThreadedCPUBackend::calculate_populations_pre_impact()
 {
-    SPDLOG_DEBUG("Calculating populations");
-    // Calculating pre-message neuron state, one thread per neurons_per_thread_ neurons or less.
     for (auto &population : populations_)
     {
         auto pop_size = std::visit([](auto &pop) { return pop.size(); }, population);
@@ -83,10 +81,13 @@ void MultiThreadedCPUBackend::calculate_populations()
                 population);
         }
     }
-    // Wait for all threads to finish
+    // Wait for all threads to finish their work
     calc_pool_.join();
+}
 
-    // Processing messages, one thread per population, probably very hard to go deeper unless atomic neuron params.
+
+void MultiThreadedCPUBackend::calculate_populations_impact()
+{
     for (auto &population : populations_)
     {
         auto uid = std::visit([](auto &population) { return population.get_uid(); }, population);
@@ -97,23 +98,28 @@ void MultiThreadedCPUBackend::calculate_populations()
             population);
     }
     calc_pool_.join();
+}
 
-    // Calculating post input changes and outputs.
-    std::vector<knp::core::messaging::SpikeData> spike_container(populations_.size());
+
+std::vector<knp::core::messaging::SpikeMessage> MultiThreadedCPUBackend::calculate_populations_post_impact()
+{
+    std::vector<knp::core::messaging::SpikeMessage> spike_container(populations_.size());
     for (size_t pop_index = 0; pop_index < populations_.size(); ++pop_index)
     {
         auto &population = populations_[pop_index];
-        size_t population_size = std::visit([](auto &population) { return population.size(); }, population);
+        auto &message = spike_container[pop_index];
+        message.header_.send_time_ = get_step();
+        message.header_.sender_uid_ = std::visit([](auto &population) { return population.get_uid(); }, population);
 
+        size_t population_size = std::visit([](auto &population) { return population.size(); }, population);
         for (size_t neuron_index = 0; neuron_index < population_size; neuron_index += neurons_per_thread_)
         {
-            auto &spike_data = spike_container[pop_index];
             std::visit(
-                [this, &spike_data, neuron_index](auto &pop)
+                [this, &message, neuron_index](auto &pop)
                 {
                     auto do_work = [&]() {
                         calculate_neurons_post_input_state_part(
-                            pop, spike_data, neuron_index, neurons_per_thread_, ep_mutex_);
+                            pop, message, neuron_index, neurons_per_thread_, ep_mutex_);
                     };
                     boost::asio::post(calc_pool_, do_work);
                 },
@@ -121,13 +127,23 @@ void MultiThreadedCPUBackend::calculate_populations()
         }
     }
     calc_pool_.join();
+    return spike_container;
+}
 
-    // Sending messages
-    for (size_t i = 0; i < populations_.size(); ++i)
+
+void MultiThreadedCPUBackend::calculate_populations()
+{
+    SPDLOG_DEBUG("Calculating populations");
+    calculate_populations_pre_impact();
+
+    calculate_populations_impact();
+
+    auto spike_messages = calculate_populations_post_impact();
+
+    // Sending non-empty messages
+    for (auto &message : spike_messages)
     {
-        if (spike_container[i].empty()) continue;
-        auto sender_uid = std::visit([](auto &pop) { return pop.get_uid(); }, populations_[i]);
-        knp::core::messaging::SpikeMessage message{{sender_uid, get_step()}, std::move(spike_container[i])};
+        if (message.neuron_indexes_.empty()) continue;
         message_endpoint_.send_message(message);
     }
 }
@@ -208,60 +224,6 @@ void MultiThreadedCPUBackend::step()
     SPDLOG_DEBUG("Step finished");
 }
 
-void MultiThreadedCPUBackend::step_old()
-{
-    SPDLOG_DEBUG("Starting step #{}", get_step());
-    message_bus_.route_messages();
-    message_endpoint_.receive_all_messages();
-
-    // Calculate populations.
-    for (auto &e : populations_)
-    {
-        std::visit(
-            [this](auto &arg)
-            {
-                using T = std::decay_t<decltype(arg)>;
-                if constexpr (
-                    boost::mp11::mp_find<SupportedPopulations, T>{} == boost::mp11::mp_size<SupportedPopulations>{})
-                    static_assert(knp::core::always_false_v<T>, "Population isn't supported by the CPU MT backend!");
-                boost::asio::post(
-                    calc_pool_,
-                    [this, &arg]() { std::invoke(&MultiThreadedCPUBackend::calculate_population, this, arg); });
-            },
-            e);
-    }
-
-    //    calc_pool_.join();
-
-    message_bus_.route_messages();
-    message_endpoint_.receive_all_messages();
-
-    // Calculate projections.
-    for (auto &e : projections_)
-    {
-        std::visit(
-            [this, &e](auto &arg)
-            {
-                using T = std::decay_t<decltype(arg)>;
-                if constexpr (
-                    boost::mp11::mp_find<SupportedProjections, T>{} == boost::mp11::mp_size<SupportedProjections>{})
-                    static_assert(knp::core::always_false_v<T>, "Projection isn't supported by the CPU MT backend!");
-                // Quick and dirty.
-                boost::asio::post(
-                    calc_pool_, [this, &arg, &e]()
-                    { std::invoke(&MultiThreadedCPUBackend::calculate_projection, this, arg, e.messages_); });
-            },
-            e.arg_);
-    }
-
-    //    calc_pool_.join();
-    message_bus_.route_messages();
-    message_endpoint_.receive_all_messages();
-
-    auto step = gad_step();
-    SPDLOG_DEBUG("Step finished #{}", step);
-}
-
 
 void MultiThreadedCPUBackend::load_populations(const std::vector<PopulationVariants> &populations)
 {
@@ -322,22 +284,6 @@ void MultiThreadedCPUBackend::init()
         if (post_uid) message_endpoint_.subscribe<knp::core::messaging::SynapticImpactMessage>(post_uid, {this_uid});
     }
     SPDLOG_DEBUG("Initializing finished...");
-}
-
-
-void MultiThreadedCPUBackend::calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population)
-{
-    SPDLOG_TRACE("Calculate population {}", std::string(population.get_uid()));
-    calculate_blifat_population(population, message_endpoint_, get_step(), ep_mutex_);
-}
-
-
-void MultiThreadedCPUBackend::calculate_projection(
-    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
-    core::messaging::SynapticMessageQueue &message_queue)
-{
-    SPDLOG_TRACE("Calculate projection {}", std::string(projection.get_uid()));
-    calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, get_step(), ep_mutex_);
 }
 
 

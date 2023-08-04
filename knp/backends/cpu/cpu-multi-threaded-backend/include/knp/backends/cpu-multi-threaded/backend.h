@@ -260,7 +260,6 @@ public:
      * @copydoc knp::core::Backend::step()
      */
     void step() override;
-    void step_old();
 
     /**
      * @brief Subscribe internal endpoint to messages.
@@ -276,12 +275,13 @@ public:
     {
         return message_endpoint_.subscribe<MessageType>(receiver, senders);
     }
+
     /**
      * @brief Get message endpoint.
      * @return message endpoint.
      */
-    const core::MessageEndpoint &get_message_endpoint() const override { return message_endpoint_; }
-    core::MessageEndpoint &get_message_endpoint() override { return message_endpoint_; }
+    [[nodiscard]] const core::MessageEndpoint &get_message_endpoint() const override { return message_endpoint_; }
+    [[nodiscard]] core::MessageEndpoint &get_message_endpoint() override { return message_endpoint_; }
 
     /**
      * @brief Calculates all populations.
@@ -299,23 +299,14 @@ protected:
      */
     void init() override;
 
-    /**
-     * @brief Calculate population of BLIFAT neurons.
-     * @note Population will be changed during calculation.
-     * @param population population of BLIFAT neurons to calculate.
-     */
-    void calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population);
-    /**
-     * @brief Calculate projection of Delta synapses.
-     * @note Projection will be changed during calculation.
-     * @param projection projection of Delta synapses to calculate.
-     * @param message_queue message queue to send to projection for calculation.
-     */
-    void calculate_projection(
-        knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
-        core::messaging::SynapticMessageQueue &message_queue);
-
 private:
+    // Calculating pre-message neuron state, one thread per neurons_per_thread_ neurons or less.
+    void calculate_populations_pre_impact();
+    // Processing messages, one thread per population, probably very hard to go deeper unless atomic neuron params.
+    void calculate_populations_impact();
+    // Calculating post input changes and outputs.
+    std::vector<knp::core::messaging::SpikeMessage> calculate_populations_post_impact();
+
     PopulationContainer populations_;
     ProjectionContainer projections_;
     const size_t neurons_per_thread_ = 1000;

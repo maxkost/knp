@@ -71,4 +71,4 @@ void process_inputs(
  */
 void calculate_neurons_post_input_state_part(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population,
-    knp::core::messaging::SpikeData &neuron_indexes, size_t part_start, size_t part_size, std::mutex &mutex);
+    knp::core::messaging::SpikeMessage &neuron_indexes, size_t part_start, size_t part_size, std::mutex &mutex);
