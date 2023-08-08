@@ -33,7 +33,7 @@ void calculate_projection_part(
     {
         auto neuron_index = message_in.neuron_indexes_[spike_index];
         auto synapses = projection.get_by_presynaptic_neuron(neuron_index);
-        // Add new impacts
+        // Add new impacts.
         for (const auto &synapse_index : synapses)
         {
             auto &syn = projection[synapse_index];
@@ -80,7 +80,7 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
     for (const auto &neuron_index : message_in.neuron_indexes_)
     {
         auto synapses = projection.get_by_presynaptic_neuron(neuron_index);
-        // Add new impacts
+        // Add new impacts.
         for (const auto &synapse_index : synapses)
         {
             auto &syn = projection[synapse_index];
@@ -116,7 +116,7 @@ void calculate_delta_synapse_projection(
     if (out_iter != future_messages.end())
     {
         SPDLOG_TRACE("Projection is sending an impact message");
-        // Send a message and remove it from the queue
+        // Send a message and remove it from the queue.
         endpoint.send_message(out_iter->second);
         future_messages.erase(out_iter);
     }

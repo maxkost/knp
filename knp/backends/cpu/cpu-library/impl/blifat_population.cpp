@@ -171,7 +171,7 @@ knp::core::messaging::SpikeData calculate_blifat_population_data(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint)
 {
     SPDLOG_DEBUG("Calculating BLIFAT population {}", std::string{population.get_uid()});
-    // This whole function might be optimizable if we find a way to not loop over the whole population
+    // This whole function might be optimizable if we find a way to not loop over the whole population.
     std::vector<SynapticImpactMessage> messages = endpoint.unload_messages<SynapticImpactMessage>(population.get_uid());
 
     calculate_neurons_state(population, messages);
