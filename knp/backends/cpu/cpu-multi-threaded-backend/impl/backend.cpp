@@ -141,7 +141,7 @@ void MultiThreadedCPUBackend::calculate_populations()
     auto spike_messages = calculate_populations_post_impact();
 
     // Sending non-empty messages.
-    for (auto &message : spike_messages)
+    for (const auto &message : spike_messages)
     {
         if (message.neuron_indexes_.empty()) continue;
         message_endpoint_.send_message(message);

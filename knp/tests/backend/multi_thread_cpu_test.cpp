@@ -106,7 +106,7 @@ TEST(MultiThreadCpuSuite, SynapsesGettingTest)
 }
 
 
-static void fibonacci(const uint64_t begin, uint64_t iterations, uint64_t *result)
+void fibonacci(const uint64_t begin, uint64_t iterations, uint64_t *result)
 {
     uint64_t prev[] = {begin, 0};
     for (uint64_t i = 0; i < iterations; ++i)
