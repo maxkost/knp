@@ -20,7 +20,7 @@ source_group(headers REGULAR_EXPRESSION "include/.*")
 
 knp_add_library("${PROJECT_NAME}"
     SHARED
-    impl/backend.cpp
+    impl/backend.cpp impl/tools/src/thread_pool_context.cpp
     ${${PROJECT_NAME}_headers}
 )
 

@@ -1,5 +1,5 @@
 /**
- * @file thread_pool.h
+ * @file thread_pool_executor.h
  * @brief Thread pool executor class.
  * @author Vartenkov A.
  * @date 08.08.2023

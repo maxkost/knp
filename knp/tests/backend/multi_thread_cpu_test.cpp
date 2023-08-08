@@ -16,8 +16,8 @@
 
 #include <boost/bind.hpp>
 
-#include "../../backends/cpu/cpu-multi-threaded-backend/impl/tools/thread_pool_context.h"
-#include "../../backends/cpu/cpu-multi-threaded-backend/impl/tools/thread_pool_executor.h"
+#include "../../backends/cpu/cpu-multi-threaded-backend/impl/tools/include/thread_pool_context.h"
+#include "../../backends/cpu/cpu-multi-threaded-backend/impl/tools/include/thread_pool_executor.h"
 
 using Population = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::PopulationVariants;
 using Projection = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::ProjectionVariants;

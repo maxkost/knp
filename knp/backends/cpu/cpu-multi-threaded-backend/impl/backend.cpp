@@ -20,7 +20,7 @@
 
 #include <boost/mp11.hpp>
 
-#include "../impl/tools/thread_pool.h"
+#include "tools/include/thread_pool.h"
 
 
 namespace knp::backends::multi_threaded_cpu
@@ -76,13 +76,13 @@ void MultiThreadedCPUBackend::calculate_populations_pre_impact()
                         static_assert(
                             knp::core::always_false_v<T>, "Population isn't supported by the CPU MT backend!");
 
-                    // Start threads
+                    // Start threads.
                     calc_pool_->post([&]() { calculate_neurons_state_part(pop, neuron_index, neurons_per_thread_); });
                 },
                 population);
         }
     }
-    // Wait for all threads to finish their work
+    // Wait for all threads to finish their work.
     calc_pool_->join();
 }
 
@@ -140,7 +140,7 @@ void MultiThreadedCPUBackend::calculate_populations()
 
     auto spike_messages = calculate_populations_post_impact();
 
-    // Sending non-empty messages
+    // Sending non-empty messages.
     for (auto &message : spike_messages)
     {
         if (message.neuron_indexes_.empty()) continue;
@@ -185,7 +185,7 @@ void MultiThreadedCPUBackend::calculate_projections()
             calc_pool_->join();
         }
     }
-    // Sending messages. No reason to parallelize this, as endpoint is the bottleneck and is not threadsafe.
+    // Sending messages. It might be possible to parallelize this as well if we use more than one endpoint.
     for (auto &projection : projections_)
     {
         auto &msg_queue = projection.messages_;
