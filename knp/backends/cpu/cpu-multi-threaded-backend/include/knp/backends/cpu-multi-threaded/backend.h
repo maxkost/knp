@@ -33,7 +33,6 @@ namespace knp::backends::multi_threaded_cpu
 {
 
 class ThreadPool;
-class ThreadPoolExecutor;
 
 /**
  * @brief The MultiThreadedCPUBackend class is a definition of an interface to the multi-threaded CPU backend.
@@ -314,8 +313,7 @@ private:
     const size_t neurons_per_thread_ = 1000;
     const size_t spikes_per_thread_ = 1000;
     core::MessageEndpoint message_endpoint_;
-    std::unique_ptr<ThreadPool> thread_context_;
-    std::unique_ptr<ThreadPoolExecutor> calc_pool_;
+    std::unique_ptr<ThreadPool> calc_pool_;
     std::mutex ep_mutex_;
 };
 

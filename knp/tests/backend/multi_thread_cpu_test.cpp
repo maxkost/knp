@@ -16,8 +16,8 @@
 
 #include <boost/bind.hpp>
 
-#include "../../backends/cpu/cpu-multi-threaded-backend/impl/tools/thread_pool.h"
-
+#include "../../backends/cpu/cpu-multi-threaded-backend/impl/tools/thread_pool_context.h"
+#include "../../backends/cpu/cpu-multi-threaded-backend/impl/tools/thread_pool_executor.h"
 
 using Population = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::PopulationVariants;
 using Projection = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::ProjectionVariants;
@@ -123,8 +123,8 @@ static void fibonacci(const uint64_t begin, uint64_t iterations, uint64_t *resul
 
 
 void batch(
-    knp::backends::multi_threaded_cpu::ThreadPool &pool, uint64_t iterations, const std::vector<uint64_t> &start_values,
-    std::vector<uint64_t> &result)
+    knp::backends::multi_threaded_cpu::ThreadPoolContext &pool, uint64_t iterations,
+    const std::vector<uint64_t> &start_values, std::vector<uint64_t> &result)
 {
     knp::backends::multi_threaded_cpu::ThreadPoolExecutor executor(pool);
     result.resize(start_values.size(), 0);
@@ -135,7 +135,7 @@ void batch(
 
 TEST(MultiThreadCpuSuite, ThreadPoolTest)
 {
-    knp::backends::multi_threaded_cpu::ThreadPool pool;
+    knp::backends::multi_threaded_cpu::ThreadPoolContext pool;
     std::vector<uint64_t> result;
     batch(pool, 10, {2, 4, 5, 7, 9}, result);
     ASSERT_EQ(result.size(), 5);
