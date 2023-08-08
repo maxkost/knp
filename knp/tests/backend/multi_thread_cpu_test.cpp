@@ -5,19 +5,16 @@
 #include <knp/backends/cpu-multi-threaded/backend.h>
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
-#include <knp/neuron-traits/blifat.h>
-#include <knp/synapse-traits/delta.h>
 
 #include <generators.h>
-#include <spdlog/spdlog.h>
 #include <tests_common.h>
 
 #include <vector>
 
 #include <boost/bind.hpp>
 
-#include "../../backends/cpu/cpu-multi-threaded-backend/impl/tools/include/thread_pool_context.h"
-#include "../../backends/cpu/cpu-multi-threaded-backend/impl/tools/include/thread_pool_executor.h"
+#include "knp/../../impl/tools/include/thread_pool_context.h"
+#include "knp/../../impl/tools/include/thread_pool_executor.h"
 
 using Population = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::PopulationVariants;
 using Projection = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::ProjectionVariants;

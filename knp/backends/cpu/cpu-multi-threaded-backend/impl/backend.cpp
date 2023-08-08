@@ -117,7 +117,7 @@ std::vector<knp::core::messaging::SpikeMessage> MultiThreadedCPUBackend::calcula
             std::visit(
                 [this, &message, neuron_index](auto &pop)
                 {
-                    auto do_work = [&]() {
+                    auto do_work = [this, &message, &pop, neuron_index]() {
                         calculate_neurons_post_input_state_part(
                             pop, message, neuron_index, neurons_per_thread_, ep_mutex_);
                     };
@@ -173,7 +173,7 @@ void MultiThreadedCPUBackend::calculate_projections()
                 std::visit(
                     [this, spike_index, &msg, &projection](auto &proj)
                     {
-                        auto work = [&]() {
+                        auto work = [&proj, &msg, &projection, spike_index, this]() {
                             calculate_projection_part(
                                 proj, msg, projection.messages_, get_step(), spike_index, spikes_per_thread_,
                                 ep_mutex_);
