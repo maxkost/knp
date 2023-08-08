@@ -16,11 +16,24 @@
 #include <boost/asio/thread_pool.hpp>
 #include <boost/asio/ts/executor.hpp>
 
-namespace knp
+/**
+ * General namespace
+ */
+namespace knp::backends::multi_threaded_cpu
 {
+
+/**
+ * @brief Thread pool context. A service class used for creating pool executors.
+ * @note context lifetime should exceed lifetimes of its executors.
+ * @note move and assignment are disabled.
+ */
 class ThreadPool
 {
 public:
+    /**
+     * @brief Constructor.
+     * @param num_threads number of worker threads.
+     */
     explicit ThreadPool(size_t num_threads = std::thread::hardware_concurrency()) : pool_(num_threads)
     {
         try
@@ -46,6 +59,9 @@ public:
         }
     }
 
+    /**
+     * @brief Destructor, blocking. Sends signal for threads to finish working, then joins all worker threads.
+     */
     ~ThreadPool()
     {
         stop();
@@ -70,13 +86,13 @@ private:
         void (*execute_)(std::shared_ptr<Function> &p);
     };
 
-    void do_work_started(const std::shared_ptr<size_t> &task_count) noexcept  // done
+    void do_work_started(const std::shared_ptr<size_t> &task_count) noexcept
     {
         ++(*task_count);
         usage_state_ = Usage::WORKING;
     }
 
-    void do_work_finished(const std::shared_ptr<size_t> &task_count)  // done
+    void do_work_finished(const std::shared_ptr<size_t> &task_count)
     {
         // Check if this was the final task.
         if (--(*task_count) == 0)
@@ -92,7 +108,7 @@ private:
         }
     }
 
-    void execute(std::unique_lock<std::mutex> &lock, std::shared_ptr<Function> &work)  // done
+    void execute(std::unique_lock<std::mutex> &lock, std::shared_ptr<Function> &work)
     {
         std::shared_ptr<size_t> work_count(std::move(work->work_count_));
         try
@@ -109,7 +125,7 @@ private:
         }
     }
 
-    bool execute_next(std::unique_lock<std::mutex> &lock)  // done
+    bool execute_next(std::unique_lock<std::mutex> &lock)
     {
         if (work_queue_.empty()) return false;
         auto task(work_queue_.front());
@@ -119,7 +135,7 @@ private:
         return true;
     }
 
-    void stop()  // done
+    void stop()
     {
         std::lock_guard lock_guard(mutex_);  // Not sure if we need it.
         if (usage_state_ == Usage::READY)
@@ -129,7 +145,7 @@ private:
         condition_.notify_all();
     }
 
-    void post(std::shared_ptr<Function> task, const std::shared_ptr<size_t> &task_count)  // done
+    void post(std::shared_ptr<Function> task, const std::shared_ptr<size_t> &task_count)
     {
         std::lock_guard lock(mutex_);
         work_queue_.push(task);
@@ -147,24 +163,20 @@ private:
 };
 
 
+/**
+ * @brief Class for thread execution, this is the interface for thread pool.
+ * @note Use boost::asio::post(executor, task) to queue more tasks. Use join() to wait for task execution.
+ */
 class ThreadPoolExecutor
 {
 public:
+    /**
+     * @brief Constructs pool executor.
+     * @param context ThreadPool context. Its lifetime should be at least as long as for an object of this class.
+     */
     explicit ThreadPoolExecutor(ThreadPool &context) : context_(context), task_count_(std::make_shared<size_t>(0)) {}
 
     [[nodiscard]] ThreadPool &context() { return context_; }
-
-    void on_work_started()
-    {
-        std::lock_guard lock(context_.mutex_);
-        context_.do_work_started(task_count_);
-    }
-
-    void on_work_finished()
-    {
-        std::lock_guard lock(context_.mutex_);
-        context_.do_work_finished(task_count_);  // locks
-    }
 
     template <class Func, class Alloc>
     void post(Func function, const Alloc &allocator) const
@@ -175,6 +187,9 @@ public:
         context_.post(new_task, task_count_);
     }
 
+    /**
+     * @brief Waits for all tasks to finish. Doesn't join the threads.
+     */
     void join() const
     {
         std::unique_lock<std::mutex> lock(context_.mutex_);
@@ -182,6 +197,9 @@ public:
             if (!context_.execute_next(lock)) context_.condition_.wait(lock);
     }
 
+    /**
+     * @brief Blocking destructor that waits for all tasks to be completed.
+     */
     ~ThreadPoolExecutor() { join(); }
 
 private:
@@ -201,12 +219,33 @@ private:
         Func function;
     };
 
+    // cppcheck-suppress unusedPrivateFunction
+    void on_work_started()
+    {
+        std::lock_guard lock(context_.mutex_);
+        context_.do_work_started(task_count_);
+    }
+
+    // cppcheck-suppress unusedPrivateFunction
+    void on_work_finished()
+    {
+        std::lock_guard lock(context_.mutex_);
+        context_.do_work_finished(task_count_);  // locks
+    }
+
+
+    /**
+     * @brief Empty function needed to fulfil asio::post requirements
+     */
     template <class Func, class Alloc>
     // cppcheck-suppress unusedPrivateFunction
     [[maybe_unused]] void dispatch(Func, const Alloc &) const
     {
     }
 
+    /**
+     * @brief Empty function needed to fulfil asio::post requirements.
+     */
     template <class Func, class Alloc>
     // cppcheck-suppress unusedPrivateFunction
     [[maybe_unused]] void defer(Func, const Alloc &) const
@@ -217,4 +256,4 @@ private:
     std::shared_ptr<size_t> task_count_;
 };
 
-}  // namespace knp
+}  // namespace knp::backends::multi_threaded_cpu

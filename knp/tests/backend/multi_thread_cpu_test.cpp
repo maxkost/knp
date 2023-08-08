@@ -3,7 +3,6 @@
  */
 
 #include <knp/backends/cpu-multi-threaded/backend.h>
-#include <knp/backends/cpu-multi-threaded/thread_pool.h>
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 #include <knp/neuron-traits/blifat.h>
@@ -16,6 +15,8 @@
 #include <vector>
 
 #include <boost/bind.hpp>
+
+#include "../../backends/cpu/cpu-multi-threaded-backend/impl/tools/thread_pool.h"
 
 
 using Population = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::PopulationVariants;
@@ -122,10 +123,10 @@ static void fibonacci(const uint64_t begin, uint64_t iterations, uint64_t *resul
 
 
 void batch(
-    knp::ThreadPool &pool, uint64_t iterations, const std::vector<uint64_t> &start_values,
+    knp::backends::multi_threaded_cpu::ThreadPool &pool, uint64_t iterations, const std::vector<uint64_t> &start_values,
     std::vector<uint64_t> &result)
 {
-    knp::ThreadPoolExecutor executor(pool);
+    knp::backends::multi_threaded_cpu::ThreadPoolExecutor executor(pool);
     result.resize(start_values.size(), 0);
     for (size_t i = 0; i < start_values.size(); ++i)
         boost::asio::post(executor, boost::bind(fibonacci, start_values[i], iterations, &result[i]));
@@ -134,7 +135,7 @@ void batch(
 
 TEST(MultiThreadCpuSuite, ThreadPoolTest)
 {
-    knp::ThreadPool pool;
+    knp::backends::multi_threaded_cpu::ThreadPool pool;
     std::vector<uint64_t> result;
     batch(pool, 10, {2, 4, 5, 7, 9}, result);
     ASSERT_EQ(result.size(), 5);

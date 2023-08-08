@@ -20,11 +20,15 @@
 
 #include <boost/mp11.hpp>
 
+#include "../impl/tools/thread_pool.h"
+
 
 namespace knp::backends::multi_threaded_cpu
 {
 MultiThreadedCPUBackend::MultiThreadedCPUBackend(size_t thread_count)
-    : message_endpoint_{message_bus_.create_endpoint()}, thread_context_(thread_count), calc_pool_{thread_context_}
+    : message_endpoint_{message_bus_.create_endpoint()},
+      thread_context_(std::make_unique<ThreadPool>(thread_count)),
+      calc_pool_(std::make_unique<ThreadPoolExecutor>(*thread_context_.get()))
 {
     SPDLOG_INFO("MT CPU backend instance created, threads count = {}...", thread_count);
 }
@@ -76,13 +80,13 @@ void MultiThreadedCPUBackend::calculate_populations_pre_impact()
 
                     // Start threads
                     boost::asio::post(
-                        calc_pool_, [&]() { calculate_neurons_state_part(pop, neuron_index, neurons_per_thread_); });
+                        *calc_pool_, [&]() { calculate_neurons_state_part(pop, neuron_index, neurons_per_thread_); });
                 },
                 population);
         }
     }
     // Wait for all threads to finish their work
-    calc_pool_.join();
+    calc_pool_->join();
 }
 
 
@@ -94,10 +98,10 @@ void MultiThreadedCPUBackend::calculate_populations_impact()
         auto messages = message_endpoint_.unload_messages<knp::core::messaging::SynapticImpactMessage>(uid);
         std::visit(
             [this, &messages](auto &pop)
-            { boost::asio::post(calc_pool_, [&pop, messages]() { process_inputs(pop, messages); }); },
+            { boost::asio::post(*calc_pool_, [&pop, messages]() { process_inputs(pop, messages); }); },
             population);
     }
-    calc_pool_.join();
+    calc_pool_->join();
 }
 
 
@@ -121,12 +125,12 @@ std::vector<knp::core::messaging::SpikeMessage> MultiThreadedCPUBackend::calcula
                         calculate_neurons_post_input_state_part(
                             pop, message, neuron_index, neurons_per_thread_, ep_mutex_);
                     };
-                    boost::asio::post(calc_pool_, do_work);
+                    boost::asio::post(*calc_pool_, do_work);
                 },
                 population);
         }
     }
-    calc_pool_.join();
+    calc_pool_->join();
     return spike_container;
 }
 
@@ -178,11 +182,11 @@ void MultiThreadedCPUBackend::calculate_projections()
                                 proj, msg, projection.messages_, get_step(), spike_index, spikes_per_thread_,
                                 ep_mutex_);
                         };
-                        boost::asio::post(calc_pool_, work);
+                        boost::asio::post(*calc_pool_, work);
                     },
                     projection.arg_);
             }
-            calc_pool_.join();
+            calc_pool_->join();
         }
     }
     // Sending messages. No reason to parallelize this, as endpoint is the bottleneck and is not threadsafe.
