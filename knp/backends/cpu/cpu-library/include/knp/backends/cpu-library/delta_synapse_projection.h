@@ -16,7 +16,7 @@
 
 /**
  * @brief Type of the message queue.
-*/
+ */
 typedef std::unordered_map<size_t, knp::core::messaging::SynapticImpactMessage> MessageQueue;
 
 /**
@@ -29,6 +29,17 @@ typedef std::unordered_map<size_t, knp::core::messaging::SynapticImpactMessage> 
 void calculate_delta_synapse_projection(
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, knp::core::MessageEndpoint &endpoint,
     MessageQueue &future_messages, size_t step_n);
+
+/**
+ * @brief Make one execution step for a projection of AdditiveSTDPDelta synapses.
+ * @param projection projection to update.
+ * @param endpoint message endpoint used for message exchange.
+ * @param future_messages message queue to process via endpoint.
+ * @param step_n execution step.
+ */
+void calculate_additive_stdp_delta_synapse_projection(
+    knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> &projection,
+    knp::core::MessageEndpoint &endpoint, MessageQueue &future_messages, size_t step_n);
 
 /**
  * @brief Make one execution step for a projection of Delta synapses.

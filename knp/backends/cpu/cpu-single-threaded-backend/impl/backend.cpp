@@ -86,7 +86,7 @@ void SingleThreadedCPUBackend::step()
                 if constexpr (
                     boost::mp11::mp_find<SupportedPopulations, T>{} == boost::mp11::mp_size<SupportedPopulations>{})
                     static_assert(knp::core::always_false_v<T>, "Population isn't supported by the CPU ST backend!");
-                std::invoke(&SingleThreadedCPUBackend::calculate_population, this, arg);
+                calculate_population(arg);
             },
             e);
     }
@@ -103,7 +103,7 @@ void SingleThreadedCPUBackend::step()
                 if constexpr (
                     boost::mp11::mp_find<SupportedProjections, T>{} == boost::mp11::mp_size<SupportedProjections>{})
                     static_assert(knp::core::always_false_v<T>, "Projection isn't supported by the CPU ST backend!");
-                std::invoke(&SingleThreadedCPUBackend::calculate_projection, this, arg, e.messages_);
+                calculate_projection(arg, e.messages_);
             },
             e.arg_);
     }
@@ -204,8 +204,17 @@ void SingleThreadedCPUBackend::calculate_projection(
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
     core::messaging::SynapticMessageQueue &message_queue)
 {
-    SPDLOG_TRACE("Calculate projection {}", std::string(projection.get_uid()));
+    SPDLOG_TRACE("Calculate Delta synapse projection {}", std::string(projection.get_uid()));
     calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, get_step());
+}
+
+
+void SingleThreadedCPUBackend::calculate_projection(
+    knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> &projection,
+    core::messaging::SynapticMessageQueue &message_queue)
+{
+    SPDLOG_TRACE("Calculate AdditiveSTDPDelta synapse projection {}", std::string(projection.get_uid()));
+    calculate_additive_stdp_delta_synapse_projection(projection, message_endpoint_, message_queue, get_step());
 }
 
 

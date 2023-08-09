@@ -22,7 +22,7 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, knp::core::MessageEndpoint &endpoint,
     MessageQueue &future_messages, size_t step_n)
 {
-    SPDLOG_TRACE("Calculating delta synapse projection");
+    SPDLOG_TRACE("Calculating Delta synapse projection data");
     std::vector<SpikeMessage> messages = endpoint.unload_messages<SpikeMessage>(projection.get_uid());
     SpikeMessage message_in = messages.empty() ? SpikeMessage{{UID{}, 0}, {}} : messages[0];
 
@@ -65,6 +65,7 @@ void calculate_delta_synapse_projection(
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, knp::core::MessageEndpoint &endpoint,
     MessageQueue &future_messages, size_t step_n)
 {
+    SPDLOG_DEBUG("Calculating Delta synapse projection");
     auto out_iter = calculate_delta_synapse_projection_data(projection, endpoint, future_messages, step_n);
     if (out_iter != future_messages.end())
     {
@@ -73,6 +74,14 @@ void calculate_delta_synapse_projection(
         endpoint.send_message(out_iter->second);
         future_messages.erase(out_iter);
     }
+}
+
+
+void calculate_additive_stdp_delta_synapse_projection(
+    knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> &projection,
+    knp::core::MessageEndpoint &endpoint, MessageQueue &future_messages, size_t step_n)
+{
+    SPDLOG_DEBUG("Calculating Delta synapse projection");
 }
 
 
