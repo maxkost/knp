@@ -152,38 +152,28 @@ void MultiThreadedCPUBackend::calculate_populations()
 void MultiThreadedCPUBackend::calculate_projections()
 {
     SPDLOG_DEBUG("Calculating projections");
-    std::vector<core::messaging::SpikeMessage> messages;
-    messages.reserve(projections_.size());
+    for (auto &projection : projections_)
     {
-        for (size_t i = 0; i < projections_.size(); ++i)
+        auto uid = std::visit([](auto &proj) { return proj.get_uid(); }, projection.arg_);
+        auto msg_buf = message_endpoint_.unload_messages<knp::core::messaging::SpikeMessage>(uid);
+        // We might want to add some preliminary function before, even if delta proj doesn't require it.
+        if (msg_buf.empty()) continue;
+        auto &msg = msg_buf[0];
+        // Looping over spikes.
+        for (size_t spike_index = 0; spike_index < msg.neuron_indexes_.size(); spike_index += spikes_per_thread_)
         {
-            auto &projection = projections_[i];
-            auto uid = std::visit([](auto &proj) { return proj.get_uid(); }, projection.arg_);
-            auto msg_buf = message_endpoint_.unload_messages<knp::core::messaging::SpikeMessage>(uid);
-            messages.push_back(
-                msg_buf.empty() ? core::messaging::SpikeMessage{{core::UID{false}, get_step()}, {}}
-                                : std::move(msg_buf[0]));
-            msg_buf.clear();
-            auto &msg = messages[i];
-            // Looping over spikes.
-            // We might want to add some preliminary function before, even if delta proj doesn't require it.
-            for (size_t spike_index = 0; spike_index < messages[i].neuron_indexes_.size();
-                 spike_index += spikes_per_thread_)
-            {
-                std::visit(
-                    [this, spike_index, &msg, &projection](auto &proj)
-                    {
-                        auto work = [&proj, &msg, &projection, spike_index, this]() {
-                            calculate_projection_part(
-                                proj, msg, projection.messages_, get_step(), spike_index, spikes_per_thread_,
-                                ep_mutex_);
-                        };
-                        calc_pool_->post(work);
-                    },
-                    projection.arg_);
-            }
-            calc_pool_->join();
+            std::visit(
+                [this, spike_index, &msg, &projection](auto &proj)
+                {
+                    auto work = [&proj, &msg, &projection, spike_index, this]() {
+                        calculate_projection_part(
+                            proj, msg, projection.messages_, get_step(), spike_index, spikes_per_thread_, ep_mutex_);
+                    };
+                    calc_pool_->post(work);
+                },
+                projection.arg_);
         }
+        calc_pool_->join();
     }
     // Sending messages. It might be possible to parallelize this as well if we use more than one endpoint.
     for (auto &projection : projections_)
