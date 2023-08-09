@@ -108,10 +108,12 @@ TEST(MultiThreadCpuSuite, SynapsesGettingTest)
 
 void fibonacci(const uint64_t begin, uint64_t iterations, uint64_t *result)
 {
+    // This function calculates last 3 digits of "begin * Fibonacci(iterations)"
     uint64_t prev[] = {begin, 0};
+    const uint64_t divider = 1000;  // 10^N, used so that only N last digits remain
     for (uint64_t i = 0; i < iterations; ++i)
     {
-        const auto tmp = (prev[0] + prev[1]) % 1000;
+        const auto tmp = (prev[0] + prev[1]) % divider;
         prev[1] = prev[0];
         prev[0] = tmp;
     }
@@ -134,17 +136,16 @@ TEST(MultiThreadCpuSuite, ThreadPoolTest)
 {
     knp::backends::multi_threaded_cpu::ThreadPoolContext pool;
     std::vector<uint64_t> result;
-    batch(pool, 10, {2, 4, 5, 7, 9}, result);
-    ASSERT_EQ(result.size(), 5);
-    ASSERT_EQ(result[0], 178);
+    const int num_iterations = 10;  // Corresponding fibonacci number is 89.
+    batch(pool, num_iterations, {2, 4, 5, 7, 9}, result);
+    ASSERT_EQ(result.size(), 5);  // All threads are finished.
+    ASSERT_EQ(result[0], 178);    // The results are correct (89 * 2).
     ASSERT_EQ(result[1], 356);
-    batch(pool, 10, {7, 5, 5, 7, 9, 11}, result);
-    ASSERT_EQ(result.size(), 6);
+
+    // Check that pool is reusable.
+    batch(pool, num_iterations, {7, 5, 5, 7, 9, 11, 8, 7}, result);
+    ASSERT_EQ(result.size(), 8);
     ASSERT_EQ(result[0], 623);
     ASSERT_EQ(result[1], 445);
-    batch(pool, 10, {3, 9, 5, 7, 7, 11, 9}, result);
-    ASSERT_EQ(result.size(), 7);
-    ASSERT_EQ(result[0], 267);
-    ASSERT_EQ(result[1], 801);
-    ASSERT_EQ(result[1], result[6]);
+    ASSERT_EQ(result[0], result[7]);  // Delayed tasks should give the same results as the first ones.
 }
