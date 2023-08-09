@@ -78,7 +78,8 @@ void MultiThreadedCPUBackend::calculate_populations_pre_impact()
                             knp::core::always_false_v<T>, "Population isn't supported by the CPU MT backend!");
 
                     // Start threads.
-                    calc_pool_->post([&]() { calculate_neurons_state_part(pop, neuron_index, neurons_per_thread_); });
+                    calc_pool_->post([&pop, this, neuron_index]()
+                                     { calculate_neurons_state_part(pop, neuron_index, neurons_per_thread_); });
                 },
                 population);
         }

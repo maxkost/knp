@@ -19,7 +19,7 @@ ThreadPoolContext::ThreadPoolContext(size_t num_threads) : pool_(num_threads)
         {
             boost::asio::post(
                 pool_,
-                [&]
+                [this]
                 {
                     std::unique_lock lock(mutex_);
                     while (usage_state_ != Usage::FINISHED)
