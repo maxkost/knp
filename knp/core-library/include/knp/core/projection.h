@@ -138,13 +138,13 @@ public:
      * @brief Get UID of the associated population from which this projection receives spikes.
      * @return UID of the presynaptic population.
      */
-    [[nodiscard]] UID get_presynaptic() const { return presynaptic_uid_; }
+    [[nodiscard]] const UID &get_presynaptic() const { return presynaptic_uid_; }
 
     /**
      * @brief Get UID of the associated population to which this projection sends signals.
      * @return UID of the postsynaptic population.
      */
-    [[nodiscard]] UID get_postsynaptic() const { return postsynaptic_uid_; }
+    [[nodiscard]] const UID &get_postsynaptic() const { return postsynaptic_uid_; }
 
     /**
      * @brief Calculate connection parameters for a synapse with the given index.

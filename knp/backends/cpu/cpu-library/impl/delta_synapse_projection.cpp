@@ -22,9 +22,9 @@ void calculate_projection_part(
     MessageQueue &future_messages, u_int64_t step_n, size_t part_start, size_t part_size, std::mutex &mutex)
 {
     SPDLOG_TRACE("Calculating delta synapse projection part");
-    const auto projection_uid = projection.get_uid();
-    const auto projection_presynaptic = projection.get_presynaptic();
-    const auto projection_postsynaptic = projection.get_postsynaptic();
+    const auto &projection_uid = projection.get_uid();
+    const auto &projection_presynaptic = projection.get_presynaptic();
+    const auto &projection_postsynaptic = projection.get_postsynaptic();
     size_t part_end = std::min(part_start + part_size, message_in.neuron_indexes_.size());
     std::vector<std::pair<uint64_t, knp::core::messaging::SynapticImpact>> container;
 
@@ -73,9 +73,9 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
     std::vector<SpikeMessage> messages = endpoint.unload_messages<SpikeMessage>(projection.get_uid());
     SpikeMessage message_in = messages.empty() ? SpikeMessage{{UID{}, 0}, {}} : messages[0];
 
-    const auto projection_uid = projection.get_uid();
-    const auto projection_presynaptic = projection.get_presynaptic();
-    const auto projection_postsynaptic = projection.get_postsynaptic();
+    const auto &projection_uid = projection.get_uid();
+    const auto &projection_presynaptic = projection.get_presynaptic();
+    const auto &projection_postsynaptic = projection.get_postsynaptic();
 
     for (const auto &neuron_index : message_in.neuron_indexes_)
     {
