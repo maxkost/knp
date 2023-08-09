@@ -56,11 +56,8 @@ void ThreadPoolContext::do_work_finished(const std::shared_ptr<size_t> &task_cou
     // Check if this was the final task.
     if (--(*task_count) == 0)
     {
-        // use_count now should be equal to 1, we decrease it to 0 and signal all threads to stop.
         if (usage_state_ == Usage::STOPPING)
-        {
             usage_state_ = Usage::FINISHED;
-        }
         else
             usage_state_ = Usage::READY;
         condition_.notify_all();
@@ -99,7 +96,7 @@ bool ThreadPoolContext::execute_next(std::unique_lock<std::mutex> &lock)
 
 void ThreadPoolContext::stop()
 {
-    std::lock_guard lock_guard(mutex_);  // Not sure if we need it.
+    std::lock_guard lock_guard(mutex_);
     if (usage_state_ == Usage::READY)
         usage_state_ = Usage::FINISHED;
     else
