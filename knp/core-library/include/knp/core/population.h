@@ -57,6 +57,17 @@ public:
      */
     Population(NeuronGenerator generator, size_t neurons_count) { add_neurons(generator, neurons_count); }
 
+    /**
+     * @brief Construct a population by running a neuron generator.
+     * @param uid population uid.
+     * @param generator neuron generator.
+     * @param neurons_count number of time to run the neuron generator.
+     */
+    Population(const knp::core::UID &uid, NeuronGenerator generator, size_t neurons_count) : base_{uid}
+    {
+        add_neurons(generator, neurons_count);
+    }
+
 public:
     /**
      * @brief Get population UID.
@@ -161,26 +172,26 @@ public:
      * @param index neuron index.
      */
     auto &operator[](const size_t index) { return neurons_[index]; }
-    
+
     /**
      * @brief Get an iterator pointing to the first element of the population.
      * @return constant population iterator.
-    */
+     */
     auto begin() const { return neurons_.cbegin(); }
     /**
      * @brief Get an iterator pointing to the first element of the population.
      * @return population iterator.
-    */
+     */
     auto begin() { return neurons_.begin(); }
     /**
      * @brief Get an iterator pointing to the last element of the population.
      * @return constant iterator.
-    */
+     */
     auto end() const { return neurons_.cend(); }
     /**
      * @brief Get an iterator pointing to the last element of the population.
      * @return iterator.
-    */
+     */
     auto end() { return neurons_.end(); }
 
 public:
@@ -191,8 +202,8 @@ public:
     size_t size() const { return neurons_.size(); }
 
 private:
-    std::vector<NeuronParameters> neurons_;
     BaseData base_;
+    std::vector<NeuronParameters> neurons_;
 };
 
 

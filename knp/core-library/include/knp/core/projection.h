@@ -63,16 +63,21 @@ public:
      * @brief Synapse generation function.
      */
     using SynapseGenerator = std::function<std::optional<Synapse>(uint32_t)>;
+    using SynapseGenerator1 = std::function<std::optional<std::tuple<SynapseParameters, uint32_t, uint32_t>>(uint32_t)>;
 
     /**
      * @brief Construct an empty projection.
      * @param presynaptic_uid UID of the presynaptic population.
      * @param postsynaptic_uid UID of the postsynaptic population.
      */
-    Projection(UID presynaptic_uid, UID postsynaptic_uid)
-        : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
-    {
-    }
+    Projection(UID presynaptic_uid, UID postsynaptic_uid);
+    /**
+     * @brief Construct an empty projection.
+     * @param uid projection uid.
+     * @param presynaptic_uid UID of the presynaptic population.
+     * @param postsynaptic_uid UID of the postsynaptic population.
+     */
+    Projection(UID uid, UID presynaptic_uid, UID postsynaptic_uid);
 
     /**
      * @brief Construct a projection by running a synapse generator a given number of times.
@@ -80,18 +85,29 @@ public:
      * @param postsynaptic_uid postsynaptic population UID.
      * @param generator function that generates a synapse.
      * @param num_iterations number of iterations to run the synapse generator.
+     * @deprecated
      */
-    Projection(UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator &generator, size_t num_iterations)
-        : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
-    {
-        for (size_t i = 0; i < num_iterations; ++i)
-        {
-            if (auto params = generator(i))
-            {
-                parameters_.emplace_back(std::move(params.value()));
-            }
-        }
-    }
+    Projection(UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator &generator, size_t num_iterations);
+
+    /**
+     * @brief Construct a projection by running a synapse generator a given number of times.
+     * @param presynaptic_uid presynaptic population UID.
+     * @param postsynaptic_uid postsynaptic population UID.
+     * @param generator function that generates a synapse parameters: parameteres, id_from, id_to.
+     * @param synapses_count number of iterations to run the synapse generator.
+     */
+    Projection(UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator1 &generator, size_t synapses_count);
+
+    /**
+     * @brief Construct a projection by running a synapse generator a given number of times.
+     * @param uid projection uid.
+     * @param presynaptic_uid presynaptic population UID.
+     * @param postsynaptic_uid postsynaptic population UID.
+     * @param generator function that generates a synapse parameters: parameteres, id_from, id_to.
+     * @param synapses_count number of iterations to run the synapse generator.
+     */
+    Projection(
+        UID uid, UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator1 &generator, size_t synapses_count);
 
 public:
     /**
@@ -123,22 +139,22 @@ public:
     /**
      * @brief Get an iterator pointing to the first element of the projection.
      * @return constant projection iterator.
-    */
+     */
     [[nodiscard]] auto begin() const { return parameters_.cbegin(); }
     /**
      * @brief Get an iterator pointing to the first element of the projection.
      * @return projection iterator.
-    */
+     */
     [[nodiscard]] auto begin() { return parameters_.begin(); }
     /**
      * @brief Get an iterator pointing to the last element of the projection.
      * @return constant iterator.
-    */
+     */
     [[nodiscard]] auto end() const { return parameters_.cend(); }
     /**
      * @brief Get an iterator pointing to the last element of the projection.
      * @return iterator.
-    */
+     */
     [[nodiscard]] auto end() { return parameters_.end(); }
 
 public:
@@ -192,16 +208,7 @@ public:
     /**
      * @brief Calculate connection parameters for all synapses in the projection.
      */
-    [[nodiscard]] std::vector<std::tuple<size_t, size_t, size_t>> get_connections() const
-    {
-        std::vector<std::tuple<size_t, size_t, size_t>> result;
-        result.reserve(parameters_.size());
-        for (size_t i = 0; i < parameters_.size(); ++i)
-        {
-            result.emplace_back(std::make_tuple(parameters_[i].id_from, i, parameters_[i].id_to));
-        }
-        return result;
-    }
+    [[nodiscard]] std::vector<std::tuple<size_t, size_t, size_t>> get_connections() const;
 
     /**
      * @brief Append connections to the existing projection.
@@ -209,18 +216,7 @@ public:
      * @param generator synapse generation function.
      * @return number of synapses added to the projection, which can be less or equal to the `num_iterations` value.
      */
-    size_t add_synapses(size_t num_iterations, const SynapseGenerator &generator)
-    {
-        const size_t starting_size = parameters_.size();
-        for (size_t i = 0; i < num_iterations; ++i)
-        {
-            if (auto data = generator(i))
-            {
-                parameters_.emplace_back(std::move(data.value()));
-            }
-        }
-        return parameters_.size() - starting_size;
-    }
+    size_t add_synapses(size_t num_iterations, const SynapseGenerator &generator);
 
     /**
      * @brief Add a set of user-defined synapses to the projection.
@@ -228,12 +224,7 @@ public:
      * @note The method might create duplicate synapses.
      * @return number of synapses added to the projection.
      */
-    size_t add_synapses(const std::vector<Synapse> &synapses)
-    {
-        const size_t starting_size = parameters_.size();
-        std::copy(synapses.begin(), synapses.end(), std::back_insert_iterator(parameters_));
-        return parameters_.size() - starting_size;
-    }
+    size_t add_synapses(const std::vector<Synapse> &synapses);
 
     /**
      * @brief Remove all synapses from the projection.

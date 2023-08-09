@@ -177,6 +177,17 @@ void Network::add_projection(typename std::decay<ProjectionType>::type &projecti
 }
 
 
+template <typename SynapseType>
+void Network::add_projection(
+    knp::core::UID projection_uid, knp::core::UID pre_population_uid, knp::core::UID post_population_uid,
+    typename knp::core::Projection<SynapseType>::SynapseGenerator1 generator, size_t synapses_count)
+{
+    SPDLOG_DEBUG("Add projection {}", std::string(projection_uid));
+    add_projection(core::AllProjectionsVariant(knp::core::Projection<SynapseType>(
+        projection_uid, pre_population_uid, post_population_uid, generator, synapses_count)));
+}
+
+
 template <typename ProjectionType>
 ProjectionType &Network::get_projection(const knp::core::UID &projection_uid)
 {
@@ -220,6 +231,9 @@ void Network::remove_projection(const core::UID &projection_uid)
     template void Network::add_projection<knp::core::Projection<synapse_type>>(                                        \
         knp::core::Projection<synapse_type> &&);                                                                       \
     template void Network::add_projection<knp::core::Projection<synapse_type>>(knp::core::Projection<synapse_type> &); \
+    template void Network::add_projection<synapse_type>(                                                               \
+        knp::core::UID, knp::core::UID, knp::core::UID,                                                                \
+        typename knp::core::Projection<synapse_type>::SynapseGenerator1, size_t);                                      \
     template knp::core::Projection<synapse_type> &Network::get_projection<knp::core::Projection<synapse_type>>(        \
         const knp::core::UID &);                                                                                       \
     template const knp::core::Projection<synapse_type> &Network::get_projection<knp::core::Projection<synapse_type>>(  \
