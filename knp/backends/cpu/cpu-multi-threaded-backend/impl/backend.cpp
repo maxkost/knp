@@ -12,6 +12,7 @@
 #include <knp/core/core.h>
 #include <knp/devices/cpu.h>
 #include <knp/meta/stringify.h>
+#include <knp/meta/variant_helpers.h>
 
 #include <spdlog/spdlog.h>
 
@@ -149,6 +150,22 @@ void MultiThreadedCPUBackend::load_projections(const std::vector<ProjectionVaria
     }
 
     SPDLOG_DEBUG("All projections loaded");
+}
+
+
+void MultiThreadedCPUBackend::load_all_projections(const std::vector<knp::core::AllProjectionsVariant> &projections)
+{
+    SPDLOG_DEBUG("Loading all projections");
+    knp::meta::load_from_container<SupportedProjections>(projections, projections_);
+    SPDLOG_DEBUG("All projections loaded");
+}
+
+
+void MultiThreadedCPUBackend::load_all_populations(const std::vector<knp::core::AllPopulationsVariant> &populations)
+{
+    SPDLOG_DEBUG("Loading all populations");
+    knp::meta::load_from_container<SupportedPopulations>(populations, populations_);
+    SPDLOG_DEBUG("All populations loaded");
 }
 
 

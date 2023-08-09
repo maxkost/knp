@@ -169,24 +169,18 @@ public:
     void load_projections(const std::vector<ProjectionVariants> &projections);
 
     /**
-     * @brief Add projections to backend. 
+     * @brief Add projections to backend.
      * @throw exception if the `projections` parameter contains unsupported projection types.
      * @param projections projections to add.
      */
-    void load_all_projections(const std::vector<knp::core::AllProjectionsVariant> &projections) override
-    {
-        load_projections(projections);
-    }
+    void load_all_projections(const std::vector<knp::core::AllProjectionsVariant> &projections) override;
 
     /**
-     * @brief Add populations to backend. 
+     * @brief Add populations to backend.
      * @throw exception if the `populations` parameter contains unsupported population types.
      * @param populations populations to add.
      */
-    void load_all_populations(const std::vector<knp::core::AllPopulationsVariant> &populations) override
-    {
-        load_populations(populations);
-    }
+    void load_all_populations(const std::vector<knp::core::AllPopulationsVariant> &populations) override;
 
 public:
     /**
@@ -304,9 +298,6 @@ protected:
         core::messaging::SynapticMessageQueue &message_queue);
 
 private:
-    void append_projection(const std::variant<SupportedProjections> &projection);
-    void append_population(const std::variant<SupportedPopulations> &population);
-
     // cppcheck-suppress unusedStructMember
     PopulationContainer populations_;
     // cppcheck-suppress unusedStructMember

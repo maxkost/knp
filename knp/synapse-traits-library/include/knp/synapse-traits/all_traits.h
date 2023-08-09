@@ -12,6 +12,7 @@
 #include <boost/mp11.hpp>
 
 #include "delta.h"
+#include "stdp.h"
 
 /**
  * @brief Synapse traits namespace.
@@ -20,12 +21,12 @@ namespace knp::synapse_traits
 {
 
 // Comma-separated list of synapses.
-#define ALL_SYNAPSES knp::synapse_traits::DeltaSynapse
+#define ALL_SYNAPSES knp::synapse_traits::DeltaSynapse, knp::synapse_traits::AdditiveSTDPDeltaSynapse
 /**
  * @brief List of synapse types.
  * @details To add a new synapse type to the list, define it in the ALL_SYNAPSES macro. For example,
  * @code{.cpp}
- * #define ALL_SYNAPSES knp::synapse_traits::DeltaSynapse, knp::synapse_traits::AdditiveSTDPSynapse
+ * #define ALL_SYNAPSES knp::synapse_traits::DeltaSynapse, knp::synapse_traits::AdditiveSTDPDeltaSynapse
  * @endcode
  */
 using AllSynapses = boost::mp11::mp_list<ALL_SYNAPSES>;

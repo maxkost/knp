@@ -12,6 +12,7 @@
 #include <knp/core/core.h>
 #include <knp/devices/cpu.h>
 #include <knp/meta/stringify.h>
+#include <knp/meta/variant_helpers.h>
 
 #include <spdlog/spdlog.h>
 
@@ -68,23 +69,6 @@ SupportedVariants convert_variant(const AllVariants &input)
     SupportedVariants result = std::visit([](auto &&arg) -> SupportedVariants { return arg; }, input);
     return result;
 }
-
-// void SingleThreadedCPUBackend::add_projections_all(const std::vector<core::AllProjectionsVariant> &projections)
-//{
-//     std::vector<size_t> indexes = get_supported_projection_indexes();
-//     for (auto &projection : projections)
-//     {
-//         if (std::find(indexes.begin(), indexes.end(), projection.index()) == indexes.end())
-//             throw(std::runtime_error("Not supported projection type"));
-
-
-//        projections_.push_back(ProjectionWrapper{
-//            convert_variant<core::AllProjectionsVariant, SingleThreadedCPUBackend::ProjectionVariants>(projection)});
-//    }
-//}
-
-
-// void SingleThreadedCPUBackend::add_populations_all(const std::vector<core::AllPopulationsVariant> &populations) {}
 
 
 void SingleThreadedCPUBackend::step()
@@ -154,6 +138,22 @@ void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVari
     }
 
     SPDLOG_DEBUG("All projections loaded");
+}
+
+
+void SingleThreadedCPUBackend::load_all_projections(const std::vector<knp::core::AllProjectionsVariant> &projections)
+{
+    SPDLOG_DEBUG("Loading all projections");
+    knp::meta::load_from_container<SupportedProjections>(projections, projections_);
+    SPDLOG_DEBUG("All projections loaded");
+}
+
+
+void SingleThreadedCPUBackend::load_all_populations(const std::vector<knp::core::AllPopulationsVariant> &populations)
+{
+    SPDLOG_DEBUG("Loading all populations");
+    knp::meta::load_from_container<SupportedPopulations>(populations, populations_);
+    SPDLOG_DEBUG("All populations loaded");
 }
 
 
