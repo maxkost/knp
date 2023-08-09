@@ -26,7 +26,8 @@
 namespace knp::backends::multi_threaded_cpu
 {
 MultiThreadedCPUBackend::MultiThreadedCPUBackend(size_t thread_count)
-    : message_endpoint_{message_bus_.create_endpoint()}, calc_pool_(std::make_unique<ThreadPool>(thread_count))
+    : message_endpoint_{message_bus_.create_endpoint()},
+      calc_pool_(std::make_unique<ThreadPool>(thread_count ? thread_count : std::thread::hardware_concurrency()))
 {
     SPDLOG_INFO("MT CPU backend instance created, threads count = {}...", thread_count);
 }
@@ -203,7 +204,7 @@ std::vector<size_t> MultiThreadedCPUBackend::get_supported_population_indexes() 
 
 void MultiThreadedCPUBackend::step()
 {
-    SPDLOG_DEBUG(std::string("Starting step #{}"), get_step());
+    SPDLOG_DEBUG("Starting step #{}.", get_step());
     calculate_populations();
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
@@ -211,7 +212,7 @@ void MultiThreadedCPUBackend::step()
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
     gad_step();
-    SPDLOG_DEBUG("Step #{} finished", get_step());
+    SPDLOG_DEBUG("Step #{} finished.", get_step());
 }
 
 

@@ -120,12 +120,13 @@ public:
 public:
     /**
      * @brief Default constructor for multi-threaded CPU backend.
+     * @param thread_count number of threads. On 0 it's calculated automatically.
      */
-    explicit MultiThreadedCPUBackend(size_t thread_count = std::thread::hardware_concurrency());
+    explicit MultiThreadedCPUBackend(size_t thread_count = 0);
     /**
      * @brief Destructor for multi-threaded CPU backend.
      */
-    ~MultiThreadedCPUBackend();
+    ~MultiThreadedCPUBackend() override;
 
 public:
     /**
