@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 
 add_subdirectory(cpu-library)
+add_subdirectory(thread_pool)
 
 file(GLOB backends LIST_DIRECTORIES true "[a-zA-Z0-9_]*-backend")
 

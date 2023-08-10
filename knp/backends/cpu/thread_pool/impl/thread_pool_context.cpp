@@ -4,7 +4,7 @@
  * @author Vartenkov A.
  * @date 08.08.2023
  */
-#include "../include/thread_pool_context.h"
+#include <knp/backends/thread_pool/thread_pool_context.h>
 
 /**
  * @brief Namespace for multi-threaded backend.

@@ -20,7 +20,7 @@ source_group(headers REGULAR_EXPRESSION "include/.*")
 
 knp_add_library("${PROJECT_NAME}"
     SHARED
-    impl/backend.cpp impl/tools/src/thread_pool_context.cpp
+    impl/backend.cpp
     ${${PROJECT_NAME}_headers}
 )
 
@@ -29,3 +29,4 @@ add_library(KNP::Backends::CPUMultiThreaded ALIAS "${PROJECT_NAME}")
 target_link_libraries("${PROJECT_NAME}" PRIVATE Boost::headers Boost::system spdlog::spdlog_header_only)
 target_link_libraries("${PROJECT_NAME}" PUBLIC KNP::Core KNP::Devices::CPU)
 target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Backends::CPU::Library)
+target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Backends::CPU::ThreadPool)

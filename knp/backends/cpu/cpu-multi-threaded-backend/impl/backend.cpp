@@ -8,6 +8,7 @@
 #include <knp/backends/cpu-library/blifat_population.h>
 #include <knp/backends/cpu-library/delta_synapse_projection.h>
 #include <knp/backends/cpu-multi-threaded/backend.h>
+#include <knp/backends/thread_pool/thread_pool.h>
 #include <knp/core/core.h>
 #include <knp/devices/cpu.h>
 #include <knp/meta/stringify.h>
@@ -19,8 +20,6 @@
 #include <vector>
 
 #include <boost/mp11.hpp>
-
-#include "tools/include/thread_pool.h"
 
 
 namespace knp::backends::multi_threaded_cpu

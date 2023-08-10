@@ -3,6 +3,8 @@
  */
 
 #include <knp/backends/cpu-multi-threaded/backend.h>
+#include <knp/backends/thread_pool/thread_pool_context.h>
+#include <knp/backends/thread_pool/thread_pool_executor.h>
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 
@@ -12,9 +14,6 @@
 #include <vector>
 
 #include <boost/bind.hpp>
-
-#include "knp/../../impl/tools/include/thread_pool_context.h"
-#include "knp/../../impl/tools/include/thread_pool_executor.h"
 
 using Population = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::PopulationVariants;
 using Projection = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::ProjectionVariants;
