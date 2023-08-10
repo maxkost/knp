@@ -31,8 +31,20 @@ namespace knp::core::messaging
 */
 using MessageVariant = boost::mp11::mp_rename<AllMessages, std::variant>;
 
+/**
+ * @brief Pack messages to envelope.
+ * @param message message to pack.
+*/
 std::vector<uint8_t> pack_to_envelope(const MessageVariant &message);
+/**
+ * @brief Extract messages from envelope.
+ * @param buffer message buffer.
+*/
 MessageVariant extract_from_envelope(const void *buffer);
+/**
+ * @brief Extract messages from envelope.
+ * @param buffer message buffer in the `uint8_t` vector format.
+*/
 MessageVariant extract_from_envelope(std::vector<uint8_t> &buffer);
 
 }  // namespace knp::core::messaging

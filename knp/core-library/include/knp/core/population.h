@@ -52,6 +52,8 @@ public:
 public:
     /**
      * @brief Construct a population by running a neuron generator.
+     * @param generator neuron generator.
+     * @param neurons_count number of time to run the neuron generator.
      */
     Population(NeuronGenerator generator, size_t neurons_count) { add_neurons(generator, neurons_count); }
 
@@ -151,19 +153,34 @@ public:
     /**
      * @brief Get parameter values of a neuron with the given index.
      * @note Constant method.
+     * @param index neuron index.
      */
     const auto &operator[](const size_t index) const { return get_neuron_parameters(index); }
     /**
      * @brief Get parameter values of a neuron with the given index.
+     * @param index neuron index.
      */
     auto &operator[](const size_t index) { return neurons_[index]; }
-    /// TODO: make iterator class.
+    
+    /**
+     * @brief Get an iterator pointing to the first element of the population.
+     * @return constant population iterator.
+    */
     auto begin() const { return neurons_.cbegin(); }
-    /// TODO: make iterator class.
+    /**
+     * @brief Get an iterator pointing to the first element of the population.
+     * @return population iterator.
+    */
     auto begin() { return neurons_.begin(); }
-    /// TODO: make iterator class.
+    /**
+     * @brief Get an iterator pointing to the last element of the population.
+     * @return constant iterator.
+    */
     auto end() const { return neurons_.cend(); }
-    /// TODO: make iterator class.
+    /**
+     * @brief Get an iterator pointing to the last element of the population.
+     * @return iterator.
+    */
     auto end() { return neurons_.end(); }
 
 public:

@@ -199,44 +199,42 @@ public:
      * @brief Get an iterator pointing to the first element of the population loaded to backend.
      * @return population iterator.
      */
-    PopulationIterator begin_populations();
-
+    [[nodiscard]] PopulationIterator begin_populations();
     /**
      * @brief Get an iterator pointing to the first element of the population loaded to backend.
      * @return constant population iterator.
      */
-    PopulationConstIterator begin_populations() const;
+    [[nodiscard]] PopulationConstIterator begin_populations() const;
     /**
      * @brief Get an iterator pointing to the last element of the population.
      * @return iterator.
      */
-    PopulationIterator end_populations();
+    [[nodiscard]] PopulationIterator end_populations();
     /**
      * @brief Get a constant iterator pointing to the last element of the population.
      * @return iterator.
      */
-    PopulationConstIterator end_populations() const;
-
+    [[nodiscard]] PopulationConstIterator end_populations() const;
     /**
      * @brief Get an iterator pointing to the first element of the projection loaded to backend.
      * @return projection iterator.
      */
-    ProjectionIterator begin_projections();
+    [[nodiscard]] ProjectionIterator begin_projections();
     /**
      * @brief Get an iterator pointing to the first element of the projection loaded to backend.
      * @return constant projection iterator.
      */
-    ProjectionConstIterator begin_projections() const;
+    [[nodiscard]] ProjectionConstIterator begin_projections() const;
     /**
      * @brief Get an iterator pointing to the last element of the projection.
      * @return iterator.
      */
-    ProjectionIterator end_projections();
+    [[nodiscard]] ProjectionIterator end_projections();
     /**
      * @brief Get a constant iterator pointing to the last element of the projection.
      * @return iterator.
      */
-    ProjectionConstIterator end_projections() const;
+    [[nodiscard]] ProjectionConstIterator end_projections() const;
 
 public:
     /**
