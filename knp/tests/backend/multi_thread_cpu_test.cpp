@@ -34,7 +34,7 @@ public:
 
 TEST(MultiThreadCpuSuite, SmallestNetwork)
 {
-    // Create a single neuron network: input -> input_projection -> population <=> loop_projection
+    // Create a single neuron network: input -> input_projection -> population <=> loop_projection.
 
     namespace kt = knp::testing;
     kt::MTestingBack backend;
@@ -54,7 +54,7 @@ TEST(MultiThreadCpuSuite, SmallestNetwork)
     knp::core::UID in_channel_uid;
     knp::core::UID out_channel_uid;
 
-    // Create input and output
+    // Create input and output.
     backend.subscribe<knp::core::messaging::SpikeMessage>(input_uid, {in_channel_uid});
     endpoint.subscribe<knp::core::messaging::SpikeMessage>(out_channel_uid, {population.get_uid()});
 
@@ -64,7 +64,7 @@ TEST(MultiThreadCpuSuite, SmallestNetwork)
 
     for (knp::core::messaging::Step step = 0; step < 20; ++step)
     {
-        // Send inputs on steps 0, 5, 10, 15
+        // Send inputs on steps 0, 5, 10, 15.
         if (step % 5 == 0)
         {
             knp::core::messaging::SpikeMessage message{{in_channel_uid, 0}, {0}};
@@ -73,11 +73,11 @@ TEST(MultiThreadCpuSuite, SmallestNetwork)
         backend.step();
         endpoint.receive_all_messages();
         auto output = endpoint.unload_messages<knp::core::messaging::SpikeMessage>(out_channel_uid);
-        // Write up the steps where the network sends a spike
+        // Write up the steps where the network sends a spike.
         if (!output.empty()) results.push_back(step);
     }
 
-    // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
+    // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop).
     const std::vector<knp::core::messaging::Step> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
     ASSERT_EQ(results, expected_results);
 }
@@ -107,9 +107,9 @@ TEST(MultiThreadCpuSuite, SynapsesGettingTest)
 
 void fibonacci(const uint64_t begin, uint64_t iterations, uint64_t *result)
 {
-    // This function calculates last 3 digits of "begin * Fibonacci(iterations)"
+    // This function calculates last 3 digits of "begin * Fibonacci(iterations)".
     uint64_t prev[] = {begin, 0};
-    const uint64_t divider = 1000;  // 10^N, used so that only N last digits remain
+    const uint64_t divider = 1000;  // 10^N, used so that only N last digits remain.
     for (uint64_t i = 0; i < iterations; ++i)
     {
         const auto tmp = (prev[0] + prev[1]) % divider;
