@@ -31,7 +31,9 @@
  */
 namespace knp::backends::multi_threaded_cpu
 {
-
+/**
+ * @brief Thread pool class, use "post" to queue a task.
+ */
 class ThreadPool;
 
 /**

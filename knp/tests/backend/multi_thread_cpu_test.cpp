@@ -11,9 +11,9 @@
 #include <generators.h>
 #include <tests_common.h>
 
+#include <functional>
 #include <vector>
 
-#include <boost/bind.hpp>
 
 using Population = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::PopulationVariants;
 using Projection = knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::ProjectionVariants;
@@ -127,7 +127,7 @@ void batch(
     knp::backends::multi_threaded_cpu::ThreadPoolExecutor executor(pool);
     result.resize(start_values.size(), 0);
     for (size_t i = 0; i < start_values.size(); ++i)
-        boost::asio::post(executor, boost::bind(fibonacci, start_values[i], iterations, &result[i]));
+        boost::asio::post(executor, std::bind(fibonacci, start_values[i], iterations, &result[i]));
 }
 
 
