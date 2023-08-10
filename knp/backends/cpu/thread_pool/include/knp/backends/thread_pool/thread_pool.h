@@ -33,13 +33,15 @@ public:
     /**
      * @brief Add a task to the pool.
      * @tparam Func functional type.
-     * @param task task to be run in the pool.
+     * @tparam Args function arguments
+     * @param func task to be run in the pool.
+     * @param args function arguments, make sure not to forget to use std::ref when needed.
      * @note Not blocking.
      */
-    template <class Func>
-    void post(Func task)
+    template <class Func, typename... Args>
+    void post(Func func, Args... args)
     {
-        boost::asio::post(executor_, task);
+        boost::asio::post(executor_, std::bind(func, args...));
     }
 
     /**

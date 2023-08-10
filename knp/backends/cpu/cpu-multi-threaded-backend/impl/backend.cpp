@@ -77,8 +77,7 @@ void MultiThreadedCPUBackend::calculate_populations_pre_impact()
                             knp::core::always_false_v<T>, "Population isn't supported by the CPU MT backend!");
 
                     // Start threads.
-                    calc_pool_->post([&pop, this, neuron_index]()
-                                     { calculate_neurons_state_part(pop, neuron_index, neurons_per_thread_); });
+                    calc_pool_->post(calculate_neurons_state_part, std::ref(pop), neuron_index, neurons_per_thread_);
                 },
                 population);
         }
@@ -95,8 +94,7 @@ void MultiThreadedCPUBackend::calculate_populations_impact()
         auto uid = std::visit([](auto &population) { return population.get_uid(); }, population);
         auto messages = message_endpoint_.unload_messages<knp::core::messaging::SynapticImpactMessage>(uid);
         std::visit(
-            [this, &messages](auto &pop) { calc_pool_->post([&pop, messages]() { process_inputs(pop, messages); }); },
-            population);
+            [this, &messages](auto &pop) { calc_pool_->post(process_inputs, std::ref(pop), messages); }, population);
     }
     calc_pool_->join();
 }
@@ -118,11 +116,9 @@ std::vector<knp::core::messaging::SpikeMessage> MultiThreadedCPUBackend::calcula
             std::visit(
                 [this, &message, neuron_index](auto &pop)
                 {
-                    auto do_work = [this, &message, &pop, neuron_index]() {
-                        calculate_neurons_post_input_state_part(
-                            pop, message, neuron_index, neurons_per_thread_, ep_mutex_);
-                    };
-                    calc_pool_->post(do_work);
+                    calc_pool_->post(
+                        calculate_neurons_post_input_state_part, std::ref(pop), std::ref(message), neuron_index,
+                        neurons_per_thread_, std::ref(ep_mutex_));
                 },
                 population);
         }
@@ -166,11 +162,9 @@ void MultiThreadedCPUBackend::calculate_projections()
             std::visit(
                 [this, spike_index, &msg, &projection](auto &proj)
                 {
-                    auto work = [&proj, &msg, &projection, spike_index, this]() {
-                        calculate_projection_part(
-                            proj, msg, projection.messages_, get_step(), spike_index, spikes_per_thread_, ep_mutex_);
-                    };
-                    calc_pool_->post(work);
+                    calc_pool_->post(
+                        calculate_projection_part, std::ref(proj), msg, std::ref(projection.messages_), get_step(),
+                        spike_index, spikes_per_thread_, std::ref(ep_mutex_));
                 },
                 projection.arg_);
         }
