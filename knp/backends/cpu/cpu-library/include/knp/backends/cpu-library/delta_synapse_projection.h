@@ -16,8 +16,25 @@
 
 /**
  * @brief Type of the message queue.
-*/
-typedef std::unordered_map<size_t, knp::core::messaging::SynapticImpactMessage> MessageQueue;
+ */
+typedef std::unordered_map<uint64_t, knp::core::messaging::SynapticImpactMessage> MessageQueue;
+
+
+/**
+ * @brief Process a part of a spike message for a projection.
+ * @param projection projection that receives the message.
+ * @param message_in spike message for the projection.
+ * @param future_messages future messages queue.
+ * @param step_n current step.
+ * @param part_start index of the starting spike.
+ * @param part_size number of spikes to process.
+ * @param mutex mutex.
+ */
+void calculate_projection_part(
+    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
+    const knp::core::messaging::SpikeMessage &message_in, MessageQueue &future_messages, u_int64_t step_n,
+    size_t part_start, size_t part_size, std::mutex &mutex);
+
 
 /**
  * @brief Make one execution step for a projection of Delta synapses.
