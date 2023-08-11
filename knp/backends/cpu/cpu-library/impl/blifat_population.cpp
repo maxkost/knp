@@ -18,7 +18,7 @@ using knp::core::messaging::SynapticImpactMessage;
 
 void impact_neuron(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron>::NeuronParameters &neuron,
-    knp::synapse_traits::OutputType synapse_type, float impact_value)
+    const knp::synapse_traits::OutputType &synapse_type, float impact_value)
 {
     switch (synapse_type)
     {
@@ -34,7 +34,7 @@ void impact_neuron(
         case knp::synapse_traits::OutputType::DOPAMINE:
             break;
         case knp::synapse_traits::OutputType::BLOCKING:
-            neuron.total_blocking_period_ = impact_value;
+            neuron.total_blocking_period_ = static_cast<unsigned int>(impact_value);
             break;
         default:
             const auto error_message = "Unknown synapse type: " + std::to_string(static_cast<int>(synapse_type));
@@ -51,13 +51,9 @@ void calculate_neuron_state(knp::core::Population<knp::neuron_traits::BLIFATNeur
     neuron.inhibitory_conductance_ *= neuron.inhibitory_conductance_decay_;
 
     if (neuron.bursting_phase_ && !--neuron.bursting_phase_)
-    {
         neuron.potential_ = neuron.potential_ * neuron.potential_decay_ + neuron.reflexive_weight_;
-    }
     else
-    {
         neuron.potential_ *= neuron.potential_decay_;
-    }
 }
 
 
@@ -75,13 +71,15 @@ void process_inputs(
     }
 }
 
-void calculate_neurons_state(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population,
-    const std::vector<SynapticImpactMessage> &messages)
+
+void calculate_neurons_state_part(
+    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, size_t part_start, size_t part_size)
 {
-    SPDLOG_TRACE("Calculate neurons state");
-    for (auto &neuron : population)
+    size_t part_end = std::min(part_start + part_size, population.size());
+    SPDLOG_TRACE("Calculate neurons state part");
+    for (size_t i = part_start; i < part_end; ++i)
     {
+        auto &neuron = population[i];
         ++neuron.n_time_steps_since_last_firing_;
         if (neuron.total_blocking_period_)
         {
@@ -92,7 +90,14 @@ void calculate_neurons_state(
             calculate_neuron_state(neuron);
         }
     }
+}
 
+
+void calculate_neurons_state(
+    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population,
+    const std::vector<SynapticImpactMessage> &messages)
+{
+    calculate_neurons_state_part(population, 0, population.size());
     process_inputs(population, messages);
 }
 
@@ -131,16 +136,33 @@ bool calculate_neuron_post_input_state(
 }
 
 
+void calculate_neurons_post_input_state_part(
+    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::messaging::SpikeMessage &message,
+    size_t part_start, size_t part_size, std::mutex &mutex)
+{
+    SPDLOG_TRACE("Calculate neurons post input state part");
+    size_t part_end = std::min(part_start + part_size, population.size());
+    std::vector<size_t> output;
+    for (size_t i = part_start; i < part_end; ++i)
+        if (!population[i].total_blocking_period_ && calculate_neuron_post_input_state(population[i]))
+            output.push_back(i);
+
+    // Updating common neuron indexes.
+    std::lock_guard<std::mutex> lock(mutex);
+    message.neuron_indexes_.reserve(message.neuron_indexes_.size() + output.size());
+    message.neuron_indexes_.insert(message.neuron_indexes_.end(), output.begin(), output.end());
+}
+
+
 void calculate_neurons_post_input_state(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population,
     knp::core::messaging::SpikeData &neuron_indexes)
 {
-    SPDLOG_TRACE("Calculate neurons post input state");
-    // can be made parallel
-    for (size_t i = 0; i < population.size(); ++i)
+    SPDLOG_TRACE("Calculate neurons post input state part");
+    for (size_t index = 0; index < population.size(); ++index)
     {
-        if (!population[i].total_blocking_period_ && calculate_neuron_post_input_state(population[i]))
-            neuron_indexes.push_back(i);
+        if (!population[index].total_blocking_period_ && calculate_neuron_post_input_state(population[index]))
+            neuron_indexes.push_back(index);
     }
 }
 
@@ -149,7 +171,7 @@ knp::core::messaging::SpikeData calculate_blifat_population_data(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint)
 {
     SPDLOG_DEBUG("Calculating BLIFAT population {}", std::string{population.get_uid()});
-    // This whole function might be optimizable if we find a way to not loop over the whole population
+    // This whole function might be optimizable if we find a way to not loop over the whole population.
     std::vector<SynapticImpactMessage> messages = endpoint.unload_messages<SynapticImpactMessage>(population.get_uid());
 
     calculate_neurons_state(population, messages);

@@ -31,6 +31,10 @@
  */
 namespace knp::backends::multi_threaded_cpu
 {
+/**
+ * @brief Thread pool class, use "post" to queue a task.
+ */
+class ThreadPool;
 
 /**
  * @brief The MultiThreadedCPUBackend class is a definition of an interface to the multi-threaded CPU backend.
@@ -118,13 +122,13 @@ public:
 public:
     /**
      * @brief Default constructor for multi-threaded CPU backend.
-     * @param thread_count number of threads.
+     * @param thread_count number of threads. On 0 it's calculated automatically.
      */
-    explicit MultiThreadedCPUBackend(size_t thread_count = boost::asio::detail::default_thread_pool_size());
+    explicit MultiThreadedCPUBackend(size_t thread_count = 0);
     /**
      * @brief Destructor for multi-threaded CPU backend.
      */
-    ~MultiThreadedCPUBackend();
+    ~MultiThreadedCPUBackend() override;
 
 public:
     /**
@@ -189,44 +193,42 @@ public:
      * @brief Get an iterator pointing to the first element of the population loaded to backend.
      * @return population iterator.
      */
-    PopulationIterator begin_populations();
-
+    [[nodiscard]] PopulationIterator begin_populations();
     /**
      * @brief Get an iterator pointing to the first element of the population loaded to backend.
      * @return constant population iterator.
      */
-    PopulationConstIterator begin_populations() const;
+    [[nodiscard]] PopulationConstIterator begin_populations() const;
     /**
      * @brief Get an iterator pointing to the last element of the population.
      * @return iterator.
      */
-    PopulationIterator end_populations();
+    [[nodiscard]] PopulationIterator end_populations();
     /**
      * @brief Get a constant iterator pointing to the last element of the population.
      * @return iterator.
      */
-    PopulationConstIterator end_populations() const;
-
+    [[nodiscard]] PopulationConstIterator end_populations() const;
     /**
      * @brief Get an iterator pointing to the first element of the projection loaded to backend.
      * @return projection iterator.
      */
-    ProjectionIterator begin_projections();
+    [[nodiscard]] ProjectionIterator begin_projections();
     /**
      * @brief Get an iterator pointing to the first element of the projection loaded to backend.
      * @return constant projection iterator.
      */
-    ProjectionConstIterator begin_projections() const;
+    [[nodiscard]] ProjectionConstIterator begin_projections() const;
     /**
      * @brief Get an iterator pointing to the last element of the projection.
      * @return iterator.
      */
-    ProjectionIterator end_projections();
+    [[nodiscard]] ProjectionIterator end_projections();
     /**
      * @brief Get a constant iterator pointing to the last element of the projection.
      * @return iterator.
      */
-    ProjectionConstIterator end_projections() const;
+    [[nodiscard]] ProjectionConstIterator end_projections() const;
 
 public:
     /**
@@ -269,12 +271,23 @@ public:
     {
         return message_endpoint_.subscribe<MessageType>(receiver, senders);
     }
+
     /**
      * @brief Get message endpoint.
      * @return message endpoint.
      */
-    const core::MessageEndpoint &get_message_endpoint() const override { return message_endpoint_; }
-    core::MessageEndpoint &get_message_endpoint() override { return message_endpoint_; }
+    [[nodiscard]] const core::MessageEndpoint &get_message_endpoint() const override { return message_endpoint_; }
+    [[nodiscard]] core::MessageEndpoint &get_message_endpoint() override { return message_endpoint_; }
+
+    /**
+     * @brief Calculates all populations.
+     */
+    void calculate_populations();
+
+    /**
+     * @brief Calculates all projections.
+     */
+    void calculate_projections();
 
 protected:
     /**
@@ -282,29 +295,24 @@ protected:
      */
     void init() override;
 
-    /**
-     * @brief Calculate population of BLIFAT neurons.
-     * @note Population will be changed during calculation.
-     * @param population population of BLIFAT neurons to calculate.
-     */
-    void calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population);
-    /**
-     * @brief Calculate projection of Delta synapses.
-     * @note Projection will be changed during calculation.
-     * @param projection projection of Delta synapses to calculate.
-     * @param message_queue message queue to send to projection for calculation.
-     */
-    void calculate_projection(
-        knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
-        core::messaging::SynapticMessageQueue &message_queue);
-
 private:
+    // Calculating pre-message neuron state, one thread per neurons_per_thread_ neurons or less.
+    void calculate_populations_pre_impact();
+    // Processing messages, one thread per population, probably very hard to go deeper unless atomic neuron params.
+    void calculate_populations_impact();
+    // Calculating post input changes and outputs.
+    std::vector<knp::core::messaging::SpikeMessage> calculate_populations_post_impact();
+
     // cppcheck-suppress unusedStructMember
     PopulationContainer populations_;
     // cppcheck-suppress unusedStructMember
     ProjectionContainer projections_;
+    // cppcheck-suppress unusedStructMember
+    const size_t neurons_per_thread_ = 1000;
+    // cppcheck-suppress unusedStructMember
+    const size_t spikes_per_thread_ = 1000;
     core::MessageEndpoint message_endpoint_;
-    boost::asio::thread_pool calc_pool_;
+    std::unique_ptr<ThreadPool> calc_pool_;
     std::mutex ep_mutex_;
 };
 
