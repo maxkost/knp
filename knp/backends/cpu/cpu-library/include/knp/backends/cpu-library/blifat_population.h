@@ -40,11 +40,11 @@ void calculate_blifat_population(
 
 
 /**
- * @brief partial pre impact population calculation.
- * @param population the population to be updated.
- * @param part_start first neuron index to be calculated.
- * @param part_size number of neurons to be calculated in a single call.
- * @note Used for parallelization.
+ * @brief Partially calculate population before it receives synaptic impact messages.
+ * @param population population to update.
+ * @param part_start index of the first neuron to calculate.
+ * @param part_size number of neurons to calculate in a single call.
+ * @note The method if used for parallelization.
  */
 void calculate_neurons_state_part(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, size_t part_start, size_t part_size);
@@ -52,9 +52,9 @@ void calculate_neurons_state_part(
 
 /**
  * @brief Process messages sent to the current population.
- * @param population the population to be updated.
- * @param messages synaptic impacts sent to the population.
- * @note Used for parallelization. See later if this function serves as a bottleneck.
+ * @param population population to update.
+ * @param messages synaptic impact messages sent to the population.
+ * @note The method is used for parallelization. See later if this method serves as a bottleneck.
  */
 void process_inputs(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population,
@@ -62,13 +62,13 @@ void process_inputs(
 
 
 /**
- * @brief Partially calculate neurons states after impact.
- * @param population the population to be updated.
- * @param message output spike message that this function updates.
- * @param part_start first neuron index to be updated.
- * @param part_size number of neurons to be updated in a single call.
+ * @brief Partially calculate population after it receives synaptic impact messages.
+ * @param population population to update.
+ * @param message output spike message to update.
+ * @param part_start index of the first neuron to update.
+ * @param part_size number of neurons to calculate in a single call.
  * @param mutex mutex that is locked to update a message.
- * @note This function is used for parallelization.
+ * @note This method is used for parallelization.
  */
 void calculate_neurons_post_input_state_part(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::messaging::SpikeMessage &message,

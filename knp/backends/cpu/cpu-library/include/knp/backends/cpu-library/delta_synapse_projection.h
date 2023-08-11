@@ -22,9 +22,9 @@ typedef std::unordered_map<uint64_t, knp::core::messaging::SynapticImpactMessage
 
 /**
  * @brief Process a part of a spike message for a projection.
- * @param projection projection that receives the message.
- * @param message_in spike message for the projection.
- * @param future_messages future messages queue.
+ * @param projection projection to receive the message.
+ * @param message_in spike message to send to projection.
+ * @param future_messages queue of future messages.
  * @param step_n current step.
  * @param part_start index of the starting spike.
  * @param part_size number of spikes to process.

@@ -23,9 +23,9 @@ namespace knp::backends::multi_threaded_cpu
 {
 
 /**
- * @brief Thread pool context. A service class used for creating pool executors.
- * @note context lifetime should exceed lifetimes of its executors.
- * @note move and assignment are disabled.
+ * @brief The ThreadPoolContext class is a service class used for creating pool executors.
+ * @note Context lifetime should exceed lifetimes of its executors.\n 
+ * Move and assignment are disabled.
  */
 class ThreadPoolContext
 {
@@ -37,7 +37,8 @@ public:
     explicit ThreadPoolContext(size_t num_threads = std::thread::hardware_concurrency());
 
     /**
-     * @brief Destructor, blocking. Sends signal for threads to finish working, then joins all worker threads.
+     * @brief Blocking destructor.
+     * @note The destructor sends signal for threads to finish working, then joins all worker threads.
      */
     ~ThreadPoolContext();
 
