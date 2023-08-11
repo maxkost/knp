@@ -15,6 +15,7 @@
 #include <functional>
 #include <optional>
 #include <tuple>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -23,6 +24,7 @@
  */
 namespace knp::core
 {
+
 /**
  * @brief The Projection class is a definition of similar connections between the neurons of two populations.
  * @note This class should later be divided to interface and implementation classes.
@@ -308,6 +310,24 @@ public:
     bool is_locked() { return is_locked_; }
 
 private:
+    template <typename T>
+    struct synapse_specific_parameters
+    {
+    };
+
+    template <template <typename> typename Rule, typename SynapseT>
+    struct synapse_specific_parameters<knp::synapse_traits::STDP<Rule, SynapseT>>
+    {
+        enum class ProcessingType
+        {
+            STDPOnly,
+            STDPAndSpike
+        };
+
+        std::unordered_map<core::UID, ProcessingType, core::uid_hash> stdp_populations_;
+    };
+
+private:
     BaseData base_;
 
     /**
@@ -331,6 +351,8 @@ private:
      * @brief Container of synapse parameters.
      */
     std::vector<Synapse> parameters_;
+
+    synapse_specific_parameters<SynapseType> common_parameters_;
 };
 
 
