@@ -1,5 +1,7 @@
 /**
- * Created by Vartenkov An. on 07.04.23.
+ * @brief Single threading backend test.
+ * @author Vartenkov An.
+ * @date 07.04.23.
  */
 
 #include <knp/backends/cpu-single-threaded/backend.h>

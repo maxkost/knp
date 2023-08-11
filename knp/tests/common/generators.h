@@ -1,5 +1,5 @@
 /**
- * @brief Common backends generators used for tests.
+ * @brief Common generators used for tests.
  * @author Artiom N.
  * @date 23.06.2023
  */
@@ -14,6 +14,9 @@
 #include <optional>
 
 
+/**
+ * @brief Test namespace.
+ */
 namespace knp::testing
 {
 using DeltaProjection = knp::core::Projection<knp::synapse_traits::DeltaSynapse>;
