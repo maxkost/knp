@@ -124,7 +124,7 @@ public:
     /**
      * @brief Default constructor for multi-threaded CPU backend.
      * @param thread_count number of threads. 
-     * @note If `thread_count` quals `0`, then the number of threads is calculated automatically.
+     * @note If `thread_count` equals `0`, then the number of threads is calculated automatically.
      */
     explicit MultiThreadedCPUBackend(size_t thread_count = 0);
     /**
