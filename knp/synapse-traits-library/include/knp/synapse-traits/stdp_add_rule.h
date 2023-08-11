@@ -14,10 +14,20 @@
  */
 namespace knp::synapse_traits
 {
+
 /**
- * @brief Structure for STDP add rule parameters.
+ * @brief STDP additive rule parameters.
  */
 template <typename SynapseType>
-struct STDPAdditiveRule;
+struct STDPAdditiveRule
+{
+    using LinkedSynapseType = SynapseType;
+
+    /**
+     * @brief STDP weight to add.
+     */
+    // cppcheck-suppress unusedStructMember
+    float weight_;
+};
 
 }  // namespace knp::synapse_traits

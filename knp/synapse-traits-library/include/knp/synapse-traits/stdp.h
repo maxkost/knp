@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <set>
+
 #include "delta.h"
 #include "stdp_add_rule.h"
 #include "type_traits.h"
@@ -18,29 +20,53 @@ namespace knp::synapse_traits
 {
 
 /**
- * @brief Delta synapse with STDP additive rule type.
+ * @brief Common template for the all STDP implementations.
  */
-using AdditiveSTDPDeltaSynapse = STDPAdditiveRule<DeltaSynapse>;
+template <template <typename> typename Rule, typename Synapse>
+struct STDP;
+
 
 /**
- * @brief Delta synapse with STDP add rule.
+ * @brief Synapse with STDP rule.
+ * @details STDP rule is a template, because sometimes parameters can be different in the
+ *  different rule/synapse combinations. This allows make that.
+ * @code
+   template<>
+   struct STDPAdditiveRule<DeltaSynapse>
+   {
+        using LinkedSynapseType = DeltaSynapse;
+
+        float weight1_;
+        float weight2_;
+    };
+ * @endcode
  */
-template <>
-struct synapse_parameters<AdditiveSTDPDeltaSynapse>
+template <template <typename> typename Rule, typename Synapse>
+struct synapse_parameters<STDP<Rule, Synapse>>
 {
-    synapse_parameters() : weight_(0.0f) {}
-
-    explicit synapse_parameters(float weight) : weight_(weight) {}
+    /**
+     * @brief Specific STDP rule type.
+     */
+    using RuleType = Rule<Synapse>;
+    /**
+     * @brief Synapse model type.
+     */
+    using SynapseType = Synapse;
 
     /**
-     * @brief Synapse parameters.
+     * @brief STDP rule parameters.
      */
-    synapse_parameters<DeltaSynapse> synapse_;
-
+    RuleType rule_;
     /**
-     * @brief STDP weight to add.
+     * @brief Synapse model parameters.
      */
-    float weight_;
+    synapse_parameters<SynapseType> synapse_;
 };
+
+
+/**
+ * @brief Delta synapse with STDP additive rule type.
+ */
+using AdditiveSTDPDeltaSynapse = STDP<STDPAdditiveRule, DeltaSynapse>;
 
 }  // namespace knp::synapse_traits
