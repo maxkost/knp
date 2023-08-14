@@ -17,7 +17,7 @@
 namespace knp::backends::multi_threaded_cpu
 {
 /**
- * @brief The ThreadPoolExecutor class is a deifintion of the interface to thread pool used for thread execution.
+ * @brief The ThreadPoolExecutor class is a definition of the interface to thread pool used for thread execution.
  * @note Use `boost::asio::post(executor, task)` to queue more tasks.\n
  * Use `join()` to wait for task execution.
  */
