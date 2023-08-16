@@ -64,7 +64,7 @@ void MultiThreadedCPUBackend::calculate_populations_pre_impact()
     for (auto &population : populations_)
     {
         auto pop_size = std::visit([](auto &pop) { return pop.size(); }, population);
-        for (size_t neuron_index = 0; neuron_index < pop_size; neuron_index += neurons_per_thread_)
+        for (size_t neuron_index = 0; neuron_index < pop_size; neuron_index += population_part_size_)
         {
             std::visit(
                 [this, neuron_index](auto &pop)
@@ -77,7 +77,7 @@ void MultiThreadedCPUBackend::calculate_populations_pre_impact()
                             knp::core::always_false_v<T>, "Population isn't supported by the CPU MT backend!");
 
                     // Start threads.
-                    calc_pool_->post(calculate_neurons_state_part, std::ref(pop), neuron_index, neurons_per_thread_);
+                    calc_pool_->post(calculate_neurons_state_part, std::ref(pop), neuron_index, population_part_size_);
                 },
                 population);
         }
@@ -111,14 +111,14 @@ std::vector<knp::core::messaging::SpikeMessage> MultiThreadedCPUBackend::calcula
         message.header_.sender_uid_ = std::visit([](auto &population) { return population.get_uid(); }, population);
 
         size_t population_size = std::visit([](auto &population) { return population.size(); }, population);
-        for (size_t neuron_index = 0; neuron_index < population_size; neuron_index += neurons_per_thread_)
+        for (size_t neuron_index = 0; neuron_index < population_size; neuron_index += population_part_size_)
         {
             std::visit(
                 [this, &message, neuron_index](auto &pop)
                 {
                     calc_pool_->post(
                         calculate_neurons_post_input_state_part, std::ref(pop), std::ref(message), neuron_index,
-                        neurons_per_thread_, std::ref(ep_mutex_));
+                        population_part_size_, std::ref(ep_mutex_));
                 },
                 population);
         }
@@ -153,18 +153,21 @@ void MultiThreadedCPUBackend::calculate_projections()
     {
         auto uid = std::visit([](auto &proj) { return proj.get_uid(); }, projection.arg_);
         auto msg_buf = message_endpoint_.unload_messages<knp::core::messaging::SpikeMessage>(uid);
+
         // We might want to add some preliminary function before, even if delta proj doesn't require it.
         if (msg_buf.empty()) continue;
-        auto &msg = msg_buf[0];
-        // Looping over spikes.
-        for (size_t spike_index = 0; spike_index < msg.neuron_indexes_.size(); spike_index += spikes_per_thread_)
+
+        // Looping over synapses.
+        auto message_data = convert_spikes(msg_buf[0]);
+        auto proj_size = std::visit([](const auto &proj) { return proj.size(); }, projection.arg_);
+        for (size_t synapse_index = 0; synapse_index < proj_size; synapse_index += projection_part_size_)
         {
             std::visit(
-                [this, spike_index, &msg, &projection](auto &proj)
+                [this, synapse_index, &message_data, &projection](auto &proj)
                 {
                     calc_pool_->post(
-                        calculate_projection_part, std::ref(proj), msg, std::ref(projection.messages_), get_step(),
-                        spike_index, spikes_per_thread_, std::ref(ep_mutex_));
+                        calculate_projection_part, std::ref(proj), message_data, std::ref(projection.messages_),
+                        get_step(), synapse_index, projection_part_size_, std::ref(ep_mutex_));
                 },
                 projection.arg_);
         }

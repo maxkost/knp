@@ -123,7 +123,7 @@ public:
 public:
     /**
      * @brief Default constructor for multi-threaded CPU backend.
-     * @param thread_count number of threads. 
+     * @param thread_count number of threads.
      * @note If `thread_count` equals `0`, then the number of threads is calculated automatically.
      */
     explicit MultiThreadedCPUBackend(size_t thread_count = 0);
@@ -309,7 +309,7 @@ protected:
     void init() override;
 
 private:
-    // Calculating pre-message neuron state, one thread per neurons_per_thread_ neurons or less.
+    // Calculating pre-message neuron state, one thread per population_part_size_ neurons or less.
     void calculate_populations_pre_impact();
     // Processing messages, one thread per population, probably very hard to go deeper unless atomic neuron params.
     void calculate_populations_impact();
@@ -318,8 +318,8 @@ private:
 
     PopulationContainer populations_;
     ProjectionContainer projections_;
-    const size_t neurons_per_thread_ = 1000;
-    const size_t spikes_per_thread_ = 1000;
+    const size_t population_part_size_ = 1000;
+    const size_t projection_part_size_ = 1000;
     core::MessageEndpoint message_endpoint_;
     std::unique_ptr<ThreadPool> calc_pool_;
     std::mutex ep_mutex_;

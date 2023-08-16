@@ -146,7 +146,7 @@ public:
      * @brief Count number of synapses in the projection.
      * @return number of synapses.
      */
-    [[nodiscard]] size_t size() { return parameters_.size(); }
+    [[nodiscard]] size_t size() const { return parameters_.size(); }
 
     /**
      * @brief Get UID of the associated population from which this projection receives spikes.
