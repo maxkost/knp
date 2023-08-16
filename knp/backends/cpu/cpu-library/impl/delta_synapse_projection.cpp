@@ -41,6 +41,9 @@ void calculate_projection_part(
     }
     // Add impacts to future messages queue, it is a shared resource.
     std::lock_guard lock_guard(mutex);
+    const auto &projection_uid = projection.get_uid();
+    const auto &presynaptic_uid = projection.get_presynaptic();
+    const auto &postsynaptic_uid = projection.get_postsynaptic();
     for (auto value : container)
     {
         auto iter = future_messages.find(value.first);
@@ -49,10 +52,7 @@ void calculate_projection_part(
         else
         {
             knp::core::messaging::SynapticImpactMessage message_out{
-                {projection.get_uid(), step_n},
-                projection.get_postsynaptic(),
-                projection.get_presynaptic(),
-                {value.second}};
+                {projection_uid, step_n}, postsynaptic_uid, presynaptic_uid, {value.second}};
             future_messages.insert(std::make_pair(value.first, message_out));
         }
     }
@@ -65,7 +65,7 @@ std::unordered_map<uint64_t, size_t> convert_spikes(const SpikeMessage &message)
     for (auto n : message.neuron_indexes_)
     {
         auto iter = result.find(n);
-        if (iter == result.end())
+        if (result.end() == iter)
             result.insert({n, 1});
         else
             ++(iter->second);

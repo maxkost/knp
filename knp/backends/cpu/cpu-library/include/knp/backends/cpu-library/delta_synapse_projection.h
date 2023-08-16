@@ -30,7 +30,7 @@ std::unordered_map<uint64_t, size_t> convert_spikes(const knp::core::messaging::
  * @brief Process a part of projection synapses.
  * @param projection projection to receive the message.
  * @param message_in_data processed spike data for the projection.
- * @param future_messages future messages queue
+ * @param future_messages future messages queue.
  * @param step_n  current step.
  * @param part_start index of the starting synapse.
  * @param part_size number of synapses to process.

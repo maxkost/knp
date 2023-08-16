@@ -146,44 +146,6 @@ void MultiThreadedCPUBackend::calculate_populations()
 }
 
 
-// void MultiThreadedCPUBackend::calculate_projections()
-//{
-//     SPDLOG_DEBUG("Calculating projections");
-//     for (auto &projection : projections_)
-//     {
-//         auto uid = std::visit([](auto &proj) { return proj.get_uid(); }, projection.arg_);
-//         auto msg_buf = message_endpoint_.unload_messages<knp::core::messaging::SpikeMessage>(uid);
-//         // We might want to add some preliminary function before, even if delta proj doesn't require it.
-//         if (msg_buf.empty()) continue;
-//         auto &msg = msg_buf[0];
-//         // Looping over spikes.
-//         for (size_t spike_index = 0; spike_index < msg.neuron_indexes_.size(); spike_index += projection_part_size_)
-//         {
-//             std::visit(
-//                 [this, spike_index, &msg, &projection](auto &proj)
-//                 {
-//                     calc_pool_->post(
-//                         calculate_projection_part, std::ref(proj), msg, std::ref(projection.messages_), get_step(),
-//                         spike_index, projection_part_size_, std::ref(ep_mutex_));
-//                 },
-//                 projection.arg_);
-//         }
-//         calc_pool_->join();
-//     }
-//     // Sending messages. It might be possible to parallelize this as well if we use more than one endpoint.
-//     for (auto &projection : projections_)
-//     {
-//         auto &msg_queue = projection.messages_;
-//         auto msg_iter = msg_queue.find(get_step());
-//         if (msg_iter != msg_queue.end())
-//         {
-//             message_endpoint_.send_message(std::move(msg_iter->second));
-//             msg_queue.erase(msg_iter);
-//         }
-//     }
-// }
-
-
 void MultiThreadedCPUBackend::calculate_projections()
 {
     SPDLOG_DEBUG("Calculating projections");
