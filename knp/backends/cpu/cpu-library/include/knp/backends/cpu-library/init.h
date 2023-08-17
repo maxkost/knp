@@ -19,7 +19,7 @@ namespace knp::backends::cpu
 {
 
 template <typename T>
-void subscribe_stdp_projection(const typename core::Projection<T> &p, knp::core::MessageEndpoint &)
+void subscribe_stdp_projection(const typename core::Projection<T> &, knp::core::MessageEndpoint &)
 {
 }
 

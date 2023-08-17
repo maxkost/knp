@@ -78,14 +78,12 @@ std::unordered_map<uint64_t, size_t> convert_spikes(const SpikeMessage &message)
 
 
 MessageQueue::const_iterator calculate_delta_synapse_projection_data(
-    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, knp::core::MessageEndpoint &endpoint,
+    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, const std::vector<SpikeMessage> &messages,
     MessageQueue &future_messages, size_t step_n)
 {
     SPDLOG_TRACE("Calculating Delta synapse projection data");
-    std::vector<SpikeMessage> messages = endpoint.unload_messages<SpikeMessage>(projection.get_uid());
 
     if (messages.empty() || messages[0].neuron_indexes_.empty()) return future_messages.find(step_n);
-
     auto message_data = convert_spikes(messages[0]);
 
     for (size_t synapse_index = 0; synapse_index < projection.size(); ++synapse_index)
@@ -119,7 +117,9 @@ void calculate_delta_synapse_projection(
     MessageQueue &future_messages, size_t step_n)
 {
     SPDLOG_DEBUG("Calculating Delta synapse projection");
-    auto out_iter = calculate_delta_synapse_projection_data(projection, endpoint, future_messages, step_n);
+
+    auto out_iter = calculate_delta_synapse_projection_data(
+        projection, endpoint.unload_messages<SpikeMessage>(projection.get_uid()), future_messages, step_n);
     if (out_iter != future_messages.end())
     {
         SPDLOG_TRACE("Projection is sending an impact message");
@@ -135,6 +135,74 @@ void calculate_additive_stdp_delta_synapse_projection(
     knp::core::MessageEndpoint &endpoint, MessageQueue &future_messages, size_t step_n)
 {
     SPDLOG_DEBUG("Calculating Delta synapse projection");
+
+    using ProjectionType = typename std::decay_t<decltype(projection)>;
+    using ProcessingType =
+        typename ProjectionType::SynapseSpecificParameters<ProjectionType::ProjectionSynapseType>::ProcessingType;
+
+    const auto &stdp_pops = projection.get_common_paratemeters().stdp_populations_;
+
+    const auto all_messages = endpoint.unload_messages<SpikeMessage>(projection.get_uid());
+    // Spike messages to process as usual.
+    std::vector<SpikeMessage> usual_spike_messages;
+    std::vector<SpikeMessage> stdp_only_messages;
+
+    usual_spike_messages.reserve(all_messages.size());
+    stdp_only_messages.reserve(all_messages.size());
+
+    for (const auto &msg : all_messages)
+    {
+        const auto &stdp_pop_iter = stdp_pops.find(msg.header_.sender_uid_);
+        if (stdp_pop_iter == stdp_pops.end())
+        {
+            SPDLOG_TRACE("Not STDP population {}", std::string(msg.header_.sender_uid_));
+            usual_spike_messages.push_back(msg);
+        }
+        else
+        {
+            const auto &[uid, processing_type] = *stdp_pop_iter;
+            assert(uid == msg.header_.sender_uid_);
+
+            if (ProcessingType::STDPAndSpike == processing_type)
+            {
+                SPDLOG_TRACE("STDP synapse and spike");
+                //                auto out_iter = calculate_delta_synapse_projection_data(projection, messages,
+                //                                                                        future_messages, step_n);
+                //                if (out_iter != future_messages.end())
+                //                {
+                //                    SPDLOG_TRACE("Projection is sending an impact message");
+                //                    // Send a message and remove it from the queue.
+                //                    endpoint.send_message(out_iter->second);
+                //                    future_messages.erase(out_iter);
+                //                }
+                usual_spike_messages.push_back(msg);
+            }
+            else if (ProcessingType::STDPOnly == processing_type)
+            {
+                SPDLOG_TRACE("STDP synapse");
+            }
+            else
+            {
+                SPDLOG_ERROR(
+                    "Incorrect processing type {} for population {}", static_cast<int>(processing_type),
+                    std::string(uid));
+            }
+        }
+    }
+
+    if (!usual_spike_messages.empty())
+    {
+        SPDLOG_DEBUG("Calculating STDP Delta synapse projection spikes");
+
+        //        auto out_iter = calculate_delta_synapse_projection_data(projection, usual_spike_messages,
+        //        future_messages, step_n); if (out_iter != future_messages.end())
+        //        {
+        //            SPDLOG_TRACE("Projection is sending an impact message");
+        //            // Send a message and remove it from the queue.
+        //            endpoint.send_message(out_iter->second);
+        //            future_messages.erase(out_iter);
+        //        }
+    }
 }
 
 }  // namespace knp::backends::cpu
