@@ -40,7 +40,7 @@ namespace knp::framework
                 
         public:
             /**
-             * @brief Funtion type that returns a backend instance.
+             * @brief Function type that returns a backend instance.
             */
             typedef std::shared_ptr<core::Backend>(BackendCreateFunction)();
 

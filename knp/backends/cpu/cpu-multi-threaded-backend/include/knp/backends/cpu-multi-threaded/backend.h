@@ -32,7 +32,8 @@
 namespace knp::backends::multi_threaded_cpu
 {
 /**
- * @brief Thread pool class, use "post" to queue a task.
+ * @brief The ThreadPool class is a definition of thread pool.
+ * @note Use the `post` method to queue a task.
  */
 class ThreadPool;
 
@@ -122,7 +123,8 @@ public:
 public:
     /**
      * @brief Default constructor for multi-threaded CPU backend.
-     * @param thread_count number of threads. On 0 it's calculated automatically.
+     * @param thread_count number of threads.
+     * @note If `thread_count` equals `0`, then the number of threads is calculated automatically.
      */
     explicit MultiThreadedCPUBackend(size_t thread_count = 0);
     /**
@@ -274,18 +276,23 @@ public:
 
     /**
      * @brief Get message endpoint.
+     * @note Constant method.
      * @return message endpoint.
      */
     [[nodiscard]] const core::MessageEndpoint &get_message_endpoint() const override { return message_endpoint_; }
+    /**
+     * @brief Get message endpoint.
+     * @return message endpoint.
+     */
     [[nodiscard]] core::MessageEndpoint &get_message_endpoint() override { return message_endpoint_; }
 
     /**
-     * @brief Calculates all populations.
+     * @brief Calculate all populations.
      */
     void calculate_populations();
 
     /**
-     * @brief Calculates all projections.
+     * @brief Calculate all projections.
      */
     void calculate_projections();
 
@@ -296,7 +303,7 @@ protected:
     void init() override;
 
 private:
-    // Calculating pre-message neuron state, one thread per neurons_per_thread_ neurons or less.
+    // Calculating pre-message neuron state, one thread per population_part_size_ neurons or less.
     void calculate_populations_pre_impact();
     // Processing messages, one thread per population, probably very hard to go deeper unless atomic neuron params.
     void calculate_populations_impact();

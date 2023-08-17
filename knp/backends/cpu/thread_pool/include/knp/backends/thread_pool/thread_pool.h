@@ -16,13 +16,13 @@
 namespace knp::backends::multi_threaded_cpu
 {
 /**
- * @brief Thread pool class.
+ * @brief The ThreadPool class is a definition of thread pool.
  */
 class ThreadPool
 {
 public:
     /**
-     * @brief Create a thread pool.
+     * @brief Create thread pool.
      * @param num_threads number of worker threads in the pool.
      */
     explicit ThreadPool(size_t num_threads)
@@ -31,12 +31,12 @@ public:
     }
 
     /**
-     * @brief Add a task to the pool.
-     * @tparam Func functional type.
-     * @tparam Args function arguments
-     * @param func task to be run in the pool.
-     * @param args function arguments, make sure not to forget to use std::ref when needed.
-     * @note Not blocking.
+     * @brief Add task to pool.
+     * @tparam Func function type.
+     * @tparam Args function arguments.
+     * @param func task to run in the pool.
+     * @param args function arguments (if required, use `std::ref`).
+     * @note Non-blocking method.
      */
     template <class Func, typename... Args>
     void post(Func func, Args... args)
@@ -46,7 +46,7 @@ public:
 
     /**
      * @brief Wait until all threads stop processing.
-     * @note Blocking, will wait indefinitely if at least one task never stops.
+     * @note Blocking method that waits indefinitely if at least one task never stops.
      */
     void join() { executor_.join(); }
 

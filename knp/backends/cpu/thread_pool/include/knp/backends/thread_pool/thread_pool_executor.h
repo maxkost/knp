@@ -17,23 +17,36 @@
 namespace knp::backends::multi_threaded_cpu
 {
 /**
- * @brief Class for thread execution, this is the interface for thread pool.
- * @note Use boost::asio::post(executor, task) to queue more tasks. Use join() to wait for task execution.
+ * @brief The ThreadPoolExecutor class is a definition of the interface to thread pool used for thread execution.
+ * @note Use `boost::asio::post(executor, task)` to queue more tasks.\n
+ * Use `join()` to wait for task execution.
  */
 class ThreadPoolExecutor
 {
 public:
     /**
-     * @brief Constructs pool executor.
-     * @param context ThreadPool context. Its lifetime should be at least as long as for an object of this class.
+     * @brief Construct pool executor.
+     * @param context thread pool context. 
+     * @note Lifetime of thread pool context should be at least as long as lifetime of this class object. 
      */
     explicit ThreadPoolExecutor(ThreadPoolContext &context)
         : context_(context), task_count_(std::make_shared<size_t>(0))
     {
     }
 
+    /**
+     * @brief Get thread pool context.
+    */
     [[nodiscard]] ThreadPoolContext &context() { return context_; }
 
+    /**
+     * @brief Use functions from the `asio` library.
+     * @note Do not call this method directly. Use `boost::asio::post` function to call the `post` method.
+     * @tparam Func function type.
+     * @tparam Alloc allocator type.
+     * @param function function to add to task queue.
+     * @param allocator allocator.
+    */
     template <class Func, class Alloc>
     void post(Func function, const Alloc &allocator) const
     {
@@ -44,7 +57,8 @@ public:
     }
 
     /**
-     * @brief Waits for all tasks to finish. Doesn't join the threads.
+     * @brief Wait for all tasks to finish. 
+     * @note The method does not join threads.
      */
     void join() const
     {

@@ -197,7 +197,7 @@ public:
 public:
     /**
      * @brief Count number of neurons in the population.
-     * @return neuron count.
+     * @return number of neurons.
      */
     size_t size() const { return neurons_.size(); }
 
