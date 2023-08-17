@@ -36,6 +36,14 @@ class Projection
 {
 public:
     /**
+     * @brief Type of the projection synapses.
+     */
+    using ProjectionSynapseType = SynapseType;
+    /**
+     * @brief Projection of synapses with the specified synapse type.
+     */
+    using ProjectionType = Projection<SynapseType>;
+    /**
      * @brief Parameters of the specified synapse type.
      */
     using SynapseParameters = typename synapse_traits::synapse_parameters<SynapseType>;
@@ -309,14 +317,14 @@ public:
      */
     bool is_locked() { return is_locked_; }
 
-private:
+public:
     template <typename T>
-    struct synapse_specific_parameters
+    struct SynapseSpecificParameters
     {
     };
 
     template <template <typename> typename Rule, typename SynapseT>
-    struct synapse_specific_parameters<knp::synapse_traits::STDP<Rule, SynapseT>>
+    struct SynapseSpecificParameters<knp::synapse_traits::STDP<Rule, SynapseT>>
     {
         enum class ProcessingType
         {
@@ -326,6 +334,11 @@ private:
 
         std::unordered_map<core::UID, ProcessingType, core::uid_hash> stdp_populations_;
     };
+
+public:
+    SynapseSpecificParameters<SynapseType> &get_common_paratemeters() { return common_parameters_; }
+
+    const SynapseSpecificParameters<SynapseType> &get_common_paratemeters() const { return common_parameters_; }
 
 private:
     BaseData base_;
@@ -352,7 +365,7 @@ private:
      */
     std::vector<Synapse> parameters_;
 
-    synapse_specific_parameters<SynapseType> common_parameters_;
+    SynapseSpecificParameters<SynapseType> common_parameters_;
 };
 
 
