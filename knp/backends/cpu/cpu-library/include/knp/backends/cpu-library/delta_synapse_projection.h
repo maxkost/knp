@@ -14,6 +14,9 @@
 #include <mutex>
 #include <unordered_map>
 
+
+namespace knp::backends::cpu
+{
 /**
  * @brief Type of the message queue.
  */
@@ -74,3 +77,5 @@ void calculate_additive_stdp_delta_synapse_projection(
 void calculate_delta_synapse_projection(
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, knp::core::MessageEndpoint &endpoint,
     MessageQueue &future_messages, size_t step_n, std::mutex &m);
+
+}  // namespace knp::backends::cpu

@@ -14,6 +14,9 @@
 #include <vector>
 
 
+namespace knp::backends::cpu
+{
+
 using knp::core::UID;
 using knp::core::messaging::SpikeMessage;
 
@@ -133,3 +136,5 @@ void calculate_additive_stdp_delta_synapse_projection(
 {
     SPDLOG_DEBUG("Calculating Delta synapse projection");
 }
+
+}  // namespace knp::backends::cpu

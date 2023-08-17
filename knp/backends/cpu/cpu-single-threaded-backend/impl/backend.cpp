@@ -8,6 +8,7 @@
 
 #include <knp/backends/cpu-library/blifat_population.h>
 #include <knp/backends/cpu-library/delta_synapse_projection.h>
+#include <knp/backends/cpu-library/init.h>
 #include <knp/backends/cpu-single-threaded/backend.h>
 #include <knp/core/core.h>
 #include <knp/devices/cpu.h>
@@ -177,18 +178,10 @@ std::vector<std::unique_ptr<knp::core::Device>> SingleThreadedCPUBackend::get_de
 
 void SingleThreadedCPUBackend::init()
 {
-    SPDLOG_DEBUG("Initializing...");
+    SPDLOG_DEBUG("Initializing single-threaded CPU backend...");
 
-    for (const auto &p : projections_)
-    {
-        const auto [pre_uid, post_uid, this_uid] = std::visit(
-            [](const auto &proj)
-            { return std::make_tuple(proj.get_presynaptic(), proj.get_postsynaptic(), proj.get_uid()); },
-            p.arg_);
+    knp::backends::cpu::init(projections_, message_endpoint_);
 
-        if (pre_uid) message_endpoint_.subscribe<knp::core::messaging::SpikeMessage>(this_uid, {pre_uid});
-        if (post_uid) message_endpoint_.subscribe<knp::core::messaging::SynapticImpactMessage>(post_uid, {this_uid});
-    }
     SPDLOG_DEBUG("Initializing finished...");
 }
 
@@ -196,7 +189,7 @@ void SingleThreadedCPUBackend::init()
 void SingleThreadedCPUBackend::calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population)
 {
     SPDLOG_TRACE("Calculate population {}", std::string(population.get_uid()));
-    calculate_blifat_population(population, message_endpoint_, get_step());
+    knp::backends::cpu::calculate_blifat_population(population, message_endpoint_, get_step());
 }
 
 
@@ -205,7 +198,7 @@ void SingleThreadedCPUBackend::calculate_projection(
     core::messaging::SynapticMessageQueue &message_queue)
 {
     SPDLOG_TRACE("Calculate Delta synapse projection {}", std::string(projection.get_uid()));
-    calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, get_step());
+    knp::backends::cpu::calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, get_step());
 }
 
 
@@ -214,7 +207,8 @@ void SingleThreadedCPUBackend::calculate_projection(
     core::messaging::SynapticMessageQueue &message_queue)
 {
     SPDLOG_TRACE("Calculate AdditiveSTDPDelta synapse projection {}", std::string(projection.get_uid()));
-    calculate_additive_stdp_delta_synapse_projection(projection, message_endpoint_, message_queue, get_step());
+    knp::backends::cpu::calculate_additive_stdp_delta_synapse_projection(
+        projection, message_endpoint_, message_queue, get_step());
 }
 
 

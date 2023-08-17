@@ -16,6 +16,10 @@
 #include <queue>
 #include <vector>
 
+
+namespace knp::backends::cpu
+{
+
 /**
  * @brief Make one execution step for a population of BLIFAT neurons.
  * @param population population to update.
@@ -73,3 +77,5 @@ void process_inputs(
 void calculate_neurons_post_input_state_part(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::messaging::SpikeMessage &message,
     size_t part_start, size_t part_size, std::mutex &mutex);
+
+}  // namespace knp::backends::cpu

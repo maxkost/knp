@@ -14,6 +14,9 @@
 #include <unordered_map>
 
 
+namespace knp::backends::cpu
+{
+
 using knp::core::messaging::SynapticImpactMessage;
 
 void impact_neuron(
@@ -211,3 +214,5 @@ void calculate_blifat_population(
         SPDLOG_DEBUG("Sent {} spike(s)", res_message.neuron_indexes_.size());
     }
 }
+
+}  // namespace knp::backends::cpu
