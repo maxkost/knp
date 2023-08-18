@@ -35,6 +35,9 @@ namespace knp::core
 class continuously_uid_generator
 {
 public:
+    /**
+     * @brief Generate next UID.
+    */
     ::boost::uuids::uuid operator()() const;
     /**
      * @brief Reset UID counter.
@@ -126,7 +129,7 @@ struct UID
     explicit operator bool() const { return !tag.is_nil(); }
 
     /**
-     * @brief Comparison operator for sorting.
+     * @brief Check if the current UID is less than the specified UID.
      * @param uid UID to compare to the current UID.
      * @return `true` if the current UID is less than the specified UID.
      */

@@ -58,6 +58,10 @@ public:
      * @return receiver UID.
      */
     static UID get_receiver_uid(const SubscriptionVariant &subscription);
+    /**
+     * @brief Get subscription key from a subscription variant.
+     * @param subscription subscription variant.
+    */
     static std::pair<size_t, UID> get_subscription_key(const SubscriptionVariant &subscription);
 
     // tparams was temporarily disabled, because of the bug in the CLang documentation checker.

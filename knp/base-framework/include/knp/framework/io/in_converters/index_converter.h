@@ -1,5 +1,5 @@
 /**
- * @brief Input index converter header
+ * @brief Input index converter header.
  * @author Vartenkov Andrey
  * @date 25.04.2023
  */

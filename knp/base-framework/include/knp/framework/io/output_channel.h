@@ -1,5 +1,5 @@
 /**
- * @brief Output channel header
+ * @brief Output channel header.
  * @author Vartenkov Andrey
  * @date 11.05.2023
  */
@@ -72,6 +72,10 @@ public:
         core::messaging::Step starting_step, core::messaging::Step final_step);
 
 protected:
+
+    /**
+     * @brief Base data.
+    */
     core::BaseData base_;
 
     /**

@@ -1,5 +1,5 @@
 /**
- * @brief Input channel header
+ * @brief Input channel header.
  * @author Vartenkov Andrey
  * @date 04.05.2023
  */

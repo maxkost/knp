@@ -1,5 +1,5 @@
 /**
- * @brief Counting converter header
+ * @brief Counting converter header.
  * @author Vartenkov Andrey
  * @date 01.06.2023
  */

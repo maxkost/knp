@@ -20,9 +20,9 @@
 typedef std::unordered_map<uint64_t, knp::core::messaging::SynapticImpactMessage> MessageQueue;
 
 /**
- * @brief Converts spike vector to unordered map.
+ * @brief Convert spike vector to unordered map.
  * @param message spike message.
- * @return unordered map of {index : number of instances (usually 1)}.
+ * @return unordered map of `{index : number of instances}`. Number of instances usually equals `1`.
  */
 std::unordered_map<uint64_t, size_t> convert_spikes(const knp::core::messaging::SpikeMessage &message);
 
@@ -30,8 +30,8 @@ std::unordered_map<uint64_t, size_t> convert_spikes(const knp::core::messaging::
  * @brief Process a part of projection synapses.
  * @param projection projection to receive the message.
  * @param message_in_data processed spike data for the projection.
- * @param future_messages future messages queue.
- * @param step_n  current step.
+ * @param future_messages queue of future messages.
+ * @param step_n current step.
  * @param part_start index of the starting synapse.
  * @param part_size number of synapses to process.
  * @param mutex mutex.
