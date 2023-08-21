@@ -56,17 +56,17 @@ public:
         /**
          * @brief Synapse parameters. For example, parameters can contain synapse weight and delay.
          */
-        SynapseParameters params;
+        SynapseParameters params_;
 
         /**
          * @brief Index of a neuron from which the synapse receives spikes (presynaptic neuron).
          */
-        uint32_t id_from;
+        uint32_t id_from_;
 
         /**
          * @brief Index of a neuron that the synapse influences (postsynaptic neuron).
          */
-        uint32_t id_to;
+        uint32_t id_to_;
     };
 
     /**
@@ -103,7 +103,7 @@ public:
      * @brief Construct a projection by running a synapse generator a given number of times.
      * @param presynaptic_uid presynaptic population UID.
      * @param postsynaptic_uid postsynaptic population UID.
-     * @param generator function that generates a synapse parameters: parameteres, id_from, id_to.
+     * @param generator function that generates a synapse parameters: parameteres, id_from_, id_to_.
      * @param synapses_count number of iterations to run the synapse generator.
      */
     Projection(UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator1 &generator, size_t synapses_count);
@@ -113,7 +113,7 @@ public:
      * @param uid projection uid.
      * @param presynaptic_uid presynaptic population UID.
      * @param postsynaptic_uid postsynaptic population UID.
-     * @param generator function that generates a synapse parameters: parameteres, id_from, id_to.
+     * @param generator function that generates a synapse parameters: parameteres, id_from_, id_to_.
      * @param synapses_count number of iterations to run the synapse generator.
      */
     Projection(
@@ -193,7 +193,7 @@ public:
      */
     [[nodiscard]] std::tuple<size_t, size_t, size_t> get_connection(size_t index) const
     {
-        return std::make_tuple(parameters_[index].id_from, index, parameters_[index].id_to);
+        return std::make_tuple(parameters_[index].id_from_, index, parameters_[index].id_to_);
     }
 
     // TODO: VERY inefficient. Will need to optimize it to less than linear ASAP
@@ -207,7 +207,7 @@ public:
         std::vector<size_t> res;
         for (size_t i = 0; i < parameters_.size(); ++i)
         {
-            if (parameters_[i].id_from == neuron_index)
+            if (parameters_[i].id_from_ == neuron_index)
             {
                 res.push_back(i);
             }
@@ -275,7 +275,7 @@ public:
      */
     size_t disconnect_postsynaptic_neuron(size_t neuron_index)
     {
-        return disconnect_if([neuron_index](const Synapse &synapse) { return synapse.id_to == neuron_index; });
+        return disconnect_if([neuron_index](const Synapse &synapse) { return synapse.id_to_ == neuron_index; });
     }
 
     /**
@@ -285,7 +285,7 @@ public:
      */
     size_t disconnect_presynaptic_neuron(size_t neuron_index)
     {
-        return disconnect_if([neuron_index](const Synapse &synapse) { return synapse.id_from == neuron_index; });
+        return disconnect_if([neuron_index](const Synapse &synapse) { return synapse.id_from_ == neuron_index; });
     }
 
     /**
@@ -297,7 +297,7 @@ public:
     size_t disconnect_neurons(size_t neuron_from, size_t neuron_to)
     {
         return disconnect_if([neuron_from, neuron_to](const Synapse &synapse)
-                             { return (synapse.id_from == neuron_from) && (synapse.id_to == neuron_to); });
+                             { return (synapse.id_from_ == neuron_from) && (synapse.id_to_ == neuron_to); });
     }
 
 public:

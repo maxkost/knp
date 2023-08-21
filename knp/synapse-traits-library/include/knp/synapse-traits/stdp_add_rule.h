@@ -17,6 +17,7 @@ namespace knp::synapse_traits
 
 /**
  * @brief STDP additive rule parameters.
+ * @note Parameters for the W(x) function by Zhang et al. 1998.
  */
 template <typename SynapseType>
 struct STDPAdditiveRule
@@ -24,10 +25,16 @@ struct STDPAdditiveRule
     using LinkedSynapseType = SynapseType;
 
     /**
-     * @brief STDP weight to add.
+     * @brief Time constant in ms.
      */
     // cppcheck-suppress unusedStructMember
-    float weight_;
+    float tau_plus_ = 10;
+
+    /**
+     * @brief Time constant in ms.
+     */
+    // cppcheck-suppress unusedStructMember
+    float tau_minus_ = 10;
 };
 
 }  // namespace knp::synapse_traits

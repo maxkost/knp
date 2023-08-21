@@ -79,7 +79,7 @@ std::vector<std::tuple<size_t, size_t, size_t>> knp::core::Projection<SynapseTyp
     result.reserve(parameters_.size());
     for (size_t i = 0; i < parameters_.size(); ++i)
     {
-        result.emplace_back(std::make_tuple(parameters_[i].id_from, i, parameters_[i].id_to));
+        result.emplace_back(std::make_tuple(parameters_[i].id_from_, i, parameters_[i].id_to_));
     }
     return result;
 }

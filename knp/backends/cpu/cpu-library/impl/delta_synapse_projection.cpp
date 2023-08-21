@@ -35,10 +35,10 @@ void calculate_projection_part(
         const auto &synapse = projection[synapse_index];
         // Add new impact
         // the message is sent on step N - 1, received on N.
-        uint64_t key = synapse.params.delay_ + step_n - 1;
+        uint64_t key = synapse.params_.delay_ + step_n - 1;
 
         knp::core::messaging::SynapticImpact impact{
-            synapse_index, synapse.params.weight_, synapse.params.output_type_, synapse.id_from, synapse.id_to};
+            synapse_index, synapse.params_.weight_, synapse.params_.output_type_, synapse.id_from_, synapse.id_to_};
 
         container.emplace_back(std::pair{key, impact});
     }
@@ -77,9 +77,25 @@ std::unordered_map<uint64_t, size_t> convert_spikes(const SpikeMessage &message)
 }
 
 
+const knp::synapse_traits::synapse_parameters<knp::synapse_traits::DeltaSynapse> &get_delta_synapse_params(
+    const knp::synapse_traits::synapse_parameters<knp::synapse_traits::DeltaSynapse> &synapse_params)
+{
+    return synapse_params;
+}
+
+
+const knp::synapse_traits::synapse_parameters<knp::synapse_traits::DeltaSynapse> &get_delta_synapse_params(
+    const knp::synapse_traits::synapse_parameters<
+        knp::synapse_traits::STDP<knp::synapse_traits::STDPAdditiveRule, knp::synapse_traits::DeltaSynapse>>
+        &synapse_params)
+{
+    return synapse_params.synapse_;
+}
+
+
+template <typename ProjectionType>
 MessageQueue::const_iterator calculate_delta_synapse_projection_data(
-    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, const std::vector<SpikeMessage> &messages,
-    MessageQueue &future_messages, size_t step_n)
+    ProjectionType &projection, const std::vector<SpikeMessage> &messages, MessageQueue &future_messages, size_t step_n)
 {
     SPDLOG_TRACE("Calculating Delta synapse projection data");
 
@@ -89,13 +105,14 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
     for (size_t synapse_index = 0; synapse_index < projection.size(); ++synapse_index)
     {
         const auto &synapse = projection[synapse_index];
-        auto spike_iter = message_data.find(synapse.id_from);
+        auto spike_iter = message_data.find(synapse.id_from_);
         if (spike_iter == message_data.end()) continue;
 
+        const auto &synapse_params = get_delta_synapse_params(synapse.params_);
         // the message is sent on step N - 1, received on N.
-        size_t future_step = synapse.params.delay_ + step_n - 1;
+        size_t future_step = synapse_params.delay_ + step_n - 1;
         knp::core::messaging::SynapticImpact impact{
-            synapse_index, synapse.params.weight_, synapse.params.output_type_, synapse.id_from, synapse.id_to};
+            synapse_index, synapse_params.weight_, synapse_params.output_type_, synapse.id_from_, synapse.id_to_};
 
         auto iter = future_messages.find(future_step);
         if (iter != future_messages.end())
@@ -127,6 +144,34 @@ void calculate_delta_synapse_projection(
         endpoint.send_message(out_iter->second);
         future_messages.erase(out_iter);
     }
+}
+
+
+float stdp_w(float a_plus, float a_minus, float tau_plus, float tau_minus, float x)
+{
+    // Zhang et al. 1998.
+    return x > 0 ? a_plus * std::exp(-x / tau_plus) : a_minus * std::exp(x / tau_minus);
+}
+
+
+float stdp_delta_w(
+    const std::vector<size_t> &presynaptic_spikes, const std::vector<size_t> &postsynaptic_spikes,
+    std::function<float(float)> w)
+{
+    // Gerstner and al. 1996, Kempter et al. 1999.
+
+    assert(presynaptic_spikes.size() == postsynaptic_spikes.size());
+
+    float w_j = 0;
+
+    for (const auto &t_f : presynaptic_spikes)
+        for (const auto &t_n : postsynaptic_spikes)
+        {
+            // cppcheck-suppress useStlAlgorithm
+            w_j += w(t_n - t_f);
+        }
+
+    return w_j;
 }
 
 
@@ -166,15 +211,6 @@ void calculate_additive_stdp_delta_synapse_projection(
             if (ProcessingType::STDPAndSpike == processing_type)
             {
                 SPDLOG_TRACE("STDP synapse and spike");
-                //                auto out_iter = calculate_delta_synapse_projection_data(projection, messages,
-                //                                                                        future_messages, step_n);
-                //                if (out_iter != future_messages.end())
-                //                {
-                //                    SPDLOG_TRACE("Projection is sending an impact message");
-                //                    // Send a message and remove it from the queue.
-                //                    endpoint.send_message(out_iter->second);
-                //                    future_messages.erase(out_iter);
-                //                }
                 usual_spike_messages.push_back(msg);
             }
             else if (ProcessingType::STDPOnly == processing_type)
@@ -194,14 +230,20 @@ void calculate_additive_stdp_delta_synapse_projection(
     {
         SPDLOG_DEBUG("Calculating STDP Delta synapse projection spikes");
 
-        //        auto out_iter = calculate_delta_synapse_projection_data(projection, usual_spike_messages,
-        //        future_messages, step_n); if (out_iter != future_messages.end())
-        //        {
-        //            SPDLOG_TRACE("Projection is sending an impact message");
-        //            // Send a message and remove it from the queue.
-        //            endpoint.send_message(out_iter->second);
-        //            future_messages.erase(out_iter);
-        //        }
+        auto out_iter =
+            calculate_delta_synapse_projection_data(projection, usual_spike_messages, future_messages, step_n);
+        if (out_iter != future_messages.end())
+        {
+            SPDLOG_TRACE("Projection is sending an impact message");
+            // Send a message and remove it from the queue.
+            endpoint.send_message(out_iter->second);
+            future_messages.erase(out_iter);
+        }
+    }
+
+    if (!stdp_only_messages.empty())
+    {
+        void;
     }
 }
 
