@@ -332,6 +332,7 @@ public:
             STDPAndSpike
         };
 
+        uint32_t stdp_window_size_ = 1;
         std::unordered_map<core::UID, ProcessingType, core::uid_hash> stdp_populations_;
     };
 
