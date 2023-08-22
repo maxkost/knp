@@ -32,32 +32,44 @@ const knp::synapse_traits::synapse_parameters<knp::synapse_traits::DeltaSynapse>
 }
 
 
-float stdp_w(float a_plus, float a_minus, float tau_plus, float tau_minus, float x)
+class STDPFormula
 {
-    // Zhang et al. 1998.
-    return x > 0 ? a_plus * std::exp(-x / tau_plus) : a_minus * std::exp(x / tau_minus);
-}
+public:
+    STDPFormula(float tau_plus, float tau_minus, float a_plus, float a_minus)
+        : tau_plus_(tau_plus), tau_minus_(tau_minus), a_plus_(a_plus), a_minus_(a_minus)
+    {
+    }
 
+    float stdp_w(float x)
+    {
+        // Zhang et al. 1998.
+        return x > 0 ? a_plus_ * std::exp(-x / tau_plus_) : a_minus_ * std::exp(x / tau_minus_);
+    }
 
-float stdp_delta_w(
-    const std::vector<size_t> &presynaptic_spikes, const std::vector<size_t> &postsynaptic_spikes,
-    std::function<float(float)> w)
-{
-    // Gerstner and al. 1996, Kempter et al. 1999.
+    float stdp_delta_w(const std::vector<size_t> &presynaptic_spikes, const std::vector<size_t> &postsynaptic_spikes)
+    {
+        // Gerstner and al. 1996, Kempter et al. 1999.
 
-    assert(presynaptic_spikes.size() == postsynaptic_spikes.size());
+        assert(presynaptic_spikes.size() == postsynaptic_spikes.size());
 
-    float w_j = 0;
+        float w_j = 0;
 
-    for (const auto &t_f : presynaptic_spikes)
-        for (const auto &t_n : postsynaptic_spikes)
-        {
-            // cppcheck-suppress useStlAlgorithm
-            w_j += w(t_n - t_f);
-        }
+        for (const auto &t_f : presynaptic_spikes)
+            for (const auto &t_n : postsynaptic_spikes)
+            {
+                // cppcheck-suppress useStlAlgorithm
+                w_j += stdp_w(t_n - t_f);
+            }
 
-    return w_j;
-}
+        return w_j;
+    }
+
+private:
+    float tau_plus_;
+    float tau_minus_;
+    float a_plus_;
+    float a_minus_;
+};
 
 
 void calculate_additive_stdp_delta_synapse_projection(

@@ -55,7 +55,7 @@ struct SynapticImpact
 
     /**
      * @brief Compare synaptic impact messages.
-    */
+     */
     bool operator==(const SynapticImpact &) const;
 };
 
@@ -67,7 +67,7 @@ struct SynapticImpactMessage
 {
     /**
      * @brief Message header.
-    */
+     */
     MessageHeader header_;
 
     /**
@@ -92,28 +92,28 @@ typedef std::unordered_map<size_t, SynapticImpactMessage> SynapticMessageQueue;
  * @brief Get synaptic impact from an input stream.
  * @param stream input stream.
  * @param impact synaptic impact to get from the input stream.
-*/
+ */
 std::istream &operator>>(std::istream &stream, SynapticImpact &impact);
 
 /**
  * @brief Send synaptic impact to an output stream.
  * @param stream output stream.
  * @param impact synaptic impact to send to the output stream.
-*/
+ */
 std::ostream &operator<<(std::ostream &stream, const SynapticImpact &impact);
 
 /**
  * @brief Send synaptic impact message to an output stream.
  * @param stream output stream.
  * @param msg synaptic impact message to send to the output stream.
-*/
+ */
 std::ostream &operator<<(std::ostream &stream, const SynapticImpactMessage &msg);
 
 /**
  * @brief Get synaptic impact message from an input stream.
  * @param stream input stream.
  * @param msg synaptic impact message to get from the input stream.
-*/
+ */
 std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg);
 
 }  // namespace knp::core::messaging

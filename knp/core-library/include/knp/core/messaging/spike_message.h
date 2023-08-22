@@ -29,6 +29,7 @@ using SpikeIndex = uint32_t;
  */
 using SpikeData = std::vector<SpikeIndex>;
 
+
 /**
  * @brief Structure of the spike message.
  */
@@ -44,6 +45,7 @@ struct SpikeMessage
      */
     SpikeData neuron_indexes_;
 };
+
 
 /**
  * @brief Send spike message to an output stream.
