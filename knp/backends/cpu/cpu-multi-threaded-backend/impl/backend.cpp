@@ -166,8 +166,9 @@ void MultiThreadedCPUBackend::calculate_projections()
                 [this, synapse_index, &message_data, &projection](auto &proj)
                 {
                     calc_pool_->post(
-                        calculate_projection_part, std::ref(proj), message_data, std::ref(projection.messages_),
-                        get_step(), synapse_index, projection_part_size_, std::ref(ep_mutex_));
+                        calculate_projection_part, std::ref(proj), std::ref(message_data),
+                        std::ref(projection.messages_), get_step(), synapse_index, projection_part_size_,
+                        std::ref(ep_mutex_));
                 },
                 projection.arg_);
         }
