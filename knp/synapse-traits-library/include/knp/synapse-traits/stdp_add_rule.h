@@ -7,7 +7,10 @@
 
 #pragma once
 
+#include <vector>
+
 #include "type_traits.h"
+
 
 /**
  * @brief Synapse traits namespace.
@@ -35,6 +38,12 @@ struct STDPAdditiveRule
      */
     // cppcheck-suppress unusedStructMember
     float tau_minus_ = 10;
+
+    /**
+     * @brief Steps when spikes fired.
+     */
+    // cppcheck-suppress unusedStructMember
+    std::vector<size_t> spike_times_;
 };
 
 }  // namespace knp::synapse_traits
