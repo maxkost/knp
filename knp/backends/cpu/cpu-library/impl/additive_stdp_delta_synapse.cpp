@@ -40,13 +40,14 @@ public:
     {
     }
 
-    float stdp_w(float x)
+    [[nodiscard]] float stdp_w(float x)
     {
         // Zhang et al. 1998.
         return x > 0 ? a_plus_ * std::exp(-x / tau_plus_) : a_minus_ * std::exp(x / tau_minus_);
     }
 
-    float stdp_delta_w(const std::vector<size_t> &presynaptic_spikes, const std::vector<size_t> &postsynaptic_spikes)
+    [[nodiscard]] float stdp_delta_w(
+        const std::vector<uint32_t> &presynaptic_spikes, const std::vector<uint32_t> &postsynaptic_spikes)
     {
         // Gerstner and al. 1996, Kempter et al. 1999.
 
@@ -64,6 +65,12 @@ public:
         return w_j;
     }
 
+    [[nodiscard]] float operator()(
+        const std::vector<uint32_t> &presynaptic_spikes, const std::vector<uint32_t> &postsynaptic_spikes)
+    {
+        return stdp_delta_w(presynaptic_spikes, postsynaptic_spikes);
+    }
+
 private:
     float tau_plus_;
     float tau_minus_;
@@ -74,7 +81,7 @@ private:
 
 void append_spike_times(
     knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> &projection,
-    const std::vector<SpikeMessage> &spikes, std::function<std::vector<size_t>(size_t)> syn_index_getter,
+    const std::vector<SpikeMessage> &spikes, std::function<std::vector<size_t>(uint32_t)> syn_index_getter,
     std::vector<uint32_t> knp::synapse_traits::STDPAdditiveRule<knp::synapse_traits::DeltaSynapse>::*spike_queue)
 {
     for (const auto &msg : spikes)
@@ -153,7 +160,7 @@ void calculate_additive_stdp_delta_synapse_projection(
 
         append_spike_times(
             projection, usual_spike_messages,
-            [&projection](size_t ni) { return projection.get_by_presynaptic_neuron(ni); },
+            [&projection](uint32_t ni) { return projection.get_by_presynaptic_neuron(ni); },
             &knp::synapse_traits::STDPAdditiveRule<knp::synapse_traits::DeltaSynapse>::presynaptic_spike_times_);
 
         auto out_iter = calculate_delta_synapse_projection_data(
@@ -173,8 +180,22 @@ void calculate_additive_stdp_delta_synapse_projection(
         // Fill synapses post-synaptic spike queue.
         append_spike_times(
             projection, stdp_only_messages,
-            [&projection](size_t ni) { return projection.get_by_postsynaptic_neuron(ni); },
+            [&projection](uint32_t ni) { return projection.get_by_postsynaptic_neuron(ni); },
             &knp::synapse_traits::STDPAdditiveRule<knp::synapse_traits::DeltaSynapse>::postsynaptic_spike_times_);
+    }
+
+    for (auto &s : projection)
+    {
+        auto &rule = s.params_.rule_;
+        const auto period = rule.tau_plus_ + rule.tau_minus_;
+
+        if (rule.presynaptic_spike_times_.size() >= period && rule.postsynaptic_spike_times_.size() >= period)
+        {
+            STDPFormula sf(rule.tau_plus_, rule.tau_minus_, 1, 1);
+            s.params_.synapse_.weight_ += sf(rule.presynaptic_spike_times_, rule.postsynaptic_spike_times_);
+            rule.presynaptic_spike_times_.clear();
+            rule.postsynaptic_spike_times_.clear();
+        }
     }
 }
 
