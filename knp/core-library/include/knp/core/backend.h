@@ -145,9 +145,14 @@ public:
 public:
     /**
      * @brief Get message endpoint.
+     * @note Constant method.
      * @return message endpoint.
      */
     virtual const core::MessageEndpoint &get_message_endpoint() const = 0;
+    /**
+     * @brief Get message endpoint.
+     * @return message endpoint.
+     */
     virtual core::MessageEndpoint &get_message_endpoint() = 0;
 
 public:

@@ -1,5 +1,5 @@
 /**
- * @brief Output converter header
+ * @brief Output converter header.
  * @author Vartenkov Andrey
  * @date 05.04.2023
  */

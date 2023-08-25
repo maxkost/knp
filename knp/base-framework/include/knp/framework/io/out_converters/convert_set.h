@@ -1,5 +1,5 @@
 /**
- * @brief Set converter header
+ * @brief Set converter header.
  * @author Vartenkov Andrey
  * @date 01.06.2023
  */

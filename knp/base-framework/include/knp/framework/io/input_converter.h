@@ -1,5 +1,5 @@
 /**
- * @brief Input converter header
+ * @brief Input converter header.
  * @author Vartenkov Andrey
  * @date 25.04.2023
  */

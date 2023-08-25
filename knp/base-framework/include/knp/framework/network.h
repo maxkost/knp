@@ -131,7 +131,7 @@ public:
      * @brief Get a population with the given UID from the network.
      * @tparam PopulationType type of population to get.
      * @param population_uid population UID.
-     * @throw `std::logic_error` if population is not found in the network.
+     * @throw std::logic_error if population is not found in the network.
      * @return population.
      */
     template <typename PopulationType>
@@ -141,7 +141,7 @@ public:
      * @note Constant method.
      * @tparam PopulationType type of population to get.
      * @param population_uid population UID.
-     * @throw `std::logic_error` if population is not found in the network.
+     * @throw std::logic_error if population is not found in the network.
      * @return population.
      */
     template <typename PopulationType>
@@ -190,7 +190,7 @@ public:
      * @brief Get a projection with the given UID from the network.
      * @tparam ProjectionType type of projection to get.
      * @param projection_uid projection UID.
-     * @throw `std::logic_error` if projection is not found in the network.
+     * @throw std::logic_error if projection is not found in the network.
      * @return projection.
      */
     template <typename ProjectionType>
@@ -200,7 +200,7 @@ public:
      * @note Constant method.
      * @tparam ProjectionType type of projection to get.
      * @param projection_uid projection UID.
-     * @throw `std::logic_error` if projection is not found in the network.
+     * @throw std::logic_error if projection is not found in the network.
      * @return projection.
      */
     template <typename ProjectionType>

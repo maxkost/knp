@@ -1,5 +1,5 @@
 /**
- * @brief Input sequence converter header
+ * @brief Input sequence converter header.
  * @author Vartenkov Andrey
  * @date 25.04.2023
  */
