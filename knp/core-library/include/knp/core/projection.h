@@ -202,18 +202,14 @@ public:
      * @param neuron_index index of a presynaptic neuron.
      * @return indexes of all synapses associated with the specified presynaptic neuron.
      */
-    [[nodiscard]] std::vector<size_t> get_by_presynaptic_neuron(size_t neuron_index) const
-    {
-        std::vector<size_t> res;
-        for (size_t i = 0; i < parameters_.size(); ++i)
-        {
-            if (parameters_[i].id_from_ == neuron_index)
-            {
-                res.push_back(i);
-            }
-        }
-        return res;
-    }
+    [[nodiscard]] std::vector<size_t> get_by_presynaptic_neuron(size_t neuron_index) const;
+
+    /**
+     * @brief Find synapses that connected to the neuron with the given index.
+     * @param neuron_index index of a postsynaptic neuron.
+     * @return indexes of all synapses associated with the specified postsynaptic neuron.
+     */
+    [[nodiscard]] std::vector<size_t> get_by_postsynaptic_neuron(size_t neuron_index) const;
 
     /**
      * @brief Calculate connection parameters for all synapses in the projection.

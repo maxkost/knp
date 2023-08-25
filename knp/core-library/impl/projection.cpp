@@ -73,6 +73,38 @@ knp::core::Projection<SynapseType>::Projection(
 
 
 template <typename SynapseType>
+std::vector<size_t> knp::core::Projection<SynapseType>::get_by_presynaptic_neuron(size_t neuron_index) const
+{
+    std::vector<size_t> res;
+
+    for (size_t i = 0; i < parameters_.size(); ++i)
+    {
+        if (parameters_[i].id_from_ == neuron_index)
+        {
+            res.push_back(i);
+        }
+    }
+    return res;
+}
+
+
+template <typename SynapseType>
+std::vector<size_t> knp::core::Projection<SynapseType>::get_by_postsynaptic_neuron(size_t neuron_index) const
+{
+    std::vector<size_t> res;
+
+    for (size_t i = 0; i < parameters_.size(); ++i)
+    {
+        if (parameters_[i].id_to_ == neuron_index)
+        {
+            res.push_back(i);
+        }
+    }
+    return res;
+}
+
+
+template <typename SynapseType>
 std::vector<std::tuple<size_t, size_t, size_t>> knp::core::Projection<SynapseType>::get_connections() const
 {
     std::vector<std::tuple<size_t, size_t, size_t>> result;

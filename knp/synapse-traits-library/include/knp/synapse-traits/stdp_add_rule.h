@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <cinttypes>
 #include <vector>
 
 #include "type_traits.h"
@@ -40,10 +41,16 @@ struct STDPAdditiveRule
     float tau_minus_ = 10;
 
     /**
-     * @brief Steps when spikes fired.
+     * @brief Steps when spikes on the synapse fired.
      */
     // cppcheck-suppress unusedStructMember
-    std::vector<size_t> spike_times_;
+    std::vector<uint32_t> presynaptic_spike_times_;
+
+    /**
+     * @brief Steps when spikes on the axon fired.
+     */
+    // cppcheck-suppress unusedStructMember
+    std::vector<uint32_t> postsynaptic_spike_times_;
 };
 
 }  // namespace knp::synapse_traits

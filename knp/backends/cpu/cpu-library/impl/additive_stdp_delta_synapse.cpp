@@ -72,6 +72,29 @@ private:
 };
 
 
+void append_spike_times(
+    knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> &projection,
+    const std::vector<SpikeMessage> &spikes, std::function<std::vector<size_t>(size_t)> syn_index_getter,
+    std::vector<uint32_t> knp::synapse_traits::STDPAdditiveRule<knp::synapse_traits::DeltaSynapse>::*spike_queue)
+{
+    for (const auto &msg : spikes)
+    {
+        // Filling synapses spike queue.
+        for (auto neuron_index : msg.neuron_indexes_)
+        {
+            // TODO: Ineffective, MUST be cached.
+            for (auto synapse_index : syn_index_getter(neuron_index))
+            {
+                auto &rule = projection[synapse_index].params_.rule_;
+                // Limit spike times queue.
+                if ((rule.*spike_queue).size() < rule.tau_minus_ + rule.tau_plus_)
+                    (rule.*spike_queue).push_back(msg.header_.send_time_);
+            }
+        }
+    }
+}
+
+
 void calculate_additive_stdp_delta_synapse_projection(
     knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> &projection,
     knp::core::MessageEndpoint &endpoint, MessageQueue &future_messages, size_t step_n)
@@ -127,21 +150,10 @@ void calculate_additive_stdp_delta_synapse_projection(
     {
         SPDLOG_DEBUG("Calculating STDP Delta synapse projection spikes");
 
-        for (const auto &msg : usual_spike_messages)
-        {
-            // Filling synapses spike queue.
-            for (auto neuron_index : msg.neuron_indexes_)
-            {
-                // TODO: Ineffective, MUST be cached.
-                for (auto synapse_index : projection.get_by_presynaptic_neuron(neuron_index))
-                {
-                    auto &rule = projection[synapse_index].params_.rule_;
-                    // Limit spike times queue.
-                    if (rule.spike_times_.size() < rule.tau_minus_ + rule.tau_plus_)
-                        rule.spike_times_.push_back(msg.header_.send_time_);
-                }
-            }
-        }
+        append_spike_times(
+            projection, usual_spike_messages,
+            [&projection](size_t ni) { return projection.get_by_presynaptic_neuron(ni); },
+            &knp::synapse_traits::STDPAdditiveRule<knp::synapse_traits::DeltaSynapse>::presynaptic_spike_times_);
 
         auto out_iter = calculate_delta_synapse_projection_data(
             projection, usual_spike_messages, future_messages, step_n, get_delta_synapse_params);
@@ -157,7 +169,11 @@ void calculate_additive_stdp_delta_synapse_projection(
     if (!stdp_only_messages.empty())
     {
         SPDLOG_TRACE("STDP message processing...");
-        // Fill synapses spike queue.
+        // Fill synapses post-synaptic spike queue.
+        append_spike_times(
+            projection, stdp_only_messages,
+            [&projection](size_t ni) { return projection.get_by_postsynaptic_neuron(ni); },
+            &knp::synapse_traits::STDPAdditiveRule<knp::synapse_traits::DeltaSynapse>::postsynaptic_spike_times_);
     }
 }
 
