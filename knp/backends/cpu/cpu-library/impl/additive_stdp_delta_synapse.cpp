@@ -115,6 +115,7 @@ void calculate_additive_stdp_delta_synapse_projection(
     usual_spike_messages.reserve(all_messages.size());
     stdp_only_messages.reserve(all_messages.size());
 
+    // TODO: Remove cycles.
     for (const auto &msg : all_messages)
     {
         const auto &stdp_pop_iter = stdp_pops.find(msg.header_.sender_uid_);
