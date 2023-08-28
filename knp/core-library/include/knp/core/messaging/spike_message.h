@@ -43,6 +43,8 @@ struct SpikeMessage
      * @brief Indexes of the recently spiked neurons.
      */
     SpikeData neuron_indexes_;
+
+    // TODO: maybe add operator [] and others, to be able to use templates for message processing.
 };
 
 /**
