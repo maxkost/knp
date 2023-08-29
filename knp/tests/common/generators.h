@@ -20,6 +20,7 @@
 namespace knp::testing
 {
 using DeltaProjection = knp::core::Projection<knp::synapse_traits::DeltaSynapse>;
+using STDPDeltaProjection = knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse>;
 using BLIFATPopulation = knp::core::Population<knp::neuron_traits::BLIFATNeuron>;
 
 // Create an input projection
@@ -33,6 +34,13 @@ inline std::optional<DeltaProjection::Synapse> input_projection_gen(size_t /*ind
 inline std::optional<DeltaProjection::Synapse> synapse_generator(size_t /*index*/)  // NOLINT
 {
     return DeltaProjection::Synapse{{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};
+}
+
+
+// Create an STDP loop projection
+inline std::optional<STDPDeltaProjection::Synapse> stdp_synapse_generator(size_t /*index*/)  // NOLINT
+{
+    return STDPDeltaProjection::Synapse{{{}, {1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}}, 0, 0};
 }
 
 
