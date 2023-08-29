@@ -109,10 +109,9 @@ void calculate_additive_stdp_delta_synapse_projection(
     SPDLOG_DEBUG("Calculating Delta synapse projection");
 
     using ProjectionType = typename std::decay_t<decltype(projection)>;
-    using ProcessingType =
-        typename ProjectionType::SynapseSpecificParameters<ProjectionType::ProjectionSynapseType>::ProcessingType;
+    using ProcessingType = typename ProjectionType::SharedSynapseParameters::ProcessingType;
 
-    const auto &stdp_pops = projection.get_common_paratemeters().stdp_populations_;
+    const auto &stdp_pops = projection.get_shared_parameters().stdp_populations_;
 
     const auto all_messages = endpoint.unload_messages<SpikeMessage>(projection.get_uid());
     // Spike messages to process as usual.

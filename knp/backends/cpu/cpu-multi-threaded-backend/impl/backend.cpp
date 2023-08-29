@@ -282,7 +282,7 @@ std::vector<std::unique_ptr<knp::core::Device>> MultiThreadedCPUBackend::get_dev
 
 void MultiThreadedCPUBackend::init()
 {
-    SPDLOG_DEBUG("Initializing mulri-threaded CPU backend...");
+    SPDLOG_DEBUG("Initializing multi-threaded CPU backend...");
 
     knp::backends::cpu::init(projections_, message_endpoint_);
 

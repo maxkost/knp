@@ -11,6 +11,9 @@
 #include <knp/core/messaging/messaging.h>
 #include <knp/core/projection.h>
 
+#include <spdlog/spdlog.h>
+
+#include <string>
 #include <tuple>
 #include <variant>
 
@@ -18,21 +21,27 @@
 namespace knp::backends::cpu
 {
 
-template <typename T>
-void subscribe_stdp_projection(const typename core::Projection<T> &, knp::core::MessageEndpoint &)
+template <typename SynapseType>
+struct subscribe_stdp_projection
 {
-}
+    static void subscribe(const typename core::Projection<SynapseType> &, knp::core::MessageEndpoint &) {}
+};
 
 
-template <template <typename> typename Rule, typename SynapseT>
-void subscribe_stdp_projection(
-    const typename core::Projection<SynapseT> &p, knp::core::MessageEndpoint &message_endpoint)
+template <template <typename> typename Rule, typename SynapseType>
+struct subscribe_stdp_projection<knp::synapse_traits::STDP<Rule, SynapseType>>
 {
-    for (const auto &[pop_uid, _] : p.get_common_parameters().stdp_populations_)
+    static void subscribe(
+        const typename core::Projection<knp::synapse_traits::STDP<Rule, SynapseType>> &p,
+        knp::core::MessageEndpoint &message_endpoint)
     {
-        if (pop_uid) message_endpoint.subscribe<knp::core::messaging::SpikeMessage>(p.get_uid(), {pop_uid});
+        SPDLOG_TRACE("Subscribing STDP projecction {}", std::string(p.get_uid()));
+        for (const auto &[pop_uid, _] : p.get_shared_parameters().stdp_populations_)
+        {
+            if (pop_uid) message_endpoint.subscribe<knp::core::messaging::SpikeMessage>(p.get_uid(), {pop_uid});
+        }
     }
-}
+};
 
 
 template <typename ProjectionContainer>
@@ -44,7 +53,7 @@ void init(const ProjectionContainer &projections, knp::core::MessageEndpoint &me
             [&message_endpoint](const auto &proj)
             {
                 using T = std::decay_t<decltype(proj)>;
-                subscribe_stdp_projection<typename T::ProjectionSynapseType>(proj, message_endpoint);
+                subscribe_stdp_projection<typename T::ProjectionSynapseType>::subscribe(proj, message_endpoint);
                 return std::make_tuple(proj.get_presynaptic(), proj.get_postsynaptic(), proj.get_uid());
             },
             p.arg_);
@@ -53,4 +62,5 @@ void init(const ProjectionContainer &projections, knp::core::MessageEndpoint &me
         if (post_uid) message_endpoint.subscribe<knp::core::messaging::SynapticImpactMessage>(post_uid, {this_uid});
     }
 }
+
 }  // namespace knp::backends::cpu

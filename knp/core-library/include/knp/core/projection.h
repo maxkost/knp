@@ -19,6 +19,31 @@
 #include <utility>
 #include <vector>
 
+
+namespace knp::synapse_traits
+{
+/**
+ * @brief Structure for the parameters shared between synapses for STDP.
+ * @tparam Rule type of the STDP rule.
+ * @tparam SynapseType type of synapses.
+ */
+template <template <typename> typename Rule, typename SynapseType>
+struct shared_synapse_parameters<knp::synapse_traits::STDP<Rule, SynapseType>>
+{
+    enum class ProcessingType
+    {
+        STDPOnly,
+        STDPAndSpike
+    };
+
+    using ContainerType = std::unordered_map<core::UID, ProcessingType, core::uid_hash>;
+
+    uint32_t stdp_window_size_ = 1;
+    ContainerType stdp_populations_;
+};
+
+}  // namespace knp::synapse_traits
+
 /**
  * @brief Core library namespace.
  */
@@ -75,6 +100,9 @@ public:
     using SynapseGenerator = std::function<std::optional<Synapse>(uint32_t)>;
     using SynapseGenerator1 = std::function<std::optional<std::tuple<SynapseParameters, uint32_t, uint32_t>>(uint32_t)>;
 
+    using SharedSynapseParameters = knp::synapse_traits::shared_synapse_parameters<SynapseType>;
+
+public:
     /**
      * @brief Construct an empty projection.
      * @param presynaptic_uid UID of the presynaptic population.
@@ -314,28 +342,9 @@ public:
     bool is_locked() { return is_locked_; }
 
 public:
-    template <typename T>
-    struct SynapseSpecificParameters
-    {
-    };
+    SharedSynapseParameters &get_shared_parameters() { return shared_parameters_; }
 
-    template <template <typename> typename Rule, typename SynapseT>
-    struct SynapseSpecificParameters<knp::synapse_traits::STDP<Rule, SynapseT>>
-    {
-        enum class ProcessingType
-        {
-            STDPOnly,
-            STDPAndSpike
-        };
-
-        uint32_t stdp_window_size_ = 1;
-        std::unordered_map<core::UID, ProcessingType, core::uid_hash> stdp_populations_;
-    };
-
-public:
-    SynapseSpecificParameters<SynapseType> &get_common_paratemeters() { return common_parameters_; }
-
-    const SynapseSpecificParameters<SynapseType> &get_common_paratemeters() const { return common_parameters_; }
+    const SharedSynapseParameters &get_shared_parameters() const { return shared_parameters_; }
 
 private:
     BaseData base_;
@@ -362,7 +371,7 @@ private:
      */
     std::vector<Synapse> parameters_;
 
-    SynapseSpecificParameters<SynapseType> common_parameters_;
+    SharedSynapseParameters shared_parameters_;
 };
 
 
