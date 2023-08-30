@@ -15,6 +15,9 @@
 #include <unordered_map>
 
 
+/**
+ * @brief CPU backends namespace.
+ */
 namespace knp::backends::cpu
 {
 /**

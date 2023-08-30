@@ -17,6 +17,9 @@
 #include <vector>
 
 
+/**
+ * @brief CPU backends namespace.
+ */
 namespace knp::backends::cpu
 {
 

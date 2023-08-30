@@ -26,6 +26,9 @@ namespace knp::synapse_traits
 template <typename SynapseType>
 struct STDPAdditiveRule
 {
+    /**
+     * @brief Type of the synapse linked with rule.
+     */
     using LinkedSynapseType = SynapseType;
 
     /**

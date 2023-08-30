@@ -20,6 +20,9 @@
 #include <vector>
 
 
+/**
+ * @brief Synapse traits namespace.
+ */
 namespace knp::synapse_traits
 {
 /**
@@ -96,8 +99,12 @@ public:
 
     /**
      * @brief Synapse generation function.
+     * @deprecated Must be removed.
      */
     using SynapseGenerator = std::function<std::optional<Synapse>(uint32_t)>;
+    /**
+     * @brief Synapse generation function type.
+     */
     using SynapseGenerator1 = std::function<std::optional<std::tuple<SynapseParameters, uint32_t, uint32_t>>(uint32_t)>;
 
     using SharedSynapseParameters = knp::synapse_traits::shared_synapse_parameters<SynapseType>;
@@ -123,7 +130,7 @@ public:
      * @param postsynaptic_uid postsynaptic population UID.
      * @param generator function that generates a synapse.
      * @param num_iterations number of iterations to run the synapse generator.
-     * @deprecated
+     * @deprecated Must be removed.
      */
     Projection(UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator &generator, size_t num_iterations);
 
@@ -297,20 +304,14 @@ public:
      * @param neuron_index index of the postsynaptic neuron which related synapses must be deleted.
      * @return number of deleted synapses.
      */
-    size_t disconnect_postsynaptic_neuron(size_t neuron_index)
-    {
-        return disconnect_if([neuron_index](const Synapse &synapse) { return synapse.id_to_ == neuron_index; });
-    }
+    size_t disconnect_postsynaptic_neuron(size_t neuron_index);
 
     /**
      * @brief Remove all synapses that receive signals from a neuron with the given index.
      * @param neuron_index index of the presynaptic neuron which related synapses must be deleted.
      * @return number of deleted synapses.
      */
-    size_t disconnect_presynaptic_neuron(size_t neuron_index)
-    {
-        return disconnect_if([neuron_index](const Synapse &synapse) { return synapse.id_from_ == neuron_index; });
-    }
+    size_t disconnect_presynaptic_neuron(size_t neuron_index);
 
     /**
      * @brief Remove all synapses between two neurons with given indexes.
@@ -318,11 +319,7 @@ public:
      * @param neuron_to index of the postsynaptic neuron.
      * @return number of deleted synapses.
      */
-    size_t disconnect_neurons(size_t neuron_from, size_t neuron_to)
-    {
-        return disconnect_if([neuron_from, neuron_to](const Synapse &synapse)
-                             { return (synapse.id_from_ == neuron_from) && (synapse.id_to_ == neuron_to); });
-    }
+    size_t disconnect_neurons(size_t neuron_from, size_t neuron_to);
 
 public:
     /**
@@ -342,8 +339,14 @@ public:
     bool is_locked() { return is_locked_; }
 
 public:
+    /**
+     * @brief Get parameters shared between all synapses.
+     * @return shared parameters.
+     */
     SharedSynapseParameters &get_shared_parameters() { return shared_parameters_; }
-
+    /**
+     * @copydoc get_shared_parameters()
+     */
     const SharedSynapseParameters &get_shared_parameters() const { return shared_parameters_; }
 
 private:

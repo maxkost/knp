@@ -141,6 +141,28 @@ size_t knp::core::Projection<SynapseType>::add_synapses(const std::vector<Synaps
 }
 
 
+template <typename SynapseType>
+size_t knp::core::Projection<SynapseType>::disconnect_postsynaptic_neuron(size_t neuron_index)
+{
+    return disconnect_if([neuron_index](const Synapse &synapse) { return synapse.id_to_ == neuron_index; });
+}
+
+
+template <typename SynapseType>
+size_t knp::core::Projection<SynapseType>::disconnect_presynaptic_neuron(size_t neuron_index)
+{
+    return disconnect_if([neuron_index](const Synapse &synapse) { return synapse.id_from_ == neuron_index; });
+}
+
+
+template <typename SynapseType>
+size_t knp::core::Projection<SynapseType>::disconnect_neurons(size_t neuron_from, size_t neuron_to)
+{
+    return disconnect_if([neuron_from, neuron_to](const Synapse &synapse)
+                         { return (synapse.id_from_ == neuron_from) && (synapse.id_to_ == neuron_to); });
+}
+
+
 #define INSTANCE_PROJECTIONS(n, template_for_instance, synapse_type) template class knp::core::Projection<synapse_type>;
 
 // cppcheck-suppress unknownMacro
