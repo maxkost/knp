@@ -10,6 +10,7 @@
 #include <knp/core/uid.h>
 
 #include <any>
+#include <functional>
 #include <map>
 #include <string>
 #include <variant>
@@ -46,9 +47,9 @@ public:
      * @return tag value.
      */
     template <typename T>
-    [[nodiscard]] T &get_tag(const std::string &name)
+    [[nodiscard]] std::decay_t<T> &get_tag(const std::string &name)
     {
-        return std::any_cast<T>(tags_[name]);
+        return std::any_cast<std::decay_t<T> &>(tags_[name]);
     }
 
 private:

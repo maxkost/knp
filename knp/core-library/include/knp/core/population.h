@@ -53,7 +53,7 @@ public:
     /**
      * @brief Construct a population by running a neuron generator.
      * @param generator neuron generator.
-     * @param neurons_count number of time to run the neuron generator.
+     * @param neurons_count number of times to run the neuron generator.
      */
     Population(NeuronGenerator generator, size_t neurons_count) { add_neurons(generator, neurons_count); }
 
@@ -61,7 +61,7 @@ public:
      * @brief Construct a population by running a neuron generator.
      * @param uid population uid.
      * @param generator neuron generator.
-     * @param neurons_count number of time to run the neuron generator.
+     * @param neurons_count number of times to run the neuron generator.
      */
     Population(const knp::core::UID &uid, NeuronGenerator generator, size_t neurons_count) : base_{uid}
     {
@@ -81,6 +81,13 @@ public:
      * @see TagMap.
      */
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
+
+    /**
+     * @brief Get tags used by the population.
+     * @return population tag map.
+     * @see TagMap.
+     */
+    [[nodiscard]] auto &get_tags() const { return base_.tags_; }
 
 public:
     /**
@@ -116,7 +123,7 @@ public:
      * @param index index of the population neuron.
      * @return tag map of the neuron.
      */
-    [[nodiscard]] const TagMap &get_neuron_tags(size_t index)
+    [[nodiscard]] TagMap &get_neuron_tags(size_t index)
     {
         return base_.tags_.template get_tag<std::vector<TagMap>>("neuron_tags")[index];
     }

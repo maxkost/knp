@@ -18,11 +18,15 @@
 #include <variant>
 
 
+/**
+ * @brief CPU backends namespace.
+ */
 namespace knp::backends::cpu
 {
 
 /**
  * @brief The "null" subscriber.
+ * @tparam SynapseType type of the non-STDP synapses.
  */
 template <typename SynapseType>
 struct subscribe_stdp_projection
@@ -33,6 +37,8 @@ struct subscribe_stdp_projection
 
 /**
  * @brief STDP projection subscriber.
+ * @tparam Rule STDP rule.
+ * @tparam SynapseType linked synapse type.
  */
 template <template <typename> typename Rule, typename SynapseType>
 struct subscribe_stdp_projection<knp::synapse_traits::STDP<Rule, SynapseType>>

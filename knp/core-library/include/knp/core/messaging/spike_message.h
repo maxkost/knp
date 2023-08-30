@@ -24,6 +24,7 @@ namespace knp::core::messaging
  */
 using SpikeIndex = uint32_t;
 
+
 /**
  * @brief List of spike indexes.
  */

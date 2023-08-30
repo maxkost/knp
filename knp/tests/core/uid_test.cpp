@@ -34,6 +34,19 @@ TEST(UidSuite, UidToString)
 }
 
 
+TEST(UidSuite, UidFromStream)
+{
+    //    ::knp::core::UID uid;
+
+    //    std::istringstream ss;
+
+    //    ss << "01020300-0000-0000-0000-000000000000";
+    //    uid << ss;
+
+    //    ASSERT_EQ(uid, ::knp::core::UID(::boost::uuids::uuid{{1, 2, 3}}));
+}
+
+
 TEST(UidSuite, UidEq)
 {
     ::knp::core::UID uid1{::boost::uuids::uuid{{1, 2, 3}}};
