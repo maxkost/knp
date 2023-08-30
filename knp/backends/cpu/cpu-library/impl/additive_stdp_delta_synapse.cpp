@@ -89,7 +89,7 @@ void append_spike_times(
         // Filling synapses spike queue.
         for (auto neuron_index : msg.neuron_indexes_)
         {
-            // TODO: Ineffective, MUST be cached.
+            // TODO: Inefficient, MUST be cached.
             for (auto synapse_index : syn_index_getter(neuron_index))
             {
                 auto &rule = projection[synapse_index].params_.rule_;

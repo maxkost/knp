@@ -21,6 +21,9 @@
 namespace knp::backends::cpu
 {
 
+/**
+ * @brief The "null" subscriber.
+ */
 template <typename SynapseType>
 struct subscribe_stdp_projection
 {
@@ -28,6 +31,9 @@ struct subscribe_stdp_projection
 };
 
 
+/**
+ * @brief STDP projection subscriber.
+ */
 template <template <typename> typename Rule, typename SynapseType>
 struct subscribe_stdp_projection<knp::synapse_traits::STDP<Rule, SynapseType>>
 {
@@ -44,6 +50,12 @@ struct subscribe_stdp_projection<knp::synapse_traits::STDP<Rule, SynapseType>>
 };
 
 
+/**
+ * @brief Backend initialize function.
+ * @param projections container with back-end projections.
+ * @param message_endpoint message endpoint.
+ * @tparam ProjectionContainer projections container type.
+ */
 template <typename ProjectionContainer>
 void init(const ProjectionContainer &projections, knp::core::MessageEndpoint &message_endpoint)
 {
