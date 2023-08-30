@@ -21,7 +21,8 @@ namespace knp::meta
 {
 
 /**
- * Function load elements from the one container of all variants to the another container - subset of the all variants.
+ * @brief Function loads elements from one container of all variants to another container that contains a subset of all
+ * variants.
  * @tparam SupportedTypes variants subset.
  * @tparam AllVariants all supported variants.
  * @tparam ToContainer resulting container.
