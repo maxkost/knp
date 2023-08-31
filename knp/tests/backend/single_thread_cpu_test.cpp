@@ -91,7 +91,7 @@ TEST(SingleThreadCpuSuite, STDPNetwork)
     // Create a single neuron network: input -> input_projection -> population <=> loop_projection
     kt::STestingBack backend;
 
-    kt::BLIFATPopulation population{kt::neuron_generator, 1};
+    kt::BLIFATPopulation population{knp::core::UID(), kt::neuron_generator, 1};
     auto loop_projection =
         kt::STDPDeltaProjection{population.get_uid(), population.get_uid(), kt::stdp_synapse_generator, 1};
     Projection input_projection =
