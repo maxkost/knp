@@ -38,6 +38,7 @@ struct MessageHeader
     Step send_time_;
 };
 
+
 /**
  * @brief Get message header from an input stream.
  * @param stream input stream.

@@ -26,7 +26,7 @@ void ModelExecutor::init_channels(
 
         std::vector<core::UID> p_uids(channels.bucket_size(i));
         std::transform(
-            bucket_iter, channels.end(i), std::back_inserter(p_uids), [](const auto &it) { return it.second; });
+            bucket_iter, channels.end(i), std::back_inserter(p_uids), [](const auto &iter) { return iter.second; });
 
         (this->*channel_gen)(channel_uid, p_uids);
     }
@@ -70,7 +70,7 @@ const input::InputChannel &ModelExecutor::get_input_channel(const core::UID &cha
 {
     auto result = std::find_if(
         in_channels_.cbegin(), in_channels_.cend(),
-        [&channel_uid](const auto &ic) { return ic.get_uid() == channel_uid; });
+        [&channel_uid](const auto &input_channel) { return input_channel.get_uid() == channel_uid; });
     if (in_channels_.cend() == result) throw std::runtime_error("Wrong input channel UID");
     return *result;
 }
@@ -80,7 +80,7 @@ input::InputChannel &ModelExecutor::get_input_channel(const core::UID &channel_u
 {
     auto result = std::find_if(
         in_channels_.begin(), in_channels_.end(),
-        [&channel_uid](const auto &ic) { return ic.get_uid() == channel_uid; });
+        [&channel_uid](const auto &input_channel) { return input_channel.get_uid() == channel_uid; });
     if (in_channels_.end() == result) throw std::runtime_error("Wrong input channel UID");
     return *result;
 }
@@ -90,7 +90,7 @@ output::OutputChannel &ModelExecutor::get_output_channel(const core::UID &channe
 {
     auto result = std::find_if(
         out_channels_.begin(), out_channels_.end(),
-        [&channel_uid](const auto &oc) { return oc.get_uid() == channel_uid; });
+        [&channel_uid](const auto &output_channel) { return output_channel.get_uid() == channel_uid; });
     if (out_channels_.end() == result) throw std::runtime_error("Wrong output channel UID");
     return *result;
 }
@@ -100,7 +100,7 @@ const output::OutputChannel &ModelExecutor::get_output_channel(const core::UID &
 {
     auto result = std::find_if(
         out_channels_.cbegin(), out_channels_.cend(),
-        [&channel_uid](const auto &oc) { return oc.get_uid() == channel_uid; });
+        [&channel_uid](const auto &output_channel) { return output_channel.get_uid() == channel_uid; });
     if (out_channels_.cend() == result) throw std::runtime_error("Wrong output channel UID");
     return *result;
 }

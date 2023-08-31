@@ -34,7 +34,7 @@ class BOOST_SYMBOL_VISIBLE Backend
 {
 public:
     /**
-     * @brief Predicate type. 
+     * @brief Predicate type.
      * @details If the predicate returns `true`, network execution continues. Otherwise network execution stops./n
      * The predicate gets a step number as a parameter.
      */
@@ -86,17 +86,16 @@ public:
      */
     [[nodiscard]] virtual std::vector<size_t> get_supported_projection_indexes() const = 0;
 
-
 public:
     /**
-     * @brief Add projections to backend. 
+     * @brief Add projections to backend.
      * @throw exception if the `projections` parameters contains unsupported projection types.
      * @param projections projections to add.
      */
     virtual void load_all_projections(const std::vector<AllProjectionsVariant> &projections) = 0;
 
     /**
-     * @brief Add populations to backend. 
+     * @brief Add populations to backend.
      * @throw exception if the `populations` parameter contains unsupported population types.
      * @param populations populations to add.
      */

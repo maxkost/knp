@@ -19,4 +19,14 @@ namespace knp::synapse_traits
  */
 template <typename SynapseType>
 struct synapse_parameters;
+
+
+/**
+ * @brief Structure for the parameters shared between synapses.
+ * @tparam SynapseType type of synapses.
+ */
+template <typename SynapseType>
+struct shared_synapse_parameters
+{
+};
 }  // namespace knp::synapse_traits

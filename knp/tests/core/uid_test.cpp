@@ -4,7 +4,7 @@
 
 #include <knp/core/uid.h>
 
-#include "tests_common.h"
+#include <tests_common.h>
 
 
 TEST(UidSuite, UidGenerator)
@@ -13,10 +13,10 @@ TEST(UidSuite, UidGenerator)
 
     auto gen = ::knp::core::continuously_uid_generator();
     gen.reset();
-    auto u = gen();
+    auto uid = gen();
 
-    ASSERT_EQ(uuid{{1}}, u);
-    ASSERT_NE(uuid{{2}}, u);
+    ASSERT_EQ(uuid{{1}}, uid);
+    ASSERT_NE(uuid{{2}}, uid);
 
     auto u_gen = ::knp::core::continuously_uid_generator();
 
@@ -34,6 +34,19 @@ TEST(UidSuite, UidToString)
 }
 
 
+TEST(UidSuite, UidFromStream)
+{
+    //    ::knp::core::UID uid;
+
+    //    std::istringstream ss;
+
+    //    ss << "01020300-0000-0000-0000-000000000000";
+    //    uid << ss;
+
+    //    ASSERT_EQ(uid, ::knp::core::UID(::boost::uuids::uuid{{1, 2, 3}}));
+}
+
+
 TEST(UidSuite, UidEq)
 {
     ::knp::core::UID uid1{::boost::uuids::uuid{{1, 2, 3}}};
@@ -45,4 +58,15 @@ TEST(UidSuite, UidEq)
     ASSERT_NE(uid1, uid3);
     ASSERT_EQ(uid4, uid2);
     ASSERT_LT(uid3, uid1);
+}
+
+
+TEST(UidSuite, UidHash)
+{
+    ::knp::core::UID uid1{::boost::uuids::uuid{{1, 2, 3}}};
+
+    std::unordered_map<knp::core::UID, knp::core::UID, knp::core::uid_hash> uid_container;
+
+    uid_container[uid1] = uid1;
+    ASSERT_EQ(uid_container[uid1], uid1);
 }

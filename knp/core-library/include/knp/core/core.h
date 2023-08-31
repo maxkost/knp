@@ -10,6 +10,7 @@
 #include <knp/core/uid.h>
 
 #include <any>
+#include <functional>
 #include <map>
 #include <string>
 #include <variant>
@@ -20,12 +21,6 @@
  */
 namespace knp::core
 {
-/**
- * @brief Template used to generate a fixed `false` value for static asserts.
- */
-template <class>
-inline constexpr bool always_false_v = false;
-
 /**
  * @brief The TagMap class is a definition of tags used by entity and their values.
  */
@@ -46,9 +41,9 @@ public:
      * @return tag value.
      */
     template <typename T>
-    [[nodiscard]] T &get_tag(const std::string &name)
+    [[nodiscard]] std::decay_t<T> &get_tag(const std::string &name)
     {
-        return std::any_cast<T>(tags_[name]);
+        return std::any_cast<std::decay_t<T> &>(tags_[name]);
     }
 
 private:

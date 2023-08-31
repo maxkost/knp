@@ -24,10 +24,12 @@ namespace knp::core::messaging
  */
 using SpikeIndex = uint32_t;
 
+
 /**
  * @brief List of spike indexes.
  */
 using SpikeData = std::vector<SpikeIndex>;
+
 
 /**
  * @brief Structure of the spike message.
@@ -44,6 +46,7 @@ struct SpikeMessage
      */
     SpikeData neuron_indexes_;
 };
+
 
 /**
  * @brief Send spike message to an output stream.

@@ -109,8 +109,9 @@ SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg)
     UID presynaptic_uid{false};
     UID postsynaptic_uid{false};
     std::copy(
-        s_msg_header->sender_uid().data()->begin(), s_msg_header->sender_uid().data()->end(),
-        sender_uid.tag.data);  // clang_sa_ignore [core.CallAndMessage]
+        s_msg_header->sender_uid().data()->begin(),
+        s_msg_header->sender_uid().data()->end(),  // clang_sa_ignore [core.CallAndMessage]
+        sender_uid.tag.data);
     std::copy(
         s_msg->presynaptic_population_uid()->data()->begin(), s_msg->presynaptic_population_uid()->data()->end(),
         presynaptic_uid.tag.data);

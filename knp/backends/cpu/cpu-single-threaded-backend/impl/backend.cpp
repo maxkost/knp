@@ -8,10 +8,13 @@
 
 #include <knp/backends/cpu-library/blifat_population.h>
 #include <knp/backends/cpu-library/delta_synapse_projection.h>
+#include <knp/backends/cpu-library/init.h>
 #include <knp/backends/cpu-single-threaded/backend.h>
 #include <knp/core/core.h>
 #include <knp/devices/cpu.h>
+#include <knp/meta/assert_helpers.h>
 #include <knp/meta/stringify.h>
+#include <knp/meta/variant_helpers.h>
 
 #include <spdlog/spdlog.h>
 
@@ -69,23 +72,6 @@ SupportedVariants convert_variant(const AllVariants &input)
     return result;
 }
 
-// void SingleThreadedCPUBackend::add_projections_all(const std::vector<core::AllProjectionsVariant> &projections)
-//{
-//     std::vector<size_t> indexes = get_supported_projection_indexes();
-//     for (auto &projection : projections)
-//     {
-//         if (std::find(indexes.begin(), indexes.end(), projection.index()) == indexes.end())
-//             throw(std::runtime_error("Not supported projection type"));
-
-
-//        projections_.push_back(ProjectionWrapper{
-//            convert_variant<core::AllProjectionsVariant, SingleThreadedCPUBackend::ProjectionVariants>(projection)});
-//    }
-//}
-
-
-// void SingleThreadedCPUBackend::add_populations_all(const std::vector<core::AllPopulationsVariant> &populations) {}
-
 
 void SingleThreadedCPUBackend::step()
 {
@@ -101,8 +87,8 @@ void SingleThreadedCPUBackend::step()
                 using T = std::decay_t<decltype(arg)>;
                 if constexpr (
                     boost::mp11::mp_find<SupportedPopulations, T>{} == boost::mp11::mp_size<SupportedPopulations>{})
-                    static_assert(knp::core::always_false_v<T>, "Population isn't supported by the CPU ST backend!");
-                std::invoke(&SingleThreadedCPUBackend::calculate_population, this, arg);
+                    static_assert(knp::meta::always_false_v<T>, "Population isn't supported by the CPU ST backend!");
+                calculate_population(arg);
             },
             e);
     }
@@ -118,8 +104,8 @@ void SingleThreadedCPUBackend::step()
                 using T = std::decay_t<decltype(arg)>;
                 if constexpr (
                     boost::mp11::mp_find<SupportedProjections, T>{} == boost::mp11::mp_size<SupportedProjections>{})
-                    static_assert(knp::core::always_false_v<T>, "Projection isn't supported by the CPU ST backend!");
-                std::invoke(&SingleThreadedCPUBackend::calculate_projection, this, arg, e.messages_);
+                    static_assert(knp::meta::always_false_v<T>, "Projection isn't supported by the CPU ST backend!");
+                calculate_projection(arg, e.messages_);
             },
             e.arg_);
     }
@@ -157,6 +143,22 @@ void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVari
 }
 
 
+void SingleThreadedCPUBackend::load_all_projections(const std::vector<knp::core::AllProjectionsVariant> &projections)
+{
+    SPDLOG_DEBUG("Loading all projections");
+    knp::meta::load_from_container<SupportedProjections>(projections, projections_);
+    SPDLOG_DEBUG("All projections loaded");
+}
+
+
+void SingleThreadedCPUBackend::load_all_populations(const std::vector<knp::core::AllPopulationsVariant> &populations)
+{
+    SPDLOG_DEBUG("Loading all populations");
+    knp::meta::load_from_container<SupportedPopulations>(populations, populations_);
+    SPDLOG_DEBUG("All populations loaded");
+}
+
+
 std::vector<std::unique_ptr<knp::core::Device>> SingleThreadedCPUBackend::get_devices() const
 {
     std::vector<std::unique_ptr<knp::core::Device>> result;
@@ -177,18 +179,10 @@ std::vector<std::unique_ptr<knp::core::Device>> SingleThreadedCPUBackend::get_de
 
 void SingleThreadedCPUBackend::init()
 {
-    SPDLOG_DEBUG("Initializing...");
+    SPDLOG_DEBUG("Initializing single-threaded CPU backend...");
 
-    for (const auto &p : projections_)
-    {
-        const auto [pre_uid, post_uid, this_uid] = std::visit(
-            [](const auto &proj)
-            { return std::make_tuple(proj.get_presynaptic(), proj.get_postsynaptic(), proj.get_uid()); },
-            p.arg_);
+    knp::backends::cpu::init(projections_, message_endpoint_);
 
-        if (pre_uid) message_endpoint_.subscribe<knp::core::messaging::SpikeMessage>(this_uid, {pre_uid});
-        if (post_uid) message_endpoint_.subscribe<knp::core::messaging::SynapticImpactMessage>(post_uid, {this_uid});
-    }
     SPDLOG_DEBUG("Initializing finished...");
 }
 
@@ -196,7 +190,7 @@ void SingleThreadedCPUBackend::init()
 void SingleThreadedCPUBackend::calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population)
 {
     SPDLOG_TRACE("Calculate population {}", std::string(population.get_uid()));
-    calculate_blifat_population(population, message_endpoint_, get_step());
+    knp::backends::cpu::calculate_blifat_population(population, message_endpoint_, get_step());
 }
 
 
@@ -204,8 +198,18 @@ void SingleThreadedCPUBackend::calculate_projection(
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
     core::messaging::SynapticMessageQueue &message_queue)
 {
-    SPDLOG_TRACE("Calculate projection {}", std::string(projection.get_uid()));
-    calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, get_step());
+    SPDLOG_TRACE("Calculate Delta synapse projection {}", std::string(projection.get_uid()));
+    knp::backends::cpu::calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, get_step());
+}
+
+
+void SingleThreadedCPUBackend::calculate_projection(
+    knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> &projection,
+    core::messaging::SynapticMessageQueue &message_queue)
+{
+    SPDLOG_TRACE("Calculate AdditiveSTDPDelta synapse projection {}", std::string(projection.get_uid()));
+    knp::backends::cpu::calculate_additive_stdp_delta_synapse_projection(
+        projection, message_endpoint_, message_queue, get_step());
 }
 
 

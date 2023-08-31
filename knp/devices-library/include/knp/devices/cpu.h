@@ -15,7 +15,7 @@
 
 
 /**
- * @brief Device namespace.
+ * @brief CPU device namespace.
  */
 namespace knp::devices::cpu
 {
@@ -77,14 +77,15 @@ public:
 
 private:
     // Non const, because of move operator.
+    // cppcheck-suppress unusedStructMember
     std::string cpu_name_;
     mutable std::unique_ptr<CpuPower> power_meter_;
 };
 
 
 /**
- * @brief List all processors on which backend can be initialized. 
-*/
+ * @brief List all processors on which backend can be initialized.
+ */
 std::vector<CPU> list_processors();
 
 }  // namespace knp::devices::cpu

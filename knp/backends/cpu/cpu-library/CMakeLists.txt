@@ -18,8 +18,11 @@ file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/backends/cpu-library/*.h)
 knp_add_library("${PROJECT_NAME}"
     STATIC
 
+    impl/init.cpp
     impl/blifat_population.cpp
+    impl/delta_synapse_projection_impl.h
     impl/delta_synapse_projection.cpp
+    impl/additive_stdp_delta_synapse.cpp
 
     ${${PROJECT_NAME}_headers}
     )

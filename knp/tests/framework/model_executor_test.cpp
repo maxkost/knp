@@ -52,7 +52,6 @@ TEST(FrameworkSuite, ModelExecutorLoad)
 
     knp::framework::ModelExecutor me(model, knp::testing::get_backend_path(), {{i_channel_uid, input_gen}});
 
-    me.init();
     auto &out_channel = me.get_output_channel(o_channel_uid);
 
     me.start([](size_t step) { return step < 20; });

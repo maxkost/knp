@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 import json
-from pathlib import Path
 import subprocess
 import sys
-
+from pathlib import Path
 
 if len(sys.argv) < 3:
     print(f'{Path(__file__).name} <root directory> <percent>')
@@ -13,7 +12,18 @@ root_dir = Path(sys.argv[1])
 percent = int(sys.argv[2])
 params = sys.argv[2:]
 
-command = ['gcovr', '-r', str(root_dir), '-e', str(root_dir / 'third-party/.*'), '--json-summary']
+command = [
+    'gcovr',
+    '-r',
+    str(root_dir),
+    '-e',
+    str(root_dir / 'third-party' / '.*'),
+    '-e',
+    str(root_dir / 'knp' / '.*-traits-library'),
+    '-e',
+    '.*\\.h',
+    '--json-summary',
+]
 
 result = subprocess.run(command, check=False, stdout=subprocess.PIPE)
 
