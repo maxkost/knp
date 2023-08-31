@@ -12,6 +12,7 @@
 #include <knp/backends/cpu-single-threaded/backend.h>
 #include <knp/core/core.h>
 #include <knp/devices/cpu.h>
+#include <knp/meta/assert_helpers.h>
 #include <knp/meta/stringify.h>
 #include <knp/meta/variant_helpers.h>
 
@@ -86,7 +87,7 @@ void SingleThreadedCPUBackend::step()
                 using T = std::decay_t<decltype(arg)>;
                 if constexpr (
                     boost::mp11::mp_find<SupportedPopulations, T>{} == boost::mp11::mp_size<SupportedPopulations>{})
-                    static_assert(knp::core::always_false_v<T>, "Population isn't supported by the CPU ST backend!");
+                    static_assert(knp::meta::always_false_v<T>, "Population isn't supported by the CPU ST backend!");
                 calculate_population(arg);
             },
             e);
@@ -103,7 +104,7 @@ void SingleThreadedCPUBackend::step()
                 using T = std::decay_t<decltype(arg)>;
                 if constexpr (
                     boost::mp11::mp_find<SupportedProjections, T>{} == boost::mp11::mp_size<SupportedProjections>{})
-                    static_assert(knp::core::always_false_v<T>, "Projection isn't supported by the CPU ST backend!");
+                    static_assert(knp::meta::always_false_v<T>, "Projection isn't supported by the CPU ST backend!");
                 calculate_projection(arg, e.messages_);
             },
             e.arg_);
@@ -254,10 +255,10 @@ SingleThreadedCPUBackend::ProjectionIterator SingleThreadedCPUBackend::end_proje
 }
 
 
-// SingleThreadedCPUBackend::ProjectionConstIterator SingleThreadedCPUBackend::end_projections() const
-//{
-//     return projections_.cend();
-// }
+SingleThreadedCPUBackend::ProjectionConstIterator SingleThreadedCPUBackend::end_projections() const
+{
+    return projections_.cend();
+}
 
 
 }  // namespace knp::backends::single_threaded_cpu

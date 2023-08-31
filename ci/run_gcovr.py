@@ -17,9 +17,11 @@ command = [
     '-r',
     str(root_dir),
     '-e',
-    str(root_dir / 'third-party/.*'),
+    str(root_dir / 'third-party' / '.*'),
     '-e',
-    str(root_dir / '.*-traits-library'),
+    str(root_dir / 'knp' / '.*-traits-library'),
+    '-e',
+    '.*\\.h',
     '--json-summary',
 ]
 

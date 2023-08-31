@@ -12,6 +12,7 @@
 #include <knp/backends/thread_pool/thread_pool.h>
 #include <knp/core/core.h>
 #include <knp/devices/cpu.h>
+#include <knp/meta/assert_helpers.h>
 #include <knp/meta/stringify.h>
 #include <knp/meta/variant_helpers.h>
 
@@ -76,7 +77,7 @@ void MultiThreadedCPUBackend::calculate_populations_pre_impact()
                     if constexpr (
                         boost::mp11::mp_find<SupportedPopulations, T>{} == boost::mp11::mp_size<SupportedPopulations>{})
                         static_assert(
-                            knp::core::always_false_v<T>, "Population isn't supported by the CPU MT backend!");
+                            knp::meta::always_false_v<T>, "Population isn't supported by the CPU MT backend!");
 
                     // Start threads.
                     calc_pool_->post(

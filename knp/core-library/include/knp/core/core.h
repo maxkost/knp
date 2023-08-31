@@ -22,12 +22,6 @@
 namespace knp::core
 {
 /**
- * @brief Template used to generate a fixed `false` value for static asserts.
- */
-template <class>
-inline constexpr bool always_false_v = false;
-
-/**
  * @brief The TagMap class is a definition of tags used by entity and their values.
  */
 class TagMap
