@@ -13,6 +13,7 @@
 #include <knp/framework/io/input_channel.h>
 #include <knp/framework/io/output_channel.h>
 #include <knp/framework/network.h>
+#include <knp/monitoring/observer.h>
 
 #include <memory>
 #include <tuple>
@@ -78,6 +79,7 @@ public:
      * @param population_uid UID of the population which will be connected to the channel.
      */
     void add_output_channel(const core::UID &channel_uid, const core::UID &population_uid);
+
     /**
      * @brief Return all input channels.
      * @return map of input channels.
@@ -92,9 +94,7 @@ public:
 private:
     knp::core::BaseData base_;
     knp::framework::Network network_;
-    // cppcheck-suppress unusedStructMember
     std::unordered_multimap<core::UID, core::UID, core::uid_hash> in_channels_;
-    // cppcheck-suppress unusedStructMember
     std::unordered_multimap<core::UID, core::UID, core::uid_hash> out_channels_;
 };
 

@@ -9,6 +9,7 @@
 
 #include <knp/framework/backend_loader.h>
 #include <knp/framework/model.h>
+#include <knp/monitoring/observer.h>
 
 #include <filesystem>
 #include <functional>
@@ -102,6 +103,15 @@ public:
      */
     const input::InputChannel &get_input_channel(const core::UID &channel_uid) const;
 
+    template <class Message>
+    void add_observer(monitoring::MessageProcessor<Message> &&message_processor, const std::vector<core::UID> &senders)
+    {
+        observers_.emplace_back(knp::monitoring::MessageObserver<Message>(
+            backend_->message_bus_.create_endpoint(), std::move(message_processor), core::UID{true}));
+
+        std::visit([&senders](auto &entity) { entity.subscribe(senders); }, observers_.back());
+    }
+
 private:
     template <typename GenType>
     void init_channels(
@@ -116,11 +126,9 @@ private:
     std::shared_ptr<core::Backend> backend_;
     knp::framework::Model &model_;
     InputChannelMap i_map_;
-    // cppcheck-suppress unusedStructMember
     std::vector<knp::framework::input::InputChannel> in_channels_;
-
-    // cppcheck-suppress unusedStructMember
     std::vector<knp::framework::output::OutputChannel> out_channels_;
+    std::vector<monitoring::AnyObserverVariant> observers_;
 };
 
 }  // namespace knp::framework

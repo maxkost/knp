@@ -16,61 +16,48 @@
 #include <utility>
 #include <vector>
 
+#include <boost/mp11.hpp>
+
 
 namespace knp::monitoring
 {
+/**
+ * @brief Functor for message processing.
+ */
+template <class Message>
+using MessageProcessor = std::function<void(const std::vector<Message>)>;
 
 
 /**
- * @brief simple functor that writes spikes from entities to file in a given order.
+ * @brief A class that receives messages and process them.
+ * @tparam Message message type that is processed by an observer.
+ * @note use this for statistics calculation or for information output.
  */
-class OrderedWriter
-{
-public:
-    /**
-     * @brief Constructor.
-     * @param path output file path.
-     * @param order order of entities.
-     * @param separator string that separates spike indexes.
-     */
-    explicit OrderedWriter(const std::filesystem::path &path, std::vector<core::UID> order, std::string separator = " ")
-        : order_(std::move(order)), separator_(std::move(separator))
-    {
-        file_.open(path);
-        if (file_.bad()) throw std::runtime_error(std::string{"Couldn't open file: "} + path.string());
-    }
-
-    void operator()(const std::vector<core::messaging::SpikeMessage> &messages)
-    {
-        // TODO: Inefficient, but should not be a problem
-        for (size_t i = 0; i < order_.size(); ++i)
-        {
-            if (messages[i].header_.sender_uid_ == order_[i])
-            {
-                for (auto &value : messages[i].neuron_indexes_) file_ << value << separator_;
-                file_ << std::endl;
-            }
-        }
-    }
-
-private:
-    std::vector<core::UID> order_;
-    std::string separator_;
-    std::ofstream file_;
-};
-
-
 template <class Message>
 class MessageObserver
 {
 public:
-    MessageObserver(core::MessageEndpoint &&endpoint, core::UID uid)
-        : endpoint_(std::move(endpoint)), uid_(std::move(uid))
+    /**
+     * @brief Constructor.
+     * @param endpoint endpoint to get messages from.
+     * @param processor functor to process messages.
+     * @param uid observer uid.
+     */
+    MessageObserver(
+        core::MessageEndpoint &&endpoint, MessageProcessor<Message> &&processor, core::UID uid = core::UID{true})
+        : endpoint_(std::move(endpoint)), process_messages_(processor), uid_(uid)
     {
     }
 
+    /**
+     * @brief Subscribe to messages.
+     * @param entities message senders.
+     */
     void subscribe(const std::vector<core::UID> &entities) { endpoint_.subscribe<Message>(uid_, entities); }
 
+    /**
+     * @brief Receive and process messages.
+     */
     void update()
     {
         endpoint_.receive_all_messages();
@@ -79,8 +66,19 @@ public:
     }
 
 private:
-    std::function<void(std::vector<Message>)> process_messages_;
     core::MessageEndpoint endpoint_;
+    MessageProcessor<Message> process_messages_;
     core::UID uid_;
 };
+
+/**
+ * @brief list of all possible observers.
+ */
+using AllObservers = boost::mp11::mp_transform<MessageObserver, core::messaging::AllMessages>;
+
+/**
+ * @brief observer variant, containing all possible observers.
+ */
+using AnyObserverVariant = boost::mp11::mp_rename<AllObservers, std::variant>;
+
 }  // namespace knp::monitoring

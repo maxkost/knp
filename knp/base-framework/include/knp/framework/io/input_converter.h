@@ -9,8 +9,6 @@
 #include <knp/core/messaging/spike_message.h>
 #include <knp/core/uid.h>
 
-#include <spdlog/spdlog.h>
-
 #include <functional>
 #include <sstream>
 #include <string>
