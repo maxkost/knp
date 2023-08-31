@@ -13,10 +13,10 @@ TEST(UidSuite, UidGenerator)
 
     auto gen = ::knp::core::continuously_uid_generator();
     gen.reset();
-    auto u = gen();
+    auto uid = gen();
 
-    ASSERT_EQ(uuid{{1}}, u);
-    ASSERT_NE(uuid{{2}}, u);
+    ASSERT_EQ(uuid{{1}}, uid);
+    ASSERT_NE(uuid{{2}}, uid);
 
     auto u_gen = ::knp::core::continuously_uid_generator();
 
@@ -65,8 +65,8 @@ TEST(UidSuite, UidHash)
 {
     ::knp::core::UID uid1{::boost::uuids::uuid{{1, 2, 3}}};
 
-    std::unordered_map<knp::core::UID, knp::core::UID, knp::core::uid_hash> s;
+    std::unordered_map<knp::core::UID, knp::core::UID, knp::core::uid_hash> uid_container;
 
-    s[uid1] = uid1;
-    ASSERT_EQ(s[uid1], uid1);
+    uid_container[uid1] = uid1;
+    ASSERT_EQ(uid_container[uid1], uid1);
 }

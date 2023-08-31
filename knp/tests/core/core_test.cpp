@@ -9,9 +9,9 @@
 
 TEST(CoreSuite, TagMapTest)
 {
-    knp::core::TagMap tm;
+    knp::core::TagMap tag_map;
 
-    tm.get_tag("test") = std::string("test_val");
+    tag_map.get_tag("test") = std::string("test_val");
 
-    ASSERT_EQ(tm.get_tag<std::string>("test"), "test_val");
+    ASSERT_EQ(tag_map.get_tag<std::string>("test"), "test_val");
 }

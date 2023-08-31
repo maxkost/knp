@@ -39,10 +39,10 @@ void impact_neuron(
         case knp::synapse_traits::OutputType::BLOCKING:
             neuron.total_blocking_period_ = static_cast<unsigned int>(impact_value);
             break;
-        default:
-            const auto error_message = "Unknown synapse type: " + std::to_string(static_cast<int>(synapse_type));
-            SPDLOG_ERROR(error_message);
-            throw std::runtime_error(error_message);
+            //        default:
+            //            const auto error_message = "Unknown synapse type: " +
+            //            std::to_string(static_cast<int>(synapse_type)); SPDLOG_ERROR(error_message); throw
+            //            std::runtime_error(error_message);
     }
 }
 
@@ -202,14 +202,14 @@ void calculate_blifat_population(
 
 void calculate_blifat_population(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint,
-    size_t step_n, std::mutex &m)
+    size_t step_n, std::mutex &mutex)
 {
     auto neuron_indexes{calculate_blifat_population_data(population, endpoint)};
 
     if (!neuron_indexes.empty())
     {
         knp::core::messaging::SpikeMessage res_message{{population.get_uid(), step_n}, neuron_indexes};
-        std::lock_guard<std::mutex> lg(m);
+        std::lock_guard<std::mutex> guard(mutex);
         endpoint.send_message(res_message);
         SPDLOG_DEBUG("Sent {} spike(s)", res_message.neuron_indexes_.size());
     }

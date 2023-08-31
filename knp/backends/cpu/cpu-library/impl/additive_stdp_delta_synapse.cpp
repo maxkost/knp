@@ -40,10 +40,11 @@ public:
     {
     }
 
-    [[nodiscard]] float stdp_w(float x)
+    [[nodiscard]] float stdp_w(float weight_diff)
     {
         // Zhang et al. 1998.
-        return x > 0 ? a_plus_ * std::exp(-x / tau_plus_) : a_minus_ * std::exp(x / tau_minus_);
+        return weight_diff > 0 ? a_plus_ * std::exp(-weight_diff / tau_plus_)
+                               : a_minus_ * std::exp(weight_diff / tau_minus_);
     }
 
     [[nodiscard]] float stdp_delta_w(
@@ -161,7 +162,7 @@ void calculate_additive_stdp_delta_synapse_projection(
 
         append_spike_times(
             projection, usual_spike_messages,
-            [&projection](uint32_t ni) { return projection.get_by_presynaptic_neuron(ni); },
+            [&projection](uint32_t neuron_index) { return projection.get_by_presynaptic_neuron(neuron_index); },
             &knp::synapse_traits::STDPAdditiveRule<knp::synapse_traits::DeltaSynapse>::presynaptic_spike_times_);
 
         auto out_iter = calculate_delta_synapse_projection_data(
@@ -181,7 +182,7 @@ void calculate_additive_stdp_delta_synapse_projection(
         // Fill synapses post-synaptic spike queue.
         append_spike_times(
             projection, stdp_only_messages,
-            [&projection](uint32_t ni) { return projection.get_by_postsynaptic_neuron(ni); },
+            [&projection](uint32_t neuron_index) { return projection.get_by_postsynaptic_neuron(neuron_index); },
             &knp::synapse_traits::STDPAdditiveRule<knp::synapse_traits::DeltaSynapse>::postsynaptic_spike_times_);
     }
 
@@ -193,9 +194,9 @@ void calculate_additive_stdp_delta_synapse_projection(
 
         if (rule.presynaptic_spike_times_.size() >= period && rule.postsynaptic_spike_times_.size() >= period)
         {
-            STDPFormula sf(rule.tau_plus_, rule.tau_minus_, 1, 1);
+            STDPFormula stdp_formula(rule.tau_plus_, rule.tau_minus_, 1, 1);
             SPDLOG_TRACE("Old weight = {}", s.params_.synapse_.weight_);
-            s.params_.synapse_.weight_ += sf(rule.presynaptic_spike_times_, rule.postsynaptic_spike_times_);
+            s.params_.synapse_.weight_ += stdp_formula(rule.presynaptic_spike_times_, rule.postsynaptic_spike_times_);
             SPDLOG_TRACE("New weight = {}", s.params_.synapse_.weight_);
             rule.presynaptic_spike_times_.clear();
             rule.postsynaptic_spike_times_.clear();
