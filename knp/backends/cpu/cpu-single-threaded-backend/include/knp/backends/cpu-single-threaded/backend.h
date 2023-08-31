@@ -206,6 +206,7 @@ public:
      */
     PopulationConstIterator end_populations() const;
 
+    // TODO: make iterator, which is returns projections, but not a wrapper.
     /**
      * @brief Get an iterator pointing to the first element of the projection loaded to backend.
      * @return projection iterator.

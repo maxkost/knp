@@ -47,9 +47,10 @@ struct subscribe_stdp_projection<knp::synapse_traits::STDP<Rule, SynapseType>>
         const typename core::Projection<knp::synapse_traits::STDP<Rule, SynapseType>> &p,
         knp::core::MessageEndpoint &message_endpoint)
     {
-        SPDLOG_TRACE("Subscribing STDP projecction {}", std::string(p.get_uid()));
+        SPDLOG_TRACE("Subscribing method for the STDP projection {}", std::string(p.get_uid()));
         for (const auto &[pop_uid, _] : p.get_shared_parameters().stdp_populations_)
         {
+            SPDLOG_TRACE("Subscribing STDP projection {} to {}", std::string(p.get_uid()), std::string(pop_uid));
             if (pop_uid) message_endpoint.subscribe<knp::core::messaging::SpikeMessage>(p.get_uid(), {pop_uid});
         }
     }

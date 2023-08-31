@@ -139,10 +139,12 @@ void calculate_additive_stdp_delta_synapse_projection(
             {
                 SPDLOG_TRACE("STDP synapse and spike");
                 usual_spike_messages.push_back(msg);
+                stdp_only_messages.push_back(msg);
             }
             else if (ProcessingType::STDPOnly == processing_type)
             {
                 SPDLOG_TRACE("STDP synapse");
+                stdp_only_messages.push_back(msg);
             }
             else
             {
@@ -185,13 +187,16 @@ void calculate_additive_stdp_delta_synapse_projection(
 
     for (auto &s : projection)
     {
+        SPDLOG_TRACE("Applying STDP rule...");
         auto &rule = s.params_.rule_;
         const auto period = rule.tau_plus_ + rule.tau_minus_;
 
         if (rule.presynaptic_spike_times_.size() >= period && rule.postsynaptic_spike_times_.size() >= period)
         {
             STDPFormula sf(rule.tau_plus_, rule.tau_minus_, 1, 1);
+            SPDLOG_TRACE("Old weight = {}", s.params_.synapse_.weight_);
             s.params_.synapse_.weight_ += sf(rule.presynaptic_spike_times_, rule.postsynaptic_spike_times_);
+            SPDLOG_TRACE("New weight = {}", s.params_.synapse_.weight_);
             rule.presynaptic_spike_times_.clear();
             rule.postsynaptic_spike_times_.clear();
         }

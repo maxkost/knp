@@ -7,29 +7,40 @@
 
 #include <knp/core/projection.h>
 
+#include <spdlog/spdlog.h>
+
 
 namespace knp::core
 {
 
 template <typename SynapseType>
-knp::core::Projection<SynapseType>::Projection(UID presynaptic_uid, UID postsynaptic_uid)
+Projection<SynapseType>::Projection(UID presynaptic_uid, UID postsynaptic_uid)
     : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
+    SPDLOG_DEBUG(
+        "Creating projection with UID = {}, presynaptic UID = {}, postsynaptic UID = {}", std::string(get_uid()),
+        std::string(presynaptic_uid_), std::string(postsynaptic_uid_));
 }
 
 
 template <typename SynapseType>
-knp::core::Projection<SynapseType>::Projection(UID uid, UID presynaptic_uid, UID postsynaptic_uid)
+Projection<SynapseType>::Projection(UID uid, UID presynaptic_uid, UID postsynaptic_uid)
     : base_{uid}, presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
+    SPDLOG_DEBUG(
+        "Creating projection with UID = {}, presynaptic UID = {}, postsynaptic UID = {}", std::string(get_uid()),
+        std::string(presynaptic_uid_), std::string(postsynaptic_uid_));
 }
 
 
 template <typename SynapseType>
-knp::core::Projection<SynapseType>::Projection(
+Projection<SynapseType>::Projection(
     UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator &generator, size_t num_iterations)
     : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
+    SPDLOG_DEBUG(
+        "Creating projection with UID = {}, presynaptic UID = {}, postsynaptic UID = {}, i = {}",
+        std::string(get_uid()), std::string(presynaptic_uid_), std::string(postsynaptic_uid_), num_iterations);
     for (size_t i = 0; i < num_iterations; ++i)
     {
         if (auto params = generator(i))
@@ -41,11 +52,14 @@ knp::core::Projection<SynapseType>::Projection(
 
 
 template <typename SynapseType>
-knp::core::Projection<SynapseType>::Projection(
-    UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator1 &generator, size_t synapses_count)
+Projection<SynapseType>::Projection(
+    UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator1 &generator, size_t num_iterations)
     : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
-    for (size_t i = 0; i < synapses_count; ++i)
+    SPDLOG_DEBUG(
+        "Creating projection with UID = {}, presynaptic UID = {}, postsynaptic UID = {}, i = {}",
+        std::string(get_uid()), std::string(presynaptic_uid_), std::string(postsynaptic_uid_), num_iterations);
+    for (size_t i = 0; i < num_iterations; ++i)
     {
         if (auto params = generator(i))
         {
@@ -57,11 +71,14 @@ knp::core::Projection<SynapseType>::Projection(
 
 
 template <typename SynapseType>
-knp::core::Projection<SynapseType>::Projection(
-    UID uid, UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator1 &generator, size_t synapses_count)
+Projection<SynapseType>::Projection(
+    UID uid, UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator1 &generator, size_t num_iterations)
     : base_{uid}, presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
-    for (size_t i = 0; i < synapses_count; ++i)
+    SPDLOG_DEBUG(
+        "Creating projection with UID = {}, presynaptic UID = {}, postsynaptic UID = {}, i = {}",
+        std::string(get_uid()), std::string(presynaptic_uid_), std::string(postsynaptic_uid_), num_iterations);
+    for (size_t i = 0; i < num_iterations; ++i)
     {
         if (auto params = generator(i))
         {

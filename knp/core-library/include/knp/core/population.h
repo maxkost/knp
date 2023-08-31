@@ -55,7 +55,7 @@ public:
      * @param generator neuron generator.
      * @param neurons_count number of times to run the neuron generator.
      */
-    Population(NeuronGenerator generator, size_t neurons_count) { add_neurons(generator, neurons_count); }
+    Population(NeuronGenerator generator, size_t neurons_count);
 
     /**
      * @brief Construct a population by running a neuron generator.
@@ -63,10 +63,7 @@ public:
      * @param generator neuron generator.
      * @param neurons_count number of times to run the neuron generator.
      */
-    Population(const knp::core::UID &uid, NeuronGenerator generator, size_t neurons_count) : base_{uid}
-    {
-        add_neurons(generator, neurons_count);
-    }
+    Population(const knp::core::UID &uid, NeuronGenerator generator, size_t neurons_count);
 
 public:
     /**

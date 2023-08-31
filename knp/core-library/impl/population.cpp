@@ -8,9 +8,28 @@
 
 #include <knp/core/population.h>
 
+#include <spdlog/spdlog.h>
+
 
 namespace knp::core
 {
+template <typename NeuronType>
+Population<NeuronType>::Population(Population<NeuronType>::NeuronGenerator generator, size_t neurons_count)
+{
+    SPDLOG_DEBUG("Creating population with UID = {} and neurons count = {}", std::string(get_uid()), neurons_count);
+    add_neurons(generator, neurons_count);
+}
+
+
+template <typename NeuronType>
+Population<NeuronType>::Population(
+    const UID &uid, Population<NeuronType>::NeuronGenerator generator, size_t neurons_count)
+    : base_{uid}
+{
+    SPDLOG_DEBUG("Creating population with UID = {} and neurons count = {}", std::string(get_uid()), neurons_count);
+    add_neurons(generator, neurons_count);
+}
+
 
 #define INSTANCE_POPULATIONS(n, template_for_instance, neuron_type) template class knp::core::Population<neuron_type>;
 

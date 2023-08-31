@@ -254,10 +254,10 @@ SingleThreadedCPUBackend::ProjectionIterator SingleThreadedCPUBackend::end_proje
 }
 
 
-SingleThreadedCPUBackend::ProjectionConstIterator SingleThreadedCPUBackend::end_projections() const
-{
-    return projections_.cend();
-}
+// SingleThreadedCPUBackend::ProjectionConstIterator SingleThreadedCPUBackend::end_projections() const
+//{
+//     return projections_.cend();
+// }
 
 
 }  // namespace knp::backends::single_threaded_cpu

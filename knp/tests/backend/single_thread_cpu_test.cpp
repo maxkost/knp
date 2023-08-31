@@ -39,7 +39,7 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
     namespace kt = knp::testing;
 
     // Create a single neuron network: input -> input_projection -> population <=> loop_projection
-    knp::testing::STestingBack backend;
+    kt::STestingBack backend;
 
     kt::BLIFATPopulation population{kt::neuron_generator, 1};
     Projection loop_projection =
@@ -89,14 +89,18 @@ TEST(SingleThreadCpuSuite, STDPNetwork)
     namespace kt = knp::testing;
 
     // Create a single neuron network: input -> input_projection -> population <=> loop_projection
-    knp::testing::STestingBack backend;
+    kt::STestingBack backend;
 
     kt::BLIFATPopulation population{kt::neuron_generator, 1};
-    Projection loop_projection =
+    auto loop_projection =
         kt::STDPDeltaProjection{population.get_uid(), population.get_uid(), kt::stdp_synapse_generator, 1};
     Projection input_projection =
-        kt::DeltaProjection{knp::core::UID{false}, population.get_uid(), kt::input_projection_gen, 1};
+        kt::STDPDeltaProjection{knp::core::UID{false}, population.get_uid(), kt::stdp_input_projection_gen, 1};
     knp::core::UID input_uid = std::visit([](const auto &proj) { return proj.get_uid(); }, input_projection);
+
+    loop_projection.get_shared_parameters().stdp_populations_[population.get_uid()] =
+        knp::synapse_traits::shared_synapse_parameters<
+            knp::synapse_traits::AdditiveSTDPDeltaSynapse>::ProcessingType::STDPAndSpike;
 
     backend.load_populations({population});
     backend.load_projections({input_projection, loop_projection});
@@ -128,9 +132,29 @@ TEST(SingleThreadCpuSuite, STDPNetwork)
         if (!output.empty()) results.push_back(step);
     }
 
+    std::vector<float> old_synaptic_weights, new_synaptic_weights;
+    old_synaptic_weights.reserve(loop_projection.size());
+    new_synaptic_weights.reserve(loop_projection.size());
+
+    std::transform(
+        loop_projection.begin(), loop_projection.end(), std::back_inserter(old_synaptic_weights),
+        [](const auto &s) { return s.params_.synapse_.weight_; });
+
+    for (auto p = backend.begin_projections(); p != backend.end_projections(); ++p)
+    {
+        const auto &prj = std::get<kt::STDPDeltaProjection>(p->arg_);
+        if (prj.get_uid() != loop_projection.get_uid()) continue;
+
+        std::transform(
+            prj.begin(), prj.end(), std::back_inserter(new_synaptic_weights),
+            [](const auto &s) { return s.params_.synapse_.weight_; });
+    }
+
     // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
     const std::vector<knp::core::messaging::Step> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
+
     ASSERT_EQ(results, expected_results);
+    ASSERT_NE(old_synaptic_weights, new_synaptic_weights);
 }
 
 
