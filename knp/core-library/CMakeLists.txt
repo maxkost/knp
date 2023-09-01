@@ -16,8 +16,6 @@ include(clang-tidy)
 include(knp-functions)
 
 file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/core/*.h)
-file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/monitoring/*.h)
-
 
 set(${PROJECT_NAME}_FB_SOURCES
     impl/messaging/fbs/message_envelope.fbs

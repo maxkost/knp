@@ -12,8 +12,8 @@
 #include <knp/framework/backend_loader.h>
 #include <knp/framework/io/input_channel.h>
 #include <knp/framework/io/output_channel.h>
+#include <knp/framework/monitoring/observer.h>
 #include <knp/framework/network.h>
-#include <knp/monitoring/observer.h>
 
 #include <memory>
 #include <tuple>

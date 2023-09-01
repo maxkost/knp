@@ -9,7 +9,7 @@
 
 #include <knp/framework/backend_loader.h>
 #include <knp/framework/model.h>
-#include <knp/monitoring/observer.h>
+#include <knp/framework/monitoring/observer.h>
 
 #include <filesystem>
 #include <functional>
@@ -24,7 +24,6 @@
  */
 namespace knp::framework
 {
-
 /**
  * @brief The ModelExecutor class is a definition of an executor that runs the uploaded model on the specified backend.
  */
@@ -83,6 +82,7 @@ public:
      * @throw std::runtime_error if there is no channel with a given UID.
      */
     const output::OutputChannel &get_output_channel(const core::UID &channel_uid) const;
+
     /**
      * @brief Get reference to input channel by its UID.
      * @param channel_uid channel UID.
@@ -99,10 +99,16 @@ public:
      */
     const input::InputChannel &get_input_channel(const core::UID &channel_uid) const;
 
+    /**
+     * @brief
+     * @tparam Message
+     * @param message_processor
+     * @param senders
+     */
     template <class Message>
     void add_observer(monitoring::MessageProcessor<Message> &&message_processor, const std::vector<core::UID> &senders)
     {
-        observers_.emplace_back(knp::monitoring::MessageObserver<Message>(
+        observers_.emplace_back(monitoring::MessageObserver<Message>(
             backend_->message_bus_.create_endpoint(), std::move(message_processor), core::UID{true}));
 
         std::visit([&senders](auto &entity) { entity.subscribe(senders); }, observers_.back());

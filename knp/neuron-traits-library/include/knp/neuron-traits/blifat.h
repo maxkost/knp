@@ -52,8 +52,6 @@ struct default_values<BLIFATNeuron>
  * @brief Structure for BLIFAT neuron parameters.
  */
 template <>
-
-
 struct neuron_parameters<BLIFATNeuron>
 {
     /**
