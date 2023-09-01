@@ -110,7 +110,7 @@ bool calculate_neuron_post_input_state(
 {
     bool spike = false;
 
-    if (neuron.inhibitory_conductance_ < 1.0f)
+    if (neuron.inhibitory_conductance_ < 1.0)
     {
         neuron.potential_ -=
             (neuron.potential_ - neuron.reversive_inhibitory_potential_) * neuron.inhibitory_conductance_;
@@ -121,7 +121,7 @@ bool calculate_neuron_post_input_state(
     }
 
     if ((neuron.n_time_steps_since_last_firing_ > neuron.absolute_refractory_period_) &&
-        (neuron.potential_ >= 1.0 + neuron.dynamic_threshold_))
+        (neuron.potential_ >= neuron.activation_threshold_ + neuron.dynamic_threshold_))
     {
         // Spike.
         neuron.dynamic_threshold_ += neuron.threshold_increment_;

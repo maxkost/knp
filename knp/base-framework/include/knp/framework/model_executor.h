@@ -9,6 +9,7 @@
 
 #include <knp/framework/backend_loader.h>
 #include <knp/framework/model.h>
+#include <knp/framework/monitoring/observer.h>
 
 #include <filesystem>
 #include <functional>
@@ -23,7 +24,6 @@
  */
 namespace knp::framework
 {
-
 /**
  * @brief The ModelExecutor class is a definition of an executor that runs the uploaded model on the specified backend.
  */
@@ -82,6 +82,7 @@ public:
      * @throw std::runtime_error if there is no channel with a given UID.
      */
     const output::OutputChannel &get_output_channel(const core::UID &channel_uid) const;
+
     /**
      * @brief Get reference to input channel by its UID.
      * @param channel_uid channel UID.
@@ -97,6 +98,21 @@ public:
      * @throw std::runtime_error if no channel with the given UID exists.
      */
     const input::InputChannel &get_input_channel(const core::UID &channel_uid) const;
+
+    /**
+     * @brief Add observer to executor.
+     * @tparam Message type of messages to observe.
+     * @param message_processor functor that defines how to process received messages.
+     * @param senders list of observed entities.
+     */
+    template <class Message>
+    void add_observer(monitoring::MessageProcessor<Message> &&message_processor, const std::vector<core::UID> &senders)
+    {
+        observers_.emplace_back(monitoring::MessageObserver<Message>(
+            backend_->message_bus_.create_endpoint(), std::move(message_processor), core::UID{true}));
+
+        std::visit([&senders](auto &entity) { entity.subscribe(senders); }, observers_.back());
+    }
 
 protected:
     /**
@@ -118,11 +134,9 @@ private:
     std::shared_ptr<core::Backend> backend_;
     knp::framework::Model &model_;
     InputChannelMap i_map_;
-    // cppcheck-suppress unusedStructMember
     std::vector<knp::framework::input::InputChannel> in_channels_;
-
-    // cppcheck-suppress unusedStructMember
     std::vector<knp::framework::output::OutputChannel> out_channels_;
+    std::vector<monitoring::AnyObserverVariant> observers_;
 };
 
 }  // namespace knp::framework

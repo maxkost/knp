@@ -38,7 +38,8 @@ struct default_values<BLIFATNeuron>
      */
     constexpr static std::size_t steps_before_firing = std::numeric_limits<std::size_t>::infinity();
     /**
-     * @brief The parameter defines a value to which membrane potential tends (for conductance-based inhibitory synapses)
+     * @brief The parameter defines a value to which membrane potential tends (for conductance-based inhibitory
+     * synapses)
      */
     constexpr static double reverse_inhibitory_potential = -0.3;
     /**
@@ -51,20 +52,25 @@ struct default_values<BLIFATNeuron>
  * @brief Structure for BLIFAT neuron parameters.
  */
 template <>
-
-
 struct neuron_parameters<BLIFATNeuron>
 {
     /**
      * @brief The parameter takes the default value of `steps_before_firing` defined for a BLIFAT neuron.
      */
     std::size_t n_time_steps_since_last_firing_ = default_values<BLIFATNeuron>::steps_before_firing;
+
     /**
-     * @brief The parameter defines a dynamic threshold for membrane potential after reaching which a neuron generates a spike.
+     * @brief The parameter defines a threshold for membrane potential.
+     */
+    double activation_threshold_ = 1.0;
+    /**
+     * @brief The parameter defines a dynamic threshold for membrane potential after reaching which a neuron generates a
+     * spike.
      */
     double dynamic_threshold_ = 0.;
     /**
-     * @brief The parameter defines a time constant during which the `dynamic_threshold_` parameter tends to its base value if nothing happens.
+     * @brief The parameter defines a time constant during which the `dynamic_threshold_` parameter tends to its base
+     * value if nothing happens.
      */
     double threshold_decay_ = 0.;
     /**
@@ -76,13 +82,15 @@ struct neuron_parameters<BLIFATNeuron>
      */
     double postsynaptic_trace_ = 0.;
     /**
-     * @brief The parameter defines a time constant during which the `postsynaptic_trace_` parameter tends to zero if nothing happens.
+     * @brief The parameter defines a time constant during which the `postsynaptic_trace_` parameter tends to zero if
+     * nothing happens.
      * @details If `postsynaptic_trace_decay_` equals 0, then `postsynaptic_trace_` also equals 0.
      */
     double postsynaptic_trace_decay_ = 0.;
 
     /**
-     * @brief The parameter defines a value that increases the `postsynaptic_trace_` value if a neuron generates a spike.
+     * @brief The parameter defines a value that increases the `postsynaptic_trace_` value if a neuron generates a
+     * spike.
      */
     double postsynaptic_trace_increment_ = 0.;
     /**
@@ -136,7 +144,8 @@ struct neuron_parameters<BLIFATNeuron>
      */
     double min_potential_ = default_values<BLIFATNeuron>::min_potential;
     /**
-     * @brief The parameter defines the number of network execution steps, during which the neuron activity is totally blocked.
+     * @brief The parameter defines the number of network execution steps, during which the neuron activity is totally
+     * blocked.
      */
     unsigned total_blocking_period_ = 0;
 };
