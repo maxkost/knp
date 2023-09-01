@@ -100,10 +100,10 @@ public:
     const input::InputChannel &get_input_channel(const core::UID &channel_uid) const;
 
     /**
-     * @brief
-     * @tparam Message
-     * @param message_processor
-     * @param senders
+     * @brief Add observer to executor.
+     * @tparam Message type of messages to observe.
+     * @param message_processor functor that defines how to process received messages.
+     * @param senders list of observed entities.
      */
     template <class Message>
     void add_observer(monitoring::MessageProcessor<Message> &&message_processor, const std::vector<core::UID> &senders)

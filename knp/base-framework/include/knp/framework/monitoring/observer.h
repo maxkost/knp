@@ -18,11 +18,14 @@
 #include "knp/core/message_endpoint.h"
 #include "knp/core/messaging/messaging.h"
 
-
+/**
+ * @brief Monitoring namespace.
+ */
 namespace knp::framework::monitoring
 {
 /**
  * @brief Functor for message processing.
+ * @tparam Message type of messages the functor processes.
  */
 template <class Message>
 using MessageProcessor = std::function<void(const std::vector<Message>)>;
