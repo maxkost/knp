@@ -44,7 +44,8 @@ public:
     /**
      * @brief List of synapse types supported by the single-threaded CPU backend.
      */
-    using SupportedSynapses = boost::mp11::mp_list<knp::synapse_traits::DeltaSynapse>;
+    using SupportedSynapses =
+        boost::mp11::mp_list<knp::synapse_traits::DeltaSynapse, knp::synapse_traits::AdditiveSTDPDeltaSynapse>;
 
     /**
      * @brief List of supported population types based on neuron types specified in `SupportedNeurons`.
@@ -169,24 +170,18 @@ public:
     void load_projections(const std::vector<ProjectionVariants> &projections);
 
     /**
-     * @brief Add projections to backend. 
+     * @brief Add projections to backend.
      * @throw exception if the `projections` parameter contains unsupported projection types.
      * @param projections projections to add.
      */
-    void load_all_projections(const std::vector<knp::core::AllProjectionsVariant> &projections) override
-    {
-        load_projections(projections);
-    }
+    void load_all_projections(const std::vector<knp::core::AllProjectionsVariant> &projections) override;
 
     /**
-     * @brief Add populations to backend. 
+     * @brief Add populations to backend.
      * @throw exception if the `populations` parameter contains unsupported population types.
      * @param populations populations to add.
      */
-    void load_all_populations(const std::vector<knp::core::AllPopulationsVariant> &populations) override
-    {
-        load_populations(populations);
-    }
+    void load_all_populations(const std::vector<knp::core::AllPopulationsVariant> &populations) override;
 
 public:
     /**
@@ -211,6 +206,7 @@ public:
      */
     PopulationConstIterator end_populations() const;
 
+    // TODO: make iterator, which is returns projections, but not a wrapper.
     /**
      * @brief Get an iterator pointing to the first element of the projection loaded to backend.
      * @return projection iterator.
@@ -302,11 +298,17 @@ protected:
     void calculate_projection(
         knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
         core::messaging::SynapticMessageQueue &message_queue);
+    /**
+     * @brief Calculate projection of AdditiveSTDPDelta synapses.
+     * @note Projection will be changed during calculation.
+     * @param projection projection to calculate.
+     * @param message_queue message queue to send to projection for calculation.
+     */
+    void calculate_projection(
+        knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> &projection,
+        core::messaging::SynapticMessageQueue &message_queue);
 
 private:
-    void append_projection(const std::variant<SupportedProjections> &projection);
-    void append_population(const std::variant<SupportedPopulations> &population);
-
     // cppcheck-suppress unusedStructMember
     PopulationContainer populations_;
     // cppcheck-suppress unusedStructMember

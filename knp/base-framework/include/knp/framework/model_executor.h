@@ -47,6 +47,7 @@ public:
         : backend_loader_(), model_(model), i_map_(std::move(i_map))
     {
         backend_ = backend_loader_.load(backend_path);
+        init();
     }
 
 public:
@@ -65,11 +66,6 @@ public:
      * @brief Stop model execution.
      */
     void stop();
-
-    /**
-     * @brief Write model to backend.
-     */
-    void init();
 
 public:
     /**
@@ -111,6 +107,12 @@ public:
 
         std::visit([&senders](auto &entity) { entity.subscribe(senders); }, observers_.back());
     }
+
+protected:
+    /**
+     * @brief Write model to backend.
+     */
+    void init();
 
 private:
     template <typename GenType>

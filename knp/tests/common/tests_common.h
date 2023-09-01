@@ -1,3 +1,8 @@
+/**
+ * @brief Common routines used for tests.
+ * @author Artiom N.
+ * @date 31.12.2022
+ */
 #pragma once
 
 #include <gmock/gmock.h>

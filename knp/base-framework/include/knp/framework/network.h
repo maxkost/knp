@@ -172,6 +172,19 @@ public:
      */
     template <typename ProjectionType>
     void add_projection(typename std::decay<ProjectionType>::type &projection);
+    /**
+     * @brief Add a projection to the network.
+     * @tparam SynapseType type of the new projection synapses.
+     * @param projection_uid uid of the new projection.
+     * @param generator synapse generator.
+     * @param pre_population_uid presynaptic population UID.
+     * @param post_population_uid postsynaptic population UID.
+     * @param synapse_count synapses count in the projection.
+     */
+    template <typename SynapseType>
+    void add_projection(
+        knp::core::UID projection_uid, knp::core::UID pre_population_uid, knp::core::UID post_population_uid,
+        typename knp::core::Projection<SynapseType>::SynapseGenerator1 generator, size_t synapse_count);
 
     /**
      * @brief Get a projection with the given UID from the network.

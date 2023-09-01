@@ -181,20 +181,14 @@ public:
      * @throw exception if the `projections` parameter contains unsupported projection types.
      * @param projections projections to add.
      */
-    void load_all_projections(const std::vector<knp::core::AllProjectionsVariant> &projections) override
-    {
-        load_projections(projections);
-    }
+    void load_all_projections(const std::vector<knp::core::AllProjectionsVariant> &projections) override;
 
     /**
      * @brief Add populations to backend.
      * @throw exception if the `populations` parameter contains unsupported population types.
      * @param populations populations to add.
      */
-    void load_all_populations(const std::vector<knp::core::AllPopulationsVariant> &populations) override
-    {
-        load_populations(populations);
-    }
+    void load_all_populations(const std::vector<knp::core::AllPopulationsVariant> &populations) override;
 
 public:
     /**
@@ -316,9 +310,13 @@ private:
     // Calculating post input changes and outputs.
     std::vector<knp::core::messaging::SpikeMessage> calculate_populations_post_impact();
 
+    // cppcheck-suppress unusedStructMember
     PopulationContainer populations_;
+    // cppcheck-suppress unusedStructMember
     ProjectionContainer projections_;
+    // cppcheck-suppress unusedStructMember
     const size_t population_part_size_ = 1000;
+    // cppcheck-suppress unusedStructMember
     const size_t projection_part_size_ = 1000;
     core::MessageEndpoint message_endpoint_;
     std::unique_ptr<ThreadPool> calc_pool_;
