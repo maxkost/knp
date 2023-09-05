@@ -44,8 +44,9 @@ public:
     /**
      * @brief List of synapse types supported by the single-threaded CPU backend.
      */
-    using SupportedSynapses =
-        boost::mp11::mp_list<knp::synapse_traits::DeltaSynapse, knp::synapse_traits::AdditiveSTDPDeltaSynapse>;
+    using SupportedSynapses = boost::mp11::mp_list<
+        knp::synapse_traits::DeltaSynapse, knp::synapse_traits::AdditiveSTDPDeltaSynapse,
+        knp::synapse_traits::STDPSynapticResourceSynapse>;
 
     /**
      * @brief List of supported population types based on neuron types specified in `SupportedNeurons`.
@@ -306,6 +307,15 @@ protected:
      */
     void calculate_projection(
         knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> &projection,
+        core::messaging::SynapticMessageQueue &message_queue);
+    /**
+     * @brief Calculate projection of STDPSynapticResourceSynapse synapses.
+     * @note Projection will be changed during calculation.
+     * @param projection projection to calculate.
+     * @param message_queue message queue to send to projection for calculation.
+     */
+    void calculate_projection(
+        knp::core::Projection<knp::synapse_traits::STDPSynapticResourceSynapse> &projection,
         core::messaging::SynapticMessageQueue &message_queue);
 
 private:

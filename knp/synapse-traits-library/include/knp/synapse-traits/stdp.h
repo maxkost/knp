@@ -73,6 +73,6 @@ using AdditiveSTDPDeltaSynapse = STDP<STDPAdditiveRule, DeltaSynapse>;
 /**
  * @brief Delta synapse with STDP synaptic resource rule type.
  */
-using AdditiveSTDPSynapticResourceSynapse = STDP<STDPSynapticResourceRule, DeltaSynapse>;
+using STDPSynapticResourceSynapse = STDP<STDPSynapticResourceRule, DeltaSynapse>;
 
 }  // namespace knp::synapse_traits
