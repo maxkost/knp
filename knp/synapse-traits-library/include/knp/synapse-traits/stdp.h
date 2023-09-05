@@ -14,7 +14,7 @@
 #include "type_traits.h"
 
 /**
- * @brief Synapse traits namespace.
+ * @brief Namespace for synapse traits.
  */
 namespace knp::synapse_traits
 {
@@ -29,7 +29,7 @@ struct STDP;
 /**
  * @brief Synapse with STDP rule.
  * @details STDP rule is a template, because sometimes parameters can be different in the
- *  different rule/synapse combinations. This allows make that.
+ *  different rule/synapse combinations. 
  * @code
    template<>
    struct STDPAdditiveRule<DeltaSynapse>

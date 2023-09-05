@@ -301,7 +301,7 @@ protected:
     /**
      * @brief Calculate projection of AdditiveSTDPDelta synapses.
      * @note Projection will be changed during calculation.
-     * @param projection projection to calculate.
+     * @param projection projection of AdditiveSTDPDelta synapses to calculate.
      * @param message_queue message queue to send to projection for calculation.
      */
     void calculate_projection(

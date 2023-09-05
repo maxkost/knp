@@ -14,14 +14,14 @@
 
 
 /**
- * @brief Synapse traits namespace.
+ * @brief Namespace for synapse traits.
  */
 namespace knp::synapse_traits
 {
 
 /**
  * @brief STDP additive rule parameters.
- * @note Parameters for the W(x) function by Zhang et al. 1998.
+ * @note Parameters for the `W(x)` function by Zhang et al. 1998.
  */
 template <typename SynapseType>
 struct STDPAdditiveRule
@@ -32,25 +32,25 @@ struct STDPAdditiveRule
     using LinkedSynapseType = SynapseType;
 
     /**
-     * @brief Time constant in ms.
+     * @brief Time constant in milliseconds inteded to increase the weight.
      */
     // cppcheck-suppress unusedStructMember
     float tau_plus_ = 10;
 
     /**
-     * @brief Time constant in ms.
+     * @brief Time constant in milliseconds intended to decrease the weight.
      */
     // cppcheck-suppress unusedStructMember
     float tau_minus_ = 10;
 
     /**
-     * @brief Steps when spikes on the synapse fired.
+     * @brief Indexes of network exeution steps on which spikes on the synapse were generated.
      */
     // cppcheck-suppress unusedStructMember
     std::vector<uint32_t> presynaptic_spike_times_;
 
     /**
-     * @brief Steps when spikes on the axon fired.
+     * @brief Indexes of network exeution steps on which spikes on the axon were generated.
      */
     // cppcheck-suppress unusedStructMember
     std::vector<uint32_t> postsynaptic_spike_times_;

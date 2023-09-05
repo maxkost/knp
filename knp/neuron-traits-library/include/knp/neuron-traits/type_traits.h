@@ -9,7 +9,7 @@
 #include <type_traits>
 
 /**
- * @brief Neuron traits namespace.
+ * @brief Namespace for neuron traits.
  */
 namespace knp::neuron_traits
 {
