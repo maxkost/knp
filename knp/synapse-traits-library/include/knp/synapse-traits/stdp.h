@@ -11,6 +11,7 @@
 
 #include "delta.h"
 #include "stdp_add_rule.h"
+#include "stdp_synaptic_resource_rule.h"
 #include "type_traits.h"
 
 /**
@@ -68,5 +69,10 @@ struct synapse_parameters<STDP<Rule, Synapse>>
  * @brief Delta synapse with STDP additive rule type.
  */
 using AdditiveSTDPDeltaSynapse = STDP<STDPAdditiveRule, DeltaSynapse>;
+
+/**
+ * @brief Delta synapse with STDP synaptic resource rule type.
+ */
+using AdditiveSTDPSynapticResourceSynapse = STDP<STDPSynapticResourceRule, DeltaSynapse>;
 
 }  // namespace knp::synapse_traits
