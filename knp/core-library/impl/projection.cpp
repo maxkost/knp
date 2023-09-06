@@ -133,7 +133,6 @@ template <typename SynapseType>
 std::vector<size_t> knp::core::Projection<SynapseType>::get_by_postsynaptic_neuron(size_t neuron_index) const
 {
     reindex();
-
     auto range = index_.get<mi_postsynaptic>().equal_range(neuron_index);
     std::vector<size_t> result;
     for (auto iter = range.first; iter != range.second; ++iter) result.push_back(iter->index_);
