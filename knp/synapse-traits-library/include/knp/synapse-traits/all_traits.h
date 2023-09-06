@@ -9,6 +9,8 @@
 
 #include <knp/meta/stringify.h>
 
+#include <unordered_map>
+
 #include <boost/mp11.hpp>
 
 #include "delta.h"
@@ -35,5 +37,26 @@ using AllSynapses = boost::mp11::mp_list<ALL_SYNAPSES>;
  * @brief A tuple that contains string names of synapse types.
  */
 constexpr auto synapses_names = KNP_MAKE_TUPLE(ALL_SYNAPSES);
+
+/**
+ * @brief Structure for the parameters shared between synapses for STDP.
+ * @tparam Rule type of the STDP rule.
+ * @tparam SynapseType type of synapses.
+ */
+template <template <typename> typename Rule, typename SynapseType>
+struct shared_synapse_parameters<knp::synapse_traits::STDP<Rule, SynapseType>>
+{
+    enum class ProcessingType
+    {
+        STDPOnly,
+        STDPAndSpike
+    };
+
+    using ContainerType = std::unordered_map<core::UID, ProcessingType, core::uid_hash>;
+
+    // cppcheck-suppress unusedStructMember
+    uint32_t stdp_window_size_ = 1;
+    ContainerType stdp_populations_;
+};
 
 }  // namespace knp::synapse_traits

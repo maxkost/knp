@@ -8,6 +8,7 @@
 #pragma once
 
 #include <knp/core/core.h>
+#include <knp/core/projection_support.h>
 #include <knp/core/uid.h>
 #include <knp/synapse-traits/all_traits.h>
 
@@ -19,40 +20,15 @@
 #include <utility>
 #include <vector>
 
-
-/**
- * @brief Synapse traits namespace.
- */
-namespace knp::synapse_traits
-{
-/**
- * @brief Structure for the parameters shared between synapses for STDP.
- * @tparam Rule type of the STDP rule.
- * @tparam SynapseType type of synapses.
- */
-template <template <typename> typename Rule, typename SynapseType>
-struct shared_synapse_parameters<knp::synapse_traits::STDP<Rule, SynapseType>>
-{
-    enum class ProcessingType
-    {
-        STDPOnly,
-        STDPAndSpike
-    };
-
-    using ContainerType = std::unordered_map<core::UID, ProcessingType, core::uid_hash>;
-
-    uint32_t stdp_window_size_ = 1;
-    ContainerType stdp_populations_;
-};
-
-}  // namespace knp::synapse_traits
+#include <boost/multi_index/hashed_index.hpp>
+#include <boost/multi_index/member.hpp>
+#include <boost/multi_index_container.hpp>
 
 /**
  * @brief Core library namespace.
  */
 namespace knp::core
 {
-
 /**
  * @brief The Projection class is a definition of similar connections between the neurons of two populations.
  * @note This class should later be divided to interface and implementation classes.
@@ -196,6 +172,7 @@ public:
      * @return constant iterator.
      */
     [[nodiscard]] auto end() const { return parameters_.cend(); }
+    // TODO: This might be dangerous if you change index_from or index_to of a synapse, without updating.
     /**
      * @brief Get an iterator pointing to the last element of the projection.
      * @return iterator.
@@ -226,9 +203,9 @@ public:
      * @param index index of the projection synapse.
      * @return presynaptic neuron index, synapse index, postsynaptic neuron index.
      */
-    [[nodiscard]] std::tuple<size_t, size_t, size_t> get_connection(size_t index) const
+    [[nodiscard]] knp::core::Connection get_connection(size_t index) const
     {
-        return std::make_tuple(parameters_[index].id_from_, index, parameters_[index].id_to_);
+        return {parameters_[index].id_from_, parameters_[index].id_to_, index};
     }
 
     // TODO: VERY inefficient. Will need to optimize it to less than linear ASAP
@@ -249,7 +226,7 @@ public:
     /**
      * @brief Calculate connection parameters for all synapses in the projection.
      */
-    [[nodiscard]] std::vector<std::tuple<size_t, size_t, size_t>> get_connections() const;
+    [[nodiscard]] std::vector<Connection> get_connections() const;
 
     /**
      * @brief Append connections to the existing projection.
@@ -270,7 +247,11 @@ public:
     /**
      * @brief Remove all synapses from the projection.
      */
-    void clear() { parameters_.clear(); }
+    void clear()
+    {
+        parameters_.clear();
+        index_.clear();
+    }
 
     /**
      * @brief Remove a synapse with the given index from the projection.
@@ -295,6 +276,7 @@ public:
     size_t disconnect_if(Predicate predicate)
     {
         const size_t starting_size = parameters_.size();
+        is_index_updated_ = false;
         parameters_.resize(std::remove_if(parameters_.begin(), parameters_.end(), predicate) - parameters_.begin());
         return starting_size - parameters_.size();
     }
@@ -350,6 +332,8 @@ public:
     const SharedSynapseParameters &get_shared_parameters() const { return shared_parameters_; }
 
 private:
+    void reindex() const;
+
     BaseData base_;
 
     /**
@@ -367,12 +351,12 @@ private:
      */
     bool is_locked_ = false;
 
-    // TODO Change this container into something that searches efficiently by input index. A multiindex or
-    // unordered_multimap
     /**
      * @brief Container of synapse parameters.
      */
     std::vector<Synapse> parameters_;
+    mutable Index index_;  // So far index is mutable so we can reindex a const object that has an non-updated index.
+    mutable bool is_index_updated_ = false;
 
     SharedSynapseParameters shared_parameters_;
 };
