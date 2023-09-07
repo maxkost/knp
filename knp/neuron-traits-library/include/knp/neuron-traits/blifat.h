@@ -106,6 +106,12 @@ struct neuron_parameters<BLIFATNeuron>
      * @brief The parameter defines the current membrane potential.
      */
     double potential_ = 0;
+
+    /**
+     * @brief This parameter is used if there was a blocking signal. Then all potential changes due to synapses are
+     * ignored.
+     */
+    double pre_impact_potential_ = 0;
     /**
      * @brief The parameter defines a time constant during which the `potential_` value tends to zero.
      */

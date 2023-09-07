@@ -47,6 +47,7 @@ void impact_neuron(
 }
 
 
+// TODO: Rename these functions, they're confusing.
 void calculate_neuron_state(knp::core::Population<knp::neuron_traits::BLIFATNeuron>::NeuronParameters &neuron)
 {
     neuron.dynamic_threshold_ *= neuron.threshold_decay_;
@@ -57,6 +58,7 @@ void calculate_neuron_state(knp::core::Population<knp::neuron_traits::BLIFATNeur
         neuron.potential_ = neuron.potential_ * neuron.potential_decay_ + neuron.reflexive_weight_;
     else
         neuron.potential_ *= neuron.potential_decay_;
+    neuron.pre_impact_potential_ = neuron.potential_;
 }
 
 
@@ -84,14 +86,7 @@ void calculate_neurons_state_part(
     {
         auto &neuron = population[i];
         ++neuron.n_time_steps_since_last_firing_;
-        if (neuron.total_blocking_period_)
-        {
-            --neuron.total_blocking_period_;
-        }
-        else
-        {
-            calculate_neuron_state(neuron);
-        }
+        calculate_neuron_state(neuron);
     }
 }
 
@@ -109,6 +104,11 @@ bool calculate_neuron_post_input_state(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron>::NeuronParameters &neuron)
 {
     bool spike = false;
+    if (neuron.total_blocking_period_)
+    {
+        neuron.potential_ = neuron.pre_impact_potential_;
+        --neuron.total_blocking_period_;
+    }
 
     if (neuron.inhibitory_conductance_ < 1.0)
     {
@@ -147,8 +147,7 @@ void calculate_neurons_post_input_state_part(
     size_t part_end = std::min(part_start + part_size, population.size());
     std::vector<size_t> output;
     for (size_t i = part_start; i < part_end; ++i)
-        if (!population[i].total_blocking_period_ && calculate_neuron_post_input_state(population[i]))
-            output.push_back(i);
+        if (calculate_neuron_post_input_state(population[i])) output.push_back(i);
 
     // Updating common neuron indexes.
     std::lock_guard<std::mutex> lock(mutex);
@@ -164,8 +163,7 @@ void calculate_neurons_post_input_state(
     SPDLOG_TRACE("Calculate neurons post input state part");
     for (size_t index = 0; index < population.size(); ++index)
     {
-        if (!population[index].total_blocking_period_ && calculate_neuron_post_input_state(population[index]))
-            neuron_indexes.push_back(index);
+        if (calculate_neuron_post_input_state(population[index])) neuron_indexes.push_back(index);
     }
 }
 
