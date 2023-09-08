@@ -30,6 +30,12 @@ struct STDPSynapticResourceRule
      * @brief Type of the synapse linked with rule.
      */
     using LinkedSynapseType = SynapseType;
+
+    /**
+     * @brief Synaptic resource.
+     */
+    // cppcheck-suppress unusedStructMember
+    float synaptic_resource_;
 };
 
 }  // namespace knp::synapse_traits

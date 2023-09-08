@@ -72,10 +72,9 @@ public:
         core::messaging::Step starting_step, core::messaging::Step final_step);
 
 protected:
-
     /**
      * @brief Base data.
-    */
+     */
     core::BaseData base_;
 
     /**
@@ -93,7 +92,7 @@ protected:
 
 /**
  * @brief Read all accumulated spike messages from subscription and convert them to output data.
- * @param oc output channel object.
+ * @param output_channel output channel object.
  * @param converter data converter.
  * @param step_from network step from which the method starts reading spike messages.
  * @param step_to network step after which the method stops reading spike messages.
@@ -101,11 +100,11 @@ protected:
  */
 template <typename ResultType>
 [[nodiscard]] ResultType output_channel_get(
-    OutputChannel &oc, OutputConverter<ResultType> converter, core::messaging::Step step_from,
+    OutputChannel &output_channel, OutputConverter<ResultType> converter, core::messaging::Step step_from,
     core::messaging::Step step_to)
 {
-    oc.update();
-    return converter(oc.read_some_from_buffer(step_from, step_to));
+    output_channel.update();
+    return converter(output_channel.read_some_from_buffer(step_from, step_to));
 }
 
 }  // namespace knp::framework::output

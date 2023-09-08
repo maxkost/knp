@@ -21,39 +21,39 @@
 namespace knp::framework
 {
 
+/**
+ * @brief The BackendLoader class is a definition of a backend loader.
+ */
+class BackendLoader
+{
+public:
     /**
-     * @brief The BackendLoader class is a definition of a backend loader. 
-    */
-    class BackendLoader
-    {
-        public:
-            /**
-             * @brief Load backend.
-             * @param backend_path path to backend.
-            */
-            std::shared_ptr<core::Backend> load(const std::filesystem::path &backend_path);
-            /**
-             * @brief Check if the specified path points to a backend.
-             * @param backend_path path to backend.
-            */
-            bool is_backend(const std::filesystem::path &backend_path) const;
-                
-        public:
-            /**
-             * @brief Function type that returns a backend instance.
-            */
-            typedef std::shared_ptr<core::Backend>(BackendCreateFunction)();
+     * @brief Load backend.
+     * @param backend_path path to backend.
+     */
+    std::shared_ptr<core::Backend> load(const std::filesystem::path &backend_path);
+    /**
+     * @brief Check if the specified path points to a backend.
+     * @param backend_path path to backend.
+     */
+    bool is_backend(const std::filesystem::path &backend_path) const;
 
-        protected:
-            /**
-             * @brief Create a backend loader that will load and create a backend instance.
-             * @param backend_path path to backend.
-            */
-            std::function<BackendCreateFunction> make_creator(const std::filesystem::path &backend_path);
+public:
+    /**
+     * @brief Function type that returns a backend instance.
+     */
+    typedef std::shared_ptr<core::Backend>(BackendCreateFunction)();
 
-        private:
-            // std::filesystem::path doesn't work on any compilers.
-            std::unordered_map<std::string, std::function<BackendCreateFunction>> creators_;
-    };
+protected:
+    /**
+     * @brief Create a backend loader that will load and create a backend instance.
+     * @param backend_path path to backend.
+     */
+    std::function<BackendCreateFunction> make_creator(const std::filesystem::path &backend_path);
+
+private:
+    // std::filesystem::path doesn't work on any compilers.
+    std::unordered_map<std::string, std::function<BackendCreateFunction>> creators_;
+};
 
 }  // namespace knp::framework
