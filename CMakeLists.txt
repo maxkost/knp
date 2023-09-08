@@ -16,8 +16,11 @@ option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development p
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
     message(STATUS "Setting release optimization flags...")
-    set(CMAKE_C_FLAGS_RELEASE "-march=native -mtune=native -Ofast -fopt-info-vec-optimized -funroll-loops -fomit-frame-pointer -finline -mno-vzeroupper -pipe")
+    # -pipe
+    set(CMAKE_C_FLAGS_RELEASE "-march=native -mtune=native -mno-vzeroupper -Ofast -fopt-info-vec-optimized -funroll-loops -fomit-frame-pointer -finline")
     set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
+    add_definitions(-include x86intrin.h)
+    # -include bits/stdc++.h
 endif()
 
 set(ENABLE_FAST_MATH ON)
