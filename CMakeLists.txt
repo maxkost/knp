@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.22) # TODO: increase to 3.25
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(knp-functions)
-include(print-variables)
 include(third-party)
 include(version)
 
@@ -14,6 +13,11 @@ option(KNP_BUILD_TESTS "Build tests" ON)
 option(KNP_ENABLE_COVERAGE "Enable coverage test" ON)
 option(KNP_BUILD_DOCUMENTATION "Build doxygen auto documentation" ON)
 option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+    message(STATUS "Setting release optimization flags...")
+    set(CMAKE_CXX_FLAGS_RELEASE "-Ofast")
+endif()
 
 set(ENABLE_FAST_MATH ON)
 
@@ -46,6 +50,8 @@ include(GNUInstallDirs)
 
 file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
 include_directories(third-party ${THIRD_PARTY_INCLUDES})
+
+include(print-variables)
 
 add_third_party(googletest)
 
