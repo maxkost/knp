@@ -135,7 +135,7 @@ struct neuron_parameters<BLIFATNeuron>
      */
     unsigned absolute_refractory_period_ = 0;
     /**
-     * @brief The parameter defines a potential value after a neuron genarates a spike.
+     * @brief The parameter defines a potential value after a neuron generates a spike.
      */
     double potential_reset_value_ = 0.;
 

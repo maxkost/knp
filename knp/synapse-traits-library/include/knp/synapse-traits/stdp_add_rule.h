@@ -32,7 +32,7 @@ struct STDPAdditiveRule
     using LinkedSynapseType = SynapseType;
 
     /**
-     * @brief Time constant in milliseconds inteded to increase the weight.
+     * @brief Time constant in milliseconds intended to increase the weight.
      */
     // cppcheck-suppress unusedStructMember
     float tau_plus_ = 10;
@@ -44,13 +44,13 @@ struct STDPAdditiveRule
     float tau_minus_ = 10;
 
     /**
-     * @brief Indexes of network exeution steps on which spikes on the synapse were generated.
+     * @brief Indexes of network execution steps on which spikes on the synapse were generated.
      */
     // cppcheck-suppress unusedStructMember
     std::vector<uint32_t> presynaptic_spike_times_;
 
     /**
-     * @brief Indexes of network exeution steps on which spikes on the axon were generated.
+     * @brief Indexes of network execution steps on which spikes on the axon were generated.
      */
     // cppcheck-suppress unusedStructMember
     std::vector<uint32_t> postsynaptic_spike_times_;
