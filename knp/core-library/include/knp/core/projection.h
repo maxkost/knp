@@ -208,7 +208,6 @@ public:
         return {parameters_[index].id_from_, parameters_[index].id_to_, index};
     }
 
-    // TODO: VERY inefficient. Will need to optimize it to less than linear ASAP
     /**
      * @brief Find synapses that originate from a neuron with the given index.
      * @param neuron_index index of a presynaptic neuron.

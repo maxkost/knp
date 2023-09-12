@@ -100,7 +100,7 @@ void MultiThreadedCPUBackend::calculate_populations_impact()
         auto messages = message_endpoint_.unload_messages<knp::core::messaging::SynapticImpactMessage>(uid);
         std::visit(
             [this, &messages](auto &pop)
-            { calc_pool_->post(knp::backends::cpu::process_inputs, std::ref(pop), messages); },
+            { calc_pool_->post(knp::backends::cpu::process_inputs, std::ref(pop), std::move(messages)); },
             population);
     }
     calc_pool_->join();
