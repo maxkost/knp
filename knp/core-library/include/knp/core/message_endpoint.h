@@ -28,6 +28,15 @@
 
 namespace knp::core
 {
+
+class MessageEndpointImpl
+{
+public:
+    virtual std::optional<messaging::MessageVariant> receive_message() = 0;
+    virtual void send_message(const knp::core::messaging::MessageVariant &message) = 0;
+    virtual ~MessageEndpointImpl() = default;
+};
+
 /**
  * @brief The MessageEndpoint class is a definition of message endpoints.
  * @details You can use message endpoints to receive or send messages.
@@ -61,7 +70,7 @@ public:
     /**
      * @brief Get subscription key from a subscription variant.
      * @param subscription subscription variant.
-    */
+     */
     static std::pair<size_t, UID> get_subscription_key(const SubscriptionVariant &subscription);
 
     // tparams was temporarily disabled, because of the bug in the CLang documentation checker.
@@ -169,10 +178,6 @@ public:
     using SubscriptionContainer = std::map<std::pair<size_t, UID>, SubscriptionVariant>;
 
 protected:
-    /**
-     * @brief The MessageEndpointImpl class defines the implementation of the message endpoint.
-     */
-    class MessageEndpointImpl;
     /**
      * @brief Message endpoint implementation.
      */

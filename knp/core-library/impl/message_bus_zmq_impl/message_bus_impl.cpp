@@ -18,25 +18,20 @@
 #include "message_endpoint_impl.h"
 
 
-namespace
-{
-
-class MessageEndpointConstructible : public knp::core::MessageEndpoint
-{
-public:
-    explicit MessageEndpointConstructible(zmq::socket_t &&sub_socket, zmq::socket_t &&pub_socket)
-    {
-        impl_ = std::make_unique<MessageEndpointImpl>(std::move(sub_socket), std::move(pub_socket));
-    }
-};
-
-}  // namespace
-
-
 namespace knp::core
 {
 
-MessageBus::MessageBusImpl::MessageBusImpl()
+class MessageEndpointZMQ : public knp::core::MessageEndpoint
+{
+public:
+    explicit MessageEndpointZMQ(zmq::socket_t &&sub_socket, zmq::socket_t &&pub_socket)
+    {
+        impl_ = std::make_unique<knp::core::MessageEndpointZMQImpl>(std::move(sub_socket), std::move(pub_socket));
+    }
+};
+
+
+MessageBusZMQImpl::MessageBusZMQImpl()
     :  // TODO: replace with std::format.
       router_sock_address_("inproc://route_" + std::string(UID())),
       publish_sock_address_("inproc://publish_" + std::string(UID())),
@@ -51,7 +46,7 @@ MessageBus::MessageBusImpl::MessageBusImpl()
 }
 
 
-bool MessageBus::MessageBusImpl::step()
+bool MessageBusZMQImpl::step()
 {
     zmq::message_t message;
     zmq::recv_result_t recv_result;
@@ -99,12 +94,11 @@ bool MessageBus::MessageBusImpl::step()
         SPDLOG_CRITICAL(e.what());
         throw;
     }
-
     return recv_result.has_value() && recv_result.value() != 0;
 }
 
 
-MessageEndpoint MessageBus::MessageBusImpl::create_endpoint()
+MessageEndpoint MessageBusZMQImpl::create_endpoint()
 {
     zmq::socket_t sub_socket{context_, zmq::socket_type::sub};
     zmq::socket_t pub_socket{context_, zmq::socket_type::dealer};
@@ -127,7 +121,7 @@ MessageEndpoint MessageBus::MessageBusImpl::create_endpoint()
     SPDLOG_DEBUG("Sub socket connecting to {}", publish_sock_address_);
     sub_socket.connect(publish_sock_address_);
 
-    return MessageEndpointConstructible(std::move(sub_socket), std::move(pub_socket));
+    return MessageEndpointZMQ(std::move(sub_socket), std::move(pub_socket));
 }
 
 }  // namespace knp::core

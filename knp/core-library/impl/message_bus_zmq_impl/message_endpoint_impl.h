@@ -9,6 +9,8 @@
 
 #include <knp/core/message_endpoint.h>
 
+#include <spdlog/spdlog.h>
+
 #include <memory>
 #include <string>
 #include <vector>
@@ -19,15 +21,31 @@
 namespace knp::core
 {
 
-class MessageEndpoint::MessageEndpointImpl
+class MessageEndpointZMQImpl : public MessageEndpointImpl
 {
 public:
-    explicit MessageEndpointImpl(zmq::socket_t &&sub_socket, zmq::socket_t &&pub_socket);
+    explicit MessageEndpointZMQImpl(zmq::socket_t &&sub_socket, zmq::socket_t &&pub_socket);
 
 public:
-    void send_message(const std::vector<uint8_t> &data);
-    void send_message(const void *data, size_t size);
-    std::optional<zmq::message_t> receive_message();
+    std::optional<messaging::MessageVariant> receive_message() override
+    {
+        auto message_var = receive_zmq_message();
+        if (!message_var.has_value()) return {};
+
+        auto message = knp::core::messaging::extract_from_envelope(message_var->data());
+        return message;
+    }
+    void send_message(const knp::core::messaging::MessageVariant &message) override
+    {
+        auto packed_msg = knp::core::messaging::pack_to_envelope(message);
+        SPDLOG_TRACE("Packed message size = {}...", packed_msg.size());
+        send_zmq_message(packed_msg.data(), packed_msg.size());
+    }
+
+public:
+    void send_zmq_message(const std::vector<uint8_t> &data);
+    void send_zmq_message(const void *data, size_t size);
+    std::optional<zmq::message_t> receive_zmq_message();
 
 private:
     // zmq::context_t &context_;

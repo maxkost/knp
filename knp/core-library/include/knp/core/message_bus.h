@@ -17,6 +17,29 @@
  */
 namespace knp::core
 {
+/**
+ * @brief Base class for different message bus implementations.
+ */
+class MessageBusImpl
+{
+public:
+    /**
+     * @brief Send a message between endpoints.
+     */
+    virtual bool step() = 0;
+
+    /**
+     * @brief Creates an endpoint that can be used for message exchange.
+     * @return a new endpoint.
+     */
+    [[nodiscard]] virtual MessageEndpoint create_endpoint() = 0;
+
+    /**
+     * @brief Default virtual destructor.
+     */
+    virtual ~MessageBusImpl() = default;
+};
+
 
 /**
  * @brief The MessageBus class is a definition of an interface to a message bus.
@@ -30,9 +53,14 @@ public:
     MessageBus();
 
     /**
+     * @brief Message bus constructor with a specialized implementation.
+     */
+    explicit MessageBus(std::unique_ptr<MessageBusImpl> &&impl);
+
+    /**
      * @brief Message bus destructor.
      */
-    ~MessageBus();
+    ~MessageBus() = default;
 
 public:
     /**
@@ -58,8 +86,6 @@ private:
     /**
      * @brief Message bus implementation.
      */
-    class MessageBusImpl;
-
     std::unique_ptr<MessageBusImpl> impl_;
 };
 

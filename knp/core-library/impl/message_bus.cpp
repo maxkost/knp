@@ -17,13 +17,16 @@
 namespace knp::core
 {
 
-MessageBus::MessageBus() : impl_(std::make_unique<MessageBusImpl>())
+MessageBus::MessageBus() : impl_(std::make_unique<MessageBusZMQImpl>())
 {
     assert(impl_.get());
 }
 
 
-MessageBus::~MessageBus() {}
+MessageBus::MessageBus(std::unique_ptr<MessageBusImpl> &&impl) : impl_(std::move(impl))
+{
+    if (!impl_.get()) throw std::runtime_error("Unavailable message bus implementation");
+}
 
 
 MessageEndpoint MessageBus::create_endpoint()

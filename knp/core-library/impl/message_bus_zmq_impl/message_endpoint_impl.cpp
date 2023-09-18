@@ -18,19 +18,19 @@
 namespace knp::core
 {
 
-MessageEndpoint::MessageEndpointImpl::MessageEndpointImpl(zmq::socket_t &&sub_socket, zmq::socket_t &&pub_socket)
+MessageEndpointZMQImpl::MessageEndpointZMQImpl(zmq::socket_t &&sub_socket, zmq::socket_t &&pub_socket)
     : sub_socket_(std::move(sub_socket)), pub_socket_(std::move(pub_socket))
 {
 }
 
 
-void MessageEndpoint::MessageEndpointImpl::send_message(const std::vector<uint8_t> &data)
+void MessageEndpointZMQImpl::send_zmq_message(const std::vector<uint8_t> &data)
 {
-    send_message(data.data(), data.size());
+    send_zmq_message(data.data(), data.size());
 }
 
 
-void MessageEndpoint::MessageEndpointImpl::send_message(const void *data, size_t size)
+void MessageEndpointZMQImpl::send_zmq_message(const void *data, size_t size)
 {
     // send_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
     zmq::send_result_t result;
@@ -52,7 +52,7 @@ void MessageEndpoint::MessageEndpointImpl::send_message(const void *data, size_t
 }
 
 
-std::optional<zmq::message_t> MessageEndpoint::MessageEndpointImpl::receive_message()
+std::optional<zmq::message_t> MessageEndpointZMQImpl::receive_zmq_message()
 {
     zmq::message_t msg;
     // recv_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.

@@ -22,10 +22,10 @@ namespace knp::core
 /**
  * @brief internal message bus class, not intended for user code.
  */
-class MessageBus::MessageBusImpl
+class MessageBusZMQImpl : public MessageBusImpl
 {
 public:
-    MessageBusImpl();
+    MessageBusZMQImpl();
 
     /**
      * @brief send a message from one socket to another.

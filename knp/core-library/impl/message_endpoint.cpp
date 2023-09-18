@@ -9,15 +9,12 @@
 
 #include <spdlog/spdlog.h>
 
-#include <fstream>
 #include <memory>
 
 // sleep_for.
 #include <thread>
 
 #include <boost/preprocessor.hpp>
-
-#include "message_bus_zmq_impl/message_endpoint_impl.h"
 
 
 namespace knp::core
@@ -78,6 +75,7 @@ Subscription<MessageType> &MessageEndpoint::subscribe(const UID &receiver, const
 }
 
 
+// TODO: Implement
 template <typename MessageType>
 void MessageEndpoint::unsubscribe(const UID &receiver)
 {
@@ -105,11 +103,7 @@ void MessageEndpoint::send_message(const knp::core::messaging::MessageVariant &m
 {
     SPDLOG_TRACE(
         "Sending message from the {}, index = {}...", std::string(get_header(message).sender_uid_), message.index());
-
-    auto packed_msg = knp::core::messaging::pack_to_envelope(message);
-    SPDLOG_TRACE("Packed message size = {}...", packed_msg.size());
-
-    impl_->send_message(packed_msg.data(), packed_msg.size());
+    impl_->send_message(message);
 }
 
 
@@ -117,11 +111,9 @@ bool MessageEndpoint::receive_message()
 {
     SPDLOG_DEBUG("Receiving message...");
 
-    auto message_var = impl_->receive_message();
-    if (!message_var.has_value()) return false;
-
-    auto message = knp::core::messaging::extract_from_envelope(message_var->data());
-
+    auto message_opt = impl_->receive_message();
+    if (!message_opt.has_value()) return false;
+    auto &message = message_opt.value();
     const UID &sender_uid = get_header(message).sender_uid_;
     const size_t type_index = message.index();
 

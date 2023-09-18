@@ -318,6 +318,8 @@ protected:
      */
     void init() override;
 
+    std::unique_ptr<core::MessageBusImpl> get_message_bus_impl();
+
 private:
     // Calculating pre-message neuron state, one thread per population_part_size_ neurons or less.
     void calculate_populations_pre_impact();
