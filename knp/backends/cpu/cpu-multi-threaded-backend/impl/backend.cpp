@@ -27,17 +27,16 @@
 
 namespace knp::backends::multi_threaded_cpu
 {
-MultiThreadedCPUBackend::MultiThreadedCPUBackend(size_t thread_count)
-    : message_endpoint_{message_bus_.create_endpoint()},
-      calc_pool_(std::make_unique<ThreadPool>(thread_count ? thread_count : std::thread::hardware_concurrency()))
+MultiThreadedCPUBackend::MultiThreadedCPUBackend(
+    size_t thread_count, size_t population_part_size, size_t projection_part_size)
+    : population_part_size_(population_part_size),
+      projection_part_size_(projection_part_size),
+      message_endpoint_{message_bus_.create_endpoint()},
+      calc_pool_(std::make_unique<tools::ThreadPool>(thread_count ? thread_count : std::thread::hardware_concurrency()))
 {
-    SPDLOG_INFO("MT CPU backend instance created, threads count = {}...", thread_count);
-}
-
-
-MultiThreadedCPUBackend::~MultiThreadedCPUBackend()
-{
-    // stop() and join() will be called in the thread_pool destructor.
+    SPDLOG_INFO(
+        "MT CPU backend instance created, threads count = {}...",
+        thread_count ? thread_count : std::thread::hardware_concurrency());
 }
 
 
@@ -152,10 +151,25 @@ void MultiThreadedCPUBackend::calculate_populations()
     }
 }
 
+template <class ProjectionWrapper>
+void send_message(ProjectionWrapper &projection, core::MessageEndpoint &endpoint, uint64_t step)
+{
+    auto &msg_queue = projection.messages_;
+    auto msg_iter = msg_queue.find(step);
+    if (msg_iter != msg_queue.end())
+    {
+        endpoint.send_message(std::move(msg_iter->second));
+        msg_queue.erase(msg_iter);
+    }
+}
+
 
 void MultiThreadedCPUBackend::calculate_projections()
 {
     SPDLOG_DEBUG("Calculating projections");
+    std::vector<std::unordered_map<uint64_t, size_t>> converted_message_buffer;
+    converted_message_buffer.reserve(projections_.size());
+
     for (auto &projection : projections_)
     {
         auto uid = std::visit([](auto &proj) { return proj.get_uid(); }, projection.arg_);
@@ -165,22 +179,22 @@ void MultiThreadedCPUBackend::calculate_projections()
         if (msg_buf.empty()) continue;
 
         // Looping over synapses.
-        auto message_data = knp::backends::cpu::convert_spikes(msg_buf[0]);
-        auto proj_size = std::visit([](const auto &proj) { return proj.size(); }, projection.arg_);
+        converted_message_buffer.emplace_back(cpu::convert_spikes(msg_buf[0]));
+        const auto proj_size = std::visit([](const auto &proj) { return proj.size(); }, projection.arg_);
         for (size_t synapse_index = 0; synapse_index < proj_size; synapse_index += projection_part_size_)
         {
             std::visit(
-                [this, synapse_index, &message_data, &projection](auto &proj)
+                [this, synapse_index, &converted_message_buffer, &projection](auto &proj)
                 {
                     calc_pool_->post(
-                        knp::backends::cpu::calculate_projection_part, std::ref(proj), std::ref(message_data),
-                        std::ref(projection.messages_), get_step(), synapse_index, projection_part_size_,
-                        std::ref(ep_mutex_));
+                        knp::backends::cpu::calculate_projection_part, std::ref(proj),
+                        std::ref(converted_message_buffer.back()), std::ref(projection.messages_), get_step(),
+                        synapse_index, projection_part_size_, std::ref(ep_mutex_));
                 },
                 projection.arg_);
         }
-        calc_pool_->join();
     }
+    calc_pool_->join();
     // Sending messages. It might be possible to parallelize this as well if we use more than one endpoint.
     for (auto &projection : projections_)
     {

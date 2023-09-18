@@ -14,7 +14,7 @@
 /**
  * @brief Namespace for multi-threaded backend.
  */
-namespace knp::backends::multi_threaded_cpu
+namespace knp::backends::tools
 {
 /**
  * @brief The ThreadPoolExecutor class is a definition of the interface to thread pool used for thread execution.
@@ -26,8 +26,8 @@ class ThreadPoolExecutor
 public:
     /**
      * @brief Construct pool executor.
-     * @param context thread pool context. 
-     * @note Lifetime of thread pool context should be at least as long as lifetime of this class object. 
+     * @param context thread pool context.
+     * @note Lifetime of thread pool context should be at least as long as lifetime of this class object.
      */
     explicit ThreadPoolExecutor(ThreadPoolContext &context)
         : context_(context), task_count_(std::make_shared<size_t>(0))
@@ -36,7 +36,7 @@ public:
 
     /**
      * @brief Get thread pool context.
-    */
+     */
     [[nodiscard]] ThreadPoolContext &context() { return context_; }
 
     /**
@@ -46,7 +46,7 @@ public:
      * @tparam Alloc allocator type.
      * @param function function to add to task queue.
      * @param allocator allocator.
-    */
+     */
     template <class Func, class Alloc>
     void post(Func function, const Alloc &allocator) const
     {
@@ -57,7 +57,7 @@ public:
     }
 
     /**
-     * @brief Wait for all tasks to finish. 
+     * @brief Wait for all tasks to finish.
      * @note The method does not join threads.
      */
     void join() const
@@ -126,4 +126,4 @@ private:
     std::shared_ptr<size_t> task_count_;
 };
 
-}  // namespace knp::backends::multi_threaded_cpu
+}  // namespace knp::backends::tools
