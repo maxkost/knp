@@ -87,10 +87,9 @@ void calculate_synaptic_resource_stdp_delta_synapse_projection(
 
                 // Weight recalculation.
                 const auto syn_w = std::max(synapse.params_.rule_.synaptic_resource_, 0.f);
+                const auto weight_diff = synapse.params_.rule_.w_max_ - synapse.params_.rule_.w_min_;
                 synapse.params_.synapse_.weight_ =
-                    synapse.params_.rule_.w_min_ +
-                    (synapse.params_.rule_.w_max_ - synapse.params_.rule_.w_min_) * syn_w /
-                        (synapse.params_.rule_.w_max_ - synapse.params_.rule_.w_min_ + syn_w);
+                    synapse.params_.rule_.w_min_ + weight_diff * syn_w / (weight_diff + syn_w);
             }
         }
 
