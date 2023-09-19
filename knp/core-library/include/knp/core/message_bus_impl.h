@@ -4,13 +4,11 @@
  * @author Vartenkov A.
  * @date 19.09.2023
  */
-
 #pragma once
+#include <knp/core/message_endpoint.h>
 
 namespace knp::core
 {
-class MessageEndpoint;
-
 /**
  * @brief Base class for different message bus implementations.
  */

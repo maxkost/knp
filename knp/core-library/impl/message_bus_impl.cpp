@@ -9,12 +9,13 @@
 
 namespace knp::core
 {
-
 MessageBusImpl::~MessageBusImpl() {}
 
 bool MessageBusImpl::step()
 {
     return false;
 }
+
+void MessageBusImpl::update() {}
 
 }  // namespace knp::core

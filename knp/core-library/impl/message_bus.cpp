@@ -17,11 +17,6 @@
 namespace knp::core
 {
 
-MessageBusImpl::~MessageBusImpl() {}
-
-void MessageBusImpl::update() {}
-
-
 MessageBus::MessageBus() : impl_(std::make_unique<MessageBusZMQImpl>())
 {
     assert(impl_.get());

@@ -55,6 +55,7 @@ bool MessageBusSingleCPUImpl::step()
         if (endpoint_ptr.expired()) continue;
         endpoint_ptr.lock()->add_received_message(message);
     }
+    messages_to_route_.pop_back();
     return true;
 }
 
