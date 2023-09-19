@@ -12,7 +12,7 @@
 #include <boost/mp11.hpp>
 
 #include "delta.h"
-#include "stdp.h"
+#include "stdp_type_traits.h"
 
 /**
  * @brief Synapse traits namespace.

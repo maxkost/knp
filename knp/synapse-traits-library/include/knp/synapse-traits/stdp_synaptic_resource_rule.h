@@ -10,7 +10,7 @@
 #include <cinttypes>
 #include <vector>
 
-#include "type_traits.h"
+#include "stdp_common.h"
 
 
 /**
@@ -46,6 +46,41 @@ struct STDPSynapticResourceRule
      */
     // cppcheck-suppress unusedStructMember
     float w_max_;
+    /**
+     * @brief Resource decreasing constant.
+     * @note d_u_ must be equal or greate 0.
+     */
+    // cppcheck-suppress unusedStructMember
+    float d_u_;
+};
+
+
+/**
+ * @brief Shared parameters for the resource STDP.
+ */
+template <typename SynapseType>
+struct shared_synapse_parameters<STDP<STDPSynapticResourceRule, SynapseType>>
+{
+    /**
+     * @brief Free synaptic resource.
+     */
+    // cppcheck-suppress unusedStructMember
+    float free_synaptic_resource_;
+    /**
+     * @brief Stability.
+     */
+    // cppcheck-suppress unusedStructMember
+    float stability_;
+    /**
+     * @brief ISI_max.
+     */
+    // cppcheck-suppress unusedStructMember
+    float isi_max_;
+    /**
+     * @brief Hebbian plasticity constant.
+     */
+    // cppcheck-suppress unusedStructMember
+    float d_h_;
 };
 
 }  // namespace knp::synapse_traits
