@@ -36,6 +36,16 @@ struct STDPSynapticResourceRule
      */
     // cppcheck-suppress unusedStructMember
     float synaptic_resource_;
+    /**
+     * @brief Minimal weight value.
+     */
+    // cppcheck-suppress unusedStructMember
+    float w_min_;
+    /**
+     * @brief Maximal weight value.
+     */
+    // cppcheck-suppress unusedStructMember
+    float w_max_;
 };
 
 }  // namespace knp::synapse_traits

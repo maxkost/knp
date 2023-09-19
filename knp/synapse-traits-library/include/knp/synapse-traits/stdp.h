@@ -66,6 +66,15 @@ struct synapse_parameters<STDP<Rule, Synapse>>
 
 
 /**
+ * @brief Common STDP parameters.
+ */
+template <template <typename> typename Rule, typename SynapseType>
+struct shared_synapse_parameters<knp::synapse_traits::STDP<Rule, SynapseType>>
+{
+};
+
+
+/**
  * @brief Delta synapse with STDP additive rule type.
  */
 using AdditiveSTDPDeltaSynapse = STDP<STDPAdditiveRule, DeltaSynapse>;

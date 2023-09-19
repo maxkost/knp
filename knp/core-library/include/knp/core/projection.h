@@ -21,33 +21,6 @@
 
 
 /**
- * @brief Synapse traits namespace.
- */
-namespace knp::synapse_traits
-{
-/**
- * @brief Structure for the parameters shared between synapses for STDP.
- * @tparam Rule type of the STDP rule.
- * @tparam SynapseType type of synapses.
- */
-template <template <typename> typename Rule, typename SynapseType>
-struct shared_synapse_parameters<knp::synapse_traits::STDP<Rule, SynapseType>>
-{
-    enum class ProcessingType
-    {
-        STDPOnly,
-        STDPAndSpike
-    };
-
-    using ContainerType = std::unordered_map<core::UID, ProcessingType, core::uid_hash>;
-
-    uint32_t stdp_window_size_ = 1;
-    ContainerType stdp_populations_;
-};
-
-}  // namespace knp::synapse_traits
-
-/**
  * @brief Core library namespace.
  */
 namespace knp::core
@@ -107,7 +80,36 @@ public:
      */
     using SynapseGenerator1 = std::function<std::optional<std::tuple<SynapseParameters, uint32_t, uint32_t>>(uint32_t)>;
 
-    using SharedSynapseParameters = knp::synapse_traits::shared_synapse_parameters<SynapseType>;
+
+public:
+    template <typename SynapseT>
+    struct SharedSynapseParametersT
+    {
+        knp::synapse_traits::shared_synapse_parameters<SynapseT> synapses_parameters_;
+    };
+
+
+    /**
+     * @brief Structure for the parameters shared between synapses for STDP.
+     * @tparam Rule type of the STDP rule.
+     * @tparam SynapseT type of synapses.
+     */
+    template <template <typename> typename Rule, typename SynapseT>
+    struct SharedSynapseParametersT<knp::synapse_traits::STDP<Rule, SynapseT>>
+    {
+        enum class ProcessingType
+        {
+            STDPOnly,
+            STDPAndSpike
+        };
+
+        using ContainerType = std::unordered_map<core::UID, ProcessingType, core::uid_hash>;
+        ContainerType stdp_populations_;
+
+        knp::synapse_traits::shared_synapse_parameters<knp::synapse_traits::STDP<Rule, SynapseT>> synapses_parameters_;
+    };
+
+    using SharedSynapseParameters = SharedSynapseParametersT<SynapseType>;
 
 public:
     /**

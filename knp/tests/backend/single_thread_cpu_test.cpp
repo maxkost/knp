@@ -99,8 +99,7 @@ TEST(SingleThreadCpuSuite, STDPNetwork)
     knp::core::UID input_uid = std::visit([](const auto &proj) { return proj.get_uid(); }, input_projection);
 
     loop_projection.get_shared_parameters().stdp_populations_[population.get_uid()] =
-        knp::synapse_traits::shared_synapse_parameters<
-            knp::synapse_traits::AdditiveSTDPDeltaSynapse>::ProcessingType::STDPAndSpike;
+        kt::STDPDeltaProjection::SharedSynapseParameters::ProcessingType::STDPAndSpike;
 
     backend.load_populations({population});
     backend.load_projections({input_projection, loop_projection});
