@@ -38,10 +38,18 @@ void calculate_synaptic_resource_stdp_delta_synapse_projection(
 {
     SPDLOG_DEBUG("Calculating Synaptic Resource STDP Delta synapse projection");
 
+    enum class ISIPeriodType
+    {
+        not_in_the_isi,
+        period_started,
+        period_continued
+    };
+
     using ProjectionType = typename std::decay_t<decltype(projection)>;
     using ProcessingType = typename ProjectionType::SharedSynapseParameters::ProcessingType;
 
-    const auto &shared_params = projection.get_shared_parameters();
+    auto &shared_params = projection.get_shared_parameters();
+    auto &synapses_parameters = shared_params.synapses_parameters_;
     const auto &stdp_pops = shared_params.stdp_populations_;
 
     const auto all_messages = endpoint.unload_messages<SpikeMessage>(projection.get_uid());
@@ -56,6 +64,36 @@ void calculate_synaptic_resource_stdp_delta_synapse_projection(
     for (const auto &msg : all_messages)
     {
         const auto &stdp_pop_iter = stdp_pops.find(msg.header_.sender_uid_);
+
+        for (const auto &spiked_neuron_index : msg.neuron_indexes_)
+        {
+            ISIPeriodType isi_period = ISIPeriodType::not_in_the_isi;
+
+            for (const auto &synapse_index : projection.get_by_presynaptic_neuron(spiked_neuron_index))
+            {
+                auto &synapse = projection[synapse_index];
+                // Unconditional decreasing synaptic resource.
+                synapse.params_.rule_.synaptic_resource_ -= synapse.params_.rule_.d_u_;
+                // Hebbian plasticity value reset.
+                // TODO: rebuild.
+                // cppcheck-suppress knownConditionTrueFalse
+                if (synapses_parameters.d_h_ >= 0 && ISIPeriodType::period_started == isi_period)
+                    synapses_parameters.d_h_ = synapses_parameters.d_h_initial_;
+
+                // Hebbian plasticity.
+                float d_h = synapses_parameters.d_h_ *
+                            std::min(static_cast<float>(std::pow(2, -synapses_parameters.stability_)), 1.f);
+                synapse.params_.rule_.synaptic_resource_ += d_h;
+
+                // Weight recalculation.
+                const auto syn_w = std::max(synapse.params_.rule_.synaptic_resource_, 0.f);
+                synapse.params_.synapse_.weight_ =
+                    synapse.params_.rule_.w_min_ +
+                    (synapse.params_.rule_.w_max_ - synapse.params_.rule_.w_min_) * syn_w /
+                        (synapse.params_.rule_.w_max_ - synapse.params_.rule_.w_min_ + syn_w);
+            }
+        }
+
         if (stdp_pop_iter == stdp_pops.end())
         {
             SPDLOG_TRACE("Not STDP population {}", std::string(msg.header_.sender_uid_));

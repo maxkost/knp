@@ -72,15 +72,20 @@ struct shared_synapse_parameters<STDP<STDPSynapticResourceRule, SynapseType>>
     // cppcheck-suppress unusedStructMember
     float stability_;
     /**
-     * @brief ISI_max.
+     * @brief Time between spikes in the ISI period.
      */
     // cppcheck-suppress unusedStructMember
     float isi_max_;
     /**
-     * @brief Hebbian plasticity constant.
+     * @brief Hebbian plasticity value.
      */
     // cppcheck-suppress unusedStructMember
     float d_h_;
+    /**
+     * @brief Hebbian plasticity initial value.
+     */
+    // cppcheck-suppress unusedStructMember
+    float d_h_initial_;
 };
 
 }  // namespace knp::synapse_traits
