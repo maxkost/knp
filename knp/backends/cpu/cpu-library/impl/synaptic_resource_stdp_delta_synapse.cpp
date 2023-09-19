@@ -81,8 +81,8 @@ void calculate_synaptic_resource_stdp_delta_synapse_projection(
                     synapses_parameters.d_h_ = synapses_parameters.d_h_initial_;
 
                 // Hebbian plasticity.
-                float d_h = synapses_parameters.d_h_ *
-                            std::min(static_cast<float>(std::pow(2, -synapses_parameters.stability_)), 1.f);
+                const float d_h = synapses_parameters.d_h_ *
+                                  std::min(static_cast<float>(std::pow(2, -synapses_parameters.stability_)), 1.f);
                 synapse.params_.rule_.synaptic_resource_ += d_h;
 
                 // Weight recalculation.

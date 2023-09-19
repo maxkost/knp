@@ -14,7 +14,6 @@ if(NOT KNP_BUILD_TESTS)
     return()
 endif()
 
-include(Dart)
 include(CTest)
 
 enable_testing()
