@@ -107,7 +107,7 @@ void calculate_additive_stdp_delta_synapse_projection(
     knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> &projection,
     knp::core::MessageEndpoint &endpoint, MessageQueue &future_messages, size_t step_n)
 {
-    SPDLOG_DEBUG("Calculating Delta synapse projection");
+    SPDLOG_DEBUG("Calculating Additive STDP Delta synapse projection");
 
     using ProjectionType = typename std::decay_t<decltype(projection)>;
     using ProcessingType = typename ProjectionType::SharedSynapseParameters::ProcessingType;

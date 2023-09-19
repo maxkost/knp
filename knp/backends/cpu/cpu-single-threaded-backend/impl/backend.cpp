@@ -214,12 +214,12 @@ void SingleThreadedCPUBackend::calculate_projection(
 
 
 void SingleThreadedCPUBackend::calculate_projection(
-    knp::core::Projection<knp::synapse_traits::STDPSynapticResourceSynapse> &projection,
+    knp::core::Projection<knp::synapse_traits::SynapticResourceSTDPDeltaSynapse> &projection,
     core::messaging::SynapticMessageQueue &message_queue)
 {
     SPDLOG_TRACE("Calculate STDPSynapticResource synapse projection {}", std::string(projection.get_uid()));
-    //    knp::backends::cpu::calculate_additive_stdp_delta_synapse_projection(
-    //        projection, message_endpoint_, message_queue, get_step());
+    knp::backends::cpu::calculate_synaptic_resource_stdp_delta_synapse_projection(
+        projection, message_endpoint_, message_queue, get_step());
 }
 
 

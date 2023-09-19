@@ -46,7 +46,7 @@ public:
      */
     using SupportedSynapses = boost::mp11::mp_list<
         knp::synapse_traits::DeltaSynapse, knp::synapse_traits::AdditiveSTDPDeltaSynapse,
-        knp::synapse_traits::STDPSynapticResourceSynapse>;
+        knp::synapse_traits::SynapticResourceSTDPDeltaSynapse>;
 
     /**
      * @brief List of supported population types based on neuron types specified in `SupportedNeurons`.
@@ -315,7 +315,7 @@ protected:
      * @param message_queue message queue to send to projection for calculation.
      */
     void calculate_projection(
-        knp::core::Projection<knp::synapse_traits::STDPSynapticResourceSynapse> &projection,
+        knp::core::Projection<knp::synapse_traits::SynapticResourceSTDPDeltaSynapse> &projection,
         core::messaging::SynapticMessageQueue &message_queue);
 
 private:
