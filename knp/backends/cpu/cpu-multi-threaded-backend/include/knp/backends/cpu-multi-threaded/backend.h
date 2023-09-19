@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <knp/backends/thread_pool/thread_pool.h>
 #include <knp/core/backend.h>
 #include <knp/core/population.h>
 #include <knp/core/projection.h>

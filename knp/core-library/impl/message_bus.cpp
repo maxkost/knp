@@ -17,6 +17,11 @@
 namespace knp::core
 {
 
+MessageBusImpl::~MessageBusImpl() {}
+
+void MessageBusImpl::update() {}
+
+
 MessageBus::MessageBus() : impl_(std::make_unique<MessageBusZMQImpl>())
 {
     assert(impl_.get());
@@ -25,7 +30,7 @@ MessageBus::MessageBus() : impl_(std::make_unique<MessageBusZMQImpl>())
 
 MessageBus::MessageBus(std::unique_ptr<MessageBusImpl> &&impl) : impl_(std::move(impl))
 {
-    if (!impl_.get()) throw std::runtime_error("Unavailable message bus implementation");
+    if (!impl_) throw std::runtime_error("Unavailable message bus implementation");
 }
 
 
@@ -45,6 +50,7 @@ size_t MessageBus::route_messages()
 {
     SPDLOG_DEBUG("Message routing cycle started...");
     size_t count = 0;
+    impl_->update();
     while (step())
     {
         ++count;

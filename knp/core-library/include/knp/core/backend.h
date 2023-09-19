@@ -18,6 +18,7 @@
 #include <memory>
 #include <set>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <boost/config.hpp>
@@ -203,6 +204,12 @@ protected:
      * @brief Backend default constructor.
      */
     Backend() = default;
+
+    /**
+     * @brief Backend constructor with custom bus implementation.
+     * @param impl bus implementation.
+     */
+    explicit Backend(std::unique_ptr<MessageBusImpl> &&impl) : message_bus_(std::move(impl)) {}
 
     /**
      * @brief Initialize backend before starting network execution.

@@ -181,7 +181,7 @@ protected:
     /**
      * @brief Message endpoint implementation.
      */
-    std::unique_ptr<MessageEndpointImpl> impl_;
+    std::shared_ptr<MessageEndpointImpl> impl_;
 
 protected:
     /**

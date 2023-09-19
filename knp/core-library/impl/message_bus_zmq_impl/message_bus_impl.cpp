@@ -21,12 +21,12 @@
 namespace knp::core
 {
 
-class MessageEndpointZMQ : public knp::core::MessageEndpoint
+class MessageEndpointZMQ : public MessageEndpoint
 {
 public:
     explicit MessageEndpointZMQ(zmq::socket_t &&sub_socket, zmq::socket_t &&pub_socket)
     {
-        impl_ = std::make_unique<knp::core::MessageEndpointZMQImpl>(std::move(sub_socket), std::move(pub_socket));
+        impl_ = std::make_shared<knp::core::MessageEndpointZMQImpl>(std::move(sub_socket), std::move(pub_socket));
     }
 };
 

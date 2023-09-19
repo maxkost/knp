@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <knp/core/message_bus_impl.h>
 #include <knp/core/message_endpoint.h>
 
 #include <functional>
@@ -17,30 +18,6 @@
  */
 namespace knp::core
 {
-/**
- * @brief Base class for different message bus implementations.
- */
-class MessageBusImpl
-{
-public:
-    /**
-     * @brief Send a message between endpoints.
-     */
-    virtual bool step() = 0;
-
-    /**
-     * @brief Creates an endpoint that can be used for message exchange.
-     * @return a new endpoint.
-     */
-    [[nodiscard]] virtual MessageEndpoint create_endpoint() = 0;
-
-    /**
-     * @brief Default virtual destructor.
-     */
-    virtual ~MessageBusImpl() = default;
-};
-
-
 /**
  * @brief The MessageBus class is a definition of an interface to a message bus.
  */

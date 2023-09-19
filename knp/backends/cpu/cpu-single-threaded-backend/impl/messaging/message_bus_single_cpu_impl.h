@@ -8,17 +8,26 @@
 
 #include <knp/core/message_bus.h>
 
+#include <list>
+#include <memory>
+#include <vector>
+
 /**
  * @brief Namespace for single-threaded backend.
  */
 namespace knp::backends::single_threaded_cpu
 {
+class MessageEndpointSingleCPUImpl;
+
 class MessageBusSingleCPUImpl : public core::MessageBusImpl
 {
 public:
+    void update() override;
     bool step() override;
     [[nodiscard]] core::MessageEndpoint create_endpoint() override;
 
 private:
+    std::vector<knp::core::messaging::MessageVariant> messages_to_route_;
+    std::list<std::weak_ptr<MessageEndpointSingleCPUImpl>> endpoints_;
 };
 }  // namespace knp::backends::single_threaded_cpu
