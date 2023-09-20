@@ -25,6 +25,7 @@ public:
 
 void MessageBusCPUImpl::update()
 {
+    std::lock_guard lock(mutex_);
     // This function is called before routing messages.
     auto iter = endpoints_.begin();
     while (iter != endpoints_.end())
@@ -52,6 +53,7 @@ void MessageBusCPUImpl::update()
 
 bool MessageBusCPUImpl::step()
 {
+    const std::lock_guard lock(mutex_);
     if (messages_to_route_.empty()) return false;  // no more messages left for endpoints to receive.
     // Sending a message to every endpoint.
     auto message = std::move(messages_to_route_.back());
@@ -71,6 +73,7 @@ bool MessageBusCPUImpl::step()
 core::MessageEndpoint MessageBusCPUImpl::create_endpoint()
 {
     auto endpoint_impl = std::make_shared<MessageEndpointCPUImpl>();
+    const std::lock_guard lock(mutex_);
     endpoints_.push_back(std::weak_ptr(endpoint_impl));
     return MessageEndpointCPU{std::move(endpoint_impl)};
 }

@@ -29,7 +29,8 @@ namespace knp::backends::multi_threaded_cpu
 {
 MultiThreadedCPUBackend::MultiThreadedCPUBackend(
     size_t thread_count, size_t population_part_size, size_t projection_part_size)
-    : population_part_size_(population_part_size),
+    : Backend(knp::core::MessageBus::make_cpu_implementation()),
+      population_part_size_(population_part_size),
       projection_part_size_(projection_part_size),
       message_endpoint_{message_bus_.create_endpoint()},
       calc_pool_(std::make_unique<tools::ThreadPool>(thread_count ? thread_count : std::thread::hardware_concurrency()))

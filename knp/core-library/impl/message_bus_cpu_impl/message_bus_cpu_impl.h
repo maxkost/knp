@@ -8,6 +8,7 @@
 
 #include <list>
 #include <memory>
+#include <mutex>
 #include <vector>
 
 #include "knp/core/message_bus.h"
@@ -29,5 +30,6 @@ public:
 private:
     std::vector<knp::core::messaging::MessageVariant> messages_to_route_;
     std::list<std::weak_ptr<MessageEndpointCPUImpl>> endpoints_;
+    std::mutex mutex_;
 };
 }  // namespace knp::core
