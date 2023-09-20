@@ -1,11 +1,3 @@
-//
-// Created by an_vartenkov on 19.09.23.
-//
-
-#ifndef KNPRUNARNI_ENDPOINT_SINGLE_CPU_IMPL_H
-#    define KNPRUNARNI_ENDPOINT_SINGLE_CPU_IMPL_H
-
-#endif  // KNPRUNARNI_ENDPOINT_SINGLE_CPU_IMPL_H
 /**
  * @file message_bus_single_cpu_impl.h
  * @brief Single-threaded CPU message bus implementation header.
@@ -21,12 +13,12 @@
 #include <vector>
 
 /**
- * @brief Namespace for single-threaded backend.
+ * @brief Core library namespace.
  */
-namespace knp::backends::single_threaded_cpu
+namespace knp::core
 {
 
-class MessageEndpointSingleCPUImpl : public core::MessageEndpointImpl
+class MessageEndpointCPUImpl : public core::MessageEndpointImpl
 {
 public:
     void send_message(const knp::core::messaging::MessageVariant &message) override
@@ -34,13 +26,13 @@ public:
         messages_to_send_.push_back(message);
     };
 
-    ~MessageEndpointSingleCPUImpl() = default;
+    ~MessageEndpointCPUImpl() = default;
 
     /**
      * @brief Reads all the messages queued to be sent, then clears message container.
      * @return a vector of messages to be sent to other endpoints.
      */
-    [[nodiscard]] std::vector<knp::core::messaging::MessageVariant> get_sent_messages()
+    [[nodiscard]] std::vector<knp::core::messaging::MessageVariant> unload_sent_messages()
     {
         auto result = std::move(messages_to_send_);
         messages_to_send_.clear();
@@ -75,8 +67,8 @@ public:
     }
 
 private:
-    std::vector<knp::core::messaging::MessageVariant> messages_to_send_;
-    std::vector<knp::core::messaging::MessageVariant> received_messages_;
+    std::vector<messaging::MessageVariant> messages_to_send_;
+    std::vector<messaging::MessageVariant> received_messages_;
 };
 
-}  // namespace knp::backends::single_threaded_cpu
+}  // namespace knp::core

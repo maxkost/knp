@@ -42,10 +42,13 @@ knp_add_library("${PROJECT_NAME}"
     impl/projection.cpp
     impl/message_bus.cpp
     impl/message_endpoint.cpp
-    impl/message_bus_zmq_impl/message_bus_impl.h
-    impl/message_bus_zmq_impl/message_endpoint_impl.h
-    impl/message_bus_zmq_impl/message_bus_impl.cpp
-    impl/message_bus_zmq_impl/message_endpoint_impl.cpp
+    impl/message_bus_zmq_impl/message_bus_zmq_impl.h
+    impl/message_bus_zmq_impl/endpoint_zmq_impl.h
+    impl/message_bus_zmq_impl/message_bus_zmq_impl.cpp
+    impl/message_bus_zmq_impl/endpoint_zmq_impl.cpp
+    impl/message_bus_cpu_impl/message_bus_cpu_impl.cpp
+    impl/message_bus_cpu_impl/message_bus_cpu_impl.h
+    impl/message_bus_cpu_impl/endpoint_cpu_impl.h
     impl/message_bus_impl.cpp
     impl/message_header.cpp
     impl/messaging/message_envelope.cpp

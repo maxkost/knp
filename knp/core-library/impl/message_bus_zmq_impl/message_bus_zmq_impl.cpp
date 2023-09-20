@@ -5,7 +5,7 @@
  * @date 31.03.2023
  */
 
-#include "message_bus_impl.h"
+#include "message_bus_zmq_impl.h"
 
 #include <spdlog/spdlog.h>
 
@@ -15,7 +15,7 @@
 
 #include <zmq.hpp>
 
-#include "message_endpoint_impl.h"
+#include "endpoint_zmq_impl.h"
 
 
 namespace knp::core

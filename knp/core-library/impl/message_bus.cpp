@@ -11,13 +11,26 @@
 
 #include <zmq.hpp>
 
-#include "message_bus_zmq_impl/message_bus_impl.h"
+#include "message_bus_cpu_impl/message_bus_cpu_impl.h"
+#include "message_bus_zmq_impl/message_bus_zmq_impl.h"
 
 
 namespace knp::core
 {
 
-MessageBus::MessageBus() : impl_(std::make_unique<MessageBusZMQImpl>())
+std::unique_ptr<MessageBusImpl> MessageBus::make_cpu_implementation()
+{
+    return std::make_unique<MessageBusCPUImpl>();
+}
+
+
+std::unique_ptr<MessageBusImpl> MessageBus::make_zmq_implementation()
+{
+    return std::make_unique<MessageBusZMQImpl>();
+}
+
+
+MessageBus::MessageBus() : impl_(make_zmq_implementation())
 {
     assert(impl_.get());
 }

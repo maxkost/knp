@@ -22,12 +22,10 @@
 
 #include <boost/mp11.hpp>
 
-#include "messaging/message_bus_single_cpu_impl.h"
-
 namespace knp::backends::single_threaded_cpu
 {
 SingleThreadedCPUBackend::SingleThreadedCPUBackend()
-    : Backend{std::make_unique<MessageBusSingleCPUImpl>()}, message_endpoint_{message_bus_.create_endpoint()}
+    : Backend{core::MessageBus::make_cpu_implementation()}, message_endpoint_{message_bus_.create_endpoint()}
 {
     SPDLOG_INFO("ST CPU backend instance created...");
 }

@@ -25,7 +25,19 @@ class MessageBus
 {
 public:
     /**
+     * @brief Create a CPU-based message bus implementation.
+     * @return unique pointer to implementation.
+     */
+    static std::unique_ptr<MessageBusImpl> make_cpu_implementation();
+
+    /**
+     * @brief Create a ZMQ-based message bus implementation.
+     * @return unique pointer to implementation.
+     */
+    static std::unique_ptr<MessageBusImpl> make_zmq_implementation();
+    /**
      * @brief Default message bus constructor.
+     * @note Uses ZMQ implementation.
      */
     MessageBus();
 
