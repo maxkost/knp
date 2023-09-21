@@ -174,12 +174,12 @@ public:
     void add_projection(typename std::decay<ProjectionType>::type &projection);
     /**
      * @brief Add a projection to the network.
-     * @tparam SynapseType type of the new projection synapses.
-     * @param projection_uid uid of the new projection.
+     * @tparam SynapseType type of projection synapses.
+     * @param projection_uid UID of projection to add.
      * @param generator synapse generator.
-     * @param pre_population_uid presynaptic population UID.
-     * @param post_population_uid postsynaptic population UID.
-     * @param synapse_count synapses count in the projection.
+     * @param pre_population_uid UID of the presynaptic population.
+     * @param post_population_uid UID of the postsynaptic population.
+     * @param synapse_count number of projection synapses.
      */
     template <typename SynapseType>
     void add_projection(

@@ -59,7 +59,7 @@ public:
 
     /**
      * @brief Construct a population by running a neuron generator.
-     * @param uid population uid.
+     * @param uid population UID.
      * @param generator neuron generator.
      * @param neurons_count number of times to run the neuron generator.
      */

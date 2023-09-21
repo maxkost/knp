@@ -18,7 +18,7 @@
 
 
 /**
- * @brief CPU backends namespace.
+ * @brief Namespace for CPU backends.
  */
 namespace knp::backends::cpu
 {

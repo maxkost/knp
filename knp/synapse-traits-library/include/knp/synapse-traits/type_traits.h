@@ -8,7 +8,7 @@
 #pragma once
 
 /**
- * @brief Synapse traits namespace.
+ * @brief Namespace for synapse traits.
  */
 namespace knp::synapse_traits
 {
@@ -22,7 +22,7 @@ struct synapse_parameters;
 
 
 /**
- * @brief Structure for the parameters shared between synapses.
+ * @brief Structure for parameters shared between synapses.
  * @tparam SynapseType type of synapses.
  */
 template <typename SynapseType>

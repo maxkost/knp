@@ -21,13 +21,13 @@ namespace knp::meta
 {
 
 /**
- * @brief Function loads elements from one container of all variants to another container that contains a subset of all
+ * @brief Load elements from one container of all variants to another container that contains a subset of all
  * variants.
- * @tparam SupportedTypes variants subset.
+ * @tparam SupportedTypes subset of variants.
  * @tparam AllVariants all supported variants.
- * @tparam ToContainer resulting container.
- * @param from_container source.
- * @param to_container destination.
+ * @tparam ToContainer target container.
+ * @param from_container source container.
+ * @param to_container target container.
  */
 template <typename SupportedTypes, typename AllVariants, typename ToContainer>
 void load_from_container(const std::vector<AllVariants> &from_container, ToContainer &to_container)

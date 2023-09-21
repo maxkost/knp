@@ -20,10 +20,6 @@
 #include <utility>
 #include <vector>
 
-#include <boost/multi_index/hashed_index.hpp>
-#include <boost/multi_index/member.hpp>
-#include <boost/multi_index_container.hpp>
-
 /**
  * @brief Core library namespace.
  */
@@ -83,6 +79,9 @@ public:
      */
     using SynapseGenerator1 = std::function<std::optional<std::tuple<SynapseParameters, uint32_t, uint32_t>>(uint32_t)>;
 
+    /**
+     * @brief Type of shared synapse parameters.
+     */
     using SharedSynapseParameters = knp::synapse_traits::shared_synapse_parameters<SynapseType>;
 
 public:
@@ -94,7 +93,7 @@ public:
     Projection(UID presynaptic_uid, UID postsynaptic_uid);
     /**
      * @brief Construct an empty projection.
-     * @param uid projection uid.
+     * @param uid projection UID.
      * @param presynaptic_uid UID of the presynaptic population.
      * @param postsynaptic_uid UID of the postsynaptic population.
      */
@@ -114,18 +113,18 @@ public:
      * @brief Construct a projection by running a synapse generator a given number of times.
      * @param presynaptic_uid presynaptic population UID.
      * @param postsynaptic_uid postsynaptic population UID.
-     * @param generator function that generates a synapse parameters: parameteres, id_from_, id_to_.
-     * @param num_iterations number of iterations to run the synapse generator.
+     * @param generator function that generates synapse parameters: `parameteres`, `id_from_`, `id_to_`.
+     * @param num_iterations number of times to run the synapse generator.
      */
     Projection(UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator1 &generator, size_t num_iterations);
 
     /**
      * @brief Construct a projection by running a synapse generator a given number of times.
-     * @param uid projection uid.
+     * @param uid projection UID.
      * @param presynaptic_uid presynaptic population UID.
      * @param postsynaptic_uid postsynaptic population UID.
-     * @param generator function that generates a synapse parameters: parameteres, id_from_, id_to_.
-     * @param num_iterations number of iterations to run the synapse generator.
+     * @param generator function that generates synapse parameters: `parameteres`, `id_from_`, `id_to_`.
+     * @param num_iterations number of times to run the synapse generator.
      */
     Projection(
         UID uid, UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator1 &generator, size_t num_iterations);
@@ -216,7 +215,7 @@ public:
     [[nodiscard]] std::vector<size_t> get_by_presynaptic_neuron(size_t neuron_index) const;
 
     /**
-     * @brief Find synapses that connected to the neuron with the given index.
+     * @brief Find synapses connected to the neuron with the given index.
      * @param neuron_index index of a postsynaptic neuron.
      * @return indexes of all synapses associated with the specified postsynaptic neuron.
      */
@@ -326,7 +325,9 @@ public:
      */
     SharedSynapseParameters &get_shared_parameters() { return shared_parameters_; }
     /**
-     * @copydoc get_shared_parameters()
+     * @brief Get parameters shared between all synapses.
+     * @note Constant method.
+     * @return shared parameters.
      */
     const SharedSynapseParameters &get_shared_parameters() const { return shared_parameters_; }
 
