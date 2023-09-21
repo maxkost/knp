@@ -138,6 +138,8 @@ public:
     /**
      * @brief Default constructor for multi-threaded CPU backend.
      * @param thread_count number of threads.
+     * @param population_part_size number of synapses that are calculated in a single thread.
+     * @param projection_part_size number of neurons that are calculated in a single thread.
      * @note If `thread_count` equals `0`, then the number of threads is calculated automatically.
      */
     explicit MultiThreadedCPUBackend(
