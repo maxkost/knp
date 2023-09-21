@@ -27,6 +27,23 @@ TEST(MessageBusSuite, AddSubscriptionMessage)
 }
 
 
+TEST(MessageBusSuite, SubscribeUnsubscribe)
+{
+    knp::core::MessageBus bus;
+    auto ep{bus.create_endpoint()};
+    knp::core::UID sender{true}, receiver{true}, false_uid{true};
+    ep.subscribe<knp::core::messaging::SpikeMessage>(receiver, {sender});
+    bool deleted = ep.unsubscribe<knp::core::messaging::SpikeMessage>(false_uid);
+    EXPECT_EQ(deleted, false);
+    deleted = ep.unsubscribe<knp::core::messaging::SpikeMessage>(receiver);
+    EXPECT_EQ(deleted, true);
+    deleted = ep.unsubscribe<knp::core::messaging::SynapticImpactMessage>(receiver);
+    EXPECT_EQ(deleted, false);
+    deleted = ep.unsubscribe<knp::core::messaging::SpikeMessage>(receiver);
+    EXPECT_EQ(deleted, false);
+}
+
+
 TEST(MessageBusSuite, CreateBusAndEndpointZMQ)
 {
     using SpikeMessage = knp::core::messaging::SpikeMessage;

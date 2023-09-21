@@ -75,16 +75,18 @@ Subscription<MessageType> &MessageEndpoint::subscribe(const UID &receiver, const
 }
 
 
-// TODO: Implement
 template <typename MessageType>
-void MessageEndpoint::unsubscribe(const UID &receiver)
+bool MessageEndpoint::unsubscribe(const UID &receiver)
 {
     SPDLOG_DEBUG("Unsubscribing {}...", std::string(receiver));
-
-    //    constexpr auto index = get_type_index<MessageVariant, MessageType>;
-
-    //    auto &sub_list = subscriptions_.get<by_type_and_uid>();
-    //    sub_list.erase(sub_list.find(std::make_pair(receiver, index)));
+    constexpr auto index = get_type_index<knp::core::messaging::MessageVariant, MessageType>;
+    auto iter = subscriptions_.find(std::make_pair(index, receiver));
+    if (iter != subscriptions_.end())
+    {
+        subscriptions_.erase(iter);
+        return true;
+    }
+    return false;
 }
 
 
@@ -160,7 +162,7 @@ void MessageEndpoint::receive_all_messages(const std::chrono::milliseconds &slee
 #define INSTANCE_MESSAGES_FUNCTIONS(n, template_for_instance, message_type)        \
     template Subscription<message_type> &MessageEndpoint::subscribe<message_type>( \
         const UID &receiver, const std::vector<UID> &senders);                     \
-    template void MessageEndpoint::unsubscribe<message_type>(const UID &receiver);
+    template bool MessageEndpoint::unsubscribe<message_type>(const UID &receiver);
 
 BOOST_PP_SEQ_FOR_EACH(INSTANCE_MESSAGES_FUNCTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES))
 

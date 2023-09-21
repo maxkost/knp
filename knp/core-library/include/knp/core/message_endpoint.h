@@ -125,9 +125,10 @@ public:
      * @brief Unsubscribe from messages of a specified type.
      * @tparam MessageType type of messages to which the receiver is subscribed.
      * @param receiver receiver UID.
+     * @return true if deleted a subscription, false otherwise.
      */
     template <typename MessageType>
-    void unsubscribe(const UID &receiver);
+    bool unsubscribe(const UID &receiver);
 
     /**
      * @brief Remove all subscriptions for a receiver with given UID.

@@ -59,7 +59,7 @@ size_t MessageBusZMQImpl::step()
 
         SPDLOG_DEBUG("Running poll()");
 
-        if (zmq::poll(items, 1ms))
+        if (zmq::poll(items, 0ms))
         {
             SPDLOG_TRACE("Poll() successful, receiving data");
             do
