@@ -1,5 +1,5 @@
 /**
- * @file message_bus_impl.cpp
+ * @file message_bus_zmq_impl.cpp
  * @brief Message bus ZeroMQ implementation.
  * @author Artiom N.
  * @date 31.03.2023
@@ -15,7 +15,7 @@
 
 #include <zmq.hpp>
 
-#include "endpoint_zmq_impl.h"
+#include "message_endpoint_zmq_impl.h"
 
 
 namespace knp::core::messaging::impl

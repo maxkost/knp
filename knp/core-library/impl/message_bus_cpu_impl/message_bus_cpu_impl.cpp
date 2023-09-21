@@ -1,6 +1,6 @@
 /**
- * @file message_bus_single_cpu_impl.cpp
- * @brief Single-threaded CPU message bus implementation.
+ * @file message_bus_cpu_impl.cpp
+ * @brief CPU-based message bus implementation.
  * @author Vartenkov A.
  * @date 18.09.2023
  */
@@ -9,7 +9,7 @@
 
 #include <utility>
 
-#include "endpoint_cpu_impl.h"
+#include "message_endpoint_cpu_impl.h"
 
 /**
  * @brief Namespace for implementations of message bus.

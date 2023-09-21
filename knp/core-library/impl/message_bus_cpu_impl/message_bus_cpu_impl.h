@@ -1,6 +1,6 @@
 /**
- * @file message_bus_single_cpu_impl.h
- * @brief Single-threaded CPU message bus implementation header.
+ * @file message_bus_cpu_impl.h
+ * @brief CPU-based message bus implementation header.
  * @author Vartenkov A.
  * @date 18.09.2023
  */

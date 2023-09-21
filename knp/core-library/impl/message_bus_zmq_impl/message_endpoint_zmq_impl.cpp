@@ -1,11 +1,11 @@
 /**
- * @file message_endpoint_impl.cpp
+ * @file message_endpoint_zmq_impl.cpp
  * @brief Message endpoint ZeroMQ implementation.
  * @author Artiom N.
  * @date 31.03.2023
  */
 
-#include "endpoint_zmq_impl.h"
+#include "message_endpoint_zmq_impl.h"
 
 #include <spdlog/spdlog.h>
 

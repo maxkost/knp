@@ -1,5 +1,5 @@
 /**
- * @file message_bus_impl.h
+ * @file message_bus_zmq_impl.h
  * @brief Message bus ZeroMQ implementation header.
  * @author Artiom N.
  * @date 31.03.2023

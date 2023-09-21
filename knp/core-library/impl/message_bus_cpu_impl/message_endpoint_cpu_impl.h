@@ -1,5 +1,5 @@
 /**
- * @file endpoint_cpu_impl.h
+ * @file message_endpoint_cpu_impl.h
  * @brief CPU endpoint implementation header.
  * @author Vartenkov A.
  * @date 18.09.2023

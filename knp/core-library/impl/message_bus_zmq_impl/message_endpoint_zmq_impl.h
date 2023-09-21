@@ -1,5 +1,5 @@
 /**
- * @file message_endpoint_impl.h
+ * @file message_endpoint_zmq_impl.h
  * @brief Message endpoint ZeroMQ implementation header.
  * @author Artiom N.
  * @date 31.03.2023
