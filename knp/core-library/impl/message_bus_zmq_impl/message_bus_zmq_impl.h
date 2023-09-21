@@ -16,7 +16,7 @@
 #include <zmq.hpp>
 
 
-namespace knp::core
+namespace knp::core::messaging::impl
 {
 
 /**
@@ -69,4 +69,4 @@ private:
 };
 
 
-}  // namespace knp::core
+}  // namespace knp::core::messaging::impl

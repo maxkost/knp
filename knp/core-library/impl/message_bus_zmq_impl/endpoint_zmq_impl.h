@@ -18,7 +18,10 @@
 #include <zmq.hpp>
 
 
-namespace knp::core
+/**
+ * @brief Namespace for implementations of message bus.
+ */
+namespace knp::core::messaging::impl
 {
 
 class MessageEndpointZMQImpl : public MessageEndpointImpl
@@ -53,4 +56,4 @@ private:
     zmq::socket_t pub_socket_;
 };
 
-}  // namespace knp::core
+}  // namespace knp::core::messaging::impl

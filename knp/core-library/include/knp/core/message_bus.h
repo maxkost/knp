@@ -28,13 +28,13 @@ public:
      * @brief Create a CPU-based message bus implementation.
      * @return unique pointer to implementation.
      */
-    static std::unique_ptr<MessageBusImpl> make_cpu_implementation();
+    static std::unique_ptr<messaging::impl::MessageBusImpl> make_cpu_implementation();
 
     /**
      * @brief Create a ZMQ-based message bus implementation.
      * @return unique pointer to implementation.
      */
-    static std::unique_ptr<MessageBusImpl> make_zmq_implementation();
+    static std::unique_ptr<messaging::impl::MessageBusImpl> make_zmq_implementation();
     /**
      * @brief Default message bus constructor.
      * @note Uses ZMQ implementation.
@@ -44,7 +44,7 @@ public:
     /**
      * @brief Message bus constructor with a specialized implementation.
      */
-    explicit MessageBus(std::unique_ptr<MessageBusImpl> &&impl);
+    explicit MessageBus(std::unique_ptr<messaging::impl::MessageBusImpl> &&impl);
 
     /**
      * @brief Message bus destructor.
@@ -75,7 +75,7 @@ private:
     /**
      * @brief Message bus implementation.
      */
-    std::unique_ptr<MessageBusImpl> impl_;
+    std::unique_ptr<messaging::impl::MessageBusImpl> impl_;
 };
 
 }  // namespace knp::core

@@ -12,9 +12,9 @@
 #include "endpoint_cpu_impl.h"
 
 /**
- * @brief Core library namespace.
+ * @brief Namespace for implementations of message bus.
  */
-namespace knp::core
+namespace knp::core::messaging::impl
 {
 
 class MessageEndpointCPU : public MessageEndpoint
@@ -80,4 +80,4 @@ core::MessageEndpoint MessageBusCPUImpl::create_endpoint()
     return MessageEndpointCPU{std::move(endpoint_impl)};
 }
 
-}  // namespace knp::core
+}  // namespace knp::core::messaging::impl

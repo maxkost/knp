@@ -209,7 +209,7 @@ protected:
      * @brief Backend constructor with custom bus implementation.
      * @param impl bus implementation.
      */
-    explicit Backend(std::unique_ptr<MessageBusImpl> &&impl) : message_bus_(std::move(impl)) {}
+    explicit Backend(std::unique_ptr<messaging::impl::MessageBusImpl> &&impl) : message_bus_(std::move(impl)) {}
 
     /**
      * @brief Initialize backend before starting network execution.

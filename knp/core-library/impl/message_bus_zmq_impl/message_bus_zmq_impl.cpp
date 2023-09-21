@@ -18,7 +18,7 @@
 #include "endpoint_zmq_impl.h"
 
 
-namespace knp::core
+namespace knp::core::messaging::impl
 {
 
 class MessageEndpointZMQ : public MessageEndpoint
@@ -26,7 +26,7 @@ class MessageEndpointZMQ : public MessageEndpoint
 public:
     explicit MessageEndpointZMQ(zmq::socket_t &&sub_socket, zmq::socket_t &&pub_socket)
     {
-        impl_ = std::make_shared<knp::core::MessageEndpointZMQImpl>(std::move(sub_socket), std::move(pub_socket));
+        impl_ = std::make_shared<MessageEndpointZMQImpl>(std::move(sub_socket), std::move(pub_socket));
     }
 };
 
@@ -124,4 +124,4 @@ MessageEndpoint MessageBusZMQImpl::create_endpoint()
     return MessageEndpointZMQ(std::move(sub_socket), std::move(pub_socket));
 }
 
-}  // namespace knp::core
+}  // namespace knp::core::messaging::impl

@@ -1,6 +1,6 @@
 /**
- * @file message_bus_single_cpu_impl.h
- * @brief Single-threaded CPU message bus implementation header.
+ * @file endpoint_cpu_impl.h
+ * @brief CPU endpoint implementation header.
  * @author Vartenkov A.
  * @date 18.09.2023
  */
@@ -14,9 +14,9 @@
 #include <vector>
 
 /**
- * @brief Core library namespace.
+ * @brief Namespace for implementations of message bus.
  */
-namespace knp::core
+namespace knp::core::messaging::impl
 {
 
 /**
@@ -48,7 +48,7 @@ public:
         return result;
     }
 
-    // Embarrassingly inefficient: all endpoints basically receive all messages by copying them. Should do better.
+    // TODO: Embarrassingly inefficient: all endpoints basically receive all messages by copying them. Should do better.
     void add_received_messages(const std::vector<knp::core::messaging::MessageVariant> &incoming_messages)
     {
         std::lock_guard lock(mutex_);
@@ -85,4 +85,4 @@ private:
     std::mutex mutex_;
 };
 
-}  // namespace knp::core
+}  // namespace knp::core::messaging::impl

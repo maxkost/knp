@@ -14,13 +14,13 @@
 #include "knp/core/message_bus.h"
 
 /**
- * @brief Core library namespace.
+ * @brief Namespace for implementations of message bus.
  */
-namespace knp::core
+namespace knp::core::messaging::impl
 {
 class MessageEndpointCPUImpl;
 
-class MessageBusCPUImpl : public core::MessageBusImpl
+class MessageBusCPUImpl : public MessageBusImpl
 {
 public:
     void update() override;
@@ -32,4 +32,4 @@ private:
     std::list<std::weak_ptr<MessageEndpointCPUImpl>> endpoints_;
     std::mutex mutex_;
 };
-}  // namespace knp::core
+}  // namespace knp::core::messaging::impl

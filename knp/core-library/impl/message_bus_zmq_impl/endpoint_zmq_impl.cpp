@@ -15,7 +15,7 @@
 #include <zmq.hpp>
 
 
-namespace knp::core
+namespace knp::core::messaging::impl
 {
 
 MessageEndpointZMQImpl::MessageEndpointZMQImpl(zmq::socket_t &&sub_socket, zmq::socket_t &&pub_socket)
@@ -93,4 +93,4 @@ std::optional<zmq::message_t> MessageEndpointZMQImpl::receive_zmq_message()
 
     return msg;
 }
-}  // namespace knp::core
+}  // namespace knp::core::messaging::impl

@@ -7,7 +7,10 @@
 #pragma once
 #include <knp/core/message_endpoint.h>
 
-namespace knp::core
+/**
+ * @brief Namespace for implementations of message bus.
+ */
+namespace knp::core::messaging::impl
 {
 /**
  * @brief Base class for different message bus implementations.
@@ -37,4 +40,4 @@ public:
      */
     virtual void update();
 };
-}  // namespace knp::core
+}  // namespace knp::core::messaging::impl

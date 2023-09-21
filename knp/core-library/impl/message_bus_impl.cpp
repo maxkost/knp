@@ -7,7 +7,7 @@
 
 #include <knp/core/message_bus_impl.h>
 
-namespace knp::core
+namespace knp::core::messaging::impl
 {
 MessageBusImpl::~MessageBusImpl() {}
 
@@ -18,4 +18,4 @@ size_t MessageBusImpl::step()
 
 void MessageBusImpl::update() {}
 
-}  // namespace knp::core
+}  // namespace knp::core::messaging::impl
