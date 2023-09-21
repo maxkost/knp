@@ -14,6 +14,9 @@
  */
 namespace knp::core
 {
+/**
+ * @brief boost::multi_index namespace.
+ */
 namespace mi = boost::multi_index;
 
 /**
@@ -34,6 +37,12 @@ struct Connection
      * @brief Index of synapse parameters.
      */
     size_t index_;
+
+    /**
+     * @brief Comparison operator.
+     * @param c another connection.
+     * @return true if connections have the same parameters and direction.
+     */
     bool operator==(const Connection &c) const { return from_ == c.from_ && to_ == c.to_ && index_ == c.index_; }
 };
 

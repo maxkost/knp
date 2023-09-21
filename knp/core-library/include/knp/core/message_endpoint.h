@@ -29,13 +29,30 @@
 namespace knp::core
 {
 
+/**
+ * @brief Base class for all message endpoint implementations.
+ */
 class MessageEndpointImpl
 {
 public:
+    /**
+     * @brief Receive a message from message bus.
+     * @return message if a message was received, nothing otherwise.
+     */
     virtual std::optional<messaging::MessageVariant> receive_message() = 0;
+
+    /**
+     * @brief Send a message to a message bus.
+     * @param message message to be sent.
+     */
     virtual void send_message(const knp::core::messaging::MessageVariant &message) = 0;
+
+    /**
+     * @brief Default virtual destructor.
+     */
     virtual ~MessageEndpointImpl() = default;
 };
+
 
 /**
  * @brief The MessageEndpoint class is a definition of message endpoints.
