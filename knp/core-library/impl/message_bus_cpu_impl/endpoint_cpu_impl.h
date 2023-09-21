@@ -19,6 +19,10 @@
 namespace knp::core
 {
 
+/**
+ * @brief Endpoint implementation class for CPU message bus.
+ * @note should never be used explicitly.
+ */
 class MessageEndpointCPUImpl : public core::MessageEndpointImpl
 {
 public:

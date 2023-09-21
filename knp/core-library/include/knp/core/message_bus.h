@@ -60,10 +60,10 @@ public:
     [[nodiscard]] MessageEndpoint create_endpoint();
 
     /**
-     * @brief Route a single message.
-     * @return `true` if a message was routed, `false` if no message was routed.
+     * @brief Route some messages.
+     * @return number of messages routed during the step.
      */
-    bool step();
+    size_t step();
 
     /**
      * @brief Route messages.

@@ -22,8 +22,9 @@ public:
 
     /**
      * @brief Send a message between endpoints.
+     * @return number of messages routed during this step.
      */
-    virtual bool step();
+    virtual size_t step();
 
     /**
      * @brief Creates an endpoint that can be used for message exchange.

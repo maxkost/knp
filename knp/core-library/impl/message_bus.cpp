@@ -48,7 +48,7 @@ MessageEndpoint MessageBus::create_endpoint()
 }
 
 
-bool MessageBus::step()
+size_t MessageBus::step()
 {
     return impl_->step();
 }
@@ -59,10 +59,9 @@ size_t MessageBus::route_messages()
     SPDLOG_DEBUG("Message routing cycle started...");
     size_t count = 0;
     impl_->update();
-    while (step())
-    {
-        ++count;
-    }
+    size_t num_messages;
+    while ((num_messages = step())) count += num_messages;
+
     return count;
 }
 

@@ -11,9 +11,9 @@ namespace knp::core
 {
 MessageBusImpl::~MessageBusImpl() {}
 
-bool MessageBusImpl::step()
+size_t MessageBusImpl::step()
 {
-    return false;
+    return 0;
 }
 
 void MessageBusImpl::update() {}

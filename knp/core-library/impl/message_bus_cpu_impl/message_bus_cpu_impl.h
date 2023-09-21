@@ -24,7 +24,7 @@ class MessageBusCPUImpl : public core::MessageBusImpl
 {
 public:
     void update() override;
-    bool step() override;
+    size_t step() override;
     [[nodiscard]] core::MessageEndpoint create_endpoint() override;
 
 private:

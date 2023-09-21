@@ -46,7 +46,7 @@ MessageBusZMQImpl::MessageBusZMQImpl()
 }
 
 
-bool MessageBusZMQImpl::step()
+size_t MessageBusZMQImpl::step()
 {
     zmq::message_t message;
     zmq::recv_result_t recv_result;
@@ -75,10 +75,10 @@ bool MessageBusZMQImpl::step()
         else
         {
             SPDLOG_DEBUG("Poll() returned 0, exiting");
-            return false;
+            return 0;
         }
 
-        if (isit_id(recv_result)) return true;
+        if (isit_id(recv_result)) return 1;
 
         SPDLOG_DEBUG("Data was received, bus will re-send the message");
         // send_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.

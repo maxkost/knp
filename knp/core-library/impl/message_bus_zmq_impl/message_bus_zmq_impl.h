@@ -30,13 +30,13 @@ public:
     /**
      * @brief send a message from one socket to another.
      */
-    bool step();
+    size_t step() override;
 
     /**
      * @brief Creates an endpoint that can be used for message exchange.
      * @return a new endpoint.
      */
-    [[nodiscard]] MessageEndpoint create_endpoint();
+    [[nodiscard]] MessageEndpoint create_endpoint() override;
 
 private:
     bool isit_id(const zmq::recv_result_t &recv_result) const { return recv_result.value() == 5; }
