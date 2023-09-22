@@ -88,7 +88,6 @@ public:
         knp::synapse_traits::shared_synapse_parameters<SynapseT> synapses_parameters_;
     };
 
-
     /**
      * @brief Structure for the parameters shared between synapses for STDP.
      * @tparam Rule type of the STDP rule.
