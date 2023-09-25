@@ -30,7 +30,7 @@ std::unique_ptr<messaging::impl::MessageBusImpl> MessageBus::make_zmq_implementa
 }
 
 
-MessageBus::MessageBus() : impl_(make_zmq_implementation())
+MessageBus::MessageBus() : impl_(make_cpu_implementation())
 {
     assert(impl_.get());
 }
