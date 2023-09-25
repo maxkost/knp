@@ -5,7 +5,7 @@
  * @date 19.09.2023
  */
 
-#include <knp/core/message_bus_impl.h>
+#include "message_bus_impl.h"
 
 namespace knp::core::messaging::impl
 {

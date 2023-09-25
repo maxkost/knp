@@ -15,11 +15,6 @@
 namespace knp::core
 {
 /**
- * @brief boost::multi_index namespace.
- */
-namespace mi = boost::multi_index;
-
-/**
  * @brief Connection description structure.
  */
 struct Connection
@@ -50,11 +45,14 @@ struct Connection
 /**
  * @brief A container of Connections, with fast search by any of its fields.
  */
-typedef mi::multi_index_container<
+typedef boost::multi_index::multi_index_container<
     Connection,
-    mi::indexed_by<
-        mi::hashed_non_unique<mi::tag<struct mi_presynaptic>, BOOST_MULTI_INDEX_MEMBER(Connection, size_t, from_)>,
-        mi::hashed_non_unique<mi::tag<struct mi_postsynaptic>, BOOST_MULTI_INDEX_MEMBER(Connection, size_t, to_)>,
-        mi::hashed_unique<mi::tag<struct mi_synapse_index>, BOOST_MULTI_INDEX_MEMBER(Connection, size_t, index_)>>>
+    boost::multi_index::indexed_by<
+        boost::multi_index::hashed_non_unique<
+            boost::multi_index::tag<struct mi_presynaptic>, BOOST_MULTI_INDEX_MEMBER(Connection, size_t, from_)>,
+        boost::multi_index::hashed_non_unique<
+            boost::multi_index::tag<struct mi_postsynaptic>, BOOST_MULTI_INDEX_MEMBER(Connection, size_t, to_)>,
+        boost::multi_index::hashed_unique<
+            boost::multi_index::tag<struct mi_synapse_index>, BOOST_MULTI_INDEX_MEMBER(Connection, size_t, index_)> > >
     Index;
 }  // namespace knp::core

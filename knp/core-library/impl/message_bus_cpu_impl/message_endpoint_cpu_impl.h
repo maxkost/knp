@@ -6,7 +6,7 @@
  */
 #pragma once
 
-#include <knp/core/message_endpoint.h>
+#include <message_endpoint_impl.h>
 
 #include <algorithm>
 #include <mutex>
@@ -23,7 +23,7 @@ namespace knp::core::messaging::impl
  * @brief Endpoint implementation class for CPU message bus.
  * @note should never be used explicitly.
  */
-class MessageEndpointCPUImpl : public core::MessageEndpointImpl
+class MessageEndpointCPUImpl : public MessageEndpointImpl
 {
 public:
     MessageEndpointCPUImpl() {}

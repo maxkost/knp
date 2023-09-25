@@ -5,11 +5,11 @@
  * @date 18.09.2023
  */
 
-#include "message_bus_cpu_impl.h"
+#include <message_bus_cpu_impl/message_bus_cpu_impl.h>
+#include <message_bus_cpu_impl/message_endpoint_cpu_impl.h>
 
 #include <utility>
 
-#include "message_endpoint_cpu_impl.h"
 
 /**
  * @brief Namespace for implementations of message bus.
@@ -34,13 +34,9 @@ void MessageBusCPUImpl::update()
         // Clear up all pointers to expired endpoints.
         if (!endpoint_ptr)
         {
-            auto new_iter = iter;
-            ++new_iter;
-            endpoints_.erase(iter);
-            iter = new_iter;
+            endpoints_.erase(iter++);
             continue;
         }
-
         // Read all sent messages to an internal buffer.
         auto new_messages = endpoint_ptr->unload_sent_messages();
         messages_to_route_.insert(

@@ -10,7 +10,6 @@
 #include <knp/backends/cpu-library/init.h>
 #include <knp/backends/cpu-multi-threaded/backend.h>
 #include <knp/backends/thread_pool/thread_pool.h>
-#include <knp/core/core.h>
 #include <knp/devices/cpu.h>
 #include <knp/meta/assert_helpers.h>
 #include <knp/meta/stringify.h>

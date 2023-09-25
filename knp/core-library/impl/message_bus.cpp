@@ -17,6 +17,8 @@
 
 namespace knp::core
 {
+MessageBus::~MessageBus() {}
+
 
 std::unique_ptr<messaging::impl::MessageBusImpl> MessageBus::make_cpu_implementation()
 {
@@ -39,6 +41,15 @@ MessageBus::MessageBus() : impl_(make_cpu_implementation())
 MessageBus::MessageBus(std::unique_ptr<messaging::impl::MessageBusImpl> &&impl) : impl_(std::move(impl))
 {
     if (!impl_) throw std::runtime_error("Unavailable message bus implementation");
+}
+
+
+MessageBus::MessageBus(bool is_cpu_impl)
+{
+    if (is_cpu_impl)
+        impl_ = make_cpu_implementation();
+    else
+        impl_ = make_zmq_implementation();
 }
 
 

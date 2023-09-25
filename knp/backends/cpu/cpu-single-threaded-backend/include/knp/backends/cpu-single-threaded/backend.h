@@ -123,7 +123,7 @@ public:
     /**
      * @brief Destructor for single-threaded CPU backend.
      */
-    ~SingleThreadedCPUBackend() = default;
+    ~SingleThreadedCPUBackend() override = default;
 
 public:
     /**
@@ -309,9 +309,7 @@ protected:
         core::messaging::SynapticMessageQueue &message_queue);
 
 private:
-    // cppcheck-suppress unusedStructMember
     PopulationContainer populations_;
-    // cppcheck-suppress unusedStructMember
     ProjectionContainer projections_;
     core::MessageEndpoint message_endpoint_;
 };

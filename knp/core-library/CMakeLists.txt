@@ -50,6 +50,7 @@ knp_add_library("${PROJECT_NAME}"
     impl/message_bus_cpu_impl/message_bus_cpu_impl.h
     impl/message_bus_cpu_impl/message_endpoint_cpu_impl.h
     impl/message_bus_impl.cpp
+    impl/message_bus_impl.h
     impl/message_header.cpp
     impl/messaging/message_envelope.cpp
     impl/messaging/spike_message_impl.h
@@ -63,9 +64,9 @@ knp_add_library("${PROJECT_NAME}"
 add_library(KNP::Core ALIAS "${PROJECT_NAME}")
 
 source_group(source REGULAR_EXPRESSION "impl/.*")
-source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "include/.*")
 
 target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS})
+target_include_directories("${PROJECT_NAME}" PRIVATE "impl")
 
 # Flatbuffers headers must be generated before core compilation started.
 add_dependencies("${PROJECT_NAME}" "${PROJECT_NAME}_messaging")

@@ -24,8 +24,8 @@
 
 namespace knp::backends::single_threaded_cpu
 {
-SingleThreadedCPUBackend::SingleThreadedCPUBackend()
-    : Backend{core::MessageBus::make_cpu_implementation()}, message_endpoint_{message_bus_.create_endpoint()}
+
+SingleThreadedCPUBackend::SingleThreadedCPUBackend() : message_endpoint_{message_bus_.create_endpoint()}
 {
     SPDLOG_INFO("ST CPU backend instance created...");
 }

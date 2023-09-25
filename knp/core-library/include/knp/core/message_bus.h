@@ -7,11 +7,16 @@
 
 #pragma once
 
-#include <knp/core/message_bus_impl.h>
 #include <knp/core/message_endpoint.h>
 
 #include <functional>
 #include <memory>
+
+namespace knp::core::messaging::impl
+{
+class MessageBusImpl;
+}  // namespace knp::core::messaging::impl
+
 
 /**
  * @brief Core library namespace.
@@ -25,21 +30,16 @@ class MessageBus
 {
 public:
     /**
-     * @brief Create a CPU-based message bus implementation.
-     * @return unique pointer to implementation.
-     */
-    static std::unique_ptr<messaging::impl::MessageBusImpl> make_cpu_implementation();
-
-    /**
-     * @brief Create a ZMQ-based message bus implementation.
-     * @return unique pointer to implementation.
-     */
-    static std::unique_ptr<messaging::impl::MessageBusImpl> make_zmq_implementation();
-    /**
      * @brief Default message bus constructor.
      * @note Uses ZMQ implementation.
      */
     MessageBus();
+
+    /**
+     * @brief MessageBus with selection of implementation.
+     * @param is_impl_cpu if to use cpu implementation.
+     */
+    explicit MessageBus(bool is_impl_cpu);
 
     /**
      * @brief Message bus constructor with a specialized implementation.
@@ -49,7 +49,7 @@ public:
     /**
      * @brief Message bus destructor.
      */
-    ~MessageBus() = default;
+    ~MessageBus();
 
 public:
     /**
@@ -72,6 +72,17 @@ public:
     size_t route_messages();
 
 private:
+    /**
+     * @brief Create a CPU-based message bus implementation.
+     * @return unique pointer to implementation.
+     */
+    static std::unique_ptr<messaging::impl::MessageBusImpl> make_cpu_implementation();
+
+    /**
+     * @brief Create a ZMQ-based message bus implementation.
+     * @return unique pointer to implementation.
+     */
+    static std::unique_ptr<messaging::impl::MessageBusImpl> make_zmq_implementation();
     /**
      * @brief Message bus implementation.
      */

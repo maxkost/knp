@@ -355,7 +355,8 @@ private:
      * @brief Container of synapse parameters.
      */
     std::vector<Synapse> parameters_;
-    mutable Index index_;  // So far index is mutable so we can reindex a const object that has an non-updated index.
+    // So far the index is mutable so we can reindex a const object that has an non-updated index.
+    mutable Index index_;
     mutable bool is_index_updated_ = false;
 
     SharedSynapseParameters shared_parameters_;

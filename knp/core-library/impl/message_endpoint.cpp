@@ -7,6 +7,7 @@
 
 #include <knp/core/message_endpoint.h>
 
+#include <message_endpoint_impl.h>
 #include <spdlog/spdlog.h>
 
 #include <memory>

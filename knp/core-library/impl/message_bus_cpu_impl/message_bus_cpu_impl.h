@@ -6,12 +6,14 @@
  */
 #pragma once
 
+#include <knp/core/message_bus.h>
+
+#include <message_bus_impl.h>
+
 #include <list>
 #include <memory>
 #include <mutex>
 #include <vector>
-
-#include "knp/core/message_bus.h"
 
 /**
  * @brief Namespace for implementations of message bus.
