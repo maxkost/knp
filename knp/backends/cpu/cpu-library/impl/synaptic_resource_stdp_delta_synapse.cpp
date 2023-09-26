@@ -81,6 +81,8 @@ void process_spiking_neurons(
                 synapse.params_.synapse_.weight_ =
                     synapse.params_.rule_.w_min_ + weight_diff * syn_w / (weight_diff + syn_w);
             }
+
+            // Free synaptic resource renormalization.
         }
 
         if (post_synaptic)
