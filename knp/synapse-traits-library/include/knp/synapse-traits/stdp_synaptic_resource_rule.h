@@ -67,6 +67,11 @@ struct shared_synapse_parameters<STDP<STDPSynapticResourceRule, SynapseType>>
     // cppcheck-suppress unusedStructMember
     float free_synaptic_resource_ = 0;
     /**
+     * @brief Free synaptic resource threshold value.
+     */
+    // cppcheck-suppress unusedStructMember
+    float free_synaptic_resource_threshold_;
+    /**
      * @brief Stability.
      */
     // cppcheck-suppress unusedStructMember
@@ -87,7 +92,7 @@ struct shared_synapse_parameters<STDP<STDPSynapticResourceRule, SynapseType>>
     // cppcheck-suppress unusedStructMember
     float d_h_initial_;
     /**
-     * @brief Synaptic resource threshold value value.
+     * @brief Synaptic resource threshold value.
      */
     // cppcheck-suppress unusedStructMember
     float synaptic_resource_threshold_;

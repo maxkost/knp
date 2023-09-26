@@ -81,8 +81,19 @@ void process_spiking_neurons(
                 synapse.params_.synapse_.weight_ =
                     synapse.params_.rule_.w_min_ + weight_diff * syn_w / (weight_diff + syn_w);
             }
+        }
 
-            // Free synaptic resource renormalization.
+        // Free synaptic resource renormalization.
+        if (ISIPeriodType::not_in_the_isi == neuron_data.type_ &&
+            synapses_parameters.free_synaptic_resource_ > synapses_parameters.free_synaptic_resource_threshold_)
+        {
+            // TODO: Not projection, but neuron synapses count.
+            auto add_resource_value = synapses_parameters.free_synaptic_resource_ / projection.size();
+            for (auto &synapse : projection)
+            {
+                synapse.params_.rule_.synaptic_resource_ += add_resource_value;
+            }
+            synapses_parameters.free_synaptic_resource_ = 0;
         }
 
         if (post_synaptic)

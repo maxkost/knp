@@ -4,7 +4,7 @@
 
 include_guard(GLOBAL)
 
-find_package(Doxygen REQUIRED)
+find_package(Doxygen)
 
 
 macro(add_doxygen target_name doxyfile_in)
