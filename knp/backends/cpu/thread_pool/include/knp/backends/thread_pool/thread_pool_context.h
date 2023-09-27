@@ -17,14 +17,14 @@
 #include <boost/asio/ts/executor.hpp>
 
 /**
- * @brief Namespace for multi-threaded backend.
+ * @brief Namespace for CPU backend executors.
  */
-namespace knp::backends::multi_threaded_cpu
+namespace knp::backends::cpu_executors
 {
 
 /**
  * @brief The ThreadPoolContext class is a service class used for creating pool executors.
- * @note Context lifetime should exceed lifetimes of its executors.\n 
+ * @note Context lifetime should exceed lifetimes of its executors.\n
  * Move and assignment are disabled.
  */
 class ThreadPoolContext
@@ -82,4 +82,4 @@ private:
     boost::asio::thread_pool pool_;
 };
 
-}  // namespace knp::backends::multi_threaded_cpu
+}  // namespace knp::backends::cpu_executors

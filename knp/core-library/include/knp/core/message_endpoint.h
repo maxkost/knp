@@ -25,6 +25,17 @@
 
 #include <boost/mp11.hpp>
 
+/**
+ * @brief Namespace for implementations of message bus.
+ */
+namespace knp::core::messaging::impl
+{
+/**
+ * @brief Internal implementation class for message endpoint.
+ */
+class MessageEndpointImpl;
+}  // namespace knp::core::messaging::impl
+
 
 namespace knp::core
 {
@@ -61,7 +72,7 @@ public:
     /**
      * @brief Get subscription key from a subscription variant.
      * @param subscription subscription variant.
-    */
+     */
     static std::pair<size_t, UID> get_subscription_key(const SubscriptionVariant &subscription);
 
     // tparams was temporarily disabled, because of the bug in the CLang documentation checker.
@@ -116,9 +127,10 @@ public:
      * @brief Unsubscribe from messages of a specified type.
      * @tparam MessageType type of messages to which the receiver is subscribed.
      * @param receiver receiver UID.
+     * @return true if deleted a subscription, false otherwise.
      */
     template <typename MessageType>
-    void unsubscribe(const UID &receiver);
+    bool unsubscribe(const UID &receiver);
 
     /**
      * @brief Remove all subscriptions for a receiver with given UID.
@@ -170,13 +182,9 @@ public:
 
 protected:
     /**
-     * @brief The MessageEndpointImpl class defines the implementation of the message endpoint.
-     */
-    class MessageEndpointImpl;
-    /**
      * @brief Message endpoint implementation.
      */
-    std::unique_ptr<MessageEndpointImpl> impl_;
+    std::shared_ptr<messaging::impl::MessageEndpointImpl> impl_;
 
 protected:
     /**

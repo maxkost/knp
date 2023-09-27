@@ -31,16 +31,16 @@ void calculate_projection_part(
     std::vector<std::pair<uint64_t, knp::core::messaging::SynapticImpact>> container;
     for (size_t synapse_index = part_start; synapse_index < part_end; ++synapse_index)
     {
-        auto iter = message_in_data.find(synapse_index);
+        auto &synapse = projection[synapse_index];
+        auto iter = message_in_data.find(synapse.id_from_);
         if (iter == message_in_data.end()) continue;
 
-        const auto &synapse = projection[synapse_index];
         // Add new impact
         // the message is sent on step N - 1, received on N.
         uint64_t key = synapse.params_.delay_ + step_n - 1;
-
         knp::core::messaging::SynapticImpact impact{
-            synapse_index, synapse.params_.weight_, synapse.params_.output_type_, synapse.id_from_, synapse.id_to_};
+            synapse_index, synapse.params_.weight_ * iter->second, synapse.params_.output_type_, synapse.id_from_,
+            synapse.id_to_};
 
         container.emplace_back(std::pair{key, impact});
     }

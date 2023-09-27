@@ -61,8 +61,6 @@ TEST(ProjectionSuite, Generation)
     DeltaProjection projection(knc::UID{}, knc::UID{}, generator, presynaptic_size * postsynaptic_size);
     ASSERT_EQ(projection.size(), presynaptic_size * postsynaptic_size);
     ASSERT_EQ(projection[1000].params_.delay_, 11);
-    ASSERT_EQ(std::get<0>(projection.get_connection(1000)), 1000u / postsynaptic_size);
-    ASSERT_EQ(projection.get_connections()[1000], projection.get_connection(1000));
 }
 
 

@@ -1,11 +1,11 @@
 /**
- * @file message_endpoint_impl.cpp
+ * @file message_endpoint_zmq_impl.cpp
  * @brief Message endpoint ZeroMQ implementation.
  * @author Artiom N.
  * @date 31.03.2023
  */
 
-#include "message_endpoint_impl.h"
+#include "message_endpoint_zmq_impl.h"
 
 #include <spdlog/spdlog.h>
 
@@ -15,22 +15,22 @@
 #include <zmq.hpp>
 
 
-namespace knp::core
+namespace knp::core::messaging::impl
 {
 
-MessageEndpoint::MessageEndpointImpl::MessageEndpointImpl(zmq::socket_t &&sub_socket, zmq::socket_t &&pub_socket)
+MessageEndpointZMQImpl::MessageEndpointZMQImpl(zmq::socket_t &&sub_socket, zmq::socket_t &&pub_socket)
     : sub_socket_(std::move(sub_socket)), pub_socket_(std::move(pub_socket))
 {
 }
 
 
-void MessageEndpoint::MessageEndpointImpl::send_message(const std::vector<uint8_t> &data)
+void MessageEndpointZMQImpl::send_zmq_message(const std::vector<uint8_t> &data)
 {
-    send_message(data.data(), data.size());
+    send_zmq_message(data.data(), data.size());
 }
 
 
-void MessageEndpoint::MessageEndpointImpl::send_message(const void *data, size_t size)
+void MessageEndpointZMQImpl::send_zmq_message(const void *data, size_t size)
 {
     // send_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
     zmq::send_result_t result;
@@ -52,7 +52,7 @@ void MessageEndpoint::MessageEndpointImpl::send_message(const void *data, size_t
 }
 
 
-std::optional<zmq::message_t> MessageEndpoint::MessageEndpointImpl::receive_message()
+std::optional<zmq::message_t> MessageEndpointZMQImpl::receive_zmq_message()
 {
     zmq::message_t msg;
     // recv_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
@@ -66,7 +66,7 @@ std::optional<zmq::message_t> MessageEndpoint::MessageEndpointImpl::receive_mess
         std::vector<zmq_pollitem_t> items = {zmq_pollitem_t{.socket = sub_socket_.handle(), .events = ZMQ_POLLIN}};
 
         SPDLOG_DEBUG("Running poll()");
-        if (zmq::poll(items, 1ms))
+        if (zmq::poll(items, 0ms))
         {
             SPDLOG_TRACE("Poll() successful, receiving data");
             do
@@ -93,4 +93,4 @@ std::optional<zmq::message_t> MessageEndpoint::MessageEndpointImpl::receive_mess
 
     return msg;
 }
-}  // namespace knp::core
+}  // namespace knp::core::messaging::impl

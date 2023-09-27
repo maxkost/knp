@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <knp/backends/thread_pool/thread_pool.h>
 #include <knp/core/backend.h>
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
@@ -27,15 +28,35 @@
 
 
 /**
+ * @brief Namespace for CPU backend executors.
+ */
+namespace knp::backends::cpu_executors
+{
+/**
+ * @brief Internal thread pool class used for task scheduling.
+ */
+class ThreadPool;
+}  // namespace knp::backends::cpu_executors
+
+/**
  * @brief Namespace for multi-threaded backend.
  */
 namespace knp::backends::multi_threaded_cpu
 {
 /**
+ * @brief Default size of population part that is processed in a single thread.
+ */
+const size_t default_population_part_size = 1000;
+
+/**
+ * @brief Default size of projection part that is processed in a single thread.
+ */
+const size_t default_projection_part_size = 1000;
+
+/**
  * @brief The ThreadPool class is a definition of thread pool.
  * @note Use the `post` method to queue a task.
  */
-class ThreadPool;
 
 /**
  * @brief The MultiThreadedCPUBackend class is a definition of an interface to the multi-threaded CPU backend.
@@ -124,13 +145,18 @@ public:
     /**
      * @brief Default constructor for multi-threaded CPU backend.
      * @param thread_count number of threads.
+     * @param population_part_size number of synapses that are calculated in a single thread.
+     * @param projection_part_size number of neurons that are calculated in a single thread.
      * @note If `thread_count` equals `0`, then the number of threads is calculated automatically.
      */
-    explicit MultiThreadedCPUBackend(size_t thread_count = 0);
+    explicit MultiThreadedCPUBackend(
+        size_t thread_count = 0, size_t population_part_size = default_population_part_size,
+        size_t projection_part_size = default_projection_part_size);
     /**
      * @brief Destructor for multi-threaded CPU backend.
+     * @note The functions stop() and join() will be called in the thread_pool destructor.
      */
-    ~MultiThreadedCPUBackend() override;
+    ~MultiThreadedCPUBackend() override = default;
 
 public:
     /**
@@ -310,16 +336,12 @@ private:
     // Calculating post input changes and outputs.
     std::vector<knp::core::messaging::SpikeMessage> calculate_populations_post_impact();
 
-    // cppcheck-suppress unusedStructMember
     PopulationContainer populations_;
-    // cppcheck-suppress unusedStructMember
     ProjectionContainer projections_;
-    // cppcheck-suppress unusedStructMember
-    const size_t population_part_size_ = 1000;
-    // cppcheck-suppress unusedStructMember
-    const size_t projection_part_size_ = 1000;
+    const size_t population_part_size_;
+    const size_t projection_part_size_;
     core::MessageEndpoint message_endpoint_;
-    std::unique_ptr<ThreadPool> calc_pool_;
+    std::unique_ptr<cpu_executors::ThreadPool> calc_pool_;
     std::mutex ep_mutex_;
 };
 

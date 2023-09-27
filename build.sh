@@ -15,9 +15,13 @@ build()
 {
   [ $VERBOSE == 1 ] && MAKE_ADD_OPTS="${MAKE_ADD_OPTS} VERBOSE=1"
   if [[ $RELEASE == 1 ]]; then
+    echo "Building release..."
+    BUILD_DIR="build_release"
     CMAKE_ADD_OPTS="${CMAKE_ADD_OPTS} -DCMAKE_BUILD_TYPE=Release"
   else
+    echo "Building debug..."
     CMAKE_ADD_OPTS="${CMAKE_ADD_OPTS} -DCMAKE_BUILD_TYPE=Debug"
+    BUILD_DIR="build"
   fi
   [ "${CLEAN}" == 1 ] && BUILD_ADD_OPTS="${BUILD_ADD_OPTS} --clean-first"
   set -e
@@ -33,9 +37,9 @@ build()
         -DCMAKE_INSTALL_PREFIX="install" \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=On \
         ${CMAKE_ADD_OPTS} \
-        -B build \
+        -B "${BUILD_DIR}" \
         -S . && \
-  "${CMAKE_BINARY}" --build build --parallel ${BUILD_ADD_OPTS}
+  "${CMAKE_BINARY}" --build "${BUILD_DIR}" --parallel ${BUILD_ADD_OPTS}
 }
 
 
