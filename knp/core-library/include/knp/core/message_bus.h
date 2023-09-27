@@ -12,8 +12,14 @@
 #include <functional>
 #include <memory>
 
+/**
+ * @brief Namespace for implementations of message bus.
+ */
 namespace knp::core::messaging::impl
 {
+/**
+ * @brief Internal implementation class for message bus.
+ */
 class MessageBusImpl;
 }  // namespace knp::core::messaging::impl
 

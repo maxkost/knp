@@ -26,8 +26,15 @@
 #include <boost/dll/alias.hpp>
 #include <boost/mp11.hpp>
 
+
+/**
+ * @brief Namespace for CPU backend executors.
+ */
 namespace knp::backends::cpu_executors
 {
+/**
+ * @brief Internal thread pool class used for task scheduling.
+ */
 class ThreadPool;
 }  // namespace knp::backends::cpu_executors
 

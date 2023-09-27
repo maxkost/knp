@@ -9,8 +9,6 @@
 
 #include <knp/meta/stringify.h>
 
-#include <unordered_map>
-
 #include <boost/mp11.hpp>
 
 #include "delta.h"

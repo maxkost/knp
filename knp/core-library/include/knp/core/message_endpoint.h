@@ -25,8 +25,14 @@
 
 #include <boost/mp11.hpp>
 
+/**
+ * @brief Namespace for implementations of message bus.
+ */
 namespace knp::core::messaging::impl
 {
+/**
+ * @brief Internal implementation class for message endpoint.
+ */
 class MessageEndpointImpl;
 }  // namespace knp::core::messaging::impl
 
