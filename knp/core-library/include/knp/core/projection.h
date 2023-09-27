@@ -8,6 +8,7 @@
 #pragma once
 
 #include <knp/core/core.h>
+#include <knp/core/synaptic_index.h>
 #include <knp/core/uid.h>
 #include <knp/synapse-traits/all_traits.h>
 
@@ -47,6 +48,7 @@ struct shared_synapse_parameters<knp::synapse_traits::STDP<Rule, SynapseType>>
 
 }  // namespace knp::synapse_traits
 
+
 /**
  * @brief Core library namespace.
  */
@@ -75,7 +77,6 @@ public:
      * @brief Parameters of the specified synapse type.
      */
     using SynapseParameters = typename synapse_traits::synapse_parameters<SynapseType>;
-
     /**
      * @brief Synapse description structure that contains synapse parameters and indexes of the associated neurons.
      */
@@ -199,6 +200,7 @@ public:
      * @return constant iterator.
      */
     [[nodiscard]] auto end() const { return parameters_.cend(); }
+    // TODO: This might be dangerous if you change index_from or index_to of a synapse, without updating.
     /**
      * @brief Get an iterator pointing to the last element of the projection.
      * @return iterator.
@@ -225,17 +227,6 @@ public:
     [[nodiscard]] const UID &get_postsynaptic() const { return postsynaptic_uid_; }
 
     /**
-     * @brief Calculate connection parameters for a synapse with the given index.
-     * @param index index of the projection synapse.
-     * @return presynaptic neuron index, synapse index, postsynaptic neuron index.
-     */
-    [[nodiscard]] std::tuple<size_t, size_t, size_t> get_connection(size_t index) const
-    {
-        return std::make_tuple(parameters_[index].id_from_, index, parameters_[index].id_to_);
-    }
-
-    // TODO: VERY inefficient. Will need to optimize it to less than linear ASAP
-    /**
      * @brief Find synapses that originate from a neuron with the given index.
      * @param neuron_index index of a presynaptic neuron.
      * @return indexes of all synapses associated with the specified presynaptic neuron.
@@ -248,11 +239,6 @@ public:
      * @return indexes of all synapses associated with the specified postsynaptic neuron.
      */
     [[nodiscard]] std::vector<size_t> get_by_postsynaptic_neuron(size_t neuron_index) const;
-
-    /**
-     * @brief Calculate connection parameters for all synapses in the projection.
-     */
-    [[nodiscard]] std::vector<std::tuple<size_t, size_t, size_t>> get_connections() const;
 
     /**
      * @brief Append connections to the existing projection.
@@ -273,13 +259,17 @@ public:
     /**
      * @brief Remove all synapses from the projection.
      */
-    void clear() { parameters_.clear(); }
+    void clear();
 
     /**
      * @brief Remove a synapse with the given index from the projection.
      * @param index index of the synapse to remove.
      */
-    void remove_synapse(size_t index) { parameters_.erase(parameters_.begin() + index); }
+    void remove_synapse(size_t index)
+    {
+        is_index_updated_ = false;
+        parameters_.erase(parameters_.begin() + index);
+    }
 
     /**
      * @brief Remove synapses with the given indexes from the projection.
@@ -298,6 +288,7 @@ public:
     size_t disconnect_if(Predicate predicate)
     {
         const size_t starting_size = parameters_.size();
+        is_index_updated_ = false;
         parameters_.resize(std::remove_if(parameters_.begin(), parameters_.end(), predicate) - parameters_.begin());
         return starting_size - parameters_.size();
     }
@@ -355,6 +346,11 @@ public:
     const SharedSynapseParameters &get_shared_parameters() const { return shared_parameters_; }
 
 private:
+    // So far the index is mutable so we can reindex a const object that has an non-updated index.
+    mutable synapse_access::Index index_;
+
+    void reindex() const;
+
     BaseData base_;
 
     /**
@@ -372,12 +368,11 @@ private:
      */
     bool is_locked_ = false;
 
-    // TODO Change this container into something that searches efficiently by input index. A multiindex or
-    // unordered_multimap
     /**
      * @brief Container of synapse parameters.
      */
     std::vector<Synapse> parameters_;
+    mutable bool is_index_updated_ = false;
 
     SharedSynapseParameters shared_parameters_;
 };
@@ -402,5 +397,6 @@ using AllProjections = boost::mp11::mp_transform<knp::core::Projection, knp::syn
  * @see ALL_SYNAPSES.
  */
 using AllProjectionsVariant = boost::mp11::mp_rename<AllProjections, std::variant>;
+
 
 }  // namespace knp::core

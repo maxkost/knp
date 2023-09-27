@@ -5,12 +5,11 @@ Checks:             '*,
                     -fuchsia-default-arguments-calls,
                     -fuchsia-overloaded-operator,
                     -fuchsia-statically-constructed-objects,
-                    -llvmlibc-restrict-system-libc-headers,
                     -misc-non-private-member-variables-in-classes,
                     -modernize-use-trailing-return-type,
                     -llvm-header-guard,
-                    -android-cloexec-dup,
-                    -llvmlibc-implementation-in-namespace'
+                    -llvmlibc-*,
+                    -android-cloexec-dup'
 CheckOptions:
   - key:            header-filter
     value:          .

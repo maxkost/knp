@@ -10,7 +10,6 @@
 #include <knp/backends/cpu-library/delta_synapse_projection.h>
 #include <knp/backends/cpu-library/init.h>
 #include <knp/backends/cpu-single-threaded/backend.h>
-#include <knp/core/core.h>
 #include <knp/devices/cpu.h>
 #include <knp/meta/assert_helpers.h>
 #include <knp/meta/stringify.h>
@@ -23,9 +22,9 @@
 
 #include <boost/mp11.hpp>
 
-
 namespace knp::backends::single_threaded_cpu
 {
+
 SingleThreadedCPUBackend::SingleThreadedCPUBackend() : message_endpoint_{message_bus_.create_endpoint()}
 {
     SPDLOG_INFO("ST CPU backend instance created...");

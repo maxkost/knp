@@ -13,11 +13,22 @@
 #include <memory>
 
 /**
+ * @brief Namespace for implementations of message bus.
+ */
+namespace knp::core::messaging::impl
+{
+/**
+ * @brief Internal implementation class for message bus.
+ */
+class MessageBusImpl;
+}  // namespace knp::core::messaging::impl
+
+
+/**
  * @brief Core library namespace.
  */
 namespace knp::core
 {
-
 /**
  * @brief The MessageBus class is a definition of an interface to a message bus.
  */
@@ -26,8 +37,20 @@ class MessageBus
 public:
     /**
      * @brief Default message bus constructor.
+     * @note Uses ZMQ implementation.
      */
     MessageBus();
+
+    /**
+     * @brief MessageBus with selection of implementation.
+     * @param is_impl_cpu if to use cpu implementation.
+     */
+    explicit MessageBus(bool is_impl_cpu);
+
+    /**
+     * @brief Message bus constructor with a specialized implementation.
+     */
+    explicit MessageBus(std::unique_ptr<messaging::impl::MessageBusImpl> &&impl);
 
     /**
      * @brief Message bus destructor.
@@ -43,10 +66,10 @@ public:
     [[nodiscard]] MessageEndpoint create_endpoint();
 
     /**
-     * @brief Route a single message.
-     * @return `true` if a message was routed, `false` if no message was routed.
+     * @brief Route some messages.
+     * @return number of messages routed during the step.
      */
-    bool step();
+    size_t step();
 
     /**
      * @brief Route messages.
@@ -56,11 +79,20 @@ public:
 
 private:
     /**
+     * @brief Create a CPU-based message bus implementation.
+     * @return unique pointer to implementation.
+     */
+    static std::unique_ptr<messaging::impl::MessageBusImpl> make_cpu_implementation();
+
+    /**
+     * @brief Create a ZMQ-based message bus implementation.
+     * @return unique pointer to implementation.
+     */
+    static std::unique_ptr<messaging::impl::MessageBusImpl> make_zmq_implementation();
+    /**
      * @brief Message bus implementation.
      */
-    class MessageBusImpl;
-
-    std::unique_ptr<MessageBusImpl> impl_;
+    std::unique_ptr<messaging::impl::MessageBusImpl> impl_;
 };
 
 }  // namespace knp::core
