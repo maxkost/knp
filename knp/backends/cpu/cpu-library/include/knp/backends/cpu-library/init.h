@@ -19,7 +19,7 @@
 
 
 /**
- * @brief CPU backends namespace.
+ * @brief Namespace for CPU backends.
  */
 namespace knp::backends::cpu
 {
@@ -58,10 +58,10 @@ struct subscribe_stdp_projection<knp::synapse_traits::STDP<Rule, SynapseType>>
 
 
 /**
- * @brief Backend initialize function.
- * @param projections container with back-end projections.
+ * @brief Initialize backend.
+ * @param projections container backend projections.
  * @param message_endpoint message endpoint.
- * @tparam ProjectionContainer projections container type.
+ * @tparam ProjectionContainer type of projection container.
  */
 template <typename ProjectionContainer>
 void init(const ProjectionContainer &projections, knp::core::MessageEndpoint &message_endpoint)

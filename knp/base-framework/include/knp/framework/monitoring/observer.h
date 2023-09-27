@@ -32,9 +32,9 @@ using MessageProcessor = std::function<void(const std::vector<Message>)>;
 
 
 /**
- * @brief A class that receives messages and process them.
+ * @brief The MessageObserver class is a definition of an observer that receives messages and processes them.
  * @tparam Message message type that is processed by an observer.
- * @note use this for statistics calculation or for information output.
+ * @note Use this class for statistics calculation or for information output.
  */
 template <class Message>
 class MessageObserver
@@ -42,9 +42,9 @@ class MessageObserver
 public:
     /**
      * @brief Constructor.
-     * @param endpoint endpoint to get messages from.
+     * @param endpoint endpoint from which to get messagess.
      * @param processor functor to process messages.
-     * @param uid observer uid.
+     * @param uid observer UID.
      */
     MessageObserver(
         core::MessageEndpoint &&endpoint, MessageProcessor<Message> &&processor, core::UID uid = core::UID{true})
@@ -75,12 +75,12 @@ private:
 };
 
 /**
- * @brief list of all possible observers.
+ * @brief List of all possible observers.
  */
 using AllObservers = boost::mp11::mp_transform<MessageObserver, core::messaging::AllMessages>;
 
 /**
- * @brief observer variant, containing all possible observers.
+ * @brief Observer variant that contains all possible observers.
  */
 using AnyObserverVariant = boost::mp11::mp_rename<AllObservers, std::variant>;
 

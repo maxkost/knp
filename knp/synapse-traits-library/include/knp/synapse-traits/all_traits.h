@@ -15,7 +15,7 @@
 #include "stdp_type_traits.h"
 
 /**
- * @brief Synapse traits namespace.
+ * @brief Namespace for synapse traits.
  */
 namespace knp::synapse_traits
 {

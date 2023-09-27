@@ -14,7 +14,7 @@
 #include "blifat.h"
 
 /**
- * @brief Neuron traits namespace.
+ * @brief Namespace for neuron traits.
  */
 namespace knp::neuron_traits
 {

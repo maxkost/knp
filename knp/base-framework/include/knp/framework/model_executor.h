@@ -102,7 +102,7 @@ public:
     /**
      * @brief Add observer to executor.
      * @tparam Message type of messages to observe.
-     * @param message_processor functor that defines how to process received messages.
+     * @param message_processor functor to process received messages.
      * @param senders list of observed entities.
      */
     template <class Message>

@@ -35,7 +35,7 @@ Projection<SynapseType>::Projection(UID uid, UID presynaptic_uid, UID postsynapt
 
 template <typename SynapseType>
 Projection<SynapseType>::Projection(
-    UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator &generator, size_t num_iterations)
+    UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator, size_t num_iterations)
     : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -53,7 +53,7 @@ Projection<SynapseType>::Projection(
 
 template <typename SynapseType>
 Projection<SynapseType>::Projection(
-    UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator1 &generator, size_t num_iterations)
+    UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator1 generator, size_t num_iterations)
     : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -72,7 +72,7 @@ Projection<SynapseType>::Projection(
 
 template <typename SynapseType>
 Projection<SynapseType>::Projection(
-    UID uid, UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator1 &generator, size_t num_iterations)
+    UID uid, UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator1 generator, size_t num_iterations)
     : base_{uid}, presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -118,6 +118,13 @@ std::vector<size_t> knp::core::Projection<SynapseType>::get_by_postsynaptic_neur
         }
     }
     return res;
+}
+
+
+template <typename SynapseType>
+std::tuple<size_t, size_t, size_t> knp::core::Projection<SynapseType>::get_connection(size_t index) const
+{
+    return std::make_tuple(parameters_[index].id_from_, index, parameters_[index].id_to_);
 }
 
 
