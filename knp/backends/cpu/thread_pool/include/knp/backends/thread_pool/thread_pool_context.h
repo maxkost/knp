@@ -17,9 +17,9 @@
 #include <boost/asio/ts/executor.hpp>
 
 /**
- * @brief Namespace for multi-threaded backend.
+ * @brief Namespace for CPU backend executors.
  */
-namespace knp::backends::tools
+namespace knp::backends::cpu_executors
 {
 
 /**
@@ -82,4 +82,4 @@ private:
     boost::asio::thread_pool pool_;
 };
 
-}  // namespace knp::backends::tools
+}  // namespace knp::backends::cpu_executors

@@ -26,10 +26,10 @@
 #include <boost/dll/alias.hpp>
 #include <boost/mp11.hpp>
 
-namespace knp::backends::tools
+namespace knp::backends::cpu_executors
 {
 class ThreadPool;
-}
+}  // namespace knp::backends::cpu_executors
 
 /**
  * @brief Namespace for multi-threaded backend.
@@ -334,7 +334,7 @@ private:
     const size_t population_part_size_;
     const size_t projection_part_size_;
     core::MessageEndpoint message_endpoint_;
-    std::unique_ptr<tools::ThreadPool> calc_pool_;
+    std::unique_ptr<cpu_executors::ThreadPool> calc_pool_;
     std::mutex ep_mutex_;
 };
 

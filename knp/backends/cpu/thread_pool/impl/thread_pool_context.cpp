@@ -7,9 +7,9 @@
 #include <knp/backends/thread_pool/thread_pool_context.h>
 
 /**
- * @brief Namespace for backend tools.
+ * @brief Namespace for CPU backend executors.
  */
-namespace knp::backends::tools
+namespace knp::backends::cpu_executors
 {
 ThreadPoolContext::ThreadPoolContext(size_t num_threads) : pool_(num_threads)
 {
@@ -106,4 +106,4 @@ void ThreadPoolContext::post(const std::shared_ptr<Function> &task, const std::s
     do_work_started(task_count);
     condition_.notify_one();
 }
-}  // namespace knp::backends::tools
+}  // namespace knp::backends::cpu_executors

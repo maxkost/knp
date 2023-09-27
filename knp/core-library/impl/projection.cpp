@@ -9,6 +9,7 @@
 
 #include <spdlog/spdlog.h>
 
+
 /**
  * @brief Helper function, removes elements by their indexes in a single pass.
  * @tparam T value type.
@@ -38,6 +39,22 @@ void remove_by_index(std::vector<T> &data, const IndexContainer &to_remove)
 
 namespace knp::core
 {
+using Connection = typename std::tuple<size_t, size_t, size_t>;
+
+template <int N>
+size_t get_nth(const Connection &x)
+{
+    return std::get<N>(x);
+}
+
+/**
+ * @brief A container of Connections, with fast search by any of its fields.
+ */
+class ProjectionIndex
+{
+public:
+};
+
 
 template <typename SynapseType>
 Projection<SynapseType>::Projection(UID presynaptic_uid, UID postsynaptic_uid)
@@ -122,7 +139,7 @@ template <typename SynapseType>
 std::vector<size_t> knp::core::Projection<SynapseType>::get_by_presynaptic_neuron(size_t neuron_index) const
 {
     reindex();
-    auto range = index_.get<mi_presynaptic>().equal_range(neuron_index);
+    auto range = index_.find_by_presynaptic(neuron_index);
     std::vector<size_t> result;
     for (auto iter = range.first; iter != range.second; ++iter) result.push_back(iter->index_);
     return result;
@@ -133,20 +150,9 @@ template <typename SynapseType>
 std::vector<size_t> knp::core::Projection<SynapseType>::get_by_postsynaptic_neuron(size_t neuron_index) const
 {
     reindex();
-    auto range = index_.get<mi_postsynaptic>().equal_range(neuron_index);
+    auto range = index_.find_by_postsynaptic(neuron_index);
     std::vector<size_t> result;
     for (auto iter = range.first; iter != range.second; ++iter) result.push_back(iter->index_);
-    return result;
-}
-
-
-template <typename SynapseType>
-std::vector<knp::core::Connection> knp::core::Projection<SynapseType>::get_connections() const
-{
-    std::vector<Connection> result;
-    result.reserve(parameters_.size());
-    for (size_t i = 0; i < parameters_.size(); ++i)
-        result.emplace_back(Connection{parameters_[i].id_from_, parameters_[i].id_to_, i});
     return result;
 }
 
@@ -182,6 +188,13 @@ size_t knp::core::Projection<SynapseType>::add_synapses(const std::vector<Synaps
     return parameters_.size() - starting_size;
 }
 
+template <typename SynapseType>
+void Projection<SynapseType>::clear()
+{
+    parameters_.clear();
+    index_.clear();
+}
+
 
 template <typename SynapseType>
 size_t knp::core::Projection<SynapseType>::disconnect_postsynaptic_neuron(size_t neuron_index)
@@ -193,7 +206,7 @@ size_t knp::core::Projection<SynapseType>::disconnect_postsynaptic_neuron(size_t
     std::sort(synapses_to_remove.begin(), synapses_to_remove.end());
     remove_by_index(parameters_, synapses_to_remove);
     if (was_index_updated)
-        for (auto &synapse : synapses_to_remove) index_.get<mi_synapse_index>().erase(synapse);
+        for (auto &synapse : synapses_to_remove) index_.erase(synapse);
 
     is_index_updated_ = was_index_updated;
     return starting_size - parameters_.size();
@@ -224,7 +237,7 @@ void knp::core::Projection<SynapseType>::reindex() const
     for (size_t i = 0; i < parameters_.size(); ++i)
     {
         auto &synapse = parameters_[i];
-        index_.insert(Connection{synapse.id_from_, synapse.id_to_, i});
+        index_.insert(knp::core::synapse_access::Connection{synapse.id_from_, synapse.id_to_, i});
     }
     is_index_updated_ = true;
 }

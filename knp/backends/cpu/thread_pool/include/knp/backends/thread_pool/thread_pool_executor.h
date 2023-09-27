@@ -14,7 +14,7 @@
 /**
  * @brief Namespace for multi-threaded backend.
  */
-namespace knp::backends::tools
+namespace knp::backends::cpu_executors
 {
 /**
  * @brief The ThreadPoolExecutor class is a definition of the interface to thread pool used for thread execution.
@@ -126,4 +126,4 @@ private:
     std::shared_ptr<size_t> task_count_;
 };
 
-}  // namespace knp::backends::tools
+}  // namespace knp::backends::cpu_executors

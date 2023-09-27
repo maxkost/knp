@@ -123,10 +123,10 @@ void fibonacci(const uint64_t begin, uint64_t iterations, uint64_t *result)
 
 
 void batch(
-    knp::backends::tools::ThreadPoolContext &pool, uint64_t iterations, const std::vector<uint64_t> &start_values,
-    std::vector<uint64_t> &result)
+    knp::backends::cpu_executors::ThreadPoolContext &pool, uint64_t iterations,
+    const std::vector<uint64_t> &start_values, std::vector<uint64_t> &result)
 {
-    knp::backends::tools::ThreadPoolExecutor executor(pool);
+    knp::backends::cpu_executors::ThreadPoolExecutor executor(pool);
     result.resize(start_values.size(), 0);
     for (size_t i = 0; i < start_values.size(); ++i)
         boost::asio::post(executor, std::bind(fibonacci, start_values[i], iterations, &result[i]));
@@ -135,7 +135,7 @@ void batch(
 
 TEST(MultiThreadCpuSuite, ThreadPoolTest)
 {
-    knp::backends::tools::ThreadPoolContext pool;
+    knp::backends::cpu_executors::ThreadPoolContext pool;
     std::vector<uint64_t> result;
     const int num_iterations = 10;  // Corresponding fibonacci number is 89.
     batch(pool, num_iterations, {2, 4, 5, 7, 9}, result);

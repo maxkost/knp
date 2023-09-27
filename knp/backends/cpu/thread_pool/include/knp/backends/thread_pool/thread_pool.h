@@ -13,7 +13,7 @@
 /**
  * @brief Namespace for multi-threaded backend.
  */
-namespace knp::backends::tools
+namespace knp::backends::cpu_executors
 {
 /**
  * @brief The ThreadPool class is a definition of thread pool.
@@ -56,4 +56,4 @@ private:
     ThreadPoolExecutor executor_;
 };
 
-}  // namespace knp::backends::tools
+}  // namespace knp::backends::cpu_executors
