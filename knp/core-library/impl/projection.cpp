@@ -1,6 +1,6 @@
 /**
- * @file population.cpp
- * @brief Population class implementation.
+ * @file projection.cpp
+ * @brief Projection class implementation.
  * @author Andrey V.
  * @date 26.01.2023
  */
