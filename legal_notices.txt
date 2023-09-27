@@ -1,0 +1,38 @@
+# Boost
+
+Boost Software License - Version 1.0 - August 17th, 2003.
+
+
+# Flat Buffers
+
+Distributed under the terms of the Apache License Version 2.0.
+
+
+# SPDLog
+
+MIT License.
+Copyright (c) 2016 Gabi Melman.
+
+
+# Google Test
+
+Google License?
+Copyright 2008, Google Inc.
+All rights reserved.
+
+
+# Intel PCM Library
+
+BSD 3-Clause License.
+
+Copyright (c) 2009-2023, Intel Corporation
+Copyright (c) 2016-2020, opcm
+All rights reserved.
+
+
+# PyBind11
+
+Использование под вопросом.
+BSD 3-Clause License?
+
+Copyright (c) 2016 Wenzel Jakob <wenzel.jakob@epfl.ch>, All rights reserved.
