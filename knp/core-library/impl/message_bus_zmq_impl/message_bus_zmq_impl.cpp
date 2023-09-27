@@ -1,12 +1,12 @@
 /**
- * @file message_bus_impl.cpp
+ * @file message_bus_zmq_impl.cpp
  * @brief Message bus ZeroMQ implementation.
  * @author Artiom N.
  * @date 31.03.2023
  */
 
-#include "message_bus_impl.h"
-
+#include <message_bus_zmq_impl/message_bus_zmq_impl.h>
+#include <message_bus_zmq_impl/message_endpoint_zmq_impl.h>
 #include <spdlog/spdlog.h>
 
 #include <memory>
@@ -15,28 +15,21 @@
 
 #include <zmq.hpp>
 
-#include "message_endpoint_impl.h"
 
-
-namespace
+namespace knp::core::messaging::impl
 {
 
-class MessageEndpointConstructible : public knp::core::MessageEndpoint
+class MessageEndpointZMQ : public MessageEndpoint
 {
 public:
-    explicit MessageEndpointConstructible(zmq::socket_t &&sub_socket, zmq::socket_t &&pub_socket)
+    explicit MessageEndpointZMQ(zmq::socket_t &&sub_socket, zmq::socket_t &&pub_socket)
     {
-        impl_ = std::make_unique<MessageEndpointImpl>(std::move(sub_socket), std::move(pub_socket));
+        impl_ = std::make_shared<MessageEndpointZMQImpl>(std::move(sub_socket), std::move(pub_socket));
     }
 };
 
-}  // namespace
 
-
-namespace knp::core
-{
-
-MessageBus::MessageBusImpl::MessageBusImpl()
+MessageBusZMQImpl::MessageBusZMQImpl()
     :  // TODO: replace with std::format.
       router_sock_address_("inproc://route_" + std::string(UID())),
       publish_sock_address_("inproc://publish_" + std::string(UID())),
@@ -51,7 +44,7 @@ MessageBus::MessageBusImpl::MessageBusImpl()
 }
 
 
-bool MessageBus::MessageBusImpl::step()
+size_t MessageBusZMQImpl::step()
 {
     zmq::message_t message;
     zmq::recv_result_t recv_result;
@@ -64,7 +57,7 @@ bool MessageBus::MessageBusImpl::step()
 
         SPDLOG_DEBUG("Running poll()");
 
-        if (zmq::poll(items, 1ms))
+        if (zmq::poll(items, 0ms))
         {
             SPDLOG_TRACE("Poll() successful, receiving data");
             do
@@ -80,10 +73,10 @@ bool MessageBus::MessageBusImpl::step()
         else
         {
             SPDLOG_DEBUG("Poll() returned 0, exiting");
-            return false;
+            return 0;
         }
 
-        if (isit_id(recv_result)) return true;
+        if (isit_id(recv_result)) return 1;
 
         SPDLOG_DEBUG("Data was received, bus will re-send the message");
         // send_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
@@ -99,12 +92,11 @@ bool MessageBus::MessageBusImpl::step()
         SPDLOG_CRITICAL(e.what());
         throw;
     }
-
     return recv_result.has_value() && recv_result.value() != 0;
 }
 
 
-MessageEndpoint MessageBus::MessageBusImpl::create_endpoint()
+MessageEndpoint MessageBusZMQImpl::create_endpoint()
 {
     zmq::socket_t sub_socket{context_, zmq::socket_type::sub};
     zmq::socket_t pub_socket{context_, zmq::socket_type::dealer};
@@ -127,7 +119,7 @@ MessageEndpoint MessageBus::MessageBusImpl::create_endpoint()
     SPDLOG_DEBUG("Sub socket connecting to {}", publish_sock_address_);
     sub_socket.connect(publish_sock_address_);
 
-    return MessageEndpointConstructible(std::move(sub_socket), std::move(pub_socket));
+    return MessageEndpointZMQ(std::move(sub_socket), std::move(pub_socket));
 }
 
-}  // namespace knp::core
+}  // namespace knp::core::messaging::impl

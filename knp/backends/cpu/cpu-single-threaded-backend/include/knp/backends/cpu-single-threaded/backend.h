@@ -124,7 +124,7 @@ public:
     /**
      * @brief Destructor for single-threaded CPU backend.
      */
-    ~SingleThreadedCPUBackend() = default;
+    ~SingleThreadedCPUBackend() override = default;
 
 public:
     /**

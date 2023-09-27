@@ -11,19 +11,46 @@
 
 #include <zmq.hpp>
 
-#include "message_bus_zmq_impl/message_bus_impl.h"
+#include "message_bus_cpu_impl/message_bus_cpu_impl.h"
+#include "message_bus_zmq_impl/message_bus_zmq_impl.h"
 
 
 namespace knp::core
 {
+MessageBus::~MessageBus() {}
 
-MessageBus::MessageBus() : impl_(std::make_unique<MessageBusImpl>())
+
+std::unique_ptr<messaging::impl::MessageBusImpl> MessageBus::make_cpu_implementation()
+{
+    return std::make_unique<messaging::impl::MessageBusCPUImpl>();
+}
+
+
+std::unique_ptr<messaging::impl::MessageBusImpl> MessageBus::make_zmq_implementation()
+{
+    return std::make_unique<messaging::impl::MessageBusZMQImpl>();
+}
+
+
+MessageBus::MessageBus() : impl_(make_cpu_implementation())
 {
     assert(impl_.get());
 }
 
 
-MessageBus::~MessageBus() {}
+MessageBus::MessageBus(std::unique_ptr<messaging::impl::MessageBusImpl> &&impl) : impl_(std::move(impl))
+{
+    if (!impl_) throw std::runtime_error("Unavailable message bus implementation");
+}
+
+
+MessageBus::MessageBus(bool is_cpu_impl)
+{
+    if (is_cpu_impl)
+        impl_ = make_cpu_implementation();
+    else
+        impl_ = make_zmq_implementation();
+}
 
 
 MessageEndpoint MessageBus::create_endpoint()
@@ -32,7 +59,7 @@ MessageEndpoint MessageBus::create_endpoint()
 }
 
 
-bool MessageBus::step()
+size_t MessageBus::step()
 {
     return impl_->step();
 }
@@ -42,10 +69,10 @@ size_t MessageBus::route_messages()
 {
     SPDLOG_DEBUG("Message routing cycle started...");
     size_t count = 0;
-    while (step())
-    {
-        ++count;
-    }
+    impl_->update();
+    size_t num_messages;
+    while ((num_messages = step())) count += num_messages;
+
     return count;
 }
 
