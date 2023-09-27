@@ -35,7 +35,7 @@ struct STDPSynapticResourceRule
      * @brief Synaptic resource.
      */
     // cppcheck-suppress unusedStructMember
-    float synaptic_resource_;
+    float synaptic_resource_ = 1;
     /**
      * @brief Minimal weight value.
      */
@@ -65,12 +65,12 @@ struct shared_synapse_parameters<STDP<STDPSynapticResourceRule, SynapseType>>
      * @brief Free synaptic resource.
      */
     // cppcheck-suppress unusedStructMember
-    float free_synaptic_resource_ = 0;
+    float free_synaptic_resource_ = 1;
     /**
      * @brief Free synaptic resource threshold value.
      */
     // cppcheck-suppress unusedStructMember
-    float free_synaptic_resource_threshold_;
+    float free_synaptic_resource_threshold_ = -1;
     /**
      * @brief Stability.
      */
