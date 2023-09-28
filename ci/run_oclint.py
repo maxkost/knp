@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
-from pathlib import Path
 import platform
 import subprocess
 import sys
 import tarfile
+from pathlib import Path
+
 import requests
 
 
@@ -15,7 +16,11 @@ def download_oclint(url: str, oclint_directory: Path):
     print(f'Downloading {url}...')
     with requests.get(url, stream=True) as response:
         with tarfile.open(mode='r:gz', fileobj=response.raw) as tf:
-            tf.extractall(path=oclint_directory.parent)
+            if hasattr(tarfile, 'tar_filter'):
+                tf.extractall(filter=tarfile.tar_filter)  # nosec B202
+            else:
+                tf.extractall()  # nosec B202
+
     print('Downloading finished.')
 
 
@@ -65,6 +70,8 @@ command = [
     str(build_dir),
     '-e',
     'third-party',
+    '-e',
+    'examples',
     '--',
     f'-R={oclint_dir / "lib" / "oclint" / "rules"}',
 ]
