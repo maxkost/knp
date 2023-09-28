@@ -64,6 +64,8 @@ struct synapse_parameters<STDP<Rule, Synapse>>
 
 /**
  * @brief Common STDP parameters.
+ * @tparam Rule STDP rule.
+ * @tparam SynapseType synapse type linked with STDP rule.
  */
 template <template <typename> typename Rule, typename SynapseType>
 struct shared_synapse_parameters<STDP<Rule, SynapseType>>

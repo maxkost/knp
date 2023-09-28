@@ -21,6 +21,7 @@ namespace knp::synapse_traits
 
 /**
  * @brief STDP rule with synaptic resource parameters.
+ * @tparam SynapseType synapse type linked with rule.
  * @note Author of the synaptic resource - Mikhail Kiselev.
  */
 template <typename SynapseType>
@@ -57,6 +58,7 @@ struct STDPSynapticResourceRule
 
 /**
  * @brief Shared parameters for the resource STDP.
+ * @tparam SynapseType synapse type linked with resource-based STDP rule.
  */
 template <typename SynapseType>
 struct shared_synapse_parameters<STDP<STDPSynapticResourceRule, SynapseType>>

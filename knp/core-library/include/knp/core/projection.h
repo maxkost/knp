@@ -81,6 +81,10 @@ public:
     using SynapseGenerator1 = std::function<std::optional<std::tuple<SynapseParameters, uint32_t, uint32_t>>(uint32_t)>;
 
 public:
+    /**
+     * @brief Shared synapses parameters for the non-STDP variant of the projection.
+     * @tparam SynapseT projection synapse type.
+     */
     template <typename SynapseT>
     struct SharedSynapseParametersT
     {
@@ -95,15 +99,29 @@ public:
     template <template <typename> typename Rule, typename SynapseT>
     struct SharedSynapseParametersT<knp::synapse_traits::STDP<Rule, SynapseT>>
     {
+        /**
+         * @brief STDP population messages processing type.
+         */
         enum class ProcessingType
         {
+            /// This is only STDP messages.
             STDPOnly,
+            /// Not only STDP, but spikes too.
             STDPAndSpike
         };
 
+        /**
+         * @brief Map type for the saving STDP populations UIDs and linked processing type.
+         */
         using ContainerType = std::unordered_map<core::UID, ProcessingType, core::uid_hash>;
+        /**
+         * @brief Map to save population UID/processing type.
+         */
         ContainerType stdp_populations_;
 
+        /**
+         * @brief Shared synapses parameters for this projection.
+         */
         knp::synapse_traits::shared_synapse_parameters<knp::synapse_traits::STDP<Rule, SynapseT>> synapses_parameters_;
     };
 

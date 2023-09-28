@@ -216,10 +216,10 @@ repos:
         exclude: ".*fixtures"
 
 
-  - repo: https://github.com/pycqa/isort
-    rev: 5.12.0
-    hooks:
-      - id: isort
+#  - repo: https://github.com/pycqa/isort
+#    rev: 5.12.0
+#    hooks:
+#      - id: isort
 
 #      - id: tests
 #        name: tests

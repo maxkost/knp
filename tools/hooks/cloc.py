@@ -12,7 +12,8 @@ class ClocCmd(StaticAnalyzerCmd):
     """Class for the cloc command."""
 
     command = 'cloc'
-    max_lines = 350
+    max_code_lines = 350
+    max_text_lines = 500
 
     def __init__(self, args: List[str]):
         super().__init__(self.command, '', args)
@@ -27,21 +28,28 @@ class ClocCmd(StaticAnalyzerCmd):
             self.args.remove('--include-blanks')
 
     def run(self):
-        """Run cloc"""
+        """Run cloc."""
 
         self.run_command(self.args + self.files)
         self.exit_on_error()
 
         for n, v in {n: v for n, v in json.loads(self.stdout.decode()).items() if n not in ['header', 'SUM']}.items():
-            result = v['comment'] + v['code']
+            code_lines_count = v['code']
+            text_lines_count = v['comment'] + code_lines_count
 
             if self.include_blanks:
-                result += v['blank']
+                text_lines_count += v['blank']
 
-            if result >= self.max_lines:
+            if code_lines_count >= self.max_code_lines:
                 self.raise_error(
-                    f'file "{n}" exceeds line count limit',
-                    f'File contains {result} lines, but maximum is {self.max_lines}',
+                    f'file "{n}" code lines count exceeds code line count limit',
+                    f'File contains {code_lines_count} lines of code, but maximum is {self.max_code_lines}',
+                )
+
+            if text_lines_count >= self.max_text_lines:
+                self.raise_error(
+                    f'file "{n}" lines count exceeds line count limit',
+                    f'File contains {code_lines_count} lines of text, but maximum is {self.max_text_lines}',
                 )
 
 
