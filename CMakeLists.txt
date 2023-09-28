@@ -10,9 +10,18 @@ include(version)
 project(knp)
 
 option(KNP_BUILD_TESTS "Build tests" ON)
-option(KNP_ENABLE_COVERAGE "Enable coverage test" ON)
 option(KNP_BUILD_DOCUMENTATION "Build doxygen auto documentation" ON)
+option(KNP_BUILD_EXAMPLES "Build usage examples" ON)
 option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
+
+if(KNP_MAINTAINER_BUILD)
+    set(KNP_COVERAGE_DEFAULT OFF)
+else()
+    set(KNP_COVERAGE_DEFAULT ON)
+endif()
+
+option(KNP_ENABLE_COVERAGE "Enable coverage checking" ${KNP_COVERAGE_DEFAULT})
+
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
     message(STATUS "Setting release optimization flags...")
@@ -72,3 +81,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 add_subdirectory(knp)
+
+if(KNP_BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
