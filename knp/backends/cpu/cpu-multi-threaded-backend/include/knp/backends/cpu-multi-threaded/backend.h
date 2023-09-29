@@ -33,7 +33,7 @@
 namespace knp::backends::cpu_executors
 {
 /**
- * @brief Internal thread pool class used for task scheduling.
+ * @brief The ThreadPool class is an internal thread pool class used for task scheduling.
  */
 class ThreadPool;
 }  // namespace knp::backends::cpu_executors
@@ -44,19 +44,14 @@ class ThreadPool;
 namespace knp::backends::multi_threaded_cpu
 {
 /**
- * @brief Default size of population part that is processed in a single thread.
+ * @brief Default size of a population part that is processed in a single thread.
  */
 const size_t default_population_part_size = 1000;
 
 /**
- * @brief Default size of projection part that is processed in a single thread.
+ * @brief Default size of a projection part that is processed in a single thread.
  */
 const size_t default_projection_part_size = 1000;
-
-/**
- * @brief The ThreadPool class is a definition of thread pool.
- * @note Use the `post` method to queue a task.
- */
 
 /**
  * @brief The MultiThreadedCPUBackend class is a definition of an interface to the multi-threaded CPU backend.
@@ -154,7 +149,7 @@ public:
         size_t projection_part_size = default_projection_part_size);
     /**
      * @brief Destructor for multi-threaded CPU backend.
-     * @note The functions stop() and join() will be called in the thread_pool destructor.
+     * @note Functions `stop()` and `join()` will be called in the thread pool destructor.
      */
     ~MultiThreadedCPUBackend() override = default;
 

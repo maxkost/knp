@@ -13,12 +13,12 @@
 #include <memory>
 
 /**
- * @brief Namespace for implementations of message bus.
+ * @brief Namespace for message bus implementations.
  */
 namespace knp::core::messaging::impl
 {
 /**
- * @brief Internal implementation class for message bus.
+ * @brief The MessageBusImpl class is an internal implementation class for message bus.
  */
 class MessageBusImpl;
 }  // namespace knp::core::messaging::impl
@@ -37,18 +37,19 @@ class MessageBus
 public:
     /**
      * @brief Default message bus constructor.
-     * @note Uses ZMQ implementation.
+     * @note The constructor uses ZMQ implementation.
      */
     MessageBus();
 
     /**
-     * @brief MessageBus with selection of implementation.
-     * @param is_impl_cpu if to use cpu implementation.
+     * @brief Message bus constructor with selection of implementation.
+     * @param is_impl_cpu determines if cpu implementation is used.
      */
     explicit MessageBus(bool is_impl_cpu);
 
     /**
      * @brief Message bus constructor with a specialized implementation.
+     * @param impl message bus implementation.
      */
     explicit MessageBus(std::unique_ptr<messaging::impl::MessageBusImpl> &&impl);
 

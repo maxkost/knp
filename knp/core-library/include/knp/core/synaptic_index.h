@@ -45,14 +45,14 @@ struct Connection
 
 
 /**
- * @brief Index class used for fast synapse search.
+ * @brief The Index class is a class used for fast search for synapses.
  */
 class Index
 {
 public:
     /**
-     * @brief Add connection to the index.
-     * @param connection connection to be added.
+     * @brief Add connection to index.
+     * @param connection connection to add.
      */
     void insert(const Connection &connection) { val_.insert(connection); }
 

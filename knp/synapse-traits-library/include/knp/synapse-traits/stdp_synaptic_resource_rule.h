@@ -49,7 +49,7 @@ struct STDPSynapticResourceRule
     float w_max_;
     /**
      * @brief Resource decreasing constant.
-     * @note d_u_ must be equal or greate 0.
+     * @note The `d_u_` value must be equal or greater than `0`.
      */
     // cppcheck-suppress unusedStructMember
     float d_u_;

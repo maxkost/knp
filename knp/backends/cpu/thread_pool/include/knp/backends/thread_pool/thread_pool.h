@@ -11,7 +11,7 @@
 #include "thread_pool_executor.h"
 
 /**
- * @brief Namespace for multi-threaded backend.
+ * @brief Namespace for CPU backend executors.
  */
 namespace knp::backends::cpu_executors
 {

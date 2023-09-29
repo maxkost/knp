@@ -206,8 +206,8 @@ protected:
     Backend() = default;
 
     /**
-     * @brief Backend constructor with custom bus implementation.
-     * @param impl bus implementation.
+     * @brief Backend constructor with custom message bus implementation.
+     * @param impl message bus implementation.
      */
     explicit Backend(std::unique_ptr<messaging::impl::MessageBusImpl> &&impl) : message_bus_(std::move(impl)) {}
 
