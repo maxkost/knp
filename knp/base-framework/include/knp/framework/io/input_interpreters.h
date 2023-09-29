@@ -14,13 +14,13 @@ namespace knp::framework::input
 /**
  * @brief Determine if an input value is a spike and convert an input value to boolean.
  * @tparam ValueType input value type (usually an arithmetic type) that can be cast to bool implicitly.
- * @param v input value.
+ * @param val input value.
  * @return `true` if an input value is a spike, `false` if an input value is not a spike.
  */
 template <class ValueType>
-bool interpret_as_bool(ValueType v)
+bool interpret_as_bool(ValueType val)
 {
-    return v;
+    return val;
 }
 
 
@@ -34,7 +34,7 @@ template <class ValueType>
 auto interpret_with_threshold(ValueType threshold)
 {
     // We're using !(a < b) instead of (a >= b) because of the values which only have operator "less than".
-    return [threshold](ValueType v) -> bool { return !(v < threshold); };
+    return [threshold](ValueType val) -> bool { return !(val < threshold); };
 }
 
 }  // namespace knp::framework::input

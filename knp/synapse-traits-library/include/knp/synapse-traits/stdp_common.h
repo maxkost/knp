@@ -1,6 +1,6 @@
 /**
- * @file stdp.h
- * @brief STDP associations.
+ * @file stdp_common.h
+ * @brief STDP internal common templates.
  * @author Artiom N.
  * @date 09.08.2023
  */
@@ -9,8 +9,6 @@
 
 #include <set>
 
-#include "delta.h"
-#include "stdp_add_rule.h"
 #include "type_traits.h"
 
 /**
@@ -29,7 +27,7 @@ struct STDP;
 /**
  * @brief Synapse with STDP rule.
  * @details STDP rule is a template, because sometimes parameters can be different in the
- *  different rule/synapse combinations. 
+ *  different rule/synapse combinations.
  * @code
    template<>
    struct STDPAdditiveRule<DeltaSynapse>
@@ -65,8 +63,13 @@ struct synapse_parameters<STDP<Rule, Synapse>>
 
 
 /**
- * @brief Delta synapse with STDP additive rule type.
+ * @brief Common STDP parameters.
+ * @tparam Rule STDP rule.
+ * @tparam SynapseType synapse type linked with STDP rule.
  */
-using AdditiveSTDPDeltaSynapse = STDP<STDPAdditiveRule, DeltaSynapse>;
+template <template <typename> typename Rule, typename SynapseType>
+struct shared_synapse_parameters<STDP<Rule, SynapseType>>
+{
+};
 
 }  // namespace knp::synapse_traits

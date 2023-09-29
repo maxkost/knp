@@ -85,9 +85,12 @@ protected:
      */
     bool send_data(const core::messaging::SpikeData &spikes, core::messaging::Step step)
     {
-        if (spikes.empty()) return false;
+        if (spikes.empty())
+        {
+            return false;
+        }
 
-        core::messaging::SpikeMessage message{{get_uid(), step}, std::move(spikes)};
+        core::messaging::SpikeMessage message{{get_uid(), step}, spikes};
         endpoint_.send_message(message);
         return true;
     }

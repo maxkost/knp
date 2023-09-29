@@ -14,8 +14,10 @@ add_library("${PROJECT_NAME}"
     include/knp/synapse-traits/delta.h
     include/knp/synapse-traits/all_traits.h
     include/knp/synapse-traits/output_types.h
-    include/knp/synapse-traits/stdp.h
+    include/knp/synapse-traits/stdp_common.h
+    include/knp/synapse-traits/stdp_type_traits.h
     include/knp/synapse-traits/stdp_add_rule.h
+    include/knp/synapse-traits/stdp_synaptic_resource_rule.h
 )
 add_library(KNP::Synapse::Traits ALIAS "${PROJECT_NAME}")
 

@@ -22,34 +22,6 @@
 
 
 /**
- * @brief Namespace for synapse traits.
- */
-namespace knp::synapse_traits
-{
-/**
- * @brief Structure for the parameters shared between synapses for STDP.
- * @tparam Rule type of the STDP rule.
- * @tparam SynapseType type of synapses.
- */
-template <template <typename> typename Rule, typename SynapseType>
-struct shared_synapse_parameters<knp::synapse_traits::STDP<Rule, SynapseType>>
-{
-    enum class ProcessingType
-    {
-        STDPOnly,
-        STDPAndSpike
-    };
-
-    using ContainerType = std::unordered_map<core::UID, ProcessingType, core::uid_hash>;
-
-    uint32_t stdp_window_size_ = 1;
-    ContainerType stdp_populations_;
-};
-
-}  // namespace knp::synapse_traits
-
-
-/**
  * @brief Core library namespace.
  */
 namespace knp::core
@@ -108,10 +80,55 @@ public:
      */
     using SynapseGenerator1 = std::function<std::optional<std::tuple<SynapseParameters, uint32_t, uint32_t>>(uint32_t)>;
 
+public:
+    /**
+     * @brief Shared synapses parameters for the non-STDP variant of the projection.
+     * @tparam SynapseT projection synapse type.
+     */
+    template <typename SynapseT>
+    struct SharedSynapseParametersT
+    {
+        knp::synapse_traits::shared_synapse_parameters<SynapseT> synapses_parameters_;
+    };
+
+    /**
+     * @brief Structure for the parameters shared between synapses for STDP.
+     * @tparam Rule type of the STDP rule.
+     * @tparam SynapseT type of synapses.
+     */
+    template <template <typename> typename Rule, typename SynapseT>
+    struct SharedSynapseParametersT<knp::synapse_traits::STDP<Rule, SynapseT>>
+    {
+        /**
+         * @brief STDP population messages processing type.
+         */
+        enum class ProcessingType
+        {
+            /// This is only STDP messages.
+            STDPOnly,
+            /// Not only STDP, but spikes too.
+            STDPAndSpike
+        };
+
+        /**
+         * @brief Map type for the saving STDP populations UIDs and linked processing type.
+         */
+        using ContainerType = std::unordered_map<core::UID, ProcessingType, core::uid_hash>;
+        /**
+         * @brief Map to save population UID/processing type.
+         */
+        ContainerType stdp_populations_;
+
+        /**
+         * @brief Shared synapses parameters for this projection.
+         */
+        knp::synapse_traits::shared_synapse_parameters<knp::synapse_traits::STDP<Rule, SynapseT>> synapses_parameters_;
+    };
+
     /**
      * @brief Type of shared synapse parameters.
      */
-    using SharedSynapseParameters = knp::synapse_traits::shared_synapse_parameters<SynapseType>;
+    using SharedSynapseParameters = SharedSynapseParametersT<SynapseType>;
 
 public:
     /**
@@ -136,7 +153,7 @@ public:
      * @param num_iterations number of iterations to run the synapse generator.
      * @deprecated Must be removed.
      */
-    Projection(UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator &generator, size_t num_iterations);
+    Projection(UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator, size_t num_iterations);
 
     /**
      * @brief Construct a projection by running a synapse generator a given number of times.
@@ -145,7 +162,7 @@ public:
      * @param generator function that generates synapse parameters: `params_`, `id_from_`, `id_to_`.
      * @param num_iterations number of times to run the synapse generator.
      */
-    Projection(UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator1 &generator, size_t num_iterations);
+    Projection(UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator1 generator, size_t num_iterations);
 
     /**
      * @brief Construct a projection by running a synapse generator a given number of times.
@@ -155,8 +172,7 @@ public:
      * @param generator function that generates synapse parameters: `params_`, `id_from_`, `id_to_`.
      * @param num_iterations number of times to run the synapse generator.
      */
-    Projection(
-        UID uid, UID presynaptic_uid, UID postsynaptic_uid, const SynapseGenerator1 &generator, size_t num_iterations);
+    Projection(UID uid, UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator1 generator, size_t num_iterations);
 
 public:
     /**

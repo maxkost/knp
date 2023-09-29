@@ -69,4 +69,14 @@ void calculate_additive_stdp_delta_synapse_projection(
     knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> &projection,
     knp::core::MessageEndpoint &endpoint, MessageQueue &future_messages, size_t step_n);
 
+/**
+ * @brief Make one execution step for a projection of SynapticResourceSTDPDeltaSynapse synapses.
+ * @param projection projection to update.
+ * @param endpoint message endpoint used for message exchange.
+ * @param future_messages message queue to process via endpoint.
+ * @param step_n execution step.
+ */
+void calculate_synaptic_resource_stdp_delta_synapse_projection(
+    knp::core::Projection<knp::synapse_traits::SynapticResourceSTDPDeltaSynapse> &projection,
+    knp::core::MessageEndpoint &endpoint, MessageQueue &future_messages, size_t step_n);
 }  // namespace knp::backends::cpu
