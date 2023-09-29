@@ -22,16 +22,16 @@ namespace knp::core::synapse_access
 struct Connection
 {
     /**
-     * @brief Index of a presynaptic neuron.
+     * @brief Presynaptic neuron index.
      */
     size_t from_;
     /**
-     * @brief Index of a postsynaptic neuron.
+     * @brief Postsynaptic neuron index.
      */
     size_t to_;
 
     /**
-     * @brief Index of synapse parameters.
+     * @brief Synapse index.
      */
     size_t index_;
 
