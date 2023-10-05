@@ -5,5 +5,10 @@
     <id>unusedStructMember</id>
     <fileName>knp/core-library/include/*</fileName>
   </suppress>
+  <suppress>
+    <!-- Skip useless file -->
+    <id>syntaxError</id>
+    <fileName>tools/python-bindings-gen/py-gen/CppHeaderParser_l/*</fileName>
+  </suppress>
 
 </suppressions>

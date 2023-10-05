@@ -57,7 +57,7 @@ repos:
         args: ["-x", "c++", "--inline-suppr", "--template=gcc", "--suppress-xml=knp/.cppcheck-suppress.xml"]  # --cppcheck-build-dir=build]
 
       - id: cpplint
-        args: ["--root", "knp"]
+        args: ["--exclude=tools/python-bindings-gen/py-gen", "--root", "knp"]
         additional_dependencies:
           [cpplint==1.6.1]
       # - id: include-what-you-use
