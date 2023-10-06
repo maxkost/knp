@@ -33,6 +33,7 @@ namespace knp::synapse_traits
  */
 using AllSynapses = boost::mp11::mp_list<ALL_SYNAPSES>;
 
+
 /**
  * @brief A tuple that contains string names of synapse types.
  */

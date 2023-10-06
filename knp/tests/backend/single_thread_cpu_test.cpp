@@ -104,10 +104,16 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
             {{.tau_plus_ = 1, .tau_minus_ = 1}, {1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}}, 0, 0};
     };
 
+    auto stdp_neurons_generator = [](size_t /*index*/)  // NOLINT
+        -> knp::neuron_traits::neuron_parameters<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron>
+    { return knp::neuron_traits::neuron_parameters<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron>{}; };
+
     // Create a single neuron network: input -> input_projection -> population <=> loop_projection
     kt::STestingBack backend;
 
-    kt::BLIFATPopulation population{knp::core::UID(), kt::neuron_generator, 1};
+    knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> population{
+        knp::core::UID(), stdp_neurons_generator, 1};
+
     auto loop_projection = STDPDeltaProjection{population.get_uid(), population.get_uid(), stdp_synapse_generator, 1};
     Projection input_projection =
         STDPDeltaProjection{knp::core::UID{false}, population.get_uid(), stdp_input_projection_gen, 1};

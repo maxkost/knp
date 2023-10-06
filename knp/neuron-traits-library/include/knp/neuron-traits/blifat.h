@@ -26,6 +26,7 @@ namespace knp::neuron_traits
  */
 struct BLIFATNeuron;
 
+
 /**
  * @brief Structure for BLIFAT neuron default values.
  */
@@ -47,6 +48,7 @@ struct default_values<BLIFATNeuron>
      */
     constexpr static double min_potential = -1.0e9;
 };
+
 
 /**
  * @brief Structure for BLIFAT neuron parameters.

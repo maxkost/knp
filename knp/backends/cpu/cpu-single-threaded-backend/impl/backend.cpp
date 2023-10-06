@@ -188,8 +188,16 @@ void SingleThreadedCPUBackend::init()
 
 void SingleThreadedCPUBackend::calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population)
 {
-    SPDLOG_TRACE("Calculate population {}", std::string(population.get_uid()));
+    SPDLOG_TRACE("Calculate BLIFAT population {}", std::string(population.get_uid()));
     knp::backends::cpu::calculate_blifat_population(population, message_endpoint_, get_step());
+}
+
+
+void SingleThreadedCPUBackend::calculate_population(
+    knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population)
+{
+    SPDLOG_TRACE("Calculate resource-based STDP supported BLIFAT population {}", std::string(population.get_uid()));
+    knp::backends::cpu::calculate_rb_stdp_blifat_population(population, message_endpoint_, get_step());
 }
 
 

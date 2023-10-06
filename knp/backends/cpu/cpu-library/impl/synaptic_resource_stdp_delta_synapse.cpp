@@ -30,11 +30,11 @@ enum class ISIPeriodType
 };
 
 
-struct NeuronCharacteristics
-{
-    ISIPeriodType type_;
-    uint32_t last_step_;
-};
+// struct NeuronCharacteristics
+//{
+//     ISIPeriodType type_;
+//     uint32_t last_step_;
+// };
 
 
 const knp::synapse_traits::synapse_parameters<knp::synapse_traits::DeltaSynapse> &get_delta_synapse_params(
@@ -50,73 +50,73 @@ void process_spiking_neurons(
     const SpikeMessage &msg, knp::core::Projection<knp::synapse_traits::SynapticResourceSTDPDeltaSynapse> &projection,
     std::unordered_map<uint32_t, NeuronCharacteristics> &neuron_caracteristics, uint32_t step, bool post_synaptic)
 {
-    auto &shared_params = projection.get_shared_parameters();
-    auto &synapses_parameters = shared_params.synapses_parameters_;
+    //    auto &shared_params = projection.get_shared_parameters();
+    //    auto &synapses_parameters = shared_params.synapses_parameters_;
 
-    for (const auto &spiked_neuron_index : msg.neuron_indexes_)
-    {
-        auto &neuron_data = neuron_caracteristics[spiked_neuron_index];
+    //    for (const auto &spiked_neuron_index : msg.neuron_indexes_)
+    //    {
+    //        auto &neuron_data = neuron_caracteristics[spiked_neuron_index];
 
-        for (const auto &synapse_index : projection.get_by_presynaptic_neuron(spiked_neuron_index))
-        {
-            auto &synapse = projection[synapse_index];
-            // Unconditional decreasing synaptic resource.
-            synapse.params_.rule_.synaptic_resource_ -= synapse.params_.rule_.d_u_;
-            synapses_parameters.free_synaptic_resource_ += synapse.params_.rule_.d_u_;
-            // Hebbian plasticity value reset.
-            if (synapses_parameters.d_h_ >= 0 && ISIPeriodType::period_started == neuron_data.type_)
-                synapses_parameters.d_h_ = synapses_parameters.d_h_initial_;
+    //        for (const auto &synapse_index : projection.get_by_presynaptic_neuron(spiked_neuron_index))
+    //        {
+    //            auto &synapse = projection[synapse_index];
+    //            // Unconditional decreasing synaptic resource.
+    //            synapse.params_.rule_.synaptic_resource_ -= synapse.params_.rule_.d_u_;
+    //            synapses_parameters.free_synaptic_resource_ += synapse.params_.rule_.d_u_;
+    //            // Hebbian plasticity value reset.
+    //            if (synapses_parameters.d_h_ >= 0 && ISIPeriodType::period_started == neuron_data.type_)
+    //                synapses_parameters.d_h_ = synapses_parameters.d_h_initial_;
 
-            // Hebbian plasticity.
-            const float d_h = synapses_parameters.d_h_ *
-                              std::min(static_cast<float>(std::pow(2, -synapses_parameters.stability_)), 1.f);
-            synapse.params_.rule_.synaptic_resource_ += d_h;
-            synapses_parameters.free_synaptic_resource_ -= d_h;
+    //            // Hebbian plasticity.
+    //            const float d_h = synapses_parameters.d_h_ *
+    //                              std::min(static_cast<float>(std::pow(2, -synapses_parameters.stability_)), 1.f);
+    //            synapse.params_.rule_.synaptic_resource_ += d_h;
+    //            synapses_parameters.free_synaptic_resource_ -= d_h;
 
-            // Weight recalculation.
-            if (synapse.params_.rule_.synaptic_resource_ >= synapses_parameters.synaptic_resource_threshold_)
-            {
-                const auto syn_w = std::max(synapse.params_.rule_.synaptic_resource_, 0.f);
-                const auto weight_diff = synapse.params_.rule_.w_max_ - synapse.params_.rule_.w_min_;
-                synapse.params_.synapse_.weight_ =
-                    synapse.params_.rule_.w_min_ + weight_diff * syn_w / (weight_diff + syn_w);
-            }
-        }
+    //            // Weight recalculation.
+    //            if (synapse.params_.rule_.synaptic_resource_ >= synapses_parameters.synaptic_resource_threshold_)
+    //            {
+    //                const auto syn_w = std::max(synapse.params_.rule_.synaptic_resource_, 0.f);
+    //                const auto weight_diff = synapse.params_.rule_.w_max_ - synapse.params_.rule_.w_min_;
+    //                synapse.params_.synapse_.weight_ =
+    //                    synapse.params_.rule_.w_min_ + weight_diff * syn_w / (weight_diff + syn_w);
+    //            }
+    //        }
 
-        // Free synaptic resource renormalization.
-        if (ISIPeriodType::not_in_the_isi == neuron_data.type_ &&
-            synapses_parameters.free_synaptic_resource_ > synapses_parameters.free_synaptic_resource_threshold_)
-        {
-            // TODO: Not projection, but neuron synapses count.
-            auto add_resource_value = synapses_parameters.free_synaptic_resource_ / projection.size();
-            for (auto &synapse : projection)
-            {
-                synapse.params_.rule_.synaptic_resource_ += add_resource_value;
-            }
-            synapses_parameters.free_synaptic_resource_ = 0;
-        }
+    //        // Free synaptic resource renormalization.
+    //        if (ISIPeriodType::not_in_the_isi == neuron_data.type_ &&
+    //            synapses_parameters.free_synaptic_resource_ > synapses_parameters.free_synaptic_resource_threshold_)
+    //        {
+    //            // TODO: Not projection, but neuron synapses count.
+    //            auto add_resource_value = synapses_parameters.free_synaptic_resource_ / projection.size();
+    //            for (auto &synapse : projection)
+    //            {
+    //                synapse.params_.rule_.synaptic_resource_ += add_resource_value;
+    //            }
+    //            synapses_parameters.free_synaptic_resource_ = 0;
+    //        }
 
-        if (post_synaptic)
-        {
-            switch (neuron_data.type_)
-            {
-                case ISIPeriodType::not_in_the_isi:
-                    if (neuron_data.last_step_ - step < synapses_parameters.isi_max_)
-                        neuron_data.type_ = ISIPeriodType::period_started;
-                    break;
-                case ISIPeriodType::period_started:
-                    if (neuron_data.last_step_ - step < synapses_parameters.isi_max_)
-                        neuron_data.type_ = ISIPeriodType::period_continued;
-                    else
-                        neuron_data.type_ = ISIPeriodType::not_in_the_isi;
-                    break;
-                case ISIPeriodType::period_continued:
-                    if (neuron_data.last_step_ - step >= synapses_parameters.isi_max_)
-                        neuron_data.type_ = ISIPeriodType::not_in_the_isi;
-                    break;
-            }
-        }
-    }
+    //        if (post_synaptic)
+    //        {
+    //            switch (neuron_data.type_)
+    //            {
+    //                case ISIPeriodType::not_in_the_isi:
+    //                    if (neuron_data.last_step_ - step < synapses_parameters.isi_max_)
+    //                        neuron_data.type_ = ISIPeriodType::period_started;
+    //                    break;
+    //                case ISIPeriodType::period_started:
+    //                    if (neuron_data.last_step_ - step < synapses_parameters.isi_max_)
+    //                        neuron_data.type_ = ISIPeriodType::period_continued;
+    //                    else
+    //                        neuron_data.type_ = ISIPeriodType::not_in_the_isi;
+    //                    break;
+    //                case ISIPeriodType::period_continued:
+    //                    if (neuron_data.last_step_ - step >= synapses_parameters.isi_max_)
+    //                        neuron_data.type_ = ISIPeriodType::not_in_the_isi;
+    //                    break;
+    //            }
+    //        }
+    //    }
 }
 
 
@@ -131,7 +131,7 @@ void calculate_synaptic_resource_stdp_delta_synapse_projection(
     using ProjectionType = typename std::decay_t<decltype(projection)>;
     using ProcessingType = typename ProjectionType::SharedSynapseParameters::ProcessingType;
 
-    auto &shared_params = projection.get_shared_parameters();
+    // auto &shared_params = projection.get_shared_parameters();
     const auto &stdp_pops = shared_params.stdp_populations_;
 
     const auto all_messages = endpoint.unload_messages<SpikeMessage>(projection.get_uid());
@@ -169,7 +169,7 @@ void calculate_synaptic_resource_stdp_delta_synapse_projection(
         }
     }
 
-    SPDLOG_DEBUG("{}", shared_params.synapses_parameters_.isi_max_);
+    //    SPDLOG_DEBUG("{}", shared_params.synapses_parameters_.isi_max_);
 
     if (!usual_spike_messages.empty())
     {

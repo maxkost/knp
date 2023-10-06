@@ -35,6 +35,17 @@ void calculate_blifat_population(
 
 
 /**
+ * @brief Make one execution step for a population of resource-based STDP supported BLIFAT neurons.
+ * @param population population to update.
+ * @param endpoint message endpoint used for message exchange.
+ * @param step_n execution step.
+ */
+void calculate_rb_stdp_blifat_population(
+    knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population,
+    knp::core::MessageEndpoint &endpoint, size_t step_n);
+
+
+/**
  * @brief Make one execution step for a population of BLIFAT neurons.
  * @param population population to update.
  * @param endpoint message endpoint used for message exchange.

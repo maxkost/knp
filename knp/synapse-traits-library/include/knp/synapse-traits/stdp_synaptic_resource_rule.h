@@ -63,41 +63,6 @@ struct STDPSynapticResourceRule
 template <typename SynapseType>
 struct shared_synapse_parameters<STDP<STDPSynapticResourceRule, SynapseType>>
 {
-    /**
-     * @brief Free synaptic resource.
-     */
-    // cppcheck-suppress unusedStructMember
-    float free_synaptic_resource_ = 1;
-    /**
-     * @brief Free synaptic resource threshold value.
-     */
-    // cppcheck-suppress unusedStructMember
-    float free_synaptic_resource_threshold_ = -1;
-    /**
-     * @brief Stability.
-     */
-    // cppcheck-suppress unusedStructMember
-    float stability_;
-    /**
-     * @brief Time between spikes in the ISI period.
-     */
-    // cppcheck-suppress unusedStructMember
-    uint32_t isi_max_;
-    /**
-     * @brief Hebbian plasticity value.
-     */
-    // cppcheck-suppress unusedStructMember
-    float d_h_;
-    /**
-     * @brief Hebbian plasticity initial value.
-     */
-    // cppcheck-suppress unusedStructMember
-    float d_h_initial_;
-    /**
-     * @brief Synaptic resource threshold value.
-     */
-    // cppcheck-suppress unusedStructMember
-    float synaptic_resource_threshold_;
 };
 
 }  // namespace knp::synapse_traits

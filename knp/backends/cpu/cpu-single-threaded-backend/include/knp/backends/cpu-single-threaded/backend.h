@@ -39,7 +39,8 @@ public:
     /**
      * @brief List of neuron types supported by the single-threaded CPU backend.
      */
-    using SupportedNeurons = boost::mp11::mp_list<knp::neuron_traits::BLIFATNeuron>;
+    using SupportedNeurons =
+        boost::mp11::mp_list<knp::neuron_traits::BLIFATNeuron, knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron>;
 
     /**
      * @brief List of synapse types supported by the single-threaded CPU backend.
@@ -290,6 +291,13 @@ protected:
      * @param population population of BLIFAT neurons to calculate.
      */
     void calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population);
+
+    /**
+     * @brief Calculate population of resource-based STDP supported BLIFAT neurons.
+     * @note Population will be changed during calculation.
+     * @param population population of the neurons to calculate.
+     */
+    void calculate_population(knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population);
     /**
      * @brief Calculate projection of Delta synapses.
      * @note Projection will be changed during calculation.

@@ -198,6 +198,13 @@ void calculate_blifat_population(
 }
 
 
+void calculate_rb_stdp_blifat_population(
+    knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population,
+    knp::core::MessageEndpoint &endpoint, size_t step_n)
+{
+}
+
+
 void calculate_blifat_population(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint,
     size_t step_n, std::mutex &mutex)
