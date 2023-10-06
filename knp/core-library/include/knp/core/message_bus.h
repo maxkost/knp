@@ -36,21 +36,32 @@ class MessageBus
 {
 public:
     /**
-     * @brief Default message bus constructor.
+     * @brief Create a CPU-based message bus.
+     * @return message bus.
      */
-    MessageBus();
+    static MessageBus construct_cpu_bus();
 
     /**
-     * @brief Message bus constructor with selection of implementation.
-     * @param is_impl_cpu determines if cpu implementation is used.
+     * @brief Create a ZMQ-based message bus.
+     * @return message bus.
      */
-    explicit MessageBus(bool is_impl_cpu);
+    static MessageBus construct_zmq_bus();
 
     /**
-     * @brief Message bus constructor with a specialized implementation.
-     * @param impl message bus implementation.
+     * @brief Create a message bus with default implementation.
+     * @return message bus.
      */
-    explicit MessageBus(std::unique_ptr<messaging::impl::MessageBusImpl> &&impl);
+    static MessageBus construct_bus();
+
+    /**
+     * @brief Default message bus constructor is deleted. Use one of the static functions above.
+     */
+    MessageBus() = delete;
+
+    /**
+     * @brief Move constructor.
+     */
+    MessageBus(MessageBus &&);
 
     /**
      * @brief Message bus destructor.
@@ -79,19 +90,15 @@ public:
 
 private:
     /**
-     * @brief Create a CPU-based message bus implementation.
-     * @return unique pointer to implementation.
+     * @brief Message bus constructor with a specialized implementation.
+     * @param impl message bus implementation. Currently two implementations are available: ZMQ and CPU.
+     *
      */
-    static std::unique_ptr<messaging::impl::MessageBusImpl> make_cpu_implementation();
+    explicit MessageBus(std::unique_ptr<messaging::impl::MessageBusImpl> &&impl);
+
 
     /**
-     * @brief Create a ZMQ-based message bus implementation.
-     * @return unique pointer to implementation.
-     */
-    static std::unique_ptr<messaging::impl::MessageBusImpl> make_zmq_implementation();
-    /**
      * @brief Message bus implementation.
-     * @note currently two possible cases are ZMQ implementation and CPU implementation.
      */
     std::unique_ptr<messaging::impl::MessageBusImpl> impl_;
 };
