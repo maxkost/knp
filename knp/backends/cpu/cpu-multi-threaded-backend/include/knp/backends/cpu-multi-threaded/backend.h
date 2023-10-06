@@ -149,7 +149,7 @@ public:
         size_t projection_part_size = default_projection_part_size);
     /**
      * @brief Destructor for multi-threaded CPU backend.
-     * @note All threads are stopped and joined on destruction by an internal thread pool class.
+     * @note All threads are stopped and joined on destruction by an internal thread pool object.
      */
     ~MultiThreadedCPUBackend() override = default;
 

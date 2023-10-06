@@ -37,7 +37,6 @@ class MessageBus
 public:
     /**
      * @brief Default message bus constructor.
-     * @note The constructor uses ZMQ implementation.
      */
     MessageBus();
 
@@ -92,6 +91,7 @@ private:
     static std::unique_ptr<messaging::impl::MessageBusImpl> make_zmq_implementation();
     /**
      * @brief Message bus implementation.
+     * @note currently two possible cases are ZMQ implementation and CPU implementation.
      */
     std::unique_ptr<messaging::impl::MessageBusImpl> impl_;
 };
