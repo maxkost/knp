@@ -207,7 +207,7 @@ protected:
 
     /**
      * @brief Backend constructor with custom message bus implementation.
-     * @param impl message bus implementation.
+     * @param message_bus message bus.
      */
     explicit Backend(MessageBus &&message_bus) : message_bus_(std::move(message_bus)) {}
 
