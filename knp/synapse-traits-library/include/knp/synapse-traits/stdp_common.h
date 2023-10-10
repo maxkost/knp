@@ -40,7 +40,7 @@ struct STDP;
  * @endcode
  */
 template <template <typename> typename Rule, typename Synapse>
-struct synapse_parameters<STDP<Rule, Synapse>>
+struct synapse_parameters<STDP<Rule, Synapse>> : public synapse_parameters<Synapse>
 {
     /**
      * @brief Specific STDP rule type.
@@ -58,7 +58,6 @@ struct synapse_parameters<STDP<Rule, Synapse>>
     /**
      * @brief Synapse model parameters.
      */
-    synapse_parameters<SynapseType> synapse_;
 };
 
 

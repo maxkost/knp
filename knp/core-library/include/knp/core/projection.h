@@ -382,7 +382,7 @@ private:
     /**
      * @brief Return `false` if the weight change for synapses is not locked.
      */
-    bool is_locked_ = false;
+    bool is_locked_ = true;
 
     /**
      * @brief Container of synapse parameters.

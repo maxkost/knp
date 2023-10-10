@@ -24,6 +24,14 @@ namespace knp::neuron_traits
 template <typename NeuronType>
 struct SynapticResourceSTDPNeuron;
 
+enum class ISIPeriodType
+{
+    not_in_isi,
+    period_started,
+    period_continued
+};
+
+
 /**
  * @brief Template for the neurons, which are supported synaptic resource based STDP.
  */
@@ -37,10 +45,8 @@ struct default_values<SynapticResourceSTDPNeuron<NeuronType>>
  * @brief Template for the neurons, which are supported synaptic resource based STDP.
  */
 template <typename NeuronType>
-struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>>
+struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron_parameters<NeuronType>
 {
-    neuron_parameters<NeuronType> neuron_;
-
     /**
      * @brief Free synaptic resource.
      */
@@ -51,6 +57,11 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>>
      */
     // cppcheck-suppress unusedStructMember
     float free_synaptic_resource_threshold_ = -1;
+    /**
+     * @brief Synaptic resource is divided by (number of synapses + resource drain coefficient).
+     */
+    // cppcheck-suppress unusedStructMember
+    uint32_t resource_drain_coefficient_ = 0;
     /**
      * @brief Stability.
      */
@@ -72,10 +83,41 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>>
     // cppcheck-suppress unusedStructMember
     float d_h_initial_;
     /**
-     * @brief Synaptic resource threshold value.
+     * @brief Synaptic resource threshold value. Isn't used
      */
     // cppcheck-suppress unusedStructMember
     float synaptic_resource_threshold_;
+
+    /**
+     * @brief ISI period status.
+     */
+    ISIPeriodType isi_status_;
+
+    /**
+     * @brief TODO: I have no idea what we need this for.
+     */
+    // cppcheck-suppress unusedStructMember
+    uint32_t last_step_;
 };
+
+
+template <class NeuronType>
+ISIPeriodType update_isi(neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> &neuron, uint64_t step)
+{
+    switch (neuron.isi_status_)
+    {
+        case neuron_traits::ISIPeriodType::period_started:
+            if (neuron.last_step_ - step < neuron.isi_max_)
+                neuron.isi_status_ = neuron_traits::ISIPeriodType::period_continued;
+            break;
+        case neuron_traits::ISIPeriodType::period_continued:
+            if (neuron.last_step_ - step >= neuron.isi_max_)
+                neuron.isi_status_ = neuron_traits::ISIPeriodType::period_started;
+            break;
+        default:
+            throw std::runtime_error("Not supported ISI status.");
+    }
+    neuron.last_step_ = step;
+}
 
 }  // namespace knp::neuron_traits

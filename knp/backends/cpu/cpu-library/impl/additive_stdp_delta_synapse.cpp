@@ -28,7 +28,7 @@ const knp::synapse_traits::synapse_parameters<knp::synapse_traits::DeltaSynapse>
         knp::synapse_traits::STDP<knp::synapse_traits::STDPAdditiveRule, knp::synapse_traits::DeltaSynapse>>
         &synapse_params)
 {
-    return synapse_params.synapse_;
+    return synapse_params;
 }
 
 
@@ -195,9 +195,9 @@ void calculate_additive_stdp_delta_synapse_projection(
         if (rule.presynaptic_spike_times_.size() >= period && rule.postsynaptic_spike_times_.size() >= period)
         {
             STDPFormula stdp_formula(rule.tau_plus_, rule.tau_minus_, 1, 1);
-            SPDLOG_TRACE("Old weight = {}", s.params_.synapse_.weight_);
-            s.params_.synapse_.weight_ += stdp_formula(rule.presynaptic_spike_times_, rule.postsynaptic_spike_times_);
-            SPDLOG_TRACE("New weight = {}", s.params_.synapse_.weight_);
+            SPDLOG_TRACE("Old weight = {}", s.params_.weight_);
+            s.params_.weight_ += stdp_formula(rule.presynaptic_spike_times_, rule.postsynaptic_spike_times_);
+            SPDLOG_TRACE("New weight = {}", s.params_.weight_);
             rule.presynaptic_spike_times_.clear();
             rule.postsynaptic_spike_times_.clear();
         }

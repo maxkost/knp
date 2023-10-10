@@ -197,7 +197,7 @@ void SingleThreadedCPUBackend::calculate_population(
     knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population)
 {
     SPDLOG_TRACE("Calculate resource-based STDP supported BLIFAT population {}", std::string(population.get_uid()));
-    knp::backends::cpu::calculate_rb_stdp_blifat_population(population, message_endpoint_, get_step());
+    knp::backends::cpu::calculate_blifat_population(population, message_endpoint_, get_step());
 }
 
 
@@ -215,8 +215,7 @@ void SingleThreadedCPUBackend::calculate_projection(
     core::messaging::SynapticMessageQueue &message_queue)
 {
     SPDLOG_TRACE("Calculate AdditiveSTDPDelta synapse projection {}", std::string(projection.get_uid()));
-    knp::backends::cpu::calculate_additive_stdp_delta_synapse_projection(
-        projection, message_endpoint_, message_queue, get_step());
+    knp::backends::cpu::calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, get_step());
 }
 
 

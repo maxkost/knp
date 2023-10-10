@@ -9,7 +9,7 @@
 
 #include <knp/core/message_bus.h>
 #include <knp/core/population.h>
-#include <knp/neuron-traits/blifat.h>
+// #include <knp/neuron-traits/blifat.h>
 
 #include <mutex>
 #include <optional>
@@ -28,21 +28,11 @@ namespace knp::backends::cpu
  * @param population population to update.
  * @param endpoint message endpoint used for message exchange.
  * @param step_n execution step.
+ * @return indexes of spiked neurons.
  */
-void calculate_blifat_population(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint,
-    size_t step_n);
-
-
-/**
- * @brief Make one execution step for a population of resource-based STDP supported BLIFAT neurons.
- * @param population population to update.
- * @param endpoint message endpoint used for message exchange.
- * @param step_n execution step.
- */
-void calculate_rb_stdp_blifat_population(
-    knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population,
-    knp::core::MessageEndpoint &endpoint, size_t step_n);
+template <class BlifatLikeNeuron>
+std::vector<knp::core::messaging::SpikeIndex> calculate_blifat_population(
+    knp::core::Population<BlifatLikeNeuron> &population, knp::core::MessageEndpoint &endpoint, size_t step_n);
 
 
 /**
@@ -51,8 +41,9 @@ void calculate_rb_stdp_blifat_population(
  * @param endpoint message endpoint used for message exchange.
  * @param step_n execution step.
  * @param m mutex.
+ * @return indexes of spiked neurons.
  */
-void calculate_blifat_population(
+std::vector<knp::core::messaging::SpikeIndex> calculate_blifat_population(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint,
     size_t step_n, std::mutex &m);
 
@@ -64,8 +55,9 @@ void calculate_blifat_population(
  * @param part_size number of neurons to calculate in a single call.
  * @note The method if used for parallelization.
  */
+template <class BlifatLikeNeuron>
 void calculate_neurons_state_part(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, size_t part_start, size_t part_size);
+    knp::core::Population<BlifatLikeNeuron> &population, size_t part_start, size_t part_size);
 
 
 /**
@@ -74,8 +66,9 @@ void calculate_neurons_state_part(
  * @param messages synaptic impact messages sent to the population.
  * @note The method is used for parallelization. See later if this method serves as a bottleneck.
  */
+template <class BlifatLikeNeuron>
 void process_inputs(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population,
+    knp::core::Population<BlifatLikeNeuron> &population,
     const std::vector<knp::core::messaging::SynapticImpactMessage> &messages);
 
 

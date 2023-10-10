@@ -22,10 +22,10 @@ namespace knp::backends::cpu
 using knp::core::UID;
 using knp::core::messaging::SpikeMessage;
 
+template <class DeltaLikeSynapse>
 void calculate_projection_part(
-    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
-    const std::unordered_map<size_t, size_t> &message_in_data, MessageQueue &future_messages, u_int64_t step_n,
-    size_t part_start, size_t part_size, std::mutex &mutex)
+    knp::core::Projection<DeltaLikeSynapse> &projection, const std::unordered_map<size_t, size_t> &message_in_data,
+    MessageQueue &future_messages, u_int64_t step_n, size_t part_start, size_t part_size, std::mutex &mutex)
 {
     size_t part_end = std::min(part_start + part_size, projection.size());
     std::vector<std::pair<uint64_t, knp::core::messaging::SynapticImpact>> container;
@@ -79,8 +79,9 @@ std::unordered_map<uint64_t, size_t> convert_spikes(const SpikeMessage &message)
 }
 
 
+template <class DeltaLikeSynapseType>
 void calculate_delta_synapse_projection(
-    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, knp::core::MessageEndpoint &endpoint,
+    knp::core::Projection<DeltaLikeSynapseType> &projection, knp::core::MessageEndpoint &endpoint,
     MessageQueue &future_messages, size_t step_n)
 {
     SPDLOG_DEBUG("Calculating Delta synapse projection");

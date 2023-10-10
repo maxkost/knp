@@ -11,16 +11,15 @@
 #include <spdlog/spdlog.h>
 
 #include <string>
-#include <unordered_map>
-
 
 namespace knp::backends::cpu
 {
 
 using knp::core::messaging::SynapticImpactMessage;
 
+template <class BlifatLikeNeuron>
 void impact_neuron(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron>::NeuronParameters &neuron,
+    typename knp::core::Population<BlifatLikeNeuron>::NeuronParameters &neuron,
     const knp::synapse_traits::OutputType &synapse_type, float impact_value)
 {
     switch (synapse_type)
@@ -48,7 +47,8 @@ void impact_neuron(
 
 
 // TODO: Rename these functions, they're confusing.
-void calculate_neuron_state(knp::core::Population<knp::neuron_traits::BLIFATNeuron>::NeuronParameters &neuron)
+template <class BlifatLikeNeuron>
+void calculate_neuron_state(typename knp::core::Population<BlifatLikeNeuron>::NeuronParameters &neuron)
 {
     neuron.dynamic_threshold_ *= neuron.threshold_decay_;
     neuron.postsynaptic_trace_ *= neuron.postsynaptic_trace_decay_;
@@ -62,23 +62,25 @@ void calculate_neuron_state(knp::core::Population<knp::neuron_traits::BLIFATNeur
 }
 
 
+template <class BlifatLikeNeuron>
 void process_inputs(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population,
-    const std::vector<SynapticImpactMessage> &messages)
+    knp::core::Population<BlifatLikeNeuron> &population, const std::vector<SynapticImpactMessage> &messages)
 {
     SPDLOG_TRACE("Process inputs");
     for (const auto &message : messages)
     {
         for (const auto &impact : message.impacts_)
         {
-            impact_neuron(population[impact.postsynaptic_neuron_index_], impact.synapse_type_, impact.impact_value_);
+            impact_neuron<BlifatLikeNeuron>(
+                population[impact.postsynaptic_neuron_index_], impact.synapse_type_, impact.impact_value_);
         }
     }
 }
 
 
+template <class BlifatLikeNeuron>
 void calculate_neurons_state_part(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, size_t part_start, size_t part_size)
+    knp::core::Population<BlifatLikeNeuron> &population, size_t part_start, size_t part_size)
 {
     size_t part_end = std::min(part_start + part_size, population.size());
     SPDLOG_TRACE("Calculate neurons state part");
@@ -91,17 +93,17 @@ void calculate_neurons_state_part(
 }
 
 
+template <class BlifatLikeNeuron>
 void calculate_neurons_state(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population,
-    const std::vector<SynapticImpactMessage> &messages)
+    knp::core::Population<BlifatLikeNeuron> &population, const std::vector<SynapticImpactMessage> &messages)
 {
     calculate_neurons_state_part(population, 0, population.size());
     process_inputs(population, messages);
 }
 
 
-bool calculate_neuron_post_input_state(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron>::NeuronParameters &neuron)
+template <class BlifatLikeNeuron>
+bool calculate_neuron_post_input_state(typename knp::core::Population<BlifatLikeNeuron>::NeuronParameters &neuron)
 {
     bool spike = false;
     if (neuron.total_blocking_period_)
@@ -139,9 +141,10 @@ bool calculate_neuron_post_input_state(
 }
 
 
+template <class BlifatLikeNeuron>
 void calculate_neurons_post_input_state_part(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::messaging::SpikeMessage &message,
-    size_t part_start, size_t part_size, std::mutex &mutex)
+    knp::core::Population<BlifatLikeNeuron> &population, knp::core::messaging::SpikeMessage &message, size_t part_start,
+    size_t part_size, std::mutex &mutex)
 {
     SPDLOG_TRACE("Calculate neurons post input state part");
     size_t part_end = std::min(part_start + part_size, population.size());
@@ -156,20 +159,21 @@ void calculate_neurons_post_input_state_part(
 }
 
 
+template <class BlifatLikeNeuron>
 void calculate_neurons_post_input_state(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population,
-    knp::core::messaging::SpikeData &neuron_indexes)
+    knp::core::Population<BlifatLikeNeuron> &population, knp::core::messaging::SpikeData &neuron_indexes)
 {
     SPDLOG_TRACE("Calculate neurons post input state part");
     for (size_t index = 0; index < population.size(); ++index)
     {
-        if (calculate_neuron_post_input_state(population[index])) neuron_indexes.push_back(index);
+        if (calculate_neuron_post_input_state<BlifatLikeNeuron>(population[index])) neuron_indexes.push_back(index);
     }
 }
 
 
+template <class BlifatLikeNeuron>
 knp::core::messaging::SpikeData calculate_blifat_population_data(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint)
+    knp::core::Population<BlifatLikeNeuron> &population, knp::core::MessageEndpoint &endpoint)
 {
     SPDLOG_DEBUG("Calculating BLIFAT population {}", std::string{population.get_uid()});
     // This whole function might be optimizable if we find a way to not loop over the whole population.
@@ -183,9 +187,9 @@ knp::core::messaging::SpikeData calculate_blifat_population_data(
 }
 
 
+template <class BlifatLikeNeuron>
 void calculate_blifat_population(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint,
-    size_t step_n)
+    knp::core::Population<BlifatLikeNeuron> &population, knp::core::MessageEndpoint &endpoint, size_t step_n)
 {
     auto neuron_indexes{calculate_blifat_population_data(population, endpoint)};
 
@@ -198,16 +202,10 @@ void calculate_blifat_population(
 }
 
 
-void calculate_rb_stdp_blifat_population(
-    knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population,
-    knp::core::MessageEndpoint &endpoint, size_t step_n)
-{
-}
-
-
-void calculate_blifat_population(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint,
-    size_t step_n, std::mutex &mutex)
+template <class BlifatLikeNeuron>
+std::vector<knp::core::messaging::SpikeIndex> calculate_blifat_population(
+    knp::core::Population<BlifatLikeNeuron> &population, knp::core::MessageEndpoint &endpoint, size_t step_n,
+    std::mutex &mutex)
 {
     auto neuron_indexes{calculate_blifat_population_data(population, endpoint)};
 
@@ -218,6 +216,8 @@ void calculate_blifat_population(
         endpoint.send_message(res_message);
         SPDLOG_DEBUG("Sent {} spike(s)", res_message.neuron_indexes_.size());
     }
+    return neuron_indexes;
 }
+
 
 }  // namespace knp::backends::cpu
