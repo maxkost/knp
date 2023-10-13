@@ -273,7 +273,7 @@ def process_module(module_name, headers, hooks, add_namespaces=None):
             if not ns:
                 continue
 
-            print('using namespace %s;' % ns)
+            print(f'using namespace {ns};')
 
     print('\n\n')
 
