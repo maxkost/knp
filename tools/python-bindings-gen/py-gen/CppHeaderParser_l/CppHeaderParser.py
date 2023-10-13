@@ -1,4 +1,6 @@
 #!/usr/bin/python
+# type: ignore
+
 #
 # Author: Jashua R. Cloutier (contact via https://bitbucket.org/senex)
 # Project: http://senexcanis.com/open-source/cppheaderparser/

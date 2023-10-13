@@ -172,7 +172,7 @@ repos:
     rev: v1.5.1
     hooks:
       - id: mypy
-        args: ["--config-file", "knp/.mypy.ini", "--install-types"]
+        args: ["--config-file", "knp/.mypy.ini", "--install-types", "--check-untyped-defs"]
         additional_dependencies:
           [
             "isort>=5",

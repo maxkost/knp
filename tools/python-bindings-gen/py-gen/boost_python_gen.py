@@ -30,8 +30,8 @@ spaces_count = 4
 
 MethodHookData = collections.namedtuple('MethodHookData', ['method_name', 'in_params', 'ret_names', 'pre', 'post'])
 
-brief_regex = re.compile(r'\s*\*\s*(@brief)\s*(.*)')
-param_regex = re.compile(r'\*\s*\*\s*(@[^\s]+\s*)(.+)')
+brief_regex = re.compile(r'\s*\*+\s+@brief\s+(.*)')
+text_regex = re.compile(r'^\s*\*+\s+[^@](.*)$')
 
 
 def process_docstring(ds):
@@ -40,13 +40,18 @@ def process_docstring(ds):
 
     for ln in ds.split('\n'):
         if not in_brief:
-            if brief_regex.match(ln) is not None:
+            brief = brief_regex.match(ln)
+            if brief is not None:
                 in_brief = True
+                lines.append(brief.group(1))
             else:
                 continue
-        if param_regex.match(ln):
-            break
-        lines.append(ln)
+        if in_brief:
+            txt = text_regex.match(ln)
+            if txt is not None:
+                lines.append(txt.group(1))
+            else:
+                break
 
     result = ' '.join(lines)
 
@@ -56,24 +61,19 @@ def process_docstring(ds):
 def _process_enum(enum, class_name=None):
     name = enum['name']
     typename = name
-    parent = 'm'
 
     if class_name:
-        typename = '{}::{}'.format(class_name, typename)
-        parent = class_name.lower()
+        typename = f'{class_name}::{typename}'
+        class_name.lower()
 
-    ret = ['py::enum_<{}>({}, "{}")'.format(typename, parent, name)]
+    ret = ['py::enum_<{typename}>({parent}, "{name}")']
 
-    for v in enum['values']:
-        k = v['name']
-        ret.append('{}.value("{}", {}::{})'.format(' ' * spaces_count, k, typename, k))
+    for _ in enum['values']:
+        # v['name']
+        ret.append('{" " * spaces_count}.value("{k}", {typename}::{k})')
 
     ret[-1] = ret[-1] + ';'
     return ret
-
-
-def _process_fn(fn):
-    return []  # TODO
 
 
 def _process_method(class_name, meth, hooks, overloaded=False):
@@ -94,7 +94,7 @@ def _process_method(class_name, meth, hooks, overloaded=False):
     # Constructor.
     if method_name == class_name:
         params = ', '.join(p['raw_type'] for p in parameters)
-        ret.append('{}.def(py::init<{}>())'.format(' ' * spaces_count, params))
+        ret.append('{" " * spaces_count}.def(py::init<{params}>())')
     else:
         pre = []
         post = []
@@ -120,7 +120,6 @@ def _process_method(class_name, meth, hooks, overloaded=False):
             py_method_name = operators.get(m[1], method_name)
 
         if modified:
-            in_args = ''
             if in_params:
                 in_args = ', ' + ', '.join('%(type)s %(name)s' % p for p in in_params)
 
@@ -179,7 +178,7 @@ def _process_class(cls, hooks):
     class_name = cls['name']
     class_name.lower()
 
-    brk = ')' if not 'doxygen' in cls else f', {process_docstring(cls["doxygen"])})'
+    brk = ')' if 'doxygen' not in cls else f', {process_docstring(cls["doxygen"])})'
     ret = [f'py::class_<{class_name}>("{class_name}"{brk}']
 
     # Collect methods first to determine if there are overloads
@@ -233,6 +232,7 @@ def process_header(fname, hooks):
 # Hooks
 #
 
+
 # Method hook parameters:
 #   class_name: name of the class
 #   method: a method dictionary from cppheaderparser
@@ -241,8 +241,6 @@ def process_header(fname, hooks):
 #   pre: statements to insert before function call
 #   post: statements to insert after function call
 #   .. returns True if method hook did something
-
-
 def _reference_hook(class_name, method, hook_data):
     parameters = method['parameters']
     refs = [p for p in parameters if p['reference']]
@@ -264,10 +262,10 @@ def process_module(module_name, headers, hooks, add_namespaces=None):
     for header in headers:
         print('#include <%s>' % header)  # TODO, not usually the actual path
 
-    print()
+    print('\n')
     # print('#include <pybind11/pybind11.h>')
     print('#include <boost/python.hpp>')
-    print()
+    print('\n')
     # print('namespace py = pybind11;')
     print('namespace py = boost::python;')
     if add_namespaces:
@@ -276,10 +274,9 @@ def process_module(module_name, headers, hooks, add_namespaces=None):
                 continue
 
             print('using namespace %s;' % ns)
-    print()
 
-    print()
-    # print('PYBIND11_MODULE(%s, m)\n{' % module_name)
+    print('\n\n')
+
     print('BOOST_PYTHON_MODULE(%s)\n{' % module_name)
 
     if 'doxygen' in headers:
@@ -304,8 +301,7 @@ def main():
 
     args = parser.parse_args()
 
-    hooks = dict()
-    hooks['method_hooks'] = [_reference_hook, _ctr_hook]
+    hooks = {'method_hooks': [_reference_hook, _ctr_hook]}
 
     process_module(args.module_name, args.headers, hooks, args.add_namespaces.split(','))
 
