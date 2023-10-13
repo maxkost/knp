@@ -120,8 +120,7 @@ def _process_method(class_name, meth, hooks, overloaded=False):
             py_method_name = operators.get(m[1], method_name)
 
         if modified:
-            if in_params:
-                in_args = ', ' + ', '.join('%(type)s %(name)s' % p for p in in_params)
+            in_args = '' if not in_params else ', ' + ', '.join('%(type)s %(name)s' % p for p in in_params)
 
             ret.append(
                 f'{" " * spaces_count}.def("%(py_method_name)s", '
