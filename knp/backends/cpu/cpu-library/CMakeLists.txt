@@ -19,11 +19,11 @@ knp_add_library("${PROJECT_NAME}"
     STATIC
 
     impl/init.cpp
-    impl/blifat_population.cpp
+    impl/blifat_population.tpp
     impl/delta_synapse_projection_impl.h
     impl/delta_synapse_projection.cpp
     impl/additive_stdp_delta_synapse.cpp
-    impl/synaptic_resource_stdp_delta_synapse.cpp
+        impl/synaptic_resource_stdp.cpp
 
     ${${PROJECT_NAME}_headers}
     )
@@ -31,8 +31,10 @@ add_library(KNP::Backends::CPU::Library ALIAS "${PROJECT_NAME}")
 
 source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "include/.*")
+source_group(headers REGULAR_EXPRESSION "impl/.*")
 
 target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS})
+target_include_directories("${PROJECT_NAME}" PRIVATE "impl")
 
 target_link_libraries("${PROJECT_NAME}" PRIVATE Boost::headers spdlog::spdlog_header_only)
 target_link_libraries("${PROJECT_NAME}" PUBLIC KNP::Core KNP::Devices::CPU)

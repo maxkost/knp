@@ -14,6 +14,7 @@
 #include <knp/meta/assert_helpers.h>
 #include <knp/meta/stringify.h>
 #include <knp/meta/variant_helpers.h>
+#include <knp/synapse-traits/stdp_synaptic_resource_rule.h>
 
 #include <spdlog/spdlog.h>
 
@@ -72,24 +73,67 @@ SupportedVariants convert_variant(const AllVariants &input)
 }
 
 
+bool is_neuroplastic_population(const core::AllPopulationsVariant &population)
+{
+    using PopulationType =
+        knp::core::Population<knp::neuron_traits::SynapticResourceSTDPNeuron<knp::neuron_traits::BLIFATNeuron>>;
+    constexpr size_t expected_index = boost::mp11::mp_find<core::AllPopulations, PopulationType>();
+    return population.index() == expected_index;
+}
+
+
+template <class SynapseType>
+std::vector<knp::core::Projection<SynapseType> *> SingleThreadedCPUBackend::find_projection_by_type_and_postsynaptic(
+    const knp::core::UID &post_uid)
+{
+    using ProjectionType = knp::core::Projection<SynapseType>;
+    std::vector<knp::core::Projection<SynapseType> *> result;
+    // TODO : for some reason it can't instantiate mp_find template with SynapticResourceSTDPDeltaSynapse
+    constexpr auto type_index = 2;  // boost::mp11::mp_find<SynapseType, synapse_traits::AllSynapses>();
+    for (auto &projection : projections_)
+    {
+        if (projection.arg_.index() != type_index) continue;
+        ProjectionType *projection_ptr = &(std::get<type_index>(projection.arg_));
+
+        if (projection_ptr->get_postsynaptic() == post_uid) result.push_back(projection_ptr);
+    }
+    return result;
+}
+
+
 void SingleThreadedCPUBackend::step()
 {
     SPDLOG_DEBUG("Starting step #{}", get_step());
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
     // Calculate populations.
+    std::vector<std::optional<knp::core::messaging::SpikeMessage>> messages;
     for (auto &e : populations_)
     {
         std::visit(
-            [this](auto &arg)
+            [this, &messages](auto &arg)
             {
                 using T = std::decay_t<decltype(arg)>;
                 if constexpr (
                     boost::mp11::mp_find<SupportedPopulations, T>{} == boost::mp11::mp_size<SupportedPopulations>{})
                     static_assert(knp::meta::always_false_v<T>, "Population isn't supported by the CPU ST backend!");
-                calculate_population(arg);
+                messages.push_back(calculate_population(arg));
             },
             e);
+    }
+
+    using SynapseType = synapse_traits::SynapticResourceSTDPDeltaSynapse;
+    for (size_t pop_index = 0; pop_index < populations_.size(); ++pop_index)
+    {
+        if (!is_neuroplastic_population(populations_[pop_index])) continue;
+        if (!messages[pop_index]) continue;
+        auto population = std::get<
+            knp::core::Population<knp::neuron_traits::SynapticResourceSTDPNeuron<knp::neuron_traits::BLIFATNeuron>>>(
+            populations_[pop_index]);
+        auto working_projections = find_projection_by_type_and_postsynaptic<SynapseType>(population.get_uid());
+
+        knp::backends::cpu::process_spiking_neurons(
+            messages[pop_index].value(), working_projections, population, get_step());
     }
 
     message_bus_.route_messages();
@@ -186,18 +230,19 @@ void SingleThreadedCPUBackend::init()
 }
 
 
-void SingleThreadedCPUBackend::calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population)
+std::optional<core::messaging::SpikeMessage> SingleThreadedCPUBackend::calculate_population(
+    core::Population<knp::neuron_traits::BLIFATNeuron> &population)
 {
     SPDLOG_TRACE("Calculate BLIFAT population {}", std::string(population.get_uid()));
-    knp::backends::cpu::calculate_blifat_population(population, message_endpoint_, get_step());
+    return knp::backends::cpu::calculate_blifat_population(population, message_endpoint_, get_step());
 }
 
 
-void SingleThreadedCPUBackend::calculate_population(
+std::optional<core::messaging::SpikeMessage> SingleThreadedCPUBackend::calculate_population(
     knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population)
 {
     SPDLOG_TRACE("Calculate resource-based STDP supported BLIFAT population {}", std::string(population.get_uid()));
-    knp::backends::cpu::calculate_blifat_population(population, message_endpoint_, get_step());
+    return knp::backends::cpu::calculate_blifat_population(population, message_endpoint_, get_step());
 }
 
 

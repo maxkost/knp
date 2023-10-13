@@ -1,10 +1,10 @@
 /**
- * @file blifat_population.cpp
+ * @file blifat_population_impl.h
  * @brief BLIFAT neurons calculation routines implementation.
  * @author Artiom N.
  * @date 21.02.2023
  */
-
+#pragma once
 #include <knp/backends/cpu-library/blifat_population.h>
 #include <knp/synapse-traits/output_types.h>
 
@@ -16,6 +16,9 @@ namespace knp::backends::cpu
 {
 
 using knp::core::messaging::SynapticImpactMessage;
+
+#define BLIFAT_LIKE_NEURONS knp::neuron_traits::BLIFATNeuron, knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron
+
 
 template <class BlifatLikeNeuron>
 void impact_neuron(
@@ -34,14 +37,11 @@ void impact_neuron(
             neuron.inhibitory_conductance_ += impact_value;
             break;
         case knp::synapse_traits::OutputType::DOPAMINE:
+            neuron.dopamine_value_ += impact_value;
             break;
         case knp::synapse_traits::OutputType::BLOCKING:
             neuron.total_blocking_period_ = static_cast<unsigned int>(impact_value);
             break;
-            //        default:
-            //            const auto error_message = "Unknown synapse type: " +
-            //            std::to_string(static_cast<int>(synapse_type)); SPDLOG_ERROR(error_message); throw
-            //            std::runtime_error(error_message);
     }
 }
 
@@ -53,6 +53,7 @@ void calculate_neuron_state(typename knp::core::Population<BlifatLikeNeuron>::Ne
     neuron.dynamic_threshold_ *= neuron.threshold_decay_;
     neuron.postsynaptic_trace_ *= neuron.postsynaptic_trace_decay_;
     neuron.inhibitory_conductance_ *= neuron.inhibitory_conductance_decay_;
+    neuron.dopamine_value_ = 0.0;
 
     if (neuron.bursting_phase_ && !--neuron.bursting_phase_)
         neuron.potential_ = neuron.potential_ * neuron.potential_decay_ + neuron.reflexive_weight_;
@@ -188,7 +189,7 @@ knp::core::messaging::SpikeData calculate_blifat_population_data(
 
 
 template <class BlifatLikeNeuron>
-void calculate_blifat_population(
+std::optional<knp::core::messaging::SpikeMessage> calculate_blifat_population(
     knp::core::Population<BlifatLikeNeuron> &population, knp::core::MessageEndpoint &endpoint, size_t step_n)
 {
     auto neuron_indexes{calculate_blifat_population_data(population, endpoint)};
@@ -198,26 +199,27 @@ void calculate_blifat_population(
         knp::core::messaging::SpikeMessage res_message{{population.get_uid(), step_n}, neuron_indexes};
         endpoint.send_message(res_message);
         SPDLOG_DEBUG("Sent {} spike(s)", res_message.neuron_indexes_.size());
+        return res_message;
     }
+    else return {};
 }
 
 
 template <class BlifatLikeNeuron>
-std::vector<knp::core::messaging::SpikeIndex> calculate_blifat_population(
+std::optional<knp::core::messaging::SpikeMessage> calculate_blifat_population(
     knp::core::Population<BlifatLikeNeuron> &population, knp::core::MessageEndpoint &endpoint, size_t step_n,
     std::mutex &mutex)
 {
     auto neuron_indexes{calculate_blifat_population_data(population, endpoint)};
-
     if (!neuron_indexes.empty())
     {
         knp::core::messaging::SpikeMessage res_message{{population.get_uid(), step_n}, neuron_indexes};
         std::lock_guard<std::mutex> guard(mutex);
         endpoint.send_message(res_message);
         SPDLOG_DEBUG("Sent {} spike(s)", res_message.neuron_indexes_.size());
+        return res_message;
     }
-    return neuron_indexes;
+    return {};
 }
-
 
 }  // namespace knp::backends::cpu

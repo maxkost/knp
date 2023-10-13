@@ -21,7 +21,6 @@ namespace knp::neuron_traits
 {
 // Comma-separated list of neurons.
 #define ALL_NEURONS knp::neuron_traits::BLIFATNeuron, knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron
-#define BLIFAT_LIKE_NEURONS knp::neuron_traits::BLIFATNeuron, knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron
 
 
 /**

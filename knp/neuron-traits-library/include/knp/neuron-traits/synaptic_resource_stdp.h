@@ -26,7 +26,7 @@ struct SynapticResourceSTDPNeuron;
 
 enum class ISIPeriodType
 {
-    not_in_isi,
+    is_forced,
     period_started,
     period_continued
 };
@@ -67,6 +67,12 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
      */
     // cppcheck-suppress unusedStructMember
     float stability_;
+
+    /**
+     * @brief A parameter that defines value of stability changes.
+     */
+    // cppcheck-suppress unusedStructMember
+    float stability_change_parameter_ = 0;
     /**
      * @brief Time between spikes in the ISI period.
      */
@@ -78,11 +84,6 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
     // cppcheck-suppress unusedStructMember
     float d_h_;
     /**
-     * @brief Hebbian plasticity initial value.
-     */
-    // cppcheck-suppress unusedStructMember
-    float d_h_initial_;
-    /**
      * @brief Synaptic resource threshold value. Isn't used
      */
     // cppcheck-suppress unusedStructMember
@@ -92,12 +93,17 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
      * @brief ISI period status.
      */
     ISIPeriodType isi_status_;
-
     /**
-     * @brief TODO: I have no idea what we need this for.
+     * @brief
      */
     // cppcheck-suppress unusedStructMember
-    uint32_t last_step_;
+    uint64_t last_step_;
+
+    /**
+     * @brief Step of last unforced spike. Used for dopamine update.
+     */
+    // cppcheck-suppress unusedStructMember
+    uint64_t first_isi_spike_ = -1000;  // An arbitrary moderately large number.
 };
 
 
@@ -106,13 +112,19 @@ ISIPeriodType update_isi(neuron_parameters<SynapticResourceSTDPNeuron<NeuronType
 {
     switch (neuron.isi_status_)
     {
+        case neuron_traits::ISIPeriodType::is_forced:
+            neuron.isi_status_ = neuron_traits::ISIPeriodType::period_started;
+            neuron.first_isi_spike_ = step;
         case neuron_traits::ISIPeriodType::period_started:
             if (neuron.last_step_ - step < neuron.isi_max_)
                 neuron.isi_status_ = neuron_traits::ISIPeriodType::period_continued;
             break;
         case neuron_traits::ISIPeriodType::period_continued:
-            if (neuron.last_step_ - step >= neuron.isi_max_)
+            if (neuron.last_step_ - step >= neuron.isi_max_ || neuron.dopamine_value_ != 0)
+            {
                 neuron.isi_status_ = neuron_traits::ISIPeriodType::period_started;
+                neuron.first_isi_spike_ = step;
+            }
             break;
         default:
             throw std::runtime_error("Not supported ISI status.");

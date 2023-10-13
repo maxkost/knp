@@ -89,7 +89,6 @@ struct neuron_parameters<BLIFATNeuron>
      * @details If `postsynaptic_trace_decay_` equals 0, then `postsynaptic_trace_` also equals 0.
      */
     double postsynaptic_trace_decay_ = 0.;
-
     /**
      * @brief The parameter defines a value that increases the `postsynaptic_trace_` value if a neuron generates a
      * spike.
@@ -156,6 +155,10 @@ struct neuron_parameters<BLIFATNeuron>
      * blocked.
      */
     unsigned total_blocking_period_ = 0;
+    /**
+     * @brief Dopamine value, a parameter to sum up all incoming dopamine synapse impacts.
+     */
+    double dopamine_value_ = 0.0;
 };
 
 }  // namespace knp::neuron_traits

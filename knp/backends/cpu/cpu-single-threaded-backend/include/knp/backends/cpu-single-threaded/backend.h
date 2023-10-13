@@ -289,15 +289,18 @@ protected:
      * @brief Calculate population of BLIFAT neurons.
      * @note Population will be changed during calculation.
      * @param population population of BLIFAT neurons to calculate.
+     * @return copy of spike message if population is emitting one.
      */
-    void calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population);
+    std::optional<core::messaging::SpikeMessage> calculate_population(
+        knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population);
 
     /**
      * @brief Calculate population of resource-based STDP supported BLIFAT neurons.
      * @note Population will be changed during calculation.
      * @param population population of the neurons to calculate.
      */
-    void calculate_population(knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population);
+    std::optional<core::messaging::SpikeMessage> calculate_population(
+        knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population);
     /**
      * @brief Calculate projection of Delta synapses.
      * @note Projection will be changed during calculation.
@@ -327,9 +330,11 @@ protected:
         core::messaging::SynapticMessageQueue &message_queue);
 
 private:
-    // cppcheck-suppress unusedStructMember
+    template <class SynapseType>
+    std::vector<knp::core::Projection<SynapseType> *> find_projection_by_type_and_postsynaptic(
+        const knp::core::UID &post_uid);
+
     PopulationContainer populations_;
-    // cppcheck-suppress unusedStructMember
     ProjectionContainer projections_;
     core::MessageEndpoint message_endpoint_;
 };

@@ -22,6 +22,19 @@ namespace knp::backends::cpu
 using knp::core::UID;
 using knp::core::messaging::SpikeMessage;
 
+
+template <class DeltaLikeSynapse>
+void update_step(synapse_traits::synapse_parameters<DeltaLikeSynapse> &params, uint64_t step)
+{
+    params.rule.last_spike_step_ = step;
+}
+
+template <>
+void update_step<synapse_traits::DeltaSynapse>(
+    synapse_traits::synapse_parameters<synapse_traits::DeltaSynapse> &synapse, uint64_t step)
+{
+}
+
 template <class DeltaLikeSynapse>
 void calculate_projection_part(
     knp::core::Projection<DeltaLikeSynapse> &projection, const std::unordered_map<size_t, size_t> &message_in_data,
@@ -32,6 +45,7 @@ void calculate_projection_part(
     for (size_t synapse_index = part_start; synapse_index < part_end; ++synapse_index)
     {
         auto &synapse = projection[synapse_index];
+        update_step(synapse, step_n);
         auto iter = message_in_data.find(synapse.id_from_);
         if (iter == message_in_data.end()) continue;
 

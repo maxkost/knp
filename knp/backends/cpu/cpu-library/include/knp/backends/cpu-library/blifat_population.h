@@ -9,6 +9,7 @@
 
 #include <knp/core/message_bus.h>
 #include <knp/core/population.h>
+#include <knp/core/projection.h>
 // #include <knp/neuron-traits/blifat.h>
 
 #include <mutex>
@@ -22,6 +23,24 @@
  */
 namespace knp::backends::cpu
 {
+/**
+ * @brief Apply STDP to all presynaptic connections of a single population.
+ * @tparam NeuronType A type of neuron that is compatible with STDP.
+ * @param msg spikes emited by population.
+ * @param projections All projections. The ones that are not connected, are locked or are of a wrong type are skipped.
+ * @param population population.
+ * @param step current network step.
+ * @param post_synaptic
+ * @note all projections are supposed to be of the same type.
+ */
+template <class NeuronType>
+void process_spiking_neurons(
+    const core::messaging::SpikeMessage &msg,
+    std::vector<knp::core::Projection<
+        knp::synapse_traits::STDP<knp::synapse_traits::STDPSynapticResourceRule, synapse_traits::DeltaSynapse>> *>
+        &working_projections,
+    knp::core::Population<knp::neuron_traits::SynapticResourceSTDPNeuron<NeuronType>> &population, uint64_t step);
+
 
 /**
  * @brief Make one execution step for a population of BLIFAT neurons.
@@ -31,7 +50,7 @@ namespace knp::backends::cpu
  * @return indexes of spiked neurons.
  */
 template <class BlifatLikeNeuron>
-std::vector<knp::core::messaging::SpikeIndex> calculate_blifat_population(
+std::optional<core::messaging::SpikeMessage> calculate_blifat_population(
     knp::core::Population<BlifatLikeNeuron> &population, knp::core::MessageEndpoint &endpoint, size_t step_n);
 
 
@@ -43,7 +62,7 @@ std::vector<knp::core::messaging::SpikeIndex> calculate_blifat_population(
  * @param m mutex.
  * @return indexes of spiked neurons.
  */
-std::vector<knp::core::messaging::SpikeIndex> calculate_blifat_population(
+std::optional<core::messaging::SpikeMessage> calculate_blifat_population(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint,
     size_t step_n, std::mutex &m);
 
@@ -84,5 +103,6 @@ void process_inputs(
 void calculate_neurons_post_input_state_part(
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::messaging::SpikeMessage &message,
     size_t part_start, size_t part_size, std::mutex &mutex);
+
 
 }  // namespace knp::backends::cpu
