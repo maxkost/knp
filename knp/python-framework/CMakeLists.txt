@@ -6,4 +6,18 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp-python-framework LANGUAGES C CXX)
 
+find_package(Boost 1.66.0 COMPONENTS python REQUIRED)
+
 include(knp-functions)
+
+file(GLOB_RECURSE MODULES_SOURCE CONFIGURE_DEPENDS
+     "impl/*.h"
+     "impl/*.cpp")
+
+knp_add_library("${PROJECT_NAME}"
+    SHARED
+    ${MODULES_SOURCE}
+
+)
+
+target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Core KNP::BaseFramework::Core Boost::headers Boost::python)
