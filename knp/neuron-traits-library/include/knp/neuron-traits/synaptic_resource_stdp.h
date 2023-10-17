@@ -87,14 +87,14 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
      * @brief Synaptic resource threshold value. Isn't used
      */
     // cppcheck-suppress unusedStructMember
-    float synaptic_resource_threshold_;
+    float synaptic_resowurce_threshold_;
 
     /**
      * @brief ISI period status.
      */
     ISIPeriodType isi_status_;
     /**
-     * @brief
+     * @brief Last non-forced spike step.
      */
     // cppcheck-suppress unusedStructMember
     uint64_t last_step_;
@@ -130,6 +130,7 @@ ISIPeriodType update_isi(neuron_parameters<SynapticResourceSTDPNeuron<NeuronType
             throw std::runtime_error("Not supported ISI status.");
     }
     neuron.last_step_ = step;
+    return neuron.isi_status_;
 }
 
 }  // namespace knp::neuron_traits

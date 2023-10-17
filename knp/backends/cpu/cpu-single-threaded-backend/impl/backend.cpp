@@ -9,6 +9,7 @@
 #include <knp/backends/cpu-library/blifat_population.h>
 #include <knp/backends/cpu-library/delta_synapse_projection.h>
 #include <knp/backends/cpu-library/init.h>
+#include <knp/backends/cpu-library/synaptic_resource_stdp.h>
 #include <knp/backends/cpu-single-threaded/backend.h>
 #include <knp/devices/cpu.h>
 #include <knp/meta/assert_helpers.h>
@@ -18,7 +19,6 @@
 
 #include <spdlog/spdlog.h>
 
-#include <functional>
 #include <vector>
 
 #include <boost/mp11.hpp>
@@ -132,7 +132,7 @@ void SingleThreadedCPUBackend::step()
             populations_[pop_index]);
         auto working_projections = find_projection_by_type_and_postsynaptic<SynapseType>(population.get_uid());
 
-        knp::backends::cpu::process_spiking_neurons(
+        knp::backends::cpu::process_spiking_neurons<neuron_traits::BLIFATNeuron>(
             messages[pop_index].value(), working_projections, population, get_step());
     }
 
@@ -269,8 +269,7 @@ void SingleThreadedCPUBackend::calculate_projection(
     core::messaging::SynapticMessageQueue &message_queue)
 {
     SPDLOG_TRACE("Calculate STDPSynapticResource synapse projection {}", std::string(projection.get_uid()));
-    knp::backends::cpu::calculate_synaptic_resource_stdp_delta_synapse_projection(
-        projection, message_endpoint_, message_queue, get_step());
+    knp::backends::cpu::calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, get_step());
 }
 
 

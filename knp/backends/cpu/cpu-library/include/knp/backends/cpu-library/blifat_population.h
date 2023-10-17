@@ -10,11 +10,14 @@
 #include <knp/core/message_bus.h>
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
-// #include <knp/neuron-traits/blifat.h>
 
+#include <spdlog/spdlog.h>
+
+#include <algorithm>
 #include <mutex>
 #include <optional>
 #include <queue>
+#include <string>
 #include <vector>
 
 
@@ -43,40 +46,36 @@ void process_spiking_neurons(
 
 
 /**
- * @brief Make one execution step for a population of BLIFAT neurons.
- * @param population population to update.
- * @param endpoint message endpoint used for message exchange.
- * @param step_n execution step.
- * @return indexes of spiked neurons.
+ * @brief Calculate the result of a synaptic impact on a neuron.
+ * @tparam BlifatLikeNeuron type of neuron which inference can be calculated as for a BLIFAT neuron.
+ * @param neuron a BLIFAT-like neuron parameters.
+ * @param synapse_type the type of input signal.
+ * @param impact_value the value of input signal.
  */
 template <class BlifatLikeNeuron>
-std::optional<core::messaging::SpikeMessage> calculate_blifat_population(
-    knp::core::Population<BlifatLikeNeuron> &population, knp::core::MessageEndpoint &endpoint, size_t step_n);
-
-
-/**
- * @brief Make one execution step for a population of BLIFAT neurons.
- * @param population population to update.
- * @param endpoint message endpoint used for message exchange.
- * @param step_n execution step.
- * @param m mutex.
- * @return indexes of spiked neurons.
- */
-std::optional<core::messaging::SpikeMessage> calculate_blifat_population(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint,
-    size_t step_n, std::mutex &m);
-
-
-/**
- * @brief Partially calculate population before it receives synaptic impact messages.
- * @param population population to update.
- * @param part_start index of the first neuron to calculate.
- * @param part_size number of neurons to calculate in a single call.
- * @note The method if used for parallelization.
- */
-template <class BlifatLikeNeuron>
-void calculate_neurons_state_part(
-    knp::core::Population<BlifatLikeNeuron> &population, size_t part_start, size_t part_size);
+void impact_neuron(
+    typename knp::core::Population<BlifatLikeNeuron>::NeuronParameters &neuron,
+    const knp::synapse_traits::OutputType &synapse_type, float impact_value)
+{
+    switch (synapse_type)
+    {
+        case knp::synapse_traits::OutputType::EXCITATORY:
+            neuron.potential_ += impact_value;
+            break;
+        case knp::synapse_traits::OutputType::INHIBITORY_CURRENT:
+            neuron.potential_ -= impact_value;
+            break;
+        case knp::synapse_traits::OutputType::INHIBITORY_CONDUCTANCE:
+            neuron.inhibitory_conductance_ += impact_value;
+            break;
+        case knp::synapse_traits::OutputType::DOPAMINE:
+            neuron.dopamine_value_ += impact_value;
+            break;
+        case knp::synapse_traits::OutputType::BLOCKING:
+            neuron.total_blocking_period_ = static_cast<unsigned int>(impact_value);
+            break;
+    }
+}
 
 
 /**
@@ -88,7 +87,134 @@ void calculate_neurons_state_part(
 template <class BlifatLikeNeuron>
 void process_inputs(
     knp::core::Population<BlifatLikeNeuron> &population,
-    const std::vector<knp::core::messaging::SynapticImpactMessage> &messages);
+    const std::vector<core::messaging::SynapticImpactMessage> &messages)
+{
+    SPDLOG_TRACE("Process inputs");
+    for (const auto &message : messages)
+    {
+        for (const auto &impact : message.impacts_)
+        {
+            impact_neuron<BlifatLikeNeuron>(
+                population[impact.postsynaptic_neuron_index_], impact.synapse_type_, impact.impact_value_);
+        }
+    }
+}
+
+
+/**
+ * @brief Calculate a single neuron state before impacts.
+ * @tparam BlifatLikeNeuron type of neuron which inference can be calculated as for a BLIFAT neuron.
+ * @param neuron
+ */
+template <class BlifatLikeNeuron>
+void calculate_single_neuron_state(typename knp::core::Population<BlifatLikeNeuron>::NeuronParameters &neuron)
+{
+    neuron.dynamic_threshold_ *= neuron.threshold_decay_;
+    neuron.postsynaptic_trace_ *= neuron.postsynaptic_trace_decay_;
+    neuron.inhibitory_conductance_ *= neuron.inhibitory_conductance_decay_;
+    neuron.dopamine_value_ = 0.0;
+
+    if (neuron.bursting_phase_ && !--neuron.bursting_phase_)
+        neuron.potential_ = neuron.potential_ * neuron.potential_decay_ + neuron.reflexive_weight_;
+    else
+        neuron.potential_ *= neuron.potential_decay_;
+    neuron.pre_impact_potential_ = neuron.potential_;
+}
+
+
+/**
+ * @brief Partially calculate population before it receives synaptic impact messages.
+ * @param population population to update.
+ * @param part_start index of the first neuron to calculate.
+ * @param part_size number of neurons to calculate in a single call.
+ * @note The method if used for parallelization.
+ */
+template <class BlifatLikeNeuron>
+void calculate_neurons_state_part(
+    knp::core::Population<BlifatLikeNeuron> &population, size_t part_start, size_t part_size)
+{
+    size_t part_end = std::min(part_start + part_size, population.size());
+    SPDLOG_TRACE("Calculate neurons state part");
+    for (size_t i = part_start; i < part_end; ++i)
+    {
+        auto &neuron = population[i];
+        ++neuron.n_time_steps_since_last_firing_;
+        calculate_single_neuron_state<BlifatLikeNeuron>(neuron);
+    }
+}
+
+
+/**
+ *
+ * @tparam BlifatLikeNeuron type of neuron which inference can be calculated as for a BLIFAT neuron.
+ * @param population
+ * @param messages
+ */
+template <class BlifatLikeNeuron>
+void calculate_neurons_state(
+    knp::core::Population<BlifatLikeNeuron> &population,
+    const std::vector<core::messaging::SynapticImpactMessage> &messages)
+{
+    calculate_neurons_state_part(population, 0, population.size());
+    process_inputs(population, messages);
+}
+
+
+template <class BlifatLikeNeuron>
+bool calculate_neuron_post_input_state(typename knp::core::Population<BlifatLikeNeuron>::NeuronParameters &neuron)
+{
+    bool spike = false;
+    if (neuron.total_blocking_period_)
+    {
+        neuron.potential_ = neuron.pre_impact_potential_;
+        --neuron.total_blocking_period_;
+    }
+
+    if (neuron.inhibitory_conductance_ < 1.0)
+    {
+        neuron.potential_ -=
+            (neuron.potential_ - neuron.reversive_inhibitory_potential_) * neuron.inhibitory_conductance_;
+    }
+    else
+    {
+        neuron.potential_ = neuron.reversive_inhibitory_potential_;
+    }
+
+    if ((neuron.n_time_steps_since_last_firing_ > neuron.absolute_refractory_period_) &&
+        (neuron.potential_ >= neuron.activation_threshold_ + neuron.dynamic_threshold_))
+    {
+        // Spike.
+        neuron.dynamic_threshold_ += neuron.threshold_increment_;
+        neuron.postsynaptic_trace_ += neuron.postsynaptic_trace_increment_;
+
+        neuron.potential_ = neuron.potential_reset_value_;
+        neuron.bursting_phase_ = neuron.bursting_period_;
+        neuron.n_time_steps_since_last_firing_ = 0;
+        spike = true;
+    }
+
+    if (neuron.potential_ < neuron.min_potential_) neuron.potential_ = neuron.min_potential_;
+
+    return spike;
+}
+
+
+/**
+ * @brief Finish calculation after the neurons get synaptic impacts.
+ * @tparam BlifatLikeNeuron type of neuron which inference can be calculated as for a BLIFAT neuron.
+ * @param population a population of BLIFAT-like neurons.
+ * @param neuron_indexes output parameter, indexes of spiked neurons.
+ */
+template <class BlifatLikeNeuron>
+void calculate_neurons_post_input_state(
+    knp::core::Population<BlifatLikeNeuron> &population, knp::core::messaging::SpikeData &neuron_indexes)
+{
+    SPDLOG_TRACE("Calculate neurons post input state part");
+    for (size_t index = 0; index < population.size(); ++index)
+    {
+        if (calculate_neuron_post_input_state<BlifatLikeNeuron>(population[index])) neuron_indexes.push_back(index);
+    }
+}
 
 
 /**
@@ -100,9 +226,95 @@ void process_inputs(
  * @param mutex mutex that is locked to update a message.
  * @note This method is used for parallelization.
  */
+template <class BlifatLikeNeuron>
 void calculate_neurons_post_input_state_part(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::messaging::SpikeMessage &message,
-    size_t part_start, size_t part_size, std::mutex &mutex);
+    knp::core::Population<BlifatLikeNeuron> &population, knp::core::messaging::SpikeMessage &message, size_t part_start,
+    size_t part_size, std::mutex &mutex)
+{
+    SPDLOG_TRACE("Calculate neurons post input state part");
+    size_t part_end = std::min(part_start + part_size, population.size());
+    std::vector<size_t> output;
+    for (size_t i = part_start; i < part_end; ++i)
+        if (calculate_neuron_post_input_state<BlifatLikeNeuron>(population[i])) output.push_back(i);
 
+    // Updating common neuron indexes.
+    std::lock_guard<std::mutex> lock(mutex);
+    message.neuron_indexes_.reserve(message.neuron_indexes_.size() + output.size());
+    message.neuron_indexes_.insert(message.neuron_indexes_.end(), output.begin(), output.end());
+}
+
+
+/**
+ * @brief Process BLIFAT neuron population and return spiked neuron indexes.
+ * @tparam BlifatLikeNeuron type of neuron which inference can be calculated the same as BLIFAT.
+ * @param population a population of BLIFAT-like neurons.
+ * @param endpoint message endpoint.
+ * @return indexes of spiked neurons.
+ */
+template <class BlifatLikeNeuron>
+knp::core::messaging::SpikeData calculate_blifat_population_data(
+    knp::core::Population<BlifatLikeNeuron> &population, knp::core::MessageEndpoint &endpoint)
+{
+    SPDLOG_DEBUG("Calculating BLIFAT population {}", std::string{population.get_uid()});
+    // This whole function might be optimizable if we find a way to not loop over the whole population.
+    std::vector<core::messaging::SynapticImpactMessage> messages =
+        endpoint.unload_messages<core::messaging::SynapticImpactMessage>(population.get_uid());
+
+    calculate_neurons_state(population, messages);
+    knp::core::messaging::SpikeData neuron_indexes;
+    calculate_neurons_post_input_state(population, neuron_indexes);
+
+    return neuron_indexes;
+}
+
+
+/**
+ * @brief Make one execution step for a population of BLIFAT neurons.
+ * @param population population to update.
+ * @param endpoint message endpoint used for message exchange.
+ * @param step_n execution step.
+ * @return indexes of spiked neurons.
+ */
+template <class BlifatLikeNeuron>
+std::optional<core::messaging::SpikeMessage> calculate_blifat_population(
+    knp::core::Population<BlifatLikeNeuron> &population, knp::core::MessageEndpoint &endpoint, size_t step_n)
+{
+    auto neuron_indexes{calculate_blifat_population_data(population, endpoint)};
+
+    if (!neuron_indexes.empty())
+    {
+        knp::core::messaging::SpikeMessage res_message{{population.get_uid(), step_n}, neuron_indexes};
+        endpoint.send_message(res_message);
+        SPDLOG_DEBUG("Sent {} spike(s)", res_message.neuron_indexes_.size());
+        return res_message;
+    }
+    return {};
+}
+
+
+/**
+ * @brief Make one execution step for a population of BLIFAT neurons.
+ * @param population population to update.
+ * @param endpoint message endpoint used for message exchange.
+ * @param step_n execution step.
+ * @param m mutex.
+ * @return indexes of spiked neurons.
+ */
+template <class BlifatLikeNeuron>
+std::optional<knp::core::messaging::SpikeMessage> calculate_blifat_population(
+    knp::core::Population<BlifatLikeNeuron> &population, knp::core::MessageEndpoint &endpoint, size_t step_n,
+    std::mutex &mutex)
+{
+    auto neuron_indexes{calculate_blifat_population_data(population, endpoint)};
+    if (!neuron_indexes.empty())
+    {
+        knp::core::messaging::SpikeMessage res_message{{population.get_uid(), step_n}, neuron_indexes};
+        std::lock_guard<std::mutex> guard(mutex);
+        endpoint.send_message(res_message);
+        SPDLOG_DEBUG("Sent {} spike(s)", res_message.neuron_indexes_.size());
+        return res_message;
+    }
+    return {};
+}
 
 }  // namespace knp::backends::cpu

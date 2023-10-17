@@ -21,7 +21,9 @@ namespace knp::synapse_traits
  * @brief Common template for the all STDP implementations.
  */
 template <template <typename> typename Rule, typename Synapse>
-struct STDP;
+struct STDP
+{
+};
 
 
 /**
