@@ -28,17 +28,26 @@ echo "Generating..."
 for in_dir in $(find "${IN_PATH}" -type d); do
     echo "Processing ${in_dir}"
     files=$(find "${in_dir}" -maxdepth 1 -type f -iname \*.h)
-    target_file_name=${in_dir##${IN_PATH}}
 
-    if [ -z "${files}" -o -z "${target_file_name}" ]; then
+    if [ -z "${files}" ]; then
         echo "No files..."
         continue
     fi
 
-    target_file_name="${target_file_name##/}"
-    class_name="$(echo "${target_file_name}"|sed -e "s/[\/_-]/ /g;s/\b\(.\)/\u\1/g;s/ //g")"
-    target_file_name="${target_file_name//[\/-]/_}.cpp"
+    in_dir="${in_dir##${IN_PATH}}"
+    in_dir="${in_dir##/}"
+    in_dir="${in_dir%/*}"
+	mkdir -p "${OUT_PATH}/${in_dir}"
 
-    echo "${class_name} -> ${target_file_name}"
-    python3 "${PYBIND11_GEN_BIN}" "${class_name}" $* ${files} > "${OUT_PATH}/${target_file_name}"
+    for f in ${files}; do
+        target_file_name="${f%.h}"
+        target_file_name="${in_dir}/${target_file_name##*/}"
+        module_name="$(echo "${target_file_name##*/}"|sed -e "s/[\/_-]/ /g;s/\b\(.\)/\u\1/g;s/ //g")"
+
+        target_file_name="${target_file_name//[-]/_}.cpp"
+        # target_file_name="${target_file_name//[\/-]/_}.cpp"
+
+        echo "${module_name} -> ${target_file_name}"
+        python3 "${PYBIND11_GEN_BIN}" "${module_name}" $* ${f} > "${OUT_PATH}/${target_file_name}"
+    done
 done
