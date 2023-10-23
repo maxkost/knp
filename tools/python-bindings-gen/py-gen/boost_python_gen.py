@@ -6,20 +6,23 @@
 import argparse
 import collections
 import re
+from typing import Callable, Dict, List
 
-from CppHeaderParser_l import CppHeaderParser
+from CppHeaderParser_l.CppHeaderParser import CppHeader  # type: ignore
 
-op_re = re.compile(r'^.*operator\s*\w*\s*(.+)')
 operators = {
     '()': '__call__',
-    '<': '__lt__',
-    '<=': '__le__',
-    '>': '__gt__',
-    '>=': '__ge__',
-    '==': '__eq__',
-    '!=': '__ne__',
+    '<': 'py::self < py::self',
+    '<=': 'py::self <= py::self',
+    '>': 'py::self > py::self',
+    '>=': 'py::self >= py::self',
+    '==': 'py::self == py::self',
+    '!=': 'py::self != py::self',
     '[]': '__getitem__',
-    'bool': 'bool',
+    'operator bool': 'py::bool_(py::self)',
+    'operator std::string': 'py::str(py::self)',
+    'operator <<': 'py::str(py::self)',
+    'operator float': 'py::float_(py::self)',
 }
 
 spaces_count = 4
@@ -30,6 +33,9 @@ spaces_count = 4
 
 MethodHookData = collections.namedtuple('MethodHookData', ['method_name', 'in_params', 'ret_names', 'pre', 'post'])
 
+op_re = re.compile(r'^.*operator\s*([^\s\(\)].+)')
+
+# Doxygen-related regexes.
 brief_regex = re.compile(r'\s*\*+\s+@brief\s+(.*)')
 text_regex = re.compile(r'^\s*\*+\s+[^@](.*)$')
 
@@ -66,13 +72,67 @@ def _process_enum(enum, class_name=None):
         typename = f'{class_name}::{typename}'
         class_name.lower()
 
-    ret = ['py::enum_<{typename}>({parent}, "{name}")']
+    ret = [f'py::enum_<{typename}>("{name}")']
 
-    for _ in enum['values']:
+    for k in enum['values']:
         # v['name']
-        ret.append('{" " * spaces_count}.value("{k}", {typename}::{k})')
+        ret.append(f'{" " * spaces_count}.value("{k["name"]}", {typename}::{k["value"]})')
 
     ret[-1] = ret[-1] + ';'
+    return ret
+
+
+def _process_constructor(method):
+    doxygen = method.get('doxygen')
+    brk = ')' if doxygen is None else f', {process_docstring(doxygen)})'
+    params = ', '.join(p['raw_type'] for p in method['parameters'])
+
+    return f'{" " * spaces_count}.def(py::init<{params}>(){brk}'
+
+
+def _process_general_method(class_name, meth, py_method_name):
+    ret = []
+    method_name: str = meth['name']
+
+    # in_params = '' if not hook_data.in_params else ', ' + ', '.join('%(type)s %(name)s' % p \
+    # for p in hook_data.in_params)
+
+    doxygen = meth.get('doxygen')
+
+    brk = ')' if doxygen is None else f', {process_docstring(doxygen)})'
+    ret.append(f'{" " * spaces_count}.def("{py_method_name}", &{class_name}::{method_name}{brk}')
+
+    return ret
+
+
+def _process_operator(class_name, meth, py_method_name, hook_data):
+    ret = []
+    doxygen = meth.get('doxygen')
+    brk = ')' if doxygen is None else f', {process_docstring(doxygen)})'
+
+    if 'operator[]' == meth['name']:
+        # ret.extend(_process_general_method(class_name, meth, py_method_name, in_params, ret_names, pre, post))
+        ret.extend(_process_overloaded_method(class_name, meth, py_method_name, hook_data.in_params))
+        return ret
+
+    ret.append(f'{" " * spaces_count}.def({py_method_name}{brk}')
+
+    return ret
+
+
+def _process_overloaded_method(class_name, meth, py_method_name, parameters):
+    ret = []
+    method_name: str = meth['name']
+
+    doxygen = meth.get('doxygen')
+    brk = ')' if doxygen is None else f', {process_docstring(doxygen)})'
+
+    # overloaded method
+    params = ', '.join(p['raw_type'] for p in parameters)
+    overload = f'({meth["returns"]} ({class_name}::*)({params}))'
+
+    ret.append(f'{" " * spaces_count}.def("{py_method_name}", {overload}&{class_name}::{method_name}{brk}')
+
     return ret
 
 
@@ -91,13 +151,12 @@ def _process_method(class_name, meth, hooks, overloaded=False):
             p['raw_type'] = p['enum']
             p['type'] = p['enum']
 
+    meth.get('doxygen')
+
     # Constructor.
     if method_name == class_name:
-        params = ', '.join(p['raw_type'] for p in parameters)
-        ret.append('{" " * spaces_count}.def(py::init<{params}>())')
+        ret.append(_process_constructor(meth))
     else:
-        pre = []
-        post = []
         ret_names = []
         if meth['returns'] != 'void':
             ret_names.append('__ret')
@@ -107,7 +166,7 @@ def _process_method(class_name, meth, hooks, overloaded=False):
         modified = False
 
         # data that hooks can modify
-        hook_data = MethodHookData(method_name, in_params, ret_names, pre, post)
+        hook_data = MethodHookData(method_name, in_params, ret_names, [], [])
 
         for hook in hooks.get('method_hooks', []):
             if hook(class_name, meth, hook_data):
@@ -117,59 +176,14 @@ def _process_method(class_name, meth, hooks, overloaded=False):
 
         m = op_re.match(method_name)
         if m:
+            # Operator.
             py_method_name = operators.get(m[1], method_name)
-
-        if modified:
-            in_args = '' if not in_params else ', ' + ', '.join('%(type)s %(name)s' % p for p in in_params)
-
-            ret.append(
-                f'{" " * spaces_count}.def("%(py_method_name)s", '
-                f'[](%(class_name)s '
-                '&__inst%(in_args)s)\n'
-                f'{" " * 2 * spaces_count}'
-                '{' % locals()
-            )
-
-            if pre:
-                ret.append(' ' * 2 * spaces_count + '; '.join(pre) + ';')
-
-            meth_params = ', '.join(p['name'] for p in meth['parameters'])
-
-            fnret = 'auto __ret = '
-
-            if '__ret' not in ret_names:
-                fnret = ''
-
-            if not post:
-                if ret_names == ['__ret']:
-                    ret_names = []
-                    fnret = 'return '
-
-            ret.append(f'{" " * spaces_count * 2}%(fnret)s__inst.%(method_name)s(%(meth_params)s);' % locals())
-
-            if post:
-                ret.append(' ' * spaces_count + '; '.join(post) + ';')
-
-            if len(ret_names) == 0:
-                pass
-            elif len(ret_names) == 1:
-                ret.append(f'{" " * 2 * spaces_count}return %s;' % ret_names[0])
-            else:
-                ret.append(f'{" " * 2 * spaces_count}return std::make_tuple(%s);' % ', '.join(ret_names))
-
-            ret.append('%s})' % (' ' * spaces_count))
-
+            ret.extend(_process_operator(class_name, meth, py_method_name, hook_data))
         else:
-            overload = ''
             if overloaded:
-                # overloaded method
-                params = ', '.join(p['raw_type'] for p in parameters)
-                overload = '({} ({}::*)({}))'.format(meth['returns'], class_name, params)
-
-            ret.append(
-                '{}.def("{}", {}&{}::{})'.format(' ' * spaces_count, py_method_name, overload, class_name, method_name)
-            )
-
+                ret.extend(_process_overloaded_method(class_name, meth, py_method_name, parameters))
+            if modified:
+                ret.extend(_process_general_method(class_name, meth, py_method_name))
     return ret
 
 
@@ -185,19 +199,16 @@ def _process_class(cls, hooks):
     methods = cls['methods']['public']
     if methods:
         # collapse them to find overloads
-        meths = collections.OrderedDict()
+        meths: Dict[str, List[Callable]] = {}
         for meth in methods:
             meths.setdefault(meth['name'], []).append(meth)
 
         # process it
         for ml in meths.values():
-            if len(ml) == 1:
-                ret += _process_method(class_name, ml[0], hooks)
-            else:
-                for mh in ml:
-                    ret += _process_method(class_name, mh, hooks, True)
+            for mh in ml:
+                ret += _process_method(class_name, mh, hooks, len(ml) != 1)
 
-        ret[-1] = ret[-1] + ';'
+        ret[-1] += ';'
 
     for e in cls['enums']['public']:
         ret.append('')
@@ -209,7 +220,7 @@ def _process_class(cls, hooks):
 def process_header(fname, hooks):
     """Returns a list of lines."""
 
-    header = CppHeaderParser.CppHeader(fname)
+    header = CppHeader(fname)
     output = []
 
     for e in header.enums:
@@ -240,33 +251,36 @@ def process_header(fname, hooks):
 #   pre: statements to insert before function call
 #   post: statements to insert after function call
 #   .. returns True if method hook did something
-def _reference_hook(class_name, method, hook_data):
+def _reference_hook(_, method, hook_data):
     parameters = method['parameters']
     refs = [p for p in parameters if p['reference']]
     if refs:
         hook_data.in_params[:] = [p for p in hook_data.in_params if not p['reference']]
-        hook_data.pre.extend('%(raw_type)s %(name)s' % p for p in refs)
+        hook_data.pre.extend(f'{p["raw_type"]} {p["name"]}' for p in refs)
         hook_data.ret_names.extend(p['name'] for p in refs)
         return True
 
+    return False
 
-def _ctr_hook(class_name, method, hook_data):
+
+def _ctr_hook(_, method, hook_data):
     if method['returns'] == 'CTR_Code':
         hook_data.ret_names.remove('__ret')
         hook_data.post.append('CheckCTRCode(__ret)')
         return True
 
+    return False
+
 
 def process_module(module_name, headers, hooks, add_namespaces=None):
     for header in headers:
-        print('#include <%s>' % header)  # TODO, not usually the actual path
+        print(f'#include <{header}>')  # TODO, not usually the actual path
 
     print('\n')
-    # print('#include <pybind11/pybind11.h>')
     print('#include <boost/python.hpp>')
     print('\n')
-    # print('namespace py = pybind11;')
     print('namespace py = boost::python;')
+
     if add_namespaces:
         for ns in add_namespaces:
             if not ns:
@@ -281,8 +295,7 @@ def process_module(module_name, headers, hooks, add_namespaces=None):
     if 'doxygen' in headers:
         docstring = headers['doxygen']
         print(f'python::scope().attr("__doc__") = "{docstring}"')
-    # print('%sm.doc() = R"pbdoc(\n%s%s\n%s)pbdoc";' %
-    #      (' ' * spaces_count, ' ' * spaces_count * 2, module_name, ' ' * spaces_count))
+
     print()
 
     for header in headers:
