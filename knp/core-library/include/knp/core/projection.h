@@ -369,7 +369,7 @@ public:
     const SharedSynapseParameters &get_shared_parameters() const { return shared_parameters_; }
 
 private:
-    // So far the index is mutable so we can reindex a const object that has an non-updated index.
+    // So far the index is mutable so we can reindex a const object that has a non-updated index.
     mutable synapse_access::Index index_;
 
     void reindex() const;
