@@ -19,10 +19,10 @@ operators = {
     '==': 'py::self == py::self',
     '!=': 'py::self != py::self',
     '[]': '__getitem__',
-    'operator bool': 'py::bool_(py::self)',
-    'operator std::string': 'py::str(py::self)',
-    'operator <<': 'py::str(py::self)',
-    'operator float': 'py::float_(py::self)',
+    'bool': 'py::bool_(py::self)',
+    'std::string': 'py::str(py::self)',
+    '<<': 'py::str(py::self)',
+    'float': 'py::float_(py::self)',
 }
 
 spaces_count = 4
@@ -110,12 +110,14 @@ def _process_operator(class_name, meth, py_method_name, hook_data):
     doxygen = meth.get('doxygen')
     brk = ')' if doxygen is None else f', {process_docstring(doxygen)})'
 
-    if 'operator[]' == meth['name']:
+    method_body = operators.get(py_method_name)
+
+    if method_body is not None:
+        ret.append(f'{" " * spaces_count}.def({method_body}{brk}')
+    else:
         # ret.extend(_process_general_method(class_name, meth, py_method_name, in_params, ret_names, pre, post))
         ret.extend(_process_overloaded_method(class_name, meth, py_method_name, hook_data.in_params))
         return ret
-
-    ret.append(f'{" " * spaces_count}.def({py_method_name}{brk}')
 
     return ret
 
@@ -177,8 +179,7 @@ def _process_method(class_name, meth, hooks, overloaded=False):
         m = op_re.match(method_name)
         if m:
             # Operator.
-            py_method_name = operators.get(m[1], method_name)
-            ret.extend(_process_operator(class_name, meth, py_method_name, hook_data))
+            ret.extend(_process_operator(class_name, meth, m[1], hook_data))
         else:
             if overloaded:
                 ret.extend(_process_overloaded_method(class_name, meth, py_method_name, parameters))
