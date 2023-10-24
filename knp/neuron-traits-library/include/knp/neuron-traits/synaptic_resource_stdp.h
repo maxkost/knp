@@ -47,63 +47,57 @@ struct default_values<SynapticResourceSTDPNeuron<NeuronType>>
 template <typename NeuronType>
 struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron_parameters<NeuronType>
 {
+    explicit neuron_parameters(const neuron_parameters<NeuronType> &base_neuron)
+        : neuron_parameters<NeuronType>(base_neuron)
+    {
+    }
     /**
      * @brief Free synaptic resource.
      */
-    // cppcheck-suppress unusedStructMember
     float free_synaptic_resource_ = 1;
     /**
      * @brief Free synaptic resource threshold value.
      */
-    // cppcheck-suppress unusedStructMember
     float free_synaptic_resource_threshold_ = -1;
     /**
      * @brief Synaptic resource is divided by (number of synapses + resource drain coefficient).
      */
-    // cppcheck-suppress unusedStructMember
     uint32_t resource_drain_coefficient_ = 0;
     /**
      * @brief Stability.
      */
-    // cppcheck-suppress unusedStructMember
-    float stability_;
+    float stability_ = 0;
 
     /**
      * @brief A parameter that defines value of stability changes.
      */
-    // cppcheck-suppress unusedStructMember
     float stability_change_parameter_ = 0;
     /**
      * @brief Time between spikes in the ISI period.
      */
-    // cppcheck-suppress unusedStructMember
-    uint32_t isi_max_;
+    uint32_t isi_max_ = 1;
     /**
      * @brief Hebbian plasticity value.
      */
-    // cppcheck-suppress unusedStructMember
-    float d_h_;
+    float d_h_ = 1.F;
     /**
      * @brief Synaptic resource threshold value. Isn't used
      */
-    // cppcheck-suppress unusedStructMember
-    float synaptic_resowurce_threshold_;
+    float synaptic_resource_threshold_ = std::numeric_limits<float>::infinity();
 
     /**
      * @brief ISI period status.
      */
-    ISIPeriodType isi_status_;
+    ISIPeriodType isi_status_ = ISIPeriodType::period_continued;
     /**
      * @brief Last non-forced spike step.
      */
-    // cppcheck-suppress unusedStructMember
-    uint64_t last_step_;
+    uint64_t last_step_ = 0;
 
     /**
      * @brief Step of last unforced spike. Used for dopamine update.
      */
-    // cppcheck-suppress unusedStructMember
-    uint64_t first_isi_spike_ = -1000;  // An arbitrary moderately large number.
+    uint64_t first_isi_spike_ = 0;
 };
 
 

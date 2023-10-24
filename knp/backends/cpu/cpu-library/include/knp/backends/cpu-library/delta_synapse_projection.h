@@ -64,6 +64,29 @@ void calculate_delta_synapse_projection(
     knp::core::Projection<DeltaLikeSynapse> &projection, knp::core::MessageEndpoint &endpoint,
     MessageQueue &future_messages, size_t step_n);
 
+
+template <class DeltaLikeSynapse>
+void update_step(synapse_traits::synapse_parameters<DeltaLikeSynapse> &params, uint64_t step)
+{
+    params.rule_.last_spike_step_ = step;
+}
+
+
+template <>
+void update_step<synapse_traits::DeltaSynapse>(
+    synapse_traits::synapse_parameters<synapse_traits::DeltaSynapse> &, uint64_t)
+{
+}
+
+
+template <>
+void update_step<synapse_traits::AdditiveSTDPDeltaSynapse>(
+    synapse_traits::synapse_parameters<synapse_traits::AdditiveSTDPDeltaSynapse> &params, uint64_t step)
+{
+    params.rule_.presynaptic_spike_times_.push_back(step);
+}
+
+
 template <typename ProjectionType>
 MessageQueue::const_iterator calculate_delta_synapse_projection_data(
     ProjectionType &projection, const std::vector<core::messaging::SpikeMessage> &messages,
@@ -83,6 +106,7 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
             for (auto synapse_index : synapses)
             {
                 auto &synapse = projection[synapse_index];
+                update_step(synapse.params_, step_n);
                 const auto &synapse_params = sp_getter(synapse.params_);
                 // the message is sent on step N - 1, received on N.
                 size_t future_step = synapse_params.delay_ + step_n - 1;
@@ -107,18 +131,6 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
     }
 
     return future_messages.find(step_n);
-}
-
-template <class DeltaLikeSynapse>
-void update_step(synapse_traits::synapse_parameters<DeltaLikeSynapse> &params, uint64_t step)
-{
-    params.rule.last_spike_step_ = step;
-}
-
-template <>
-void update_step<synapse_traits::DeltaSynapse>(
-    synapse_traits::synapse_parameters<synapse_traits::DeltaSynapse> &params, uint64_t step)
-{
 }
 
 template <class DeltaLikeSynapse>

@@ -78,7 +78,8 @@ bool is_neuroplastic_population(const core::AllPopulationsVariant &population)
     using PopulationType =
         knp::core::Population<knp::neuron_traits::SynapticResourceSTDPNeuron<knp::neuron_traits::BLIFATNeuron>>;
     constexpr size_t expected_index = boost::mp11::mp_find<core::AllPopulations, PopulationType>();
-    return population.index() == expected_index;
+    size_t index = population.index();
+    return index == expected_index;
 }
 
 
@@ -126,14 +127,16 @@ void SingleThreadedCPUBackend::step()
     for (size_t pop_index = 0; pop_index < populations_.size(); ++pop_index)
     {
         if (!is_neuroplastic_population(populations_[pop_index])) continue;
-        if (!messages[pop_index]) continue;
-        auto population = std::get<
+        auto &population = std::get<
             knp::core::Population<knp::neuron_traits::SynapticResourceSTDPNeuron<knp::neuron_traits::BLIFATNeuron>>>(
             populations_[pop_index]);
         auto working_projections = find_projection_by_type_and_postsynaptic<SynapseType>(population.get_uid());
 
-        knp::backends::cpu::process_spiking_neurons<neuron_traits::BLIFATNeuron>(
-            messages[pop_index].value(), working_projections, population, get_step());
+        if (messages[pop_index])
+            knp::backends::cpu::process_spiking_neurons<neuron_traits::BLIFATNeuron>(
+                messages[pop_index].value(), working_projections, population, get_step());
+        knp::backends::cpu::do_dopamine_plasticity(working_projections, population, get_step());
+        knp::backends::cpu::renormalize_resource(working_projections, population, get_step());
     }
 
     message_bus_.route_messages();

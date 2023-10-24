@@ -39,16 +39,16 @@ struct STDPSynapticResourceRule
     /**
      * @brief Minimal weight value.
      */
-    float w_min_;
+    float w_min_ = 0;
     /**
      * @brief Maximal weight value.
      */
-    float w_max_;
+    float w_max_ = 1;
     /**
      * @brief Resource decreasing constant.
      * @note d_u_ must be equal or greate 0.
      */
-    float d_u_;
+    float d_u_ = 0;
 
     /**
      * @brief Dopamine plasticity period: if a neuron is rewarded during this period, synapse weight is changed.
@@ -58,8 +58,7 @@ struct STDPSynapticResourceRule
     /**
      * @brief Last time this synapse got a spike.
      */
-    // cppcheck-supress unusedStructMember
-    uint64_t last_spike_step_ = -1000;  // Arbitrary moderately large negative number
+    uint64_t last_spike_step_ = 0;
 };
 
 

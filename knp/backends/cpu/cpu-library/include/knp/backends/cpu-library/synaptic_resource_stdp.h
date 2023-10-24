@@ -45,6 +45,34 @@ template <class Synapse>
 using StdpProjection =
     knp::core::Projection<knp::synapse_traits::STDP<knp::synapse_traits::STDPSynapticResourceRule, Synapse>>;
 
+bool is_point_in_interval(uint64_t interval_begin, uint64_t interval_end, uint64_t point)
+{
+    const bool is_after_begin = point >= interval_begin;
+    const bool is_before_end = point <= interval_end;
+    const bool is_overflow = interval_end < interval_begin;
+    return (is_after_begin && is_before_end) || ((is_after_begin || is_before_end) && is_overflow);
+}
+
+template <class SynapseType>
+std::vector<synapse_traits::synapse_parameters<SynapseType> *> get_all_connected_synapses(
+    const std::vector<core::Projection<SynapseType> *> &projections_to_neuron, size_t neuron_index)
+{
+    //    for (auto *projection : projections_to_neuron)
+    //        for (auto synapse_index : projection->get_by_postsynaptic_neuron(neuron_index))
+    //            result.push_back(&(*projection)[synapse_index].params_);
+    std::vector<synapse_traits::synapse_parameters<SynapseType> *> result;
+    for (auto *projection : projections_to_neuron)
+    {
+        auto synapses = projection->get_by_postsynaptic_neuron(neuron_index);
+        std::transform(
+            synapses.begin(), synapses.end(), std::back_inserter(result),
+            [&projection](auto &index) -> synapse_traits::synapse_parameters<SynapseType> *
+            { return &(*projection)[index].params_; });
+    }
+    return result;
+}
+
+
 /**
  * @brief Apply STDP to all presynaptic connections of a single population.
  * @tparam NeuronType A type of neuron that is compatible with STDP.
@@ -61,19 +89,12 @@ void process_spiking_neurons(
     std::vector<StdpProjection<synapse_traits::DeltaSynapse> *> &working_projections,
     knp::core::Population<knp::neuron_traits::SynapticResourceSTDPNeuron<NeuronType>> &population, uint64_t step)
 {
+    using SynapseType = synapse_traits::STDP<synapse_traits::STDPSynapticResourceRule, synapse_traits::DeltaSynapse>;
     // It's very important that during this function no projection invalidates iterators.
-    using SynapseType =
-        knp::synapse_traits::STDP<knp::synapse_traits::STDPSynapticResourceRule, synapse_traits::DeltaSynapse>;
-    using SynapseParamType = knp::synapse_traits::synapse_parameters<SynapseType>;
-
     // Loop over neurons
     for (const auto &spiked_neuron_index : msg.neuron_indexes_)
     {
-        std::vector<SynapseParamType *> synapse_params;
-        for (auto *projection : working_projections)
-            for (auto synapse_index : projection->get_by_postsynaptic_neuron(spiked_neuron_index))
-                synapse_params.push_back(&(*projection)[synapse_index].params_);
-
+        auto synapse_params = get_all_connected_synapses<SynapseType>(working_projections, spiked_neuron_index);
         auto &neuron = population[spiked_neuron_index];
         // Calculate neuron ISI status.
         neuron_traits::update_isi<neuron_traits::BLIFATNeuron>(neuron, step);
@@ -85,8 +106,8 @@ void process_spiking_neurons(
             neuron.free_synaptic_resource_ += synapse->rule_.d_u_;
             // Hebbian plasticity.
             // 1. check if synapse ever got a spike in the current ISI period
-            if (step - synapse->rule_.last_spike_step_ >=
-                neuron.first_isi_spike_ - synapse->rule_.dopamine_plasticity_period_)
+
+            if (is_point_in_interval(neuron.first_isi_spike_ - neuron.isi_max_, step, synapse->rule_.last_spike_step_))
             {
                 // 2. If it did then update synaptic resource value.
                 const float d_h = neuron.d_h_ * std::min(static_cast<float>(std::pow(2, -neuron.stability_)), 1.f);
@@ -94,24 +115,54 @@ void process_spiking_neurons(
                 neuron.free_synaptic_resource_ -= d_h;
             }
         }
+        // Recalculating synapse weights. Sometimes it probably doesn't need to happen, check it later.
+        recalculate_synapse_weights<knp::synapse_traits::DeltaSynapse>(synapse_params);
+    }
+}
 
-        // Free synaptic resource renormalization.
-        // TODO : This should be in a different function.
-        if (neuron_traits::ISIPeriodType::period_started == neuron.isi_status_ &&
-            abs(neuron.free_synaptic_resource_) > neuron.free_synaptic_resource_threshold_)
-        {
-            auto add_resource_value =
-                neuron.free_synaptic_resource_ / (synapse_params.size() + neuron.resource_drain_coefficient_);
+template <class NeuronType>
+void renormalize_resource(
+    std::vector<StdpProjection<synapse_traits::DeltaSynapse> *> &working_projections,
+    knp::core::Population<knp::neuron_traits::SynapticResourceSTDPNeuron<NeuronType>> &population, uint64_t step)
+{
+    using SynapseType =
+        knp::synapse_traits::STDP<knp::synapse_traits::STDPSynapticResourceRule, synapse_traits::DeltaSynapse>;
+    for (size_t neuron_index = 0; neuron_index < population.size(); ++neuron_index)
+    {
+        auto &neuron = population[neuron_index];
+        if (step - neuron.last_step_ <= neuron.isi_max_) continue;  // neuron is still in ISI period, skip it.
+        if (abs(neuron.free_synaptic_resource_) < neuron.synaptic_resource_threshold_) continue;
 
-            for (auto synapse : synapse_params) synapse->rule_.synaptic_resource_ += add_resource_value;
+        auto synapse_params = get_all_connected_synapses<SynapseType>(working_projections, neuron_index);
 
-            neuron.free_synaptic_resource_ = 0.0F;
-        }
+        auto add_resource_value =
+            neuron.free_synaptic_resource_ / (synapse_params.size() + neuron.resource_drain_coefficient_);
 
+        for (auto synapse : synapse_params) synapse->rule_.synaptic_resource_ += add_resource_value;
+
+        neuron.free_synaptic_resource_ = 0.0F;
+        recalculate_synapse_weights(synapse_params);
+    }
+}
+
+
+template <class NeuronType>
+void do_dopamine_plasticity(
+    std::vector<StdpProjection<synapse_traits::DeltaSynapse> *> &working_projections,
+    knp::core::Population<knp::neuron_traits::SynapticResourceSTDPNeuron<NeuronType>> &population, uint64_t step)
+{
+    using SynapseType =
+        knp::synapse_traits::STDP<knp::synapse_traits::STDPSynapticResourceRule, synapse_traits::DeltaSynapse>;
+    using SynapseParamType = knp::synapse_traits::synapse_parameters<SynapseType>;
+    for (size_t neuron_index = 0; neuron_index < population.size(); ++neuron_index)
+    {
+        auto &neuron = population[neuron_index];
         // Dopamine processing. Dopamine punishment if forced does nothing.
         if (neuron.dopamine_value_ > 0.0 ||
             (neuron.dopamine_value_ < 0.0 && neuron.isi_status_ != neuron_traits::ISIPeriodType::is_forced))
         {
+            std::vector<SynapseParamType *> synapse_params =
+                get_all_connected_synapses<SynapseType>(working_projections, neuron_index);
             // Change synapse values for both D > 0 and D < 0
             for (auto synapse : synapse_params)
             {
@@ -132,12 +183,10 @@ void process_spiking_neurons(
                 neuron.stability_ +=
                     neuron.dopamine_value_ * std::max(dopamine_constant - abs(difference) / neuron.isi_max_, -1.0);
             }
+            recalculate_synapse_weights(synapse_params);
         }
-        // if (neuron.isi_status == neuron_traits::ISIPeriodType::period_started) neuron.last_unforced_spike_ = step;
-
-        // Recalculating synapse weights. Sometimes it probably doesn't need to happen, check it later.
-        recalculate_synapse_weights<knp::synapse_traits::DeltaSynapse>(synapse_params);
     }
 }
+
 
 }  // namespace knp::backends::cpu
