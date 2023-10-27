@@ -1,4 +1,4 @@
-#include <knp/core-library/include/knp/core/messaging/messaging.h>
+#include <knp/core/messaging/messaging.h>
 
 #include <boost/python.hpp>
 

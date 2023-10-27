@@ -1,21 +1,24 @@
-#include <knp/core-library/include/knp/core/core.h>
+#include <knp/core/core.h>
 
 #include <boost/python.hpp>
 
 
 namespace py = boost::python;
+namespace core = knp::core;
 
 
+/*
 BOOST_PYTHON_MODULE(Core)
 {
-    py::class_<TagMap>("TagMap", "The TagMap class is a definition of tags used by entity and their values.")
+    py::class_<core::TagMap>("TagMap", "The TagMap class is a definition of tags used by entity and their values.")
         .def(
-            "get_tag", ([[nodiscard]] std::any(TagMap::*)(std::string)) & TagMap::get_tag, "Get tag value by tag name.")
-        .def("get_tag", &TagMap::get_tag, "Get tag value by tag name.")
+            "get_tag", (std::any(core::TagMap::*)(std::string)) & core::TagMap::get_tag, "Get tag value by tag name.")
+        .def("get_tag", &core::TagMap::get_tag, "Get tag value by tag name.")
         .def(
-            "get_tag", ([[nodiscard]] std::decay_t<T>(TagMap::*)(std::string)) & TagMap::get_tag,
+            "get_tag", (std::decay_t<T>(core::TagMap::*)(std::string)) & core::TagMap::get_tag,
             "Get tag value by tag name and value type.")
-        .def("get_tag", &TagMap::get_tag, "Get tag value by tag name and value type.");
+        .def("get_tag", &core::TagMap::get_tag, "Get tag value by tag name and value type.");
 
-    py::class_<BaseData>("BaseData", "Common parameters for several different entities.")
+    py::class_<core::BaseData>("BaseData", "Common parameters for several different entities.")
 }
+*/
