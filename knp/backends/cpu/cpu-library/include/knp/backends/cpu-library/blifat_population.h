@@ -14,6 +14,7 @@
 #include <spdlog/spdlog.h>
 
 #include <algorithm>
+#include <limits>
 #include <mutex>
 #include <optional>
 #include <queue>
@@ -26,6 +27,20 @@
  */
 namespace knp::backends::cpu
 {
+// using StdpResourceNeuron = neuron_traits::SynapticResourceSTDPNeuron<neuron_traits::BLIFATNeuron>;
+template <class Neuron>
+constexpr bool has_dopamine_plasticity()
+{
+    return false;
+}
+
+template <>
+constexpr bool has_dopamine_plasticity<neuron_traits::SynapticResourceSTDPBLIFATNeuron>()
+{
+    return true;
+}
+
+
 /**
  * @brief Apply STDP to all presynaptic connections of a single population.
  * @tparam NeuronType A type of neuron that is compatible with STDP.
@@ -51,6 +66,7 @@ void process_spiking_neurons(
  * @param neuron a BLIFAT-like neuron parameters.
  * @param synapse_type the type of input signal.
  * @param impact_value the value of input signal.
+ * @note we might want to impact a neuron with a whole message if it continues to have shared values.
  */
 template <class BlifatLikeNeuron>
 void impact_neuron(
@@ -94,8 +110,11 @@ void process_inputs(
     {
         for (const auto &impact : message.impacts_)
         {
-            impact_neuron<BlifatLikeNeuron>(
-                population[impact.postsynaptic_neuron_index_], impact.synapse_type_, impact.impact_value_);
+            auto &neuron = population[impact.postsynaptic_neuron_index_];
+            impact_neuron<BlifatLikeNeuron>(neuron, impact.synapse_type_, impact.impact_value_);
+            if constexpr (has_dopamine_plasticity<BlifatLikeNeuron>())
+                if (impact.synapse_type_ == synapse_traits::OutputType::EXCITATORY)
+                    neuron.is_being_forced_ = message.is_forcing_;
         }
     }
 }
@@ -112,7 +131,11 @@ void calculate_single_neuron_state(typename knp::core::Population<BlifatLikeNeur
     neuron.dynamic_threshold_ *= neuron.threshold_decay_;
     neuron.postsynaptic_trace_ *= neuron.postsynaptic_trace_decay_;
     neuron.inhibitory_conductance_ *= neuron.inhibitory_conductance_decay_;
-    neuron.dopamine_value_ = 0.0;
+    if constexpr (has_dopamine_plasticity<BlifatLikeNeuron>())
+    {
+        neuron.dopamine_value_ = 0.0;
+        neuron.is_being_forced_ = false;
+    }
 
     if (neuron.bursting_phase_ && !--neuron.bursting_phase_)
         neuron.potential_ = neuron.potential_ * neuron.potential_decay_ + neuron.reflexive_weight_;
@@ -164,11 +187,19 @@ template <class BlifatLikeNeuron>
 bool calculate_neuron_post_input_state(typename knp::core::Population<BlifatLikeNeuron>::NeuronParameters &neuron)
 {
     bool spike = false;
-    if (neuron.total_blocking_period_)
+    if (neuron.total_blocking_period_ <= 0)
     {
+        // Restore potential that the neuron had before impacts
         neuron.potential_ = neuron.pre_impact_potential_;
-        --neuron.total_blocking_period_;
+        bool was_negative = neuron.total_blocking_period_ < 0;
+        // If is negative, increase by 1.
+        neuron.total_blocking_period_ += was_negative;
+        // If now zero, but was negative, increase it to max, else leave it as is.
+        neuron.total_blocking_period_ +=
+            std::numeric_limits<int64_t>::max() * ((neuron.total_blocking_period_ == 0) && was_negative);
     }
+    else
+        neuron.total_blocking_period_ -= 1;
 
     if (neuron.inhibitory_conductance_ < 1.0)
     {

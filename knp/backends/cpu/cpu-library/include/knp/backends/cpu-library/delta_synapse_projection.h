@@ -86,6 +86,18 @@ void update_step<synapse_traits::AdditiveSTDPDeltaSynapse>(
     params.rule_.presynaptic_spike_times_.push_back(step);
 }
 
+template <class ProjectionType>
+constexpr bool is_forcing()
+{
+    return false;
+}
+
+template <>
+constexpr bool is_forcing<knp::core::Projection<synapse_traits::DeltaSynapse>>()
+{
+    return true;
+}
+
 
 template <typename ProjectionType>
 MessageQueue::const_iterator calculate_delta_synapse_projection_data(
@@ -123,6 +135,7 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
                         {projection.get_uid(), step_n},
                         projection.get_postsynaptic(),
                         projection.get_presynaptic(),
+                        is_forcing<ProjectionType>(),
                         {impact}};
                     future_messages.insert(std::make_pair(future_step, message_out));
                 }
@@ -169,7 +182,11 @@ void calculate_projection_part(
         else
         {
             knp::core::messaging::SynapticImpactMessage message_out{
-                {projection_uid, step_n}, postsynaptic_uid, presynaptic_uid, {value.second}};
+                {projection_uid, step_n},
+                postsynaptic_uid,
+                presynaptic_uid,
+                is_forcing<core::Projection<DeltaLikeSynapse>>,
+                {value.second}};
             future_messages.insert(std::make_pair(value.first, message_out));
         }
     }

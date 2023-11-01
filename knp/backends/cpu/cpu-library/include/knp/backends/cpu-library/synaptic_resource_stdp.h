@@ -98,21 +98,34 @@ void process_spiking_neurons(
         auto &neuron = population[spiked_neuron_index];
         // Calculate neuron ISI status.
         neuron_traits::update_isi<neuron_traits::BLIFATNeuron>(neuron, step);
-        // Update synapse-only data
-        for (auto *synapse : synapse_params)
-        {
-            // Unconditional decreasing synaptic resource.
-            synapse->rule_.synaptic_resource_ -= synapse->rule_.d_u_;
-            neuron.free_synaptic_resource_ += synapse->rule_.d_u_;
-            // Hebbian plasticity.
-            // 1. check if synapse ever got a spike in the current ISI period
+        if (neuron.isi_status_ == neuron_traits::ISIPeriodType::period_started)
+            neuron.stability_ -= neuron.stability_change_at_isi_;
 
-            if (is_point_in_interval(neuron.first_isi_spike_ - neuron.isi_max_, step, synapse->rule_.last_spike_step_))
+        // This is a new spiking sequence, we can update synapses now.
+        if (neuron.isi_status_ != neuron_traits::ISIPeriodType::period_continued)
+            for (auto *synapse : synapse_params) synapse->rule_.had_hebbian_update_ = false;
+
+        // Update synapse-only data
+        if (neuron.isi_status_ != neuron_traits::ISIPeriodType::is_forced)
+        {
+            for (auto *synapse : synapse_params)
             {
-                // 2. If it did then update synaptic resource value.
-                const float d_h = neuron.d_h_ * std::min(static_cast<float>(std::pow(2, -neuron.stability_)), 1.f);
-                synapse->rule_.synaptic_resource_ += d_h;
-                neuron.free_synaptic_resource_ -= d_h;
+                // Unconditional decreasing synaptic resource.
+                // TODO: NOT HERE! Shouldn't matter now as d_u_ is zero for our task, but the logic is wrong.
+                synapse->rule_.synaptic_resource_ -= synapse->rule_.d_u_;
+                neuron.free_synaptic_resource_ += synapse->rule_.d_u_;
+                // Hebbian plasticity.
+                // 1. check if synapse ever got a spike in the current ISI period
+
+                if (is_point_in_interval(
+                        neuron.first_isi_spike_ - neuron.isi_max_, step, synapse->rule_.last_spike_step_) &&
+                    !synapse->rule_.had_hebbian_update_)
+                {
+                    // 2. If it did then update synaptic resource value.
+                    const float d_h = neuron.d_h_ * std::min(static_cast<float>(std::pow(2, -neuron.stability_)), 1.f);
+                    synapse->rule_.synaptic_resource_ += d_h;
+                    neuron.free_synaptic_resource_ -= d_h;
+                }
             }
         }
         // Recalculating synapse weights. Sometimes it probably doesn't need to happen, check it later.
@@ -120,6 +133,14 @@ void process_spiking_neurons(
     }
 }
 
+
+/**
+ * @brief If a neuron's resource is greater than 1 or -1 it should be distributed among all synapses.
+ * @tparam NeuronType type of base neuron. BLIFAT for SynapticResourceSTDPBlifat.
+ * @param working_projections a list of STDP projections. Right now only supports DeltaSynapse.
+ * @param population reference to population.
+ * @param step current step.
+ */
 template <class NeuronType>
 void renormalize_resource(
     std::vector<StdpProjection<synapse_traits::DeltaSynapse> *> &working_projections,
@@ -130,11 +151,15 @@ void renormalize_resource(
     for (size_t neuron_index = 0; neuron_index < population.size(); ++neuron_index)
     {
         auto &neuron = population[neuron_index];
-        if (step - neuron.last_step_ <= neuron.isi_max_) continue;  // neuron is still in ISI period, skip it.
+        if (step - neuron.last_step_ <= neuron.isi_max_ &&
+            neuron.isi_status_ != neuron_traits::ISIPeriodType::is_forced)
+            continue;  // neuron is still in ISI period, skip it.
+
         if (abs(neuron.free_synaptic_resource_) < neuron.synaptic_resource_threshold_) continue;
 
         auto synapse_params = get_all_connected_synapses<SynapseType>(working_projections, neuron_index);
 
+        // Divide free resource between all synapses.
         auto add_resource_value =
             neuron.free_synaptic_resource_ / (synapse_params.size() + neuron.resource_drain_coefficient_);
 
@@ -167,12 +192,16 @@ void do_dopamine_plasticity(
             for (auto synapse : synapse_params)
             {
                 if (step - synapse->rule_.last_spike_step_ < synapse->rule_.dopamine_plasticity_period_)
+                {
                     // Change synapse resource
-                    synapse->rule_.synaptic_resource_ +=
-                        neuron.dopamine_value_ * std::min(static_cast<float>(std::pow(2, -neuron.stability_)), 1.F);
+                    float d_r = neuron.dopamine_value_ *
+                                std::min(static_cast<float>(std::pow(2, -neuron.stability_)), 1.F) / 1000.0F;
+                    synapse->rule_.synaptic_resource_ += d_r;
+                    neuron.free_synaptic_resource_ -= d_r;
+                }
             }
             // Stability changes
-            if (neuron.isi_status_ == neuron_traits::ISIPeriodType::is_forced || neuron.dopamine_value_ < 0)
+            if (neuron.is_being_forced_ || neuron.dopamine_value_ < 0)  // TODO check
                 // A dopamine reward when forced or a dopamine punishment reduce stability by r*D
                 neuron.stability_ -= neuron.dopamine_value_ * neuron.stability_change_parameter_;
             else
@@ -180,13 +209,12 @@ void do_dopamine_plasticity(
                 // A dopamine reward when non-forced changes stability by D max(2 - |t(TSS) - ISImax| / ISImax, -1)
                 const double dopamine_constant = 2.0;
                 const double difference = step - neuron.first_isi_spike_ - neuron.isi_max_;
-                neuron.stability_ +=
-                    neuron.dopamine_value_ * std::max(dopamine_constant - abs(difference) / neuron.isi_max_, -1.0);
+                neuron.stability_ += neuron.stability_change_parameter_ * neuron.dopamine_value_ *
+                                     std::max(dopamine_constant - abs(difference) / neuron.isi_max_, -1.0);
             }
             recalculate_synapse_weights(synapse_params);
         }
     }
 }
-
 
 }  // namespace knp::backends::cpu

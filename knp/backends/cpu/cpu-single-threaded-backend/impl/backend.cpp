@@ -19,6 +19,7 @@
 
 #include <spdlog/spdlog.h>
 
+#include <fstream>
 #include <vector>
 
 #include <boost/mp11.hpp>
@@ -107,7 +108,7 @@ void SingleThreadedCPUBackend::step()
     SPDLOG_DEBUG("Starting step #{}", get_step());
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
-    // Calculate populations.
+    // Calculate populations. This is the same as inference.
     std::vector<std::optional<knp::core::messaging::SpikeMessage>> messages;
     for (auto &e : populations_)
     {
@@ -123,22 +124,31 @@ void SingleThreadedCPUBackend::step()
             e);
     }
 
+    // STDP
     using SynapseType = synapse_traits::SynapticResourceSTDPDeltaSynapse;
     for (size_t pop_index = 0; pop_index < populations_.size(); ++pop_index)
     {
+        // Find all neuroplastic projections to the current population.
         if (!is_neuroplastic_population(populations_[pop_index])) continue;
         auto &population = std::get<
             knp::core::Population<knp::neuron_traits::SynapticResourceSTDPNeuron<knp::neuron_traits::BLIFATNeuron>>>(
             populations_[pop_index]);
         auto working_projections = find_projection_by_type_and_postsynaptic<SynapseType>(population.get_uid());
 
+        // Call learning functions on all found projections:
+        // 1. If neurons generated spikes, process these neurons.
         if (messages[pop_index])
             knp::backends::cpu::process_spiking_neurons<neuron_traits::BLIFATNeuron>(
                 messages[pop_index].value(), working_projections, population, get_step());
+
+        // 2. Do dopamine plasticity.
         knp::backends::cpu::do_dopamine_plasticity(working_projections, population, get_step());
+
+        // 3. Renormalize resources if needed.
         knp::backends::cpu::renormalize_resource(working_projections, population, get_step());
     }
 
+    // Continue inference
     message_bus_.route_messages();
     message_endpoint_.receive_all_messages();
     // Calculate projections.
@@ -322,6 +332,5 @@ SingleThreadedCPUBackend::ProjectionConstIterator SingleThreadedCPUBackend::end_
 {
     return projections_.cend();
 }
-
 
 }  // namespace knp::backends::single_threaded_cpu

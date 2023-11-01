@@ -154,7 +154,7 @@ struct neuron_parameters<BLIFATNeuron>
      * @brief The parameter defines the number of network execution steps, during which the neuron activity is totally
      * blocked.
      */
-    unsigned total_blocking_period_ = 0;
+    int64_t total_blocking_period_ = std::numeric_limits<int64_t>::max();
     /**
      * @brief Dopamine value, a parameter to sum up all incoming dopamine synapse impacts.
      */

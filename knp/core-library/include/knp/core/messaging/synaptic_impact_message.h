@@ -9,6 +9,7 @@
 #include <knp/synapse-traits/output_types.h>
 
 #include <iostream>
+#include <limits>
 #include <map>
 #include <unordered_map>
 #include <vector>
@@ -79,6 +80,11 @@ struct SynapticImpactMessage
      * @brief UID of the population that receives impacts from the projection.
      */
     UID postsynaptic_population_uid_;
+
+    /**
+     * @brief True if this signal is from a projection without plasticity. Used in training.
+     */
+    bool is_forcing_ = false;
 
     /**
      * @brief Impact values.

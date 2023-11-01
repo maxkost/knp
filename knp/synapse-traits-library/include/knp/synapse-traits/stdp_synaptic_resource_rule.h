@@ -59,6 +59,11 @@ struct STDPSynapticResourceRule
      * @brief Last time this synapse got a spike.
      */
     uint64_t last_spike_step_ = 0;
+
+    /**
+     * @brief true if the synapse was updated during the current spike sequence.
+     */
+    bool had_hebbian_update_ = false;
 };
 
 
