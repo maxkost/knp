@@ -86,16 +86,17 @@ bool is_neuroplastic_population(const core::AllPopulationsVariant &population)
 
 template <class SynapseType>
 std::vector<knp::core::Projection<SynapseType> *> SingleThreadedCPUBackend::find_projection_by_type_and_postsynaptic(
-    const knp::core::UID &post_uid)
+    const knp::core::UID &post_uid, bool exclude_locked)
 {
     using ProjectionType = knp::core::Projection<SynapseType>;
     std::vector<knp::core::Projection<SynapseType> *> result;
     // TODO : for some reason it can't instantiate mp_find template with SynapticResourceSTDPDeltaSynapse
-    constexpr auto type_index = 2;  // boost::mp11::mp_find<SynapseType, synapse_traits::AllSynapses>();
+    constexpr auto type_index = boost::mp11::mp_find<synapse_traits::AllSynapses, SynapseType>();  // 2
     for (auto &projection : projections_)
     {
         if (projection.arg_.index() != type_index) continue;
         ProjectionType *projection_ptr = &(std::get<type_index>(projection.arg_));
+        if (projection_ptr->is_locked() && exclude_locked) continue;
 
         if (projection_ptr->get_postsynaptic() == post_uid) result.push_back(projection_ptr);
     }
@@ -133,7 +134,7 @@ void SingleThreadedCPUBackend::step()
         auto &population = std::get<
             knp::core::Population<knp::neuron_traits::SynapticResourceSTDPNeuron<knp::neuron_traits::BLIFATNeuron>>>(
             populations_[pop_index]);
-        auto working_projections = find_projection_by_type_and_postsynaptic<SynapseType>(population.get_uid());
+        auto working_projections = find_projection_by_type_and_postsynaptic<SynapseType>(population.get_uid(), true);
 
         // Call learning functions on all found projections:
         // 1. If neurons generated spikes, process these neurons.

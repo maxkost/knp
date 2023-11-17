@@ -322,6 +322,25 @@ public:
      */
     void calculate_projections();
 
+    /**
+     * @brief Stops training process by locking any unlocked projections.
+     */
+    void lock() override
+    {
+        for (ProjectionWrapper &wrapper : projections_)
+            std::visit([](auto &entity) { entity.lock_weights(); }, wrapper.arg_);
+    }
+
+    /**
+     * @brief Resume training, by unlocking all projections.
+     */
+    void unlock() override
+    {
+        // TODO: Probably only need to unlock some of projections: the ones that were locked with lock()
+        for (ProjectionWrapper &wrapper : projections_)
+            std::visit([](auto &entity) { entity.unlock_weights(); }, wrapper.arg_);
+    }
+
 protected:
     /**
      * @copydoc knp::core::Backend::init()

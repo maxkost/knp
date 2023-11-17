@@ -279,6 +279,25 @@ public:
     const core::MessageEndpoint &get_message_endpoint() const override { return message_endpoint_; }
     core::MessageEndpoint &get_message_endpoint() override { return message_endpoint_; }
 
+    /**
+     * @brief Stops training process by locking any unlocked projections.
+     */
+    void lock() override
+    {
+        for (ProjectionWrapper &wrapper : projections_)
+            std::visit([](auto &entity) { entity.lock_weights(); }, wrapper.arg_);
+    }
+
+    /**
+     * @brief Resume training, by unlocking all projections.
+     */
+    void unlock() override
+    {
+        // TODO: Probably only need to unlock some of projections: the ones that were locked with lock()
+        for (ProjectionWrapper &wrapper : projections_)
+            std::visit([](auto &entity) { entity.unlock_weights(); }, wrapper.arg_);
+    }
+
 protected:
     /**
      * @copydoc knp::core::Backend::init()
@@ -332,7 +351,7 @@ protected:
 private:
     template <class SynapseType>
     std::vector<knp::core::Projection<SynapseType> *> find_projection_by_type_and_postsynaptic(
-        const knp::core::UID &post_uid);
+        const knp::core::UID &post_uid, bool exclude_locked = false);
 
     PopulationContainer populations_;
     ProjectionContainer projections_;

@@ -114,6 +114,16 @@ public:
         std::visit([&senders](auto &entity) { entity.subscribe(senders); }, observers_.back());
     }
 
+    /**
+     * @brief Lock synapse weights.
+     */
+    void lock_weights() { backend_->lock(); }
+
+    /**
+     * @brief Unlock synapse weights.
+     */
+    void unlock_weights() { backend_->unlock(); }
+
 protected:
     /**
      * @brief Write model to backend.
@@ -139,4 +149,14 @@ private:
     std::vector<monitoring::AnyObserverVariant> observers_;
 };
 
+
+// class ModelExPredicate
+//{
+// public:
+//     ModelExPredicate(ModelExecutor &me, std::function<bool(uint64_t)> continue_pred, std::function<bool(uint64_t))
+// private:
+//     std::function<bool(uint64_t)> continue_predicate_;
+//     std::function<bool(uint64_t)> lock_predicate_;
+//     ModelExecutor &model_exec_ref;
+// };
 }  // namespace knp::framework

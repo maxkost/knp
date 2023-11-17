@@ -57,9 +57,6 @@ template <class SynapseType>
 std::vector<synapse_traits::synapse_parameters<SynapseType> *> get_all_connected_synapses(
     const std::vector<core::Projection<SynapseType> *> &projections_to_neuron, size_t neuron_index)
 {
-    //    for (auto *projection : projections_to_neuron)
-    //        for (auto synapse_index : projection->get_by_postsynaptic_neuron(neuron_index))
-    //            result.push_back(&(*projection)[synapse_index].params_);
     std::vector<synapse_traits::synapse_parameters<SynapseType> *> result;
     for (auto *projection : projections_to_neuron)
     {

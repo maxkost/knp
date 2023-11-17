@@ -348,6 +348,7 @@ public:
      */
     bool is_locked() { return is_locked_; }
 
+
 public:
     /**
      * @brief Get parameters shared between all synapses.
