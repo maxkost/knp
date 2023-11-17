@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="maximum-scale=1.0" />
+    <title> О бекенде Kaspersky Neuromorphic Platform </title>
+    <script type="text/javascript" src="../langs.js"></script>
+    <script type="text/javascript">
+        !function ( w, d ) {
+            var scriptsPath="";
+            d.writeln("\x3Cscript type='text/javascript' src='"+scriptsPath+d.documentElement.lang+".js'>\x3C/script>");
+        }( window, document );
+    </script>
+    <script type="text/javascript" src="toc.js"></script>
+    
+    <script type="text/javascript" src="aiconverter_result.js"></script>
+    <link rel="stylesheet" type='text/css' href="typography.css"/>
+    <link rel="stylesheet" type='text/css' href="styles.css"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="favicon.png" type="image/png"/>
+
+
+            <!--[if lte IE 9]>
+                <link rel="stylesheet" type="text/css" href="bootstrap.css">
+            <![endif]-->
+            <!--[if lte IE 8]>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+            <![endif]-->
+            </head>
+
+<body id="who-content">
+	<div class="cont">
+	<h2 id="t235051" class="heading2">О бекенде Kaspersky Neuromorphic Platform</h2>
+<p class="bodytext">Бекенд Kaspersky Neuromorphic Platform предоставляет стандартизированный интерфейс для работы с <a id="h254018" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254018','h254018')" target="_self">вычислителем</a>. Бекенд платформы позволяет запускать эмуляцию работы импульсной нейронной сети на различных вычислительных устройствах.</p>
+<div id="d254018" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254018');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Устройство или код, непосредственно выполняющий сеть.</p>
+</div><p class="bodytext">Физически бекенд платформы разделяется на библиотеки и компилируется в несколько независимых друг от друга бекендов. Каждый такой бекенд позволяет выполнять эмуляцию на разных типах устройств.</p>
+<p class="bodytext">Бекенд Kaspersky Neuromorphic Platform выполняет следующие функции:</p>
+<ul class="listbullet1"><li class="listbullet1">Запускает импульсные нейронные сети на различных вычислителях.</li><li class="listbullet1">Выполняет статические проверки корректности построения импульсной нейронной сети.</li><li class="listbullet1">Предоставляет общую кодовую базу для реализации вычислителей.</li></ul><p class="bodytext">Для реализации бекендов вы можете использовать следующие библиотеки платформы:</p>
+<ul class="listbullet1"><li class="listbullet1"><em class="emphasischaracter"><a id="h235739" class="crossreferencetemplate" href="235738.htm" target="_self">Библиотека поддержки бекендов</a></em>. Реализует основные объекты и шаблоны вычислителя.</li><li class="listbullet1"><em class="emphasischaracter"><a id="h248143" class="crossreferencetemplate" href="247186.htm" target="_self">Библиотека устройств</a></em>. Предоставляет набор интерфейсов для взаимодействия с физическими устройствами.</li><li class="listbullet1"><em class="emphasischaracter"><a id="h235863" class="crossreferencetemplate" href="235859.htm" target="_self">Библиотека характеристик нейронов</a></em>. Содержит наборы свойств и типизацию популяций моделей <a id="h254021" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254021','h254021')" target="_self">нейронов</a>.<div id="d254021" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254021');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Узел нейронной сети, имеющий набор атрибутов. На основе атрибутов нейрона и последовательности входных сигналов происходит вычисление некоторой математической функции, результатом которого является синаптическое воздействие или его отсутствие.</p>
+</div></li><li class="listbullet1"><em class="emphasischaracter"><a id="h235864" class="crossreferencetemplate" href="235860.htm" target="_self">Библиотека характеристик синапсов</a></em>. Содержит набор классов, определяющих поведение <a id="h254022" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254022','h254022')" target="_self">синапса.</a><div id="d254022" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254022');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Место соединения нейронов, основная функция которого&nbsp;&#8211; передача сигнала от одного нейрона к другому. Каждый нейрон может быть связан с множеством синапсов.</p>
+</div></li><li class="listbullet1"><em class="emphasischaracter"><a id="h252330" class="crossreferencetemplate" href="245041.htm" target="_self">Библиотека шаблонов.</a></em> Предоставляет шаблоны общего назначения.</li></ul><p class="bodytext">На рисунке ниже представлена схема взаимодействия библиотек платформы.</p>
+<p class="bodytext">В Kaspersky Neuromorphic Platform вычислитель хранит в себе интерфейс устройства, а также экземпляры объектов библиотеки поддержки бекендов (например, <a id="h254030" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254030','h254030')" target="_self">проекции</a> и <a id="h254031" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254031','h254031')" target="_self">популяции</a>), необходимые для выполнения прикладных задач на вычислителе. Шаблоны популяций и проекций нейронной сети должны быть специализированы типами нейронов и синапсов, описанными в библиотеках характеристик нейронов и синапсов. </p>
+<div id="d254031" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254031');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Контейнер, содержащий набор нейронов и их функцию в соответствии с типом нейронов.</p>
+</div><div id="d254030" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254030');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Контейнер, содержащий набор синапсов одного типа, соединяющих нейроны пресинаптической и постсинаптической популяций. </p>
+</div><p class="picture"><img id="f249308" src="backendarchitecture.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Взаимодействие библиотек Kaspersky Neuromorphic Platform</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div>
+</body>
+
+</html>

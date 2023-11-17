@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="maximum-scale=1.0" />
+    <title> Пространство имен output </title>
+    <script type="text/javascript" src="../langs.js"></script>
+    <script type="text/javascript">
+        !function ( w, d ) {
+            var scriptsPath="";
+            d.writeln("\x3Cscript type='text/javascript' src='"+scriptsPath+d.documentElement.lang+".js'>\x3C/script>");
+        }( window, document );
+    </script>
+    <script type="text/javascript" src="toc.js"></script>
+    
+    <script type="text/javascript" src="aiconverter_result.js"></script>
+    <link rel="stylesheet" type='text/css' href="typography.css"/>
+    <link rel="stylesheet" type='text/css' href="styles.css"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="favicon.png" type="image/png"/>
+
+            <!--[if lte IE 9]>
+                <link rel="stylesheet" type="text/css" href="bootstrap.css">
+            <![endif]-->
+            <!--[if lte IE 8]>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+            <![endif]-->
+            </head>
+
+<body id="who-content">
+	<div class="cont">
+	<h4 id="t243539" class="heading4">Пространство имен output</h4>
+<p class="bodytext">В пространство имен <code class="programcharacter">output</code> реализованы интерфейс для доступа к каналам вывода и преобразователи сообщений <code class="programcharacter">SpikeMessage</code>. Kaspersky Neuromorphic Platform может передавать данные как в синхронном режиме&nbsp;(по запросу пользователя), так и в асинхронном режиме&nbsp;(по вызову обработчика).</p>
+<p class="introheading">Класс OutputChannel</p>
+<p class="bodytext">Класс <code class="programcharacter">OutputChannel</code> реализует канал вывода, который принимает набор сообщений, содержащих спайки, от связанной популяции за несколько тактов исполнения нейронной сети. Сообщения <code class="programcharacter">SpikeMessage</code> могут быть преобразованы в один из следующих форматов данных, определяемых преобразователями сообщений:</p>
+<ul class="listbullet1"><li class="listbullet1">Вектор значений типа <code class="programcharacter">boolean</code>.</li><li class="listbullet1">Вектор значений, в котором каждое значение соответствует количеству генерации спайков нейроном.</li><li class="listbullet1">Вектор нейронов, сгенерировавших спайки, из последовательности сообщений <code class="programcharacter">SpikeMessage</code>.</li></ul><p class="bodytext">Если эти форматы данных вам не подходят, вы можете реализовать собственную функцию, которая будет преобразовывать полученные сообщения в нужный вам формат данных.</p>
+<p class="introheading">Класс ConvertToSet</p>
+<p class="bodytext">Класс <code class="programcharacter">ConvertToSet</code> реализует преобразователь данных, который получает сообщения <code class="programcharacter">SpikeMessage</code> из объекта класса <code class="programcharacter">OutputChannel</code> и преобразует их в вектор нейронов, сгенерировавших спайки. </p>
+<p class="bodytext">Каждый объект класса <code class="programcharacter">ConvertToSet</code> содержит размер вектора нейронов.</p>
+<p class="introheading">Функтор converter_bitwise</p>
+<p class="bodytext">Функтор <code class="programcharacter">converter_bitwise</code> реализует преобразователь данных, который получает сообщения <code class="programcharacter">SpikeMessage</code> и преобразует их в вектор значений типа <code class="programcharacter">boolean</code>, в котором значение <code class="programcharacter">true</code> соответствуют наличию спайка.</p>
+<p class="introheading">Функтор converter_count</p>
+<p class="bodytext">Функтор <code class="programcharacter">converter_count</code> реализует преобразователь данных, который получает сообщения <code class="programcharacter">SpikeMessage</code> и преобразует их в вектор значений. Каждое значение вектор соответствует количеству генерации спайков нейроном.</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div>
+</body>
+
+</html>
