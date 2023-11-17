@@ -1,0 +1,27 @@
+@font-face {
+  font-family: "Kaspersky Sans-Light";
+  src: url(../static/KasperskySans-Light.eot?#iefix) format("embedded-opentype"), url(../static/KasperskySans-Light.woff) format("woff"), url(../static/KasperskySans-Light.ttf) format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Kaspersky Sans-Light";
+  src: url(../static/KasperskySans-Light.eot?#iefix) format("embedded-opentype"), url(../static/KasperskySans-Light.woff) format("woff"), url(../static/KasperskySans-Light.ttf) format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Kaspersky Sans-Regular";
+  src: url(../static/KasperskySans-Regular.eot?#iefix) format("embedded-opentype"), url(../static/KasperskySans-Regular.woff) format("woff"), url(../static/KasperskySans-Regular.ttf) format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Kaspersky Sans-Regular";
+  src: url(../static/KasperskySans-Regular.eot?#iefix) format("embedded-opentype"), url(../static/KasperskySans-Regular.woff) format("woff"), url(../static/KasperskySans-Regular.ttf) format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
