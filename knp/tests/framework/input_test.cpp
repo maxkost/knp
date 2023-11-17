@@ -46,7 +46,7 @@ TEST(InputSuite, IndexConverterTest)
 
 TEST(InputSuite, ChannelTest)
 {
-    knp::core::MessageBus bus;
+    knp::core::MessageBus bus = knp::core::MessageBus::construct_bus();
     auto endpoint = bus.create_endpoint();
 
     auto converter = knp::framework::input::SequenceConverter<int>{

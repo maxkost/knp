@@ -26,12 +26,12 @@
 #include <boost/mp11.hpp>
 
 /**
- * @brief Namespace for implementations of message bus.
+ * @brief Namespace for message bus implementations.
  */
 namespace knp::core::messaging::impl
 {
 /**
- * @brief Internal implementation class for message endpoint.
+ * @brief The MessageEndpointImpl class is an internal implementation class for message endpoint.
  */
 class MessageEndpointImpl;
 }  // namespace knp::core::messaging::impl
@@ -127,7 +127,7 @@ public:
      * @brief Unsubscribe from messages of a specified type.
      * @tparam MessageType type of messages to which the receiver is subscribed.
      * @param receiver receiver UID.
-     * @return true if deleted a subscription, false otherwise.
+     * @return true if a subscription was deleted, false otherwise.
      */
     template <typename MessageType>
     bool unsubscribe(const UID &receiver);

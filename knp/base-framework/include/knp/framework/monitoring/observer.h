@@ -42,7 +42,7 @@ class MessageObserver
 public:
     /**
      * @brief Constructor.
-     * @param endpoint endpoint from which to get messagess.
+     * @param endpoint endpoint from which to get messages.
      * @param processor functor to process messages.
      * @param uid observer UID.
      */

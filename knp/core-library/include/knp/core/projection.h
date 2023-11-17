@@ -82,19 +82,22 @@ public:
 
 public:
     /**
-     * @brief Shared synapses parameters for the non-STDP variant of the projection.
+     * @brief Shared synapse parameters for the non-STDP variant of the projection.
      * @tparam SynapseT projection synapse type.
      */
     template <typename SynapseT>
     struct SharedSynapseParametersT
     {
+        /**
+         * @brief Shared synapse parameters.
+         */
         knp::synapse_traits::shared_synapse_parameters<SynapseT> synapses_parameters_;
     };
 
     /**
      * @brief Structure for the parameters shared between synapses for STDP.
-     * @tparam Rule type of the STDP rule.
-     * @tparam SynapseT type of synapses.
+     * @tparam Rule STDP rule type.
+     * @tparam SynapseT synapse type.
      */
     template <template <typename> typename Rule, typename SynapseT>
     struct SharedSynapseParametersT<knp::synapse_traits::STDP<Rule, SynapseT>>
@@ -104,23 +107,27 @@ public:
          */
         enum class ProcessingType
         {
-            /// This is only STDP messages.
+            /**
+             * @brief STDP messages only.
+             */ 
             STDPOnly,
-            /// Not only STDP, but spikes too.
+            /**
+             * @brief STDP messages and spikes.
+             */
             STDPAndSpike
         };
 
         /**
-         * @brief Map type for the saving STDP populations UIDs and linked processing type.
+         * @brief Map type for saving STDP population UIDs and linked processing type.
          */
         using ContainerType = std::unordered_map<core::UID, ProcessingType, core::uid_hash>;
         /**
-         * @brief Map to save population UID/processing type.
+         * @brief Map to save population UID and processing type.
          */
         ContainerType stdp_populations_;
 
         /**
-         * @brief Shared synapses parameters for this projection.
+         * @brief Shared synapse parameters for the current projection.
          */
         knp::synapse_traits::shared_synapse_parameters<knp::synapse_traits::STDP<Rule, SynapseT>> synapses_parameters_;
     };
@@ -362,7 +369,7 @@ public:
     const SharedSynapseParameters &get_shared_parameters() const { return shared_parameters_; }
 
 private:
-    // So far the index is mutable so we can reindex a const object that has an non-updated index.
+    // So far the index is mutable so we can reindex a const object that has a non-updated index.
     mutable synapse_access::Index index_;
 
     void reindex() const;
