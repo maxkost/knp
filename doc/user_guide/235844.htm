@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="maximum-scale=1.0" />
+    <title> Класс Projection </title>
+    <script type="text/javascript" src="../langs.js"></script>
+    <script type="text/javascript">
+        !function ( w, d ) {
+            var scriptsPath="";
+            d.writeln("\x3Cscript type='text/javascript' src='"+scriptsPath+d.documentElement.lang+".js'>\x3C/script>");
+        }( window, document );
+    </script>
+    <script type="text/javascript" src="toc.js"></script>
+    
+    <script type="text/javascript" src="aiconverter_result.js"></script>
+    <link rel="stylesheet" type='text/css' href="typography.css"/>
+    <link rel="stylesheet" type='text/css' href="styles.css"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="favicon.png" type="image/png"/>
+
+
+            <!--[if lte IE 9]>
+                <link rel="stylesheet" type="text/css" href="bootstrap.css">
+            <![endif]-->
+            <!--[if lte IE 8]>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+            <![endif]-->
+            </head>
+
+<body id="who-content">
+	<div class="cont">
+	<h3 id="t235844" class="heading3">Класс Projection</h3>
+<p class="bodytext">Шаблонный класс <code class="programcharacter">Projection</code> реализует контейнер, который содержит <a id="h254022" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254022','h254022')" target="_self">синапсы</a> одного из типов, поддерживаемых <a id="h235864" class="crossreferencetemplate" href="235860.htm" target="_self">библиотекой характеристик синапсов</a>.</p>
+<div id="d254022" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254022');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Место соединения нейронов, основная функция которого&nbsp;&#8211; передача сигнала от одного нейрона к другому. Каждый нейрон может быть связан с множеством синапсов.</p>
+</div><p class="bodytext"></p>
+<p class="bodytext">Объект класса <code class="programcharacter">Projection</code> представляет собой набор соединений нейронов пресинаптической и постсинаптической популяций. Конструирование проекции осуществляется с помощью генератора соединений.</p>
+<p class="bodytext">С помощью класса <code class="programcharacter">Projection</code> вы можете передавать данные проекции на бекенд и получать их от бекенда. </p>
+<p class="bodytext">Kaspersky Neuromorphic Platform обеспечивает <a id="h247848" class="crossreferencetemplate" href="244427.htm" target="_self">обмен данными между популяциями нейронов</a> и проекциями синапсов через <a id="h243744" class="crossreferencetemplate" href="243634.htm" target="_self">сообщения</a>. Проекция синапсов получает сообщения со <a id="h254019" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254019','h254019')" target="_self">спайками</a> от пресинаптической популяции и отправляет сообщения с <a id="h254029" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254029','h254029')" target="_self">синаптическими воздействиями</a> в постсинаптическую популяцию.</p>
+<div id="d254029" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254029');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Значение, формируемое синапсом и предназначенное для изменения значений атрибутов нейронов.</p>
+</div><div id="d254019" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254019');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Кратковременный потенциал действия, сгенерированный нейроном популяции в результате изменения атрибутов нейрона.</p>
+</div><p class="bodytext">Каждая проекция синапсов содержит следующие атрибуты:</p>
+<ul class="listbullet1"><li class="listbullet1"><a id="h248869" class="crossreferencetemplate" href="248867.htm" target="_self">Базовые данные</a> проекции.</li><li class="listbullet1">Уникальный идентификатор пресинаптической популяции.</li><li class="listbullet1">Уникальный идентификатор постсинаптической популяции.</li><li class="listbullet1">Значение типа <code class="programcharacter">boolean</code> для обозначения возможности изменения веса синапса. Если изменение веса синапса заблокировано, то атрибут имеет значение <code class="programcharacter">true</code>, иначе имеет значение <code class="programcharacter">false</code>.</li><li class="listbullet1">Атрибуты группы синапсов.</li><li class="listbullet1">Значение типа <code class="programcharacter">boolean</code> для обозначения актуальности <a id="h262525" class="crossreferencetemplate" href="262482.htm" target="_self">реестра соединений</a>. Если реестр соединений актуален, то атрибут имеет значение <code class="programcharacter">true</code>, иначе имеет значение <code class="programcharacter">false</code>.</li><li class="listbullet1">Атрибуты, используемые синапсами одного типа.</li></ul>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div>
+</body>
+
+</html>
