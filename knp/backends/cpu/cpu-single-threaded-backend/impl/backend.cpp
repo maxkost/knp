@@ -90,8 +90,7 @@ std::vector<knp::core::Projection<SynapseType> *> SingleThreadedCPUBackend::find
 {
     using ProjectionType = knp::core::Projection<SynapseType>;
     std::vector<knp::core::Projection<SynapseType> *> result;
-    // TODO : for some reason it can't instantiate mp_find template with SynapticResourceSTDPDeltaSynapse
-    constexpr auto type_index = boost::mp11::mp_find<synapse_traits::AllSynapses, SynapseType>();  // 2
+    constexpr auto type_index = boost::mp11::mp_find<synapse_traits::AllSynapses, SynapseType>();
     for (auto &projection : projections_)
     {
         if (projection.arg_.index() != type_index) continue;
@@ -134,7 +133,10 @@ void SingleThreadedCPUBackend::step()
         auto &population = std::get<
             knp::core::Population<knp::neuron_traits::SynapticResourceSTDPNeuron<knp::neuron_traits::BLIFATNeuron>>>(
             populations_[pop_index]);
+
         auto working_projections = find_projection_by_type_and_postsynaptic<SynapseType>(population.get_uid(), true);
+        // TODO: temp
+        if (working_projections.size()) std::cout << "Working projections: " << working_projections.size() << std::endl;
 
         // Call learning functions on all found projections:
         // 1. If neurons generated spikes, process these neurons.
