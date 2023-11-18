@@ -185,7 +185,7 @@ void calculate_projection_part(
                 {projection_uid, step_n},
                 postsynaptic_uid,
                 presynaptic_uid,
-                is_forcing<core::Projection<DeltaLikeSynapse>>,
+                is_forcing<core::Projection<DeltaLikeSynapse>>(),
                 {value.second}};
             future_messages.insert(std::make_pair(value.first, message_out));
         }
