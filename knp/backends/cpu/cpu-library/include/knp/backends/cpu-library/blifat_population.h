@@ -189,6 +189,7 @@ bool calculate_neuron_post_input_state(typename knp::core::Population<BlifatLike
     bool spike = false;
     if (neuron.total_blocking_period_ <= 0)
     {
+        // TODO Make more readable, don't be afraid of ifs.
         // Restore potential that the neuron had before impacts
         neuron.potential_ = neuron.pre_impact_potential_;
         bool was_negative = neuron.total_blocking_period_ < 0;

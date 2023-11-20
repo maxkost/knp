@@ -124,6 +124,8 @@ public:
      */
     void unlock_weights() { backend_->unlock(); }
 
+    core::Backend *get_backend() { return backend_.get(); }
+
 protected:
     /**
      * @brief Write model to backend.

@@ -198,9 +198,12 @@ void do_dopamine_plasticity(
                 }
             }
             // Stability changes
-            if (neuron.is_being_forced_ || neuron.dopamine_value_ < 0)  // TODO check
+            if (neuron.is_being_forced_ || neuron.dopamine_value_ < 0)
+            {
                 // A dopamine reward when forced or a dopamine punishment reduce stability by r*D
                 neuron.stability_ -= neuron.dopamine_value_ * neuron.stability_change_parameter_;
+                neuron.stability_ = std::max(neuron.stability_, 0.0F);
+            }
             else
             {
                 // A dopamine reward when non-forced changes stability by D max(2 - |t(TSS) - ISImax| / ISImax, -1)
