@@ -40,7 +40,7 @@ TEST(OutputSuite, ConverterTest)
 
 TEST(OutputSuite, ChannelTest)
 {
-    knp::core::MessageBus bus;
+    knp::core::MessageBus bus = knp::core::MessageBus::construct_bus();
     auto endpoint = bus.create_endpoint();
     // New random UID.
     knp::core::UID sender_uid;

@@ -46,7 +46,7 @@ struct STDPSynapticResourceRule
     float w_max_ = 1;
     /**
      * @brief Resource decreasing constant.
-     * @note d_u_ must be equal or greate 0.
+     * @note The `d_u_` value must be equal or greater than `0`.
      */
     float d_u_ = 0;
 
