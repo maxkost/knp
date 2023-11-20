@@ -45,10 +45,10 @@ constexpr bool has_dopamine_plasticity<neuron_traits::SynapticResourceSTDPBLIFAT
  * @brief Apply STDP to all presynaptic connections of a single population.
  * @tparam NeuronType A type of neuron that is compatible with STDP.
  * @param msg spikes emited by population.
- * @param projections All projections. The ones that are not connected, are locked or are of a wrong type are skipped.
+ * @param working_projections All projections. The ones that are not connected, are locked or are of a wrong type are
+ * skipped.
  * @param population population.
  * @param step current network step.
- * @param post_synaptic
  * @note all projections are supposed to be of the same type.
  */
 template <class NeuronType>
@@ -328,7 +328,7 @@ std::optional<core::messaging::SpikeMessage> calculate_blifat_population(
  * @param population population to update.
  * @param endpoint message endpoint used for message exchange.
  * @param step_n execution step.
- * @param m mutex.
+ * @param mutex mutex.
  * @return indexes of spiked neurons.
  */
 template <class BlifatLikeNeuron>
