@@ -1,35 +1,34 @@
 <!DOCTYPE html>
 <html lang="ru">
-  <head>
+<head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="styles/fonts.css">
-    <link rel="stylesheet" type="text/css" href="styles/globals.css">
-    <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <link href="styles/fonts.css" rel="stylesheet" type="text/css">
+    <link href="styles/globals.css" rel="stylesheet" type="text/css">
+    <link href="styles/style.css" rel="stylesheet" type="text/css">
     <title>Kaspersky Neuromorphic Platform Documentation</title>
-  </head>
-  <body>
-    <div class="grid-container">
-      <div class="overlap-group-wrapper">
-        <div class="overlap-group">
-          <div class="header">
-            <div class="logo-wrapper">
-              <div class="logo">
-                <div class="element"><img class="img" alt="Logo" src="img/logo.svg"></div>
-                <div class="kaspersky">Kaspersky <br>Neuromorphic Platform</div>
-              </div>
-            </div>
-            <div class="buttons">
-              <a href="user_guide/index.htm"><div class="button"><div class="text-wrapper">User Guide</div></div></a>
-              <a href="../build/doc_doxygen/html/index.html"><div class="button"><div class="text-wrapper">C++ API Reference</div></div></a>
-              <!-- <a href="doc_doxygen/html/index.html"><div class="button"><div class="text-wrapper">Python API Reference</div></div></a> -->
-            </div>
-          </div>
-          <div class="footer">
-            <img class="kaspersky-2" alt="Kaspersky" src="img/kaspersky.svg">
-            <p class="copyright">© 2023 AO Kaspersky Lab</p>
-          </div>
-        </div>
-      </div>
+</head>
+<body>
+<div class="grid-container">
+    <div class="header">
+        <img alt="Logo" height="96" src="img/neuromorphic-platform.svg">
+        <div class="kaspersky">Kaspersky <br>Neuromorphic Platform</div>
     </div>
-  </body>
+    <div class="content">
+        <div class="buttons">
+            <a class="button-like" href="user_guide/index.htm">
+                User Guide</a>
+            <a class="button-like" href="../build/doc_doxygen/html/index.html">
+                C++ API Reference</a>
+<!--            <a class="button-like" href="doc_doxygen/html/index.html">Python API Reference</a>-->
+        </div>
+    </div>
+    <div class="footer">
+        <img alt="Kaspersky" src="img/kaspersky.svg">
+        <p class="copyright">© 2023 AO Kaspersky Lab</p>
+    </div>
+</div>
+<video autoplay muted loop id="video-background">
+    <source src="static/background.mp4" type="video/mp4">
+</video>
+</body>
 </html>
