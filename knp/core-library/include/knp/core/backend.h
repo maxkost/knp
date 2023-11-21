@@ -213,13 +213,13 @@ protected:
     /**
      * @brief Backend default constructor.
      */
-    Backend() = default;
+    Backend() : message_bus_(knp::core::MessageBus::construct_cpu_bus()) {}
 
     /**
-     * @brief Backend constructor with custom bus implementation.
-     * @param impl bus implementation.
+     * @brief Backend constructor with custom message bus implementation.
+     * @param message_bus message bus.
      */
-    explicit Backend(std::unique_ptr<messaging::impl::MessageBusImpl> &&impl) : message_bus_(std::move(impl)) {}
+    explicit Backend(MessageBus &&message_bus) : message_bus_(std::move(message_bus)) {}
 
     /**
      * @brief Initialize backend before starting network execution.

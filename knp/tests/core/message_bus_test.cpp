@@ -30,7 +30,7 @@ TEST(MessageBusSuite, AddSubscriptionMessage)
 TEST(MessageBusSuite, SubscribeUnsubscribe)
 {
     // Test that adding and removing subscriptions works correctly.
-    knp::core::MessageBus bus;
+    knp::core::MessageBus bus = knp::core::MessageBus::construct_bus();
     auto ep{bus.create_endpoint()};
     knp::core::UID sender{true}, receiver{true}, false_uid{true};
     // Add subscription for spike messages
@@ -53,7 +53,7 @@ TEST(MessageBusSuite, SubscribeUnsubscribe)
 TEST(MessageBusSuite, CreateBusAndEndpointZMQ)
 {
     using SpikeMessage = knp::core::messaging::SpikeMessage;
-    knp::core::MessageBus bus(false);
+    knp::core::MessageBus bus = knp::core::MessageBus::construct_zmq_bus();
 
     auto ep1{bus.create_endpoint()};
     auto ep2{bus.create_endpoint()};
@@ -78,7 +78,7 @@ TEST(MessageBusSuite, CreateBusAndEndpointZMQ)
 TEST(MessageBusSuite, CreateBusAndEndpointCPU)
 {
     using SpikeMessage = knp::core::messaging::SpikeMessage;
-    knp::core::MessageBus bus(true);
+    knp::core::MessageBus bus = knp::core::MessageBus::construct_cpu_bus();
 
     auto ep1{bus.create_endpoint()};
     auto ep2{bus.create_endpoint()};

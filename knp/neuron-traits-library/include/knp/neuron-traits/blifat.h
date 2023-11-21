@@ -86,7 +86,7 @@ struct neuron_parameters<BLIFATNeuron>
     /**
      * @brief The parameter defines a time constant during which the `postsynaptic_trace_` parameter tends to zero if
      * nothing happens.
-     * @details If `postsynaptic_trace_decay_` equals 0, then `postsynaptic_trace_` also equals 0.
+     * @details If `postsynaptic_trace_decay_` equals `0`, then `postsynaptic_trace_` also equals `0`.
      */
     double postsynaptic_trace_decay_ = 0.;
     /**

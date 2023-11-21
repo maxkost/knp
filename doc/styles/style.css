@@ -1,0 +1,101 @@
+#video-background {
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-rows: 1fr 1fr 126px;
+    width: 100vw;
+    height: 100vh;
+    min-width: 590px;
+    min-height: 480px;
+}
+
+/*
+ Header
+*/
+
+.grid-container .header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: flex-end;
+    align-items: center;
+
+}
+
+/*
+ /Header
+*/
+
+/*
+ Content
+*/
+
+.grid-container .content {
+    display: flex;
+    justify-content: center;
+    margin-top: 68px;
+}
+
+.grid-container .kaspersky {
+    text-align: center;
+    font: 400 32px/normal "KasperskySansDisplay", MuseoSans, Helvetica;
+}
+
+.grid-container .buttons {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 32px;
+    height: fit-content;
+
+}
+
+.button-like {
+    display: flex;
+    justify-content: center;
+    border: 1px solid #0000002b;
+    padding: 32px 40px;
+    border-radius: 12px;
+    font: 500 20px "KasperskySansDisplay", MuseoSans, Helvetica;
+
+    color: #000;
+    transition: color .7s ease-in-out;
+}
+
+
+.button-like:hover {
+    color: #00a88e;
+}
+
+/*
+ /Content
+*/
+
+/*
+ Footer
+*/
+.grid-container .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 48px;
+}
+
+.grid-container .copyright {
+    color: #0006;
+    font: 500 14px/normal "KasperskySansDisplay", MuseoSans, Helvetica;
+}
+
+/*
+ /Footer
+*/

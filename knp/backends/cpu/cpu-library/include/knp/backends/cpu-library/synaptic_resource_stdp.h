@@ -63,7 +63,7 @@ std::vector<synapse_traits::synapse_parameters<SynapseType> *> get_all_connected
         auto synapses = projection->get_by_postsynaptic_neuron(neuron_index);
         std::transform(
             synapses.begin(), synapses.end(), std::back_inserter(result),
-            [&projection](auto &index) -> synapse_traits::synapse_parameters<SynapseType> *
+            [&projection](auto const &index) -> synapse_traits::synapse_parameters<SynapseType> *
             { return &(*projection)[index].params_; });
     }
     return result;
@@ -74,10 +74,10 @@ std::vector<synapse_traits::synapse_parameters<SynapseType> *> get_all_connected
  * @brief Apply STDP to all presynaptic connections of a single population.
  * @tparam NeuronType A type of neuron that is compatible with STDP.
  * @param msg spikes emited by population.
- * @param projections All projections. The ones that are not connected, are locked or are of a wrong type are skipped.
+ * @param working_projections All projections. The ones that are not connected, are locked or are of a wrong type are
+ * skipped.
  * @param population population.
  * @param step current network step.
- * @param post_synaptic
  * @note all projections are supposed to be of the same type.
  */
 template <class NeuronType>

@@ -9,21 +9,27 @@ include(version)
 
 project(knp)
 
-option(KNP_BUILD_TESTS "Build tests" ON)
-option(KNP_BUILD_DOCUMENTATION "Build doxygen auto documentation" ON)
-option(KNP_BUILD_EXAMPLES "Build usage examples" ON)
-option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
-
 if(KNP_MAINTAINER_BUILD)
     set(KNP_COVERAGE_DEFAULT OFF)
 else()
     set(KNP_COVERAGE_DEFAULT ON)
 endif()
 
-option(KNP_ENABLE_COVERAGE "Enable coverage checking" ${KNP_COVERAGE_DEFAULT})
+if (CMAKE_SYSTEM_PROCESSOR MATCHES "(x86)|(X86)|(amd64)|(AMD64)")
+    set(KNP_ENABLE_AVX_DEFAULT ON)
+else()
+    set(KNP_ENABLE_AVX_DEFAULT OFF)
+endif()
 
+option(KNP_BUILD_TESTS "Build tests" ON)
+option(KNP_BUILD_DOCUMENTATION "Build doxygen auto documentation" ON)
+option(KNP_BUILD_EXAMPLES "Build usage examples" ON)
+option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
+option(KNP_ENABLE_COVERAGE "Enable coverage checking" ${KNP_COVERAGE_DEFAULT})
+option(KNP_ENABLE_AVX "Enable AVX and other CPU-specific extensions in the release build" ${KNP_ENABLE_AVX_DEFAULT})
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+    message(STATUS "AVX enabled.")
     message(STATUS "Setting release optimization flags...")
     # -pipe
     set(CMAKE_C_FLAGS_RELEASE "-march=native -mtune=native -mno-vzeroupper -Ofast -fopt-info-vec-optimized -funroll-loops -fomit-frame-pointer -finline")

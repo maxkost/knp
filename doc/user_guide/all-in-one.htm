@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="maximum-scale=1.0" />
+    <title> О Kaspersky Neuromorphic Platform </title>
+    <script type="text/javascript" src="../langs.js"></script>
+    <script type="text/javascript">
+        !function ( w, d ) {
+            var scriptsPath="";
+            d.writeln("\x3Cscript type='text/javascript' src='"+scriptsPath+d.documentElement.lang+".js'>\x3C/script>");
+        }( window, document );
+    </script>
+    <script type="text/javascript" src="toc.js"></script>
+    
+    <script type="text/javascript" src="aiconverter_result.js"></script>
+    <link rel="stylesheet" type='text/css' href="typography.css"/>
+    <link rel="stylesheet" type='text/css' href="styles.css"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="favicon.png" type="image/png"/>
+
+            <!--[if lte IE 9]>
+                <link rel="stylesheet" type="text/css" href="bootstrap.css">
+            <![endif]-->
+            <!--[if lte IE 8]>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+            <![endif]-->
+            </head>
+
+<body id="who-content"><div class='cont all-in-one-toc'><h1 class='heading1 js_all_in_one_header'>Содержание</h1><ul class='contents contents_all-in-one'><li class="contents__item"><a href='232786.htm'>О Kaspersky Neuromorphic Platform</a><ul class='contents contents_all-in-one'><li class="contents__item"><a href='232787.htm'>Комплект поставки</a></li><li class="contents__item"><a href='232788.htm'>Аппаратные и программные требования</a></li></ul></li><li class="contents__item"><a href='232883.htm'>Архитектура Kaspersky Neuromorphic Platform</a><ul class='contents contents_all-in-one'><li class="contents__item"><a href='235051.htm'>О бекенде Kaspersky Neuromorphic Platform</a></li><li class="contents__item"><a href='235738.htm'>Библиотека поддержки бекендов</a><ul class='contents contents_all-in-one'><li class="contents__item"><a href='247366.htm'>Класс UID</a></li><li class="contents__item"><a href='256488.htm'>Функция uid_hash</a></li><li class="contents__item"><a href='248929.htm'>Класс continuously_uid_generator</a></li><li class="contents__item"><a href='244933.htm'>Класс TagMap</a></li><li class="contents__item"><a href='248867.htm'>Структура BaseData</a></li><li class="contents__item"><a href='235842.htm'>Класс Population</a></li><li class="contents__item"><a href='235844.htm'>Класс Projection</a></li><li class="contents__item"><a href='235749.htm'>Класс Backend</a></li><li class="contents__item"><a href='245461.htm'>Класс Device</a></li><li class="contents__item"><a href='244932.htm'>Класс MessageBus</a></li><li class="contents__item"><a href='247159.htm'>Класс MessageEndpoint</a></li><li class="contents__item"><a href='250697.htm'>Класс Subscription</a></li><li class="contents__item"><a href='243634.htm'>Пространство имен Messaging</a></li><li class="contents__item"><a href='262482.htm'>Пространство имен synapse_access</a></li></ul></li><li class="contents__item"><a href='247186.htm'>Библиотека устройств</a></li><li class="contents__item"><a href='235859.htm'>Библиотека характеристик нейронов</a></li><li class="contents__item"><a href='235860.htm'>Библиотека характеристик синапсов</a></li><li class="contents__item"><a href='245041.htm'>Библиотека шаблонов</a></li><li class="contents__item"><a href='244808.htm'>Поддерживаемые бекенды</a></li><li class="contents__item"><a href='244427.htm'>Обмен данными в Kaspersky Neuromorphic Platform</a></li><li class="contents__item"><a href='235050.htm'>Архитектура фреймворка для C++</a><ul class='contents contents_all-in-one'><li class="contents__item"><a href='243537.htm'>Объекты фреймворка для C++</a><ul class='contents contents_all-in-one'><li class="contents__item"><a href='244944.htm'>Пространство имен input</a></li><li class="contents__item"><a href='243539.htm'>Пространство имен output</a></li><li class="contents__item"><a href='235753.htm'>Набор классов Coordinates</a></li><li class="contents__item"><a href='260375.htm'>Класс MessageObserver</a></li><li class="contents__item"><a href='235801.htm'>Класс Network</a></li><li class="contents__item"><a href='235849.htm'>Класс Model</a></li><li class="contents__item"><a href='251296.htm'>Класс ModelExecutor</a></li><li class="contents__item"><a href='243548.htm'>Класс BackendLoader</a></li></ul></li></ul></li><li class="contents__item"><a href='235594.htm'>Сторонние библиотеки и используемые форматы</a><ul class='contents contents_all-in-one'><li class="contents__item"><a href='235876.htm'>Сторонние библиотеки</a></li><li class="contents__item"><a href='235877.htm'>Форматы данных, обрабатываемые нейронной сетью</a></li><li class="contents__item"><a href='235878.htm'>Форматы структуры нейронной сети</a></li></ul></li></ul></li><li class="contents__item"><a href='235045.htm'>Установка и удаление платформы</a><ul class='contents contents_all-in-one'><li class="contents__item"><a href='255811.htm'>Сценарий работы с исходным кодом платформы</a></li><li class="contents__item"><a href='235046.htm'>Клонирование исходного кода платформы из репозитория</a></li><li class="contents__item"><a href='255715.htm'>Сборка проекта из исходного кода платформы</a></li><li class="contents__item"><a href='255720.htm'>Удаление платформы</a></li></ul></li><li class="contents__item"><a href='235885.htm'>Директории для хранения данных платформы</a></li><li class="contents__item"><a href='250649.htm'>Добавление нового типа нейрона</a></li><li class="contents__item"><a href='250824.htm'>Добавление нового типа синапса</a></li><li class="contents__item"><a href='256877.htm'>Исполнение нейронной сети, загруженной на бекенд автоматически</a></li><li class="contents__item"><a href='245069.htm'>Исполнение нейронной сети, созданной из проекций и популяций</a></li><li class="contents__item"><a href='235890.htm'>Лицензирование платформы</a></li><li class="contents__item"><a href='235889.htm'>Предоставление данных</a></li><li class="contents__item"><a href='240504.htm'>Использование Kaspersky Neuromorphic Platform API</a></li><li class="contents__item"><a href='90.htm'>Глоссарий</a><ul class='contents contents_all-in-one'><li class="contents__item"><a href='90.htm'>Бекенд</a></li><li class="contents__item"><a href='90.htm'>Вес синапса</a></li><li class="contents__item"><a href='90.htm'>Вычислитель</a></li><li class="contents__item"><a href='90.htm'>Модификатор</a></li><li class="contents__item"><a href='90.htm'>Нейрон</a></li><li class="contents__item"><a href='90.htm'>Период ППС</a></li><li class="contents__item"><a href='90.htm'>Плотная последовательность спайков (ППС)</a></li><li class="contents__item"><a href='90.htm'>Популяция</a></li><li class="contents__item"><a href='90.htm'>Проекция</a></li><li class="contents__item"><a href='90.htm'>Синапс</a></li><li class="contents__item"><a href='90.htm'>Синаптическое воздействие</a></li><li class="contents__item"><a href='90.htm'>Соединение</a></li><li class="contents__item"><a href='90.htm'>Спайк</a></li><li class="contents__item"><a href='90.htm'>Фреймворк</a></li><li class="contents__item"><a href='90.htm'>Функция нейрона</a></li><li class="contents__item"><a href='90.htm'>Функция синапса</a></li></ul></li><li class="contents__item"><a href='262312.htm'>Информация о стороннем коде</a></li><li class="contents__item"><a href='240611.htm'>Уведомления о товарных знаках</a></li></ul></div><div class="cont" id="232786"><p><a name=232786 style="display: none;">[Topic 232786]</a></p>
+	<h1 id="t232786" class="heading1">О Kaspersky Neuromorphic Platform</h1>
+<p class="bodytext"></p>
+<p class="bodytext">Kaspersky Neuromorphic Platform (далее также платформа) &#8211; это программно-аппаратная платформа, предназначенная для эмуляции импульсных нейронных сетей и поддержки их выполнения на разных вычислителях.</p>
+<p class="bodytext">С помощью Kaspersky Neuromorphic Platform вы можете: </p>
+<ul class="listbullet1"><li class="listbullet1">Создавать и обучать нейронные сети на различных типах входных данных&nbsp;(например, телеметрия, события, изображения, 3D-данные и звуковые и тактильные данные). </li><li class="listbullet1">Оптимизировать структуру и гиперпараметры загруженных нейронных сетей.</li><li class="listbullet1">Проводить прикладные исследования в области классификации входных данных и других областях применения импульсных нейронных сетей. </li><li class="listbullet1">Разрабатывать новые топологии нейронных сетей&nbsp;(например, импульсные аналоги сверточных нейронных сетей, предполагающих свертку по пространству и времени). </li><li class="listbullet1">Разрабатывать новые модели синаптической пластичности.</li><li class="listbullet1">Реализовывать новые модели нейронов.</li><li class="listbullet1">Реализовывать прикладные решения на основе нейроморфных импульсных нейронных сетей и искусственного интеллекта в области робототехнических манипуляторов, интернета вещей, беспилотных систем, человеко-машинного взаимодействия, носимых устройств и оптимизационного планирования.</li><li class="listbullet1">Реализовывать прикладные решения на устройствах с пониженным энергопотреблением или с использованием нейроморфных процессоров&nbsp;(англ. Neural Processing Unit, NPU).</li></ul><p class="bodytext">Для решения вышеперечисленных задач вы можете использовать языки C++ и Python&reg;. Платформа поддерживает CPU. Фреймворк Kaspersky Neuromorphic Platform можно также использовать как бекенд для PyNN API.</p>
+<table class="relatedtopics belowtopictext" cellpadding="0" cellspacing="0" border="0">
+<tr valign="top">
+<td width= "302">
+<p class="relatedheading">В этом разделе справки</p><p class="relateditem"><a href="#232787" target="_self">Комплект поставки</a></p><p class="relateditem"><a href="#232788" target="_self">Аппаратные и программные требования</a></p></td>
+</tr>
+</table>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="232787"><p><a name=232787 style="display: none;">[Topic 232787]</a></p>
+	<h2 id="t232787" class="heading2">Комплект поставки</h2>
+<p class="bodytext">Kaspersky Neuromorphic Platform поставляется в виде файла архива, который содержит следующие файлы:</p>
+<ul class="listbullet1"><li class="listbullet1">исходный код бекендов;</li><li class="listbullet1">исходный код фреймворка платформы на языке программирования C++;</li><li class="listbullet1">исходный код фреймфорка платформы на языке программирования Python;</li><li class="listbullet1">исходный код библиотек платформы;</li><li class="listbullet1">справочное руководство по API;</li><li class="listbullet1">файл с информацией о платформе (Release Notes);</li><li class="listbullet1">файл с информацией о стороннем коде legal_notices.txt на английском языке.</li></ul><p class="bodytext">Вы можете <a id="h255810" class="crossreferencetemplate" href="#235046" target="_self">получить исходный код платформы</a> путем клонирования его репозитория.</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="232788"><p><a name=232788 style="display: none;">[Topic 232788]</a></p>
+	<h2 id="t232788" class="heading2">Аппаратные и программные требования</h2>
+<p class="bodytext">Для функционирования Kaspersky Neuromorphic Platform компьютер должен удовлетворять следующим минимальным требованиям.</p>
+<p class="bodytext">Минимальные аппаратные требования:</p>
+<ul class="listbullet1"><li class="listbullet1">центральный процессор: совместимый процессор Intel Core i5 и выше;</li><li class="listbullet1">количество ядер: одно и более;</li><li class="listbullet1">объем оперативной памяти: 8 ГБ и более.</li></ul><p class="bodytext">Поддерживаемые операционные системы:</p>
+<ul class="listbullet1"><li class="listbullet1">Debian GNU/Linux 10.х (Buster) и выше;</li><li class="listbullet1">Ubuntu 23.04 LTS и выше.</li></ul><p class="bodytext">Вы можете использовать устройство под управлением любой другой операционной системы из семейства Linux, если дистрибутив операционной системы содержит библиотеку Boost версии 1.80 и выше.</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="232883"><p><a name=232883 style="display: none;">[Topic 232883]</a></p>
+	<h1 id="t232883" class="heading1">Архитектура Kaspersky Neuromorphic Platform</h1>
+<p class="bodytext">Kaspersky Neuromorphic Platform включает в себя следующие компоненты:</p>
+<ul class="listbullet1"><li class="listbullet1"><em class="emphasischaracter"><a id="h235052" class="crossreferencetemplate" href="#235051" target="_self">Бекенд</a></em>. Запускает эмуляцию работы импульсной нейронной сети на различных вычислительных устройствах&nbsp;(например, центральных процессорах).</li><li class="listbullet1"><em class="emphasischaracter"><a id="h249325" class="crossreferencetemplate" href="#235050" target="_self">Фреймворк для C++</a></em>. Обеспечивает управление бекендами.  </li><li class="listbullet1"><em class="emphasischaracter">Python-фреймворк</em>. Обеспечивает управление бекендами. </li><li class="listbullet1"><em class="emphasischaracter">PyNN Module</em>. Обеспечивает интерфейс к Python-фреймворку.</li></ul><p class="bodytext">На рисунке ниже представлена схема взаимодействия компонентов Kaspersky Neuromorphic Platform.</p>
+<p class="picture"><img id="f248548" src="knparchitecture.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Архитектура Kaspersky Neuromorphic Platform</p>
+<table class="relatedtopics belowtopictext" cellpadding="0" cellspacing="0" border="0">
+<tr valign="top">
+<td width= "302">
+<p class="relatedheading">В этом разделе справки</p><p class="relateditem"><a href="#235051" target="_self">О бекенде Kaspersky Neuromorphic Platform</a></p><p class="relateditem"><a href="#235738" target="_self">Библиотека поддержки бекендов</a></p><p class="relateditem"><a href="#247186" target="_self">Библиотека устройств</a></p><p class="relateditem"><a href="#235859" target="_self">Библиотека характеристик нейронов</a></p><p class="relateditem"><a href="#235860" target="_self">Библиотека характеристик синапсов</a></p><p class="relateditem"><a href="#245041" target="_self">Библиотека шаблонов</a></p><p class="relateditem"><a href="#244808" target="_self">Поддерживаемые бекенды</a></p><p class="relateditem"><a href="#244427" target="_self">Обмен данными в Kaspersky Neuromorphic Platform</a></p><p class="relateditem"><a href="#235050" target="_self">Архитектура фреймворка для C++</a></p><p class="relateditem"><a href="#235594" target="_self">Сторонние библиотеки и используемые форматы</a></p></td>
+</tr>
+</table>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235051"><p><a name=235051 style="display: none;">[Topic 235051]</a></p>
+	<h2 id="t235051" class="heading2">О бекенде Kaspersky Neuromorphic Platform</h2>
+<p class="bodytext">Бекенд Kaspersky Neuromorphic Platform предоставляет стандартизированный интерфейс для работы с <a id="h254018" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254018','h254018')" target="_self">вычислителем</a>. Бекенд платформы позволяет запускать эмуляцию работы импульсной нейронной сети на различных вычислительных устройствах.</p>
+<div id="d254018" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254018');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Устройство или код, непосредственно выполняющий сеть.</p>
+</div><p class="bodytext">Физически бекенд платформы разделяется на библиотеки и компилируется в несколько независимых друг от друга бекендов. Каждый такой бекенд позволяет выполнять эмуляцию на разных типах устройств.</p>
+<p class="bodytext">Бекенд Kaspersky Neuromorphic Platform выполняет следующие функции:</p>
+<ul class="listbullet1"><li class="listbullet1">Запускает импульсные нейронные сети на различных вычислителях.</li><li class="listbullet1">Выполняет статические проверки корректности построения импульсной нейронной сети.</li><li class="listbullet1">Предоставляет общую кодовую базу для реализации вычислителей.</li></ul><p class="bodytext">Для реализации бекендов вы можете использовать следующие библиотеки платформы:</p>
+<ul class="listbullet1"><li class="listbullet1"><em class="emphasischaracter"><a id="h235739" class="crossreferencetemplate" href="#235738" target="_self">Библиотека поддержки бекендов</a></em>. Реализует основные объекты и шаблоны вычислителя.</li><li class="listbullet1"><em class="emphasischaracter"><a id="h248143" class="crossreferencetemplate" href="#247186" target="_self">Библиотека устройств</a></em>. Предоставляет набор интерфейсов для взаимодействия с физическими устройствами.</li><li class="listbullet1"><em class="emphasischaracter"><a id="h235863" class="crossreferencetemplate" href="#235859" target="_self">Библиотека характеристик нейронов</a></em>. Содержит наборы свойств и типизацию популяций моделей <a id="h254021" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254021','h254021')" target="_self">нейронов</a>.<div id="d254021" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254021');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Узел нейронной сети, имеющий набор атрибутов. На основе атрибутов нейрона и последовательности входных сигналов происходит вычисление некоторой математической функции, результатом которого является синаптическое воздействие или его отсутствие.</p>
+</div></li><li class="listbullet1"><em class="emphasischaracter"><a id="h235864" class="crossreferencetemplate" href="#235860" target="_self">Библиотека характеристик синапсов</a></em>. Содержит набор классов, определяющих поведение <a id="h254022" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254022','h254022')" target="_self">синапса.</a><div id="d254022" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254022');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Место соединения нейронов, основная функция которого&nbsp;&#8211; передача сигнала от одного нейрона к другому. Каждый нейрон может быть связан с множеством синапсов.</p>
+</div></li><li class="listbullet1"><em class="emphasischaracter"><a id="h252330" class="crossreferencetemplate" href="#245041" target="_self">Библиотека шаблонов.</a></em> Предоставляет шаблоны общего назначения.</li></ul><p class="bodytext">На рисунке ниже представлена схема взаимодействия библиотек платформы.</p>
+<p class="bodytext">В Kaspersky Neuromorphic Platform вычислитель хранит в себе интерфейс устройства, а также экземпляры объектов библиотеки поддержки бекендов (например, <a id="h254030" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254030','h254030')" target="_self">проекции</a> и <a id="h254031" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254031','h254031')" target="_self">популяции</a>), необходимые для выполнения прикладных задач на вычислителе. Шаблоны популяций и проекций нейронной сети должны быть специализированы типами нейронов и синапсов, описанными в библиотеках характеристик нейронов и синапсов. </p>
+<div id="d254031" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254031');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Контейнер, содержащий набор нейронов и их функцию в соответствии с типом нейронов.</p>
+</div><div id="d254030" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254030');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Контейнер, содержащий набор синапсов одного типа, соединяющих нейроны пресинаптической и постсинаптической популяций. </p>
+</div><p class="picture"><img id="f249308" src="backendarchitecture.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Взаимодействие библиотек Kaspersky Neuromorphic Platform</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235738"><p><a name=235738 style="display: none;">[Topic 235738]</a></p>
+	<h2 id="t235738" class="heading2">Библиотека поддержки бекендов</h2>
+<p class="bodytext">В библиотеке поддержки бекендов реализуются интерфейсы к объектам, необходимым для работы бекендов и выполнения прикладных задач. Библиотека содержит пространство имен <code class="programcharacter">core</code>.</p>
+<p class="bodytext">Таблица ниже содержит описание объектов библиотеки.</p>
+<p class="spacerfortables"></p>
+<table class="tableintopic" width="437" cellpadding="2" cellspacing="0" border="1" style="border-collapse:collapse; border:1px solid #010101">
+<tr align="left" valign="top">
+<th bgcolor="#C0C0C0" style="border:1px solid #010101;" width="219"><p class="tableheading">Объект</p>
+</th>
+<th bgcolor="#C0C0C0" style="border:1px solid #010101;" width="219"><p class="tableheading">Описание</p>
+</th>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h235750" class="crossreferencetemplate" href="#235749" target="_self">Backend</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Базовый класс для конкретных реализаций бекендов.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h248869" class="crossreferencetemplate" href="#248867" target="_self">BaseData</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Структура, определяющая набор базовых данных.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h248950" class="crossreferencetemplate" href="#248929" target="_self">continuously_uid_generator</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Класс, реализующий генератор уникальных идентификаторов.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h245548" class="crossreferencetemplate" href="#245461" target="_self">Device</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Базовый класс устройств.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h244977" class="crossreferencetemplate" href="#244932" target="_self">MessageBus</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Класс, реализующий интерфейс к шине сообщений.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h247160" class="crossreferencetemplate" href="#247159" target="_self">MessageEndpoint</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Класс, реализующий интерфейс к точке подключения.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h243744" class="crossreferencetemplate" href="#243634" target="_self">Messaging</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Пространство имен, определяющее интерфейсы к сообщениям.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h235851" class="crossreferencetemplate" href="#235842" target="_self">Population</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Шаблонный класс, реализующий контейнер <a id="h254021" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254021','h254021')" target="_self">нейронов</a> одной модели.</p>
+<div id="d254021" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254021');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Узел нейронной сети, имеющий набор атрибутов. На основе атрибутов нейрона и последовательности входных сигналов происходит вычисление некоторой математической функции, результатом которого является синаптическое воздействие или его отсутствие.</p>
+</div></td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h235852" class="crossreferencetemplate" href="#235844" target="_self">Projection</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Шаблонный класс, реализующий контейнер <a id="h254022" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254022','h254022')" target="_self">синапсов</a> одного типа.</p>
+<div id="d254022" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254022');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Место соединения нейронов, основная функция которого&nbsp;&#8211; передача сигнала от одного нейрона к другому. Каждый нейрон может быть связан с множеством синапсов.</p>
+</div></td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h250728" class="crossreferencetemplate" href="#250697" target="_self">Subscription</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Класс, реализующий подписку на сообщения.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h262525" class="crossreferencetemplate" href="#262482" target="_self">synapse_access</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Пространство имен, реализующее соединения и интерфейс для доступа к их реестру.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h244939" class="crossreferencetemplate" href="#244933" target="_self">TagMap</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Класс, реализующий интерфейс к словарю тегов.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h248876" class="crossreferencetemplate" href="#247366" target="_self">UID</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Класс, определяющий уникальные идентификаторы.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h256495" class="crossreferencetemplate" href="#256488" target="_self">uid_hash</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Функция, реализующая хеширование UID.</p>
+</td>
+</tr>
+
+</table>
+<p class="bodytext"></p>
+<p class="bodytext">На рисунке ниже представлена схема взаимодействия объектов библиотеки.</p>
+<p class="bodytext">В Kaspersky Neuromorphic Platform структура <code class="programcharacter">BaseData</code> содержит базовую информацию об объекте и включает в себя структуру <code class="programcharacter">UID</code> и объект класса <code class="programcharacter">TagMap</code>. Экземпляр структуры <code class="programcharacter">BaseData</code> используется в объектах классов <code class="programcharacter">Projection</code>, <code class="programcharacter">Population</code> и <code class="programcharacter">Backend</code>, соответственно каждый из этих объектов обладает идентификатором <code class="programcharacter">UID</code> и набором тегов и их значениями <code class="programcharacter">TagMap</code>.</p>
+<p class="bodytext">Объекты классов <code class="programcharacter">Population</code> и <code class="programcharacter">Projection</code> принимают и отправляют сообщения из пространства имен <code class="programcharacter">Messaging</code>, которые содержат в своем заголовке UID отправителя. Объект класса <code class="programcharacter">Projection</code> также получает информацию о соединениях из пространства имен <code class="programcharacter">synapse_access</code>. </p>
+<p class="bodytext">Каждый объект <code class="programcharacter">Backend</code> может работать на нескольких устройствах и содержать соответствующее количество экземпляров классов <code class="programcharacter">Device</code> и <code class="programcharacter">MessageBus</code>. Объект <code class="programcharacter">MessageBus</code> создает экземпляры класса <code class="programcharacter">MessageEndpoint</code> и взаимодействует с ними в процессе обмена сообщениями. Каждый объект <code class="programcharacter">MessageEndpoint</code> содержит контейнер подписок класса <code class="programcharacter">Subscription</code>.</p>
+<p class="picture"><img id="f249625" src="corelibrary.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Схема взаимодействия объектов библиотеки поддержки бекендов</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="247366"><p><a name=247366 style="display: none;">[Topic 247366]</a></p>
+	<h3 id="t247366" class="heading3">Класс UID</h3>
+<p class="bodytext">Объект класса <code class="programcharacter">UID</code> является частью структуры <code class="programcharacter"><a id="h248869" class="crossreferencetemplate" href="#248867" target="_self">BaseData</a></code> и представляет собой идентификатор объекта. Идентификатор является уникальным.</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="256488"><p><a name=256488 style="display: none;">[Topic 256488]</a></p>
+	<h3 id="t256488" class="heading3">Функция uid_hash</h3>
+<p class="bodytext">Функция <code class="programcharacter">uid_hash</code> реализует функцию хеширования идентификаторов объектов.</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="248929"><p><a name=248929 style="display: none;">[Topic 248929]</a></p>
+	<h3 id="t248929" class="heading3">Класс continuously_uid_generator</h3>
+<p class="bodytext">Класс <code class="programcharacter">continuously_uid_generator</code> реализует генератор уникальных идентификаторов&nbsp;(англ. UID). Идентификатор отображается в виде строки, разбитой на группы с помощью дефисов, и представляет собой 128-битное число. Идентификаторы генерируются последовательно с шагом, равным 1.</p>
+<p class="bodytext">Вы можете использовать класс <code class="programcharacter">continuously_uid_generator</code> для отладки платформы и исполнения нейронной сети.</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="244933"><p><a name=244933 style="display: none;">[Topic 244933]</a></p>
+	<h3 id="t244933" class="heading3">Класс TagMap</h3>
+<p class="bodytext">Объект класса <code class="programcharacter">TagMap</code> является составляющей частью структуры <code class="programcharacter"><a id="h248869" class="crossreferencetemplate" href="#248867" target="_self">BaseData</a></code> и представляет собой ассоциативный массив, включающий ноль или более записей типа &quot;ключ-значение тега&quot;, где ключом является имя тега. Имена тегов имеют строковый тип и являются уникальными. </p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="248867"><p><a name=248867 style="display: none;">[Topic 248867]</a></p>
+	<h3 id="t248867" class="heading3">Структура BaseData</h3>
+<p class="bodytext">Структура <code class="programcharacter">BaseData</code> определяет набор базовых данных, общих для нескольких объектов библиотеки поддержки бекендов и объектов фреймворка. Например, базовые данные <code class="programcharacter">BaseData</code> используются в объектах классов <code class="programcharacter"><a id="h235750" class="crossreferencetemplate" href="#235749" target="_self">Backend</a></code>, <code class="programcharacter"><a id="h245548" class="crossreferencetemplate" href="#245461" target="_self">Device</a></code>, <code class="programcharacter"><a id="h235851" class="crossreferencetemplate" href="#235842" target="_self">Population</a></code> и <code class="programcharacter"><a id="h235852" class="crossreferencetemplate" href="#235844" target="_self">Projection</a></code>.</p>
+<p class="bodytext">Базовые данные <code class="programcharacter">BaseData</code> включают в себя следующее:</p>
+<ul class="listbullet1"><li class="listbullet1"><code class="programcharacter"><a id="h248876" class="crossreferencetemplate" href="#247366" target="_self">uid_</a></code>&nbsp;&#8211; уникальный идентификатор объекта.</li><li class="listbullet1"><code class="programcharacter"><a id="h244939" class="crossreferencetemplate" href="#244933" target="_self">tags_</a></code>&nbsp;&#8211; ассоциативный массив <code class="programcharacter">TagMap</code>, состоящий из тегов, используемых объектом, и их значений.</li></ul>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235842"><p><a name=235842 style="display: none;">[Topic 235842]</a></p>
+	<h3 id="t235842" class="heading3">Класс Population</h3>
+<p class="bodytext">Шаблонный класс <code class="programcharacter">Population</code> реализует контейнер, который содержит <a id="h254021" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254021','h254021')" target="_self">нейроны</a>, принадлежащие одной модели. При использовании шаблона класса <code class="programcharacter">Population</code> вы можете указать один из типов нейронов, поддерживаемых библиотекой характеристик нейронов.</p>
+<div id="d254021" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254021');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Узел нейронной сети, имеющий набор атрибутов. На основе атрибутов нейрона и последовательности входных сигналов происходит вычисление некоторой математической функции, результатом которого является синаптическое воздействие или его отсутствие.</p>
+</div><p class="bodytext">С помощью класса <code class="programcharacter">Population</code> вы можете передать данные популяций на бекенд для вычисления их атрибутов. После вычисления новые атрибуты популяций хранятся на бекенде. Чтобы передать новые атрибуты от бекенда в соответствующие объекты популяций, вы можете вызвать синхронизацию. Если вы вручную изменили атрибуты популяции до вызова синхронизации, вы можете заново передать данные популяции на бекенд для вычисления новых атрибутов. Подробнее о методах популяций и бекендов см. <a id="h252220" class="crossreferencetemplate" href="#240504" target="_self">API-документацию Kaspersky Neuromorphic Platform</a>.</p>
+<p class="bodytext">Каждая популяция нейронов содержит следующие атрибуты:</p>
+<ul class="listbullet1"><li class="listbullet1"><a id="h248869" class="crossreferencetemplate" href="#248867" target="_self">Базовые данные</a> популяции.</li><li class="listbullet1">Тип нейронов, которые хранятся в популяции. <p class="listcontinue1">Тип нейрона определяет набор атрибутов и функцию этого нейрона. Функция нейрона реализуется для конкретного типа нейрона на бекенде. При получении синаптического воздействия функция нейрона изменяет значения его атрибутов и возвращает состояние генерации спайка.</p>
+</li><li class="listbullet1">Атрибуты нейронов популяции. Состояние нейронов в популяции.</li></ul>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235844"><p><a name=235844 style="display: none;">[Topic 235844]</a></p>
+	<h3 id="t235844" class="heading3">Класс Projection</h3>
+<p class="bodytext">Шаблонный класс <code class="programcharacter">Projection</code> реализует контейнер, который содержит <a id="h254022" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254022','h254022')" target="_self">синапсы</a> одного из типов, поддерживаемых <a id="h235864" class="crossreferencetemplate" href="#235860" target="_self">библиотекой характеристик синапсов</a>.</p>
+<div id="d254022" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254022');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Место соединения нейронов, основная функция которого&nbsp;&#8211; передача сигнала от одного нейрона к другому. Каждый нейрон может быть связан с множеством синапсов.</p>
+</div><p class="bodytext"></p>
+<p class="bodytext">Объект класса <code class="programcharacter">Projection</code> представляет собой набор соединений нейронов пресинаптической и постсинаптической популяций. Конструирование проекции осуществляется с помощью генератора соединений.</p>
+<p class="bodytext">С помощью класса <code class="programcharacter">Projection</code> вы можете передавать данные проекции на бекенд и получать их от бекенда. </p>
+<p class="bodytext">Kaspersky Neuromorphic Platform обеспечивает <a id="h247848" class="crossreferencetemplate" href="#244427" target="_self">обмен данными между популяциями нейронов</a> и проекциями синапсов через <a id="h243744" class="crossreferencetemplate" href="#243634" target="_self">сообщения</a>. Проекция синапсов получает сообщения со <a id="h254019" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254019','h254019')" target="_self">спайками</a> от пресинаптической популяции и отправляет сообщения с <a id="h254029" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254029','h254029')" target="_self">синаптическими воздействиями</a> в постсинаптическую популяцию.</p>
+<div id="d254029" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254029');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Значение, формируемое синапсом и предназначенное для изменения значений атрибутов нейронов.</p>
+</div><div id="d254019" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254019');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Кратковременный потенциал действия, сгенерированный нейроном популяции в результате изменения атрибутов нейрона.</p>
+</div><p class="bodytext">Каждая проекция синапсов содержит следующие атрибуты:</p>
+<ul class="listbullet1"><li class="listbullet1"><a id="h248869" class="crossreferencetemplate" href="#248867" target="_self">Базовые данные</a> проекции.</li><li class="listbullet1">Уникальный идентификатор пресинаптической популяции.</li><li class="listbullet1">Уникальный идентификатор постсинаптической популяции.</li><li class="listbullet1">Значение типа <code class="programcharacter">boolean</code> для обозначения возможности изменения веса синапса. Если изменение веса синапса заблокировано, то атрибут имеет значение <code class="programcharacter">true</code>, иначе имеет значение <code class="programcharacter">false</code>.</li><li class="listbullet1">Атрибуты группы синапсов.</li><li class="listbullet1">Значение типа <code class="programcharacter">boolean</code> для обозначения актуальности <a id="h262525" class="crossreferencetemplate" href="#262482" target="_self">реестра соединений</a>. Если реестр соединений актуален, то атрибут имеет значение <code class="programcharacter">true</code>, иначе имеет значение <code class="programcharacter">false</code>.</li><li class="listbullet1">Атрибуты, используемые синапсами одного типа.</li></ul>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235749"><p><a name=235749 style="display: none;">[Topic 235749]</a></p>
+	<h3 id="t235749" class="heading3">Класс Backend</h3>
+<p class="bodytext">Класс <code class="programcharacter">Backend</code> является базовым для реализаций бекендов. Каждый бекенд реализуется в виде отдельной библиотеки, с помощью которой вы можете:</p>
+<ul class="listbullet1"><li class="listbullet1">запускать эмуляцию работы импульсной нейронной сети на различных устройствах;</li><li class="listbullet1">считывать выходные <a id="h254019" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254019','h254019')" target="_self">спайки</a>, полученные от вычислителя;<div id="d254019" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254019');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Кратковременный потенциал действия, сгенерированный нейроном популяции в результате изменения атрибутов нейрона.</p>
+</div></li><li class="listbullet1">получать внутренние данные для мониторинга работы нейронной сети;</li><li class="listbullet1">выгружать внутренние данные мониторинга работы нейронной сети, полученные от вычислителя.</li></ul><p class="bodytext">Каждый объект класса <code class="programcharacter">Backend</code> содержит следующие атрибуты:</p>
+<ul class="listbullet1"><li class="listbullet1"><a id="h248869" class="crossreferencetemplate" href="#248867" target="_self">Базовые данные</a> бекенда.</li><li class="listbullet1"><code class="programcharacter">message_bus_</code>&nbsp;&#8211; шина сообщений. С помощью шины сообщений бекенд обеспечивает обмен сообщениями между объектами библиотеки поддержки бекендов, а также обмен сообщениями от <a id="h254020" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254020','h254020')" target="_self">модификаторов</a> к <a id="h254021" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254021','h254021')" target="_self">нейронам</a> и <a id="h254022" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254022','h254022')" target="_self">синапсам</a>.<div id="d254022" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254022');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Место соединения нейронов, основная функция которого&nbsp;&#8211; передача сигнала от одного нейрона к другому. Каждый нейрон может быть связан с множеством синапсов.</p>
+</div><div id="d254021" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254021');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Узел нейронной сети, имеющий набор атрибутов. На основе атрибутов нейрона и последовательности входных сигналов происходит вычисление некоторой математической функции, результатом которого является синаптическое воздействие или его отсутствие.</p>
+</div><div id="d254020" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254020');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Код, изменяющий поведение нейрона или синапса, например добавляющий синаптическую пластичность.</p>
+</div></li><li class="listbullet1">Статус инициализации бекенда.</li><li class="listbullet1">Статус исполнения нейронной сети на бекенде.</li><li class="listbullet1">Устройства бекенда.</li><li class="listbullet1">Номер шага.</li></ul>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="245461"><p><a name=245461 style="display: none;">[Topic 245461]</a></p>
+	<h3 id="t245461" class="heading3">Класс Device</h3>
+<p class="bodytext">Класс <code class="programcharacter">Device</code> является базовым для классов устройств, поддерживаемых <a id="h248143" class="crossreferencetemplate" href="#247186" target="_self">библиотекой устройств</a>.</p>
+<p class="bodytext">Наследники класса переопределяют методы, с помощью которых вы можете получить общую информацию об объектах классов-наследников. Например, вы можете получить информацию о типе или энергопотреблении конкретного устройства. Данные об устройствах класс <code class="programcharacter">Device</code> получает от бекенда.</p>
+<p class="bodytext">Каждый объект класса <code class="programcharacter">Device</code> содержит <a id="h248869" class="crossreferencetemplate" href="#248867" target="_self">базовые данные</a> для конкретного устройства.</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="244932"><p><a name=244932 style="display: none;">[Topic 244932]</a></p>
+	<h3 id="t244932" class="heading3">Класс MessageBus</h3>
+<p class="bodytext">Класс <code class="programcharacter">MessageBus</code> реализует интерфейс для доступа к шине сообщений, которая обеспечивает прием, распределение и доставку <a id="h243744" class="crossreferencetemplate" href="#243634" target="_self">сообщений</a> между объектами, подключенными к <a id="h235739" class="crossreferencetemplate" href="#235738" target="_self">библиотеке поддержки бекенда</a>. Объект класса <code class="programcharacter">MessageBus</code> предоставляет множество <a id="h247160" class="crossreferencetemplate" href="#247159" target="_self">точек подключения</a>, с помощью которых объекты библиотеки поддержки бекендов могут подписаться на сообщения или отправить их. </p>
+<p class="bodytext">Класс <code class="programcharacter">MessageBus</code> предоставляет методы, которые возвращают используемые точки подключения. Если вы удалите точку подключения, то передача сообщений с помощью этой точки подключения прекратится.</p>
+<p class="bodytext">Использование шины сообщений позволяет реализовать принцип &quot;издатель-подписчик&quot;. Издатель отправляет сообщения через посредника, в качестве которого выступает шина сообщений. <a id="h250728" class="crossreferencetemplate" href="#250697" target="_self">Объект подписки</a> фильтрует сообщения и отправляет их подписчикам. Подобный подход позволяет избежать создания большого количества IPC-каналов, поскольку издатель и подписчики не связаны напрямую.</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="247159"><p><a name=247159 style="display: none;">[Topic 247159]</a></p>
+	<h3 id="t247159" class="heading3">Класс MessageEndpoint</h3>
+<p class="bodytext">Класс <code class="programcharacter">MessageEndpoint</code> реализует интерфейс для доступа к точке подключения, которая обеспечивает подписку на <a id="h243744" class="crossreferencetemplate" href="#243634" target="_self">сообщения</a> и их отправку с помощью <a id="h244977" class="crossreferencetemplate" href="#244932" target="_self">шины сообщений</a>. </p>
+<p class="bodytext">Объект класса <code class="programcharacter">MessageEndpoint</code> хранит в себе набор объектов класса <code class="programcharacter"><a id="h250728" class="crossreferencetemplate" href="#250697" target="_self">Subscription</a></code>, которые используются для фильтрации сообщений. Шина сообщений может иметь несколько точек подключения, каждая из которых хранит свой набор объектов класса <code class="programcharacter">Subscription</code>. </p>
+<p class="bodytext">С помощью методов класса <code class="programcharacter">MessageEndpoint</code> вы можете настроить обмен сообщениями между объектами бекенда и фреймворка. Для передачи сообщений требуется предварительно добавить объект подписки в объект точки подключения. </p>
+<p class="bodytext">Если вы удалите точку подключения, то связанные объекты подписки также будут удалены. Передача сообщений с помощью этой точки подключения прекратится.</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="250697"><p><a name=250697 style="display: none;">[Topic 250697]</a></p>
+	<h3 id="t250697" class="heading3">Класс Subscription</h3>
+<p class="bodytext">Класс <code class="programcharacter">Subscription</code> реализует функциональность подписки на сообщения. Объект подписки используется для хранения сообщений определенного типа до их запроса получателем. В объекте подписки определены получатели хранящихся сообщений. </p>
+<p class="bodytext">Подписки хранятся в <a id="h247160" class="crossreferencetemplate" href="#247159" target="_self">точках подключения</a> к шине сообщений. Если объект точки подключения, который хранит объект подписки, будет удален, то объект подписки будет также удален. Передача сообщений, определенных этой подпиской, прекратится.</p>
+<p class="bodytext">Каждый объект подписки содержит следующие атрибуты:</p>
+<ul class="listbullet1"><li class="listbullet1">Вектор сообщений для передачи получателю. </li><li class="listbullet1">Идентификатор получателя сообщений.</li><li class="listbullet1">Идентификаторы отправителей сообщений.</li></ul>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="243634"><p><a name=243634 style="display: none;">[Topic 243634]</a></p>
+	<h3 id="t243634" class="heading3">Пространство имен Messaging</h3>
+<p class="bodytext">Пространство имен <code class="programcharacter">Messaging</code> реализует интерфейсы для доступа к сообщениям. Сообщение содержит данные, которыми обмениваются объекты бекенда, а также данные, отправляемые объектами, которые идентифицируются по UID. Обмен сообщениями обеспечивается с помощью шины сообщений <code class="programcharacter"><a id="h244977" class="crossreferencetemplate" href="#244932" target="_self">MessageBus</a></code>.</p>
+<p class="bodytext">Каждое сообщение содержит следующие атрибуты:</p>
+<ul class="listbullet1"><li class="listbullet1"><code class="programcharacter">MessageHeader</code>&nbsp;&#8211; заголовок сообщения, содержащий следующую информацию:<ul class="listbullet2"><li class="listbullet2"><code class="programcharacter">sender_uid_</code>&nbsp;&#8211; идентификатор объекта, отправившего сообщение;</li><li class="listbullet2"><code class="programcharacter">send_time_</code>&nbsp;&#8211; время отправки сообщения.</li></ul></li><li class="listbullet1">Тело сообщения, состоящее из совокупности передаваемых атрибутов. Состав передаваемых атрибутов зависит от типа сообщения.</li></ul><p class="bodytext">С помощью сообщений происходит обновление пользовательских структур и синхронизация изменений на бекенде. Таблица ниже содержит описание поддерживаемых типов сообщений бекенда. </p>
+<p class="spacerfortables"></p>
+<table class="tableintopic" width="656" cellpadding="2" cellspacing="0" border="1" style="border-collapse:collapse; border:1px solid #010101">
+<tr align="left" valign="top">
+<th bgcolor="#C0C0C0" style="border:1px solid #010101;" width="219"><p class="tableheading">Тип сообщения</p>
+</th>
+<th bgcolor="#C0C0C0" style="border:1px solid #010101;" width="219"><p class="tableheading">Описание</p>
+</th>
+<th bgcolor="#C0C0C0" style="border:1px solid #010101;" width="219"><p class="tableheading">Структура сообщения</p>
+</th>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><code class="programcharacter">SpikeMessage</code></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Сообщение от популяции нейронов к проекции синапсов, содержащее <a id="h254019" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254019','h254019')" target="_self">спайк</a>. На сообщения, содержащие спайки, может быть подписано более одной проекции.</p>
+<div id="d254019" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254019');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Кратковременный потенциал действия, сгенерированный нейроном популяции в результате изменения атрибутов нейрона.</p>
+</div></td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><code class="programcharacter">header_</code> &#8211; заголовок сообщения, содержащий UID популяции, нейроны которой сгенерировали спайки, и время генерации спайков.</p>
+<p class="tablebodytext"><code class="programcharacter">neuron_indexes_</code> &#8211; индексы нейронов популяции, сгенерировавших спайки.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><code class="programcharacter">SynapticImpactMessage</code></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Сообщение от проекции синапсов к популяции нейронов, содержащее <a id="h254029" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254029','h254029')" target="_self">синаптическое воздействие</a>.</p>
+<div id="d254029" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254029');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Значение, формируемое синапсом и предназначенное для изменения значений атрибутов нейронов.</p>
+</div></td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><code class="programcharacter">header_</code> &#8211; заголовок сообщения, содержащий UID проекции и время отправки сообщения.</p>
+<p class="tablebodytext"><code class="programcharacter">postsynaptic_population_uid_</code> &#8211; UID постсинаптической популяции.</p>
+<p class="tablebodytext"><code class="programcharacter">presynaptic_population_uid_</code> &#8211; UID пресинаптической популяции.</p>
+<p class="tablebodytext"><code class="programcharacter">impacts_</code> &#8211; вектор, содержащий следующие атрибуты:</p>
+<ul class="tablelistbullet"><li class="tablelistbullet"><code class="programcharacter">connection_index_</code> &#8211; индекс соединения.</li><li class="tablelistbullet"><code class="programcharacter">impact_value_</code> &#8211; значение синаптического воздействия.</li><li class="tablelistbullet"><code class="programcharacter">presynaptic_neuron_index_</code> &#8211; индекс пресинаптического нейрона. </li><li class="tablelistbullet"><code class="programcharacter">postsynaptic_neuron_index_</code> &#8211; индекс постсинаптического нейрона, которому будет передано значение синаптического воздействия для изменения значений его атрибутов.</li></ul></td>
+</tr>
+
+</table>
+<p class="bodytext"></p>
+<p class="listcontinue1"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue1"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue1"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue1"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue1"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="bodytext"></p>
+<p class="bodytext"></p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="262482"><p><a name=262482 style="display: none;">[Topic 262482]</a></p>
+	<h3 id="t262482" class="heading3">Пространство имен synapse_access</h3>
+<p class="bodytext">Пространство имен <code class="programcharacter">synapse_access</code> реализует соединения и интерфейс для доступа к их реестру.</p>
+<p class="introheading">Структура Connection</p>
+<p class="bodytext">Структура <code class="programcharacter">Connection</code> определяет соединение синапса с пресинаптическим и постсинаптическим нейроном и включает в себя в следующие атрибуты:</p>
+<ul class="listbullet1"><li class="listbullet1"><code class="programcharacter">from_</code>&nbsp;&#8211; индекс пресинаптического нейрона.</li><li class="listbullet1"><code class="programcharacter">to_</code>&nbsp;&#8211; индекс постсинаптического нейрона.</li><li class="listbullet1"><code class="programcharacter">index_</code>&nbsp;&#8211; индекс синапса.</li></ul><p class="introheading">Класс Index</p>
+<p class="bodytext">Класс <code class="programcharacter">Index</code> реализует реестр соединений. С помощью методов класса <code class="programcharacter">Index</code> проекция может найти синапсы, связанные с пресинаптическими или постсинаптическими нейронами с заданными индексами. В свою очередь вы можете получить информацию о соединениях с помощью методов проекции.</p>
+<p class="bodytext">Запись о соединении синапса с пресинаптическим и постсинаптическим нейронами в реестр выполняется проекцией. Обновление реестра зависит от поведения функции проекции и может выполняться автоматически после любого изменения проекции (например, удаления синапса из проекции) или в момент, когда проекция используется для вычисления.</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="247186"><p><a name=247186 style="display: none;">[Topic 247186]</a></p>
+	<h2 id="t247186" class="heading2">Библиотека устройств</h2>
+<p class="bodytext">Библиотека устройств реализует и предоставляет набор интерфейсов, которые вы можете использовать для взаимодействия с физическими устройствами. </p>
+<p class="bodytext">При запуске эмуляции импульсной нейронной сети библиотека устройств используется для получения информации об устройствах (например, параметров CPU), на которых работают реализованные бекенды. Информацию об устройстве (например, о потребляемой им мощности) вы можете получить с помощью методов объекта, который обеспечивает интерфейс к устройству.</p>
+<p class="bodytext">Выбор устройства для эмуляции нейронной сети осуществляется с помощью методов бекенда. </p>
+<p class="bodytext">В Kaspersky Neuromorphic Platform на текущий момент реализован интерфейс для центрального процессора. </p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235859"><p><a name=235859 style="display: none;">[Topic 235859]</a></p>
+	<h2 id="t235859" class="heading2">Библиотека характеристик нейронов</h2>
+<p class="bodytext">Библиотека характеристик нейронов представляет собой набор атрибутов <a id="h254021" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254021','h254021')" target="_self">нейронов</a>. Вы можете использовать атрибуты нейронов, представленных в библиотеке, например, при построении популяций.</p>
+<div id="d254021" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254021');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Узел нейронной сети, имеющий набор атрибутов. На основе атрибутов нейрона и последовательности входных сигналов происходит вычисление некоторой математической функции, результатом которого является синаптическое воздействие или его отсутствие.</p>
+</div><p class="bodytext">На текущий момент библиотека поддерживает наборы свойств для модели нейронов-интеграторов с утечкой и адаптивным порогом, генерирующих серию <a id="h254019" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254019','h254019')" target="_self">спайков</a>. Такие нейроны-интеграторы называются BLIFAT-нейроны (англ. Bursting Leaky Integrate-and-Fire with Adaptive Threshold Neuron, BLIFATNeuron). BLIFAT-нейрон характеризуется потенциалом мембраны и пороговым значением потенциала мембраны. </p>
+<div id="d254019" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254019');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Кратковременный потенциал действия, сгенерированный нейроном популяции в результате изменения атрибутов нейрона.</p>
+</div><p class="bodytext">Значение потенциала мембраны изменяется в соответствии со значением <a id="h254029" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254029','h254029')" target="_self">синаптического воздействия</a>, поступающего от связанного <a id="h254022" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254022','h254022')" target="_self">синапса</a>. Если потенциал мембраны нейрона достигает порогового значения, нейрон начинает генерировать серию спайков с определенным интервалом. При этом после генерации спайка потенциал мембраны стремится к базовому значению, а пороговое значение изменяется в соответствии с инкрементом. </p>
+<div id="d254022" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254022');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Место соединения нейронов, основная функция которого&nbsp;&#8211; передача сигнала от одного нейрона к другому. Каждый нейрон может быть связан с множеством синапсов.</p>
+</div><div id="d254029" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254029');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Значение, формируемое синапсом и предназначенное для изменения значений атрибутов нейронов.</p>
+</div><p class="bodytext">Если к нейрону не поступают сообщения от связанного синапса в течение определенного времени, потенциал мембраны и его пороговое значение экспоненциально стремятся к базовым значениям. </p>
+<p class="bodytext">Вы можете указать базовое значения потенциала мембраны, базовое пороговое значение, значение инкремента, интервал времени, при достижении которого значения потенциала и порогового значения потенциала мембраны начинают стремиться к базовым, продолжительность серии спайков и интервал генерации спайков в атрибутах экземпляра нейрона. </p>
+<p class="bodytext">Если требуется, вы можете реализовать и использовать собственные модели нейронов.</p>
+<p class="bodytext"></p>
+<p class="bodytext"></p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235860"><p><a name=235860 style="display: none;">[Topic 235860]</a></p>
+	<h2 id="t235860" class="heading2">Библиотека характеристик синапсов</h2>
+<p class="bodytext">Библиотека характеристик синапсов представляет собой набор атрибутов <a id="h254022" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254022','h254022')" target="_self">синапсов</a>. Вы можете использовать синапсы, представленные в библиотеке, например, при построении проекций.</p>
+<div id="d254022" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254022');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Место соединения нейронов, основная функция которого&nbsp;&#8211; передача сигнала от одного нейрона к другому. Каждый нейрон может быть связан с множеством синапсов.</p>
+</div><p class="bodytext">На текущий момент библиотека поддерживает наборы свойств для следующих синапсов:</p>
+<ul class="listbullet1"><li class="listbullet1">Синапс по модели <code class="programcharacter">DeltaSynapse</code>&nbsp;(далее также &quot;дельта-синапс&quot;). <p class="listcontinue1">После получения <a id="h254019" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254019','h254019')" target="_self">спайка</a> от пресинаптической <a id="h254031" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254031','h254031')" target="_self">популяции</a> синапс генерирует сообщение, содержащее значение <a id="h254029" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254029','h254029')" target="_self">синаптического воздействия</a>. Проекция синапсов отправляет синаптическое воздействие популяции для изменения мембранного потенциала постсинаптического нейрона. При этом отправка сообщения <a id="h254030" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254030','h254030')" target="_self">проекцией</a> происходит без временной задержки. </p>
+<div id="d254030" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254030');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Контейнер, содержащий набор синапсов одного типа, соединяющих нейроны пресинаптической и постсинаптической популяций. </p>
+</div><div id="d254029" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254029');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Значение, формируемое синапсом и предназначенное для изменения значений атрибутов нейронов.</p>
+</div><div id="d254031" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254031');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Контейнер, содержащий набор нейронов и их функцию в соответствии с типом нейронов.</p>
+</div><div id="d254019" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254019');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Кратковременный потенциал действия, сгенерированный нейроном популяции в результате изменения атрибутов нейрона.</p>
+</div><p class="listcontinue1">Отправляемое синаптическое воздействие определяется значением веса дельта-синапса. Вы можете указать <a id="h254034" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254034','h254034')" target="_self">вес синапса</a> в атрибутах его экземпляра.</p>
+<div id="d254034" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254034');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Значение сигнала, который синапс передает нейронам связанной популяции.</p>
+</div></li><li class="listbullet1">Синапс по модели <code class="programcharacter">AdditiveSTDPDeltaSynapse</code>.<p class="listcontinue1">Синапс по модели <code class="programcharacter">AdditiveSTDPDeltaSynapse</code> представляет собой дельта-синапс с синаптической пластичностью, зависимой от времени получения спайка. Если спайк от пресинаптической популяции поступает в проекцию перед генерацией пресинаптического спайка постсинаптическим нейроном, значение веса синапса увеличивается. Если пресинаптический спайк поступает на синапс после генерации спайка постсинаптическим нейроном, значение веса синапса уменьшается. </p>
+<p class="listcontinue1">Вес синапса определяет значение синаптического воздействия, отправляемого в постсинаптическую популяцию.</p>
+<p class="listcontinue1">Изменение веса синапса рассчитывается по формуле, представленной на рисунке ниже, где:</p>
+<ul class="listbullet2"><li class="listbullet2"><em class="emphasischaracter">j</em> соответствует пресинаптическому нейрону.</li><li class="listbullet2"><em class="emphasischaracter">i</em> соответствует постсинаптическому нейрону.</li><li class="listbullet2"><em class="emphasischaracter">n</em> соответствует порядковому номеру пресинаптического нейрона.</li><li class="listbullet2"><em class="emphasischaracter">f</em> соответствует порядковому номеру постсинаптического нейрона.</li><li class="listbullet2"><img id="f260663" src="postsynoptictime.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"> соответствует времени получения синапсом спайков от пресинаптического нейрона.</li><li class="listbullet2"><img id="f260662" src="presynaptictime.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"> соответствует времени генерации спайка постсинаптическим нейроном.</li><li class="listbullet2"><img id="f260664" src="weightchange.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"> соответствует значению изменения веса синапса после получения спайка от пресинаптического нейрона.</li></ul><p class="picture"><img id="f260659" src="additivestdpdeltasynapse.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Формула для расчета изменения веса синапса по модели <code class="programcharacter">AdditiveSTDPDeltaSynapse</code></p>
+</li><li class="listbullet1">Синапс по модели <code class="programcharacter">SynapticResourceSTDPDeltaSynapse</code>.<p class="listcontinue1">Синапс по модели <code class="programcharacter">SynapticResourceSTDPDeltaSynapse</code> представляет собой дельта-синапс с синаптической пластичностью, зависимой от синаптического ресурса. В свою очередь значение синаптического ресурса зависит от используемой синаптической пластичности:</p>
+<ul class="listbullet2"><li class="listbullet2">Хеббовская пластичность. <p class="listcontinue2">Значение синаптического ресурса зависит от периода плотной последовательности спайков (далее также &quot;ППС&quot;). <em class="emphasischaracter">ППС</em>&nbsp;&#8211; это последовательность генерируемых нейроном нефорсированных спайков, в которой все соседние спайки разделены временем не больше, чем <em class="emphasischaracter">ISImax</em>, где <em class="emphasischaracter">ISImax</em>&nbsp;&#8211; это максимальное допустимое расстояние между спайками в ППС. В свою очередь <em class="emphasischaracter">периодом ППС</em> является интервал времени между моментом начала Хеббовской пластичности перед первым спайком в ППС и одним из следующих моментов времени: достижение максимально допустимого расстояния ISImax после последнего спайка в ППС, форсированное срабатывание или приход спайка на дофаминовый синапс.</p>
+<p class="listcontinue2">При получении хотя бы одного спайка в период ППС синаптический ресурс изменяется на величину текущей Хеббовской пластичности. Значение Хеббовской пластичности зависит от переменной стабильности нейрона и рассчитывается по формуле, представленной на рисунке ниже, где: </p>
+<ul class="listbullet3"><li class="listbullet3"><img id="f264566" src="hebbianplasticity.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"> соответствует Хеббовской пластичности.</li><li class="listbullet3"><em class="emphasischaracter">s</em> соответствует переменной стабильности нейрона. В момент первого спайка в период ППС значение стабильности меняется на некоторую константу. Если стабильность уже отрицательная, она не меняется в меньшую сторону.</li></ul></li></ul><p class="picture"><img id="f264604" src="hebbianplasticity_1.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Формула для расчета Хеббовской пластичности</p>
+<ul class="listbullet2"><li class="listbullet2">Безусловная пластичность. <p class="listcontinue2">При ненулевой безусловной пластичности значение синаптического ресурса уменьшается на значение пластичности при получении спайка. Значение безусловной пластичности зависит от переменной стабильности нейрона и рассчитывается по формуле, представленной на рисунке ниже, где: </p>
+<ul class="listbullet3"><li class="listbullet3"><img id="f264566_1" src="hebbianplasticity.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"> соответствует безусловной пластичности. </li><li class="listbullet3"><em class="emphasischaracter">s</em> соответствует переменной стабильности нейрона. В момент первого спайка в период ППС значение стабильности меняется на некоторую константу. Если стабильность уже отрицательная, она не меняется в меньшую сторону.</li></ul></li></ul><p class="picture"><img id="f264604_1" src="hebbianplasticity_1.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Формула для расчета безусловной пластичности</p>
+<ul class="listbullet2"><li class="listbullet2">Дофаминовая пластичность. <p class="listcontinue2">Дофаминовая пластичность применима, когда сумма всех дофаминовых синапсов, получивших спайк в текущий шаг исполнения нейронной сети, не равна нулю. В случае дофаминовой пластичности значение синаптического ресурса изменяется по формуле, представленной на рисунке ниже, где:</p>
+<ul class="listbullet3"><li class="listbullet3"><em class="emphasischaracter">D</em> соответствует сумме дофаминовых синапсов.  </li><li class="listbullet3"><em class="emphasischaracter">s</em> соответствует переменной стабильности нейрона.</li></ul></li></ul><p class="picture"><img id="f264610" src="dopamineplasticity_1.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Формула для расчета синаптического расчета при дофаминовой пластичности</p>
+<p class="listcontinue2">В свою очередь сумма дофаминовых синапсов влияет на переменную стабильности нейрона. Если в момент форсированного срабатывания пришло <em class="emphasischaracter">дофаминовое наказание</em> (сумма дофаминовых синапсов меньше нуля), то значение стабильности нейрона уменьшается на значение <em class="emphasischaracter">rD</em>, где <em class="emphasischaracter">r</em> соответствует некоторой константе, а <em class="emphasischaracter">D</em>&nbsp;&#8211; дофаминовому наказанию.</p>
+<p class="listcontinue2">Если в момент форсированного срабатывания пришло <em class="emphasischaracter">дофаминовое вознаграждение</em> (сумма дофаминовых синапсов выше нуля), то значение стабильности нейрона увеличивается на значение <em class="emphasischaracter">rD</em>, где <em class="emphasischaracter">r</em> соответствует некоторой константе, а <em class="emphasischaracter">D</em>&nbsp;&#8211; дофаминовому вознаграждению. Иначе значение стабильности изменяется на значение, представленное на рисунке ниже, где:</p>
+<ul class="listbullet3"><li class="listbullet3"><em class="emphasischaracter">D</em> соответствует сумме дофаминовых синапсов.</li><li class="listbullet3"><em class="emphasischaracter">ISImax</em> соответствует максимально допустимому расстоянию между спайками в ППС.</li><li class="listbullet3"><img id="f264611" src="timedss.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"> соответствует времени с первого спайка в последнем ППС.</li></ul><p class="listcontinue1">Вес синапса определяет значение синаптического воздействия, отправляемого в постсинаптическую популяцию и связан со значением синаптического ресурса формулой, представленной на рисунке ниже, где:</p>
+</li><li class="listbullet1"><em class="emphasischaracter">w</em>&nbsp;соответствует весу синапса.</li><li class="listbullet1"><em class="emphasischaracter">W</em>&nbsp;соответствует синаптическому ресурсу.</li><li class="listbullet1"><img id="f264192" src="minweight.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0">&nbsp;соответствует некоторому случайно заданному минимальному значению веса.</li><li class="listbullet1"><img id="f264193" src="maxweight.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"> соответствует некоторому случайно заданному максимальному значению веса.<p class="picture"><img id="f264191" src="synapticresourcestdpdeltasynapse_1.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Формула для расчета изменения веса в зависимости от синаптического ресурса</p>
+</li></ul><p class="bodytext">Если требуется, вы можете реализовать и использовать собственные модели синапсов.</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="245041"><p><a name=245041 style="display: none;">[Topic 245041]</a></p>
+	<h2 id="t245041" class="heading2">Библиотека шаблонов</h2>
+<p class="bodytext">Библиотека шаблонов представляет собой набор шаблонов общего назначения. Шаблоны библиотеки используются, например, внутри методов бекенда, обеспечивающих интроспекцию. </p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="244808"><p><a name=244808 style="display: none;">[Topic 244808]</a></p>
+	<h2 id="t244808" class="heading2">Поддерживаемые бекенды</h2>
+<p class="bodytext">В Kaspersky Neuromorphic Platform поддерживаются следующие типы бекендов:</p>
+<ul class="listbullet1"><li class="listbullet1"><em class="emphasischaracter">Однопоточный бекенд для CPU</em>. Бекенд работает только в одном потоке. Вы можете использовать однопоточный бекенд для отладки платформы и работы нейронной сети. </li><li class="listbullet1"><em class="emphasischaracter">Многопоточный бекенд для CPU</em>. Бекенд работает в нескольких потоках одновременно, что обеспечивает повышение скорости расчета нейронной сети. Вы можете использовать многопоточный бекенд для эмуляции импульсной нейронной сети.</li></ul><p class="bodytext">Работа бекенда для CPU основывается на обмене сообщениями между <a id="h235852" class="crossreferencetemplate" href="#235844" target="_self">проекциями</a> и <a id="h235851" class="crossreferencetemplate" href="#235842" target="_self">популяциями</a>. Объекты <a id="h235739" class="crossreferencetemplate" href="#235738" target="_self">библиотеки поддержки бекендов</a> также могут обмениваться сообщениями с объектами внешней среды. Для обмена сообщений бекенд предоставляет шину сообщений <code class="programcharacter"><a id="h244977" class="crossreferencetemplate" href="#244932" target="_self">MessageBus</a></code>. </p>
+<p class="bodytext">Для инициализации бекенда требуется предварительно загрузить проекции, содержащие <a id="h254022" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254022','h254022')" target="_self">синапсы</a>, и популяции, содержащие <a id="h254021" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254021','h254021')" target="_self">нейроны</a>. В процессе инициализации бекенда загруженные проекции синапсов подписываются на <a id="h254019" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254019','h254019')" target="_self">спайки</a> от связанных популяций или каналов ввода, а загруженные популяции подписываются на <a id="h254029" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254029','h254029')" target="_self">синаптические воздействия</a> от связанных проекций. </p>
+<div id="d254029" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254029');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Значение, формируемое синапсом и предназначенное для изменения значений атрибутов нейронов.</p>
+</div><div id="d254019" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254019');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Кратковременный потенциал действия, сгенерированный нейроном популяции в результате изменения атрибутов нейрона.</p>
+</div><div id="d254021" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254021');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Узел нейронной сети, имеющий набор атрибутов. На основе атрибутов нейрона и последовательности входных сигналов происходит вычисление некоторой математической функции, результатом которого является синаптическое воздействие или его отсутствие.</p>
+</div><div id="d254022" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254022');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Место соединения нейронов, основная функция которого&nbsp;&#8211; передача сигнала от одного нейрона к другому. Каждый нейрон может быть связан с множеством синапсов.</p>
+</div><p class="bodytext">Цикл работы бекенда состоит из следующих этапов:</p>
+<ol class="listnumber1"><li class="listnumber1">Каналы ввода отправляют данные в шину сообщений <code class="programcharacter">MessageBus</code>.</li><li class="listnumber1">Бекенд вычисляет функцию популяции нейронов.</li><li class="listnumber1">Популяции нейронов отправляют спайки с результатами вычислений в шину сообщений <code class="programcharacter">MessageBus</code> с помощью точек подключения <code class="programcharacter">MessageEndpoint</code>.</li><li class="listnumber1">Шина сообщений <code class="programcharacter">MessageBus</code> отправляет данные, полученные от популяций, в проекции или каналы вывода.</li><li class="listnumber1">Бекенд вычисляет функцию проекции синапсов. </li><li class="listnumber1">Проекции синапсов отправляют синаптические воздействия с результатами вычислений в шину сообщений <code class="programcharacter">MessageBus</code> с помощью точек подключения <code class="programcharacter">MessageEndpoint</code>.</li><li class="listnumber1">Шина сообщений <code class="programcharacter">MessageBus</code> отправляет данные, полученные от проекций, в связанные популяции нейронов.</li></ol><p class="bodytext"></p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="244427"><p><a name=244427 style="display: none;">[Topic 244427]</a></p>
+	<h2 id="t244427" class="heading2">Обмен данными в Kaspersky Neuromorphic Platform</h2>
+<p class="bodytext">Kaspersky Neuromorphic Platform обеспечивает обмен данными между объектами <a id="h235739" class="crossreferencetemplate" href="#235738" target="_self">библиотеки поддержки бекендов</a>, а также между объектами платформы и объектами внешней среды. Обмен данными между объектами библиотеки поддержки бекенда Kaspersky Neuromorphic Platform осуществляется через <a id="h243744" class="crossreferencetemplate" href="#243634" target="_self">сообщения</a>.</p>
+<p class="introheading">Обмен данными между популяциями и проекциями</p>
+<p class="bodytext"><a id="h254021" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254021','h254021')" target="_self">Нейроны</a> популяции генерируют сообщения, содержащие <a id="h254019" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254019','h254019')" target="_self">спайки</a>, на которые может быть подписано более одной <a id="h254030" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254030','h254030')" target="_self">проекции</a>. Спайки популяций передаются проекциям синапсов.</p>
+<div id="d254030" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254030');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Контейнер, содержащий набор синапсов одного типа, соединяющих нейроны пресинаптической и постсинаптической популяций. </p>
+</div><div id="d254019" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254019');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Кратковременный потенциал действия, сгенерированный нейроном популяции в результате изменения атрибутов нейрона.</p>
+</div><div id="d254021" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254021');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Узел нейронной сети, имеющий набор атрибутов. На основе атрибутов нейрона и последовательности входных сигналов происходит вычисление некоторой математической функции, результатом которого является синаптическое воздействие или его отсутствие.</p>
+</div><p class="bodytext">После получения спайков бекенд вычисляет <a id="h254029" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254029','h254029')" target="_self">синаптические воздействия</a>. Проекции отправляют сообщения со значениями синаптических воздействий постсинаптическим популяциям нейронов. </p>
+<div id="d254029" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254029');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Значение, формируемое синапсом и предназначенное для изменения значений атрибутов нейронов.</p>
+</div><p class="introheading">Обмен данными между бекендом и внешней средой</p>
+<p class="bodytext">Бекенд принимает данные от внешней среды в виде спайков. Спайки могут быть переданы в бекенд в синхронном режиме&nbsp;(по запросу пользователя). Для получения спайков в синхронном режиме вызывается блокирующий метод источника данных. </p>
+<p class="bodytext">Сообщения от бекенда во внешнюю среду могут передаваться подписчикам по сигналу бекенда или в синхронном режиме по запросу пользователя.</p>
+<p class="introheading">Обмен данными между нейронной сетью и внешней средой</p>
+<p class="bodytext">Из внешней среды в нейронную сеть данные поступают через каналы ввода, которые преобразуют эти данные в спайки. </p>
+<p class="bodytext">Во внешнюю среду нейронная сеть передает данные через каналы вывода, подключенные к указанным популяциям и преобразующие спайки в данные. Передача данных, например потенциала мембраны, возможна также через подсистему мониторинга.  </p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235050"><p><a name=235050 style="display: none;">[Topic 235050]</a></p>
+	<h2 id="t235050" class="heading2">Архитектура фреймворка для C++ </h2>
+<p class="bodytext">Фреймворк Kaspersky Neuromorphic Platform, реализованный на языке программирования C++, представляет собой независимые блоки, которые обеспечивают управление бекендами, преобразуют представление нейронной сети в разные форматы и выбирают оптимальную нейронную сеть для запуска. Во фреймворке для C++ реализованы функции, не относящиеся непосредственно к эмуляции импульсных нейронных сетей. </p>
+<p class="bodytext">С помощью фреймворка для C++ Kaspersky Neuromorphic Platform вы можете выполнять следующие задачи:</p>
+<ul class="listbullet1"><li class="listbullet1">Загружать структуру нейронной сети из внешних форматов.</li><li class="listbullet1">Динамически загружать различные бекенды.</li><li class="listbullet1">Выполнять эмуляции импульсных нейронных сетей на различных бекендах.</li><li class="listbullet1">Вводить и выводить данные нейронных сетей.</li><li class="listbullet1">Контролировать выполнение эмуляции.</li><li class="listbullet1">Реализовывать специальные алгоритмы.</li></ul>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="243537"><p><a name=243537 style="display: none;">[Topic 243537]</a></p>
+	<h3 id="t243537" class="heading3">Объекты фреймворка для C++ </h3>
+<p class="bodytext">Этот раздел содержит информацию об объектах фреймворка на языке программирования C++, необходимых для управления бекендами.</p>
+<p class="bodytext">Таблица ниже содержит описание объектов фреймворка для C++.</p>
+<p class="tablename">Объекты фреймворка</p>
+<p class="spacerfortables"></p>
+<table class="tableintopic" width="437" cellpadding="2" cellspacing="0" border="1" style="border-collapse:collapse; border:1px solid #010101">
+<tr align="left" valign="top">
+<th bgcolor="#C0C0C0" style="border:1px solid #010101;" width="219"><p class="tableheading">Объект</p>
+</th>
+<th bgcolor="#C0C0C0" style="border:1px solid #010101;" width="219"><p class="tableheading">Описание</p>
+</th>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h244947" class="crossreferencetemplate" href="#243548" target="_self">BackendLoader</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Класс, реализующий загрузчик динамических библиотек.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h235754" class="crossreferencetemplate" href="#235753" target="_self">Coordinates</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Набор классов, реализующих пространственные координаты нейрона.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h244946" class="crossreferencetemplate" href="#244944" target="_self">input</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Пространство имен, в котором реализованы интерфейсы для доступа к каналу ввода и преобразователю данных, поступающих из внешней среды.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h260415" class="crossreferencetemplate" href="#260375" target="_self">MessageObserver</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Класс, реализующий наблюдателя.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h235855" class="crossreferencetemplate" href="#235849" target="_self">Model</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Класс, реализующий модель.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h251306" class="crossreferencetemplate" href="#251296" target="_self">ModelExecutor</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Класс, реализующий исполнитель модели.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h235802" class="crossreferencetemplate" href="#235801" target="_self">Network</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Класс, реализующий объект нейронной сети.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h244950" class="crossreferencetemplate" href="#243539" target="_self">output</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Пространство имен, в котором реализованы интерфейсы для доступа к каналам вывода.</p>
+</td>
+</tr>
+
+</table>
+<p class="bodytext"></p>
+<p class="bodytext"></p>
+<p class="bodytext"></p>
+<p class="bodytext"></p>
+<p class="bodytext">В Kaspersky Neuromorphic Platform объект класса <code class="programcharacter">Network</code> может включать в себя набор координат (произвольных или задаваемых пользователем) из классов <code class="programcharacter">Coordinates</code>. Объект класса <code class="programcharacter">Network</code>, а также контейнеры каналов ввода и вывода, реализованных в пространствах имен <code class="programcharacter">input</code> и <code class="programcharacter">output</code> соответственно, хранятся в объекте класса <code class="programcharacter">Model</code>. Каналы ввода и вывода используются для преобразования данных, поступающих в проекции нейронной сети, а также для преобразования сообщений популяций нейронной сети в <a id="h244950_2" class="crossreferencetemplate" href="#243539" target="_self">один из предусмотренных форматов данных</a>.</p>
+<p class="bodytext">Вы можете исполнить объект класса <code class="programcharacter">Model</code> с помощью метода <code class="programcharacter">run()</code> объекта класса <code class="programcharacter">ModelExecutor</code>. Объект класса <code class="programcharacter">ModelExecutor</code> также содержит объект класса <code class="programcharacter">MessageObserver</code>, который обрабатывает полученные сообщения в соответствии с заданной функцией, и экземпляр класса <code class="programcharacter">BackendLoader</code>, с помощью методов которого вы можете загружать динамические библиотеки. </p>
+<p class="bodytext">На рисунке ниже представлена схема взаимодействия объектов фреймворка для C++.</p>
+<p class="picture"><img id="f250829" src="frameworkobjects.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Схема взаимодействия объектов фреймворка для C++</p>
+<table class="relatedtopics belowtopictext" cellpadding="0" cellspacing="0" border="0">
+<tr valign="top">
+<td width= "302">
+<p class="relatedheading">В этом разделе</p><p class="relateditem"><a href="#244944" target="_self">Пространство имен input</a></p><p class="relateditem"><a href="#243539" target="_self">Пространство имен output</a></p><p class="relateditem"><a href="#235753" target="_self">Набор классов Coordinates</a></p><p class="relateditem"><a href="#260375" target="_self">Класс MessageObserver</a></p><p class="relateditem"><a href="#235801" target="_self">Класс Network</a></p><p class="relateditem"><a href="#235849" target="_self">Класс Model</a></p><p class="relateditem"><a href="#251296" target="_self">Класс ModelExecutor</a></p><p class="relateditem"><a href="#243548" target="_self">Класс BackendLoader</a></p></td>
+</tr>
+</table>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="244944"><p><a name=244944 style="display: none;">[Topic 244944]</a></p>
+	<h4 id="t244944" class="heading4">Пространство имен input</h4>
+<p class="bodytext">В пространстве имен <code class="programcharacter">input</code> реализованы интерфейсы для доступа к каналу ввода и преобразователю данных, поступающих из внешней среды. Данные могут поступать в Kaspersky Neuromorphic Platform как в синхронном&nbsp;(по запросу пользователя), так и в асинхронном режиме&nbsp;(по вызову обработчика). </p>
+<p class="introheading">Класс SequenceConverter</p>
+<p class="bodytext">Класс <code class="programcharacter">SequenceConverter</code> реализует преобразователь данных, который принимает данные из потока <code class="programcharacter">istream</code> и делит поступившие данные на отрезки определенной длины. С помощью методов пространства имен <code class="programcharacter">input</code> преобразователь данных приводит значения во входных отрезках к типу значений <code class="programcharacter">boolean</code>. Если входное значение содержит <a id="h254019" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254019','h254019')" target="_self">спайк</a>, метод возвращает <code class="programcharacter">true</code>. Объект класса <code class="programcharacter">SequenceConverter</code> возвращает список индексов входных значений, которые содержат спайки, в виде сообщения <code class="programcharacter"><a id="h243744" class="crossreferencetemplate" href="#243634" target="_self">SpikeMessage</a></code>. </p>
+<div id="d254019" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254019');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Кратковременный потенциал действия, сгенерированный нейроном популяции в результате изменения атрибутов нейрона.</p>
+</div><p class="bodytext">Каждый объект класса <code class="programcharacter">SequenceConverter</code> содержит следующие атрибуты:</p>
+<ul class="listbullet1"><li class="listbullet1">Поток данных <code class="programcharacter">istream</code>, от которого поступают данные.</li><li class="listbullet1">Функция приведения входных значений к типу значений <code class="programcharacter">boolean</code>.</li><li class="listbullet1">Длина отрезка входных данных. </li></ul><p class="introheading">Класс IndexConverter</p>
+<p class="bodytext">Класс <code class="programcharacter">IndexConverter</code> реализует преобразователь данных, который принимает данные из потока <code class="programcharacter">istream</code> и преобразует последовательность индексов поступивших значений, содержащих спайки, в сообщение <code class="programcharacter"><a id="h243744_2" class="crossreferencetemplate" href="#243634" target="_self">SpikeMessage</a></code>. </p>
+<p class="bodytext">Каждый объект класса <code class="programcharacter">IndexConverter</code> содержит следующие атрибуты:</p>
+<ul class="listbullet1"><li class="listbullet1">Поток данных <code class="programcharacter">istream</code>, от которого поступают данные.</li><li class="listbullet1">Символ, с помощью которого индексы значений разделены в сообщении <code class="programcharacter">SpikeMessage</code>.</li></ul><p class="introheading">Класс InputChannel</p>
+<p class="bodytext">Класс <code class="programcharacter">InputChannel</code> реализует канал ввода, который принимает сообщения <code class="programcharacter">SpikeMessage</code> от преобразователя данных. С помощью методов класса <code class="programcharacter">InputChannel</code> преобразованные данные могут быть переданы подписчикам&nbsp;через точки подключения при наличии подписки.</p>
+<p class="bodytext">Каждый объект класса <code class="programcharacter">InputChannel</code> содержит следующие атрибуты:</p>
+<ul class="listbullet1"><li class="listbullet1">Базовые данные канала ввода.</li><li class="listbullet1">Точка подключения, с помощью которой преобразованные данные отправляются подписчикам.</li><li class="listbullet1">Преобразователь данных в сообщения <code class="programcharacter">SpikeMessage</code>.</li></ul>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="243539"><p><a name=243539 style="display: none;">[Topic 243539]</a></p>
+	<h4 id="t243539" class="heading4">Пространство имен output</h4>
+<p class="bodytext">В пространство имен <code class="programcharacter">output</code> реализованы интерфейс для доступа к каналам вывода и преобразователи сообщений <code class="programcharacter">SpikeMessage</code>. Kaspersky Neuromorphic Platform может передавать данные как в синхронном режиме&nbsp;(по запросу пользователя), так и в асинхронном режиме&nbsp;(по вызову обработчика).</p>
+<p class="introheading">Класс OutputChannel</p>
+<p class="bodytext">Класс <code class="programcharacter">OutputChannel</code> реализует канал вывода, который принимает набор сообщений, содержащих спайки, от связанной популяции за несколько тактов исполнения нейронной сети. Сообщения <code class="programcharacter">SpikeMessage</code> могут быть преобразованы в один из следующих форматов данных, определяемых преобразователями сообщений:</p>
+<ul class="listbullet1"><li class="listbullet1">Вектор значений типа <code class="programcharacter">boolean</code>.</li><li class="listbullet1">Вектор значений, в котором каждое значение соответствует количеству генерации спайков нейроном.</li><li class="listbullet1">Вектор нейронов, сгенерировавших спайки, из последовательности сообщений <code class="programcharacter">SpikeMessage</code>.</li></ul><p class="bodytext">Если эти форматы данных вам не подходят, вы можете реализовать собственную функцию, которая будет преобразовывать полученные сообщения в нужный вам формат данных.</p>
+<p class="introheading">Класс ConvertToSet</p>
+<p class="bodytext">Класс <code class="programcharacter">ConvertToSet</code> реализует преобразователь данных, который получает сообщения <code class="programcharacter">SpikeMessage</code> из объекта класса <code class="programcharacter">OutputChannel</code> и преобразует их в вектор нейронов, сгенерировавших спайки. </p>
+<p class="bodytext">Каждый объект класса <code class="programcharacter">ConvertToSet</code> содержит размер вектора нейронов.</p>
+<p class="introheading">Функтор converter_bitwise</p>
+<p class="bodytext">Функтор <code class="programcharacter">converter_bitwise</code> реализует преобразователь данных, который получает сообщения <code class="programcharacter">SpikeMessage</code> и преобразует их в вектор значений типа <code class="programcharacter">boolean</code>, в котором значение <code class="programcharacter">true</code> соответствуют наличию спайка.</p>
+<p class="introheading">Функтор converter_count</p>
+<p class="bodytext">Функтор <code class="programcharacter">converter_count</code> реализует преобразователь данных, который получает сообщения <code class="programcharacter">SpikeMessage</code> и преобразует их в вектор значений. Каждое значение вектор соответствует количеству генерации спайков нейроном.</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235753"><p><a name=235753 style="display: none;">[Topic 235753]</a></p>
+	<h4 id="t235753" class="heading4">Набор классов Coordinates</h4>
+<p class="bodytext">Набор классов <code class="programcharacter">Coordinates</code> реализует координаты точки в n-мерном пространстве. Координаты хранятся в объекте тега. </p>
+<p class="bodytext">Координаты могут быть использованы для отображения нейронной сети. С помощью координат вы также можете задать атрибуты нейронной сети. Например, на основе расстояния между координатами нейронов вы можете выявить задержку сигнала, который передается между этими нейронами.</p>
+<p class="bodytext">Координаты могут изменяться произвольно. Во фреймворке для C++ реализованы декартова и полярная системы координат.</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="260375"><p><a name=260375 style="display: none;">[Topic 260375]</a></p>
+	<h4 id="t260375" class="heading4">Класс MessageObserver</h4>
+<p class="bodytext">Класс <code class="programcharacter">MessageObserver</code> реализует наблюдателя, который подписывается на некоторый набор сущностей и определенный <a id="h243744" class="crossreferencetemplate" href="#243634" target="_self">тип сообщений</a>. В конце каждого такта исполнения нейронной сети наблюдатель получает сообщения, пришедшие от сущностей по <a id="h250728" class="crossreferencetemplate" href="#250697" target="_self">подписке</a>, и обрабатывает их в соответствии с заданной функцией.</p>
+<p class="bodytext">Каждый объект класса <code class="programcharacter">MessageObserver</code> содержит следующие атрибуты:</p>
+<ul class="listbullet1"><li class="listbullet1"><a id="h247160" class="crossreferencetemplate" href="#247159" target="_self">Точка подключения</a>, которая обеспечивает подписку на сообщения сущностей;</li><li class="listbullet1">Функция для обработки полученных сообщений;</li><li class="listbullet1"><a id="h248876" class="crossreferencetemplate" href="#247366" target="_self">Идентификатор</a> наблюдателя.</li></ul>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235801"><p><a name=235801 style="display: none;">[Topic 235801]</a></p>
+	<h4 id="t235801" class="heading4">Класс Network</h4>
+<p class="bodytext">Класс <code class="programcharacter">Network</code> реализует объект нейронной сети. Объект нейронной сети хранит <a id="h248869" class="crossreferencetemplate" href="#248867" target="_self">базовые данные</a>, <a id="h235851" class="crossreferencetemplate" href="#235842" target="_self">популяции</a>, <a id="h235852" class="crossreferencetemplate" href="#235844" target="_self">проекции</a> и стратегии генерации нейронов и синапсов, а также обеспечивает общий интерфейс для доступа к нейронам и синапсам нейронной сети. В нейронной сети все популяции связаны проекциями.</p>
+<p class="bodytext">Класс содержит методы, с помощью которых вы можете добавлять и удалять популяции и проекции нейронной сети.</p>
+<p class="bodytext"></p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235849"><p><a name=235849 style="display: none;">[Topic 235849]</a></p>
+	<h4 id="t235849" class="heading4">Класс Model</h4>
+<p class="bodytext">Класс <code class="programcharacter">Model</code> реализует модель, связывающую и хранящую нейронную сеть и каналы ввода и вывода. Для исполнения модели на разных бекендах вы можете загрузить объект модели в объект класса <code class="programcharacter">ModelExecutor</code> и вызвать метод исполнения модели <code class="programcharacter">run()</code>.</p>
+<p class="bodytext">С помощью методов класса <code class="programcharacter">Model</code> вы можете управлять объектом нейронной сети. </p>
+<p class="bodytext">Каждый объект класса <code class="programcharacter">Model</code> содержит следующие атрибуты:</p>
+<ul class="listbullet1"><li class="listbullet1"><a id="h248869" class="crossreferencetemplate" href="#248867" target="_self">Базовые данные</a> модели.</li><li class="listbullet1"><a id="h235802" class="crossreferencetemplate" href="#235801" target="_self">Нейронная сеть</a>.</li><li class="listbullet1">Идентификаторы <a id="h244946" class="crossreferencetemplate" href="#244944" target="_self">каналов ввода</a> и <a id="h244950" class="crossreferencetemplate" href="#243539" target="_self">вывода</a>.</li></ul>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="251296"><p><a name=251296 style="display: none;">[Topic 251296]</a></p>
+	<h4 id="t251296" class="heading4">Класс ModelExecutor</h4>
+<p class="bodytext">Класс <code class="programcharacter">ModelExecutor</code> реализует исполнитель моделей. С помощью класса <code class="programcharacter">ModelExecutor</code> вы можете исполнить загруженную модель на разных бекендах.</p>
+<p class="bodytext">Каждый объект класса <code class="programcharacter">ModelExecutor</code> содержит следующие атрибуты:</p>
+<ul class="listbullet1"><li class="listbullet1"><a id="h248869" class="crossreferencetemplate" href="#248867" target="_self">Базовые данные</a> исполнителя модели.</li><li class="listbullet1"><a id="h244947" class="crossreferencetemplate" href="#243548" target="_self">Загрузчик динамических библиотек</a>.</li><li class="listbullet1"><a id="h235750" class="crossreferencetemplate" href="#235749" target="_self">Экземпляр бекенда</a>, на котором требуется исполнить модель.</li><li class="listbullet1"><a id="h235855" class="crossreferencetemplate" href="#235849" target="_self">Модель для исполнения</a>.</li><li class="listbullet1">Карта канала ввода, содержащая <a id="h248876" class="crossreferencetemplate" href="#247366" target="_self">идентификатор</a>, <a id="h256495" class="crossreferencetemplate" href="#256488" target="_self">хешированный идентификатор</a> и <a id="h244946" class="crossreferencetemplate" href="#244944" target="_self">преобразователь входных данных</a>.</li><li class="listbullet1"><a id="h244946_2" class="crossreferencetemplate" href="#244944" target="_self">Каналы ввода</a> и <a id="h244950" class="crossreferencetemplate" href="#243539" target="_self">вывода</a>.</li></ul><p class="bodytext"></p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="243548"><p><a name=243548 style="display: none;">[Topic 243548]</a></p>
+	<h4 id="t243548" class="heading4">Класс BackendLoader</h4>
+<p class="bodytext">Класс <code class="programcharacter">BackendLoader</code> реализует загрузчик динамических библиотек, возвращающий указатель на экземпляр загруженного бекенда. </p>
+<p class="bodytext">С помощью методов класса <code class="programcharacter">BackendLoader</code> вы можете загружать динамические библиотеки и проверять, является ли загруженная библиотека библиотекой бекенда.</p>
+<p class="bodytext">Класс <code class="programcharacter">BackendLoader</code> реализован с помощью библиотеки <a class="hyperlinktemplate" href="https://www.boost.org/doc/libs/1_80_0/doc/html/boost_dll.html" target="_blank">Boost:DLL</a>.</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235594"><p><a name=235594 style="display: none;">[Topic 235594]</a></p>
+	<h2 id="t235594" class="heading2">Сторонние библиотеки и используемые форматы </h2>
+<p class="bodytext">Этот раздел содержит информацию о сторонних библиотеках, форматах данных и структуры нейронной сети, используемых Kaspersky Neuromorphic Platform.</p>
+<table class="relatedtopics belowtopictext" cellpadding="0" cellspacing="0" border="0">
+<tr valign="top">
+<td width= "302">
+<p class="relatedheading">В этом разделе</p><p class="relateditem"><a href="#235876" target="_self">Сторонние библиотеки</a></p><p class="relateditem"><a href="#235877" target="_self">Форматы данных, обрабатываемые нейронной сетью</a></p><p class="relateditem"><a href="#235878" target="_self">Форматы структуры нейронной сети</a></p></td>
+</tr>
+</table>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235876"><p><a name=235876 style="display: none;">[Topic 235876]</a></p>
+	<h3 id="t235876" class="heading3">Сторонние библиотеки</h3>
+<p class="bodytext">Kaspersky Neuromorphic Platform использует следующие библиотеки:</p>
+<ul class="listbullet1"><li class="listbullet1"><code class="programcharacter"><a class="hyperlinktemplate" href="https://www.boost.org/doc/libs/" target="_blank">Boost</a></code>.&nbsp;Библиотеки используются для реализации классов и структур&nbsp;(например, <code class="programcharacter"><a id="h248876" class="crossreferencetemplate" href="#247366" target="_self">UID</a></code>, <code class="programcharacter"><a id="h244947" class="crossreferencetemplate" href="#243548" target="_self">BackendLoader</a></code>).</li><li class="listbullet1"><code class="programcharacter"><a class="hyperlinktemplate" href="https://flatbuffers.dev/flatbuffers_guide_use_cpp.html" target="_blank">FlatBuffers</a></code>. Библиотека используется для сериализации в Kaspersky Neuromorphic Platform.</li><li class="listbullet1"><code class="programcharacter"><a class="hyperlinktemplate" href="http://google.github.io/googletest/" target="_blank">GoogleTest</a></code>. Библиотека используется для тестов платформы.</li><li class="listbullet1"><code class="programcharacter"><a class="hyperlinktemplate" href="https://github.com/intel/pcm" target="_blank">Intel PCM</a></code>. Библиотека используется для получения от CPU метаданных устройства&nbsp;(например, данные об энергопотреблении).</li><li class="listbullet1"><code class="programcharacter"><a class="hyperlinktemplate" href="https://github.com/gabime/spdlog" target="_blank">spdlog</a></code>. Библиотека используется для логирования работы Kaspersky Neuromorphic Platform.</li></ul>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235877"><p><a name=235877 style="display: none;">[Topic 235877]</a></p>
+	<h3 id="t235877" class="heading3">Форматы данных, обрабатываемые нейронной сетью</h3>
+<p class="bodytext">В Kaspersky Neuromorphic Platform используются следующие форматы данных:</p>
+<ul class="listbullet1"><li class="listbullet1">MDF&nbsp;&#8211; формат хранения топологии нейронной сети для фреймворка.</li><li class="listbullet1">CSV&nbsp;&#8211; формат хранения состояния нейронов и синапсов нейронной сети для фреймворка.</li></ul>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235878"><p><a name=235878 style="display: none;">[Topic 235878]</a></p>
+	<h3 id="t235878" class="heading3">Форматы структуры нейронной сети</h3>
+<p class="bodytext">В качестве формата структуры нейронной сети Kaspersky Neuromorphic Platform поддерживает ArNI CSV. Формат ArNI CSV предназначен для описания нейронов и синапсов нейронной сети в виде CSV-файлов.</p>
+<p class="bodytext">Синапсы описываются следующими атрибутами:</p>
+<ul class="listbullet1"><li class="listbullet1">Индекс пресинаптического нейрона.</li><li class="listbullet1">Индекс постсинаптического нейрона.</li><li class="listbullet1">Задержка синаптического воздействия.</li><li class="listbullet1">Тип синапса.<p class="listcontinue1">Тип синапса может иметь значение 0 или 1. Значение 0 соответствует возбуждающему синапсу, значение 1 соответствует тормозящему синапсу.</p>
+</li><li class="listbullet1">Вес синапса.</li></ul><p class="bodytext">Нейроны описываются следующими атрибутами:</p>
+<ul class="listbullet1"><li class="listbullet1">Индекс нейрона.</li><li class="listbullet1">Коэффициент утечки потенциала мембраны.</li><li class="listbullet1">Минимальный потенциал мембраны нейрона.</li></ul>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235045"><p><a name=235045 style="display: none;">[Topic 235045]</a></p>
+	<h1 id="t235045" class="heading1">Установка и удаление платформы</h1>
+<p class="bodytext">Этот раздел содержит пошаговые инструкции по установке и удалению Kaspersky Neuromorphic Platform, а также по работе с исходным кодом платформы для сборки вашего проекта.</p>
+<p class="bodytext"></p>
+<table class="relatedtopics belowtopictext" cellpadding="0" cellspacing="0" border="0">
+<tr valign="top">
+<td width= "302">
+<p class="relatedheading">В этом разделе справки</p><p class="relateditem"><a href="#255811" target="_self">Сценарий работы с исходным кодом платформы</a></p><p class="relateditem"><a href="#235046" target="_self">Клонирование исходного кода платформы из репозитория</a></p><p class="relateditem"><a href="#255715" target="_self">Сборка проекта из исходного кода платформы</a></p><p class="relateditem"><a href="#255720" target="_self">Удаление платформы</a></p></td>
+</tr>
+</table>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="255811"><p><a name=255811 style="display: none;">[Topic 255811]</a></p>
+	<h2 id="t255811" class="heading2">Сценарий работы с исходным кодом платформы</h2>
+<p class="bodytext">Сценарий работы с исходным кодом платформы состоит из следующих этапов:</p>
+<ol class="scenariolistnumber"><li class="scenariolistnumber">Подготовка рабочей директории<p class="scenariolistcontinue">Создайте <a id="h255894" class="crossreferencetemplate" href="#235885" target="_self">рабочую директорию</a>, в которой будут находиться файлы программ вашего проекта&nbsp;(например, файлы формата CPP). В рабочей директории создайте поддиректорию, в которой будет храниться исходный код платформы, и назовите ее KNP.</p>
+<p class="attentioncontinue1">Директория KNP, в которую будет распакован архив с исходным кодом платформы, должна находиться на уровень ниже файлов программ вашего проекта.</p>
+<p class="attentioncontinue1">Убедитесь, что в пути к директории KNP отсутствуют пробелы и служебные символы.</p>
+</li><li class="scenariolistnumber">Получение исходного кода платформы<p class="listcontinue1">Распакуйте архив платформы, входящий в состав <a id="h255819" class="crossreferencetemplate" href="#232787" target="_self">комплекта поставки</a>, в директорию KNP. Например, вы можете распаковать архив платформы с помощью следующей команды:</p>
+<p class="scenariolistcontinue"><code class="programcharacter">tar xf &lt;</code><code class="programcharacterlocalized">путь к архиву платформы</code><code class="programcharacter">&gt; --directory &lt;</code><code class="programcharacterlocalized">путь к директории KNP</code><code class="programcharacter">&gt;</code></p>
+<p class="scenariolistcontinue">Вы также можете <a id="h255810" class="crossreferencetemplate" href="#235046" target="_self">выполнить клонирование исходного кода платформы из репозитория</a> с помощью команды <code class="programcharacter">git clone</code>.</p>
+</li><li class="scenariolistnumber">Сборка проекта из исходного кода<p class="scenariolistcontinue">В рабочей директории создайте файла скрипта сборки CMakeLists.txt и <a id="h255898" class="crossreferencetemplate" href="#255715" target="_self">укажите параметры сборки проекта</a>. Укажите название вашего проекта. Укажите директорию с исходным кодом платформы с помощью команды <code class="programcharacter">add_subdirectory()</code>. Подключите к вашему проекту необходимые библиотеки платформы с помощью команды <code class="programcharacter">target_link_libraries()</code>.</p>
+</li><li class="scenariolistnumber">Использование платформы<p class="scenariolistcontinue">Если требуется, <a id="h255814" class="crossreferencetemplate" href="#250649" target="_self">добавьте новые типы нейронов</a> и/или <a id="h255815" class="crossreferencetemplate" href="#250824" target="_self">синапсов</a>. <a id="h257223" class="crossreferencetemplate" href="#256877" target="_self">Постройте нейронную сеть</a> и исполните ее.</p>
+</li></ol>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235046"><p><a name=235046 style="display: none;">[Topic 235046]</a></p>
+	<h2 id="t235046" class="heading2">Клонирование исходного кода платформы из репозитория</h2>
+<p class="bodytext">Для получения исходного кода платформы вы можете клонировать репозиторий платформы на ваше устройство.</p>
+<p class="procedureheading">Чтобы клонировать репозиторий платформы на устройство:</p>
+<p class="bodytext"></p>
+<p class="bodytext"></p>
+<p class="bodytext"></p>
+<ol class="listnumber1"><li class="listnumber1">Откройте терминал и с помощью команды cd перейдите в <a id="h255894" class="crossreferencetemplate" href="#235885" target="_self">директорию KNP</a>.<p class="listcontinue1">Вы можете использовать любой другой инструмент для работы с Git. </p>
+</li><li class="listnumber1">В командной строке выполните следующую команду для загрузки репозитория платформы на устройство:<p class="listcontinue1"><code class="programcharacter">git clone --recurse-submodules --remote-submodules &lt;</code><code class="programcharacterlocalized">репозиторий платформы</code><code class="programcharacter">&gt;</code></p>
+<p class="listcontinue1">где:</p>
+<ul class="listbullet2"><li class="listbullet2"><code class="programcharacter">--recurse-submodules</code> означает, что каждый подмодуль в репозитории платформы, включая вложенные подмодули, будет автоматически инициализирован и обновлен.</li><li class="listbullet2"><code class="programcharacter">--remote-submodules</code> означает, что для обновления подмодуля все клонированные подмодули будут использовать статус ветки его удаленного отслеживания.</li><li class="listbullet2"><code class="programcharacter">&lt;</code><code class="programcharacterlocalized">репозиторий платформы</code><code class="programcharacter">&gt;</code> соответствует веб-адресу репозитория платформы, полученному от сотрудников &quot;Лаборатории Касперского&quot;.</li></ul></li></ol>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="255715"><p><a name=255715 style="display: none;">[Topic 255715]</a></p>
+	<h2 id="t255715" class="heading2">Сборка проекта из исходного кода платформы</h2>
+<p class="spacer"></p>
+<p class="showhideparagraph"><a class="jumptemplate" href="javascript:showAll('expandingblock')" target="_self">Развернуть все</a>&nbsp;|&nbsp;<a class="jumptemplate" href="javascript:hideAll('expandingblock')" target="_self">Свернуть все</a></p>
+<p class="bodytext">При работе с исходным кодом платформы вы можете указать параметры сборки вашего проекта в файле скрипта сборки CMakeLists.txt. </p>
+<p class="bodytext">В этом разделе приводится последовательность действий, которые требуется выполнить для настройки параметров сборки проекта, с помощью терминала Linux и текстового редактора vim. Вместо терминала Linux и редактора vim вы можете использовать любой другой инструмент разработки и текстовый редактор для работы с файлом скрипта сборки CMakeLists.txt.</p>
+<p class="bodytext">Подробнее о сборке проектов с помощью CMake см. <a class="hyperlinktemplate" href="https://cmake.org/documentation/" target="_blank">документацию CMake</a>.</p>
+<p class="procedureheading">Чтобы собрать проект из исходного кода на устройстве Linux:</p>
+<ol class="listnumber1"><li class="listnumber1">На вашем устройстве под управлением Linux откройте терминал и перейдите в <a id="h255894" class="crossreferencetemplate" href="#235885" target="_self">рабочую директорию</a> с помощью команды <code class="programcharacter">cd</code>:<p class="listcontinue1"><code class="programcharacter">cd &lt;</code><code class="programcharacterlocalized">путь к рабочей директории</code><code class="programcharacter">&gt;</code></p>
+</li><li class="listnumber1">В рабочей директории создайте файл скрипта сборки CMakeLists.txt с помощью текстового редактора vim:<p class="listcontinue1"><code class="programcharacter">vim CMakeLists.txt</code></p>
+<p class="attentioncontinue1">Вместо редактора vim вы можете использовать любой другой текстовый редактор.</p>
+</li><li class="listnumber1">В файле скрипта сборки укажите следующие параметры сборки вашего проекта:<p class="codeheadingkos">CMakeLists.txt</p>
+<p class="programckos"><code class="programcharacter">cmake_minimum_required(VERSION 3.22)</code></p>
+<p class="programckos"><code class="programcharacter">project(&lt;</code><code class="programcharacterlocalized">название проекта</code><code class="programcharacter">&gt;)</code></p>
+<p class="programckos"> </p>
+<p class="programckos"><code class="programcharacter">set(CMAKE_CXX_STANDARD 17)</code></p>
+<p class="programckos"> </p>
+<p class="programckos"><code class="programcharacter">add_subdirectory(KNP)</code></p>
+<p class="programckos"> </p>
+<p class="programckos"><code class="programcharacter">add_executable(&quot;${PROJECT_NAME}&quot; &lt;</code><code class="programcharacterlocalized">файл программы</code><code class="programcharacter">&gt;)</code></p>
+<p class="programckos"><code class="programcharacter">target_link_libraries(&quot;${PROJECT_NAME}&quot; PRIVATE &lt;</code><code class="programcharacterlocalized">подключаемые библиотеки платформы</code><code class="programcharacter">&gt;)</code></p>
+<p class="listcontinue1">где:</p>
+<ul class="listbullet2"><li class="listbullet2"><code class="programcharacter">project(&lt;</code><code class="programcharacterlocalized">название проекта</code><code class="programcharacter">&gt;)</code> определяет название проекта, например, <code class="programcharacter">project (my_project)</code>.</li><li class="listbullet2">&lt;<code class="programcharacterlocalized">файл программы</code>&gt; соответствует названию файла программы, например, main.cpp.</li><li class="listbullet2"><code class="programcharacter">target_link_libraries(&quot;${PROJECT_NAME}&quot; PRIVATE &lt;</code><code class="programcharacterlocalized">подключаемые библиотеки платформы</code><code class="programcharacter">&gt;)</code> определяет библиотеки, которые будут подключены к вашему проекту. Например, <code class="programcharacter">target_link_libraries(&quot;${PROJECT_NAME}&quot; PRIVATE KNP::BaseFramework::Core)</code> подключит к проекту фреймворк.</li></ul><p class="spacer">Примеры файла CMakeLists.txt:</p>
+<p class="listcontinue1">Примеры файла CMakeLists.txt:</p>
+<ul class="listbullet2"><li class="listbullet2"><a id="h257205" class="expandingblocktemplate" href="javascript:toggleBlock('257205')" target="_self">Пример файла CMakeLists.txt при загрузке динамических библиотек бекенда</a><div id="d257205" class="expandingblock" ><p class="codeheadingkos">CMakeLists.txt</p>
+<p class="programckos">cmake_minimum_required(VERSION 3.22)</p>
+<p class="programckos">// simple-network&nbsp;&#8211; название проекта</p>
+<p class="programckos">project(simple-network)</p>
+<p class="programckos"> </p>
+<p class="programckos">set(CMAKE_CXX_STANDARD 17)</p>
+<p class="programckos"> </p>
+<p class="programckos">// Запускает CMake в директории KNP и добавляет все проекты из директории в сборку</p>
+<p class="programckos">add_subdirectory(KNP)</p>
+<p class="programckos"> </p>
+<p class="programckos">// Добавляет бинарный файл с исходным кодом в файл программы main.cpp</p>
+<p class="programckos">add_executable(&quot;${PROJECT_NAME}&quot; main.cpp)</p>
+<p class="programckos">// Подключает фреймворк к проекту simple-network </p>
+<p class="programckos">target_link_libraries(&quot;${PROJECT_NAME}&quot; PRIVATE KNP::BaseFramework::Core)</p>
+</div></li><li class="listbullet2"><a id="h257207" class="expandingblocktemplate" href="javascript:toggleBlock('257207')" target="_self">Пример файла CMakeLists.txt без загрузки динамических библиотек бекенда</a><div id="d257207" class="expandingblock" ><p class="bodytext">При сборке проекта без загрузки динамических библиотек требуется подключить библиотеки нужных бекендов с помощью метода <code class="programcharacter">target_link_libraries</code>. Перечислите необходимые библиотеки через пробел как в приведенном примере.</p>
+<p class="codeheadingkos">CMakeLists.txt</p>
+<p class="programckos">cmake_minimum_required(VERSION 3.22)</p>
+<p class="programckos">// digits-recognition&nbsp;&#8211; название проекта</p>
+<p class="programckos">project(digits-recognition)</p>
+<p class="programckos"> </p>
+<p class="programckos">set(CMAKE_CXX_STANDARD 17)</p>
+<p class="programckos"> </p>
+<p class="programckos">// Запускает CMake в директории KNP и добавляет все проекты из директории в сборку</p>
+<p class="programckos">add_subdirectory(KNP)</p>
+<p class="programckos"> </p>
+<p class="programckos">// Добавляет бинарный файл с исходным кодом в файл программы main.cpp</p>
+<p class="programckos">add_executable(&quot;${PROJECT_NAME}&quot; main.cpp)</p>
+<p class="programckos">// Подключает фреймворк и библиотеку однопоточного бекенда для CPU к проекту simple-network. </p>
+<p class="programckos">target_link_libraries(&quot;${PROJECT_NAME}&quot; PRIVATE KNP::BaseFramework::Core KNP::Backends::CPUSingleThreaded)</p>
+</div></li></ul></li><li class="listnumber1">Для сохранения изменений в файле скрипта сборки выполните следующие действия:<ol class="listalpha2"><li class="listalpha2">Нажмите на клавишу <kbd class="keycharacter">Esc</kbd>.</li><li class="listalpha2">Введите следующую строку:<p class="listcontinue2"><code class="programcharacter">:wq!</code></p>
+</li><li class="listalpha2">Нажмите на клавишу <kbd class="keycharacter">Enter</kbd>.</li></ol></li></ol>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="255720"><p><a name=255720 style="display: none;">[Topic 255720]</a></p>
+	<h2 id="t255720" class="heading2">Удаление платформы</h2>
+<p class="procedureheading">Чтобы удалить Kaspersky Neuromorphic Platform,</p>
+<p class="bodytextindent">удалите <a id="h255894" class="crossreferencetemplate" href="#235885" target="_self">директорию KNP</a> с исходным кодом платформы из вашей рабочей директории.</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235885"><p><a name=235885 style="display: none;">[Topic 235885]</a></p>
+	<h1 id="t235885" class="heading1">Директории для хранения данных платформы</h1>
+<p class="bodytext">При работе с исходным кодом платформы Kaspersky Neuromorphic Platform использует следующие директории и поддиректории:</p>
+<ul class="listbullet1"><li class="listbullet1">.&nbsp;&#8211; корневая директория с вашим проектом. Используется для хранения файлов программ (например, main.cpp), а также файла скрипта сборки проекта CMakeLists.txt. Вы можете присвоить корневой директории любое название&nbsp;(например, /app/).</li><li class="listbullet1">./KNP&nbsp;&#8211; директория для хранения исходного кода платформы, включающая следующие поддиректории:<ul class="listbullet2"><li class="listbullet2">./KNP/ci&nbsp;&#8211; директория для хранения инструментов сборки на конвейере CI.</li><li class="listbullet2">./KNP/cmake&nbsp;&#8211;&nbsp;директория для хранения модулей CMake.</li><li class="listbullet2">./KNP/knp&nbsp;&#8211; основная директория платформы. Используется для хранения файлов бекенда,  фреймворка, библиотек платформы, а также справочного руководства API.</li><li class="listbullet2">./KNP/third-party&nbsp;&#8211; директория для хранения сторонних библиотек, необходимых для сборки бекенда.</li><li class="listbullet2">./KNP/tools&nbsp;&#8211; директория для хранения инструментов, применяемых в локальной сборке и сборке на конвейере CI.</li></ul></li></ul><p class="bodytext"></p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="250649"><p><a name=250649 style="display: none;">[Topic 250649]</a></p>
+	<h1 id="t250649" class="heading1">Добавление нового типа нейрона</h1>
+<p class="bodytext">На текущий момент Kaspersky Neuromorphic Platform поддерживает наборы свойств и типизацию популяций для модели BLIFAT-нейрона. Если требуется, вы можете добавить новый тип нейрона.</p>
+<p class="procedureheading">Чтобы добавить новый тип нейрона:</p>
+<ol class="listnumber1"><li class="listnumber1">В директории <code class="programcharacter">neuron-trait-library/include/knp/neuron-traits/</code> создайте заголовочный файл для нового типа нейрона. </li><li class="listnumber1">В созданном заголовочном файле определите структуру типа нейрона и его шаблонные свойства (например, <code class="programcharacter">default_values</code>, <code class="programcharacter">neuron_parameters</code>).<p class="listcontinue1">Пример определения BLIFAT-нейрона:</p>
+<p class="codeheadingkos">neuron-trait-library/include/knp/neuron-traits/blifat.h</p>
+<p class="programckos">#include &quot;type_traits.h&quot;</p>
+<p class="programckos"> </p>
+<p class="programckos">namespace knp::neuron_traits</p>
+<p class="programckos"> </p>
+<p class="programckos">{</p>
+<p class="programckos">struct BLIFATNeuron;</p>
+<p class="programckos"> </p>
+<p class="programckos">template &lt;&gt;</p>
+<p class="programckos">struct default_values&lt;BLIFATNeuron&gt;</p>
+<p class="programckos"> </p>
+<p class="programckos">{</p>
+<p class="programckos">    // Задает количество шагов нейронной сети с шага последнего спайка.</p>
+<p class="programckos">    constexpr static std::size_t steps_before_firing = std::numeric_limits&lt;std::size_t&gt;::infinity();</p>
+<p class="programckos">    // Задает значение, к которому стремится мембранный потенциал для тормозных синапсов, основанных на проводимости.</p>
+<p class="programckos">    constexpr static double reverse_inhibitory_potential = -0.3;</p>
+<p class="programckos">    // Задает значение, к которому стремится мембранный потенциал для тормозных синапсов, основанных на токе.</p>
+<p class="programckos">    constexpr static double min_potential = -1.0e9;</p>
+<p class="programckos">};</p>
+<p class="programckos">...</p>
+<p class="programckos">}  // namespace knp::neuron_traits</p>
+</li><li class="listnumber1">Добавьте созданный тип нейрона в список нейронов, определенных в заголовочном файле <code class="programcharacter">neuron-trait-library/include/knp/neuron-traits/all_traits.h</code>.<p class="listcontinue1">Пример добавления BLIFAT-нейрона в список нейронов:</p>
+<p class="codeheadingkos">neuron-trait-library/include/knp/neuron-traits/all_traits.h</p>
+<p class="programckos">#include &quot;blifat.h&quot;</p>
+<p class="programckos"> </p>
+<p class="programckos">namespace knp::neuron_traits</p>
+<p class="programckos"> </p>
+<p class="programckos">{</p>
+<p class="programckos">// Список типов нейронов, разделенных запятыми.</p>
+<p class="programckos">#define ALL_NEURONS knp::neuron_traits::BLIFATNeuron</p>
+<p class="programckos">...</p>
+<p class="programckos">}  // namespace knp::neuron_traits</p>
+</li><li class="listnumber1">Реализуйте в нужных бекендах перегруженный метод запуска. <p class="listcontinue1">Например, для бекенда CPU реализуйте перегруженный метод запуска расчета популяций.</p>
+</li></ol>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="250824"><p><a name=250824 style="display: none;">[Topic 250824]</a></p>
+	<h1 id="t250824" class="heading1">Добавление нового типа синапса</h1>
+<p class="bodytext">На текущий момент Kaspersky Neuromorphic Platform поддерживает наборы свойств и типизацию проекций по модели дельта-синапса. Если требуется, вы можете добавить новый тип синапса.</p>
+<p class="procedureheading">Чтобы добавить новый тип синапса:</p>
+<ol class="listnumber1"><li class="listnumber1">В директории <code class="programcharacter">synapse-traits-library/include/knp/synapse-traits/</code> создайте заголовочный файл для нового типа синапса. </li><li class="listnumber1">В созданном заголовочном файле определите структуру типа синапса и его шаблонные свойства (например, <code class="programcharacter">synapse_parameters</code>).<p class="listcontinue1">Пример определения дельта-синапса:</p>
+<p class="codeheadingkos">synapse-traits-library/include/knp/synapse-traits/delta.h</p>
+<p class="programckos">#include &quot;type_traits.h&quot;</p>
+<p class="programckos"> </p>
+<p class="programckos">namespace knp::synapse_traits</p>
+<p class="programckos"> </p>
+<p class="programckos">{</p>
+<p class="programckos">struct DeltaSynapse;</p>
+<p class="programckos"> </p>
+<p class="programckos">template &lt;&gt;</p>
+<p class="programckos">struct synapse_parameters&lt;DeltaSynapse&gt;</p>
+<p class="programckos"> </p>
+<p class="programckos">{</p>
+<p class="programckos">    // Задает атрибуты синапса.</p>
+<p class="programckos">    synapse_parameters() : weight_(0.0F), delay_(1), output_type_(knp::synapse_traits::OutputType::EXCITATORY) {}</p>
+<p class="programckos"></p>
+<p class="programckos">    synapse_parameters(float weight, uint32_t delay, knp::synapse_traits::OutputType type)</p>
+<p class="programckos">        : weight_(weight), delay_(delay), output_type_(type)</p>
+<p class="programckos"> </p>
+<p class="programckos">    // Вес синапса</p>
+<p class="programckos">    float weight_;</p>
+<p class="programckos">    // Задержка синапса</p>
+<p class="programckos">    std::size_t delay_;</p>
+<p class="programckos">    // Тип синапса на выходе</p>
+<p class="programckos">    knp::synapse_traits::OutputType output_type_;</p>
+<p class="programckos">};</p>
+<p class="programckos"> </p>
+<p class="programckos">}  // namespace knp::synapse_traits</p>
+</li><li class="listnumber1">Добавьте созданный тип синапса в список синапсов, определенных в заголовочном файле <code class="programcharacter">synapse-traits-library/include/knp/synapse-traits/all_traits.h</code>.<p class="listcontinue1">Пример добавления дельта-синапса в список синапсов:</p>
+<p class="codeheadingkos">synapse-traits-library/include/knp/synapse-traits/all_traits.h</p>
+<p class="programckos">#include &quot;delta.h&quot;</p>
+<p class="programckos"> </p>
+<p class="programckos">namespace knp::synapse_traits</p>
+<p class="programckos"> </p>
+<p class="programckos">{</p>
+<p class="programckos">// Список типов синапсов, разделенных запятыми.</p>
+<p class="programckos">#define ALL_SYNAPSES knp::synapse_traits::DeltaSynapse</p>
+<p class="programckos"> </p>
+<p class="programckos">...</p>
+<p class="programckos">}  // namespace knp::neuron_traits</p>
+</li><li class="listnumber1">Реализуйте в нужных бекендах перегруженный метод запуска. <p class="listcontinue1">Например, для бекенда CPU реализуйте перегруженный метод запуска расчета проекций.</p>
+</li></ol>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="256877"><p><a name=256877 style="display: none;">[Topic 256877]</a></p>
+	<h1 id="t256877" class="heading1">Исполнение нейронной сети, загруженной на бекенд автоматически</h1>
+<p class="bodytext">Этот раздел содержит инструкции по созданию нейронной сети, ее автоматической загрузке на бекенд и исполнению.</p>
+<p class="procedureheading">Чтобы автоматически загрузить нейронную сеть на бекенд и исполнить ее:</p>
+<ol class="listnumber1"><li class="listnumber1">В директории вашего проекта создайте файл программы формата CPP, в котором будет реализована функция для создания и запуска нейронной сети.</li><li class="listnumber1">В файле программы подключите заголовочные файлы, необходимые для исполнения нейронной сети, с помощью директивы <code class="programcharacter">#include</code>. <p class="listcontinue1">Если требуется, определите псевдонимы с помощью оператора <code class="programcharacter">using</code>.</p>
+<p class="listcontinue1">Пример подключения заголовочных файлов для исполнения нейронной сети с популяцией BLIFAT-нейронов и проекцией дельта-синапсов на однопоточном бекенде для CPU:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">#include &lt;knp/framework/io/out_converters/convert_set.h&gt;</p>
+<p class="programckos">#include &lt;knp/framework/model_executor.h&gt;</p>
+<p class="programckos">#include &lt;knp/framework/network.h&gt;</p>
+<p class="programckos">#include &lt;knp/neuron-traits/blifat.h&gt;</p>
+<p class="programckos">#include &lt;knp/synapse-traits/delta.h&gt;</p>
+<p class="programckos"> </p>
+<p class="programckos">#include &lt;filesystem&gt;</p>
+<p class="programckos">  </p>
+<p class="programckos"> </p>
+<p class="programckos">using DeltaProjection = knp::core::Projection&lt;knp::synapse_traits::DeltaSynapse&gt;;</p>
+<p class="programckos">using BLIFATPopulation = knp::core::Population&lt;knp::neuron_traits::BLIFATNeuron&gt;;</p>
+</li><li class="listnumber1">Реализуйте генератор синапсов с нужными вам свойствами или используйте готовый генератор из библиотеки фреймворка.<p class="listcontinue1">Пример реализации генератора дельта-синапсов:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">// Реализована функция, генерирующая синапсы для проекции, которая будет связана </p>
+<p class="programckos">// с каналом ввода. Функция хранится в переменной input_projection_gen.</p>
+<p class="programckos">inline std::optional&lt;DeltaProjection::Synapse&gt; input_projection_gen(size_t /*index*/) </p>
+<p class="programckos">{</p>
+<p class="programckos">    return DeltaProjection::Synapse{{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};</p>
+<p class="programckos">}</p>
+<p class="programckos"> </p>
+<p class="programckos"> </p>
+<p class="programckos">// Реализована функция, генерирующая синапсы для проекции, которая будет замыкать вывод </p>
+<p class="programckos">// популяции на себя. Функция хранится в переменной synapse_generator.</p>
+<p class="programckos">inline std::optional&lt;DeltaProjection::Synapse&gt; synapse_generator(size_t /*index*/)  </p>
+<p class="programckos">{</p>
+<p class="programckos">    return DeltaProjection::Synapse{{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};</p>
+<p class="programckos">}</p>
+</li><li class="listnumber1">Реализуйте генератор нейронов с нужными вам свойствами или используйте готовый генератор из библиотеки фреймворка.<p class="listcontinue1">Пример реализации генератора BLIFAT-нейронов:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">// Реализована функция, генерирующая нейроны. </p>
+<p class="programckos">// Функция хранится в переменной neuron_generator.</p>
+<p class="programckos">inline knp::neuron_traits::neuron_parameters&lt;knp::neuron_traits::BLIFATNeuron&gt; neuron_generator(size_t)  </p>
+<p class="programckos">{</p>
+<p class="programckos">    return knp::neuron_traits::neuron_parameters&lt;knp::neuron_traits::BLIFATNeuron&gt;{};</p>
+<p class="programckos">}</p>
+</li><li class="listnumber1">Создайте функцию, в которой будут созданы объекты, необходимые для исполнения нейронной сети.<p class="listcontinue1">Пример создания функции <code class="programcharacter">main</code>:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">main(int argc, const char* const argv[])</p>
+<p class="programckos">{</p>
+<p class="programckos">    ...</p>
+</li><li class="listnumber1">В созданной функции создайте объект популяции и передайте в конструктор генератор нейронов.<p class="listcontinue1">Пример создания объекта популяции:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">    ...</p>
+<p class="programckos">    // Создает объект популяции с одним BLIFAT-нейроном</p>
+<p class="programckos">    BLIFATPopulation population{neuron_generator, 1};</p>
+<p class="programckos">    </p>
+<p class="programckos">    // Сохраняет UID популяции в переменной output_uid </p>
+<p class="programckos">    knp::core::UID output_uid = population.get_uid();</p>
+<p class="programckos">    ...</p>
+</li><li class="listnumber1">В созданной функции создайте объект проекции, который будет замыкать вывод популяции на себя. Передайте в конструктор идентификатор связанной популяции и генератор синапсов.<p class="listcontinue1">Пример создания проекции, замыкающей вывод популяции на себя:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">    ...</p>
+<p class="programckos">    // Создает объект проекции с одним дельта-синапсом, замыкающей вывод популяции </p>
+<p class="programckos">    // самой на себя</p>
+<p class="programckos">    DeltaProjection loop_projection =</p>
+<p class="programckos">            DeltaProjection{population.get_uid(), population.get_uid(), synapse_generator, 1};</p>
+<p class="programckos">    ...</p>
+</li><li class="listnumber1">В созданной функции создайте объект входной проекции. Передайте в конструктор генератор синапсов и идентификатор связанной популяции.<p class="listcontinue1">Пример создания входной проекции, связанной с каналом ввода и популяцией:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">    ...</p>
+<p class="programckos">    // Создает объект входной проекции с одним дельта-синапсом, которой присваивается </p>
+<p class="programckos">    // нулевой идентификатор(knp::core::UID{false}). Проекция принимает спайки от </p>
+<p class="programckos">    // канала ввода и отправляет синаптическое воздействие в объект популяции.</p>
+<p class="programckos">    DeltaProjection input_projection = DeltaProjection{knp::core::UID{false}, population.get_uid(), input_projection_gen, 1};</p>
+<p class="programckos">    </p>
+<p class="programckos">    // Сохраняет UID входной проекции в переменной input_uid</p>
+<p class="programckos">    knp::core::UID input_uid = input_projection.get_uid();</p>
+<p class="programckos">    ...</p>
+</li><li class="listnumber1">В созданной функции создайте объект нейронной сети и передайте в него созданные проекции и популяцию.<p class="listcontinue1">Пример создания объекта нейронной сети:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">    ...</p>
+<p class="programckos">    // Создает объект сети network</p>
+<p class="programckos">    knp::framework::Network network;</p>
+<p class="programckos"> </p>
+<p class="programckos">    // Добавляет созданный объект популяции population в объект нейронной сети network</p>
+<p class="programckos">    network.add_population(std::move(population));</p>
+<p class="programckos"> </p>
+<p class="programckos">    // Добавляет созданный объект входной проекции input_projection в объект </p>
+<p class="programckos">    // нейронной сети network</p>
+<p class="programckos">    network.add_projection(std::move(input_projection));</p>
+<p class="programckos"> </p>
+<p class="programckos">    // Добавляет созданный объект проекции loop_projection, замыкающей вывод </p>
+<p class="programckos">    // популяции самой на себя, в объект нейронной сети network</p>
+<p class="programckos">    network.add_projection(std::move(loop_projection));</p>
+<p class="programckos">    ...</p>
+</li><li class="listnumber1">В созданной функции определите идентификаторы каналов ввода и вывода.<p class="listcontinue1">Пример определения идентификаторов каналов ввода и вывода:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">    ...</p>
+<p class="programckos">    // Создает произвольные идентификаторы i_channel_uid и o_channel_uid для каналов ввода и вывода</p>
+<p class="programckos">    knp::core::UID i_channel_uid, o_channel_uid;</p>
+<p class="programckos">    ...</p>
+</li><li class="listnumber1">В созданной функции создайте объект модели. Передайте в модель объект нейронной сети, идентификаторы каналов, популяции и входной проекции.<p class="listcontinue1">Пример создания модели:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">    ...</p>
+<p class="programckos">    // Создает объект модели model и передает в нее объект нейронной сети network</p>
+<p class="programckos">    knp::framework::Model model(std::move(network));</p>
+<p class="programckos"> </p>
+<p class="programckos">    // Передает в объект модели model созданный идентификатор канала ввода </p>
+<p class="programckos">    // i_channel_uid и идентификатор входной проекции input_uid.</p>
+<p class="programckos">    model.add_input_channel(i_channel_uid, input_uid);</p>
+<p class="programckos"> </p>
+<p class="programckos">    // Передает в объект модели model созданный идентификатор канала вывода </p>
+<p class="programckos">    // o_channel_uid и идентификатор популяции output_uid.</p>
+<p class="programckos">    model.add_output_channel(o_channel_uid, output_uid);</p>
+<p class="programckos">    ...</p>
+</li><li class="listnumber1">В созданной функции создайте функтор генерации спайков.<p class="listcontinue1">Пример создания функтора генерации спайков:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">    ...</p>
+<p class="programckos">    auto input_gen = [](knp::core::messaging::Step step) -&gt; knp::core::messaging::SpikeData</p>
+<p class="programckos">    {</p>
+<p class="programckos">        // Посылает спайки на шагах 0, 5, 10 и 15 исполнения нейронной сети</p>
+<p class="programckos">        if (step % 5 == 0)</p>
+<p class="programckos">        {</p>
+<p class="programckos">            knp::core::messaging::SpikeData s;</p>
+<p class="programckos">            s.push_back(0);</p>
+<p class="programckos">            return s;</p>
+<p class="programckos">        }</p>
+<p class="programckos">        return knp::core::messaging::SpikeData();</p>
+<p class="programckos">    };</p>
+<p class="programckos">    ...</p>
+</li><li class="listnumber1">В созданной функции укажите путь к экземпляру бекенда, который будет исполнять нейронную есть. <p class="attentioncontinue1">Путь к бекенду должен соответствовать пути к динамической библиотеке бекенда. Если экземпляр бекенда находится не по указанному пути, измените путь к бекенду. </p>
+<p class="listcontinue1">Пример:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">    ...</p>
+<p class="programckos">    // Заданный путь приведен в качестве примера. Укажите путь к нужной</p>
+<p class="programckos">    // динамической библиотеке бекенда на вашем локальном компьютере.</p>
+<p class="programckos">    auto backend_path = std::filesystem::path(argv[0]).parent_path().parent_path() / &quot;lib&quot; / &quot;knp-cpu-single-threaded-backend&quot;;</p>
+<p class="programckos">    ...</p>
+</li><li class="listnumber1">В созданной функции создайте объект исполнителя модели. Передайте исполнителю модели объект модели, путь к бекенду, идентификатор канала ввода и функтор генерации спайков. Запустите исполнение модели.<p class="listcontinue1">Пример создания объекта исполнителя модели и исполнения 20 шагов нейронной сети:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">    ...</p>
+<p class="programckos">    // Создает объект исполнителя модели me. Передает в объект me объект модели model, </p>
+<p class="programckos">    // путь к бекенду backend_path, идентификатор канала ввода i_channel_uid и </p>
+<p class="programckos">    // функтор генерации спайков input_gen.</p>
+<p class="programckos">    knp::framework::ModelExecutor me(model, backend_path, {{i_channel_uid, input_gen}});</p>
+<p class="programckos"> </p>
+<p class="programckos">    // Инициализирует исполнитель модели me</p>
+<p class="programckos">    me.init();</p>
+<p class="programckos"> </p>
+<p class="programckos">    // Получает ссылку на объект канала вывода out_channel из </p>
+<p class="programckos">    // исполнителя моделей me по идентификатору канала вывода o_channel_uid</p>
+<p class="programckos">    auto &amp;out_channel = me.get_output_channel(o_channel_uid);</p>
+<p class="programckos"> </p>
+<p class="programckos">    // Запускает исполнение модели на 20 шагов</p>
+<p class="programckos">    me.start([](size_t step) { return step &lt; 20; });</p>
+<p class="programckos">    ...</p>
+<p class="listcontinue1"><a id="h255423" class="expandingblocktemplate" href="javascript:toggleBlock('255423')" target="_self">Шаги исполнения нейронной сети</a></p>
+<div id="d255423" class="expandingblock" ><p class="bodytext">Исполнение нейронной сети производится циклично. Действия, описанные в цикле, повторяются каждые 5 шагов исполнения сети.</p>
+<p class="bodytext">На первом шаге цикла канал ввода посылает спайки входной проекции.</p>
+<p class="bodytext">На следующем шаге цикла входная проекция вычисляет синаптические воздействия и отправляет их популяции. После получения синаптического воздействия популяция отправляет спайки каналу вывода и проекции, замыкающей вывод популяции на себя. </p>
+<p class="bodytext">Через 6 шагов цикла после получения спайков, отправленных входной проекцией, проекция, замыкающая вывод популяции на себя, вычисляет синаптические воздействия, и передает воздействия популяции. </p>
+<p class="bodytext">На рисунке ниже представлена схема исполнения нейронной сети.</p>
+<p class="picture"><img id="f266553" src="network_cycle.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Схема исполнения нейронной сети</p>
+<p class="bodytext">В этом примере нейронная сеть исполняется в рамках цикла со следующими шагами: </p>
+<ul class="listbullet1"><li class="listbullet1"><em class="emphasischaracter">Шаг 0</em>. Канал ввода посылает спайки входной проекции. Шаг повторяется каждые 5 шагов цикла исполнения нейронной сети.</li><li class="listbullet1"><em class="emphasischaracter">Шаг 1</em>. Входная проекция вычисляет синаптические воздействия и отправляет их популяции. После получения синаптического воздействия популяция отправляет спайки каналу вывода и проекции, замыкающей вывод популяции на себя. Шаг повторяется каждые 5 шагов исполнения сети. </li><li class="listbullet1"><em class="emphasischaracter">Шаг 7</em>. Проекция, замыкающая вывод популяции на себя, вычисляет синаптические воздействия после получения спайков, отправленных 6 шагов назад, и передает воздействия популяции. Популяция отправляет спайки каналу вывода и проекции, замыкающей вывод популяции на себя. Шаг повторяется каждые 5 шагов исполнения нейронной сети.</li><li class="listbullet1"><em class="emphasischaracter">Шаг 13</em>. Проекция, замыкающая вывод популяции на себя, вычисляет синаптические воздействия после получения спайков, отправленных 6 шагов назад, и передает воздействия популяции. Популяция отправляет спайки каналу вывода и проекции, замыкающей вывод популяции на себя. Шаг повторяется каждые 5 шагов исполнения нейронной сети.</li><li class="listbullet1"><em class="emphasischaracter">Шаг 19</em>. Проекция, замыкающая вывод популяции на себя, вычисляет синаптические воздействия после получения спайков, отправленных на шаге 13, и передает воздействия популяции. Популяция отправляет спайки каналу вывода и проекции, замыкающей вывод популяции на себя. </li></ul><p class="bodytext"></p>
+</div></li><li class="listnumber1">При необходимости создайте вектор, в который будут записываться индексы шагов, на которых на канал вывода приходят спайки. <p class="listcontinue1">Пример записи результатов работы модели:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">    // Создает вектор results, в который будут записываться индексы шагов со спайками</p>
+<p class="programckos">    std::vector&lt;knp::core::messaging::Step&gt; results;</p>
+<p class="programckos"> </p>
+<p class="programckos">    // Обновляет канал вывода</p>
+<p class="programckos">    const auto &amp;spikes = out_channel.update();</p>
+<p class="programckos"> </p>
+<p class="programckos">    // Выделяет в памяти область для спайков</p>
+<p class="programckos">    results.reserve(spikes.size());</p>
+<p class="programckos"> </p>
+<p class="programckos">    // Записывает в вектор results индексы шагов, на которых на канал вывода </p>
+<p class="programckos">    // приходят спайки</p>
+<p class="programckos">    std::transform(</p>
+<p class="programckos">        spikes.cbegin(), spikes.cend(), std::back_inserter(results),</p>
+<p class="programckos">        [](const auto &amp;spike_msg) { return spike_msg.header_.send_time_; });</p>
+<p class="programckos"> </p>
+<p class="programckos">    // Выводит через пробел индексы шагов, на которых на канал вывода приходят спайки</p>
+<p class="programckos">    for (const auto &amp;s : results) std::cout &lt;&lt; s &lt;&lt; &quot; &quot;;</p>
+<p class="programckos">    // Выводит символ новой строки и вызывает метод flush()</p>
+<p class="programckos">    std::cout &lt;&lt; std::endl;</p>
+<p class="programckos">}</p>
+</li></ol>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="245069"><p><a name=245069 style="display: none;">[Topic 245069]</a></p>
+	<h1 id="t245069" class="heading1">Исполнение нейронной сети, созданной из проекций и популяций</h1>
+<p class="bodytext">Этот раздел содержит инструкции по созданию нейронной сети из проекций и популяций, загрузке проекций и популяций на бекенд и исполнению нейронной сети.</p>
+<p class="attentionbody">Этот вариант построения и исполнения нейронной сети используется редко. </p>
+<p class="procedureheading">Чтобы создать нейронную сеть вручную и исполнить ее:</p>
+<ol class="listnumber1"><li class="listnumber1">В директории вашего проекта создайте файл программы формата CPP, в котором будет реализована функция для создания и запуска нейронной сети.</li><li class="listnumber1">В файле программы подключите заголовочные файлы, необходимые для исполнения нейронной сети, с помощью директивы <code class="programcharacter">#include</code>. <p class="listcontinue1">Если требуется, определите псевдонимы с помощью оператора <code class="programcharacter">using</code>.</p>
+<p class="listcontinue1">Пример подключения заголовочных файлов для исполнения нейронной сети с популяцией BLIFAT-нейронов и проекцией дельта-синапсов на однопоточном бекенде для CPU:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">#include &lt;knp/backends/cpu-single-threaded/backend.h&gt;</p>
+<p class="programckos">#include &lt;knp/core/population.h&gt;</p>
+<p class="programckos">#include &lt;knp/core/projection.h&gt;</p>
+<p class="programckos">#include &lt;knp/neuron-traits/blifat.h&gt;</p>
+<p class="programckos">#include &lt;knp/synapse-traits/delta.h&gt;</p>
+<p class="programckos"> </p>
+<p class="programckos">#include &lt;vector&gt;</p>
+<p class="programckos"> </p>
+<p class="programckos"> </p>
+<p class="programckos">using Backend = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend;</p>
+<p class="programckos">using DeltaProjection = knp::core::Projection&lt;knp::synapse_traits::DeltaSynapse&gt;;</p>
+<p class="programckos">using BLIFATPopulation = knp::core::Population&lt;knp::neuron_traits::BLIFATNeuron&gt;;</p>
+<p class="programckos">using Population = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::PopulationVariants;</p>
+<p class="programckos">using Projection = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::ProjectionVariants;</p>
+</li><li class="listnumber1">Реализуйте генератор нейронов с нужными вам свойствами или используйте готовый генератор из библиотеки фреймворка.<p class="listcontinue1">Пример реализации генератора BLIFAT-нейронов:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">...</p>
+<p class="programckos">// Реализована функция, генерирующая нейроны. </p>
+<p class="programckos">// Функция хранится в переменной neuron_generator.</p>
+<p class="programckos">auto neuron_generator = [](size_t index)</p>
+<p class="programckos">{</p>
+<p class="programckos">    return knp::neuron_traits::neuron_parameters&lt;knp::neuron_traits::BLIFATNeuron&gt;{};</p>
+<p class="programckos">};</p>
+<p class="programckos">...</p>
+</li><li class="listnumber1">Реализуйте генератор синапсов с нужными вам свойствами или используйте готовый генератор из библиотеки фреймворка.<p class="listcontinue1">Пример реализации генератора дельта-синапсов:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">...</p>
+<p class="programckos">// Реализована функция, генерирующая синапсы для проекции, которая будет связана </p>
+<p class="programckos">// с каналом ввода. Функция хранится в переменной input_projection_gen.</p>
+<p class="programckos">DeltaProjection::SynapseGenerator input_projection_gen = [](size_t index) -&gt; std::optional&lt;DeltaProjection::Synapse&gt;</p>
+<p class="programckos">{</p>
+<p class="programckos">    return DeltaProjection::Synapse{{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};</p>
+<p class="programckos">};</p>
+<p class="programckos"> </p>
+<p class="programckos">// Реализована функция, генерирующая синапсы для проекции, которая будет замыкать </p>
+<p class="programckos">// вывод популяции на себя. Функция хранится в переменной synapse_generator.</p>
+<p class="programckos">DeltaProjection::SynapseGenerator synapse_generator = [](size_t index) -&gt; std::optional&lt;DeltaProjection::Synapse&gt;</p>
+<p class="programckos">{</p>
+<p class="programckos">    return DeltaProjection::Synapse{{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};</p>
+<p class="programckos">};</p>
+<p class="programckos">...</p>
+</li><li class="listnumber1">Создайте объект популяции и передайте в конструктор созданный генератор нейронов. <p class="listcontinue1">Пример создания объекта популяции:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">...</p>
+<p class="programckos">// Создает объект популяции</p>
+<p class="programckos">BLIFATPopulation population{neuron_generator, 1};</p>
+<p class="programckos"></p>
+</li><li class="listnumber1">Создайте объект проекции, которая будет замыкать вывод популяции на себя. Передайте в конструктор идентификатор связанной популяции и генератор синапсов.<p class="listcontinue1">Пример создания проекции, замыкающей вывод популяции на себя:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">...</p>
+<p class="programckos">// Создает объект проекции, замыкающей вывод популяции на себя</p>
+<p class="programckos">Projection loop_projection = DeltaProjection{population.get_uid(), population.get_uid(), synapse_generator, 1};</p>
+<p class="programckos">...</p>
+</li><li class="listnumber1">Создайте объект входной проекции. Передайте в конструктор генератор синапсов и идентификатор связанной популяции.<p class="listcontinue1">Пример создания входной проекции, связанной с каналом ввода и популяцией:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">...</p>
+<p class="programckos">// Создает объект входной проекции, которой присваивается нулевой идентификатор </p>
+<p class="programckos">// (knp::core::UID{false}). Проекция принимает спайки от канала ввода и отправляет </p>
+<p class="programckos">// синаптическое воздействие в объект популяции.</p>
+<p class="programckos">Projection input_projection = DeltaProjection{knp::core::UID{false}, population.get_uid(), input_projection_gen, 1};</p>
+<p class="programckos"></p>
+<p class="programckos">// Получает UID входной проекции, которая отправляет популяции синаптическое воздействие</p>
+<p class="programckos">knp::core::UID input_uid = std::visit([](const auto &amp;proj) { return proj.get_uid(); }, input_projection);</p>
+<p class="programckos">...</p>
+</li><li class="listnumber1">Загрузите популяцию и проекции на бекенд.<p class="listcontinue1">Пример загрузки популяции и проекций на бекенд:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">...</p>
+<p class="programckos">Backend backend;</p>
+<p class="programckos">...</p>
+<p class="programckos">// Загружает на бекенд созданный объект популяции</p>
+<p class="programckos">backend.load_populations({population});</p>
+<p class="programckos"></p>
+<p class="programckos">// Загружает на бекенд созданные объекты проекций</p>
+<p class="programckos">backend.load_projections({input_projection, loop_projection});</p>
+</li><li class="listnumber1">Определите объект точки подключения.<p class="listcontinue1">Пример создания точки подключения:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">...</p>
+<p class="programckos">// Создает точку подключения</p>
+<p class="programckos">auto endpoint = backend.message_bus_.create_endpoint();</p>
+<p class="programckos">...</p>
+</li><li class="listnumber1">Подключите канал ввода к входной проекции, а также популяцию к каналу вывода. Задайте для каналов ввода и вывода уникальные идентификаторы и сформируйте для них сообщения.<p class="listcontinue1">Пример подключения к каналам ввода и вывода:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">...</p>
+<p class="programckos">// Создает произвольный UID канала ввода</p>
+<p class="programckos">knp::core::UID in_channel_uid;</p>
+<p class="programckos"> </p>
+<p class="programckos">// Создает произвольный UID канала вывода</p>
+<p class="programckos">knp::core::UID out_channel_uid;</p>
+<p class="programckos"> </p>
+<p class="programckos">// Создает подписку на спайки от канала ввода</p>
+<p class="programckos">backend.subscribe&lt;knp::core::messaging::SpikeMessage&gt;(input_uid, {in_channel_uid});</p>
+<p class="programckos"> </p>
+<p class="programckos">// Создает подписку на спайки от популяции с заданным UID для канала вывода </p>
+<p class="programckos">// с заданным UID</p>
+<p class="programckos">endpoint.subscribe&lt;knp::core::messaging::SpikeMessage&gt;(out_channel_uid, {population.get_uid()});</p>
+<p class="programckos">...</p>
+</li><li class="listnumber1">Настройте передачу сообщений в нейронной сети и укажите параметры исполнения такта нейронной сети.<p class="listcontinue1">Следующий пример исполнения нейронной сети состоит из 20 шагов:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">...</p>
+<p class="programckos">std::vector&lt;size_t&gt; results;</p>
+<p class="programckos">for (size_t step = 0; step &lt; 20; ++step)</p>
+<p class="programckos">{</p>
+<p class="programckos">    // Посылает спайки входной проекции от канала ввода на шагах 0, 5, 10 и 15</p>
+<p class="programckos">    if (step % 5 == 0)</p>
+<p class="programckos">    {</p>
+<p class="programckos">        knp::core::messaging::SpikeMessage message{{in_channel_uid, 0}, {0}};</p>
+<p class="programckos">        endpoint.send_message(message);</p>
+<p class="programckos">    }</p>
+<p class="programckos">    backend.step();</p>
+<p class="programckos">    endpoint.receive_all_messages();</p>
+<p class="programckos">    // Получает спайки, отправленные популяцией на канал вывода</p>
+<p class="programckos">    auto output = endpoint.unload_messages&lt;knp::core::messaging::SpikeMessage&gt;(out_channel_uid);</p>
+<p class="programckos"> </p>
+<p class="programckos">    // Записывает индексы шагов, на которых на канал вывода приходят спайки</p>
+<p class="programckos">    if (!output.empty()) results.push_back(step);</p>
+<p class="programckos">}</p>
+<p class="programckos">...</p>
+<p class="listcontinue1"><a id="h255423" class="expandingblocktemplate" href="javascript:toggleBlock('255423')" target="_self">Шаги исполнения нейронной сети</a></p>
+<div id="d255423" class="expandingblock" ><p class="bodytext">Исполнение нейронной сети производится циклично. Действия, описанные в цикле, повторяются каждые 5 шагов исполнения сети.</p>
+<p class="bodytext">На первом шаге цикла канал ввода посылает спайки входной проекции.</p>
+<p class="bodytext">На следующем шаге цикла входная проекция вычисляет синаптические воздействия и отправляет их популяции. После получения синаптического воздействия популяция отправляет спайки каналу вывода и проекции, замыкающей вывод популяции на себя. </p>
+<p class="bodytext">Через 6 шагов цикла после получения спайков, отправленных входной проекцией, проекция, замыкающая вывод популяции на себя, вычисляет синаптические воздействия, и передает воздействия популяции. </p>
+<p class="bodytext">На рисунке ниже представлена схема исполнения нейронной сети.</p>
+<p class="picture"><img id="f266553" src="network_cycle.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Схема исполнения нейронной сети</p>
+<p class="bodytext">В этом примере нейронная сеть исполняется в рамках цикла со следующими шагами: </p>
+<ul class="listbullet1"><li class="listbullet1"><em class="emphasischaracter">Шаг 0</em>. Канал ввода посылает спайки входной проекции. Шаг повторяется каждые 5 шагов цикла исполнения нейронной сети.</li><li class="listbullet1"><em class="emphasischaracter">Шаг 1</em>. Входная проекция вычисляет синаптические воздействия и отправляет их популяции. После получения синаптического воздействия популяция отправляет спайки каналу вывода и проекции, замыкающей вывод популяции на себя. Шаг повторяется каждые 5 шагов исполнения сети. </li><li class="listbullet1"><em class="emphasischaracter">Шаг 7</em>. Проекция, замыкающая вывод популяции на себя, вычисляет синаптические воздействия после получения спайков, отправленных 6 шагов назад, и передает воздействия популяции. Популяция отправляет спайки каналу вывода и проекции, замыкающей вывод популяции на себя. Шаг повторяется каждые 5 шагов исполнения нейронной сети.</li><li class="listbullet1"><em class="emphasischaracter">Шаг 13</em>. Проекция, замыкающая вывод популяции на себя, вычисляет синаптические воздействия после получения спайков, отправленных 6 шагов назад, и передает воздействия популяции. Популяция отправляет спайки каналу вывода и проекции, замыкающей вывод популяции на себя. Шаг повторяется каждые 5 шагов исполнения нейронной сети.</li><li class="listbullet1"><em class="emphasischaracter">Шаг 19</em>. Проекция, замыкающая вывод популяции на себя, вычисляет синаптические воздействия после получения спайков, отправленных на шаге 13, и передает воздействия популяции. Популяция отправляет спайки каналу вывода и проекции, замыкающей вывод популяции на себя. </li></ul><p class="bodytext"></p>
+</div></li></ol>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235890"><p><a name=235890 style="display: none;">[Topic 235890]</a></p>
+	<h1 id="t235890" class="heading1">Лицензирование платформы</h1>
+<p class="bodytext">Условия использования Kaspersky Neuromorphic Platform&nbsp;&#8211; это обязательное соглашение между вами и АО &quot;Лаборатория Касперского&quot;, в котором изложены условия, на которых вы можете пользоваться платформой.</p>
+<p class="attentionbody">Внимательно ознакомьтесь с Условиями использования перед началом работы с Kaspersky Neuromorphic Platform.</p>
+<p class="bodytext">Вы можете ознакомиться с Условиями использования, прочитав документ LICENSE.txt, расположенный в директории KNP после распаковки архива с исходным кодом платформы.</p>
+<p class="bodytext">Если вы не согласны с Условиями использования, вы должны удалить и не использовать Kaspersky Neuromorphic Platform.</p>
+<p class="bodytext"></p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="235889"><p><a name=235889 style="display: none;">[Topic 235889]</a></p>
+	<h1 id="t235889" class="heading1">Предоставление данных</h1>
+<p class="bodytext">Kaspersky Neuromorphic Platform не запрашивает, не хранит и не обрабатывает информацию, относящуюся к персональным данным.</p>
+<p class="bodytext"></p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="240504"><p><a name=240504 style="display: none;">[Topic 240504]</a></p>
+	<h1 id="t240504" class="heading1">Использование Kaspersky Neuromorphic Platform API</h1>
+<p class="bodytext">В Kaspersky Neuromorphic Platform реализован интерфейс прикладного программирования (Application Programming Interface, API), который обеспечивает доступ к методам платформы. </p>
+<p class="bodytext"><img id="f250453" src="icon_api_open.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"> <a class="directhyperlinktemplate" href="../../build/doc_doxygen/html/index.html" target="_blank">ОТКРЫТЬ СПРАВОЧНОЕ РУКОВОДСТВО API для фреймворка для C++&nbsp;(на английском языке)</a></p>
+<p class="bodytext">С помощью Kaspersky Neuromorphic Platform API вы можете выполнять следующие действия:</p>
+<ul class="listbullet1"><li class="listbullet1">получать данные об используемых устройствах и бекендах;</li><li class="listbullet1">получать данные об объектах библиотеки поддержки бекендов;</li><li class="listbullet1">получать данные об объектах фронтенда платформы;</li><li class="listbullet1">управлять объектами библиотеки поддержки бекендов;</li><li class="listbullet1">создавать и обучать нейронные сети;</li><li class="listbullet1">управлять гиперпараметрами нейронных сетей;</li><li class="listbullet1">создавать новые модели нейронов;</li><li class="listbullet1">создавать новые топологии нейронных сетей;</li><li class="listbullet1">реализовывать прикладные решения.</li></ul><p class="bodytext"></p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="90"><p><a name=90 style="display: none;">[Topic 90]</a></p>
+	<h1 class="heading1">Глоссарий</h1>
+<a name="o251916"></a><h5 class="heading5">Бекенд</h5>
+<p class="bodytext">Программно-аппаратная часть платформы, обеспечивающая универсальный интерфейс к вычислителю и реализующая функции нейронов и синапсов, а также их модификаторов в терминах вычислителя.</p>
+<a name="o251925"></a><h5 class="heading5">Вес синапса</h5>
+<p class="bodytext">Значение сигнала, который синапс передает нейронам связанной популяции.</p>
+<a name="o251918"></a><h5 class="heading5">Вычислитель</h5>
+<p class="bodytext">Устройство или код, непосредственно выполняющий сеть.</p>
+<a name="o251926"></a><h5 class="heading5">Модификатор</h5>
+<p class="bodytext">Код, изменяющий поведение нейрона или синапса, например добавляющий синаптическую пластичность.</p>
+<a name="o251914"></a><h5 class="heading5">Нейрон</h5>
+<p class="bodytext">Узел нейронной сети, имеющий набор атрибутов. На основе атрибутов нейрона и последовательности входных сигналов происходит вычисление некоторой математической функции, результатом которого является синаптическое воздействие или его отсутствие.</p>
+<a name="o264599"></a><h5 class="heading5">Период ППС</h5>
+<p class="bodytext">Интервал времени между моментом начала Хеббовской пластичности перед первым спайком в ППС и одним из следующих моментов времени: достижение максимально допустимого расстояния (ISImax) после последнего спайка в ППС, форсированное срабатывание или приход спайка на дофаминовый синапс.</p>
+<a name="o264601"></a><h5 class="heading5">Плотная последовательность спайков (ППС)</h5>
+<p class="bodytext">Последовательность генерируемых нейроном нефорсированных спайков, в которой все соседние спайки разделены временем не большее, чем ISImax, где ISImax&nbsp;&#8211; это максимальное допустимое расстояние между спайками.</p>
+<a name="o251919"></a><h5 class="heading5">Популяция</h5>
+<p class="bodytext">Контейнер, содержащий набор нейронов и их функцию в соответствии с типом нейронов.</p>
+<a name="o251920"></a><h5 class="heading5">Проекция</h5>
+<p class="bodytext">Контейнер, содержащий набор синапсов одного типа, соединяющих нейроны пресинаптической и постсинаптической популяций. </p>
+<a name="o251915"></a><h5 class="heading5">Синапс</h5>
+<p class="bodytext">Место соединения нейронов, основная функция которого&nbsp;&#8211; передача сигнала от одного нейрона к другому. Каждый нейрон может быть связан с множеством синапсов.</p>
+<a name="o251924"></a><h5 class="heading5">Синаптическое воздействие</h5>
+<p class="bodytext">Значение, формируемое синапсом и предназначенное для изменения значений атрибутов нейронов.</p>
+<a name="o251929"></a><h5 class="heading5">Соединение</h5>
+<p class="bodytext">Связь синапса с пресинаптическим или постсинаптическим нейроном.</p>
+<a name="o251921"></a><h5 class="heading5">Спайк</h5>
+<p class="bodytext">Кратковременный потенциал действия, сгенерированный нейроном популяции в результате изменения атрибутов нейрона.</p>
+<a name="o251917"></a><h5 class="heading5">Фреймворк</h5>
+<p class="bodytext">Программно-аппаратная часть платформы, определяющая ее структуру и обеспечивающая управление бекендами. В Kaspersky Neuromorphic Platform реализован фреймворк на языке программирования C++.</p>
+<a name="o251927"></a><h5 class="heading5">Функция нейрона</h5>
+<p class="bodytext">Система, описывающая и изменяющая поведение нейрона. Результатом функции является спайк или его отсутствие.</p>
+<a name="o251928"></a><h5 class="heading5">Функция синапса</h5>
+<p class="bodytext">Система, моделирующая поведение синапса. Результатом функции является синаптическое воздействие или его отсутствие.</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="262312"><p><a name=262312 style="display: none;">[Topic 262312]</a></p>
+	<h1 id="t262312" class="heading1">Информация о стороннем коде</h1>
+<p class="bodytext">Информация о стороннем коде содержится в файле NOTICES.txt, расположенном в директории KNP после распаковки архива с исходным кодом платформы.</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div><div class="cont" id="240611"><p><a name=240611 style="display: none;">[Topic 240611]</a></p>
+	<h1 id="t240611" class="heading1">Уведомления о товарных знаках</h1>
+<p class="bodytext">Зарегистрированные товарные знаки и знаки обслуживания являются собственностью их правообладателей.</p>
+<p class="bodytext">LTS и Ubuntu&nbsp;являются зарегистрированными товарными знаками Canonical Ltd.</p>
+<p class="bodytext">Intel и Core&nbsp;&#8211; товарные знаки Intel Corporation, зарегистрированные в Соединенных Штатах Америки и в других странах.</p>
+<p class="bodytext">Linux&nbsp;&#8211; товарный знак Linus Torvalds, зарегистрированный в США и в других странах.</p>
+<p class="bodytext">Python &#8211; товарный знак или зарегистрированный товарный знак Python Software Foundation.</p>
+<p class="bodytext">Debian&nbsp;&#8211; зарегистрированный товарный знак Software in the Public Interest, Inc.</p>
+<p class="bodytext"></p>
+<p class="bodytext"></p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div>
