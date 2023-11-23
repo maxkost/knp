@@ -62,3 +62,16 @@ TEST(MessageSuite, SubscriptionTest)
     subs.add_message(knp::core::messaging::SpikeMessage());
     ASSERT_EQ(subs.get_messages().size(), 1);
 }
+
+
+TEST(MessageSuite, HeaderIOTest)
+{
+    std::stringstream stream;
+    knp::core::UID uid;
+    uint64_t time = 12345;
+    knp::core::messaging::MessageHeader header_in{uid, time}, header_out;
+    stream << header_in;
+    stream >> header_out;
+    ASSERT_EQ(header_in.sender_uid_, header_out.sender_uid_);
+    ASSERT_EQ(header_in.send_time_, header_out.send_time_);
+}
