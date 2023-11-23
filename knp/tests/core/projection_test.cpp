@@ -188,11 +188,11 @@ TEST(ProjectionSuite, SynapseRemoval)
 TEST(ProjectionSuite, LockTest)
 {
     DeltaProjection projection(knc::UID{}, knc::UID{});
-    ASSERT_FALSE(projection.is_locked());
-    projection.lock_weights();
     ASSERT_TRUE(projection.is_locked());
     projection.unlock_weights();
     ASSERT_FALSE(projection.is_locked());
+    projection.lock_weights();
+    ASSERT_TRUE(projection.is_locked());
 }
 
 

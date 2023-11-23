@@ -99,62 +99,64 @@ TEST(MessageBusSuite, CreateBusAndEndpointCPU)
     EXPECT_EQ(msgs[0].neuron_indexes_, msg.neuron_indexes_);
 }
 
-//
-// TEST(MessageBusSuite, SynapticImpactMessageSendZMQ)
-//{
-//    using SynapticImpactMessage = knp::core::messaging::SynapticImpactMessage;
-//    knp::core::MessageBus bus(false);
-//
-//    auto ep1{bus.create_endpoint()};
-//    knp::synapse_traits::OutputType synapse_type = knp::synapse_traits::OutputType::EXCITATORY;
-//    SynapticImpactMessage msg{
-//        {knp::core::UID{}},
-//        knp::core::UID{},
-//        knp::core::UID{},
-//        {{1, 2, synapse_type, 3, 4}, {4, 3, synapse_type, 2, 1}, {7, 8, synapse_type, 9, 10}}};
-//
-//    auto &subscription = ep1.subscribe<SynapticImpactMessage>(knp::core::UID(), {msg.header_.sender_uid_});
-//
-//    ep1.send_message(msg);
-//    // ID message and data message.
-//    EXPECT_EQ(bus.route_messages(), 2);
-//    ep1.receive_all_messages();
-//
-//    const auto &msgs = subscription.get_messages();
-//
-//    EXPECT_EQ(msgs.size(), 1);
-//    EXPECT_EQ(msgs[0].header_.sender_uid_, msg.header_.sender_uid_);
-//    ASSERT_EQ(msgs[0].presynaptic_population_uid_, msg.presynaptic_population_uid_);
-//    ASSERT_EQ(msgs[0].postsynaptic_population_uid_, msg.postsynaptic_population_uid_);
-//    ASSERT_EQ(msgs[0].impacts_, msg.impacts_);
-//}
+
+TEST(MessageBusSuite, SynapticImpactMessageSendZMQ)
+{
+    using SynapticImpactMessage = knp::core::messaging::SynapticImpactMessage;
+    knp::core::MessageBus bus = knp::core::MessageBus::construct_zmq_bus();
+
+    auto ep1{bus.create_endpoint()};
+    knp::synapse_traits::OutputType synapse_type = knp::synapse_traits::OutputType::EXCITATORY;
+    SynapticImpactMessage msg{
+        {knp::core::UID{}},
+        knp::core::UID{},
+        knp::core::UID{},
+        false,
+        {{1, 2, synapse_type, 3, 4}, {4, 3, synapse_type, 2, 1}, {7, 8, synapse_type, 9, 10}}};
+
+    auto &subscription = ep1.subscribe<SynapticImpactMessage>(knp::core::UID(), {msg.header_.sender_uid_});
+
+    ep1.send_message(msg);
+    // ID message and data message.
+    EXPECT_EQ(bus.route_messages(), 2);
+    ep1.receive_all_messages();
+
+    const auto &msgs = subscription.get_messages();
+
+    EXPECT_EQ(msgs.size(), 1);
+    EXPECT_EQ(msgs[0].header_.sender_uid_, msg.header_.sender_uid_);
+    ASSERT_EQ(msgs[0].presynaptic_population_uid_, msg.presynaptic_population_uid_);
+    ASSERT_EQ(msgs[0].postsynaptic_population_uid_, msg.postsynaptic_population_uid_);
+    ASSERT_EQ(msgs[0].impacts_, msg.impacts_);
+}
 
 
-// TEST(MessageBusSuite, SynapticImpactMessageSendCPU)
-//{
-//     using SynapticImpactMessage = knp::core::messaging::SynapticImpactMessage;
-//     knp::core::MessageBus bus(true);
-//
-//     auto ep1{bus.create_endpoint()};
-//     knp::synapse_traits::OutputType synapse_type = knp::synapse_traits::OutputType::EXCITATORY;
-//     SynapticImpactMessage msg{
-//         {knp::core::UID{}},
-//         knp::core::UID{},
-//         knp::core::UID{},
-//         {{1, 2, synapse_type, 3, 4}, {4, 3, synapse_type, 2, 1}, {7, 8, synapse_type, 9, 10}}};
-//
-//     auto &subscription = ep1.subscribe<SynapticImpactMessage>(knp::core::UID(), {msg.header_.sender_uid_});
-//
-//     ep1.send_message(msg);
-//     // ID message and data message.
-//     EXPECT_EQ(bus.route_messages(), 1);
-//     ep1.receive_all_messages();
-//
-//     const auto &msgs = subscription.get_messages();
-//
-//     EXPECT_EQ(msgs.size(), 1);
-//     EXPECT_EQ(msgs[0].header_.sender_uid_, msg.header_.sender_uid_);
-//     ASSERT_EQ(msgs[0].presynaptic_population_uid_, msg.presynaptic_population_uid_);
-//     ASSERT_EQ(msgs[0].postsynaptic_population_uid_, msg.postsynaptic_population_uid_);
-//     ASSERT_EQ(msgs[0].impacts_, msg.impacts_);
-// }
+TEST(MessageBusSuite, SynapticImpactMessageSendCPU)
+{
+    using SynapticImpactMessage = knp::core::messaging::SynapticImpactMessage;
+    knp::core::MessageBus bus = knp::core::MessageBus::construct_cpu_bus();
+
+    auto ep1{bus.create_endpoint()};
+    knp::synapse_traits::OutputType synapse_type = knp::synapse_traits::OutputType::EXCITATORY;
+    SynapticImpactMessage msg{
+        {knp::core::UID{}},
+        knp::core::UID{},
+        knp::core::UID{},
+        false,
+        {{1, 2, synapse_type, 3, 4}, {4, 3, synapse_type, 2, 1}, {7, 8, synapse_type, 9, 10}}};
+
+    auto &subscription = ep1.subscribe<SynapticImpactMessage>(knp::core::UID(), {msg.header_.sender_uid_});
+
+    ep1.send_message(msg);
+    // ID message and data message.
+    EXPECT_EQ(bus.route_messages(), 1);
+    ep1.receive_all_messages();
+
+    const auto &msgs = subscription.get_messages();
+
+    EXPECT_EQ(msgs.size(), 1);
+    EXPECT_EQ(msgs[0].header_.sender_uid_, msg.header_.sender_uid_);
+    ASSERT_EQ(msgs[0].presynaptic_population_uid_, msg.presynaptic_population_uid_);
+    ASSERT_EQ(msgs[0].postsynaptic_population_uid_, msg.postsynaptic_population_uid_);
+    ASSERT_EQ(msgs[0].impacts_, msg.impacts_);
+}
