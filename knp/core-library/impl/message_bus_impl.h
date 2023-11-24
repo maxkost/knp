@@ -21,13 +21,13 @@ public:
     /**
      * @brief Default virtual destructor.
      */
-    virtual ~MessageBusImpl();
+    virtual ~MessageBusImpl() {}
 
     /**
      * @brief Send a message between endpoints.
      * @return number of messages routed during this step.
      */
-    virtual size_t step();
+    virtual size_t step() = 0;
 
     /**
      * @brief Creates an endpoint that can be used for message exchange.
@@ -38,6 +38,6 @@ public:
     /**
      * @brief Update if needed, to be called once before message routing.
      */
-    virtual void update();
+    virtual void update() {}
 };
 }  // namespace knp::core::messaging::impl
