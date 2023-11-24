@@ -20,20 +20,29 @@
  */
 namespace knp::neuron_traits
 {
-
+/**
+ * @brief A type of neuron with SynapticResourceSTDP learning rule. It is a wrapper over base neuron type.
+ * @tparam NeuronType base neuron type.
+ */
 template <typename NeuronType>
 struct SynapticResourceSTDPNeuron;
 
+
+/**
+ * @brief A state of neuron in continuous spike generation period.
+ */
 enum class ISIPeriodType
 {
     is_forced,
     period_started,
-    period_continued
+    period_continued,
+    not_in_period
 };
 
 
 /**
- * @brief Template for the neurons, which are supported synaptic resource based STDP.
+ * @brief Template for the neuron parameters, which are supported synaptic resource based STDP.
+ * @tparam NeuronType base neuron type without plasticity.
  */
 template <typename NeuronType>
 struct default_values<SynapticResourceSTDPNeuron<NeuronType>>
@@ -43,10 +52,16 @@ struct default_values<SynapticResourceSTDPNeuron<NeuronType>>
 
 /**
  * @brief Template for the neurons, which are supported synaptic resource based STDP.
+ * @tparam NeuronType a base neuron type with no plasticity.
+ * @note This class contains all neuron parameters of the base neuron.
  */
 template <typename NeuronType>
 struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron_parameters<NeuronType>
 {
+    /**
+     * @brief Construct a SynapticResourceSTDP parameters from a base neuron.
+     * @param base_neuron
+     */
     explicit neuron_parameters(const neuron_parameters<NeuronType> &base_neuron)
         : neuron_parameters<NeuronType>(base_neuron)
     {
@@ -111,10 +126,17 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
 };
 
 
+/**
+ * @brief Update spike sequence state for the neuron. It's called after a neuron sends a spike.
+ * @tparam NeuronType base neuron type.
+ * @param neuron neuron parameters.
+ * @param step current step.
+ * @return new state.
+ */
 template <class NeuronType>
 ISIPeriodType update_isi(neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> &neuron, uint64_t step)
 {
-    if (neuron.is_being_forced_)  // This neuron got a forcing spike this turn and doesn't
+    if (neuron.is_being_forced_)  // This neuron got a forcing spike this turn and doesn't continue its spiking sequence
     {
         neuron.isi_status_ = neuron_traits::ISIPeriodType::is_forced;
         // Do not update last_step_
@@ -138,6 +160,10 @@ ISIPeriodType update_isi(neuron_parameters<SynapticResourceSTDPNeuron<NeuronType
                     neuron.isi_status_ = neuron_traits::ISIPeriodType::period_started;
                     neuron.first_isi_spike_ = step;
                 }
+                break;
+            case neuron_traits::ISIPeriodType::not_in_period:
+                neuron.isi_status_ = neuron_traits::ISIPeriodType::period_started;
+                neuron.first_isi_spike_ = step;
                 break;
             default:
                 throw std::runtime_error("Not supported ISI status.");
