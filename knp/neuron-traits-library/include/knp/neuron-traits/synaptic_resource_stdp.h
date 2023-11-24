@@ -33,9 +33,21 @@ struct SynapticResourceSTDPNeuron;
  */
 enum class ISIPeriodType
 {
+    /**
+     * @brief Neuron is forced (spiked while receiving an excitatory signal from a non-plastic neuron).
+     */
     is_forced,
+    /**
+     * @brief A first non-forced spike in a period.
+     */
     period_started,
+    /**
+     * @brief Non-forced spikes following the first one.
+     */
     period_continued,
+    /**
+     * @brief Previous sequence has ended, a new one hasn't started yet. Not really used as state changes on a spike.
+     */
     not_in_period
 };
 
