@@ -146,6 +146,7 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
     return future_messages.find(step_n);
 }
 
+
 template <class DeltaLikeSynapse>
 void calculate_projection_part(
     knp::core::Projection<DeltaLikeSynapse> &projection, const std::unordered_map<size_t, size_t> &message_in_data,

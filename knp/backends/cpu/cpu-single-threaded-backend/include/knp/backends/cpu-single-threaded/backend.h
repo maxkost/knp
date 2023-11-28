@@ -353,6 +353,10 @@ private:
     std::vector<knp::core::Projection<SynapseType> *> find_projection_by_type_and_postsynaptic(
         const knp::core::UID &post_uid, bool exclude_locked = false);
 
+    void do_STDP_resource_plasticity(
+        knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population,
+        const std::optional<core::messaging::SpikeMessage> &message);
+
     PopulationContainer populations_;
     ProjectionContainer projections_;
     core::MessageEndpoint message_endpoint_;

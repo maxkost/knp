@@ -47,7 +47,7 @@ public:
     /**
      * @brief Type of the neuron generator.
      */
-    using NeuronGenerator = std::function<NeuronParameters(size_t index)>;
+    using NeuronGenerator = std::function<std::optional<NeuronParameters>(size_t index)>;
 
 public:
     /**
@@ -136,7 +136,8 @@ public:
         neurons_.reserve(count);
         for (size_t i = 0; i < count; ++i)
         {
-            neurons_.template emplace_back(std::move(generator(i)));
+            auto neuron = generator(i);
+            if (neuron.has_value()) neurons_.template emplace_back(std::move(neuron.value()));
         }
     }
 

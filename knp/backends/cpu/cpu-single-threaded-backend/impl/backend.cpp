@@ -103,6 +103,27 @@ std::vector<knp::core::Projection<SynapseType> *> SingleThreadedCPUBackend::find
 }
 
 
+// TODO : Template this.
+void SingleThreadedCPUBackend::do_STDP_resource_plasticity(
+    knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population,
+    const std::optional<core::messaging::SpikeMessage> &message)
+{
+    using SynapseType = synapse_traits::SynapticResourceSTDPDeltaSynapse;
+    auto working_projections = find_projection_by_type_and_postsynaptic<SynapseType>(population.get_uid(), true);
+    // Call learning functions on all found projections:
+    // 1. If neurons generated spikes, process these neurons.
+    if (message.has_value())
+        knp::backends::cpu::process_spiking_neurons<neuron_traits::BLIFATNeuron>(
+            message.value(), working_projections, population, get_step());
+
+    // 2. Do dopamine plasticity.
+    knp::backends::cpu::do_dopamine_plasticity(working_projections, population, get_step());
+
+    // 3. Renormalize resources if needed.
+    knp::backends::cpu::renormalize_resource(working_projections, population, get_step());
+}
+
+
 void SingleThreadedCPUBackend::step()
 {
     SPDLOG_DEBUG("Starting step #{}", get_step());
@@ -119,36 +140,19 @@ void SingleThreadedCPUBackend::step()
                 if constexpr (
                     boost::mp11::mp_find<SupportedPopulations, T>{} == boost::mp11::mp_size<SupportedPopulations>{})
                     static_assert(knp::meta::always_false_v<T>, "Population isn't supported by the CPU ST backend!");
-                messages.push_back(calculate_population(arg));
+                auto message_opt = calculate_population(arg);
+
+                if constexpr (std::is_same<
+                                  T,
+                                  knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron>>::value)
+                {
+                    // Resource STDP
+                    do_STDP_resource_plasticity(arg, message_opt);
+                }
+
+                messages.push_back(std::move(message_opt));
             },
             e);
-    }
-
-    // STDP
-    using SynapseType = synapse_traits::SynapticResourceSTDPDeltaSynapse;
-    for (size_t pop_index = 0; pop_index < populations_.size(); ++pop_index)
-    {
-        // Find all neuroplastic projections to the current population.
-        if (!is_neuroplastic_population(populations_[pop_index])) continue;
-        auto &population = std::get<
-            knp::core::Population<knp::neuron_traits::SynapticResourceSTDPNeuron<knp::neuron_traits::BLIFATNeuron>>>(
-            populations_[pop_index]);
-
-        auto working_projections = find_projection_by_type_and_postsynaptic<SynapseType>(population.get_uid(), true);
-        // TODO: temp
-        if (working_projections.size()) std::cout << "Working projections: " << working_projections.size() << std::endl;
-
-        // Call learning functions on all found projections:
-        // 1. If neurons generated spikes, process these neurons.
-        if (messages[pop_index])
-            knp::backends::cpu::process_spiking_neurons<neuron_traits::BLIFATNeuron>(
-                messages[pop_index].value(), working_projections, population, get_step());
-
-        // 2. Do dopamine plasticity.
-        knp::backends::cpu::do_dopamine_plasticity(working_projections, population, get_step());
-
-        // 3. Renormalize resources if needed.
-        knp::backends::cpu::renormalize_resource(working_projections, population, get_step());
     }
 
     // Continue inference
