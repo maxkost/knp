@@ -15,15 +15,7 @@ include(knp-functions)
 
 file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/backends/cpu-library/*.h)
 
-knp_add_library("${PROJECT_NAME}"
-    STATIC
-
-    impl/init.cpp
-    impl/delta_synapse_projection_impl.h
-    impl/synaptic_resource_stdp.cpp
-
-    ${${PROJECT_NAME}_headers}
-    )
+knp_add_library("${PROJECT_NAME}" STATIC ${${PROJECT_NAME}_headers})
 add_library(KNP::Backends::CPU::Library ALIAS "${PROJECT_NAME}")
 
 source_group(source REGULAR_EXPRESSION "impl/.*")
