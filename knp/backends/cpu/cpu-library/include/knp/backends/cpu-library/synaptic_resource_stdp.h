@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include <knp/backends/cpu-library/base_stdp.h>
 #include <knp/core/messaging/spike_message.h>
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
@@ -216,5 +217,24 @@ void do_dopamine_plasticity(
         }
     }
 }
+
+
+template <class DeltaLikeSynapse>
+struct WeightUpdateSTDP<synapse_traits::STDP<synapse_traits::STDPSynapticResourceRule, DeltaLikeSynapse>>
+{
+    using Synapse = synapse_traits::STDP<synapse_traits::STDPSynapticResourceRule, DeltaLikeSynapse>;
+    static void init_projection(
+        knp::core::Projection<Synapse> &projection, std::vector<core::messaging::SpikeMessage> &messages, uint64_t step)
+    {
+    }
+
+    static void init_synapse(knp::synapse_traits::synapse_parameters<Synapse> &params, uint64_t step)
+    {
+        params.rule_.last_spike_step_ = step;
+    }
+
+    static void modify_weights(knp::core::Projection<Synapse> &projection) {}
+};
+
 
 }  // namespace knp::backends::cpu

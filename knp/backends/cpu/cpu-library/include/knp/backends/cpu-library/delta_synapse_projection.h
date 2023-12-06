@@ -19,6 +19,8 @@
 #include <utility>
 #include <vector>
 
+#include "additive_stdp.h"
+
 
 /**
  * @brief Namespace for CPU backends.
@@ -28,7 +30,7 @@ namespace knp::backends::cpu
 /**
  * @brief Type of the message queue.
  */
-typedef std::unordered_map<uint64_t, knp::core::messaging::SynapticImpactMessage> MessageQueue;
+typedef knp::core::messaging::SynapticMessageQueue MessageQueue;
 
 /**
  * @brief Convert spike vector to unordered map.
@@ -65,32 +67,12 @@ void calculate_delta_synapse_projection(
     MessageQueue &future_messages, size_t step_n);
 
 
-template <class DeltaLikeSynapse>
-void update_step(synapse_traits::synapse_parameters<DeltaLikeSynapse> &params, uint64_t step)
-{
-    params.rule_.last_spike_step_ = step;
-}
-
-
-template <>
-void update_step<synapse_traits::DeltaSynapse>(
-    synapse_traits::synapse_parameters<synapse_traits::DeltaSynapse> &, uint64_t)
-{
-}
-
-
-template <>
-void update_step<synapse_traits::AdditiveSTDPDeltaSynapse>(
-    synapse_traits::synapse_parameters<synapse_traits::AdditiveSTDPDeltaSynapse> &params, uint64_t step)
-{
-    params.rule_.presynaptic_spike_times_.push_back(step);
-}
-
 template <class ProjectionType>
 constexpr bool is_forcing()
 {
     return false;
 }
+
 
 template <>
 constexpr bool is_forcing<knp::core::Projection<synapse_traits::DeltaSynapse>>()
@@ -101,13 +83,15 @@ constexpr bool is_forcing<knp::core::Projection<synapse_traits::DeltaSynapse>>()
 
 template <typename ProjectionType>
 MessageQueue::const_iterator calculate_delta_synapse_projection_data(
-    ProjectionType &projection, const std::vector<core::messaging::SpikeMessage> &messages,
-    MessageQueue &future_messages, size_t step_n,
+    ProjectionType &projection, std::vector<core::messaging::SpikeMessage> &messages, MessageQueue &future_messages,
+    size_t step_n,
     std::function<knp::synapse_traits::synapse_parameters<knp::synapse_traits::DeltaSynapse>(
         const typename ProjectionType::SynapseParameters &)>
         sp_getter = [](const typename ProjectionType::SynapseParameters &sp) { return sp; })
 {
     SPDLOG_TRACE("Calculating Delta synapse projection data");
+    using SynapseType = typename ProjectionType::ProjectionSynapseType;
+    WeightUpdateSTDP<SynapseType>::init_projection(projection, messages, step_n);
 
     for (const auto &message : messages)
     {
@@ -118,7 +102,7 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
             for (auto synapse_index : synapses)
             {
                 auto &synapse = projection[synapse_index];
-                update_step(synapse.params_, step_n);
+                WeightUpdateSTDP<SynapseType>::init_synapse(synapse.params_, step_n);
                 const auto &synapse_params = sp_getter(synapse.params_);
                 // the message is sent on step N - 1, received on N.
                 size_t future_step = synapse_params.delay_ + step_n - 1;
@@ -142,7 +126,7 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
             }
         }
     }
-
+    WeightUpdateSTDP<SynapseType>::modify_weights(projection);
     return future_messages.find(step_n);
 }
 
@@ -157,7 +141,8 @@ void calculate_projection_part(
     for (size_t synapse_index = part_start; synapse_index < part_end; ++synapse_index)
     {
         auto &synapse = projection[synapse_index];
-        update_step(synapse.params_, step_n);
+        // update_step(synapse.params_, step_n);
+        // TODO: Move update logic here too.
         auto iter = message_in_data.find(synapse.id_from_);
         if (iter == message_in_data.end()) continue;
 
@@ -216,9 +201,8 @@ void calculate_delta_synapse_projection(
 {
     SPDLOG_DEBUG("Calculating Delta synapse projection");
 
-    auto out_iter = calculate_delta_synapse_projection_data(
-        projection, endpoint.unload_messages<core::messaging::SpikeMessage>(projection.get_uid()), future_messages,
-        step_n);
+    auto messages = endpoint.unload_messages<core::messaging::SpikeMessage>(projection.get_uid());
+    auto out_iter = calculate_delta_synapse_projection_data(projection, messages, future_messages, step_n);
     if (out_iter != future_messages.end())
     {
         SPDLOG_TRACE("Projection is sending an impact message");

@@ -23,9 +23,7 @@ namespace knp::synapse_traits
  * @tparam Synapse type of base synapse.
  */
 template <template <typename> typename Rule, typename Synapse>
-struct STDP
-{
-};
+struct STDP;
 
 
 /**

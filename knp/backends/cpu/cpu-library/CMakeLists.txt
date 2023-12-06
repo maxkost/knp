@@ -20,7 +20,6 @@ knp_add_library("${PROJECT_NAME}"
 
     impl/init.cpp
     impl/delta_synapse_projection_impl.h
-    impl/additive_stdp_delta_synapse.cpp
     impl/synaptic_resource_stdp.cpp
 
     ${${PROJECT_NAME}_headers}

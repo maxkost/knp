@@ -19,7 +19,6 @@
 
 #include <spdlog/spdlog.h>
 
-#include <fstream>
 #include <vector>
 
 #include <boost/mp11.hpp>

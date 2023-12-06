@@ -95,7 +95,7 @@ struct SynapticImpactMessage
 /**
  * @brief Synaptic messages that the projection will send in the future depending on the network execution step number.
  */
-typedef std::unordered_map<size_t, SynapticImpactMessage> SynapticMessageQueue;
+typedef std::unordered_map<uint64_t, SynapticImpactMessage> SynapticMessageQueue;
 
 /**
  * @brief Get synaptic impact from an input stream.
