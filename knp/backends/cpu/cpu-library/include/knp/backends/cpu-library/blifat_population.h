@@ -27,7 +27,6 @@
  */
 namespace knp::backends::cpu
 {
-// using StdpResourceNeuron = neuron_traits::SynapticResourceSTDPNeuron<neuron_traits::BLIFATNeuron>;
 template <class Neuron>
 constexpr bool has_dopamine_plasticity()
 {

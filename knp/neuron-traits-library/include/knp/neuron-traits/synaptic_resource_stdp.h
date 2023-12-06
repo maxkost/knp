@@ -83,9 +83,9 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
      */
     float free_synaptic_resource_ = 1;
     /**
-     * @brief Free synaptic resource threshold value.
+     * @brief Synaptic resource threshold value.
      */
-    float free_synaptic_resource_threshold_ = -1;
+    float synaptic_resource_threshold_ = std::numeric_limits<float>::infinity();
     /**
      * @brief Synaptic resource is divided by (number of synapses + resource drain coefficient).
      */
@@ -112,11 +112,6 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
      * @brief Hebbian plasticity value.
      */
     float d_h_ = 1.F;
-    /**
-     * @brief Synaptic resource threshold value. Isn't used
-     */
-    float synaptic_resource_threshold_ = std::numeric_limits<float>::infinity();
-
     /**
      * @brief ISI period status.
      */
