@@ -117,14 +117,14 @@ public:
     /**
      * @brief Lock synapse weights.
      */
-    void lock_weights() { backend_->stop_learning(); }
+    void stop_learning() { backend_->stop_learning(); }
 
     /**
      * @brief Unlock synapse weights.
      */
-    void unlock_weights() { backend_->start_learning(); }
+    void start_learning() { backend_->start_learning(); }
 
-    core::Backend *get_backend() { return backend_.get(); }
+    std::shared_ptr<core::Backend> get_backend() { return backend_; }
 
 protected:
     /**
