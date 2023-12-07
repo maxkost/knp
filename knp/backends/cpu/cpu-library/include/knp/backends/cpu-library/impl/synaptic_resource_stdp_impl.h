@@ -6,7 +6,7 @@
  */
 
 #pragma once
-#include <knp/backends/cpu-library/base_stdp.h>
+#include <knp/backends/cpu-library/impl/base_stdp.h>
 #include <knp/backends/cpu-library/impl/synaptic_resource_stdp_impl.h>
 #include <knp/core/messaging/spike_message.h>
 #include <knp/core/population.h>

@@ -19,7 +19,7 @@
 #include <utility>
 #include <vector>
 
-#include "additive_stdp.h"
+#include "knp/backends/cpu-library/impl/additive_stdp.h"
 
 
 /**

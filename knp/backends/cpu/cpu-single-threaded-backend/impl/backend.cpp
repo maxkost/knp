@@ -6,8 +6,8 @@
  */
 
 
-#include <knp/backends/cpu-library/blifat_population.h>
-#include <knp/backends/cpu-library/delta_synapse_projection.h>
+#include <knp/backends/cpu-library/impl/blifat_population.h>
+#include <knp/backends/cpu-library/impl/delta_synapse_projection.h>
 #include <knp/backends/cpu-library/impl/synaptic_resource_stdp_impl.h>
 #include <knp/backends/cpu-library/init.h>
 #include <knp/backends/cpu-single-threaded/backend.h>
