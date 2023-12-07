@@ -21,7 +21,7 @@ public:
     /**
      * @brief Default virtual destructor.
      */
-    virtual ~MessageBusImpl() {}
+    virtual ~MessageBusImpl() = default;
 
     /**
      * @brief Send a message between endpoints.

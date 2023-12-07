@@ -195,12 +195,12 @@ public:
     /**
      * @brief Stop learning.
      */
-    virtual void lock() = 0;
+    virtual void stop_learning() = 0;
 
     /**
      * @brief Restart learning.
      */
-    virtual void unlock() = 0;
+    virtual void start_learning() = 0;
 
 public:
     /**

@@ -12,7 +12,7 @@
 #include <boost/mp11.hpp>
 
 #include "blifat.h"
-#include "synaptic_resource_stdp.h"
+#include "stdp_synaptic_resource_rule.h"
 
 /**
  * @brief Namespace for neuron traits.

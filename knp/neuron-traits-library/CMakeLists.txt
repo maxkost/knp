@@ -12,7 +12,7 @@ add_library("${PROJECT_NAME}"
     INTERFACE
     include/knp/neuron-traits/type_traits.h
     include/knp/neuron-traits/blifat.h
-    include/knp/neuron-traits/synaptic_resource_stdp.h
+    include/knp/neuron-traits/stdp_synaptic_resource_rule.h
     include/knp/neuron-traits/all_traits.h
 )
 add_library(KNP::Neuron::Traits ALIAS "${PROJECT_NAME}")

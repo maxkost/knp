@@ -222,7 +222,7 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
     backend.load_projections({input_projection, loop_projection});
 
     backend.init();
-    backend.unlock();
+    backend.start_learning();
     auto endpoint = backend.message_bus_.create_endpoint();
 
     knp::core::UID in_channel_uid;

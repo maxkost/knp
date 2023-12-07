@@ -1,5 +1,5 @@
 /**
- * @file synaptic_resource_stdp_neurons.h
+ * @file stdp_synaptic_resource_rule.h
  * @brief Synaptcic resource based STDP neurons parameters.
  * @author Artiom N.
  * @date 06.10.2023
@@ -64,7 +64,7 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
 {
     /**
      * @brief Construct a SynapticResourceSTDP parameters from a base neuron.
-     * @param base_neuron
+     * @param base_neuron starting parameters of the base neuron type.
      */
     explicit neuron_parameters(const neuron_parameters<NeuronType> &base_neuron)
         : neuron_parameters<NeuronType>(base_neuron)

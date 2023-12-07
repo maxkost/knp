@@ -320,7 +320,7 @@ public:
     /**
      * @brief Stops training process by locking any unlocked projections.
      */
-    void lock() override
+    void stop_learning() override
     {
         for (ProjectionWrapper &wrapper : projections_)
             std::visit([](auto &entity) { entity.lock_weights(); }, wrapper.arg_);
@@ -329,9 +329,9 @@ public:
     /**
      * @brief Resume training, by unlocking all projections.
      */
-    void unlock() override
+    void start_learning() override
     {
-        // TODO: Probably only need to unlock some of projections: the ones that were locked with lock()
+        // TODO: Probably only need to start_learning some of projections: the ones that were locked with lock()
         for (ProjectionWrapper &wrapper : projections_)
             std::visit([](auto &entity) { entity.unlock_weights(); }, wrapper.arg_);
     }

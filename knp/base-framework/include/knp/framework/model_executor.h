@@ -117,12 +117,12 @@ public:
     /**
      * @brief Lock synapse weights.
      */
-    void lock_weights() { backend_->lock(); }
+    void lock_weights() { backend_->stop_learning(); }
 
     /**
      * @brief Unlock synapse weights.
      */
-    void unlock_weights() { backend_->unlock(); }
+    void unlock_weights() { backend_->start_learning(); }
 
     core::Backend *get_backend() { return backend_.get(); }
 
