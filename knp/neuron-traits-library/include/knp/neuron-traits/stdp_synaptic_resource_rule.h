@@ -50,6 +50,9 @@ enum class ISIPeriodType
 template <typename NeuronType>
 struct default_values<SynapticResourceSTDPNeuron<NeuronType>>
 {
+    /**
+     * @brief Base neuron default parameters.
+     */
     default_values<NeuronType> neuron_;
 };
 
