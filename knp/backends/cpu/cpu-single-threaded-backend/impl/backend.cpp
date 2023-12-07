@@ -8,8 +8,8 @@
 
 #include <knp/backends/cpu-library/blifat_population.h>
 #include <knp/backends/cpu-library/delta_synapse_projection.h>
+#include <knp/backends/cpu-library/impl/synaptic_resource_stdp_impl.h>
 #include <knp/backends/cpu-library/init.h>
-#include <knp/backends/cpu-library/synaptic_resource_stdp.h>
 #include <knp/backends/cpu-single-threaded/backend.h>
 #include <knp/devices/cpu.h>
 #include <knp/meta/assert_helpers.h>
@@ -73,56 +73,6 @@ SupportedVariants convert_variant(const AllVariants &input)
 }
 
 
-bool is_neuroplastic_population(const core::AllPopulationsVariant &population)
-{
-    using PopulationType =
-        knp::core::Population<knp::neuron_traits::SynapticResourceSTDPNeuron<knp::neuron_traits::BLIFATNeuron>>;
-    constexpr size_t expected_index = boost::mp11::mp_find<core::AllPopulations, PopulationType>();
-    size_t index = population.index();
-    return index == expected_index;
-}
-
-
-template <class SynapseType>
-std::vector<knp::core::Projection<SynapseType> *> SingleThreadedCPUBackend::find_projection_by_type_and_postsynaptic(
-    const knp::core::UID &post_uid, bool exclude_locked)
-{
-    using ProjectionType = knp::core::Projection<SynapseType>;
-    std::vector<knp::core::Projection<SynapseType> *> result;
-    constexpr auto type_index = boost::mp11::mp_find<synapse_traits::AllSynapses, SynapseType>();
-    for (auto &projection : projections_)
-    {
-        if (projection.arg_.index() != type_index) continue;
-        ProjectionType *projection_ptr = &(std::get<type_index>(projection.arg_));
-        if (projection_ptr->is_locked() && exclude_locked) continue;
-
-        if (projection_ptr->get_postsynaptic() == post_uid) result.push_back(projection_ptr);
-    }
-    return result;
-}
-
-
-// TODO : Template this.
-void SingleThreadedCPUBackend::do_STDP_resource_plasticity(
-    knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population,
-    const std::optional<core::messaging::SpikeMessage> &message)
-{
-    using SynapseType = synapse_traits::SynapticResourceSTDPDeltaSynapse;
-    auto working_projections = find_projection_by_type_and_postsynaptic<SynapseType>(population.get_uid(), true);
-    // Call learning functions on all found projections:
-    // 1. If neurons generated spikes, process these neurons.
-    if (message.has_value())
-        knp::backends::cpu::process_spiking_neurons<neuron_traits::BLIFATNeuron>(
-            message.value(), working_projections, population, get_step());
-
-    // 2. Do dopamine plasticity.
-    knp::backends::cpu::do_dopamine_plasticity(working_projections, population, get_step());
-
-    // 3. Renormalize resources if needed.
-    knp::backends::cpu::renormalize_resource(working_projections, population, get_step());
-}
-
-
 void SingleThreadedCPUBackend::step()
 {
     SPDLOG_DEBUG("Starting step #{}", get_step());
@@ -146,7 +96,11 @@ void SingleThreadedCPUBackend::step()
                                   knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron>>::value)
                 {
                     // Resource STDP
-                    do_STDP_resource_plasticity(arg, message_opt);
+                    using SynapseType = synapse_traits::SynapticResourceSTDPDeltaSynapse;
+                    auto working_projections =
+                        cpu::find_projection_by_type_and_postsynaptic<SynapseType, ProjectionContainer>(
+                            projections_, arg.get_uid(), true);
+                    cpu::do_STDP_resource_plasticity(arg, working_projections, message_opt, get_step());
                 }
 
                 messages.push_back(std::move(message_opt));
