@@ -7,10 +7,10 @@
 
 #pragma once
 #include <knp/backends/cpu-library/base_stdp.h>
+#include <knp/backends/cpu-library/impl/synaptic_resource_stdp_impl.h>
 #include <knp/core/messaging/spike_message.h>
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
-#include <knp/neuron-traits/synaptic_resource_stdp.h>
 #include <knp/synapse-traits/stdp_common.h>
 #include <knp/synapse-traits/stdp_synaptic_resource_rule.h>
 #include <knp/synapse-traits/stdp_type_traits.h>

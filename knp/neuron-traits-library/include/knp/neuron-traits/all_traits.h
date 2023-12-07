@@ -12,13 +12,15 @@
 #include <boost/mp11.hpp>
 
 #include "blifat.h"
-#include "synaptic_resource_stdp_neurons.h"
+#include "synaptic_resource_stdp.h"
 
 /**
  * @brief Namespace for neuron traits.
  */
 namespace knp::neuron_traits
 {
+using SynapticResourceSTDPBLIFATNeuron = SynapticResourceSTDPNeuron<BLIFATNeuron>;
+
 // Comma-separated list of neurons.
 #define ALL_NEURONS knp::neuron_traits::BLIFATNeuron, knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron
 

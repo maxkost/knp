@@ -218,9 +218,6 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
         STDPDeltaProjection{knp::core::UID{false}, population.get_uid(), stdp_input_projection_gen, 1};
     knp::core::UID input_uid = std::visit([](const auto &proj) { return proj.get_uid(); }, input_projection);
 
-    //    loop_projection.get_shared_parameters().stdp_populations_[population.get_uid()] =
-    //        STDPDeltaProjection::SharedSynapseParameters::ProcessingType::STDPAndSpike;
-
     backend.load_populations({population});
     backend.load_projections({input_projection, loop_projection});
 

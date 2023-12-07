@@ -39,6 +39,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU
 endif()
 
 set(ENABLE_FAST_MATH ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if(NOT KNP_MAINTAINER_BUILD)
     execute_process(COMMAND pre-commit install
@@ -79,7 +80,6 @@ add_third_party(spdlog)
 add_third_party(pybind11)
 add_third_party(pcm)
 set(FLATBUFFERS_BUILD_CPP17 ON)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 add_third_party(flatbuffers)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
