@@ -1,5 +1,5 @@
 /**
- * @file blifat_population.h
+ * @file blifat_population_impl.h
  * @brief BLIFAT neurons calculation routines definition.
  * @author Artiom N.
  * @date 21.02.2023

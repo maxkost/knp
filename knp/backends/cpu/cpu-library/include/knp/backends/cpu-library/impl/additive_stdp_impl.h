@@ -1,5 +1,5 @@
 /**
- * @file additive_stdp.h
+ * @file additive_stdp_impl.h
  * @brief Additive STDP calculation routines implementation.
  * @author Artiom N.
  * @date 21.08.2023

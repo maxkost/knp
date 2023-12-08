@@ -15,6 +15,7 @@ namespace knp::backends::cpu
 {
 /**
  * @brief Make one execution step for a population of BLIFAT neurons.
+ * @tparam BlifatLikeNeuron neuron type with BLIFAT-like neuron_parameters.
  * @param population population to update.
  * @param endpoint message endpoint used for message exchange.
  * @param step_n execution step.
@@ -55,6 +56,7 @@ std::optional<core::messaging::SpikeMessage> calculate_resource_stdp_population(
 
 /**
  * @brief Make one execution step for a population of BLIFAT neurons.
+ * @tparam BlifatLikeNeuron neuron with BLIFAT-like neuron parameters.
  * @param population population to update.
  * @param endpoint message endpoint used for message exchange.
  * @param step_n execution step.

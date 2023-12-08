@@ -1,5 +1,5 @@
 /**
- * @file delta_synapse_projection.h
+ * @file delta_synapse_projection_impl.h
  * @brief DeltaSynapse calculation routines definition.
  * @author Artiom N.
  * @date 21.02.2023

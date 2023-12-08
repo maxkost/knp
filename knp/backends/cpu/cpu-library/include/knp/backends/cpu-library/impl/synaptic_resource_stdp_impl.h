@@ -1,5 +1,5 @@
 /**
- * @file synaptic_resource_stdp.h
+ * @file synaptic_resource_stdp_impl.h
  * @brief Synaptic resource based STDP neurons adapter.
  * @author Artiom N.
  * @date 06.10.2023

@@ -1,5 +1,5 @@
 /**
- * @file base_stdp.h
+ * @file base_stdp_impl.h
  * @brief Common templates used for different STDP variants.
  * @author A. Vartenkov
  * @date 04.11.2023
