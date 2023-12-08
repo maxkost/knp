@@ -299,15 +299,8 @@ knp::core::messaging::SpikeData calculate_blifat_population_data(
 }
 
 
-/**
- * @brief Make one execution step for a population of BLIFAT neurons.
- * @param population population to update.
- * @param endpoint message endpoint used for message exchange.
- * @param step_n execution step.
- * @return indexes of spiked neurons.
- */
 template <class BlifatLikeNeuron>
-std::optional<core::messaging::SpikeMessage> calculate_blifat_population(
+std::optional<core::messaging::SpikeMessage> calculate_blifat_population_impl(
     knp::core::Population<BlifatLikeNeuron> &population, knp::core::MessageEndpoint &endpoint, size_t step_n)
 {
     auto neuron_indexes{calculate_blifat_population_data(population, endpoint)};
@@ -332,7 +325,7 @@ std::optional<core::messaging::SpikeMessage> calculate_blifat_population(
  * @return indexes of spiked neurons.
  */
 template <class BlifatLikeNeuron>
-std::optional<knp::core::messaging::SpikeMessage> calculate_blifat_population(
+std::optional<knp::core::messaging::SpikeMessage> calculate_blifat_population_impl(
     knp::core::Population<BlifatLikeNeuron> &population, knp::core::MessageEndpoint &endpoint, size_t step_n,
     std::mutex &mutex)
 {

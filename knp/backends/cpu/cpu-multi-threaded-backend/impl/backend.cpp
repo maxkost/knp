@@ -5,8 +5,8 @@
  * @date 21.06.2023
  */
 
-#include <knp/backends/cpu-library/impl/blifat_population.h>
-#include <knp/backends/cpu-library/impl/delta_synapse_projection.h>
+#include <knp/backends/cpu-library/blifat_population.h>
+#include <knp/backends/cpu-library/delta_synapse_projection.h>
 #include <knp/backends/cpu-library/init.h>
 #include <knp/backends/cpu-multi-threaded/backend.h>
 #include <knp/backends/thread_pool/thread_pool.h>

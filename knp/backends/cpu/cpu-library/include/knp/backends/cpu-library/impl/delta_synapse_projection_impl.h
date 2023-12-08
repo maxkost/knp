@@ -19,7 +19,7 @@
 #include <utility>
 #include <vector>
 
-#include "knp/backends/cpu-library/impl/additive_stdp.h"
+#include "knp/backends/cpu-library/impl/additive_stdp_impl.h"
 
 
 /**
@@ -39,30 +39,15 @@ typedef knp::core::messaging::SynapticMessageQueue MessageQueue;
  */
 std::unordered_map<uint64_t, size_t> convert_spikes(const knp::core::messaging::SpikeMessage &message);
 
-/**
- * @brief Process a part of projection synapses.
- * @param projection projection to receive the message.
- * @param message_in_data processed spike data for the projection.
- * @param future_messages queue of future messages.
- * @param step_n current step.
- * @param part_start index of the starting synapse.
- * @param part_size number of synapses to process.
- * @param mutex mutex.
- */
+
 template <class DeltaLikeSynapse>
-void calculate_projection_part(
+void calculate_projection_part_impl(
     knp::core::Projection<DeltaLikeSynapse> &projection, const std::unordered_map<size_t, size_t> &message_in_data,
     MessageQueue &future_messages, u_int64_t step_n, size_t part_start, size_t part_size, std::mutex &mutex);
 
-/**
- * @brief Make one execution step for a projection of Delta synapses.
- * @param projection projection to update.
- * @param endpoint message endpoint used for message exchange.
- * @param future_messages message queue to process via endpoint.
- * @param step_n execution step.
- */
+
 template <class DeltaLikeSynapse>
-void calculate_delta_synapse_projection(
+void calculate_delta_synapse_projection_impl(
     knp::core::Projection<DeltaLikeSynapse> &projection, knp::core::MessageEndpoint &endpoint,
     MessageQueue &future_messages, size_t step_n);
 
@@ -132,7 +117,7 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
 
 
 template <class DeltaLikeSynapse>
-void calculate_projection_part(
+void calculate_projection_part_impl(
     knp::core::Projection<DeltaLikeSynapse> &projection, const std::unordered_map<size_t, size_t> &message_in_data,
     MessageQueue &future_messages, u_int64_t step_n, size_t part_start, size_t part_size, std::mutex &mutex)
 {
@@ -195,7 +180,7 @@ std::unordered_map<uint64_t, size_t> convert_spikes(const core::messaging::Spike
 
 
 template <class DeltaLikeSynapseType>
-void calculate_delta_synapse_projection(
+void calculate_delta_synapse_projection_impl(
     knp::core::Projection<DeltaLikeSynapseType> &projection, knp::core::MessageEndpoint &endpoint,
     MessageQueue &future_messages, size_t step_n)
 {
