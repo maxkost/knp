@@ -1,84 +1,74 @@
 /**
  * @file blifat_population.h
- * @brief BLIFAT neurons calculation routines definition.
- * @author Artiom N.
- * @date 21.02.2023
+ * @brief Common templates for Blifat population.
+ * @author A. Vartenkov
+ * @date 07.11.2023
  */
-
 #pragma once
-
-#include <knp/core/message_bus.h>
-#include <knp/core/population.h>
-#include <knp/neuron-traits/blifat.h>
-
-#include <mutex>
-#include <optional>
-#include <queue>
-#include <vector>
-
+#include <knp/backends/cpu-library/impl/blifat_population_impl.h>
+#include <knp/backends/cpu-library/impl/synaptic_resource_stdp_impl.h>
 
 /**
  * @brief Namespace for CPU backends.
  */
 namespace knp::backends::cpu
 {
-
 /**
  * @brief Make one execution step for a population of BLIFAT neurons.
+ * @tparam BlifatLikeNeuron neuron type with BLIFAT-like neuron_parameters.
  * @param population population to update.
  * @param endpoint message endpoint used for message exchange.
  * @param step_n execution step.
+ * @return indexes of spiked neurons.
  */
-void calculate_blifat_population(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint,
-    size_t step_n);
+template <class BlifatLikeNeuron>
+std::optional<core::messaging::SpikeMessage> calculate_blifat_population(
+    knp::core::Population<BlifatLikeNeuron> &population, knp::core::MessageEndpoint &endpoint, size_t step_n)
+{
+    return calculate_blifat_population_impl(population, endpoint, step_n);
+}
+
+
+/**
+ * @brief Make one execution step for a population of SynapticResourceStdp neurons.
+ * @tparam BlifatLikeNeuron base neuron type.
+ * @tparam BaseSynapseType base synapse type.
+ * @tparam ProjectionContainer type of a projection container.
+ * @param population population to update.
+ * @param container projection container from backend.
+ * @param endpoint message endpoint used for message exchange.
+ * @param step_n execution step.
+ * @return message containing indexes of spiked neurons.
+ */
+template <class BlifatLikeNeuron, class BaseSynapseType, class ProjectionContainer>
+std::optional<core::messaging::SpikeMessage> calculate_resource_stdp_population(
+    knp::core::Population<neuron_traits::SynapticResourceSTDPNeuron<BlifatLikeNeuron>> &population,
+    ProjectionContainer &container, knp::core::MessageEndpoint &endpoint, size_t step_n)
+{
+    using StdpSynapseType = synapse_traits::STDP<synapse_traits::STDPSynapticResourceRule, BaseSynapseType>;
+    auto message_opt = calculate_blifat_population_impl(population, endpoint, step_n);
+    auto working_projections = find_projection_by_type_and_postsynaptic<StdpSynapseType, ProjectionContainer>(
+        container, population.get_uid(), true);
+    do_STDP_resource_plasticity(population, working_projections, message_opt, step_n);
+    return message_opt;
+}
 
 
 /**
  * @brief Make one execution step for a population of BLIFAT neurons.
+ * @tparam BlifatLikeNeuron neuron with BLIFAT-like neuron parameters.
  * @param population population to update.
  * @param endpoint message endpoint used for message exchange.
  * @param step_n execution step.
- * @param m mutex.
+ * @param mutex mutex.
+ * @return indexes of spiked neurons.
  */
-void calculate_blifat_population(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::MessageEndpoint &endpoint,
-    size_t step_n, std::mutex &m);
-
-
-/**
- * @brief Partially calculate population before it receives synaptic impact messages.
- * @param population population to update.
- * @param part_start index of the first neuron to calculate.
- * @param part_size number of neurons to calculate in a single call.
- * @note The method if used for parallelization.
- */
-void calculate_neurons_state_part(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, size_t part_start, size_t part_size);
-
-
-/**
- * @brief Process messages sent to the current population.
- * @param population population to update.
- * @param messages synaptic impact messages sent to the population.
- * @note The method is used for parallelization. See later if this method serves as a bottleneck.
- */
-void process_inputs(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population,
-    const std::vector<knp::core::messaging::SynapticImpactMessage> &messages);
-
-
-/**
- * @brief Partially calculate population after it receives synaptic impact messages.
- * @param population population to update.
- * @param message output spike message to update.
- * @param part_start index of the first neuron to update.
- * @param part_size number of neurons to calculate in a single call.
- * @param mutex mutex that is locked to update a message.
- * @note This method is used for parallelization.
- */
-void calculate_neurons_post_input_state_part(
-    knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population, knp::core::messaging::SpikeMessage &message,
-    size_t part_start, size_t part_size, std::mutex &mutex);
+template <class BlifatLikeNeuron>
+std::optional<knp::core::messaging::SpikeMessage> calculate_blifat_population(
+    knp::core::Population<BlifatLikeNeuron> &population, knp::core::MessageEndpoint &endpoint, size_t step_n,
+    std::mutex &mutex)
+{
+    return calculate_blifat_population_impl(population, endpoint, step_n, mutex);
+}
 
 }  // namespace knp::backends::cpu

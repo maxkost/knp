@@ -114,6 +114,18 @@ public:
         std::visit([&senders](auto &entity) { entity.subscribe(senders); }, observers_.back());
     }
 
+    /**
+     * @brief Lock synapse weights.
+     */
+    void stop_learning() { backend_->stop_learning(); }
+
+    /**
+     * @brief Unlock synapse weights.
+     */
+    void start_learning() { backend_->start_learning(); }
+
+    std::shared_ptr<core::Backend> get_backend() { return backend_; }
+
 protected:
     /**
      * @brief Write model to backend.
@@ -138,5 +150,4 @@ private:
     std::vector<knp::framework::output::OutputChannel> out_channels_;
     std::vector<monitoring::AnyObserverVariant> observers_;
 };
-
 }  // namespace knp::framework

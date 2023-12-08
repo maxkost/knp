@@ -108,6 +108,7 @@ SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg)
     UID sender_uid{false};
     UID presynaptic_uid{false};
     UID postsynaptic_uid{false};
+    bool is_forced = false;
     std::copy(
         s_msg_header->sender_uid().data()->begin(),
         s_msg_header->sender_uid().data()->end(),  // clang_sa_ignore [core.CallAndMessage]
@@ -133,7 +134,7 @@ SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg)
         });
 
     return SynapticImpactMessage{
-        {sender_uid, s_msg_header->send_time()}, presynaptic_uid, postsynaptic_uid, std::move(impacts)};
+        {sender_uid, s_msg_header->send_time()}, presynaptic_uid, postsynaptic_uid, is_forced, std::move(impacts)};
 }
 
 }  // namespace knp::core::messaging

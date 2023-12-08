@@ -192,6 +192,16 @@ public:
      */
     core::messaging::Step get_step() const { return step_; }
 
+    /**
+     * @brief Stop learning.
+     */
+    virtual void stop_learning() = 0;
+
+    /**
+     * @brief Restart learning.
+     */
+    virtual void start_learning() = 0;
+
 public:
     /**
      * @brief Get network execution status.

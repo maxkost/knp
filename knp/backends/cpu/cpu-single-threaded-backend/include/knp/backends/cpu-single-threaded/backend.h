@@ -39,7 +39,8 @@ public:
     /**
      * @brief List of neuron types supported by the single-threaded CPU backend.
      */
-    using SupportedNeurons = boost::mp11::mp_list<knp::neuron_traits::BLIFATNeuron>;
+    using SupportedNeurons =
+        boost::mp11::mp_list<knp::neuron_traits::BLIFATNeuron, knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron>;
 
     /**
      * @brief List of synapse types supported by the single-threaded CPU backend.
@@ -278,6 +279,25 @@ public:
     const core::MessageEndpoint &get_message_endpoint() const override { return message_endpoint_; }
     core::MessageEndpoint &get_message_endpoint() override { return message_endpoint_; }
 
+    /**
+     * @brief Stops training process by locking any unlocked projections.
+     */
+    void stop_learning() override
+    {
+        for (ProjectionWrapper &wrapper : projections_)
+            std::visit([](auto &entity) { entity.lock_weights(); }, wrapper.arg_);
+    }
+
+    /**
+     * @brief Resume training, by unlocking all projections.
+     */
+    void start_learning() override
+    {
+        // TODO: Probably only need to start_learning some of projections: the ones that were locked with lock()
+        for (ProjectionWrapper &wrapper : projections_)
+            std::visit([](auto &entity) { entity.unlock_weights(); }, wrapper.arg_);
+    }
+
 protected:
     /**
      * @copydoc knp::core::Backend::init()
@@ -288,8 +308,18 @@ protected:
      * @brief Calculate population of BLIFAT neurons.
      * @note Population will be changed during calculation.
      * @param population population of BLIFAT neurons to calculate.
+     * @return copy of spike message if population is emitting one.
      */
-    void calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population);
+    std::optional<core::messaging::SpikeMessage> calculate_population(
+        knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population);
+
+    /**
+     * @brief Calculate population of resource-based STDP supported BLIFAT neurons.
+     * @note Population will be changed during calculation.
+     * @param population population of the neurons to calculate.
+     */
+    std::optional<core::messaging::SpikeMessage> calculate_population(
+        knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population);
     /**
      * @brief Calculate projection of Delta synapses.
      * @note Projection will be changed during calculation.
@@ -319,9 +349,7 @@ protected:
         core::messaging::SynapticMessageQueue &message_queue);
 
 private:
-    // cppcheck-suppress unusedStructMember
     PopulationContainer populations_;
-    // cppcheck-suppress unusedStructMember
     ProjectionContainer projections_;
     core::MessageEndpoint message_endpoint_;
 };

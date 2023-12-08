@@ -9,6 +9,7 @@
 #include <knp/synapse-traits/output_types.h>
 
 #include <iostream>
+#include <limits>
 #include <map>
 #include <unordered_map>
 #include <vector>
@@ -80,6 +81,12 @@ struct SynapticImpactMessage
      */
     UID postsynaptic_population_uid_;
 
+    // TODO: Try to remove this when fixing main; this parameter is too specific to be a part of a general message.
+    /**
+     * @brief True if this signal is from a projection without plasticity. Used in training.
+     */
+    bool is_forcing_ = false;
+
     /**
      * @brief Impact values.
      */
@@ -89,7 +96,7 @@ struct SynapticImpactMessage
 /**
  * @brief Synaptic messages that the projection will send in the future depending on the network execution step number.
  */
-typedef std::unordered_map<size_t, SynapticImpactMessage> SynapticMessageQueue;
+typedef std::unordered_map<uint64_t, SynapticImpactMessage> SynapticMessageQueue;
 
 /**
  * @brief Get synaptic impact from an input stream.
