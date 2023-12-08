@@ -89,21 +89,6 @@ void SingleThreadedCPUBackend::step()
                     boost::mp11::mp_find<SupportedPopulations, T>{} == boost::mp11::mp_size<SupportedPopulations>{})
                     static_assert(knp::meta::always_false_v<T>, "Population isn't supported by the CPU ST backend!");
                 auto message_opt = calculate_population(arg);
-
-                //                if constexpr (std::is_same<
-                //                                  T,
-                //                                  knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron>>::value)
-                //                {
-                //                    // Resource STDP
-                //                    using SynapseType = synapse_traits::SynapticResourceSTDPDeltaSynapse;
-                //                    auto working_projections =
-                //                        cpu::find_projection_by_type_and_postsynaptic<SynapseType,
-                //                        ProjectionContainer>(
-                //                            projections_, arg.get_uid(), true);
-                //                    cpu::do_STDP_resource_plasticity(arg, working_projections, message_opt,
-                //                    get_step());
-                //                }
-
                 messages.push_back(std::move(message_opt));
             },
             e);
