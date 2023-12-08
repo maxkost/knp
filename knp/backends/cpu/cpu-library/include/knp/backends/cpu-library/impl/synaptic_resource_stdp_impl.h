@@ -7,7 +7,6 @@
 
 #pragma once
 #include <knp/backends/cpu-library/impl/base_stdp_impl.h>
-#include <knp/backends/cpu-library/impl/synaptic_resource_stdp_impl.h>
 #include <knp/core/messaging/spike_message.h>
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
@@ -326,7 +325,8 @@ struct WeightUpdateSTDP<synapse_traits::STDP<synapse_traits::STDPSynapticResourc
 template <class NeuronType, class SynapseType>
 void do_STDP_resource_plasticity(
     knp::core::Population<knp::neuron_traits::SynapticResourceSTDPNeuron<NeuronType>> &population,
-    std::vector<knp::core::Projection<SynapseType> *> working_projections,
+    std::vector<knp::core::Projection<synapse_traits::STDP<synapse_traits::STDPSynapticResourceRule, SynapseType>> *>
+        working_projections,
     const std::optional<core::messaging::SpikeMessage> &message, uint64_t step)
 {
     // Call learning functions on all found projections:
@@ -341,5 +341,4 @@ void do_STDP_resource_plasticity(
     // 3. Renormalize resources if needed.
     knp::backends::cpu::renormalize_resource(working_projections, population, step);
 }
-
 }  // namespace knp::backends::cpu

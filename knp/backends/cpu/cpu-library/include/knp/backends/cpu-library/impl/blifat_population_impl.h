@@ -19,8 +19,10 @@
 #include <optional>
 #include <queue>
 #include <string>
+#include <utility>
 #include <vector>
 
+#include "synaptic_resource_stdp_impl.h"
 
 /**
  * @brief Namespace for CPU backends.
@@ -304,15 +306,15 @@ std::optional<core::messaging::SpikeMessage> calculate_blifat_population_impl(
     knp::core::Population<BlifatLikeNeuron> &population, knp::core::MessageEndpoint &endpoint, size_t step_n)
 {
     auto neuron_indexes{calculate_blifat_population_data(population, endpoint)};
-
+    std::optional<knp::core::messaging::SpikeMessage> message_opt = {};
     if (!neuron_indexes.empty())
     {
         knp::core::messaging::SpikeMessage res_message{{population.get_uid(), step_n}, neuron_indexes};
         endpoint.send_message(res_message);
         SPDLOG_DEBUG("Sent {} spike(s)", res_message.neuron_indexes_.size());
-        return res_message;
+        message_opt = std::move(res_message);
     }
-    return {};
+    return message_opt;
 }
 
 

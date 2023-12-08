@@ -8,7 +8,6 @@
 
 #include <knp/backends/cpu-library/blifat_population.h>
 #include <knp/backends/cpu-library/delta_synapse_projection.h>
-#include <knp/backends/cpu-library/impl/synaptic_resource_stdp_impl.h>
 #include <knp/backends/cpu-library/init.h>
 #include <knp/backends/cpu-single-threaded/backend.h>
 #include <knp/devices/cpu.h>
@@ -91,17 +90,19 @@ void SingleThreadedCPUBackend::step()
                     static_assert(knp::meta::always_false_v<T>, "Population isn't supported by the CPU ST backend!");
                 auto message_opt = calculate_population(arg);
 
-                if constexpr (std::is_same<
-                                  T,
-                                  knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron>>::value)
-                {
-                    // Resource STDP
-                    using SynapseType = synapse_traits::SynapticResourceSTDPDeltaSynapse;
-                    auto working_projections =
-                        cpu::find_projection_by_type_and_postsynaptic<SynapseType, ProjectionContainer>(
-                            projections_, arg.get_uid(), true);
-                    cpu::do_STDP_resource_plasticity(arg, working_projections, message_opt, get_step());
-                }
+                //                if constexpr (std::is_same<
+                //                                  T,
+                //                                  knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron>>::value)
+                //                {
+                //                    // Resource STDP
+                //                    using SynapseType = synapse_traits::SynapticResourceSTDPDeltaSynapse;
+                //                    auto working_projections =
+                //                        cpu::find_projection_by_type_and_postsynaptic<SynapseType,
+                //                        ProjectionContainer>(
+                //                            projections_, arg.get_uid(), true);
+                //                    cpu::do_STDP_resource_plasticity(arg, working_projections, message_opt,
+                //                    get_step());
+                //                }
 
                 messages.push_back(std::move(message_opt));
             },
@@ -215,7 +216,9 @@ std::optional<core::messaging::SpikeMessage> SingleThreadedCPUBackend::calculate
     knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population)
 {
     SPDLOG_TRACE("Calculate resource-based STDP supported BLIFAT population {}", std::string(population.get_uid()));
-    return knp::backends::cpu::calculate_blifat_population(population, message_endpoint_, get_step());
+    return knp::backends::cpu::calculate_resource_stdp_population<
+        neuron_traits::BLIFATNeuron, synapse_traits::DeltaSynapse, ProjectionContainer>(
+        population, projections_, message_endpoint_, get_step());
 }
 
 
