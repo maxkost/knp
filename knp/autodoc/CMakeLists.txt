@@ -31,6 +31,7 @@ if(KNP_BUILD_DOCUMENTATION)
         BUNDLE_ID "com.kaspersky.KNP"
         PUBLISHER_NAME "Kaspersky Lab"
         EXCLUDE_PATTERNS "*.descr* */impl/*"
+        EXCLUDE_SYMBOLS "*impl*, *testing*"
         STRIP_FROM_INC_PATH "${_strip_list}"
     )
     # Automatically build doc.
