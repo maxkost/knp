@@ -27,7 +27,7 @@ namespace knp::meta
  * overflow</a>.
  * @tparam T type of variable.
  * @return name of a variable type.
- * @note Use as type_name<decltype(variable)>().
+ * @note Use as `type_name<decltype(variable)>()`.
  */
 template <class T>
 std::string type_name()
@@ -69,15 +69,7 @@ struct is_specialization : std::false_type
 
 
 /**
- * @brief Specialization test template.
- * @details See <a href="https://stackoverflow.com/questions/31762958/check-if-class-is-a-template-specialization">
- Stack Overflow</a>.
- * @tparam T possible specialization of `Template`.
- * @tparam Template template.
- * @code
-    static_assert(is_specialization<std::vector<int>, std::vector>{}, "");
-    static_assert(!is_specialization<std::vector<int>, std::list>{}, "");
- * @endcode
+ * @copydoc knp::meta::is_specialization
  */
 template <template <class...> class Template, class... Args>
 struct is_specialization<Template<Args...>, Template> : std::true_type

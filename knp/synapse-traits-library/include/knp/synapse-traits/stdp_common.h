@@ -18,8 +18,9 @@ namespace knp::synapse_traits
 {
 
 /**
- * @brief Common template for the all STDP implementations. It is a type of synapse and a wrapper over a base synapse.
- * @tparam Rule type of learning rule that is applied to the base synapse. See: STDPSynapticResourceRule.
+ * @brief Common template for the all STDP implementations. 
+ * @note It defines a synapse type that can be used as a wrapper over a base synapse.
+ * @tparam Rule type of learning rule that is applied to the base synapse. See `STDPSynapticResourceRule`.
  * @tparam Synapse type of base synapse.
  */
 template <template <typename> typename Rule, typename Synapse>

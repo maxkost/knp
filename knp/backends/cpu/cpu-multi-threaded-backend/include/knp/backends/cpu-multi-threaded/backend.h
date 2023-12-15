@@ -318,7 +318,7 @@ public:
     void calculate_projections();
 
     /**
-     * @brief Stops training process by locking any unlocked projections.
+     * @brief Stop training by locking all projections.
      */
     void stop_learning() override
     {
@@ -327,7 +327,7 @@ public:
     }
 
     /**
-     * @brief Resume training, by unlocking all projections.
+     * @brief Resume training by unlocking all projections.
      */
     void start_learning() override
     {

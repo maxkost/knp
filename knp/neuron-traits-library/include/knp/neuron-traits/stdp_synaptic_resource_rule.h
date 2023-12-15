@@ -1,6 +1,6 @@
 /**
  * @file stdp_synaptic_resource_rule.h
- * @brief Synaptcic resource based STDP neurons parameters.
+ * @brief Synaptic resource based STDP neurons parameters.
  * @author Artiom N.
  * @date 06.10.2023
  */
@@ -13,38 +13,40 @@
 namespace knp::neuron_traits
 {
 /**
- * @brief A type of neuron with SynapticResourceSTDP learning rule. It is a wrapper over base neuron type.
+ * @brief Neuron type with resource-based STDP learning rule. 
+ * @details You can use this structure as a wrapper over base neuron type.
  * @tparam NeuronType base neuron type.
  */
 template <typename NeuronType>
 struct SynapticResourceSTDPNeuron;
 
 /**
- * @brief A state of neuron in continuous spike generation period.
+ * @brief Neuron state in the continuous spike generation period.
  */
 enum class ISIPeriodType
 {
     /**
-     * @brief Neuron is forced (spiked while receiving an excitatory signal from a non-plastic neuron).
+     * @brief Neuron is forced, i.e. spiked while receiving an excitatory signal from a non-plastic neuron.
      */
     is_forced,
     /**
-     * @brief A first non-forced spike in a period.
+     * @brief Neuron receives the first non-forced spike.
      */
     period_started,
     /**
-     * @brief Non-forced spikes following the first one.
+     * @brief Neuron continues to receive non-forced spikes.
      */
     period_continued,
     /**
-     * @brief Previous sequence has ended, a new one hasn't started yet. Not really used as state changes on a spike.
+     * @brief Sequence of spikes has ended. A new sequence has not started yet. 
+     * @note The state is not commonly used as neuron state changes after a spike.
      */
     not_in_period
 };
 
 
 /**
- * @brief Template for the neuron parameters, which are supported synaptic resource based STDP.
+ * @brief Template for neuron parameters supported by synaptic resource-based STDP.
  * @tparam NeuronType base neuron type without plasticity.
  */
 template <typename NeuronType>
@@ -58,15 +60,15 @@ struct default_values<SynapticResourceSTDPNeuron<NeuronType>>
 
 
 /**
- * @brief Template for the neurons, which are supported synaptic resource based STDP.
- * @tparam NeuronType a base neuron type with no plasticity.
- * @note This class contains all neuron parameters of the base neuron.
+ * @brief Template for neuron parameters supported by synaptic resource-based STDP.
+ * @tparam NeuronType base neuron type without plasticity.
+ * @note The class contains all neuron parameters of the base neuron.
  */
 template <typename NeuronType>
 struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron_parameters<NeuronType>
 {
     /**
-     * @brief Construct a SynapticResourceSTDP parameters from a base neuron.
+     * @brief Construct parameters for synaptic resource-based STDP from a base neuron.
      * @param base_neuron starting parameters of the base neuron type.
      */
     explicit neuron_parameters(const neuron_parameters<NeuronType> &base_neuron)
@@ -82,7 +84,7 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
      */
     float synaptic_resource_threshold_ = std::numeric_limits<float>::infinity();
     /**
-     * @brief Synaptic resource is divided by (number of synapses + resource drain coefficient).
+     * @brief Synaptic resource divided by `number of synapses + resource drain coefficient`.
      */
     uint32_t resource_drain_coefficient_ = 0;
     /**
@@ -91,7 +93,7 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
     float stability_ = 0;
 
     /**
-     * @brief A parameter that defines value of stability changes.
+     * @brief The parameter defines the stability fluctuation value.
      */
     float stability_change_parameter_ = 0;
 
@@ -117,12 +119,12 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
     uint64_t last_step_ = 0;
 
     /**
-     * @brief Step of last unforced spike. Used for dopamine update.
+     * @brief Step of the last unforced spike. Used to update the dopamine value.
      */
     uint64_t first_isi_spike_ = 0;
 
     /**
-     * @brief internal parameter. True if a neuron received a forcing synaptic signal on this turn.
+     * @brief `true` if a neuron receives a forced synaptic signal.
      */
     bool is_being_forced_ = false;
 };

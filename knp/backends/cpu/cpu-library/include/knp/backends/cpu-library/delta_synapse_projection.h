@@ -15,7 +15,7 @@ namespace knp::backends::cpu
 {
 /**
  * @brief Make one execution step for a projection of Delta synapses.
- * @tparam DeltaLikeSynapseType type of synapse, needs to have weight and delay.
+ * @tparam DeltaLikeSynapseType type of a synapse that requires synapse weight and delay as parameters.
  * @param projection projection to update.
  * @param endpoint message endpoint used for message exchange.
  * @param future_messages message queue to process via endpoint.
@@ -32,7 +32,7 @@ void calculate_delta_synapse_projection(
 
 /**
  * @brief Process a part of projection synapses.
- * @tparam DeltaLikeSynapse type of synapse that needs to have weight and delay.
+ * @tparam DeltaLikeSynapse type of a synapse that requires synapse weight and delay as parameters.
  * @param projection projection to receive the message.
  * @param message_in_data processed spike data for the projection.
  * @param future_messages queue of future messages.

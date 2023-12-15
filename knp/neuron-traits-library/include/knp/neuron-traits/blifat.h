@@ -156,7 +156,7 @@ struct neuron_parameters<BLIFATNeuron>
      */
     int64_t total_blocking_period_ = std::numeric_limits<int64_t>::max();
     /**
-     * @brief Dopamine value, a parameter to sum up all incoming dopamine synapse impacts.
+     * @brief The parameter defines a dopamine value used to sum up all incoming dopamine synapse impacts.
      */
     double dopamine_value_ = 0.0;
 };

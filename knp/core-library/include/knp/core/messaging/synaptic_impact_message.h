@@ -83,7 +83,8 @@ struct SynapticImpactMessage
 
     // TODO: Try to remove this when fixing main; this parameter is too specific to be a part of a general message.
     /**
-     * @brief True if this signal is from a projection without plasticity. Used in training.
+     * @brief `true` if the signal is from a projection without plasticity. 
+     * @details The parameter is used in training.
      */
     bool is_forcing_ = false;
 

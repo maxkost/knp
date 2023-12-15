@@ -280,7 +280,7 @@ public:
     core::MessageEndpoint &get_message_endpoint() override { return message_endpoint_; }
 
     /**
-     * @brief Stops training process by locking any unlocked projections.
+     * @brief Stop training by locking all projections.
      */
     void stop_learning() override
     {
@@ -289,7 +289,7 @@ public:
     }
 
     /**
-     * @brief Resume training, by unlocking all projections.
+     * @brief Resume training by unlocking all projections.
      */
     void start_learning() override
     {
@@ -307,39 +307,39 @@ protected:
     /**
      * @brief Calculate population of BLIFAT neurons.
      * @note Population will be changed during calculation.
-     * @param population population of BLIFAT neurons to calculate.
-     * @return copy of spike message if population is emitting one.
+     * @param population population to calculate.
+     * @return copy of a spike message if population is emitting one.
      */
     std::optional<core::messaging::SpikeMessage> calculate_population(
         knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population);
 
     /**
-     * @brief Calculate population of resource-based STDP supported BLIFAT neurons.
+     * @brief Calculate population of `SynapticResourceSTDPNeuron` neurons.
      * @note Population will be changed during calculation.
-     * @param population population of the neurons to calculate.
+     * @param population population to calculate.
      */
     std::optional<core::messaging::SpikeMessage> calculate_population(
         knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population);
     /**
      * @brief Calculate projection of Delta synapses.
      * @note Projection will be changed during calculation.
-     * @param projection projection of Delta synapses to calculate.
+     * @param projection projection to calculate.
      * @param message_queue message queue to send to projection for calculation.
      */
     void calculate_projection(
         knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
         core::messaging::SynapticMessageQueue &message_queue);
     /**
-     * @brief Calculate projection of AdditiveSTDPDelta synapses.
+     * @brief Calculate projection of `AdditiveSTDPDeltaSynapse` synapses.
      * @note Projection will be changed during calculation.
-     * @param projection projection of AdditiveSTDPDelta synapses to calculate.
+     * @param projection projection to calculate.
      * @param message_queue message queue to send to projection for calculation.
      */
     void calculate_projection(
         knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> &projection,
         core::messaging::SynapticMessageQueue &message_queue);
     /**
-     * @brief Calculate projection of STDPSynapticResourceSynapse synapses.
+     * @brief Calculate projection of `SynapticResourceSTDPDeltaSynapse` synapses.
      * @note Projection will be changed during calculation.
      * @param projection projection to calculate.
      * @param message_queue message queue to send to projection for calculation.
