@@ -1,6 +1,6 @@
 /**
  * @file init.h
- * @brief Backends initializing routines.
+ * @brief Initializing routines for backend.
  * @author Artiom N.
  * @date 17.08.2023
  */

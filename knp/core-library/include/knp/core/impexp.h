@@ -1,5 +1,5 @@
 /**
- * @brief Import/export control header.
+ * @brief Import and export control header.
  * @author Artiom N.
  * @date 25.10.2021
  */

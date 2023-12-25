@@ -1,6 +1,6 @@
 /**
  * @file generator.h
- * @brief Coordinates generator.
+ * @brief Coordinate generator.
  * @author Artiom N.
  * @date 22.03.2023
  */

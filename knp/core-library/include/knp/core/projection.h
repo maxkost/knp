@@ -1,6 +1,6 @@
 /**
  * @file projection.h
- * @brief General Projection Interface.
+ * @brief General projection interface.
  * @author Artiom N.
  * @date 18.01.2023
  */

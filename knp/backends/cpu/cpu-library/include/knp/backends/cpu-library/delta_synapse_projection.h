@@ -1,6 +1,6 @@
 /**
  * @file delta_synapse_projection.h
- * @brief Common templates for delta synapse projection.
+ * @brief Common templates for Delta synapse projection.
  * @author A. Vartenkov
  * @date 07.11.2023
  */

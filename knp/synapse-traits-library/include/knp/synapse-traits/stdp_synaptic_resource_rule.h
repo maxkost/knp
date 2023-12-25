@@ -1,6 +1,6 @@
 /**
  * @file stdp_synaptic_resource_rule.h
- * @brief STDP rule with synaptic resource.
+ * @brief Rule for synapse resource-based STDP.
  * @author Artiom N.
  * @date 05.09.2023
  */
@@ -14,7 +14,7 @@
 
 
 /**
- * @brief Synapse traits namespace.
+ * @brief Namespace for synapse traits.
  */
 namespace knp::synapse_traits
 {

@@ -1,6 +1,6 @@
 /**
  * @file cartesian.h
- * @brief Cartesian coordinates representation.
+ * @brief Representation of Cartesian coordinates.
  * @author Artiom N.
  * @date 22.03.2023
  */

@@ -1,6 +1,6 @@
 /**
  * @file all_traits.h
- * @brief All neuron types traits list.
+ * @brief List of all neuron type traits.
  * @author Artiom N.
  * @date 22.03.2023
  */

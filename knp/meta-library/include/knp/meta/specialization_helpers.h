@@ -1,6 +1,6 @@
 /**
  * @file specialization_helpers.h
- * @brief Some useful routines working with template specializations/
+ * @brief Some useful routines for working with template specializations.
  * @author Artiom N.
  * @date 11.08.2023
  */

@@ -1,6 +1,6 @@
 /**
  * @file stdp_synaptic_resource_rule.h
- * @brief Synaptic resource based STDP neurons parameters.
+ * @brief Synaptic resource-based STDP neuron parameters.
  * @author Artiom N.
  * @date 06.10.2023
  */

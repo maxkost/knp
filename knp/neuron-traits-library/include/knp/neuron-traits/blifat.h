@@ -1,6 +1,6 @@
 /**
  * @file blifat.h
- * @brief BLIFAT neuron types traits.
+ * @brief BLIFAT neuron type traits.
  * @author Artiom N.
  * @date 26.01.2023
  */

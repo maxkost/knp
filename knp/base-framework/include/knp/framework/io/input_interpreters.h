@@ -1,5 +1,5 @@
 /**
- * @brief Input interpreters header.
+ * @brief Input interpreter header.
  * @author Vartenkov Andrey
  * @date 31.06.2023
  */

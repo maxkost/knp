@@ -1,6 +1,6 @@
 /**
  * @file population.h
- * @brief General Population Interface.
+ * @brief General population interface.
  * @author Artiom N.
  * @date 18.01.2023
  */

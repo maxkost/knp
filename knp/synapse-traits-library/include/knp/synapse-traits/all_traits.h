@@ -1,6 +1,6 @@
 /**
  * @file delta.h
- * @brief Delta synapse types traits.
+ * @brief Delta synapse type traits.
  * @author Artiom N.
  * @date 22.03.2023
  */

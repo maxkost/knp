@@ -1,6 +1,6 @@
 /**
  * @file spike_message.h
- * @brief Spike class.
+ * @brief Spike message class.
  * @author Artiom N.
  * @date 26.01.2023
  */

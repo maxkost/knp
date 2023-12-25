@@ -1,6 +1,6 @@
 /**
  * @file output_types.h
- * @brief Enumeration of different ways a synaptic impact may influence a neuron.
+ * @brief Enumeration of different ways that a synaptic impact may influence a neuron.
  * @author Vartenkov A.
  * @date 4.03.2023
  */

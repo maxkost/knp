@@ -1,6 +1,6 @@
 /**
  * @file backend.h
- * @brief Multi threaded CPU backend class definition.
+ * @brief Class definition for multi-threaded CPU backend.
  * @author Artiom N.
  * @date 21.06.2023
  */

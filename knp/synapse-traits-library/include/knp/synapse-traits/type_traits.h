@@ -1,6 +1,6 @@
 /**
  * @file type_traits.h
- * @brief Common synapse types traits.
+ * @brief Common synapse type traits.
  * @author Artiom N.
  * @date 26.01.2023
  */

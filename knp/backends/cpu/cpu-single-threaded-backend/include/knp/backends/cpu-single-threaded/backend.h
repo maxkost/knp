@@ -1,6 +1,6 @@
 /**
  * @file backend.h
- * @brief Single threaded CPU backend class definition.
+ * @brief Class definition for single-threaded CPU backend.
  * @author Artiom N.
  * @date 30.01.2023
  */

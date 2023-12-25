@@ -1,6 +1,6 @@
 /**
  * @file backend.h
- * @brief Backend base class definition.
+ * @brief Class definition for backend base.
  * @author Artiom N.
  * @date 11.01.2023
  */

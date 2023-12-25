@@ -1,6 +1,6 @@
 /**
  * @file assert_helpers.h
- * @brief Some helpers useful for assertions.
+ * @brief Some helpers that are useful for assertions.
  * @author Artiom N.
  * @date 31.08.2023
  */

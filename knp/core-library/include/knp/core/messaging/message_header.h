@@ -1,6 +1,6 @@
 /**
  * @file message_header.h
- * @brief Message headers class.
+ * @brief Message header class.
  * @author Artiom N.
  * @date 26.01.2023
  */

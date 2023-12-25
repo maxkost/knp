@@ -1,6 +1,6 @@
 /**
  * @file blifat_population.h
- * @brief Common templates for Blifat population.
+ * @brief Common templates for BLIFAT population.
  * @author A. Vartenkov
  * @date 07.11.2023
  */

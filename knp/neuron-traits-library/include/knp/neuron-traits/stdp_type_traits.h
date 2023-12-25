@@ -1,6 +1,6 @@
 /**
  * @file stdp_type_traits.h
- * @brief STDP-specific neuron types traits list.
+ * @brief List of STDP-specific neuron type traits.
  * @author A. Vartenkov.
  * @date 7.12.2023
  */
