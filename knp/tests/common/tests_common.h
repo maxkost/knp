@@ -1,4 +1,5 @@
 /**
+ * @file tests_common.h
  * @brief Common routines used for tests.
  * @author Artiom N.
  * @date 31.12.2022

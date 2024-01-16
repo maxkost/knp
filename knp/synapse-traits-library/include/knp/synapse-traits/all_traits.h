@@ -1,5 +1,5 @@
 /**
- * @file delta.h
+ * @file all_traits.h
  * @brief Delta synapse type traits.
  * @author Artiom N.
  * @date 22.03.2023

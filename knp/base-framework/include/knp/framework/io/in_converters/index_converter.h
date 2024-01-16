@@ -1,5 +1,6 @@
 /**
- * @brief Input index converter header.
+ * @file index_converter.h
+ * @brief Header for input index converter.
  * @author Vartenkov Andrey
  * @date 25.04.2023
  */

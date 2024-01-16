@@ -1,5 +1,6 @@
 /**
- * @brief Import and export control header.
+ * @file impexp.h
+ * @brief Header for import and export control.
  * @author Artiom N.
  * @date 25.10.2021
  */

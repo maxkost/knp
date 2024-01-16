@@ -1,5 +1,6 @@
 /**
- * @brief Counting converter header.
+ * @file convert_count.h
+ * @brief Header for counting converter.
  * @author Vartenkov Andrey
  * @date 01.06.2023
  */

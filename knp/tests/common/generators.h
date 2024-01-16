@@ -1,4 +1,5 @@
 /**
+ * @file generators.h
  * @brief Common generators used for tests.
  * @author Artiom N.
  * @date 23.06.2023

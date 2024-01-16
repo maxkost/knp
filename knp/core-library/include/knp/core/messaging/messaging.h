@@ -1,6 +1,6 @@
 /**
  * @file messaging.h
- * @brief Messaging common header.
+ * @brief Common header for messaging.
  * @author Artiom N.
  * @date 02.03.2023
  */

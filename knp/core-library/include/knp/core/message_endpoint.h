@@ -1,5 +1,5 @@
 /**
- * @file message_bus.h
+ * @file message_endpoint.h
  * @brief Message endpoint interface.
  * @author Artiom N.
  * @date 23.01.2023
