@@ -15,9 +15,9 @@ You can use Kaspersky Neuromorphic Platform to do the following:
 \li Implement application solutions on devices with low power consumption or using neural processing units (NPU).
 You can use the C++ and Python languages to accomplish these tasks. The platform supports CPU. The Kaspersky Neuromorphic Platform framework can also be used as a backend for the PyNN API.
 
-\section doxygen About this guide
+\section doxygen About API reference
 
-The API Reference Guide for Kaspersky Neuromorphic Platform is intended for specialists engaged in the development of secure solutions based on the platform and in the development of the Kaspersky Neuromorphic Platform code base.
+The API reference for Kaspersky Neuromorphic Platform is intended for specialists engaged in the development of secure solutions based on the platform and in the development of the Kaspersky Neuromorphic Platform code base.
 
 For information on the platform concepts and architecture, installation instructions and platform use cases, see <a href="../../../user_guide/index.htm">Kaspersky Neuromorphic Platform User Guide</a>.
 
