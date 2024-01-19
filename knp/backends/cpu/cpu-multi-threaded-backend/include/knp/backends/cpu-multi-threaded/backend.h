@@ -116,7 +116,9 @@ public:
      */
     using ProjectionContainer = std::vector<ProjectionWrapper>;
 
-    // TODO: Make custom iterators.
+    /**
+     * @todo Make custom iterators.
+     */ 
 
     /**
      * @brief Types of population iterators.
@@ -331,7 +333,9 @@ public:
      */
     void start_learning() override
     {
-        // TODO: Probably only need to start_learning some of projections: the ones that were locked with lock()
+        /**
+         * @todo Probably only need to use `start_learning` for some of projections: the ones that were locked with `lock()`.
+         */
         for (ProjectionWrapper &wrapper : projections_)
             std::visit([](auto &entity) { entity.unlock_weights(); }, wrapper.arg_);
     }

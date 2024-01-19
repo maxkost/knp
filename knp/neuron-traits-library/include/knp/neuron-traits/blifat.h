@@ -33,7 +33,9 @@ struct BLIFATNeuron;
 template <>
 struct default_values<BLIFATNeuron>
 {
-    // TODO: see if there are any problems with this implementation, then change it or delete this TODO
+    /**
+     * @todo Check if there are any problems with this implementation, then change it or delete this TODO.
+    */
     /**
      * @brief The parameter defines a number of network steps since the last spike.
      */

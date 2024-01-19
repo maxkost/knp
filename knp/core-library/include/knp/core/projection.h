@@ -223,7 +223,9 @@ public:
      * @return constant iterator.
      */
     [[nodiscard]] auto end() const { return parameters_.cend(); }
-    // TODO: This might be dangerous if you change index_from or index_to of a synapse, without updating.
+    /**
+     * @todo It might be dangerous if you change `index_from` or `index_to` of a synapse without updating.
+     */ 
     /**
      * @brief Get an iterator pointing to the last element of the projection.
      * @return iterator.
@@ -297,8 +299,9 @@ public:
     /**
      * @brief Remove synapses with the given indexes from the projection.
      * @param indexes indexes of synapses to remove.
+     * @todo Implement this.
      */
-    void remove_synapses(const std::vector<size_t> &indexes) {}  // TODO: implement this.
+    void remove_synapses(const std::vector<size_t> &indexes) {}  
 
     /**
      * @brief Remove synapses according to a given criterion.

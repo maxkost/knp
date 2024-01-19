@@ -81,10 +81,10 @@ struct SynapticImpactMessage
      */
     UID postsynaptic_population_uid_;
 
-    // TODO: Try to remove this when fixing main; this parameter is too specific to be a part of a general message.
     /**
      * @brief `true` if the signal is from a projection without plasticity. 
      * @details The parameter is used in training.
+     * @todo Try to remove this when fixing main; this parameter is too specific to be a part of a general message.
      */
     bool is_forcing_ = false;
 
