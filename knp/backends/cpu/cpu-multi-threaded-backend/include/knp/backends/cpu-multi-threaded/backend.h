@@ -1,6 +1,6 @@
 /**
  * @file backend.h
- * @brief Multi threaded CPU backend class definition.
+ * @brief Class definition for multi-threaded CPU backend.
  * @author Artiom N.
  * @date 21.06.2023
  */
@@ -116,7 +116,9 @@ public:
      */
     using ProjectionContainer = std::vector<ProjectionWrapper>;
 
-    // TODO: Make custom iterators.
+    /**
+     * @todo Make custom iterators.
+     */ 
 
     /**
      * @brief Types of population iterators.
@@ -316,6 +318,27 @@ public:
      * @brief Calculate all projections.
      */
     void calculate_projections();
+
+    /**
+     * @brief Stop training by locking all projections.
+     */
+    void stop_learning() override
+    {
+        for (ProjectionWrapper &wrapper : projections_)
+            std::visit([](auto &entity) { entity.lock_weights(); }, wrapper.arg_);
+    }
+
+    /**
+     * @brief Resume training by unlocking all projections.
+     */
+    void start_learning() override
+    {
+        /**
+         * @todo Probably only need to use `start_learning` for some of projections: the ones that were locked with `lock()`.
+         */
+        for (ProjectionWrapper &wrapper : projections_)
+            std::visit([](auto &entity) { entity.unlock_weights(); }, wrapper.arg_);
+    }
 
 protected:
     /**

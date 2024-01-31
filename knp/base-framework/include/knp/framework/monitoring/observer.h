@@ -1,6 +1,6 @@
 /**
  * @file observer.h
- * @brief an observer class that unloads messages and stores them.
+ * @brief Observer class that unloads messages and stores them.
  * @author Vartenkov A.
  * @date 23.08.2023
  */

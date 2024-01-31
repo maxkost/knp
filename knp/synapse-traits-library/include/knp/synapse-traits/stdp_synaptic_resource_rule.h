@@ -1,6 +1,6 @@
 /**
  * @file stdp_synaptic_resource_rule.h
- * @brief STDP rule with synaptic resource.
+ * @brief Rule for synapse resource-based STDP.
  * @author Artiom N.
  * @date 05.09.2023
  */
@@ -14,7 +14,7 @@
 
 
 /**
- * @brief Synapse traits namespace.
+ * @brief Namespace for synapse traits.
  */
 namespace knp::synapse_traits
 {
@@ -35,24 +35,35 @@ struct STDPSynapticResourceRule
     /**
      * @brief Synaptic resource.
      */
-    // cppcheck-suppress unusedStructMember
-    float synaptic_resource_ = 1;
+    float synaptic_resource_ = 0;
     /**
      * @brief Minimal weight value.
      */
-    // cppcheck-suppress unusedStructMember
-    float w_min_;
+    float w_min_ = 0;
     /**
      * @brief Maximal weight value.
      */
-    // cppcheck-suppress unusedStructMember
-    float w_max_;
+    float w_max_ = 1;
     /**
      * @brief Resource decreasing constant.
      * @note The `d_u_` value must be equal or greater than `0`.
      */
-    // cppcheck-suppress unusedStructMember
-    float d_u_;
+    float d_u_ = 0;
+
+    /**
+     * @brief Dopamine plasticity period. If a neuron is rewarded during this period, then the synapse weight changes.
+     */
+    uint32_t dopamine_plasticity_period_ = 0;
+
+    /**
+     * @brief Step number of when the synapse got a spike last.
+     */
+    uint64_t last_spike_step_ = 0;
+
+    /**
+     * @brief `true` if the synapse was updated during the current spike sequence.
+     */
+    bool had_hebbian_update_ = false;
 };
 
 
@@ -63,41 +74,6 @@ struct STDPSynapticResourceRule
 template <typename SynapseType>
 struct shared_synapse_parameters<STDP<STDPSynapticResourceRule, SynapseType>>
 {
-    /**
-     * @brief Free synaptic resource.
-     */
-    // cppcheck-suppress unusedStructMember
-    float free_synaptic_resource_ = 1;
-    /**
-     * @brief Free synaptic resource threshold value.
-     */
-    // cppcheck-suppress unusedStructMember
-    float free_synaptic_resource_threshold_ = -1;
-    /**
-     * @brief Stability.
-     */
-    // cppcheck-suppress unusedStructMember
-    float stability_;
-    /**
-     * @brief Time between spikes in the ISI period.
-     */
-    // cppcheck-suppress unusedStructMember
-    uint32_t isi_max_;
-    /**
-     * @brief Hebbian plasticity value.
-     */
-    // cppcheck-suppress unusedStructMember
-    float d_h_;
-    /**
-     * @brief Hebbian plasticity initial value.
-     */
-    // cppcheck-suppress unusedStructMember
-    float d_h_initial_;
-    /**
-     * @brief Synaptic resource threshold value.
-     */
-    // cppcheck-suppress unusedStructMember
-    float synaptic_resource_threshold_;
 };
 
 }  // namespace knp::synapse_traits

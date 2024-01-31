@@ -14,7 +14,7 @@
 #include "stdp_synaptic_resource_rule.h"
 
 /**
- * @brief Synapse traits namespace.
+ * @brief Namespace for synapse traits.
  */
 namespace knp::synapse_traits
 {

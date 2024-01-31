@@ -1,6 +1,6 @@
 /**
  * @file backend.h
- * @brief Single threaded CPU backend class definition.
+ * @brief Class definition for single-threaded CPU backend.
  * @author Artiom N.
  * @date 30.01.2023
  */
@@ -39,7 +39,8 @@ public:
     /**
      * @brief List of neuron types supported by the single-threaded CPU backend.
      */
-    using SupportedNeurons = boost::mp11::mp_list<knp::neuron_traits::BLIFATNeuron>;
+    using SupportedNeurons =
+        boost::mp11::mp_list<knp::neuron_traits::BLIFATNeuron, knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron>;
 
     /**
      * @brief List of synapse types supported by the single-threaded CPU backend.
@@ -96,7 +97,9 @@ public:
      */
     using ProjectionContainer = std::vector<ProjectionWrapper>;
 
-    // TODO: Make custom iterators.
+    /**
+     * @todo Make custom iterators.
+     */ 
 
     /**
      * @brief Types of population iterators.
@@ -207,7 +210,9 @@ public:
      */
     PopulationConstIterator end_populations() const;
 
-    // TODO: make iterator, which is returns projections, but not a wrapper.
+    /**
+     * @todo Make iterator which returns projections, but not a wrapper.
+     */ 
     /**
      * @brief Get an iterator pointing to the first element of the projection loaded to backend.
      * @return projection iterator.
@@ -278,6 +283,27 @@ public:
     const core::MessageEndpoint &get_message_endpoint() const override { return message_endpoint_; }
     core::MessageEndpoint &get_message_endpoint() override { return message_endpoint_; }
 
+    /**
+     * @brief Stop training by locking all projections.
+     */
+    void stop_learning() override
+    {
+        for (ProjectionWrapper &wrapper : projections_)
+            std::visit([](auto &entity) { entity.lock_weights(); }, wrapper.arg_);
+    }
+
+    /**
+     * @brief Resume training by unlocking all projections.
+     */
+    void start_learning() override
+    {
+        /**
+         * @todo Probably only need to use `start_learning` for some of projections: the ones that were locked with `lock()`.
+         */ 
+        for (ProjectionWrapper &wrapper : projections_)
+            std::visit([](auto &entity) { entity.unlock_weights(); }, wrapper.arg_);
+    }
+
 protected:
     /**
      * @copydoc knp::core::Backend::init()
@@ -287,29 +313,39 @@ protected:
     /**
      * @brief Calculate population of BLIFAT neurons.
      * @note Population will be changed during calculation.
-     * @param population population of BLIFAT neurons to calculate.
+     * @param population population to calculate.
+     * @return copy of a spike message if population is emitting one.
      */
-    void calculate_population(knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population);
+    std::optional<core::messaging::SpikeMessage> calculate_population(
+        knp::core::Population<knp::neuron_traits::BLIFATNeuron> &population);
+
+    /**
+     * @brief Calculate population of `SynapticResourceSTDPNeuron` neurons.
+     * @note Population will be changed during calculation.
+     * @param population population to calculate.
+     */
+    std::optional<core::messaging::SpikeMessage> calculate_population(
+        knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population);
     /**
      * @brief Calculate projection of Delta synapses.
      * @note Projection will be changed during calculation.
-     * @param projection projection of Delta synapses to calculate.
+     * @param projection projection to calculate.
      * @param message_queue message queue to send to projection for calculation.
      */
     void calculate_projection(
         knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
         core::messaging::SynapticMessageQueue &message_queue);
     /**
-     * @brief Calculate projection of AdditiveSTDPDelta synapses.
+     * @brief Calculate projection of `AdditiveSTDPDeltaSynapse` synapses.
      * @note Projection will be changed during calculation.
-     * @param projection projection of AdditiveSTDPDelta synapses to calculate.
+     * @param projection projection to calculate.
      * @param message_queue message queue to send to projection for calculation.
      */
     void calculate_projection(
         knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> &projection,
         core::messaging::SynapticMessageQueue &message_queue);
     /**
-     * @brief Calculate projection of STDPSynapticResourceSynapse synapses.
+     * @brief Calculate projection of `SynapticResourceSTDPDeltaSynapse` synapses.
      * @note Projection will be changed during calculation.
      * @param projection projection to calculate.
      * @param message_queue message queue to send to projection for calculation.
@@ -319,9 +355,7 @@ protected:
         core::messaging::SynapticMessageQueue &message_queue);
 
 private:
-    // cppcheck-suppress unusedStructMember
     PopulationContainer populations_;
-    // cppcheck-suppress unusedStructMember
     ProjectionContainer projections_;
     core::MessageEndpoint message_endpoint_;
 };

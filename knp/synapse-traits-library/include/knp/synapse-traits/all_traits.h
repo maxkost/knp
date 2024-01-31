@@ -1,6 +1,6 @@
 /**
- * @file delta.h
- * @brief Delta synapse types traits.
+ * @file all_traits.h
+ * @brief Delta synapse type traits.
  * @author Artiom N.
  * @date 22.03.2023
  */
@@ -32,6 +32,7 @@ namespace knp::synapse_traits
  * @endcode
  */
 using AllSynapses = boost::mp11::mp_list<ALL_SYNAPSES>;
+
 
 /**
  * @brief A tuple that contains string names of synapse types.

@@ -1,6 +1,6 @@
 /**
  * @file backend.h
- * @brief Backend base class definition.
+ * @brief Class definition for backend base.
  * @author Artiom N.
  * @date 11.01.2023
  */
@@ -191,6 +191,16 @@ public:
      * @return step number.
      */
     core::messaging::Step get_step() const { return step_; }
+
+    /**
+     * @brief Stop learning.
+     */
+    virtual void stop_learning() = 0;
+
+    /**
+     * @brief Restart learning.
+     */
+    virtual void start_learning() = 0;
 
 public:
     /**

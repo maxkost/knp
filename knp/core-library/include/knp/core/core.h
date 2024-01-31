@@ -1,6 +1,6 @@
 /**
  * @file core.h
- * @brief Core library main include.
+ * @brief Class definition for core library basic entities.
  * @author Artiom N.
  * @date 11.01.2023
  */

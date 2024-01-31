@@ -111,6 +111,7 @@ TEST(MessageBusSuite, SynapticImpactMessageSendZMQ)
         {knp::core::UID{}},
         knp::core::UID{},
         knp::core::UID{},
+        false,
         {{1, 2, synapse_type, 3, 4}, {4, 3, synapse_type, 2, 1}, {7, 8, synapse_type, 9, 10}}};
 
     auto &subscription = ep1.subscribe<SynapticImpactMessage>(knp::core::UID(), {msg.header_.sender_uid_});
@@ -141,6 +142,7 @@ TEST(MessageBusSuite, SynapticImpactMessageSendCPU)
         {knp::core::UID{}},
         knp::core::UID{},
         knp::core::UID{},
+        false,
         {{1, 2, synapse_type, 3, 4}, {4, 3, synapse_type, 2, 1}, {7, 8, synapse_type, 9, 10}}};
 
     auto &subscription = ep1.subscribe<SynapticImpactMessage>(knp::core::UID(), {msg.header_.sender_uid_});

@@ -1,6 +1,6 @@
 /**
  * @file spike_message.h
- * @brief Spike class.
+ * @brief Spike message class.
  * @author Artiom N.
  * @date 26.01.2023
  */
@@ -46,7 +46,9 @@ struct SpikeMessage
      */
     SpikeData neuron_indexes_;
 
-    // TODO: maybe add operator [] and others, to be able to use templates for message processing.
+    /**
+     * @todo Maybe add operator `[]` and others to be able to use templates for message processing.
+     */ 
 };
 
 

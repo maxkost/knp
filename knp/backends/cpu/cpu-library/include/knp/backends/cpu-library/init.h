@@ -1,6 +1,6 @@
 /**
  * @file init.h
- * @brief Backends initializing routines.
+ * @brief Initializing routines for backend.
  * @author Artiom N.
  * @date 17.08.2023
  */
@@ -31,6 +31,9 @@ namespace knp::backends::cpu
 template <typename SynapseType>
 struct subscribe_stdp_projection
 {
+    /**
+     * @brief Subscribe STDP projection to messages.
+     */
     static void subscribe(const typename core::Projection<SynapseType> &, knp::core::MessageEndpoint &) {}
 };
 

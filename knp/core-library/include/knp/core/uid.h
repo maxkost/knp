@@ -58,11 +58,12 @@ public:
  */
 struct UID
 {
-    // TODO: Optimize it.
+    
     /**
      * @brief Generate a random UID.
      * @param random boolean value that takes the values `true` or `false`.
      *        If `true`, the constructor generates a random UID. If `false`, the constructor generates a null UID.
+     * @todo Optimize it.
      */
     explicit UID(bool random) : tag(random ? uid_generator()() : ::boost::uuids::nil_uuid()) {}
 

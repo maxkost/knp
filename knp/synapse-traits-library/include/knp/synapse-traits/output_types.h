@@ -1,6 +1,6 @@
 /**
  * @file output_types.h
- * @brief Enumeration of different ways a synaptic impact may influence a neuron.
+ * @brief Enumeration of different ways that a synaptic impact may influence a neuron.
  * @author Vartenkov A.
  * @date 4.03.2023
  */
@@ -12,10 +12,11 @@
  */
 namespace knp::synapse_traits
 {
-// TODO: Improve descriptions.
-// TODO: Split this enum?
+
 /**
  * @brief Types of synapses. This parameter is used for projection-population interaction.
+ * @todo Improve descriptions.
+ * Maybe split this enum.
  */
 enum class OutputType
 {

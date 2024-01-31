@@ -1,6 +1,6 @@
 /**
  * @file backend_loader.h
- * @brief Backends loader interface.
+ * @brief Backend loader interface.
  * @author Artiom N.
  * @date 16.03.2023
  */

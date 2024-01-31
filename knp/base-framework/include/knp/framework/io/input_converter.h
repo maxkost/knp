@@ -1,5 +1,6 @@
 /**
- * @brief Input converter header.
+ * @file input_converter.h
+ * @brief Header for input converter.
  * @author Vartenkov Andrey
  * @date 25.04.2023
  */

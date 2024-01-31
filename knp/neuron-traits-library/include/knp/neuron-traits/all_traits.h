@@ -1,6 +1,6 @@
 /**
  * @file all_traits.h
- * @brief All neuron types traits list.
+ * @brief List of all neuron type traits.
  * @author Artiom N.
  * @date 22.03.2023
  */
@@ -12,6 +12,9 @@
 #include <boost/mp11.hpp>
 
 #include "blifat.h"
+#include "stdp_synaptic_resource_rule.h"
+#include "stdp_type_traits.h"
+
 
 /**
  * @brief Namespace for neuron traits.
@@ -19,7 +22,9 @@
 namespace knp::neuron_traits
 {
 // Comma-separated list of neurons.
-#define ALL_NEURONS knp::neuron_traits::BLIFATNeuron
+#define ALL_NEURONS knp::neuron_traits::BLIFATNeuron, knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron
+
+
 /**
  * @brief List of neuron types.
  * @details To add a new neuron type to the list, define it in the ALL_NEURONS macro. For example,
@@ -28,6 +33,7 @@ namespace knp::neuron_traits
  * @endcode
  */
 using AllNeurons = boost::mp11::mp_list<ALL_NEURONS>;
+
 
 /**
  * @brief A tuple that contains string names of neuron types.

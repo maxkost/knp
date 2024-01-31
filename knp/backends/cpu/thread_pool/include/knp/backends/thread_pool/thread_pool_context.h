@@ -74,6 +74,9 @@ private:
     void post(const std::shared_ptr<Function> &task, const std::shared_ptr<size_t> &task_count);
 
 private:
+    /**
+     * @copybrief knp::backends::cpu_executors::ThreadPoolExecutor
+     */
     friend class ThreadPoolExecutor;
     std::mutex mutex_;
     std::condition_variable condition_;

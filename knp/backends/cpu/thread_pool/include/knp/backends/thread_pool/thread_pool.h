@@ -1,6 +1,6 @@
 /**
  * @file thread_pool.h
- * @brief Reusable thread pool class, a modified example from asio documentation, aggregates context and executor.
+ * @brief Reusable thread pool class, a modified example from asio documentation that aggregates context and executor.
  * @author Vartenkov A.
  * @date 27.07.2023
  */

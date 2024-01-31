@@ -1,5 +1,6 @@
 /**
- * @brief Input sequence converter header.
+ * @file sequence_converter.h
+ * @brief Header for input sequence converter.
  * @author Vartenkov Andrey
  * @date 25.04.2023
  */

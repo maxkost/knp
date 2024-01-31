@@ -1,5 +1,6 @@
 /**
- * @brief Set converter header.
+ * @file convert_set.h
+ * @brief Header for set converter.
  * @author Vartenkov Andrey
  * @date 01.06.2023
  */
@@ -19,7 +20,8 @@ namespace knp::framework::output
 {
 
 /**
- * @brief The ConvertToSet class is a definition of a converter that gets a set of spiked neuron indexes from spike messages.
+ * @brief The ConvertToSet class is a definition of a converter that gets a set of spiked neuron indexes from spike
+ * messages.
  */
 class ConvertToSet
 {

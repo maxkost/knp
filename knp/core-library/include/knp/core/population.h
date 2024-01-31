@@ -1,6 +1,6 @@
 /**
  * @file population.h
- * @brief General Population Interface.
+ * @brief General population interface.
  * @author Artiom N.
  * @date 18.01.2023
  */
@@ -25,7 +25,7 @@ namespace knp::core
 /**
  * @brief The Population class is a container of neurons of the same model.
  * @tparam NeuronType type of the population neurons.
- * @see Neuron.
+ * @see ALL_NEURONS.
  */
 template <typename NeuronType>
 class Population
@@ -47,7 +47,7 @@ public:
     /**
      * @brief Type of the neuron generator.
      */
-    using NeuronGenerator = std::function<NeuronParameters(size_t index)>;
+    using NeuronGenerator = std::function<std::optional<NeuronParameters>(size_t index)>;
 
 public:
     /**
@@ -136,7 +136,8 @@ public:
         neurons_.reserve(count);
         for (size_t i = 0; i < count; ++i)
         {
-            neurons_.template emplace_back(std::move(generator(i)));
+            auto neuron = generator(i);
+            if (neuron.has_value()) neurons_.template emplace_back(std::move(neuron.value()));
         }
     }
 

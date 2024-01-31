@@ -1,6 +1,6 @@
 /**
  * @file variant_helpers.h
- * @brief Some useful routines working with std::variant.
+ * @brief Some useful routines for working with `std::variant`.
  * @author Artiom N.
  * @date 09.08.2023
  */

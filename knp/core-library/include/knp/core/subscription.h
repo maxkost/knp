@@ -1,6 +1,6 @@
 /**
  * @file subscription.h
- * @brief defines Subscription, a class that determines message exchange between entities in the network
+ * @brief Subscription class that determines message exchange between entities in the network.
  * @author Vartenkov A.
  * @date 15.03.2023
  */

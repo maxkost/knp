@@ -1,6 +1,6 @@
 /**
  * @file polar.h
- * @brief Polar coordinates implementations.
+ * @brief Implementations of polar coordinates.
  * @author Artiom N.
  * @date 22.03.2023
  */

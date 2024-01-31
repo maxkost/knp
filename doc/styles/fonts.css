@@ -1,27 +1,52 @@
 @font-face {
-  font-family: "Kaspersky Sans-Light";
-  src: url(../static/KasperskySans-Light.eot?#iefix) format("embedded-opentype"), url(../static/KasperskySans-Light.woff) format("woff"), url(../static/KasperskySans-Light.ttf) format("truetype");
-  font-weight: 100;
-  font-style: normal;
+    font-family: "Kaspersky Sans-Light";
+    src: url(../static/KasperskySans-Light.eot?#iefix) format("embedded-opentype"), url(../static/KasperskySans-Light.woff) format("woff"), url(../static/KasperskySans-Light.ttf) format("truetype");
+    font-weight: 100;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: "Kaspersky Sans-Light";
-  src: url(../static/KasperskySans-Light.eot?#iefix) format("embedded-opentype"), url(../static/KasperskySans-Light.woff) format("woff"), url(../static/KasperskySans-Light.ttf) format("truetype");
-  font-weight: 300;
-  font-style: normal;
+    font-family: "Kaspersky Sans-Light";
+    src: url(../static/KasperskySans-Light.eot?#iefix) format("embedded-opentype"), url(../static/KasperskySans-Light.woff) format("woff"), url(../static/KasperskySans-Light.ttf) format("truetype");
+    font-weight: 300;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: "Kaspersky Sans-Regular";
-  src: url(../static/KasperskySans-Regular.eot?#iefix) format("embedded-opentype"), url(../static/KasperskySans-Regular.woff) format("woff"), url(../static/KasperskySans-Regular.ttf) format("truetype");
-  font-weight: 600;
-  font-style: normal;
+    font-family: "Kaspersky Sans-Regular";
+    src: url(../static/KasperskySans-Regular.eot?#iefix) format("embedded-opentype"), url(../static/KasperskySans-Regular.woff) format("woff"), url(../static/KasperskySans-Regular.ttf) format("truetype");
+    font-weight: 600;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: "Kaspersky Sans-Regular";
-  src: url(../static/KasperskySans-Regular.eot?#iefix) format("embedded-opentype"), url(../static/KasperskySans-Regular.woff) format("woff"), url(../static/KasperskySans-Regular.ttf) format("truetype");
-  font-weight: 700;
-  font-style: normal;
+    font-family: "Kaspersky Sans-Regular";
+    src: url(../static/KasperskySans-Regular.eot?#iefix) format("embedded-opentype"), url(../static/KasperskySans-Regular.woff) format("woff"), url(../static/KasperskySans-Regular.ttf) format("truetype");
+    font-weight: 700;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: "KasperskySansDisplay";
+    font-style: normal;
+    font-weight: 300;
+    src: url(../static/Kaspersky_Sans_Display_22122022/Kaspersky_Sans_Display_Regular.woff2) format("woff2"), url(../static/Kaspersky_Sans_Display_22122022/Kaspersky_Sans_Display_Regular.woff) format("woff");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "KasperskySansDisplay";
+    font-style: normal;
+    font-weight: normal;
+    src: url(../static/Kaspersky_Sans_Display_22122022/Kaspersky_Sans_Display_Medium.woff2) format("woff2"), url(../static/Kaspersky_Sans_Display_22122022/Kaspersky_Sans_Display_Medium.woff) format("woff");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "KasperskySansDisplay";
+    font-style: normal;
+    font-weight: bold;
+    src: url(../static/Kaspersky_Sans_Display_22122022/Kaspersky_Sans_Display_Bold.woff2) format("woff2"), url(../static/Kaspersky_Sans_Display_22122022/Kaspersky_Sans_Display_Bold.woff) format("woff");
+    font-display: swap;
 }

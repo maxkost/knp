@@ -1,6 +1,6 @@
 /**
  * @file cpu.h
- * @brief CPU device class definition.
+ * @brief Class definition for CPU device.
  * @author Artiom N.
  * @date 30.01.2023
  */

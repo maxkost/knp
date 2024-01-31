@@ -1,39 +1,38 @@
 /**
  * @file delta_synapse_projection.h
- * @brief DeltaSynapse calculation routines definition.
- * @author Artiom N.
- * @date 21.02.2023
+ * @brief Common templates for Delta synapse projection.
+ * @author A. Vartenkov
+ * @date 07.11.2023
  */
-
 #pragma once
+#include <knp/backends/cpu-library/impl/delta_synapse_projection_impl.h>
 
-#include <knp/core/message_bus.h>
-#include <knp/core/projection.h>
-#include <knp/synapse-traits/delta.h>
-
-#include <mutex>
 #include <unordered_map>
-
-
 /**
  * @brief Namespace for CPU backends.
  */
 namespace knp::backends::cpu
 {
 /**
- * @brief Type of the message queue.
+ * @brief Make one execution step for a projection of Delta synapses.
+ * @tparam DeltaLikeSynapseType type of a synapse that requires synapse weight and delay as parameters.
+ * @param projection projection to update.
+ * @param endpoint message endpoint used for message exchange.
+ * @param future_messages message queue to process via endpoint.
+ * @param step_n execution step.
  */
-typedef std::unordered_map<uint64_t, knp::core::messaging::SynapticImpactMessage> MessageQueue;
+template <class DeltaLikeSynapseType>
+void calculate_delta_synapse_projection(
+    knp::core::Projection<DeltaLikeSynapseType> &projection, knp::core::MessageEndpoint &endpoint,
+    MessageQueue &future_messages, size_t step_n)
+{
+    calculate_delta_synapse_projection_impl<DeltaLikeSynapseType>(projection, endpoint, future_messages, step_n);
+}
 
-/**
- * @brief Convert spike vector to unordered map.
- * @param message spike message.
- * @return unordered map of `{index : number of instances}`. Number of instances usually equals `1`.
- */
-std::unordered_map<uint64_t, size_t> convert_spikes(const knp::core::messaging::SpikeMessage &message);
 
 /**
  * @brief Process a part of projection synapses.
+ * @tparam DeltaLikeSynapse type of a synapse that requires synapse weight and delay as parameters.
  * @param projection projection to receive the message.
  * @param message_in_data processed spike data for the projection.
  * @param future_messages queue of future messages.
@@ -42,41 +41,12 @@ std::unordered_map<uint64_t, size_t> convert_spikes(const knp::core::messaging::
  * @param part_size number of synapses to process.
  * @param mutex mutex.
  */
+template <class DeltaLikeSynapse>
 void calculate_projection_part(
-    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
-    const std::unordered_map<size_t, size_t> &message_in_data, MessageQueue &future_messages, u_int64_t step_n,
-    size_t part_start, size_t part_size, std::mutex &mutex);
+    knp::core::Projection<DeltaLikeSynapse> &projection, const std::unordered_map<size_t, size_t> &message_in_data,
+    MessageQueue &future_messages, u_int64_t step_n, size_t part_start, size_t part_size, std::mutex &mutex)
+{
+    calculate_projection_part_impl(projection, message_in_data, future_messages, step_n, part_start, part_size, mutex);
+}
 
-/**
- * @brief Make one execution step for a projection of Delta synapses.
- * @param projection projection to update.
- * @param endpoint message endpoint used for message exchange.
- * @param future_messages message queue to process via endpoint.
- * @param step_n execution step.
- */
-void calculate_delta_synapse_projection(
-    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, knp::core::MessageEndpoint &endpoint,
-    MessageQueue &future_messages, size_t step_n);
-
-/**
- * @brief Make one execution step for a projection of AdditiveSTDPDelta synapses.
- * @param projection projection to update.
- * @param endpoint message endpoint used for message exchange.
- * @param future_messages message queue to process via endpoint.
- * @param step_n execution step.
- */
-void calculate_additive_stdp_delta_synapse_projection(
-    knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> &projection,
-    knp::core::MessageEndpoint &endpoint, MessageQueue &future_messages, size_t step_n);
-
-/**
- * @brief Make one execution step for a projection of SynapticResourceSTDPDeltaSynapse synapses.
- * @param projection projection to update.
- * @param endpoint message endpoint used for message exchange.
- * @param future_messages message queue to process via endpoint.
- * @param step_n execution step.
- */
-void calculate_synaptic_resource_stdp_delta_synapse_projection(
-    knp::core::Projection<knp::synapse_traits::SynapticResourceSTDPDeltaSynapse> &projection,
-    knp::core::MessageEndpoint &endpoint, MessageQueue &future_messages, size_t step_n);
 }  // namespace knp::backends::cpu

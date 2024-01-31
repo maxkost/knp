@@ -1,6 +1,6 @@
 /**
  * @file stdp_add_rule.h
- * @brief STDP with additive rule.
+ * @brief Rule for additive STDP.
  * @author Artiom N.
  * @date 09.08.2023
  */

@@ -1,5 +1,6 @@
 /**
- * @brief Input interpreters header.
+ * @file input_interpreters.h
+ * @brief Header for input interpreter.
  * @author Vartenkov Andrey
  * @date 31.06.2023
  */

@@ -1,6 +1,6 @@
 /**
  * @file blifat.h
- * @brief BLIFAT neuron types traits.
+ * @brief BLIFAT neuron type traits.
  * @author Artiom N.
  * @date 26.01.2023
  */
@@ -26,13 +26,16 @@ namespace knp::neuron_traits
  */
 struct BLIFATNeuron;
 
+
 /**
  * @brief Structure for BLIFAT neuron default values.
  */
 template <>
 struct default_values<BLIFATNeuron>
 {
-    // TODO: see if there are any problems with this implementation, then change it or delete this TODO
+    /**
+     * @todo Check if there are any problems with this implementation, then change it or delete this TODO.
+    */
     /**
      * @brief The parameter defines a number of network steps since the last spike.
      */
@@ -47,6 +50,7 @@ struct default_values<BLIFATNeuron>
      */
     constexpr static double min_potential = -1.0e9;
 };
+
 
 /**
  * @brief Structure for BLIFAT neuron parameters.
@@ -87,7 +91,6 @@ struct neuron_parameters<BLIFATNeuron>
      * @details If `postsynaptic_trace_decay_` equals `0`, then `postsynaptic_trace_` also equals `0`.
      */
     double postsynaptic_trace_decay_ = 0.;
-
     /**
      * @brief The parameter defines a value that increases the `postsynaptic_trace_` value if a neuron generates a
      * spike.
@@ -153,7 +156,11 @@ struct neuron_parameters<BLIFATNeuron>
      * @brief The parameter defines the number of network execution steps, during which the neuron activity is totally
      * blocked.
      */
-    unsigned total_blocking_period_ = 0;
+    int64_t total_blocking_period_ = std::numeric_limits<int64_t>::max();
+    /**
+     * @brief The parameter defines a dopamine value used to sum up all incoming dopamine synapse impacts.
+     */
+    double dopamine_value_ = 0.0;
 };
 
 }  // namespace knp::neuron_traits

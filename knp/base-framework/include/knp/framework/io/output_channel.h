@@ -1,5 +1,6 @@
 /**
- * @brief Output channel header.
+ * @file output_channel.h
+ * @brief Header for output channel.
  * @author Vartenkov Andrey
  * @date 11.05.2023
  */
@@ -85,7 +86,6 @@ protected:
     /**
      * @brief Messages received from output population.
      */
-    // cppcheck-suppress unusedStructMember
     std::vector<core::messaging::SpikeMessage> message_buffer_;
 };
 

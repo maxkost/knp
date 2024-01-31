@@ -1,5 +1,6 @@
 /**
- * @brief Input channel header.
+ * @file input_channel.h
+ * @brief Header for input channel.
  * @author Vartenkov Andrey
  * @date 04.05.2023
  */

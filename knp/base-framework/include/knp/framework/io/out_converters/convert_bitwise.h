@@ -1,5 +1,6 @@
 /**
- * @brief Bitwise converter header.
+ * @file convert_bitwise.h
+ * @brief Header for bitwise converter.
  * @author Vartenkov Andrey
  * @date 01.06.2023
  */
