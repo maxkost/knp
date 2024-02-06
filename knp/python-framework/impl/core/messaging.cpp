@@ -1,9 +1,5 @@
-#include <knp/core/messaging/messaging.h>
+#if defined(__KNP_IN_CORE)
 
-#include <boost/python.hpp>
+// BOOST_PYTHON_MODULE(Messaging) {}
 
-
-namespace py = boost::python;
-
-
-BOOST_PYTHON_MODULE(Messaging) {}
+#endif

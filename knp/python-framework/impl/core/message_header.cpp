@@ -1,13 +1,8 @@
-#include <knp/core/messaging/message_header.h>
-
-#include <boost/python.hpp>
+#include "common.h"
 
 
-namespace py = boost::python;
-namespace messaging = knp::core::messaging;
+#if defined(__KNP_IN_CORE)
 
+py::class_<core::messaging::MessageHeader>("MessageHeader", "Common header for messages.");
 
-BOOST_PYTHON_MODULE(MessageHeader)
-{
-    py::class_<messaging::MessageHeader>("MessageHeader", "Common header for messages.");
-}
+#endif

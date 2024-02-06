@@ -1,13 +1,8 @@
-#include <knp/core/messaging/spike_message.h>
-
-#include <boost/python.hpp>
+#include "common.h"
 
 
-namespace py = boost::python;
-namespace messaging = knp::core::messaging;
+#if defined(__KNP_IN_CORE)
 
+py::class_<core::messaging::SpikeMessage>("SpikeMessage", "Structure of the spike message.");
 
-BOOST_PYTHON_MODULE(SpikeMessage)
-{
-    py::class_<messaging::SpikeMessage>("SpikeMessage", "Structure of the spike message.");
-}
+#endif
