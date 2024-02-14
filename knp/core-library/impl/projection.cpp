@@ -47,6 +47,7 @@ size_t get_nth(const Connection &x)
     return std::get<N>(x);
 }
 
+
 /**
  * @brief A container of Connections, with fast search by any of its fields.
  */
@@ -178,7 +179,8 @@ size_t knp::core::Projection<SynapseType>::add_synapses(const std::vector<Synaps
 {
     const size_t starting_size = parameters_.size();
     bool was_index_updated_ = is_index_updated_;
-    is_index_updated_ = false;  // Ensure that index is recalculated on exception
+    // Ensure that index is recalculated on exception.
+    is_index_updated_ = false;
     for (const auto &synapse : synapses)
     {
         if (was_index_updated_) index_.insert({synapse.id_from_, synapse.id_to_, parameters_.size()});
@@ -201,7 +203,8 @@ size_t knp::core::Projection<SynapseType>::disconnect_postsynaptic_neuron(size_t
 {
     const size_t starting_size = parameters_.size();
     bool was_index_updated = is_index_updated_;
-    is_index_updated_ = false;  // basic exception safety
+    // Basic exception safety.
+    is_index_updated_ = false;
     auto synapses_to_remove = get_by_postsynaptic_neuron(neuron_index);
     std::sort(synapses_to_remove.begin(), synapses_to_remove.end());
     remove_by_index(parameters_, synapses_to_remove);
@@ -243,7 +246,8 @@ void knp::core::Projection<SynapseType>::reindex() const
 }
 
 
-#define INSTANCE_PROJECTIONS(n, template_for_instance, synapse_type) template class knp::core::Projection<synapse_type>;
+#define INSTANCE_PROJECTIONS(n, template_for_instance, synapse_type) \
+    template class knp::core::Projection<knp::synapse_traits::synapse_type>;
 
 BOOST_PP_SEQ_FOR_EACH(INSTANCE_PROJECTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_SYNAPSES))
 
