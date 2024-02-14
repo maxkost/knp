@@ -96,7 +96,7 @@ public:
     /**
      * @brief Get parameters of the specific neuron in the population.
      * @param index index of the population neuron.
-     * @return vector of neuron parameters.
+     * @return specific neuron parameters.
      */
     [[nodiscard]] const NeuronParameters &get_neuron_parameters(size_t index) const { return neurons_[index]; }
 
@@ -171,12 +171,12 @@ public:
      * @note Constant method.
      * @param index neuron index.
      */
-    const auto &operator[](const size_t index) const { return get_neuron_parameters(index); }
+    const auto &operator[](size_t index) const { return get_neuron_parameters(index); }
     /**
      * @brief Get parameter values of a neuron with the given index.
      * @param index neuron index.
      */
-    auto &operator[](const size_t index) { return neurons_[index]; }
+    auto &operator[](size_t index) { return neurons_[index]; }
 
     /**
      * @brief Get an iterator pointing to the first element of the population.

@@ -21,15 +21,17 @@
  */
 namespace knp::neuron_traits
 {
-// Comma-separated list of neurons.
-#define ALL_NEURONS knp::neuron_traits::BLIFATNeuron, knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron
+/**
+ * @brief Comma-separated list of neuron tags.
+ */
+#define ALL_NEURONS BLIFATNeuron, SynapticResourceSTDPBLIFATNeuron
 
 
 /**
  * @brief List of neuron types.
  * @details To add a new neuron type to the list, define it in the ALL_NEURONS macro. For example,
  * @code{.cpp}
- * #define ALL_NEURONS knp::neuron_traits::BLIFATNeuron, knp::neuron_traits::IzhikevichNeuron
+ * #define ALL_NEURONS BLIFATNeuron, IzhikevichNeuron
  * @endcode
  */
 using AllNeurons = boost::mp11::mp_list<ALL_NEURONS>;

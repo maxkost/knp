@@ -31,7 +31,8 @@ Population<NeuronType>::Population(
 }
 
 
-#define INSTANCE_POPULATIONS(n, template_for_instance, neuron_type) template class knp::core::Population<neuron_type>;
+#define INSTANCE_POPULATIONS(n, template_for_instance, neuron_type) \
+    template class knp::core::Population<knp::neuron_traits::neuron_type>;
 
 // cppcheck-suppress unknownMacro
 BOOST_PP_SEQ_FOR_EACH(INSTANCE_POPULATIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_NEURONS))
