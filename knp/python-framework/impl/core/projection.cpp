@@ -12,7 +12,7 @@
 #include "common.h"
 
 
-// py::arg("presynaptic_uid"), py::arg("postsynaptic_uid") "Construct an empty projection.")
+//  "Construct an empty projection.")
 // "Construct a projection by running a synapse generator a given number of times."
 
 #if defined(__KNP_IN_CORE)
@@ -22,7 +22,7 @@
             "Projection",                                                                                           \
             "The Projection class is a definition of similar connections between the neurons of two populations.",  \
             py::no_init)                                                                                            \
-            .def(py::init<core::UID, core::UID>())                                                                  \
+            .def(py::init<core::UID, core::UID>(py::arg("presynaptic_uid"), py::arg("postsynaptic_uid")))           \
             .def(py::init<core::UID, core::UID, core::UID>())                                                       \
             .def(                                                                                                   \
                 "__init__", py::make_constructor(static_cast<std::shared_ptr<core::Projection<synapse_type>> (*)(   \

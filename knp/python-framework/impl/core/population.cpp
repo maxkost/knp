@@ -63,12 +63,12 @@
                     "Remove a specific neuron from the population.")                                                   \
                 .def(                                                                                                  \
                     "begin",                                                                                           \
-                    static_cast<std::vector<core::Population<nt::neuron_type>::NeuronParameters>::iterator (  // NOLINT         \
+                    static_cast<std::vector<core::Population<nt::neuron_type>::NeuronParameters>::iterator (           \
                         core::Population<nt::neuron_type>::*)()>(&core::Population<nt::neuron_type>::begin),           \
                     "Get an iterator pointing to the first element of the population.")                                \
                 .def(                                                                                                  \
                     "end",                                                                                             \
-                    static_cast<std::vector<core::Population<nt::neuron_type>::NeuronParameters>::iterator (  // NOLINT \
+                    static_cast<std::vector<core::Population<nt::neuron_type>::NeuronParameters>::iterator (           \
                         core::Population<nt::neuron_type>::*)()>(&core::Population<nt::neuron_type>::end),             \
                     "Get an iterator pointing to the last element of the population.")                                 \
                 .def(                                                                                                  \
