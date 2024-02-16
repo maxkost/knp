@@ -22,9 +22,9 @@
             "Get tags used by the population.")
 */
 
-//    .def("__getitem__",
-//        static_cast<core::Population<neuron_type>::NeuronParameters&(core::Population<neuron_type>::*)(size_t)>(&core::Population<neuron_type>::operator[]),
-//         "Get parameter values of a neuron with the given index.")
+// .def("__getitem__",
+// static_cast<core::Population<nt::neuron_type>::NeuronParameters&(core::Population<nt::neuron_type>::*)(size_t)>(&core::Population<nt::neuron_type>::operator[]),
+//     "Get parameter values of a neuron with the given index.")
 
 // .def("get_neurons_parameters", &core::Population<neuron_type>::get_neurons_parameters, "Get parameters of all neurons
 // in the population.")
@@ -35,8 +35,8 @@
 
 // .def("get_neuron_parameters", &core::Population<neuron_type>::get_neuron_parameters,
 // "Get parameters of the specific neuron in the population.")
+// py::class_<nt::neuron_parameters<nt::neuron_type>>(BOOST_PP_STRINGIZE(BOOST_PP_CAT(neuron_type, parameters)));
 
-// py::class_<nt::neuron_parameters<nt::neuron_type>>(BOOST_PP_STRINGIZE(BOOST_PP_CAT(neuron_type, Parameters)));
 
 #    define INSTANCE_PY_POPULATIONS(n, template_for_instance, neuron_type)                                             \
         py::class_<core::Population<nt::neuron_type>>(                                                                 \
@@ -62,18 +62,14 @@
                     "remove_neuron", &core::Population<nt::neuron_type>::remove_neuron,                                \
                     "Remove a specific neuron from the population.")                                                   \
                 .def(                                                                                                  \
-                    "begin",                                                                                           \
-                    static_cast<std::vector<core::Population<nt::neuron_type>::NeuronParameters>::iterator (           \
-                        core::Population<nt::neuron_type>::*)()>(&core::Population<nt::neuron_type>::begin),           \
-                    "Get an iterator pointing to the first element of the population.")                                \
-                .def(                                                                                                  \
-                    "end",                                                                                             \
-                    static_cast<std::vector<core::Population<nt::neuron_type>::NeuronParameters>::iterator (           \
-                        core::Population<nt::neuron_type>::*)()>(&core::Population<nt::neuron_type>::end),             \
-                    "Get an iterator pointing to the last element of the population.")                                 \
-                .def(                                                                                                  \
-                    "__len__", make_handler([](const core::Population<nt::neuron_type> &population)                    \
-                                            { return population.size(); }));
+                    "__iter__",                                                                                        \
+                    py::range(                                                                                         \
+                        static_cast<std::vector<core::Population<nt::neuron_type>::NeuronParameters>::iterator (       \
+                            core::Population<nt::neuron_type>::*)()>(&core::Population<nt::neuron_type>::begin),       \
+                        static_cast<std::vector<core::Population<nt::neuron_type>::NeuronParameters>::iterator (       \
+                            core::Population<nt::neuron_type>::*)()>(&core::Population<nt::neuron_type>::end)),        \
+                    "Get an iterator of the population.")                                                              \
+                .def("__len__", &core::Population<nt::neuron_type>::size);
 
 // cppcheck-suppress unknownMacro
 BOOST_PP_SEQ_FOR_EACH(INSTANCE_PY_POPULATIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_NEURONS))
