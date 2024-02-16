@@ -33,12 +33,10 @@
                                                      core::UID, core::UID, const py::object &, size_t)>(            \
                                 &projection_constructor_wrapper<synapse_type>)));  // NOLINT
 
-
 /*
-                                 //        .def(__getitem__, "Get parameter values of a synapse with the given
-                                index.")
-                                 //        .def(__getitem__, "Get parameter values of a synapse with the given
-                                index.") .def( "begin", (auto(core::Projection::*)()) & core::Projection::begin,
+                                 //   .def(__getitem__, "Get parameter values of a synapse with the given index.")
+                                 //   .def(__getitem__, "Get parameter values of a synapse with the given index.")
+                                     .def( "begin", (auto(core::Projection::*)()) & core::Projection::begin,
                                          "Get an iterator pointing to the first element of the projection.")
                                      .def(
                                          "begin", (auto(core::Projection::*)()) & core::Projection::begin,
@@ -50,22 +48,27 @@
                                          "end", (auto(core::Projection::*)()) & core::Projection::end,
                                          "Get an iterator pointing to the last element of the projection.")
                                      .def(
-                                         "add_synapses", (size_t(core::Projection::*)(size_t,
-                                core::SynapseGenerator)) & core::Projection::add_synapses, "Append connections to
-                                the existing projection.") .def("add_synapses", &Projection::add_synapses, "Append
-                                connections to the existing projection.") .def( "add_synapses",
-                                (size_t(core::Projection::*)(std::vector<Synapse>)) &
-                                core::Projection::add_synapses, "Add a set of user-defined synapses to the
-                                projection.") .def("add_synapses", &core::Projection::add_synapses, "Add a set of
-                                user-defined synapses to the projection.") .def( "remove_synapses",
-                                &core::Projection::remove_synapses, "Remove synapses with the given indexes from the
-                                projection.") .def( "get_shared_parameters",
-                                (core::SharedSynapseParameters(core::Projection::*)()) &
-                                core::Projection::get_shared_parameters, "Get parameters shared between all
-                                synapses.") .def( "get_shared_parameters",
-                                 (core::SharedSynapseParameters(core::Projection::*)()) &
-                                core::Projection::get_shared_parameters, "Get parameters shared between all
-                                synapses.")
+                                         "add_synapses", (size_t(core::Projection::*)(size_t, core::SynapseGenerator))
+                                         &core::Projection::add_synapses,
+                                         "Append connections to the existing projection.")
+                                     .def("add_synapses", &Projection::add_synapses,
+                                          "Append connections to the existing projection.")
+                                     .def("add_synapses",
+                                          (size_t(core::Projection::*)(std::vector<Synapse>))
+                                          & core::Projection::add_synapses,
+                                          "Add a set of user-defined synapses to the projection.")
+                                      .def("add_synapses", &core::Projection::add_synapses,
+                                           "Add a set of user-defined synapses to the projection.")
+                                      .def("remove_synapses", &core::Projection::remove_synapses,
+                                           "Remove synapses with the given indexes from the projection.")
+                                      .def("get_shared_parameters",
+                                           (core::SharedSynapseParameters(core::Projection::*)()) &
+                                           core::Projection::get_shared_parameters,
+                                           "Get parameters shared between all synapses.")
+                                      .def("get_shared_parameters",
+                                           (core::SharedSynapseParameters(core::Projection::*)()) &
+                                           core::Projection::get_shared_parameters,
+                                           "Get parameters shared between all synapses.")
                                   */
 
 /*
