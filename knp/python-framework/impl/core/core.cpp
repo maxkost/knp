@@ -1,23 +1,42 @@
+/**
+ * @file core.cpp
+ * @brief Python core bindings.
+ * @author Artiom N.
+ * @date 01.02.2024
+ */
 #include <knp/core/core.h>
 
 #include "common.h"
+#include "optional_converter.h"
+#include "population.h"
+#include "projection.h"
 
+// knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>
+
+// py::object my_tf(size_t index)
+//{
+//     std::cout << "Index ok = " << index << std::endl;
+//     return py::object();
+// }
 
 BOOST_PYTHON_MODULE(libknp_python_framework)
 {
-    //     py::class_<core::TagMap>("TagMap", "The TagMap class is a definition of tags used by entity and their
-    //     values.")
-    // //        .def(
-    // //            "get_tag", (std::any(core::TagMap::*)(const std::string&))(&core::TagMap::get_tag), "Get tag value
-    // by tag name.")
-    //         // .def("get_tag", &core::TagMap::get_tag, "Get tag value by tag name.")
-    //         .def(
-    //             "get_tag", (std::string&(core::TagMap::*)(const std::string&))(&core::TagMap::get_tag),
-    //             "Get tag value by tag name and value type.")
-    // //        .def("get_tag", &core::TagMap::get_tag, "Get tag value by tag name and value type.");
-    // ;
+    py::class_<knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>>(
+        "BLIFATparameters", py::no_init);
+    py::class_<core::TagMap>("TagMap", "The TagMap class is a definition of tags used by entity and their values.")
+        // //        .def(
+        // //            "get_tag", (std::any(core::TagMap::*)(const std::string&))(&core::TagMap::get_tag), "Get tag
+        // value by tag name.")
+        //         // .def("get_tag", &core::TagMap::get_tag, "Get tag value by tag name.")
+        //         .def(
+        //             "get_tag", (std::string&(core::TagMap::*)(const std::string&))(&core::TagMap::get_tag),
+        //             "Get tag value by tag name and value type.")
+        // //        .def("get_tag", &core::TagMap::get_tag, "Get tag value by tag name and value type.");
+        ;  // NOLINT
 
     py::class_<core::BaseData>("BaseData", "Common parameters for several different entities.");
+
+    py::to_python_converter<std::optional<int>, to_python_optional<int>>();
 
 #define __KNP_IN_CORE
 #include "backend.cpp"                  // NOLINT

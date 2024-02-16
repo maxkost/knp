@@ -1,3 +1,9 @@
+/**
+ * @file common.h
+ * @brief Python bindings common header.
+ * @author Artiom N.
+ * @date 05.02.2024
+ */
 #pragma once
 
 #include <knp/core/device.h>
@@ -19,6 +25,7 @@
 
 namespace py = boost::python;
 namespace core = knp::core;
+namespace nt = knp::neuron_traits;
 
 
 namespace detail
@@ -46,15 +53,15 @@ function_type_t<F> to_function(F lambda)
 
 
 template <typename R, typename... Args>
-py::object make_handler(std::function<R(Args...)> f)
+py::object make_handler(std::function<R(Args...)> func)
 {
     return py::detail::make_function_aux(
-        f, py::default_call_policies(), boost::mpl::vector<std::decay_t<R>, Args...>());
+        func, py::default_call_policies(), boost::mpl::vector<std::decay_t<R>, Args...>());
 }
 
 
 template <typename F>
-py::object make_handler(F f)
+py::object make_handler(F func)
 {
-    return make_handler(to_function(f));
+    return make_handler(to_function(func));
 }
