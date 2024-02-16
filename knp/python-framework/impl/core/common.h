@@ -26,6 +26,7 @@
 namespace py = boost::python;
 namespace core = knp::core;
 namespace nt = knp::neuron_traits;
+namespace st = knp::synapse_traits;
 
 
 namespace detail

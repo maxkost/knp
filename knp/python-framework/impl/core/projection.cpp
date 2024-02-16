@@ -14,24 +14,27 @@
 
 //  "Construct an empty projection.")
 // "Construct a projection by running a synapse generator a given number of times."
+// py::arg("presynaptic_uid"), py::arg("postsynaptic_uid"))
 
 #if defined(__KNP_IN_CORE)
 
-#    define INSTANCE_PY_PROJECTIONS(n, template_for_instance, synapse_type)                                         \
-        py::class_<core::Projection<synapse_type>>(                                                                 \
-            "Projection",                                                                                           \
-            "The Projection class is a definition of similar connections between the neurons of two populations.",  \
-            py::no_init)                                                                                            \
-            .def(py::init<core::UID, core::UID>(py::arg("presynaptic_uid"), py::arg("postsynaptic_uid")))           \
-            .def(py::init<core::UID, core::UID, core::UID>())                                                       \
-            .def(                                                                                                   \
-                "__init__", py::make_constructor(static_cast<std::shared_ptr<core::Projection<synapse_type>> (*)(   \
-                                                     core::UID, core::UID, core::UID, const py::object &, size_t)>( \
-                                &projection_constructor_wrapper<synapse_type>)))                                    \
-            .def(                                                                                                   \
-                "__init__", py::make_constructor(static_cast<std::shared_ptr<core::Projection<synapse_type>> (*)(   \
-                                                     core::UID, core::UID, const py::object &, size_t)>(            \
-                                &projection_constructor_wrapper<synapse_type>)));  // NOLINT
+#    define INSTANCE_PY_PROJECTIONS(n, template_for_instance, synapse_type)                                            \
+        py::class_<core::Projection<st::synapse_type>>(                                                                \
+            BOOST_PP_STRINGIZE(BOOST_PP_CAT(st::synapse_type, Projection)),                                            \
+                "The Projection class is a definition of similar connections between the neurons of two populations.", \
+                py::no_init)                                                                                           \
+                .def(py::init<core::UID, core::UID>())                                                                 \
+                .def(py::init<core::UID, core::UID, core::UID>())                                                      \
+                .def(                                                                                                  \
+                    "__init__",                                                                                        \
+                    py::make_constructor(static_cast<std::shared_ptr<core::Projection<st::synapse_type>> (*)(          \
+                                             core::UID, core::UID, core::UID, const py::object &, size_t)>(            \
+                        &projection_constructor_wrapper<st::synapse_type>)))                                           \
+                .def(                                                                                                  \
+                    "__init__",                                                                                        \
+                    py::make_constructor(static_cast<std::shared_ptr<core::Projection<st::synapse_type>> (*)(          \
+                                             core::UID, core::UID, const py::object &, size_t)>(                       \
+                        &projection_constructor_wrapper<st::synapse_type>)));  // NOLINT
 
 /*
                                  //   .def(__getitem__, "Get parameter values of a synapse with the given index.")
