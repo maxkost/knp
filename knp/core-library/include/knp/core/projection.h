@@ -62,23 +62,23 @@ public:
         /**
          * @brief Index of a neuron from which the synapse receives spikes (presynaptic neuron).
          */
-        uint32_t id_from_;
+        size_t id_from_;
 
         /**
          * @brief Index of a neuron that the synapse influences (postsynaptic neuron).
          */
-        uint32_t id_to_;
+        size_t id_to_;
     };
 
     /**
      * @brief Synapse generation function.
      * @deprecated Must be removed.
      */
-    using SynapseGenerator = std::function<std::optional<Synapse>(uint32_t)>;
+    using SynapseGenerator = std::function<std::optional<Synapse>(size_t)>;
     /**
      * @brief Synapse generation function type.
      */
-    using SynapseGenerator1 = std::function<std::optional<std::tuple<SynapseParameters, uint32_t, uint32_t>>(uint32_t)>;
+    using SynapseGenerator1 = std::function<std::optional<std::tuple<SynapseParameters, size_t, size_t>>(size_t)>;
 
 public:
     /**
@@ -109,7 +109,7 @@ public:
         {
             /**
              * @brief STDP messages only.
-             */ 
+             */
             STDPOnly,
             /**
              * @brief STDP messages and spikes.
@@ -225,7 +225,7 @@ public:
     [[nodiscard]] auto end() const { return parameters_.cend(); }
     /**
      * @todo It might be dangerous if you change `index_from` or `index_to` of a synapse without updating.
-     */ 
+     */
     /**
      * @brief Get an iterator pointing to the last element of the projection.
      * @return iterator.
@@ -301,7 +301,7 @@ public:
      * @param indexes indexes of synapses to remove.
      * @todo Implement this.
      */
-    void remove_synapses(const std::vector<size_t> &indexes) {}  
+    void remove_synapses(const std::vector<size_t> &indexes) {}
 
     /**
      * @brief Remove synapses according to a given criterion.

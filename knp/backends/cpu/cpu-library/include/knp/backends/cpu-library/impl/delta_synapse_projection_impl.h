@@ -19,7 +19,7 @@
 #include <utility>
 #include <vector>
 
-#include "knp/backends/cpu-library/impl/additive_stdp_impl.h"
+#include "additive_stdp_impl.h"
 
 
 /**
@@ -92,8 +92,8 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
                 // the message is sent on step N - 1, received on N.
                 size_t future_step = synapse_params.delay_ + step_n - 1;
                 knp::core::messaging::SynapticImpact impact{
-                    synapse_index, synapse_params.weight_, synapse_params.output_type_, synapse.id_from_,
-                    synapse.id_to_};
+                    synapse_index, synapse_params.weight_, synapse_params.output_type_,
+                    static_cast<uint32_t>(synapse.id_from_), static_cast<uint32_t>(synapse.id_to_)};
 
                 auto iter = future_messages.find(future_step);
                 if (iter != future_messages.end())
@@ -135,8 +135,8 @@ void calculate_projection_part_impl(
         // the message is sent on step N - 1, received on N.
         uint64_t key = synapse.params_.delay_ + step_n - 1;
         knp::core::messaging::SynapticImpact impact{
-            synapse_index, synapse.params_.weight_ * iter->second, synapse.params_.output_type_, synapse.id_from_,
-            synapse.id_to_};
+            synapse_index, synapse.params_.weight_ * iter->second, synapse.params_.output_type_,
+            static_cast<uint32_t>(synapse.id_from_), static_cast<uint32_t>(synapse.id_to_)};
 
         container.emplace_back(std::pair{key, impact});
     }
