@@ -159,7 +159,7 @@ std::vector<size_t> knp::core::Projection<SynapseType>::get_by_postsynaptic_neur
 
 
 template <typename SynapseType>
-size_t knp::core::Projection<SynapseType>::add_synapses(size_t num_iterations, const SynapseGenerator &generator)
+size_t knp::core::Projection<SynapseType>::add_synapses(SynapseGenerator generator, size_t num_iterations)
 {
     const size_t starting_size = parameters_.size();
     is_index_updated_ = false;

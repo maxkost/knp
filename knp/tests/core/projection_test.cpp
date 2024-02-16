@@ -79,7 +79,7 @@ TEST(ProjectionSuite, SynapseAddition)
     SynapseGenerator generator1 = [](uint32_t index) {
         return Synapse{{0.0F, 1, SynapseType::EXCITATORY}, index, index};
     };
-    projection.add_synapses(presynaptic_size, generator1);  // Add 1-to-1 synapses
+    projection.add_synapses(generator1, presynaptic_size);  // Add 1-to-1 synapses
     ASSERT_EQ(projection.size(), presynaptic_size);
     size_t count = projection.add_synapses({Synapse{
         {1.F, 2, SynapseType ::EXCITATORY},
@@ -91,7 +91,8 @@ TEST(ProjectionSuite, SynapseAddition)
     SynapseGenerator generator2 = [](uint32_t index) {
         return Synapse{{0.1F, 2, SynapseType::EXCITATORY}, index, (index + 1) % postsynaptic_size};
     };
-    count = projection.add_synapses(presynaptic_size, generator2);  // Add synapses from pre neuron N to post neuron N+1
+    // Add synapses from pre neuron N to post neuron N+1
+    count = projection.add_synapses(generator2, presynaptic_size);
     ASSERT_EQ(count, presynaptic_size);
     ASSERT_EQ(projection.size(), 2 * presynaptic_size + 1);
 
@@ -169,9 +170,9 @@ TEST(ProjectionSuite, SynapseRemoval)
 
     // If we run this generator N * presynaptic size, we'll have 1 to N connections of x->x, x->x+1, ... x->x+N, cycled
     count = projection.add_synapses(
-        total_connections,
         make_cyclic_generator(
-            {presynaptic_size, postsynaptic_size}, {0, 1, knp::synapse_traits::OutputType::EXCITATORY}));
+            {presynaptic_size, postsynaptic_size}, {0, 1, knp::synapse_traits::OutputType::EXCITATORY}),
+        total_connections);
     ASSERT_EQ(count, total_connections);
 
     // Delete a single synapse
