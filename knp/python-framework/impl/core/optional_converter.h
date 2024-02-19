@@ -55,7 +55,7 @@ struct from_python_optional
     {
         try
         {
-            return typename py::extract<T>::extract(obj_ptr) ? obj_ptr : nullptr;
+            return typename py::extract<std::optional<T>>::extract(obj_ptr) ? obj_ptr : nullptr;
         }
         // Without try catch it still raises a TypeError exception
         // But this enables to custom your error message
@@ -67,7 +67,7 @@ struct from_python_optional
 
     static void construct(PyObject* obj_ptr, boost::python::converter::rvalue_from_python_stage1_data* data)
     {
-        const T value = typename py::extract<T>::extract(obj_ptr);
+        const T value = typename py::extract<std::optional<T>>::extract(obj_ptr);
 
         if (value)
         {
