@@ -34,21 +34,27 @@ template <>
 struct default_values<BLIFATNeuron>
 {
     /**
-     * @todo Check if there are any problems with this implementation, then change it or delete this TODO.
-    */
-    /**
-     * @brief The parameter defines a number of network steps since the last spike.
+     * @brief The parameter is the default value of `steps_before_firing` for a BLIFAT neuron.
      */
-    constexpr static std::size_t steps_before_firing = std::numeric_limits<std::size_t>::infinity();
+    constexpr static std::size_t steps_before_firing_ = std::numeric_limits<std::size_t>::infinity();
     /**
      * @brief The parameter defines a value to which membrane potential tends (for conductance-based inhibitory
      * synapses)
      */
-    constexpr static double reverse_inhibitory_potential = -0.3;
+    constexpr static double reverse_inhibitory_potential_ = -0.3;
     /**
      * @brief The parameter defines a value to which membrane potential tends (for current-based inhibitory synapses).
      */
-    constexpr static double min_potential = -1.0e9;
+    constexpr static double min_potential_ = -1.0e9;
+    /**
+     * @brief The default value of the threshold for membrane potential.
+     */
+    constexpr static double activation_threshold_ = 1.0;
+    /**
+     * @brief The parameter defines the default value for the number of network execution steps,
+     * during which the neuron activity is totally blocked.
+     */
+    constexpr static int64_t total_blocking_period_ = std::numeric_limits<int64_t>::max();
 };
 
 
@@ -59,14 +65,14 @@ template <>
 struct neuron_parameters<BLIFATNeuron>
 {
     /**
-     * @brief The parameter takes the default value of `steps_before_firing` defined for a BLIFAT neuron.
+     * @brief The parameter defines a number of network steps since the last spike.
      */
-    std::size_t n_time_steps_since_last_firing_ = default_values<BLIFATNeuron>::steps_before_firing;
+    std::size_t n_time_steps_since_last_firing_ = default_values<BLIFATNeuron>::steps_before_firing_;
 
     /**
      * @brief The parameter defines a threshold for membrane potential.
      */
-    double activation_threshold_ = 1.0;
+    double activation_threshold_ = default_values<BLIFATNeuron>::activation_threshold_;
     /**
      * @brief The parameter defines a dynamic threshold for membrane potential after reaching which a neuron generates a
      * spike.
@@ -138,7 +144,7 @@ struct neuron_parameters<BLIFATNeuron>
     /**
      * @brief The parameter takes the default value of `reverse_inhibitory_potential` defined for a BLIFAT neuron.
      */
-    double reversive_inhibitory_potential_ = default_values<BLIFATNeuron>::reverse_inhibitory_potential;
+    double reversive_inhibitory_potential_ = default_values<BLIFATNeuron>::reverse_inhibitory_potential_;
     /**
      * @brief The parameter defines a minimum number of network steps before a neuron can generate the next spike.
      */
@@ -151,12 +157,12 @@ struct neuron_parameters<BLIFATNeuron>
     /**
      * @brief The parameter takes the default value of `min_potential` defined for a BLIFAT neuron.
      */
-    double min_potential_ = default_values<BLIFATNeuron>::min_potential;
+    double min_potential_ = default_values<BLIFATNeuron>::min_potential_;
     /**
      * @brief The parameter defines the number of network execution steps, during which the neuron activity is totally
      * blocked.
      */
-    int64_t total_blocking_period_ = std::numeric_limits<int64_t>::max();
+    int64_t total_blocking_period_ = default_values<BLIFATNeuron>::total_blocking_period_;
     /**
      * @brief The parameter defines a dopamine value used to sum up all incoming dopamine synapse impacts.
      */
