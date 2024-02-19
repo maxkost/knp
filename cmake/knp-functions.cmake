@@ -24,6 +24,8 @@ function(knp_set_target_parameters target)
     target_compile_options("${target}" PUBLIC $<$<COMPILE_LANG_AND_ID:C,GNU,Clang>:-Wall -fstack-protector-all -Wformat -Wformat-security>)
     target_compile_options("${target}" PUBLIC $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang>:-Wall -fstack-protector-all -Wformat -Wformat-security>)
 
+    target_compile_definitions("${target}" PRIVATE "KNP_LIBRARY_NAME=${target}")
+
     target_include_directories("${target}" PUBLIC
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
@@ -46,15 +48,27 @@ function (knp_add_library lib_name lib_type)
         set_target_properties("${lib_name}_obj" PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
         add_library("${lib_name}" SHARED $<TARGET_OBJECTS:${lib_name}_obj>)
+        knp_set_target_parameters("${lib_name}")
+        target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${CMAKE_SHARED_LIBRARY_PREFIX}")
+        target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${CMAKE_SHARED_LIBRARY_PREFIX}${lib_name}")
+
         add_library("${lib_name}_static" STATIC $<TARGET_OBJECTS:${lib_name}_obj>)
+        knp_set_target_parameters("${lib_name}_static")
+        target_compile_definitions("${lib_name}_static" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${CMAKE_STATIC_LIBRARY_PREFIX}")
+        target_compile_definitions("${lib_name}_static" PRIVATE "KNP_FULL_LIBRARY_NAME=${CMAKE_STATIC_LIBRARY_PREFIX}${lib_name}")
+
         set_target_properties("${lib_name}_static" PROPERTIES OUTPUT_NAME "${lib_name}")
     elseif(lib_type STREQUAL SHARED OR lib_type STREQUAL MODULE)
         add_library("${lib_name}" ${lib_type} ${${lib_name}_source})
         target_compile_definitions("${lib_name}" PRIVATE BUILD_SHARED_LIBS)
         knp_set_target_parameters("${lib_name}")
+        target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${CMAKE_SHARED_LIBRARY_PREFIX}")
+        target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${CMAKE_SHARED_LIBRARY_PREFIX}${lib_name}")
     elseif(lib_type STREQUAL STATIC)
         add_library("${lib_name}" STATIC ${${lib_name}_source})
         knp_set_target_parameters("${lib_name}")
+        target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${CMAKE_STATIC_LIBRARY_PREFIX}")
+        target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${CMAKE_STATIC_LIBRARY_PREFIX}${lib_name}")
     else()
         message(FATAL_ERROR "Incorrect library build type: \"${lib_type}\". Use SHARED/MODULE, STATIC or BOTH.")
     endif()
@@ -118,13 +132,17 @@ function(EXCLUDE_FILES_FROM_DIR_IN_LIST _InFileList _excludeDirName _verbose)
       message(STATUS "ITR=${ITR}")
     endif ("${_verbose}")
 
-    if ("${ITR}" MATCHES "(.*)${_excludeDirName}(.*)")                   # Check if the item matches the directory name in _excludeDirName
+    # Check if the item matches the directory name in _excludeDirName.
+    if ("${ITR}" MATCHES "(.*)${_excludeDirName}(.*)")
       message(STATUS "Remove Item from List:${ITR}")
-      list (REMOVE_ITEM _InFileList ${ITR})                              # Remove the item from the list
+      # Remove the item from the list.
+      list (REMOVE_ITEM _InFileList ${ITR})
     endif ("${ITR}" MATCHES "(.*)${_excludeDirName}(.*)")
 
   endforeach(ITR)
-  set(SOURCE_FILES ${_InFileList} PARENT_SCOPE)                          # Return the SOURCE_FILES variable to the calling parent
+
+  # Return the SOURCE_FILES variable to the calling parent.
+  set(SOURCE_FILES ${_InFileList} PARENT_SCOPE)
 endfunction(EXCLUDE_FILES_FROM_DIR_IN_LIST)
 
 
@@ -136,4 +154,38 @@ function(CUDA_CONVERT_FLAGS EXISTING_TARGET)
             "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${old_flags}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${CUDA_flags}>"
             )
     endif()
+endfunction()
+
+
+# Function:                 knp_add_python_library
+# Description:              Add Python module, using Boost::Python.
+# Param name:               Module name.
+# Param LINK_LIBRARIES:     Additional libraries to link.
+# Requires:
+#     find_package(Python COMPONENTS Interpreter Development REQUIRED)
+#     find_package(Boost 1.66.0 COMPONENTS python REQUIRED)
+
+function(knp_add_python_module name)
+    cmake_parse_arguments(
+            "PARSED_ARGS"
+            ""
+            ""
+            "LINK_LIBRARIES"
+            ${ARGN}
+    )
+
+    set(LIB_NAME "${PROJECT_NAME}_${name}")
+
+    file(GLOB_RECURSE ${name}_MODULES_SOURCE CONFIGURE_DEPENDS
+            "impl/${name}/*.h"
+            "impl/${name}/*.cpp")
+
+    knp_add_library(
+            "${LIB_NAME}"
+            SHARED
+            ${${name}_MODULES_SOURCE}
+    )
+
+    target_include_directories("${LIB_NAME}" PRIVATE ${Python_INCLUDE_DIRS})
+    target_link_libraries("${LIB_NAME}" PRIVATE Boost::headers Boost::python ${PARSED_ARGS_LINK_LIBRARIES})
 endfunction()

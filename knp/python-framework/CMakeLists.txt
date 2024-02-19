@@ -11,14 +11,4 @@ find_package(Boost 1.66.0 COMPONENTS python REQUIRED)
 
 include(knp-functions)
 
-file(GLOB_RECURSE MODULES_SOURCE CONFIGURE_DEPENDS
-     "impl/core/*.h"
-     "impl/core/*.cpp")
-
-knp_add_library("${PROJECT_NAME}"
-    SHARED
-    ${MODULES_SOURCE}
-)
-
-target_include_directories("${PROJECT_NAME}" PRIVATE ${Python_INCLUDE_DIRS})
-target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Core KNP::BaseFramework::Core Boost::headers Boost::python)
+knp_add_python_module(core LINK_LIBRARIES KNP::Core KNP::BaseFramework::Core)
