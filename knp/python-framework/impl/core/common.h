@@ -21,6 +21,7 @@
 #include <sstream>
 
 #include <boost/python.hpp>
+#include <boost/python/implicit.hpp>
 
 
 namespace py = boost::python;
