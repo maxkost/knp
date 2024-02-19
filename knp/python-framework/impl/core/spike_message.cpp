@@ -1,3 +1,9 @@
+/**
+ * @file spike_message.cpp
+ * @brief SpikeMessage Python bindings.
+ * @author Artiom N.
+ * @date 01.02.2024
+ */
 #include "common.h"
 
 

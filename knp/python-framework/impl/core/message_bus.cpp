@@ -1,7 +1,13 @@
+/**
+ * @file message_bus.cpp
+ * @brief Message bus Python bindings.
+ * @author Artiom N.
+ * @date 01.02.2024
+ */
 #include "common.h"
 
 
-#if defined(__KNP_IN_CORE)
+#if defined(_KNP_IN_CORE)
 
 /*
 py::class_<core::MessageBus>("MessageBus", "The MessageBus class is a definition of an interface to a message bus.")

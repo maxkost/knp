@@ -20,10 +20,6 @@
 //     return py::object();
 // }
 
-#define XSTR(x) STR(x)
-#define STR(x) #x
-
-#pragma message XSTR(KNP_FULL_LIBRARY_NAME)
 BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
 {
     //    py::to_python_converter<std::any, to_python_any>();
@@ -40,7 +36,7 @@ BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
 
     py::to_python_converter<std::optional<int>, to_python_optional<int>>();
 
-#define __KNP_IN_CORE
+#define _KNP_IN_CORE
 #include "backend.cpp"                  // NOLINT
 #include "device.cpp"                   // NOLINT
 #include "message_bus.cpp"              // NOLINT
@@ -52,7 +48,6 @@ BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
 #include "spike_message.cpp"            // NOLINT
 #include "subscription.cpp"             // NOLINT
 #include "synaptic_impact_message.cpp"  // NOLINT
-#include "synaptic_index.cpp"           // NOLINT
 #include "uid.cpp"                      // NOLINT
 #undef __KNP_IN_CORE
 }

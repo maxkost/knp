@@ -1,3 +1,9 @@
+/**
+ * @file synaptic_impact_message.cpp
+ * @brief SynapticImpact message Python bindings.
+ * @author Artiom N.
+ * @date 01.02.2024
+ */
 #include "common.h"
 
 

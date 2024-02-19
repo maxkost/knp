@@ -12,7 +12,7 @@
 #include "common.h"
 
 
-#if defined(__KNP_IN_CORE)
+#if defined(_KNP_IN_CORE)
 
 /*        .def(
             "get_tags", (auto(core::Population<knp::neuron_traits::BLIFATNeuron>::*)()) &core::Population::get_tags,

@@ -1,4 +1,10 @@
-#if defined(__KNP_IN_CORE)
+/**
+ * @file device.cpp
+ * @brief Device description Python bindings.
+ * @author Artiom N.
+ * @date 01.02.2024
+ */
+#if defined(_KNP_IN_CORE)
 
 /*
 py::enum_<core::DeviceType>("DeviceType")

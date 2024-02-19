@@ -1,6 +1,6 @@
 /**
  * @file projection.cpp
- * @brief Python bindings for Population.
+ * @brief Python bindings for Projection.
  * @author Artiom N.
  * @date 16.02.2024
  */
@@ -17,7 +17,7 @@
 // "Construct a projection by running a synapse generator a given number of times."
 // py::arg("presynaptic_uid"), py::arg("postsynaptic_uid"))
 
-#if defined(__KNP_IN_CORE)
+#if defined(_KNP_IN_CORE)
 
 #    define INSTANCE_PY_PROJECTIONS(n, template_for_instance, synapse_type)                                            \
         py::class_<core::Projection<st::synapse_type>>(                                                                \

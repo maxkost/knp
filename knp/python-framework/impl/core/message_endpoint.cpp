@@ -1,7 +1,13 @@
+/**
+ * @file message_endpoint.cpp
+ * @brief Message endpoint Python bindings.
+ * @author Artiom N.
+ * @date 01.02.2024
+ */
 #include "common.h"
 
 
-#if defined(__KNP_IN_CORE)
+#if defined(_KNP_IN_CORE)
 /*
 py::class_<core::MessageEndpoint>("MessageEndpoint", "The MessageEndpoint class is a definition of message endpoints.")
     .def("get_receiver_uid", &core::MessageEndpoint::get_receiver_uid, "Get receiver UID from a subscription variant.")

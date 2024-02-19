@@ -25,7 +25,10 @@ struct ProjectionGeneratorProxy
     std::optional<std::tuple<ElemParametersType, size_t, size_t>> operator()(size_t index)
     {
         auto res = py::call<py::object>(gen_func_.ptr(), index);
-        if (res.is_none()) return std::nullopt;
+        if (res.is_none())
+        {
+            return std::nullopt;
+        }
         return *reinterpret_cast<std::tuple<ElemParametersType, size_t, size_t> *>(res.ptr());
     }
 

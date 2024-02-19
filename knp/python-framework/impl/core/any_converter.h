@@ -1,8 +1,8 @@
 /**
- * @file optional_converter.h
- * @brief std::optional for Python.
+ * @file any_converter.h
+ * @brief std::any for Python.
  * @author Artiom N.
- * @date 09.02.2024
+ * @date 19.02.2024
  */
 
 #pragma once
@@ -15,64 +15,50 @@
 
 
 // Custom exceptions
-struct AttributeError : std::exception
+struct BadAnyCastError : std::exception
 {
-    const char* what() const throw() { return "AttributeError exception"; }
-};
-
-struct TypeError : std::exception
-{
-    const char* what() const throw() { return "TypeError exception"; }
+    const char* what() const throw() { return "Bad \"any\" cast!"; }
 };
 
 // Set python exceptions
-void translate(const std::exception& e)
-{
-    // cppcheck-suppress knownPointerToBool
-    if (dynamic_cast<const AttributeError*>(&e)) PyErr_SetString(PyExc_AttributeError, e.what());
-    // cppcheck-suppress knownPointerToBool
-    if (dynamic_cast<const TypeError*>(&e)) PyErr_SetString(PyExc_TypeError, e.what());
-}
+// void translate(const std::exception& e)
+//{
+//    // cppcheck-suppress knownPointerToBool
+//    if (dynamic_cast<const BadAnyCastError*>(&e)) PyErr_SetString(PyExc_TypeError, e.what());
+//}
 
 
-template <typename T>
-struct to_python_optional
+struct to_python_any
 {
-    static PyObject* convert(const std::optional<T>& obj)
-    {
-        if (obj) return py::incref(py::object(*obj).ptr());
-        // Raise AttributeError if any value hasn't been set yet.
-        else
-            return nullptr;
-    }
+    static PyObject* convert(const std::any& obj) { return py::incref(py::object(std::any_cast<PyObject>(obj)).ptr()); }
 };
 
 
-template <typename T>
-struct from_python_optional
+struct from_python_any
 {
     static void* convertible(PyObject* obj_ptr)
     {
         try
         {
-            return typename py::extract<T>::extract(obj_ptr) ? obj_ptr : nullptr;
+            // return py::extract<std::any>(obj_ptr).has_value() ? obj_ptr : nullptr;
+            return nullptr;
         }
         // Without try catch it still raises a TypeError exception
         // But this enables to custom your error message
         catch (...)
         {
-            throw TypeError();
+            throw BadAnyCastError();
         }
     }
 
     static void construct(PyObject* obj_ptr, boost::python::converter::rvalue_from_python_stage1_data* data)
     {
-        const T value = typename py::extract<T>::extract(obj_ptr);
+        const std::any value = py::extract<std::any>(obj_ptr);
 
-        if (value)
+        if (value.has_value())
         {
-            void* storage = ((py::converter::rvalue_from_python_storage<std::optional<T>>*)data)->storage.bytes;
-            new (storage) std::optional<T>(value);
+            void* storage = ((py::converter::rvalue_from_python_storage<std::any>*)data)->storage.bytes;
+            new (storage) std::any(value);
             data->convertible = storage;
         }
         else
@@ -81,8 +67,5 @@ struct from_python_optional
         }
     }
 
-    from_python_optional()
-    {
-        py::converter::registry::push_back(&convertible, &construct, py::type_id<std::optional<T>>());
-    }
+    from_python_any() { py::converter::registry::push_back(&convertible, &construct, py::type_id<std::any>()); }
 };
