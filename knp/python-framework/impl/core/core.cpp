@@ -34,7 +34,7 @@ BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
 
     py::class_<core::BaseData>("BaseData", "Common parameters for several different entities.");
 
-    py::to_python_converter<std::optional<int>, to_python_optional<int>>();
+    // py::to_python_converter<std::optional<int>, to_python_optional<int>>();
 
 #define _KNP_IN_CORE
 #include "backend.cpp"                  // NOLINT
@@ -49,5 +49,5 @@ BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
 #include "subscription.cpp"             // NOLINT
 #include "synaptic_impact_message.cpp"  // NOLINT
 #include "uid.cpp"                      // NOLINT
-#undef __KNP_IN_CORE
+#undef _KNP_IN_CORE
 }

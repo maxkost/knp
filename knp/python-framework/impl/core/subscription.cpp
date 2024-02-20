@@ -4,7 +4,7 @@
  * @author Artiom N.
  * @date 01.02.2024
  */
-#if defined(__KNP_IN_CORE)
+#if defined(_KNP_IN_CORE)
 /*
 py::class_<core::Subscription>(
     "Subscription", "The Subscription class is used for message exchange between the network entities.")
