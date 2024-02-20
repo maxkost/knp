@@ -19,6 +19,8 @@
 
 #if defined(_KNP_IN_CORE)
 
+namespace st = knp::synapse_traits;
+
 #    define INSTANCE_PY_PROJECTIONS(n, template_for_instance, synapse_type)                                            \
         py::class_<core::Projection<st::synapse_type>>(                                                                \
             BOOST_PP_STRINGIZE(                                             \

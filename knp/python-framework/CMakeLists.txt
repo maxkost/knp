@@ -11,4 +11,5 @@ find_package(Boost 1.66.0 COMPONENTS python REQUIRED)
 
 include(knp-functions)
 
-knp_add_python_module(core LINK_LIBRARIES KNP::Core KNP::BaseFramework::Core)
+knp_add_python_module(core LINK_LIBRARIES KNP::Core)
+knp_add_python_module(neuron_traits LINK_LIBRARIES KNP::Neuron::Traits)

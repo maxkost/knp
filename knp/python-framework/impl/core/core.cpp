@@ -4,7 +4,10 @@
  * @author Artiom N.
  * @date 01.02.2024
  */
+
 #include <knp/core/core.h>
+
+#include <filesystem>
 
 #include "any_converter.h"
 #include "common.h"
@@ -35,6 +38,13 @@ BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
     py::class_<core::BaseData>("BaseData", "Common parameters for several different entities.");
 
     // py::to_python_converter<std::optional<int>, to_python_optional<int>>();
+    //    Py_Initialize();
+
+    // Need for import.
+    //    PyObject* sysPath = PySys_GetObject("path");
+    //    PyList_Insert(sysPath, 0, PyUnicode_FromString(absolute(std::filesystem::current_path()).string().c_str()));
+    //
+    //    boost::python::import("libknp_python_framework_neuron_traits");
 
 #define _KNP_IN_CORE
 #include "backend.cpp"                  // NOLINT

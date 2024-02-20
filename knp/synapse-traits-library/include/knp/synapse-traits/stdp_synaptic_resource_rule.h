@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <cinttypes>
+#include <cstdint>
 #include <vector>
 
 #include "stdp_common.h"
