@@ -101,7 +101,10 @@ std::vector<synapse_traits::synapse_parameters<SynapseType> *> get_all_connected
         std::transform(
             synapses.begin(), synapses.end(), std::back_inserter(result),
             [&projection](auto const &index) -> synapse_traits::synapse_parameters<SynapseType> *
-            { return &(*projection)[index].params_; });
+            {
+                // todo: replace 0 with "params".
+                return &std::get<0>((*projection)[index]);
+            });
     }
     return result;
 }

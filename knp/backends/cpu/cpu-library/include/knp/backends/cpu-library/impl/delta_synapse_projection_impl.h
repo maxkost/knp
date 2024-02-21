@@ -87,13 +87,14 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
             for (auto synapse_index : synapses)
             {
                 auto &synapse = projection[synapse_index];
-                WeightUpdateSTDP<SynapseType>::init_synapse(synapse.params_, step_n);
-                const auto &synapse_params = sp_getter(synapse.params_);
+                // todo: replace 0 with "params".
+                WeightUpdateSTDP<SynapseType>::init_synapse(std::get<0>(synapse), step_n);
+                const auto &synapse_params = sp_getter(std::get<0>(synapse));
                 // the message is sent on step N - 1, received on N.
                 size_t future_step = synapse_params.delay_ + step_n - 1;
                 knp::core::messaging::SynapticImpact impact{
                     synapse_index, synapse_params.weight_, synapse_params.output_type_,
-                    static_cast<uint32_t>(synapse.id_from_), static_cast<uint32_t>(synapse.id_to_)};
+                    static_cast<uint32_t>(std::get<1>(synapse)), static_cast<uint32_t>(std::get<2>(synapse))};
 
                 auto iter = future_messages.find(future_step);
                 if (iter != future_messages.end())
@@ -128,15 +129,16 @@ void calculate_projection_part_impl(
         auto &synapse = projection[synapse_index];
         // update_step(synapse.params_, step_n);
         // TODO: Move update logic here too.
-        auto iter = message_in_data.find(synapse.id_from_);
+        auto iter = message_in_data.find(std::get<1>(synapse));
         if (iter == message_in_data.end()) continue;
 
         // Add new impact
         // the message is sent on step N - 1, received on N.
-        uint64_t key = synapse.params_.delay_ + step_n - 1;
+        uint64_t key = std::get<0>(synapse).delay_ + step_n - 1;
+        // todo: replace 1, 2 with id_from, id_to.
         knp::core::messaging::SynapticImpact impact{
-            synapse_index, synapse.params_.weight_ * iter->second, synapse.params_.output_type_,
-            static_cast<uint32_t>(synapse.id_from_), static_cast<uint32_t>(synapse.id_to_)};
+            synapse_index, std::get<0>(synapse).weight_ * iter->second, std::get<0>(synapse).output_type_,
+            static_cast<uint32_t>(std::get<1>(synapse)), static_cast<uint32_t>(std::get<2>(synapse))};
 
         container.emplace_back(std::pair{key, impact});
     }

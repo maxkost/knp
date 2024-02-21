@@ -157,7 +157,8 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
 
     std::transform(
         loop_projection.begin(), loop_projection.end(), std::back_inserter(old_synaptic_weights),
-        [](const auto &s) { return s.params_.weight_; });
+        // todo: replace 0 with "params".
+        [](const auto &s) { return std::get<0>(s).weight_; });
 
     for (auto p = backend.begin_projections(); p != backend.end_projections(); ++p)
     {
@@ -166,7 +167,8 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
 
         std::transform(
             prj.begin(), prj.end(), std::back_inserter(new_synaptic_weights),
-            [](const auto &s) { return s.params_.weight_; });
+            // todo: replace 0 with "params".
+            [](const auto &s) { return std::get<0>(s).weight_; });
     }
 
     // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
@@ -255,7 +257,8 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
 
     std::transform(
         loop_projection.begin(), loop_projection.end(), std::back_inserter(old_synaptic_weights),
-        [](const auto &s) { return s.params_.weight_; });
+        // todo: replace 0 with "params".
+        [](const auto &s) { return std::get<0>(s).weight_; });
 
     for (auto p = backend.begin_projections(); p != backend.end_projections(); ++p)
     {
@@ -264,7 +267,8 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
 
         std::transform(
             prj.begin(), prj.end(), std::back_inserter(new_synaptic_weights),
-            [](const auto &s) { return s.params_.weight_; });
+            // todo: replace 0 with "params".
+            [](const auto &s) { return std::get<0>(s).weight_; });
     }
 
     // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
