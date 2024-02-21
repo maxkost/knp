@@ -1,4 +1,5 @@
-/** @file blifat.cpp
+/**
+ * @file blifat.cpp
  * @brief BLIFAT neuron Python bindings.
  * @author Artiom N.
  * @date 20.02.24
@@ -11,6 +12,7 @@
 using bn_params = knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>;
 
 py::class_<bn_params>("BLIFATNeuronParameters", "Structure for BLIFAT neuron parameters")
+    .def(py::init<>())
     .def_readwrite(
         "n_time_steps_since_last_firing", &bn_params::n_time_steps_since_last_firing_,
         "The parameter defines a number of network steps since the last spike.")

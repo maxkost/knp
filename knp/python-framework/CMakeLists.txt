@@ -13,3 +13,5 @@ include(knp-functions)
 
 knp_add_python_module(core LINK_LIBRARIES KNP::Core)
 knp_add_python_module(neuron_traits LINK_LIBRARIES KNP::Neuron::Traits)
+knp_add_python_module(synapse_traits LINK_LIBRARIES KNP::Synapse::Traits)
+knp_add_python_module(base_framework LINK_LIBRARIES KNP::BaseFramework::Core)
