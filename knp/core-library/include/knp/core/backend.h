@@ -39,7 +39,7 @@ public:
      * @details If the predicate returns `true`, network execution continues. Otherwise network execution stops./n
      * The predicate gets a step number as a parameter.
      */
-    using RunPredicate = std::function<bool(knp::core::messaging::Step)>;
+    using RunPredicate = std::function<bool(knp::core::Step)>;
 
 public:
     /**
@@ -128,14 +128,14 @@ public:
      * @return list of devices.
      * @see Device.
      */
-    std::vector<std::unique_ptr<Device>> &get_current_devices() { return devices_; }
+    [[nodiscard]] std::vector<std::unique_ptr<Device>> &get_current_devices() { return devices_; }
     /**
      * @brief Get a list of devices on which the backend runs a network.
      * @note Constant method.
      * @return list of devices.
      * @see Device.
      */
-    const std::vector<std::unique_ptr<Device>> &get_current_devices() const { return devices_; }
+    [[nodiscard]] const std::vector<std::unique_ptr<Device>> &get_current_devices() const { return devices_; }
 
     /**
      * @brief Select devices on which to run the backend.
@@ -149,12 +149,12 @@ public:
      * @note Constant method.
      * @return message endpoint.
      */
-    virtual const core::MessageEndpoint &get_message_endpoint() const = 0;
+    [[nodiscard]] virtual const core::MessageEndpoint &get_message_endpoint() const = 0;
     /**
      * @brief Get message endpoint.
      * @return message endpoint.
      */
-    virtual core::MessageEndpoint &get_message_endpoint() = 0;
+    [[nodiscard]] virtual core::MessageEndpoint &get_message_endpoint() = 0;
 
 public:
     /**
@@ -190,7 +190,7 @@ public:
      * @brief Get current step.
      * @return step number.
      */
-    core::messaging::Step get_step() const { return step_; }
+    [[nodiscard]] core::Step get_step() const { return step_; }
 
     /**
      * @brief Stop learning.
@@ -207,7 +207,7 @@ public:
      * @brief Get network execution status.
      * @return `true` if network is being executed, `false` if network is not being executed.
      */
-    bool running() const { return started_; }
+    [[nodiscard]] bool running() const { return started_; }
 
 protected:
     /**
@@ -235,7 +235,7 @@ protected:
      * @brief Get and increase the number of the  current step.
      * @return step number.
      */
-    core::messaging::Step gad_step() { return step_++; }
+    core::Step gad_step() { return step_++; }
 
 public:
     /**
@@ -251,7 +251,7 @@ private:
     std::atomic<bool> initialized_ = false;
     volatile std::atomic<bool> started_ = false;
     std::vector<std::unique_ptr<Device>> devices_;
-    core::messaging::Step step_ = 0;
+    core::Step step_ = 0;
 };
 
 }  // namespace knp::core

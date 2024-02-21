@@ -39,7 +39,7 @@ TEST(FrameworkSuite, ModelExecutorLoad)
     model.add_input_channel(i_channel_uid, input_uid);
     model.add_output_channel(o_channel_uid, output_uid);
 
-    auto input_gen = [](knp::core::messaging::Step step) -> knp::core::messaging::SpikeData
+    auto input_gen = [](knp::core::Step step) -> knp::core::messaging::SpikeData
     {
         if (step % 5 == 0)
         {
@@ -56,7 +56,7 @@ TEST(FrameworkSuite, ModelExecutorLoad)
 
     me.start([](size_t step) { return step < 20; });
 
-    std::vector<knp::core::messaging::Step> results;
+    std::vector<knp::core::Step> results;
     const auto &spikes = out_channel.update();
     results.reserve(spikes.size());
 
@@ -64,6 +64,6 @@ TEST(FrameworkSuite, ModelExecutorLoad)
         spikes.cbegin(), spikes.cend(), std::back_inserter(results),
         [](const auto &spike_msg) { return spike_msg.header_.send_time_; });
     // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
-    const std::vector<knp::core::messaging::Step> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
+    const std::vector<knp::core::Step> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
     ASSERT_EQ(results, expected_results);
 }

@@ -60,11 +60,11 @@ TEST(MultiThreadCpuSuite, SmallestNetwork)
     backend.subscribe<knp::core::messaging::SpikeMessage>(input_uid, {in_channel_uid});
     endpoint.subscribe<knp::core::messaging::SpikeMessage>(out_channel_uid, {population.get_uid()});
 
-    std::vector<knp::core::messaging::Step> results;
+    std::vector<knp::core::Step> results;
 
     backend.init();
 
-    for (knp::core::messaging::Step step = 0; step < 20; ++step)
+    for (knp::core::Step step = 0; step < 20; ++step)
     {
         // Send inputs on steps 0, 5, 10, 15.
         if (step % 5 == 0)
@@ -80,7 +80,7 @@ TEST(MultiThreadCpuSuite, SmallestNetwork)
     }
 
     // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop).
-    const std::vector<knp::core::messaging::Step> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
+    const std::vector<knp::core::Step> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
     ASSERT_EQ(results, expected_results);
 }
 

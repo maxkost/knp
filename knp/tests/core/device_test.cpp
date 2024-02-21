@@ -20,11 +20,16 @@ TEST(DeviceTestSuite, BackendDevicesTest)
 {
     knp::backends::single_threaded_cpu::SingleThreadedCPUBackend backend;
 
-    backend.get_current_devices();
+    auto &devices = backend.get_current_devices();
 
     std::set<knp::core::UID> dus;
 
     backend.select_devices(dus);
+
+    for (auto &d : devices)
+    {
+        std::cout << d->get_name() << std::endl;
+    }
 
     // std::cout << device.get_name() << std::endl;
 }

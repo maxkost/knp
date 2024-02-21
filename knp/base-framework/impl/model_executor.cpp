@@ -108,14 +108,14 @@ const output::OutputChannel &ModelExecutor::get_output_channel(const core::UID &
 
 void ModelExecutor::start()
 {
-    start([](knp::core::messaging::Step) { return true; });
+    start([](knp::core::Step) { return true; });
 }
 
 
 void ModelExecutor::start(core::Backend::RunPredicate run_predicate)
 {
     backend_->start(
-        [this, run_predicate](knp::core::messaging::Step step)
+        [this, run_predicate](knp::core::Step step)
         {
             for (auto &i_ch : in_channels_)
             {
@@ -123,7 +123,7 @@ void ModelExecutor::start(core::Backend::RunPredicate run_predicate)
             }
             return run_predicate(step);
         },
-        [this](knp::core::messaging::Step)
+        [this](knp::core::Step)
         {
             for (auto &o_ch : out_channels_)
             {

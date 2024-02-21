@@ -9,13 +9,13 @@
 
 namespace knp::framework::output
 {
-auto comp_lower(const core::messaging::SpikeMessage &message, core::messaging::Step step)
+auto comp_lower(const core::messaging::SpikeMessage &message, core::Step step)
 {
     return message.header_.send_time_ < step;
 }
 
 
-auto comp_upper(core::messaging::Step step, const core::messaging::SpikeMessage &message)
+auto comp_upper(core::Step step, const core::messaging::SpikeMessage &message)
 {
     return step < message.header_.send_time_;
 }
@@ -38,7 +38,7 @@ std::vector<core::messaging::SpikeMessage> OutputChannel::update()
 
 
 std::vector<core::messaging::SpikeMessage> OutputChannel::read_some_from_buffer(
-    core::messaging::Step starting_step, core::messaging::Step final_step)
+    core::Step starting_step, core::Step final_step)
 {
     std::vector<core::messaging::SpikeMessage> result;
 

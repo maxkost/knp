@@ -67,4 +67,9 @@ struct BaseData
     TagMap tags_;
 };
 
+/**
+ * @brief Type used to store a step number in the form of a 64-bit unsigned integer.
+ */
+using Step = uint64_t;
+
 }  // namespace knp::core
