@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <cinttypes>
 #include <numeric>
 
 #include "output_types.h"
