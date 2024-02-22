@@ -6,6 +6,7 @@
  */
 #pragma once
 
+#include <knp/core/backend.h>
 #include <knp/core/device.h>
 #include <knp/core/message_bus.h>
 #include <knp/core/message_endpoint.h>
@@ -34,12 +35,14 @@ struct function_traits : public function_traits<decltype(&F::operator())>
 {
 };
 
+
 template <typename R, typename C, typename... Args>
 struct function_traits<R (C::*)(Args...) const>
 {
     using function_type = std::function<R(Args...)>;
 };
 }  // namespace detail
+
 
 template <typename F>
 using function_type_t = typename detail::function_traits<F>::function_type;

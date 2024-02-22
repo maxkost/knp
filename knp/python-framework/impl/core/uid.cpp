@@ -5,96 +5,17 @@
  * @date 05.02.2024
  */
 
-#include <boost/uuid/nil_generator.hpp>
-#include <boost/uuid/string_generator.hpp>
-#include <boost/uuid/uuid_io.hpp>
+#include "uid.h"
 
 #include "common.h"
 
 
 #if defined(_KNP_IN_CORE)
 
-/*
-namespace
-{
+py_uuid_UUID = py::import("uuid").attr("UUID");
 
-boost::uuids::nil_generator nil_gen;
-boost::uuids::string_generator parse_uuid;
-
-struct boost_uuid_to_python
-{
-    static PyObject* convert(boost::uuids::uuid const& uuid)
-    {
-        std::string s(boost::uuids::to_string(uuid));
-        PyObject* result = PyString_FromStringAndSize(s.data(), static_cast<Py_ssize_t>(s.length()));
-        Py_INCREF(result);
-
-        return result;
-    }
-};
-}
-
-
-struct boost_uuid_from_python
-{
-    boost_uuid_from_python()
-    {
-        py::converter::registry::push_back(&convertible, &construct, py::type_id<boost::uuids::uuid>());
-    }
-
-    static void* convertible(PyObject* obj)
-    {
-        if (obj == Py_None || PyUnicode_Check(obj) || PyString_Check(obj)) return obj;
-        return nullptr;
-    }
-
-    static void construct(PyObject* obj, py::converter::rvalue_from_python_stage1_data* data)
-    {
-        typedef py::converter::rvalue_from_python_storage<boost::uuids::uuid> storage_type;
-
-        boost::uuids::uuid uuid;
-
-        if (Py_None == obj) uuid = nil_gen();
-        else
-        {
-            PyObject* str = nullptr;
-            const char* value = "";
-
-            if (PyUnicode_Check(obj))
-            {
-                str = PyUnicode_AsUTF8String(obj);
-                if (!str) python::throw_error_already_set();
-                obj = str;
-            }
-
-            value = PyString_AsString(obj);
-            Py_XDECREF(str);
-            if (!value) py::throw_error_already_set();
-
-            try
-            {
-                uuid = parse_uuid(value);
-            }
-            catch (const std::runtime_error& e)
-            {
-                PyErr_SetString(PyExc_ValueError, "Invalid UUID value.");
-                py::throw_error_already_set();
-            }
-        }
-
-        void* storage = reinterpret_cast<storage_type*>(data)->storage.bytes;
-        new (storage) boost::uuids::uuid(uuid);
-        data->convertible = storage;
-    }
-};
-}
-
-void exportUUUID()
-{
-    py::to_python_converter<boost::uuids::uuid, boost_uuid_to_python>();
-    uuid_from_python();
-}
-*/
+py::to_python_converter<boost::uuids::uuid, uid_into_python>();
+uid_from_python();
 
 py::class_<core::continuously_uid_generator>("continuously_uid_generator", "UID generator for entities.");
 
