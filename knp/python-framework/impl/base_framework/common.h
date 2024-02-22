@@ -8,8 +8,11 @@
 
 #include <knp/framework/backend_loader.h>
 
+#include <string>
+
 #include <boost/python.hpp>
 #include <boost/python/implicit.hpp>
 
 
 namespace py = boost::python;
+namespace cpp_framework = knp::framework;
