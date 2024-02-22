@@ -35,6 +35,8 @@ BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
 
     py::class_<core::BaseData>("BaseData", "Common parameters for several different entities.");
 
+    py::implicitly_convertible<core::UID, boost::uuids::uuid>();
+
     // py::to_python_converter<std::optional<int>, to_python_optional<int>>();
     //    Py_Initialize();
 
