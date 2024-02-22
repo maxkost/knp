@@ -14,6 +14,7 @@
 #include "optional_converter.h"
 #include "population.h"
 #include "projection.h"
+#include "tuple_converter.h"
 #include "uid.h"
 
 // knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>

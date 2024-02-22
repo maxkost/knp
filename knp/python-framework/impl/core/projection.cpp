@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "common.h"
+#include "tuple_converter.h"
 
 
 //  "Construct an empty projection.")
@@ -22,6 +23,7 @@
 namespace st = knp::synapse_traits;
 
 #    define INSTANCE_PY_PROJECTIONS(n, template_for_instance, synapse_type)                                            \
+        py::register_tuple<typename core::Projection<st::synapse_type>::Synapse>();                                    \
         py::class_<core::Projection<st::synapse_type>>(                                                                \
             BOOST_PP_STRINGIZE(                                             \
                 BOOST_PP_CAT(synapse_type, Projection)),                                                               \

@@ -14,6 +14,8 @@
 #include <optional>
 #include <tuple>
 
+#include <boost/python/tuple.hpp>
+
 #include "common.h"
 
 
@@ -29,7 +31,8 @@ struct ProjectionGeneratorProxy
         {
             return std::nullopt;
         }
-        return *reinterpret_cast<typename core::Projection<ElemParametersType>::Synapse *>(res.ptr());
+
+        return py::extract<typename core::Projection<ElemParametersType>::Synapse>(res);
     }
 
     const py::object &gen_func_;
