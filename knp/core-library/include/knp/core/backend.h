@@ -181,12 +181,6 @@ public:
     void stop();
 
     /**
-     * @brief Make one network execution step.
-     * @details You can use this method for debugging purposes.
-     */
-    virtual void _step() = 0;
-
-    /**
      * @brief Get current step.
      * @return step number.
      */
@@ -209,6 +203,23 @@ public:
      */
     [[nodiscard]] bool running() const { return started_; }
 
+public:
+    /**
+     * @brief Initialize backend before starting network execution.
+     */
+    virtual void _init() = 0;
+
+    /**
+     * @brief Make one network execution step.
+     * @details You can use this method for debugging purposes.
+     */
+    virtual void _step() = 0;
+
+    /**
+     * @brief Set backend to the uninitialized state.
+     */
+    virtual void _uninit();
+
 protected:
     /**
      * @brief Backend default constructor.
@@ -220,16 +231,6 @@ protected:
      * @param message_bus message bus.
      */
     explicit Backend(MessageBus &&message_bus) : message_bus_(std::move(message_bus)) {}
-
-    /**
-     * @brief Initialize backend before starting network execution.
-     */
-    virtual void init() = 0;
-
-    /**
-     * @brief Set backend to the uninitialized state.
-     */
-    void uninit();
 
     /**
      * @brief Get and increase the number of the  current step.

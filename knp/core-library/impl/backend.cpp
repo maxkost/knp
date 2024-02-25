@@ -108,7 +108,7 @@ void Backend::stop()
 }
 
 
-void Backend::uninit()
+void Backend::_uninit()
 {
     if (!initialized_) return;
     stop();
