@@ -69,18 +69,42 @@ struct BackendWrapper : core::Backend, py::wrapper<core::Backend>
         return this->get_override("get_message_endpoint")();
     }
     core::MessageEndpoint &get_message_endpoint() override { return this->get_override("get_message_endpoint")(); }
-    void step() override { this->get_override("step")(); }
     void stop_learning() override { this->get_override("stop_learning")(); }
     void start_learning() override { this->get_override("start_learning")(); }
-    void init() override { this->get_override("init")(); }
+    void _step() override { this->get_override("step")(); }
+    void _init() override { this->get_override("init")(); }
 };
+
+
+// py::class_<std::vector<core::AllPopulationsVariant>>("AllPopulations")
+//     .def(py::vector_indexing_suite<std::vector<core::AllPopulationsVariant>>() );
+
+// py::class_<std::vector<core::AllProjectionsVariant>>("AllProjections")
+//     .def(py::vector_indexing_suite<std::vector<core::AllProjectionsVariant>>() );
 
 
 // Abstract class
 py::class_<BackendWrapper, boost::noncopyable>(
     "Backend", "The Backend class is the base class for backends.", py::no_init)
+    .def(
+        "load_all_populations",
+        make_handler(
+            [](core::Backend &b, const py::list &l)
+            {
+                using PT = core::AllPopulationsVariant;
+                b.load_all_populations(std::vector<PT>(py::stl_input_iterator<PT>(l), py::stl_input_iterator<PT>()));
+            }),
+        "Add populations to backend.")
+    .def(
+        "load_all_projections",
+        make_handler(
+            [](core::Backend &b, const py::list &l)
+            {
+                using PT = core::AllProjectionsVariant;
+                b.load_all_projections(std::vector<PT>(py::stl_input_iterator<PT>(l), py::stl_input_iterator<PT>()));
+            }),
+        "Add projections to backend.")
     .def("load_all_projections", py::pure_virtual(&core::Backend::load_all_projections), "Add projections to backend.")
-    .def("load_all_populations", py::pure_virtual(&core::Backend::load_all_populations), "Add populations to backend.")
     .def(
         "remove_projections", py::pure_virtual(&core::Backend::remove_projections),
         "Remove projections with given UIDs from the backend.")
@@ -136,10 +160,11 @@ py::class_<BackendWrapper, boost::noncopyable>(
             }),
         "Start network execution on the backend.")
     .def("stop", &core::Backend::stop, "Stop network execution on the backend.")
-    .def("step", &core::Backend::step, "Make one network execution step.")
     .def("get_step", &core::Backend::get_step, "Get current step.")
     .def("stop_learning", &core::Backend::stop_learning, "Stop learning.")
     .def("start_learning", &core::Backend::start_learning, "Restart learning.")
+    .def("_init", &core::Backend::_init, "Initialize backend before starting network execution.")
+    .def("_step", &core::Backend::_step, "Make one network execution step.")
     .add_property("uid", make_handler([](core::Backend &b) { return b.get_uid(); }), "Get backend UID.")
     .add_property("running", &core::Backend::running, "Get network execution status.");
 

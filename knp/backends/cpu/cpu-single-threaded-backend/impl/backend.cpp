@@ -179,7 +179,7 @@ std::vector<std::unique_ptr<knp::core::Device>> SingleThreadedCPUBackend::get_de
 }
 
 
-void SingleThreadedCPUBackend::init()
+void SingleThreadedCPUBackend::_init()
 {
     SPDLOG_DEBUG("Initializing single-threaded CPU backend...");
 

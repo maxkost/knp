@@ -28,7 +28,7 @@ class STestingBack : public knp::backends::single_threaded_cpu::SingleThreadedCP
 {
 public:
     STestingBack() = default;
-    void init() override { knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::init(); }
+    void _init() override { knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::_init(); }
 };
 
 }  // namespace knp::testing
@@ -51,7 +51,7 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
     backend.load_populations({population});
     backend.load_projections({input_projection, loop_projection});
 
-    backend.init();
+    backend._init();
     auto endpoint = backend.message_bus_.create_endpoint();
 
     knp::core::UID in_channel_uid;
@@ -124,7 +124,7 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
     backend.load_populations({population});
     backend.load_projections({input_projection, loop_projection});
 
-    backend.init();
+    backend._init();
     auto endpoint = backend.message_bus_.create_endpoint();
 
     knp::core::UID in_channel_uid;
@@ -223,7 +223,7 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
     backend.load_populations({population});
     backend.load_projections({input_projection, loop_projection});
 
-    backend.init();
+    backend._init();
     backend.start_learning();
     auto endpoint = backend.message_bus_.create_endpoint();
 

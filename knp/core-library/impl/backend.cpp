@@ -29,7 +29,7 @@ void Backend::pre_start()
 
     if (!initialized_)
     {
-        init();
+        _init();
         initialized_ = true;
     }
 

@@ -343,9 +343,9 @@ public:
 
 protected:
     /**
-     * @copydoc knp::core::Backend::init()
+     * @copydoc knp::core::Backend::_init()
      */
-    void init() override;
+    void _init() override;
 
 private:
     // Calculating pre-message neuron state, one thread per population_part_size_ neurons or less.

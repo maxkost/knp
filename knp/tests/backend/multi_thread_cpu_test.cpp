@@ -28,7 +28,7 @@ class MTestingBack : public knp::backends::multi_threaded_cpu::MultiThreadedCPUB
 {
 public:
     MTestingBack() = default;
-    void init() override { knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::init(); }
+    void _init() override { knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::_init(); }
 };
 
 }  // namespace knp::testing
@@ -62,7 +62,7 @@ TEST(MultiThreadCpuSuite, SmallestNetwork)
 
     std::vector<knp::core::Step> results;
 
-    backend.init();
+    backend._init();
 
     for (knp::core::Step step = 0; step < 20; ++step)
     {

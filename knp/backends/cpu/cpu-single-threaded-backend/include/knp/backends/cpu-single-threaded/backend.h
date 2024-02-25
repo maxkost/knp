@@ -307,9 +307,9 @@ public:
 
 protected:
     /**
-     * @copydoc knp::core::Backend::init()
+     * @copydoc knp::core::Backend::_init()
      */
-    void init() override;
+    void _init() override;
 
     /**
      * @brief Calculate population of BLIFAT neurons.
