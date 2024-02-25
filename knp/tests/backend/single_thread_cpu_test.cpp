@@ -71,7 +71,7 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
             knp::core::messaging::SpikeMessage message{{in_channel_uid, 0}, {0}};
             endpoint.send_message(message);
         }
-        backend.step();
+        backend._step();
         endpoint.receive_all_messages();
         auto output = endpoint.unload_messages<knp::core::messaging::SpikeMessage>(out_channel_uid);
         // Write up the steps where the network sends a spike
@@ -144,7 +144,7 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
             knp::core::messaging::SpikeMessage message{{in_channel_uid, 0}, {0}};
             endpoint.send_message(message);
         }
-        backend.step();
+        backend._step();
         endpoint.receive_all_messages();
         auto output = endpoint.unload_messages<knp::core::messaging::SpikeMessage>(out_channel_uid);
         // Write up the steps where the network sends a spike
@@ -244,7 +244,7 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
             knp::core::messaging::SpikeMessage message{{in_channel_uid, 0}, {0}};
             endpoint.send_message(message);
         }
-        backend.step();
+        backend._step();
         endpoint.receive_all_messages();
         auto output = endpoint.unload_messages<knp::core::messaging::SpikeMessage>(out_channel_uid);
         // Write up the steps where the network sends a spike

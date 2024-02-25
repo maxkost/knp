@@ -72,7 +72,7 @@ SupportedVariants convert_variant(const AllVariants &input)
 }
 
 
-void SingleThreadedCPUBackend::step()
+void SingleThreadedCPUBackend::_step()
 {
     SPDLOG_DEBUG("Starting step #{}", get_step());
     message_bus_.route_messages();

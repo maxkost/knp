@@ -184,7 +184,7 @@ public:
      * @brief Make one network execution step.
      * @details You can use this method for debugging purposes.
      */
-    virtual void step() = 0;
+    virtual void _step() = 0;
 
     /**
      * @brief Get current step.

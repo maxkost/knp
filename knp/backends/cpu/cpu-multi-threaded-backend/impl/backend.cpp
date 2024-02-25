@@ -227,7 +227,7 @@ std::vector<size_t> MultiThreadedCPUBackend::get_supported_population_indexes() 
 }
 
 
-void MultiThreadedCPUBackend::step()
+void MultiThreadedCPUBackend::_step()
 {
     SPDLOG_DEBUG("Starting step #{}.", get_step());
     calculate_populations();

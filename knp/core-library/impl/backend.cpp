@@ -45,7 +45,7 @@ void Backend::start()
     {
         while (running())
         {
-            step();
+            _step();
         }
     }
     catch (...)
@@ -65,7 +65,7 @@ void Backend::start(RunPredicate run_predicate)
     {
         while (running() && run_predicate(step_))
         {
-            step();
+            _step();
         }
     }
     catch (...)
@@ -86,7 +86,7 @@ void Backend::start(RunPredicate pre_step, RunPredicate post_step)
         while (running())
         {
             if (pre_step && !pre_step(step_)) break;
-            step();
+            _step();
             if (post_step && !post_step(step_)) break;
         }
     }

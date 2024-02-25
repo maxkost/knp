@@ -99,7 +99,7 @@ public:
 
     /**
      * @todo Make custom iterators.
-     */ 
+     */
 
     /**
      * @brief Types of population iterators.
@@ -212,7 +212,7 @@ public:
 
     /**
      * @todo Make iterator which returns projections, but not a wrapper.
-     */ 
+     */
     /**
      * @brief Get an iterator pointing to the first element of the projection loaded to backend.
      * @return projection iterator.
@@ -257,9 +257,9 @@ public:
 
 public:
     /**
-     * @copydoc knp::core::Backend::step()
+     * @copydoc knp::core::Backend::_step()
      */
-    void step() override;
+    void _step() override;
 
     /**
      * @brief Subscribe internal endpoint to messages.
@@ -298,8 +298,9 @@ public:
     void start_learning() override
     {
         /**
-         * @todo Probably only need to use `start_learning` for some of projections: the ones that were locked with `lock()`.
-         */ 
+         * @todo Probably only need to use `start_learning` for some of projections: the ones that were locked with
+         * `lock()`.
+         */
         for (ProjectionWrapper &wrapper : projections_)
             std::visit([](auto &entity) { entity.unlock_weights(); }, wrapper.arg_);
     }
