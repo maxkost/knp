@@ -24,6 +24,7 @@
 #include <vector>
 
 #include <boost/mp11.hpp>
+#include <boost/noncopyable.hpp>
 
 /**
  * @brief Namespace for message bus implementations.
@@ -43,7 +44,7 @@ namespace knp::core
  * @brief The MessageEndpoint class is a definition of message endpoints.
  * @details You can use message endpoints to receive or send messages.
  */
-class MessageEndpoint
+class MessageEndpoint : private boost::noncopyable
 {
 public:
     /**
@@ -94,8 +95,8 @@ public:
     MessageEndpoint(MessageEndpoint &&endpoint);
 
     /**
-     * @brief Default copy operator.
-     * @param endpoint endpoint to copy.
+     * @brief Default move operator.
+     * @param endpoint endpoint to move.
      */
     MessageEndpoint &operator=(MessageEndpoint &&endpoint) = default;
 

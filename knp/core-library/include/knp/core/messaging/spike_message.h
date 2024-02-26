@@ -48,9 +48,16 @@ struct SpikeMessage
 
     /**
      * @todo Maybe add operator `[]` and others to be able to use templates for message processing.
-     */ 
+     */
 };
 
+
+/**
+ * @brief Send spiking neurons indexes to an output stream.
+ * @param stream output stream.
+ * @param spikes indexes vector.
+ */
+std::ostream &operator<<(std::ostream &stream, const core::messaging::SpikeData &spikes);
 
 /**
  * @brief Send spike message to an output stream.
