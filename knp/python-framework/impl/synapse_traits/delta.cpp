@@ -26,11 +26,11 @@ using ds_params = knp::synapse_traits::synapse_parameters<knp::synapse_traits::D
 py::class_<ds_params>("DeltaSynapseParameters", "Structure for BLIFAT neuron parameters")
     .def(py::init<>())
     .def(py::init<float, uint32_t, knp::synapse_traits::OutputType>())
-    .def_readwrite("weight", &ds_params::weight_, "Synaptic weight.")
-    .def_readwrite(
+    .add_property("weight", &ds_params::weight_, "Synaptic weight.")
+    .add_property(
         "delay", &ds_params::delay_,
         "Synaptic delay. Delay of `N` means that a spike sent on step `X` will be received on step `X + N`.")
-    .def_readwrite(
+    .add_property(
         "output_type", &ds_params::output_type_,
         "Synapse type. Various types have different influences on neuron parameters, as defined by neuron function.");
 

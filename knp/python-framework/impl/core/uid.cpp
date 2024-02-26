@@ -52,4 +52,6 @@ py::class_<core::UID>("UID", "The UID class is a definition of unique identifier
 py::class_<core::uid_hash>("uid_hash", "UID hash functor type.")
     .def("operator()", &core::uid_hash::operator(), "Get a hash value of the specified UID.");
 
+// py::class_<std::vector<core::UID>>("UIDs").def(py::vector_indexing_suite<core::UID>());
+
 #endif
