@@ -20,9 +20,11 @@
 #include <knp/core/uid.h>
 
 #include <sstream>
+#include <vector>
 
 #include <boost/python.hpp>
 #include <boost/python/implicit.hpp>
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
 
 namespace py = boost::python;
@@ -66,4 +68,11 @@ template <typename F>
 py::object make_handler(F func)
 {
     return make_handler(to_function(func));
+}
+
+
+template <typename T>
+std::vector<T> py_iterable_to_vector(const py::object &iterable)
+{
+    return std::vector<T>(py::stl_input_iterator<T>(iterable), py::stl_input_iterator<T>());
 }
