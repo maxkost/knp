@@ -4,27 +4,44 @@
  * @author Artiom N.
  * @date 01.02.2024
  */
+
+#include <knp/core/subscription.h>
+
+#include "common.h"
+
 #if defined(_KNP_IN_CORE)
-/*
-py::class_<core::Subscription>(
-    "Subscription", "The Subscription class is used for message exchange between the network entities.")
-    .def(py::init<core::UID, std::vector<core::UID>>(), "Subscription constructor.")
-    .def("remove_sender", &core::Subscription::remove_sender, "Unsubscribe from a sender.")
-    .def("add_sender", &core::Subscription::add_sender, "Add a sender with the given UID to the subscription.")
-    .def("add_senders", &core::Subscription::add_senders, "Add several senders to the subscription.")
-    .def("has_sender", &core::Subscription::has_sender, "Check if a sender with the given UID exists.")
-    .def(
-        "add_message", (void(core::Subscription::*)(core::MessageType)) & core::Subscription::add_message,
-        "Add a message to the subscription.")
-    .def("add_message", &core::Subscription::add_message, "Add a message to the subscription.")
-    .def(
-        "add_message", (void(core::Subscription::*)(MessageType)) & core::Subscription::add_message,
-        "Add a message to the subscription.")
-    .def("add_message", &core::Subscription::add_message, "Add a message to the subscription.")
-    .def(
-        "get_messages", (core::MessageContainerType(core::Subscription::*)()) & core::Subscription::get_messages, "Get
-all messages.") .def( "get_messages", (core::MessageContainerType(core::Subscription::*)()) &
-core::Subscription::get_messages, "Get all messages.");
-*/
+
+namespace cm = knp::core::messaging;
+
+#    define INSTANCE_PY_SUBSCRIPTION(n, template_for_instance, message_type)                                        \
+        py::class_<core::Subscription<cm::message_type>>(                                                           \
+            BOOST_PP_STRINGIZE(BOOST_PP_CAT(message_type, Subscription)),                                           \
+                               "The Subscription class is used for message exchange between the network entities.", \
+                               py::no_init)                                                                         \
+                .def(                                                                                               \
+                    "remove_sender", &core::Subscription<cm::message_type>::remove_sender,                          \
+                    "Unsubscribe from a sender.")                                                                   \
+                .def(                                                                                               \
+                    "add_sender", &core::Subscription<cm::message_type>::add_sender,                                \
+                    "Add a sender with the given UID to the subscription.")                                         \
+                .def(                                                                                               \
+                    "add_senders", &core::Subscription<cm::message_type>::add_senders,                              \
+                    "Add several senders to the subscription.")                                                     \
+                .def(                                                                                               \
+                    "has_sender", &core::Subscription<cm::message_type>::has_sender,                                \
+                    "Check if a sender with the given UID exists.")                                                 \
+                .def(                                                                                               \
+                    "add_message",                                                                                  \
+                    static_cast<void (core::Subscription<cm::message_type>::*)(const cm::message_type&)>(           \
+                        &core::Subscription<cm::message_type>::add_message),                                        \
+                    "Add a message to the subscription.");
+//    .def(
+//        "get_messages",
+//        static_cast<core::Subscription<cm::message_type>::MessageContainerType(core::Subscription<cm::message_type>::*)()>(&core::Subscription<cm::message_type>::get_messages),
+//        "Get all messages.")
+
+
+// cppcheck-suppress unknownMacro
+BOOST_PP_SEQ_FOR_EACH(INSTANCE_PY_SUBSCRIPTION, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES))
 
 #endif

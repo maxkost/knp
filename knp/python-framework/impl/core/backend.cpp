@@ -4,6 +4,10 @@
  * @author Artiom N.
  * @date 01.02.2024
  */
+
+#include "common.h"
+
+
 #if defined(_KNP_IN_CORE)
 
 struct BackendWrapper : core::Backend, py::wrapper<core::Backend>

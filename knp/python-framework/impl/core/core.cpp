@@ -26,6 +26,19 @@
 //     return py::object();
 // }
 
+std::string get_py_class_name(const py::object &obj_class)
+{
+    const std::string class_name = boost::python::extract<std::string>(obj_class.attr("__class__").attr("__name__"));
+    if (class_name != "class")
+    {
+        PyErr_SetString(PyExc_TypeError, "Passed object is not a class!");
+        py::throw_error_already_set();
+        throw std::runtime_error("Not a class");
+    }
+
+    return boost::python::extract<std::string>(obj_class.attr("__name__"));
+}
+
 
 BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
 {
