@@ -18,7 +18,14 @@
 template <typename ElemParametersType>
 struct PopulationGeneratorProxy
 {
-    explicit PopulationGeneratorProxy(const py::object &gen_func) : gen_func_(gen_func) {}
+    explicit PopulationGeneratorProxy(const py::object &gen_func) : gen_func_(gen_func)
+    {
+        if (!PyCallable_Check(gen_func.ptr()))
+        {
+            PyErr_SetString(PyExc_TypeError, "Passed generator is not callable!");
+            py::throw_error_already_set();
+        }
+    }
 
     std::optional<ElemParametersType> operator()(size_t index)
     {

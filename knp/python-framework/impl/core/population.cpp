@@ -9,6 +9,8 @@
 
 #include <vector>
 
+#include <boost/mp11.hpp>
+
 #include "common.h"
 
 
@@ -40,6 +42,7 @@
 namespace nt = knp::neuron_traits;
 
 #    define INSTANCE_PY_POPULATIONS(n, template_for_instance, neuron_type)                                             \
+        py::implicitly_convertible<core::Population<nt::neuron_type>, core::AllPopulationsVariant>();                  \
         py::class_<core::Population<nt::neuron_type>>(                                                                 \
             BOOST_PP_STRINGIZE(BOOST_PP_CAT(neuron_type, Population)),                                                 \
                                "The Population class is a container of neurons of the same model.", py::no_init)       \
@@ -70,7 +73,10 @@ namespace nt = knp::neuron_traits;
                         static_cast<std::vector<core::Population<nt::neuron_type>::NeuronParameters>::iterator (       \
                             core::Population<nt::neuron_type>::*)()>(&core::Population<nt::neuron_type>::end)),        \
                     "Get an iterator of the population.")                                                              \
-                .def("__len__", &core::Population<nt::neuron_type>::size);
+                .def("__len__", &core::Population<nt::neuron_type>::size)                                              \
+                .add_property(                                                                                         \
+                    "uid", make_handler([](core::Population<nt::neuron_type> &p) { return p.get_uid(); }),             \
+                    "Get population UID.");
 
 // cppcheck-suppress unknownMacro
 BOOST_PP_SEQ_FOR_EACH(INSTANCE_PY_POPULATIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_NEURONS))
