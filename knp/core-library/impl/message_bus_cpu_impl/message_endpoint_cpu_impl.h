@@ -7,6 +7,7 @@
 #pragma once
 
 #include <message_endpoint_impl.h>
+#include <spdlog/spdlog.h>
 
 #include <algorithm>
 #include <mutex>
@@ -32,6 +33,7 @@ public:
     {
         std::lock_guard lock(mutex_);
         messages_to_send_.push_back(message);
+        SPDLOG_TRACE("Message was sent, type index = {}", message.index());
     }
 
     ~MessageEndpointCPUImpl() = default;

@@ -235,8 +235,7 @@ void MultiThreadedCPUBackend::_step()
     calculate_projections();
     message_bus_.route_messages();
     get_message_endpoint().receive_all_messages();
-    gad_step();
-    SPDLOG_DEBUG("Step #{} finished.", get_step());
+    SPDLOG_DEBUG("Step #{} finished.", gad_step());
 }
 
 

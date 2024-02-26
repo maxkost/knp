@@ -115,7 +115,11 @@ bool MessageEndpoint::receive_message()
     SPDLOG_DEBUG("Receiving message...");
 
     auto message_opt = impl_->receive_message();
-    if (!message_opt.has_value()) return false;
+    if (!message_opt.has_value())
+    {
+        SPDLOG_TRACE("Empty message");
+        return false;
+    }
     auto &message = message_opt.value();
     const UID &sender_uid = get_header(message).sender_uid_;
     const size_t type_index = message.index();
