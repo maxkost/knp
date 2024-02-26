@@ -13,6 +13,13 @@
 namespace knp::core::messaging
 {
 
+bool operator==(const SpikeMessage &sm1, const SpikeMessage &sm2)
+{
+    return sm1.header_.send_time_ == sm2.header_.send_time_ && sm1.header_.sender_uid_ == sm2.header_.sender_uid_ &&
+           sm1.neuron_indexes_ == sm2.neuron_indexes_;
+}
+
+
 std::ostream &operator<<(std::ostream &stream, const core::messaging::SpikeData &spikes)
 {
     for (const auto &spike : spikes)

@@ -53,6 +53,15 @@ struct SpikeMessage
 
 
 /**
+ * @brief Equality operator for the spike messages.
+ * @param sm1 first message.
+ * @param sm2 second message.
+ * @return equality.
+ */
+bool operator==(const SpikeMessage &sm1, const SpikeMessage &sm2);
+
+
+/**
  * @brief Send spiking neurons indexes to an output stream.
  * @param stream output stream.
  * @param spikes indexes vector.
