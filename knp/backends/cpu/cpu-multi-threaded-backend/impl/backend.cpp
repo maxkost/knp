@@ -243,7 +243,7 @@ void MultiThreadedCPUBackend::_step()
 
 void MultiThreadedCPUBackend::load_populations(const std::vector<PopulationVariants> &populations)
 {
-    SPDLOG_DEBUG("Loading populations");
+    SPDLOG_DEBUG("Loading populations [{}]", populations.size());
     populations_.clear();
     populations_.reserve(populations.size());
 
@@ -254,7 +254,7 @@ void MultiThreadedCPUBackend::load_populations(const std::vector<PopulationVaria
 
 void MultiThreadedCPUBackend::load_projections(const std::vector<ProjectionVariants> &projections)
 {
-    SPDLOG_DEBUG("Loading projections");
+    SPDLOG_DEBUG("Loading populations [{}]", projections.size());
     projections_.clear();
     projections_.reserve(projections.size());
 
@@ -269,7 +269,7 @@ void MultiThreadedCPUBackend::load_projections(const std::vector<ProjectionVaria
 
 void MultiThreadedCPUBackend::load_all_projections(const std::vector<knp::core::AllProjectionsVariant> &projections)
 {
-    SPDLOG_DEBUG("Loading all projections");
+    SPDLOG_DEBUG("Loading projections [{}]", projections.size());
     knp::meta::load_from_container<SupportedProjections>(projections, projections_);
     SPDLOG_DEBUG("All projections loaded");
 }
@@ -277,7 +277,7 @@ void MultiThreadedCPUBackend::load_all_projections(const std::vector<knp::core::
 
 void MultiThreadedCPUBackend::load_all_populations(const std::vector<knp::core::AllPopulationsVariant> &populations)
 {
-    SPDLOG_DEBUG("Loading all populations");
+    SPDLOG_DEBUG("Loading populations [{}]", populations.size());
     knp::meta::load_from_container<SupportedPopulations>(populations, populations_);
     SPDLOG_DEBUG("All populations loaded");
 }

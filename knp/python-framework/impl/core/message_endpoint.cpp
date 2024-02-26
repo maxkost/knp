@@ -27,8 +27,20 @@ py::class_<core::MessageEndpoint, std::shared_ptr<core::MessageEndpoint>, boost:
     .def(
         "subscribe",
         make_handler(
-            [](core::MessageEndpoint &self, const core::messaging::SpikeMessage &, const core::UID &receiver,
-               const py::list &senders) -> core::Subscription<core::messaging::SpikeMessage> & {
+            [](core::MessageEndpoint &self, const py::object &msg_class, const core::UID &receiver,
+               const py::list &senders) -> core::Subscription<core::messaging::SpikeMessage> &
+            {
+                auto class_obj_name = get_py_class_name(msg_class);
+
+                SPDLOG_TRACE("Message class name: {}", class_obj_name);
+
+                if (class_obj_name != "SpikeMessage")
+                {
+                    PyErr_SetString(PyExc_TypeError, "Passed object is not message class!");
+                    py::throw_error_already_set();
+                    return;
+                }
+
                 return self.subscribe<knp::core::messaging::SpikeMessage>(
                     receiver, py_iterable_to_vector<core::UID>(senders));
             }),

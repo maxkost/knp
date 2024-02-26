@@ -20,7 +20,10 @@
 #include <knp/core/synaptic_index.h>
 #include <knp/core/uid.h>
 
+#include <spdlog/spdlog.h>
+
 #include <sstream>
+#include <string>
 #include <vector>
 
 #include <boost/python.hpp>
@@ -77,3 +80,6 @@ std::vector<T> py_iterable_to_vector(const py::object &iterable)
 {
     return std::vector<T>(py::stl_input_iterator<T>(iterable), py::stl_input_iterator<T>());
 }
+
+
+std::string get_py_class_name(const py::object &obj_class);

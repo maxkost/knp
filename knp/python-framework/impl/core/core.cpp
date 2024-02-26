@@ -26,8 +26,11 @@
 //     return py::object();
 // }
 
+
 BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
 {
+    spdlog::set_level(static_cast<spdlog::level::level_enum>(SPDLOG_ACTIVE_LEVEL));
+
     //    py::to_python_converter<std::any, to_python_any>();
     //    from_python_any();
     py::class_<core::TagMap>("TagMap", "The TagMap class is a definition of tags used by entity and their values.")
