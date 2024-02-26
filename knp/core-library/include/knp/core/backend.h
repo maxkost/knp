@@ -145,16 +145,30 @@ public:
 
 public:
     /**
+     * @brief Subscribe internal endpoint to messages.
+     * @details The method is used to get a subscription necessary for receiving messages of the specified type.
+     * @tparam MessageType message type.
+     * @param receiver receiver UID.
+     * @param senders list of possible sender UIDs.
+     * @return subscription.
+     */
+    template <typename MessageType>
+    Subscription<MessageType> &subscribe(const UID &receiver, const std::vector<UID> &senders)
+    {
+        return message_endpoint_.subscribe<MessageType>(receiver, senders);
+    }
+
+    /**
      * @brief Get message endpoint.
      * @note Constant method.
      * @return message endpoint.
      */
-    [[nodiscard]] virtual const core::MessageEndpoint &get_message_endpoint() const = 0;
+    [[nodiscard]] virtual const core::MessageEndpoint &get_message_endpoint() const { return message_endpoint_; }
     /**
      * @brief Get message endpoint.
      * @return message endpoint.
      */
-    [[nodiscard]] virtual core::MessageEndpoint &get_message_endpoint() = 0;
+    [[nodiscard]] virtual core::MessageEndpoint &get_message_endpoint() { return message_endpoint_; }
 
 public:
     /**
@@ -224,13 +238,13 @@ protected:
     /**
      * @brief Backend default constructor.
      */
-    Backend() : message_bus_(knp::core::MessageBus::construct_cpu_bus()) {}
+    Backend();
 
     /**
      * @brief Backend constructor with custom message bus implementation.
      * @param message_bus message bus.
      */
-    explicit Backend(MessageBus &&message_bus) : message_bus_(std::move(message_bus)) {}
+    explicit Backend(MessageBus &&message_bus);
 
     /**
      * @brief Get and increase the number of the  current step.
@@ -252,6 +266,7 @@ private:
     std::atomic<bool> initialized_ = false;
     volatile std::atomic<bool> started_ = false;
     std::vector<std::unique_ptr<Device>> devices_;
+    core::MessageEndpoint message_endpoint_;
     core::Step step_ = 0;
 };
 

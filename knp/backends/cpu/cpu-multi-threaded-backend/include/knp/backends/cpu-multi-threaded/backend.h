@@ -283,33 +283,6 @@ public:
     void _step() override;
 
     /**
-     * @brief Subscribe internal endpoint to messages.
-     * @details The method is used to get a subscription necessary for receiving messages of the specified type.
-     * @tparam MessageType message type.
-     * @param receiver receiver UID.
-     * @param senders list of possible sender UIDs.
-     * @return subscription.
-     */
-    template <typename MessageType>
-    knp::core::Subscription<MessageType> &subscribe(
-        const knp::core::UID &receiver, const std::vector<knp::core::UID> &senders)
-    {
-        return message_endpoint_.subscribe<MessageType>(receiver, senders);
-    }
-
-    /**
-     * @brief Get message endpoint.
-     * @note Constant method.
-     * @return message endpoint.
-     */
-    [[nodiscard]] const core::MessageEndpoint &get_message_endpoint() const override { return message_endpoint_; }
-    /**
-     * @brief Get message endpoint.
-     * @return message endpoint.
-     */
-    [[nodiscard]] core::MessageEndpoint &get_message_endpoint() override { return message_endpoint_; }
-
-    /**
      * @brief Calculate all populations.
      */
     void calculate_populations();
@@ -355,11 +328,14 @@ private:
     // Calculating post input changes and outputs.
     std::vector<knp::core::messaging::SpikeMessage> calculate_populations_post_impact();
 
+    // cppcheck-suppress unusedStructMember
     PopulationContainer populations_;
+    // cppcheck-suppress unusedStructMember
     ProjectionContainer projections_;
+    // cppcheck-suppress unusedStructMember
     const size_t population_part_size_;
+    // cppcheck-suppress unusedStructMember
     const size_t projection_part_size_;
-    core::MessageEndpoint message_endpoint_;
     std::unique_ptr<cpu_executors::ThreadPool> calc_pool_;
     std::mutex ep_mutex_;
 };

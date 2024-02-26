@@ -25,7 +25,7 @@
 namespace knp::backends::single_threaded_cpu
 {
 
-SingleThreadedCPUBackend::SingleThreadedCPUBackend() : message_endpoint_{message_bus_.create_endpoint()}
+SingleThreadedCPUBackend::SingleThreadedCPUBackend()
 {
     SPDLOG_INFO("ST CPU backend instance created...");
 }
@@ -76,7 +76,7 @@ void SingleThreadedCPUBackend::_step()
 {
     SPDLOG_DEBUG("Starting step #{}", get_step());
     message_bus_.route_messages();
-    message_endpoint_.receive_all_messages();
+    get_message_endpoint().receive_all_messages();
     // Calculate populations. This is the same as inference.
     std::vector<std::optional<knp::core::messaging::SpikeMessage>> messages;
     for (auto &e : populations_)
@@ -96,7 +96,7 @@ void SingleThreadedCPUBackend::_step()
 
     // Continue inference
     message_bus_.route_messages();
-    message_endpoint_.receive_all_messages();
+    get_message_endpoint().receive_all_messages();
     // Calculate projections.
     for (auto &e : projections_)
     {
@@ -113,7 +113,7 @@ void SingleThreadedCPUBackend::_step()
     }
 
     message_bus_.route_messages();
-    message_endpoint_.receive_all_messages();
+    get_message_endpoint().receive_all_messages();
     auto step = gad_step();
     SPDLOG_DEBUG("Step finished #{}", step);
 }
@@ -183,7 +183,7 @@ void SingleThreadedCPUBackend::_init()
 {
     SPDLOG_DEBUG("Initializing single-threaded CPU backend...");
 
-    knp::backends::cpu::init(projections_, message_endpoint_);
+    knp::backends::cpu::init(projections_, get_message_endpoint());
 
     SPDLOG_DEBUG("Initializing finished...");
 }
@@ -193,7 +193,7 @@ std::optional<core::messaging::SpikeMessage> SingleThreadedCPUBackend::calculate
     core::Population<knp::neuron_traits::BLIFATNeuron> &population)
 {
     SPDLOG_TRACE("Calculate BLIFAT population {}", std::string(population.get_uid()));
-    return knp::backends::cpu::calculate_blifat_population(population, message_endpoint_, get_step());
+    return knp::backends::cpu::calculate_blifat_population(population, get_message_endpoint(), get_step());
 }
 
 
@@ -203,7 +203,7 @@ std::optional<core::messaging::SpikeMessage> SingleThreadedCPUBackend::calculate
     SPDLOG_TRACE("Calculate resource-based STDP supported BLIFAT population {}", std::string(population.get_uid()));
     return knp::backends::cpu::calculate_resource_stdp_population<
         neuron_traits::BLIFATNeuron, synapse_traits::DeltaSynapse, ProjectionContainer>(
-        population, projections_, message_endpoint_, get_step());
+        population, projections_, get_message_endpoint(), get_step());
 }
 
 
@@ -212,7 +212,8 @@ void SingleThreadedCPUBackend::calculate_projection(
     core::messaging::SynapticMessageQueue &message_queue)
 {
     SPDLOG_TRACE("Calculate Delta synapse projection {}", std::string(projection.get_uid()));
-    knp::backends::cpu::calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, get_step());
+    knp::backends::cpu::calculate_delta_synapse_projection(
+        projection, get_message_endpoint(), message_queue, get_step());
 }
 
 
@@ -221,7 +222,8 @@ void SingleThreadedCPUBackend::calculate_projection(
     core::messaging::SynapticMessageQueue &message_queue)
 {
     SPDLOG_TRACE("Calculate AdditiveSTDPDelta synapse projection {}", std::string(projection.get_uid()));
-    knp::backends::cpu::calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, get_step());
+    knp::backends::cpu::calculate_delta_synapse_projection(
+        projection, get_message_endpoint(), message_queue, get_step());
 }
 
 
@@ -230,7 +232,8 @@ void SingleThreadedCPUBackend::calculate_projection(
     core::messaging::SynapticMessageQueue &message_queue)
 {
     SPDLOG_TRACE("Calculate STDPSynapticResource synapse projection {}", std::string(projection.get_uid()));
-    knp::backends::cpu::calculate_delta_synapse_projection(projection, message_endpoint_, message_queue, get_step());
+    knp::backends::cpu::calculate_delta_synapse_projection(
+        projection, get_message_endpoint(), message_queue, get_step());
 }
 
 

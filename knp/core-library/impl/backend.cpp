@@ -14,6 +14,18 @@
 namespace knp::core
 {
 
+Backend::Backend()
+    : message_bus_(knp::core::MessageBus::construct_cpu_bus()), message_endpoint_{message_bus_.create_endpoint()}
+{
+}
+
+
+Backend::Backend(MessageBus&& message_bus)
+    : message_bus_(std::move(message_bus)), message_endpoint_{message_bus_.create_endpoint()}
+{
+}
+
+
 Backend::~Backend()
 {
     stop();

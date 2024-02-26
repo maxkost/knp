@@ -262,28 +262,6 @@ public:
     void _step() override;
 
     /**
-     * @brief Subscribe internal endpoint to messages.
-     * @details The method is used to get a subscription necessary for receiving messages of the specified type.
-     * @tparam MessageType message type.
-     * @param receiver receiver UID.
-     * @param senders list of possible sender UIDs.
-     * @return subscription.
-     */
-    template <typename MessageType>
-    knp::core::Subscription<MessageType> &subscribe(
-        const knp::core::UID &receiver, const std::vector<knp::core::UID> &senders)
-    {
-        return message_endpoint_.subscribe<MessageType>(receiver, senders);
-    }
-
-    /**
-     * @brief Get message endpoint.
-     * @return message endpoint.
-     */
-    const core::MessageEndpoint &get_message_endpoint() const override { return message_endpoint_; }
-    core::MessageEndpoint &get_message_endpoint() override { return message_endpoint_; }
-
-    /**
      * @brief Stop training by locking all projections.
      */
     void stop_learning() override
@@ -356,9 +334,10 @@ protected:
         core::messaging::SynapticMessageQueue &message_queue);
 
 private:
+    // cppcheck-suppress unusedStructMember
     PopulationContainer populations_;
+    // cppcheck-suppress unusedStructMember
     ProjectionContainer projections_;
-    core::MessageEndpoint message_endpoint_;
 };
 
 BOOST_DLL_ALIAS(knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::create, create_knp_backend)

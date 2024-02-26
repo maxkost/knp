@@ -30,7 +30,6 @@ MultiThreadedCPUBackend::MultiThreadedCPUBackend(
     size_t thread_count, size_t population_part_size, size_t projection_part_size)
     : population_part_size_(population_part_size),
       projection_part_size_(projection_part_size),
-      message_endpoint_{message_bus_.create_endpoint()},
       calc_pool_(std::make_unique<cpu_executors::ThreadPool>(
           thread_count ? thread_count : std::thread::hardware_concurrency()))
 {
@@ -96,7 +95,7 @@ void MultiThreadedCPUBackend::calculate_populations_impact()
     for (auto &population : populations_)
     {
         auto uid = std::visit([](auto &population) { return population.get_uid(); }, population);
-        auto messages = message_endpoint_.unload_messages<knp::core::messaging::SynapticImpactMessage>(uid);
+        auto messages = get_message_endpoint().unload_messages<knp::core::messaging::SynapticImpactMessage>(uid);
         std::visit(
             [this, &messages](auto &pop)
             {
@@ -153,7 +152,7 @@ void MultiThreadedCPUBackend::calculate_populations()
     for (const auto &message : spike_messages)
     {
         if (message.neuron_indexes_.empty()) continue;
-        message_endpoint_.send_message(message);
+        get_message_endpoint().send_message(message);
     }
 }
 
@@ -179,7 +178,7 @@ void MultiThreadedCPUBackend::calculate_projections()
     for (auto &projection : projections_)
     {
         auto uid = std::visit([](auto &proj) { return proj.get_uid(); }, projection.arg_);
-        auto msg_buf = message_endpoint_.unload_messages<knp::core::messaging::SpikeMessage>(uid);
+        auto msg_buf = get_message_endpoint().unload_messages<knp::core::messaging::SpikeMessage>(uid);
         // We might want to add some preliminary function before, even if delta proj doesn't require it.
         if (msg_buf.empty()) continue;
 
@@ -208,7 +207,7 @@ void MultiThreadedCPUBackend::calculate_projections()
         auto msg_iter = msg_queue.find(get_step());
         if (msg_iter != msg_queue.end())
         {
-            message_endpoint_.send_message(std::move(msg_iter->second));
+            get_message_endpoint().send_message(std::move(msg_iter->second));
             msg_queue.erase(msg_iter);
         }
     }
@@ -232,10 +231,10 @@ void MultiThreadedCPUBackend::_step()
     SPDLOG_DEBUG("Starting step #{}.", get_step());
     calculate_populations();
     message_bus_.route_messages();
-    message_endpoint_.receive_all_messages();
+    get_message_endpoint().receive_all_messages();
     calculate_projections();
     message_bus_.route_messages();
-    message_endpoint_.receive_all_messages();
+    get_message_endpoint().receive_all_messages();
     gad_step();
     SPDLOG_DEBUG("Step #{} finished.", get_step());
 }
@@ -305,7 +304,7 @@ void MultiThreadedCPUBackend::_init()
 {
     SPDLOG_DEBUG("Initializing multi-threaded CPU backend...");
 
-    knp::backends::cpu::init(projections_, message_endpoint_);
+    knp::backends::cpu::init(projections_, get_message_endpoint());
 
     SPDLOG_DEBUG("Initializing finished...");
 }
