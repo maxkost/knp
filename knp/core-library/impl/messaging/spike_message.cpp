@@ -13,6 +13,16 @@
 namespace knp::core::messaging
 {
 
+std::ostream &operator<<(std::ostream &stream, const core::messaging::SpikeData &spikes)
+{
+    for (const auto &spike : spikes)
+    {
+        stream << spike << " ";
+    }
+    return stream;
+}
+
+
 std::ostream &operator<<(std::ostream &stream, const SpikeMessage &msg)
 {
     stream << " " << msg.header_.sender_uid_ << " " << msg.header_.send_time_ << " " << msg.neuron_indexes_.size();
