@@ -165,6 +165,8 @@ py::class_<BackendWrapper, boost::noncopyable>(
     .def("start_learning", &core::Backend::start_learning, "Restart learning.")
     .def("_init", &core::Backend::_init, "Initialize backend before starting network execution.")
     .def("_step", &core::Backend::_step, "Make one network execution step.")
+    .def("_uninit", &core::Backend::_uninit, "Set backend to the uninitialized state.")
+    .def_readonly("message_bus", &core::Backend::message_bus_, "Get message bus")
     .add_property("uid", make_handler([](core::Backend &b) { return b.get_uid(); }), "Get backend UID.")
     .add_property("running", &core::Backend::running, "Get network execution status.");
 

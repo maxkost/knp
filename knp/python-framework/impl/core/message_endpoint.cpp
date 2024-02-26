@@ -8,16 +8,8 @@
 
 
 #if defined(_KNP_IN_CORE)
-py::class_<core::MessageEndpoint, boost::noncopyable>(
+py::class_<core::MessageEndpoint, std::shared_ptr<core::MessageEndpoint>, boost::noncopyable>(
     "MessageEndpoint", "The MessageEndpoint class is a definition of message endpoints.", py::no_init)
-    //    .def(py::init<core::MessageEndpoint&&>(), "Move constructor for message endpoints.")
-    //        .def(
-    //            "operator=", (MessageEndpoint(MessageEndpoint::*)(knp::MessageEndpoint)) &
-    //            MessageEndpoint::operator=, "Default copy operator.")
-    //        .def("operator=", &MessageEndpoint::operator=, "Default copy operator.")
-    //        .def(
-    //            "operator=", (MessageEndpoint(MessageEndpoint::*)(knp::MessageEndpoint)) &
-    //            MessageEndpoint::operator=, "Avoid copy assignment of an endpoint.")
     .def("get_receiver_uid", &core::MessageEndpoint::get_receiver_uid, "Get receiver UID from a subscription variant.")
     .def(
         "get_subscription_key", &core::MessageEndpoint::get_subscription_key,
