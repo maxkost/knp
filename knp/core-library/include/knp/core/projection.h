@@ -259,34 +259,21 @@ public:
      * @brief Remove a synapse with the given index from the projection.
      * @param index index of the synapse to remove.
      */
-    void remove_synapse(size_t index)
-    {
-        is_index_updated_ = false;
-        parameters_.erase(parameters_.begin() + index);
-    }
+    void remove_synapse(size_t index);
 
     /**
      * @brief Remove synapses with the given indexes from the projection.
      * @param indexes indexes of synapses to remove.
      * @todo Implement this.
      */
-    void remove_synapses(const std::vector<size_t> &indexes) {}
+    void remove_synapses(const std::vector<size_t> &indexes);
 
     /**
      * @brief Remove synapses according to a given criterion.
-     * @tparam Predicate functor that determines if the synapse must be deleted (derived automatically from `predicate`
-     * if not specified).
      * @param predicate functor that receives a synapse and returns `true` if the synapse must be deleted.
      * @return number of deleted synapses.
      */
-    template <class Predicate>
-    size_t disconnect_if(Predicate predicate)
-    {
-        const size_t starting_size = parameters_.size();
-        is_index_updated_ = false;
-        parameters_.resize(std::remove_if(parameters_.begin(), parameters_.end(), predicate) - parameters_.begin());
-        return starting_size - parameters_.size();
-    }
+    size_t disconnect_if(std::function<bool(const Synapse &)> predicate);
 
     /**
      * @brief Remove all synapses that lead to a neuron with the given index.

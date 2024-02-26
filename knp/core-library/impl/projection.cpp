@@ -171,11 +171,37 @@ size_t knp::core::Projection<SynapseType>::add_synapses(const std::vector<Synaps
     return parameters_.size() - starting_size;
 }
 
+
 template <typename SynapseType>
 void Projection<SynapseType>::clear()
 {
     parameters_.clear();
     index_.clear();
+}
+
+
+template <typename SynapseType>
+void knp::core::Projection<SynapseType>::remove_synapse(size_t index)
+{
+    is_index_updated_ = false;
+    parameters_.erase(parameters_.begin() + index);
+}
+
+
+template <typename SynapseType>
+void knp::core::Projection<SynapseType>::remove_synapses(const std::vector<size_t> &indexes)
+{
+    throw std::runtime_error("Not implemented");
+}
+
+
+template <typename SynapseType>
+size_t knp::core::Projection<SynapseType>::disconnect_if(std::function<bool(const Synapse &)> predicate)
+{
+    const size_t starting_size = parameters_.size();
+    is_index_updated_ = false;
+    parameters_.resize(std::remove_if(parameters_.begin(), parameters_.end(), predicate) - parameters_.begin());
+    return starting_size - parameters_.size();
 }
 
 
