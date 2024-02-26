@@ -87,16 +87,22 @@ struct BackendWrapper : core::Backend, py::wrapper<core::Backend>
 //     .def(py::vector_indexing_suite<std::vector<core::AllProjectionsVariant>>() );
 
 
+#    define INSTANCE_PY_BACKEND_SUBSCRIBE_METHOD_IMPL(n, template_for_instance, message_type) \
+        if (BOOST_PP_STRINGIZE(message_type) == class_obj_name)                               \
+            return py::object(                                                                \
+                self.subscribe<core::messaging::message_type>(receiver, py_iterable_to_vector<core::UID>(senders)));
+
+
 // Abstract class
 py::class_<BackendWrapper, boost::noncopyable>(
     "Backend", "The Backend class is the base class for backends.", py::no_init)
     .def(
         "load_all_populations",
         make_handler(
-            [](core::Backend &b, const py::list &l)
+            [](core::Backend &self, const py::list &l)
             {
                 using PT = core::AllPopulationsVariant;
-                b.load_all_populations(std::vector<PT>(py::stl_input_iterator<PT>(l), py::stl_input_iterator<PT>()));
+                self.load_all_populations(std::vector<PT>(py::stl_input_iterator<PT>(l), py::stl_input_iterator<PT>()));
             }),
         "Add populations to backend.")
     .def(
@@ -135,9 +141,9 @@ py::class_<BackendWrapper, boost::noncopyable>(
     .def(
         "start",
         make_handler(
-            [](core::Backend &b, py::object &run_predicate)
+            [](core::Backend &self, py::object &run_predicate)
             {
-                b.start(
+                self.start(
                     [&run_predicate](core::Step step)
                     {
                         auto res = py::call<py::object>(run_predicate.ptr(), step);
@@ -148,9 +154,9 @@ py::class_<BackendWrapper, boost::noncopyable>(
     .def(
         "start",
         make_handler(
-            [](core::Backend &b, py::object &pre_step, py::object &post_step)
+            [](core::Backend &self, py::object &pre_step, py::object &post_step)
             {
-                b.start(
+                self.start(
                     [&pre_step](core::Step step)
                     {
                         auto res = py::call<py::object>(pre_step.ptr(), step);
@@ -167,11 +173,35 @@ py::class_<BackendWrapper, boost::noncopyable>(
     .def("get_step", &core::Backend::get_step, "Get current step.")
     .def("stop_learning", &core::Backend::stop_learning, "Stop learning.")
     .def("start_learning", &core::Backend::start_learning, "Restart learning.")
+    .def(
+        "subscribe",
+        make_handler(
+            [](core::Backend &self, const py::object &msg_class, const core::UID &receiver,
+               const py::list &senders) -> py::object
+            {
+                const auto class_obj_name = get_py_class_name(msg_class);
+
+                SPDLOG_TRACE("Message class name: {}", class_obj_name);
+
+                // cppcheck-suppress unknownMacro
+                BOOST_PP_SEQ_FOR_EACH(
+                    INSTANCE_PY_BACKEND_SUBSCRIBE_METHOD_IMPL, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES))
+
+                PyErr_SetString(PyExc_TypeError, "Passed object is not message class!");
+                py::throw_error_already_set();
+
+                throw std::runtime_error("Incorrect class!");
+            }),
+        "Subscribe internal endpoint to messages.")
     .def("_init", &core::Backend::_init, "Initialize backend before starting network execution.")
     .def("_step", &core::Backend::_step, "Make one network execution step.")
     .def("_uninit", &core::Backend::_uninit, "Set backend to the uninitialized state.")
     .def_readonly("message_bus", &core::Backend::message_bus_, "Get message bus")
     .add_property("uid", make_handler([](core::Backend &b) { return b.get_uid(); }), "Get backend UID.")
     .add_property("running", &core::Backend::running, "Get network execution status.");
+//    .add_property("message_endpoint", static_cast<core::MessageEndpoint
+//    &(core::Backend::*)()>(&core::Backend::get_message_endpoint),
+//                  py::return_internal_reference<>(),
+//                  "Get message endpoint.");
 
 #endif

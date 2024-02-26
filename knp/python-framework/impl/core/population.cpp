@@ -24,9 +24,6 @@
             "Get tags used by the population.")
 */
 
-// .def("__getitem__",
-// static_cast<core::Population<nt::neuron_type>::NeuronParameters&(core::Population<nt::neuron_type>::*)(size_t)>(&core::Population<nt::neuron_type>::operator[]),
-//     "Get parameter values of a neuron with the given index.")
 
 // .def("get_neurons_parameters", &core::Population<neuron_type>::get_neurons_parameters, "Get parameters of all neurons
 // in the population.")
@@ -74,9 +71,16 @@ namespace nt = knp::neuron_traits;
                             core::Population<nt::neuron_type>::*)()>(&core::Population<nt::neuron_type>::end)),        \
                     "Get an iterator of the population.")                                                              \
                 .def("__len__", &core::Population<nt::neuron_type>::size)                                              \
+                .def(                                                                                                  \
+                    "__getitem__",                                                                                     \
+                    static_cast<core::Population<nt::neuron_type>::NeuronParameters &(                                 \
+                        core::Population<nt::neuron_type>::*)(size_t)>(                                                \
+                        &core::Population<nt::neuron_type>::operator[]),                                               \
+                    py::return_internal_reference<>(), "Get parameter values of a neuron with the given index.")       \
                 .add_property(                                                                                         \
                     "uid", make_handler([](core::Population<nt::neuron_type> &p) { return p.get_uid(); }),             \
                     "Get population UID.");
+
 
 // cppcheck-suppress unknownMacro
 BOOST_PP_SEQ_FOR_EACH(INSTANCE_PY_POPULATIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_NEURONS))

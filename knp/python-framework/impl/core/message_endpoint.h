@@ -12,4 +12,5 @@
 #include <boost/python.hpp>
 
 
-// BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(receive_all_messages_overloads, receive_all_messages, 0, 1);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(
+    receive_all_messages_overloads, core::MessageEndpoint::receive_all_messages, 0, 1);

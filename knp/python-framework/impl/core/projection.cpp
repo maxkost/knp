@@ -22,6 +22,40 @@
 
 namespace st = knp::synapse_traits;
 
+/*
+
+.def("get_shared_parameters",
+   (core::SharedSynapseParameters(core::Projection::*)()) &
+   core::Projection::get_shared_parameters,
+   "Get parameters shared between all synapses.")
+.def("get_shared_parameters",
+   (core::SharedSynapseParameters(core::Projection::*)()) &
+   core::Projection::get_shared_parameters,
+   "Get parameters shared between all synapses.")
+
+
+py::class_<core::Synapse>(
+    "Synapse",
+    "Synapse description structure that contains synapse parameters and indexes of the associated neurons.")
+
+    py::class_<core::SharedSynapseParametersT>(
+        "SharedSynapseParametersT", "Shared synapses parameters for the non-STDP variant of the projection.")
+
+        py::class_<SharedSynapseParametersT<core::synapse_traits::STDP<Rule, SynapseT>>>(
+            "SharedSynapseParametersT<knp::synapse_traits::STDP<Rule,SynapseT>>",
+            "Structure for the parameters shared between synapses for STDP.")
+
+            py::enum_<SharedSynapseParametersT<core::synapse_traits::STDP<Rule, SynapseT>>::ProcessingType>(
+                "ProcessingType")
+                .value(
+                    "STDPOnly",
+                    SharedSynapseParametersT<core::synapse_traits::STDP<Rule, SynapseT>>::ProcessingType::0)
+                .value(
+                    "STDPAndSpike",
+                    SharedSynapseParametersT<core::synapse_traits::STDP<Rule, SynapseT>>::ProcessingType::1);
+*/
+
+
 #    define INSTANCE_PY_PROJECTIONS(n, template_for_instance, synapse_type)                                            \
         py::implicitly_convertible<core::Projection<st::synapse_type>, core::AllProjectionsVariant>();                 \
         py::register_tuple<typename core::Projection<st::synapse_type>::Synapse>();                                    \
@@ -65,49 +99,15 @@ namespace st = knp::synapse_traits;
                         static_cast<std::vector<core::Projection<st::synapse_type>::Synapse>::iterator (               \
                             core::Projection<st::synapse_type>::*)()>(&core::Projection<st::synapse_type>::end)),      \
                     "Get an iterator of the population.")                                                              \
-                .def("__len__", &core::Projection<st::synapse_type>::size);  // NOLINT
+                .def("__len__", &core::Projection<st::synapse_type>::size)                                             \
+                .def(                                                                                                  \
+                    "__getitem__",                                                                                     \
+                    static_cast<core::Projection<st::synapse_type>::Synapse &(                                         \
+                        core::Projection<st::synapse_type>::*)(size_t index)>(                                         \
+                        &core::Projection<st::synapse_type>::operator[]),                                              \
+                    py::return_internal_reference<>(),                                                                 \
+                    "Get parameter values of a synapse with the given index.");  // NOLINT
 
-/*
-                                 //   .def(__getitem__, "Get parameter values of a synapse with the given
-   index.")
-                                 //   .def(__getitem__, "Get parameter values of a synapse with the given
-   index.")
-
-
-
-                                      .def("get_shared_parameters",
-                                           (core::SharedSynapseParameters(core::Projection::*)()) &
-                                           core::Projection::get_shared_parameters,
-                                           "Get parameters shared between all synapses.")
-                                      .def("get_shared_parameters",
-                                           (core::SharedSynapseParameters(core::Projection::*)()) &
-                                           core::Projection::get_shared_parameters,
-                                           "Get parameters shared between all synapses.")
-                                  */
-
-/*
-py::class_<core::Synapse>(
-    "Synapse",
-    "Synapse description structure that contains synapse parameters and indexes of the associated neurons.")
-
-    py::class_<core::SharedSynapseParametersT>(
-        "SharedSynapseParametersT", "Shared synapses parameters for the non-STDP variant of the
-projection.")
-
-        py::class_<SharedSynapseParametersT<core::synapse_traits::STDP<Rule, SynapseT>>>(
-            "SharedSynapseParametersT<knp::synapse_traits::STDP<Rule,SynapseT>>",
-            "Structure for the parameters shared between synapses for STDP.")
-
-            py::enum_<SharedSynapseParametersT<core::synapse_traits::STDP<Rule, SynapseT>>::ProcessingType>(
-                "ProcessingType")
-                .value(
-                    "STDPOnly",
-                    SharedSynapseParametersT<core::synapse_traits::STDP<Rule, SynapseT>>::ProcessingType::0)
-                .value(
-                    "STDPAndSpike",
-                    SharedSynapseParametersT<core::synapse_traits::STDP<Rule,
-SynapseT>>::ProcessingType::1);
-*/
 
 // cppcheck-suppress unknownMacro
 BOOST_PP_SEQ_FOR_EACH(INSTANCE_PY_PROJECTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_SYNAPSES))
