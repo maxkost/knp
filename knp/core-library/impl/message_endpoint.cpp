@@ -159,11 +159,12 @@ void MessageEndpoint::receive_all_messages(const std::chrono::milliseconds &slee
     }
 }
 
+namespace cm = knp::core::messaging;
 
-#define INSTANCE_MESSAGES_FUNCTIONS(n, template_for_instance, message_type)        \
-    template Subscription<message_type> &MessageEndpoint::subscribe<message_type>( \
-        const UID &receiver, const std::vector<UID> &senders);                     \
-    template bool MessageEndpoint::unsubscribe<message_type>(const UID &receiver);
+#define INSTANCE_MESSAGES_FUNCTIONS(n, template_for_instance, message_type)                \
+    template Subscription<cm::message_type> &MessageEndpoint::subscribe<cm::message_type>( \
+        const UID &receiver, const std::vector<UID> &senders);                             \
+    template bool MessageEndpoint::unsubscribe<cm::message_type>(const UID &receiver);
 
 BOOST_PP_SEQ_FOR_EACH(INSTANCE_MESSAGES_FUNCTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES))
 

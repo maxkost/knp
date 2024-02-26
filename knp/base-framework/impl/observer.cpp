@@ -1,0 +1,26 @@
+/**
+ * @file observer.cpp
+ * @brief Observers implementation.
+ * @author Artiom N.
+ * @date 26.02.2024
+ */
+
+#include <knp/framework/monitoring/observer.h>
+
+#include <spdlog/spdlog.h>
+
+#include <algorithm>
+
+#include <boost/preprocessor.hpp>
+
+#define _KNP_INTERNAL
+
+namespace knp::framework::monitoring
+{
+
+#define INSTANCE_OBSERVERS(n, template_for_instance, message_type) \
+    template class MessageObserver<knp::core::messaging::message_type>;
+
+BOOST_PP_SEQ_FOR_EACH(INSTANCE_OBSERVERS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES))
+
+}  // namespace knp::framework::monitoring

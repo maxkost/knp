@@ -11,6 +11,7 @@
 
 #include "any_converter.h"
 #include "common.h"
+#include "message_endpoint.h"
 #include "optional_converter.h"
 #include "population.h"
 #include "projection.h"
