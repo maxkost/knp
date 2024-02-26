@@ -23,6 +23,7 @@
 namespace st = knp::synapse_traits;
 
 #    define INSTANCE_PY_PROJECTIONS(n, template_for_instance, synapse_type)                                            \
+        py::implicitly_convertible<core::Projection<st::synapse_type>, core::AllProjectionsVariant>();                 \
         py::register_tuple<typename core::Projection<st::synapse_type>::Synapse>();                                    \
         py::class_<core::Projection<st::synapse_type>>(                                                                \
             BOOST_PP_STRINGIZE(                                             \
@@ -53,6 +54,9 @@ namespace st = knp::synapse_traits;
                 .def(                                                                                                  \
                     "remove_synapses", &core::Projection<st::synapse_type>::remove_synapses,                           \
                     "Remove synapses with the given indexes from the projection.")                                     \
+                .add_property(                                                                                         \
+                    "uid", make_handler([](core::Projection<st::synapse_type> &p) { return p.get_uid(); }),            \
+                    "Get projection UID.")                                                                             \
                 .def(                                                                                                  \
                     "__iter__",                                                                                        \
                     py::range(                                                                                         \

@@ -22,7 +22,14 @@
 template <typename ElemParametersType>
 struct ProjectionGeneratorProxy
 {
-    explicit ProjectionGeneratorProxy(const py::object &gen_func) : gen_func_(gen_func) {}
+    explicit ProjectionGeneratorProxy(const py::object &gen_func) : gen_func_(gen_func)
+    {
+        if (!PyCallable_Check(gen_func.ptr()))
+        {
+            PyErr_SetString(PyExc_TypeError, "Passed generator is not callable!");
+            py::throw_error_already_set();
+        }
+    }
 
     std::optional<typename core::Projection<ElemParametersType>::Synapse> operator()(size_t index)
     {
