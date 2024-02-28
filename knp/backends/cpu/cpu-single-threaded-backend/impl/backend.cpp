@@ -75,7 +75,7 @@ SupportedVariants convert_variant(const AllVariants &input)
 void SingleThreadedCPUBackend::_step()
 {
     SPDLOG_DEBUG("Starting step #{}", get_step());
-    message_bus_.route_messages();
+    get_message_bus().route_messages();
     get_message_endpoint().receive_all_messages();
     // Calculate populations. This is the same as inference.
     std::vector<std::optional<knp::core::messaging::SpikeMessage>> messages;
@@ -95,7 +95,7 @@ void SingleThreadedCPUBackend::_step()
     }
 
     // Continue inference
-    message_bus_.route_messages();
+    get_message_bus().route_messages();
     get_message_endpoint().receive_all_messages();
     // Calculate projections.
     for (auto &e : projections_)
@@ -112,7 +112,7 @@ void SingleThreadedCPUBackend::_step()
             e.arg_);
     }
 
-    message_bus_.route_messages();
+    get_message_bus().route_messages();
     get_message_endpoint().receive_all_messages();
     auto step = gad_step();
     SPDLOG_DEBUG("Step finished #{}", step);

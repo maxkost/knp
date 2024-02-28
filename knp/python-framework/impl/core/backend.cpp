@@ -87,11 +87,13 @@ struct BackendWrapper : core::Backend, py::wrapper<core::Backend>
 //     .def(py::vector_indexing_suite<std::vector<core::AllProjectionsVariant>>() );
 
 
-#    define INSTANCE_PY_BACKEND_SUBSCRIBE_METHOD_IMPL(n, template_for_instance, message_type) \
-        if (BOOST_PP_STRINGIZE(message_type) == class_obj_name)                               \
-            return py::object(                                                                \
-                self.subscribe<core::messaging::message_type>(receiver, py_iterable_to_vector<core::UID>(senders)));
-
+#    define INSTANCE_PY_BACKEND_SUBSCRIBE_METHOD_IMPL(n, template_for_instance, message_type)                   \
+        if (BOOST_PP_STRINGIZE(message_type) == class_obj_name)                                                 \
+        {                                                                                                       \
+            SPDLOG_TRACE("Backend subscribing to: {}", class_obj_name);                                         \
+            self.subscribe<core::messaging::message_type>(receiver, py_iterable_to_vector<core::UID>(senders)); \
+            return;                                                                                             \
+        }
 
 // Abstract class
 py::class_<BackendWrapper, boost::noncopyable>(
@@ -108,10 +110,10 @@ py::class_<BackendWrapper, boost::noncopyable>(
     .def(
         "load_all_projections",
         make_handler(
-            [](core::Backend &b, const py::list &l)
+            [](core::Backend &self, const py::list &l)
             {
                 using PT = core::AllProjectionsVariant;
-                b.load_all_projections(std::vector<PT>(py::stl_input_iterator<PT>(l), py::stl_input_iterator<PT>()));
+                self.load_all_projections(std::vector<PT>(py::stl_input_iterator<PT>(l), py::stl_input_iterator<PT>()));
             }),
         "Add projections to backend.")
     .def("load_all_projections", py::pure_virtual(&core::Backend::load_all_projections), "Add projections to backend.")
@@ -177,7 +179,7 @@ py::class_<BackendWrapper, boost::noncopyable>(
         "subscribe",
         make_handler(
             [](core::Backend &self, const py::object &msg_class, const core::UID &receiver,
-               const py::list &senders) -> py::object
+               const py::list &senders)  // -> py::object
             {
                 const auto class_obj_name = get_py_class_name(msg_class);
 
@@ -196,12 +198,19 @@ py::class_<BackendWrapper, boost::noncopyable>(
     .def("_init", &core::Backend::_init, "Initialize backend before starting network execution.")
     .def("_step", &core::Backend::_step, "Make one network execution step.")
     .def("_uninit", &core::Backend::_uninit, "Set backend to the uninitialized state.")
-    .def_readonly("message_bus", &core::Backend::message_bus_, "Get message bus")
+    .add_property(
+        "message_bus",
+        py::make_function(
+            static_cast<core::MessageBus &(core::Backend::*)()>(&core::Backend::get_message_bus),  // NOLINT
+            py::return_internal_reference<>()),
+        "Get message bus")
+    .add_property(
+        "message_endpoint",
+        py::make_function(
+            static_cast<core::MessageEndpoint &(core::Backend::*)()>(&core::Backend::get_message_endpoint),  // NOLINT
+            py::return_internal_reference<>()),
+        "Get message endpoint.")
     .add_property("uid", make_handler([](core::Backend &b) { return b.get_uid(); }), "Get backend UID.")
     .add_property("running", &core::Backend::running, "Get network execution status.");
-//    .add_property("message_endpoint", static_cast<core::MessageEndpoint
-//    &(core::Backend::*)()>(&core::Backend::get_message_endpoint),
-//                  py::return_internal_reference<>(),
-//                  "Get message endpoint.");
 
 #endif

@@ -35,7 +35,7 @@ void ModelExecutor::init_channels(
 
 void ModelExecutor::gen_input_channel(const core::UID &channel_uid, const std::vector<core::UID> &p_uids)
 {
-    in_channels_.emplace_back(channel_uid, backend_->message_bus_.create_endpoint(), i_map_.at(channel_uid));
+    in_channels_.emplace_back(channel_uid, backend_->get_message_bus().create_endpoint(), i_map_.at(channel_uid));
     for (const auto &u : p_uids)
     {
         backend_->get_message_endpoint().subscribe<knp::core::messaging::SpikeMessage>(u, {channel_uid});
@@ -45,7 +45,7 @@ void ModelExecutor::gen_input_channel(const core::UID &channel_uid, const std::v
 
 void ModelExecutor::gen_output_channel(const core::UID &channel_uid, const std::vector<core::UID> &p_uids)
 {
-    auto endpoint = backend_->message_bus_.create_endpoint();
+    auto endpoint = backend_->get_message_bus().create_endpoint();
     endpoint.subscribe<knp::core::messaging::SpikeMessage>(channel_uid, p_uids);
     out_channels_.emplace_back(channel_uid, std::move(endpoint));
 }

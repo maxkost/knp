@@ -26,13 +26,13 @@ namespace mt = core::messaging;
                 .def(py::vector_indexing_suite<std::vector<mt::message_type>>());
 
 
-#    define INSTANCE_PY_MESSAGE_ENDPOINT_SUBSCRIBE_METHOD_IMPL(n, template_for_instance, message_type)                \
-        if (BOOST_PP_STRINGIZE(message_type) == class_obj_name)                                                       \
-        {                                                                                                             \
-            SPDLOG_TRACE("Subscribing to: {} [senders: {}]", class_obj_name, senders);                                \
-            return py::object(self.subscribe<mt::message_type>(receiver, py_iterable_to_vector<core::UID>(senders))); \
+#    define INSTANCE_PY_MESSAGE_ENDPOINT_SUBSCRIBE_METHOD_IMPL(n, template_for_instance, message_type) \
+        if (BOOST_PP_STRINGIZE(message_type) == class_obj_name)                                        \
+        {                                                                                              \
+            SPDLOG_TRACE("Subscribing to: {}", class_obj_name);                                        \
+            self.subscribe<mt::message_type>(receiver, py_iterable_to_vector<core::UID>(senders));     \
+            return;                                                                                    \
         }
-
 
 #    define INSTANCE_PY_MESSAGE_ENDPOINT_UNSUBSCRIBE_METHOD_IMPL(n, template_for_instance, message_type) \
         if (BOOST_PP_STRINGIZE(message_type) == class_obj_name) return self.unsubscribe<mt::message_type>(receiver);
@@ -40,7 +40,11 @@ namespace mt = core::messaging;
 
 #    define INSTANCE_PY_MESSAGE_ENDPOINT_UNLOAD_MESSAGES_METHOD_IMPL(n, template_for_instance, message_type) \
         if (BOOST_PP_STRINGIZE(message_type) == class_obj_name)                                              \
-            return py::object(self.unload_messages<mt::message_type>(receiver));
+        {                                                                                                    \
+            auto msgs = self.unload_messages<mt::message_type>(receiver);                                    \
+            SPDLOG_TRACE("Unloading messages of the type {} [count = {}]", class_obj_name, msgs.size());     \
+            return py::object(msgs);                                                                         \
+        }
 
 
 py::class_<core::MessageEndpoint, std::shared_ptr<core::MessageEndpoint>, boost::noncopyable>(
@@ -56,7 +60,7 @@ py::class_<core::MessageEndpoint, std::shared_ptr<core::MessageEndpoint>, boost:
         "subscribe",
         make_handler(
             [](core::MessageEndpoint &self, const py::object &msg_class, const core::UID &receiver,
-               const py::list &senders) -> py::object
+               const py::list &senders)  //-> py::object
             {
                 const auto class_obj_name = get_py_class_name(msg_class);
 

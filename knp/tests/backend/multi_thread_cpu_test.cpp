@@ -51,7 +51,7 @@ TEST(MultiThreadCpuSuite, SmallestNetwork)
     backend.load_populations({population});
     backend.load_projections({input_projection, loop_projection});
 
-    auto endpoint = backend.message_bus_.create_endpoint();
+    auto endpoint = backend.get_message_bus().create_endpoint();
 
     knp::core::UID in_channel_uid;
     knp::core::UID out_channel_uid;

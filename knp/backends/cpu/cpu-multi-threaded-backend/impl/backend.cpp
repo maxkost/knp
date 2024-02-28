@@ -230,10 +230,10 @@ void MultiThreadedCPUBackend::_step()
 {
     SPDLOG_DEBUG("Starting step #{}.", get_step());
     calculate_populations();
-    message_bus_.route_messages();
+    get_message_bus().route_messages();
     get_message_endpoint().receive_all_messages();
     calculate_projections();
-    message_bus_.route_messages();
+    get_message_bus().route_messages();
     get_message_endpoint().receive_all_messages();
     auto step = gad_step();
     SPDLOG_DEBUG("Step #{} finished.", step);
