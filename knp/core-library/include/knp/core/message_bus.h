@@ -51,10 +51,10 @@ public:
      * @brief Create a message bus with default implementation.
      * @return message bus.
      */
-    static MessageBus construct_bus();
+    static MessageBus construct_bus() { return construct_cpu_bus(); }
 
     /**
-     * @brief Default message bus constructor is deleted. 
+     * @brief Default message bus constructor is deleted.
      * @note Use one of the static functions above.
      */
     MessageBus() = delete;
@@ -92,7 +92,7 @@ public:
 private:
     /**
      * @brief Message bus constructor with a specialized implementation.
-     * @param impl message bus implementation. 
+     * @param impl message bus implementation.
      * @note Currently two implementations are available: ZMQ and CPU.
      */
     explicit MessageBus(std::unique_ptr<messaging::impl::MessageBusImpl> &&impl);

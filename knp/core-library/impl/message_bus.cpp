@@ -33,12 +33,6 @@ MessageBus MessageBus::construct_zmq_bus()
 }
 
 
-MessageBus MessageBus::construct_bus()
-{
-    return construct_zmq_bus();
-}
-
-
 MessageBus::MessageBus(std::unique_ptr<messaging::impl::MessageBusImpl> &&impl) : impl_(std::move(impl))
 {
     if (!impl_) throw std::runtime_error("Unavailable message bus implementation");
