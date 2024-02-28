@@ -28,8 +28,8 @@ py::class_<core::messaging::SpikeData>("SpikeData").def(py::vector_indexing_suit
 
 py::class_<core::messaging::SpikeMessage>("SpikeMessage", "Structure of the spike message.")
     //    .def("__init__", py::make_constructor(&sm_constructor))
-    .def_readwrite("header", &core::messaging::SpikeMessage::header_, "Message header")
-    .def_readwrite(
+    .add_property("header", &core::messaging::SpikeMessage::header_, "Message header")
+    .add_property(
         "neuron_indexes", &core::messaging::SpikeMessage::neuron_indexes_, "Indexes of the recently spiked neurons")
     .def(py::self_ns::str(py::self));
 
