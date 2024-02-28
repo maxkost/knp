@@ -57,11 +57,12 @@ MessageEndpoint::~MessageEndpoint() {}
 template <typename MessageType>
 Subscription<MessageType> &MessageEndpoint::subscribe(const UID &receiver, const std::vector<UID> &senders)
 {
-    SPDLOG_DEBUG("Subscribing {} to the list of senders...", std::string(receiver));
+    SPDLOG_DEBUG("Subscribing {} to the list of senders [{}]...", std::string(receiver), senders.size());
 
     constexpr size_t index = get_type_index<knp::core::messaging::MessageVariant, MessageType>;
 
     auto iter = subscriptions_.find(std::make_pair(index, receiver));
+
     if (iter != subscriptions_.end())
     {
         auto &sub = *const_cast<Subscription<MessageType> *>(&std::get<index>(iter->second));
