@@ -11,6 +11,7 @@
 #include <knp/core/projection.h>
 
 #include <generators.h>
+#include <spdlog/spdlog.h>
 #include <tests_common.h>
 
 #include <functional>
@@ -73,8 +74,10 @@ TEST(MultiThreadCpuSuite, SmallestNetwork)
             endpoint.send_message(message);
         }
         backend._step();
-        endpoint.receive_all_messages();
+        size_t msg_count = endpoint.receive_all_messages();
+        SPDLOG_DEBUG("Received {} messages", msg_count);
         auto output = endpoint.unload_messages<knp::core::messaging::SpikeMessage>(out_channel_uid);
+        SPDLOG_DEBUG("Unloaded {} messages", output.size());
         // Write up the steps where the network sends a spike.
         if (!output.empty()) results.push_back(step);
     }

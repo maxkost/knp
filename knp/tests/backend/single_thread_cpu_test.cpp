@@ -72,8 +72,10 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
             endpoint.send_message(message);
         }
         backend._step();
-        endpoint.receive_all_messages();
+        size_t msg_count = endpoint.receive_all_messages();
+        SPDLOG_DEBUG("Received {} messages", msg_count);
         auto output = endpoint.unload_messages<knp::core::messaging::SpikeMessage>(out_channel_uid);
+        SPDLOG_DEBUG("Unloaded {} messages", output.size());
         // Write up the steps where the network sends a spike
         if (!output.empty()) results.push_back(step);
     }
@@ -241,12 +243,14 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
         // Send inputs on steps 0, 5, 10, 15
         if (step % 5 == 0)
         {
-            knp::core::messaging::SpikeMessage message{{in_channel_uid, 0}, {0}};
+            knp::core::messaging::SpikeMessage message{{in_channel_uid, step}, {0}};
             endpoint.send_message(message);
         }
         backend._step();
-        endpoint.receive_all_messages();
+        size_t msg_count = endpoint.receive_all_messages();
+        SPDLOG_DEBUG("Received {} messages", msg_count);
         auto output = endpoint.unload_messages<knp::core::messaging::SpikeMessage>(out_channel_uid);
+        SPDLOG_DEBUG("Unloaded {} messages", output.size());
         // Write up the steps where the network sends a spike
         if (!output.empty()) results.push_back(step);
     }
