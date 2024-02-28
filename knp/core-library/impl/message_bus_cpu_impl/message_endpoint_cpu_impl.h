@@ -10,6 +10,7 @@
 #include <spdlog/spdlog.h>
 
 #include <algorithm>
+#include <memory>
 #include <mutex>
 #include <utility>
 #include <vector>
@@ -27,16 +28,22 @@ namespace knp::core::messaging::impl
 class MessageEndpointCPUImpl : public MessageEndpointImpl
 {
 public:
-    MessageEndpointCPUImpl() {}
+    MessageEndpointCPUImpl(
+        std::shared_ptr<std::vector<messaging::MessageVariant>> messages_to_send,
+        std::shared_ptr<std::vector<messaging::MessageVariant>> received_messages)
+        : messages_to_send_(std::move(messages_to_send)), received_messages_(std::move(received_messages))
+    {
+    }
 
     void send_message(const knp::core::messaging::MessageVariant &message) override
     {
-        std::lock_guard lock(mutex_);
-        messages_to_send_.push_back(message);
+        const std::lock_guard lock(mutex_);
+
+        messages_to_send_->push_back(message);
         SPDLOG_TRACE("Message was sent, type index = {}", message.index());
     }
 
-    ~MessageEndpointCPUImpl() = default;
+    ~MessageEndpointCPUImpl() override = default;
 
     /**
      * @brief Reads all the messages queued to be sent, then clears message container.
@@ -44,46 +51,52 @@ public:
      */
     [[nodiscard]] std::vector<knp::core::messaging::MessageVariant> unload_sent_messages()
     {
-        std::lock_guard lock(mutex_);
-        auto result = std::move(messages_to_send_);
-        messages_to_send_.clear();
+        const std::lock_guard lock(mutex_);
+        auto result = std::move(*messages_to_send_);
+
+        messages_to_send_->clear();
         return result;
     }
 
     // TODO: Embarrassingly inefficient: all endpoints basically receive all messages by copying them. Should do better.
     void add_received_messages(const std::vector<knp::core::messaging::MessageVariant> &incoming_messages)
     {
-        std::lock_guard lock(mutex_);
-        if (received_messages_.capacity() < received_messages_.size() + incoming_messages.size())
-            received_messages_.reserve(std::max(2 * received_messages_.size(), 2 * incoming_messages.size()));
+        const std::lock_guard lock(mutex_);
 
-        received_messages_.insert(received_messages_.end(), incoming_messages.begin(), incoming_messages.end());
+        received_messages_->insert(received_messages_->end(), incoming_messages.begin(), incoming_messages.end());
     }
 
     void add_received_message(knp::core::messaging::MessageVariant &&incoming)
     {
-        std::lock_guard lock(mutex_);
-        received_messages_.emplace_back(incoming);
+        const std::lock_guard lock(mutex_);
+
+        received_messages_->emplace_back(incoming);
     }
 
     void add_received_message(const knp::core::messaging::MessageVariant &incoming)
     {
-        std::lock_guard lock(mutex_);
-        received_messages_.push_back(incoming);
+        const std::lock_guard lock(mutex_);
+
+        received_messages_->push_back(incoming);
     }
 
     std::optional<knp::core::messaging::MessageVariant> receive_message() override
     {
-        std::lock_guard lock(mutex_);
-        if (received_messages_.empty()) return {};
-        auto result = std::move(received_messages_.back());
-        received_messages_.pop_back();
+        const std::lock_guard lock(mutex_);
+
+        if (received_messages_->empty())
+        {
+            return {};
+        }
+
+        auto result = std::move(received_messages_->back());
+        received_messages_->pop_back();
         return result;
     }
 
 private:
-    std::vector<messaging::MessageVariant> messages_to_send_;
-    std::vector<messaging::MessageVariant> received_messages_;
+    std::shared_ptr<std::vector<messaging::MessageVariant>> messages_to_send_;
+    std::shared_ptr<std::vector<messaging::MessageVariant>> received_messages_;
     std::mutex mutex_;
 };
 

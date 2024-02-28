@@ -13,7 +13,9 @@
 #include <list>
 #include <memory>
 #include <mutex>
+#include <tuple>
 #include <vector>
+
 
 /**
  * @brief Namespace for implementations of message bus.
@@ -32,8 +34,10 @@ public:
 private:
     // cppcheck-suppress unusedStructMember
     std::vector<knp::core::messaging::MessageVariant> messages_to_route_;
-    // cppcheck-suppress unusedStructMember
-    std::list<std::weak_ptr<MessageEndpointCPU>> endpoints_;
+    std::list<std::tuple<
+        std::weak_ptr<std::vector<messaging::MessageVariant>>, std::weak_ptr<std::vector<messaging::MessageVariant>>>>
+        // cppcheck-suppress unusedStructMember
+        endpoint_messages_;
     std::mutex mutex_;
 };
 }  // namespace knp::core::messaging::impl

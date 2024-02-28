@@ -47,21 +47,22 @@ void MessageBusCPUImpl::update()
 {
     std::lock_guard lock(mutex_);
     // This function is called before routing messages.
-    auto iter = endpoints_.begin();
-    while (iter != endpoints_.end())
+    auto iter = endpoint_messages_.begin();
+    while (iter != endpoint_messages_.end())
     {
-        auto endpoint_ptr = iter->lock();
+        auto send_container_ptr = std::get<0>(*iter).lock();
         // Clear up all pointers to expired endpoints.
-        if (!endpoint_ptr)
+        if (!send_container_ptr)
         {
-            endpoints_.erase(iter++);
+            endpoint_messages_.erase(iter++);
             continue;
         }
+
         // Read all sent messages to an internal buffer.
-        auto new_messages = endpoint_ptr->unload_sent_messages();
         messages_to_route_.insert(
-            messages_to_route_.end(), std::make_move_iterator(new_messages.begin()),
-            std::make_move_iterator(new_messages.end()));
+            messages_to_route_.end(), std::make_move_iterator(send_container_ptr->begin()),
+            std::make_move_iterator(send_container_ptr->end()));
+        send_container_ptr->clear();
         ++iter;
     }
 }
@@ -74,12 +75,12 @@ size_t MessageBusCPUImpl::step()
     // Sending a message to every endpoint.
     auto message = std::move(messages_to_route_.back());
     size_t message_counter = 0;
-    for (auto endpoint_ptr : endpoints_)
+    for (auto endpoint_message_containers : endpoint_messages_)
     {
-        auto shared_endpoint_ptr = endpoint_ptr.lock();
+        auto recv_ptr = std::get<1>(endpoint_message_containers).lock();
         // Skipping all endpoints deleted after previous update(). Will delete them at the next update().
-        if (!shared_endpoint_ptr) continue;
-        shared_endpoint_ptr->add_received_message(message);
+        if (!recv_ptr) continue;
+        recv_ptr->emplace_back(message);
         ++message_counter;
     }
     // Remove message from container.
@@ -90,9 +91,17 @@ size_t MessageBusCPUImpl::step()
 
 core::MessageEndpoint MessageBusCPUImpl::create_endpoint()
 {
-    auto endpoint = MessageEndpointCPU(std::make_shared<MessageEndpointCPUImpl>());
     const std::lock_guard lock(mutex_);
-    //    endpoints_.push_back(std::shared_ptr(endpoint));
+
+    using VT = std::vector<messaging::MessageVariant>;
+
+    auto messages_to_send_v{std::make_shared<VT>()};
+    auto recv_messages_v{std::make_shared<VT>()};
+
+    endpoint_messages_.emplace_back(messages_to_send_v, recv_messages_v);
+
+    auto endpoint = MessageEndpointCPU(std::make_shared<MessageEndpointCPUImpl>(messages_to_send_v, recv_messages_v));
+
     return endpoint;
 }
 
