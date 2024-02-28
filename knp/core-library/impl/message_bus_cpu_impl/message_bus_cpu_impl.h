@@ -20,7 +20,7 @@
  */
 namespace knp::core::messaging::impl
 {
-class MessageEndpointCPUImpl;
+class MessageEndpointCPU;
 
 class MessageBusCPUImpl : public MessageBusImpl
 {
@@ -30,8 +30,10 @@ public:
     [[nodiscard]] core::MessageEndpoint create_endpoint() override;
 
 private:
+    // cppcheck-suppress unusedStructMember
     std::vector<knp::core::messaging::MessageVariant> messages_to_route_;
-    std::list<std::weak_ptr<MessageEndpointCPUImpl>> endpoints_;
+    // cppcheck-suppress unusedStructMember
+    std::list<std::weak_ptr<MessageEndpointCPU>> endpoints_;
     std::mutex mutex_;
 };
 }  // namespace knp::core::messaging::impl
