@@ -5,20 +5,21 @@
  * @date 16.02.2024
  */
 
-#include "projection.h"
-
-#include <tuple>
-#include <vector>
-
-#include "common.h"
-#include "tuple_converter.h"
-
 
 //  "Construct an empty projection.")
 // "Construct a projection by running a synapse generator a given number of times."
 // py::arg("presynaptic_uid"), py::arg("postsynaptic_uid"))
 
 #if defined(_KNP_IN_CORE)
+
+#    include "projection.h"
+
+#    include <tuple>
+#    include <vector>
+
+#    include "common.h"
+#    include "tuple_converter.h"
+
 
 namespace st = knp::synapse_traits;
 
@@ -59,6 +60,9 @@ py::class_<core::Synapse>(
 #    define INSTANCE_PY_PROJECTIONS(n, template_for_instance, synapse_type)                                            \
         py::implicitly_convertible<core::Projection<st::synapse_type>, core::AllProjectionsVariant>();                 \
         py::register_tuple<typename core::Projection<st::synapse_type>::Synapse>();                                    \
+        py::class_<typename core::Projection<st::synapse_type>::Synapse>(                                              \
+            BOOST_PP_STRINGIZE(BOOST_PP_CAT(synapse_type, Parameters)));                                               \
+                                                                                                                       \
         py::class_<core::Projection<st::synapse_type>>(                                                                \
             BOOST_PP_STRINGIZE(                                             \
                 BOOST_PP_CAT(synapse_type, Projection)),                                                               \
