@@ -35,7 +35,7 @@ MessageBus MessageBus::construct_zmq_bus()
 
 MessageBus MessageBus::construct_bus()
 {
-    return construct_cpu_bus();
+    return construct_zmq_bus();
 }
 
 
