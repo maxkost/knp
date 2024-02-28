@@ -256,7 +256,8 @@ public:
     /**
      * @brief Message bus used by backend.
      */
-    MessageBus message_bus_;
+    [[nodiscard]] MessageBus &get_message_bus() { return message_bus_; }
+    [[nodiscard]] const MessageBus &get_message_bus() const { return message_bus_; }
 
 private:
     void pre_start();
@@ -266,7 +267,8 @@ private:
     std::atomic<bool> initialized_ = false;
     volatile std::atomic<bool> started_ = false;
     std::vector<std::unique_ptr<Device>> devices_;
-    core::MessageEndpoint message_endpoint_;
+    MessageBus message_bus_;
+    MessageEndpoint message_endpoint_;
     core::Step step_ = 0;
 };
 
