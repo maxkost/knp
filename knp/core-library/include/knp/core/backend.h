@@ -159,6 +159,16 @@ public:
     }
 
     /**
+     * @brief Message bus used by backend.
+     */
+    [[nodiscard]] MessageBus &get_message_bus() { return message_bus_; }
+    /**
+     * @brief Message bus used by backend.
+     * @note Constant method.
+     */
+    [[nodiscard]] const MessageBus &get_message_bus() const { return message_bus_; }
+
+    /**
      * @brief Get message endpoint.
      * @note Constant method.
      * @return message endpoint.
@@ -251,13 +261,6 @@ protected:
      * @return step number.
      */
     core::Step gad_step() { return step_++; }
-
-public:
-    /**
-     * @brief Message bus used by backend.
-     */
-    [[nodiscard]] MessageBus &get_message_bus() { return message_bus_; }
-    [[nodiscard]] const MessageBus &get_message_bus() const { return message_bus_; }
 
 private:
     void pre_start();
