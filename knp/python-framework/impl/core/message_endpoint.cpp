@@ -116,7 +116,8 @@ py::class_<core::MessageEndpoint, std::shared_ptr<core::MessageEndpoint>, boost:
         "Remove all subscriptions for a receiver with given UID.")
     .def("send_message", &core::MessageEndpoint::send_message, "Send a message to the message bus.")
     .def(
-        "receive_all_messages", make_handler([](core::MessageEndpoint &self) { self.receive_all_messages(); }),
+        "receive_all_messages",
+        make_handler([](core::MessageEndpoint &self) -> size_t { return self.receive_all_messages(); }),
         // receive_all_messages_overloads(py::args("sleep_duration")),
         "Receive all messages that were sent to the endpoint.");
 
