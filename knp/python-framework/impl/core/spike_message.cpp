@@ -4,21 +4,12 @@
  * @author Artiom N.
  * @date 01.02.2024
  */
-#include "common.h"
-
 
 #if defined(_KNP_IN_CORE)
 
-// std::shared_ptr<knp::core::messaging::SpikeMessage> sm_constructor(const py::tuple& header, const py::list& spikes)
-//{
-//     core::messaging::SpikeMessage sm =
-//         {
-//             {py::extract<core::UID>(header[0]), py::extract<size_t>(header[1])},
-//             py_iterable_to_vector<core::messaging::SpikeIndex>(spikes)
-//     };
-//
-//     return std::make_shared<knp::core::messaging::SpikeMessage>(std::move(sm));
-// }
+#    include "spike_message.h"
+
+#    include "common.h"
 
 
 py::class_<core::messaging::SpikeData>("SpikeData").def(py::vector_indexing_suite<core::messaging::SpikeData>());
@@ -27,7 +18,7 @@ py::class_<core::messaging::SpikeData>("SpikeData").def(py::vector_indexing_suit
 
 
 py::class_<core::messaging::SpikeMessage>("SpikeMessage", "Structure of the spike message.")
-    //    .def("__init__", py::make_constructor(&sm_constructor))
+    .def("__init__", py::make_constructor(&spike_message_constructor))
     .add_property("header", &core::messaging::SpikeMessage::header_, "Message header")
     .add_property(
         "neuron_indexes", &core::messaging::SpikeMessage::neuron_indexes_, "Indexes of the recently spiked neurons")

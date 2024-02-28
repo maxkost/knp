@@ -15,6 +15,7 @@
 #include "optional_converter.h"
 #include "population.h"
 #include "projection.h"
+#include "spike_message.h"
 #include "tuple_converter.h"
 #include "uid.h"
 

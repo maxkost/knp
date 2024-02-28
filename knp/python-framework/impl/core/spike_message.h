@@ -1,8 +1,24 @@
-//
-// Created by artiom on 28.02.24.
-//
+/**
+ * @file spike_message.h
+ * @brief SpikeMessage Python bindings header.
+ * @author Artiom N.
+ * @date 28.02.2024
+ */
 
-#ifndef KNP_SPIKE_MESSAGE_H
-#define KNP_SPIKE_MESSAGE_H
+#pragma once
 
-#endif  // KNP_SPIKE_MESSAGE_H
+#include <memory>
+#include <utility>
+
+#include "common.h"
+
+
+std::shared_ptr<knp::core::messaging::SpikeMessage> spike_message_constructor(
+    const py::tuple& header, const py::list& spikes)
+{
+    core::messaging::SpikeMessage sm = {
+        {py::extract<core::UID>(header[0]), py::extract<size_t>(header[1])},
+        py_iterable_to_vector<core::messaging::SpikeIndex>(spikes)};
+
+    return std::make_shared<knp::core::messaging::SpikeMessage>(std::move(sm));
+}
