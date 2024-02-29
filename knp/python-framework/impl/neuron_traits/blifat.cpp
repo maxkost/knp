@@ -64,7 +64,7 @@ py::class_<bn_params>("BLIFATNeuronParameters", "Structure for BLIFAT neuron par
         "reflexive_weight", &bn_params::reflexive_weight_,
         "The parameter defines a value that increases the membrane potential after a neuron generates a spike.")
     .add_property(
-        "reversive_inhibitory_potential", &bn_params::reversive_inhibitory_potential_,
+        "reverse_inhibitory_potential", &bn_params::reverse_inhibitory_potential_,
         "The parameter takes the default value of `reverse_inhibitory_potential` defined for a BLIFAT neuron.")
     .add_property(
         "absolute_refractory_period", &bn_params::absolute_refractory_period_,

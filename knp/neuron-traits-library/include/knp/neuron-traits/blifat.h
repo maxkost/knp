@@ -144,7 +144,7 @@ struct neuron_parameters<BLIFATNeuron>
     /**
      * @brief The parameter takes the default value of `reverse_inhibitory_potential` defined for a BLIFAT neuron.
      */
-    double reversive_inhibitory_potential_ = default_values<BLIFATNeuron>::reverse_inhibitory_potential_;
+    double reverse_inhibitory_potential_ = default_values<BLIFATNeuron>::reverse_inhibitory_potential_;
     /**
      * @brief The parameter defines a minimum number of network steps before a neuron can generate the next spike.
      */

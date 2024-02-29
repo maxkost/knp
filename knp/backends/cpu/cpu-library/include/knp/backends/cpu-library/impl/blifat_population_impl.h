@@ -206,11 +206,11 @@ bool calculate_neuron_post_input_state(typename knp::core::Population<BlifatLike
     if (neuron.inhibitory_conductance_ < 1.0)
     {
         neuron.potential_ -=
-            (neuron.potential_ - neuron.reversive_inhibitory_potential_) * neuron.inhibitory_conductance_;
+            (neuron.potential_ - neuron.reverse_inhibitory_potential_) * neuron.inhibitory_conductance_;
     }
     else
     {
-        neuron.potential_ = neuron.reversive_inhibitory_potential_;
+        neuron.potential_ = neuron.reverse_inhibitory_potential_;
     }
 
     if ((neuron.n_time_steps_since_last_firing_ > neuron.absolute_refractory_period_) &&
