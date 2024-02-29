@@ -216,6 +216,7 @@ bool calculate_neuron_post_input_state(typename knp::core::Population<BlifatLike
     if ((neuron.n_time_steps_since_last_firing_ > neuron.absolute_refractory_period_) &&
         (neuron.potential_ >= neuron.activation_threshold_ + neuron.dynamic_threshold_))
     {
+        SPDLOG_TRACE("Neuron spiked");
         // Spike.
         neuron.dynamic_threshold_ += neuron.threshold_increment_;
         neuron.postsynaptic_trace_ += neuron.postsynaptic_trace_increment_;

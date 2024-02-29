@@ -30,7 +30,7 @@ namespace knp::backends::cpu
 /**
  * @brief Type of the message queue.
  */
-typedef knp::core::messaging::SynapticMessageQueue MessageQueue;
+using MessageQueue = knp::core::messaging::SynapticMessageQueue;
 
 /**
  * @brief Convert spike vector to unordered map.
@@ -72,7 +72,7 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
     size_t step_n,
     std::function<knp::synapse_traits::synapse_parameters<knp::synapse_traits::DeltaSynapse>(
         const typename ProjectionType::SynapseParameters &)>
-        sp_getter = [](const typename ProjectionType::SynapseParameters &sp) { return sp; })
+        sp_getter = [](const typename ProjectionType::SynapseParameters &synapse_params) { return synapse_params; })
 {
     SPDLOG_TRACE("Calculating Delta synapse projection data");
     using SynapseType = typename ProjectionType::ProjectionSynapseType;
@@ -98,7 +98,9 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
 
                 auto iter = future_messages.find(future_step);
                 if (iter != future_messages.end())
+                {
                     iter->second.impacts_.push_back(impact);
+                }
                 else
                 {
                     knp::core::messaging::SynapticImpactMessage message_out{
@@ -130,7 +132,10 @@ void calculate_projection_part_impl(
         // update_step(synapse.params_, step_n);
         // TODO: Move update logic here too.
         auto iter = message_in_data.find(std::get<1>(synapse));
-        if (iter == message_in_data.end()) continue;
+        if (iter == message_in_data.end())
+        {
+            continue;
+        }
 
         // Add new impact
         // the message is sent on step N - 1, received on N.
@@ -140,18 +145,21 @@ void calculate_projection_part_impl(
             synapse_index, std::get<0>(synapse).weight_ * iter->second, std::get<0>(synapse).output_type_,
             static_cast<uint32_t>(std::get<1>(synapse)), static_cast<uint32_t>(std::get<2>(synapse))};
 
-        container.emplace_back(std::pair{key, impact});
+        container.emplace_back(key, impact);
     }
     // Add impacts to future messages queue, it is a shared resource.
-    std::lock_guard lock_guard(mutex);
+    const std::lock_guard lock_guard(mutex);
     const auto &projection_uid = projection.get_uid();
     const auto &presynaptic_uid = projection.get_presynaptic();
     const auto &postsynaptic_uid = projection.get_postsynaptic();
+
     for (auto value : container)
     {
         auto iter = future_messages.find(value.first);
         if (iter != future_messages.end())
+        {
             iter->second.impacts_.push_back(value.second);
+        }
         else
         {
             knp::core::messaging::SynapticImpactMessage message_out{
@@ -169,13 +177,17 @@ void calculate_projection_part_impl(
 std::unordered_map<uint64_t, size_t> convert_spikes(const core::messaging::SpikeMessage &message)
 {
     std::unordered_map<size_t, size_t> result;
-    for (auto n : message.neuron_indexes_)
+    for (auto neuron_idx : message.neuron_indexes_)
     {
-        auto iter = result.find(n);
+        auto iter = result.find(neuron_idx);
         if (result.end() == iter)
-            result.insert({n, 1});
+        {
+            result.insert({neuron_idx, 1});
+        }
         else
+        {
             ++(iter->second);
+        }
     }
     return result;
 }

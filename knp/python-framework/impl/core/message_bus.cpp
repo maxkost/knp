@@ -4,10 +4,11 @@
  * @author Artiom N.
  * @date 01.02.2024
  */
-#include "common.h"
-
 
 #if defined(_KNP_IN_CORE)
+
+#    include "common.h"
+
 
 py::class_<core::MessageBus, boost::noncopyable>(
     "MessageBus", "The MessageBus class is a definition of an interface to a message bus.", py::no_init)

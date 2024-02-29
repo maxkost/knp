@@ -47,7 +47,7 @@ namespace mt = core::messaging;
         }
 
 
-py::class_<core::MessageEndpoint, std::shared_ptr<core::MessageEndpoint>, boost::noncopyable>(
+py::class_<core::MessageEndpoint, boost::noncopyable, std::shared_ptr<core::MessageEndpoint>>(
     "MessageEndpoint", "The MessageEndpoint class is a definition of message endpoints.", py::no_init)
     // cppcheck-suppress unknownMacro
     .add_property(
