@@ -5,11 +5,12 @@
  * @date 01.02.2024
  */
 
-#include <knp/core/subscription.h>
-
-#include "common.h"
-
 #if defined(_KNP_IN_CORE)
+
+#    include <knp/core/subscription.h>
+
+#    include "common.h"
+
 
 namespace cm = knp::core::messaging;
 

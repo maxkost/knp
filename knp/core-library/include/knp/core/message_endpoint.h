@@ -92,13 +92,7 @@ public:
      * @brief Move constructor for message endpoints.
      * @param endpoint endpoint to move.
      */
-    MessageEndpoint(MessageEndpoint &&endpoint);
-
-    /**
-     * @brief Default move operator.
-     * @param endpoint endpoint to move.
-     */
-    MessageEndpoint &operator=(MessageEndpoint &&endpoint) = default;
+    MessageEndpoint(MessageEndpoint &&endpoint) noexcept;
 
     /**
      * @brief Avoid copy assignment of an endpoint.

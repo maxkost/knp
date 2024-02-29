@@ -5,16 +5,16 @@
  * @date 07.02.2024
  */
 
-#include "population.h"
-
-#include <vector>
-
-#include <boost/mp11.hpp>
-
-#include "common.h"
-
 
 #if defined(_KNP_IN_CORE)
+
+#    include "population.h"
+
+#    include <vector>
+
+#    include <boost/mp11.hpp>
+
+#    include "common.h"
 
 /*        .def(
             "get_tags", (auto(core::Population<knp::neuron_traits::BLIFATNeuron>::*)()) &core::Population::get_tags,

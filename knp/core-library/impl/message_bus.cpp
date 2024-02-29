@@ -19,7 +19,7 @@ namespace knp::core
 {
 MessageBus::~MessageBus() {}
 
-MessageBus::MessageBus(MessageBus &&) = default;
+MessageBus::MessageBus(MessageBus &&) noexcept = default;
 
 MessageBus MessageBus::construct_cpu_bus()
 {

@@ -45,7 +45,7 @@ std::pair<size_t, UID> MessageEndpoint::get_subscription_key(const MessageEndpoi
 }
 
 
-MessageEndpoint::MessageEndpoint(MessageEndpoint &&endpoint)
+MessageEndpoint::MessageEndpoint(MessageEndpoint &&endpoint) noexcept
     : impl_(std::move(endpoint.impl_)), subscriptions_(std::move(endpoint.subscriptions_))
 {
 }
@@ -98,7 +98,10 @@ void MessageEndpoint::remove_receiver(const UID &receiver)
 
     for (auto sub_iter = subscriptions_.begin(); sub_iter != subscriptions_.end(); ++sub_iter)
     {
-        if (get_receiver_uid(sub_iter->second) == receiver) subscriptions_.erase(sub_iter);
+        if (get_receiver_uid(sub_iter->second) == receiver)
+        {
+            subscriptions_.erase(sub_iter);
+        }
     }
 }
 
@@ -124,6 +127,8 @@ bool MessageEndpoint::receive_message()
     auto &message = message_opt.value();
     const UID &sender_uid = get_header(message).sender_uid_;
     const size_t type_index = message.index();
+
+    SPDLOG_TRACE("Subscriptions count = {}", subscriptions_.size());
 
     // Find a subscription.
     for (auto &&[k, sub_variant] : subscriptions_)
@@ -159,10 +164,14 @@ bool MessageEndpoint::receive_message()
 size_t MessageEndpoint::receive_all_messages(const std::chrono::milliseconds &sleep_duration)
 {
     size_t messages_counter = 0;
+
     while (receive_message())
     {
         ++messages_counter;
-        if (sleep_duration.count()) std::this_thread::sleep_for(sleep_duration);
+        if (sleep_duration.count())
+        {
+            std::this_thread::sleep_for(sleep_duration);
+        }
     }
 
     return messages_counter;
@@ -175,7 +184,11 @@ std::vector<MessageType> MessageEndpoint::unload_messages(const knp::core::UID &
     constexpr size_t index = get_type_index<knp::core::messaging::MessageVariant, MessageType>;
     auto iter = subscriptions_.find(std::make_pair(index, receiver_uid));
 
-    if (iter == subscriptions_.end()) return {};
+    if (iter == subscriptions_.end())
+    {
+        return {};
+    }
+
     Subscription<MessageType> &subscription = std::get<index>(iter->second);
     auto result = std::move(subscription.get_messages());
     subscription.clear_messages();

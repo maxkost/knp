@@ -68,7 +68,7 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
         // Send inputs on steps 0, 5, 10, 15
         if (step % 5 == 0)
         {
-            knp::core::messaging::SpikeMessage message{{in_channel_uid, 0}, {0}};
+            knp::core::messaging::SpikeMessage message{{in_channel_uid, step}, {0}};
             endpoint.send_message(message);
         }
         backend._step();

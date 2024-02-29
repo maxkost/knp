@@ -62,7 +62,7 @@ public:
     /**
      * @brief Move constructor.
      */
-    MessageBus(MessageBus &&);
+    MessageBus(MessageBus &&) noexcept;
 
     /**
      * @brief Message bus destructor.
