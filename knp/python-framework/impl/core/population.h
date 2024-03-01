@@ -20,7 +20,7 @@ struct PopulationGeneratorProxy
 {
     explicit PopulationGeneratorProxy(const py::object &gen_func) : gen_func_(gen_func)
     {
-        if (!PyCallable_Check(gen_func.ptr()))
+        if (!static_cast<bool>(PyCallable_Check(gen_func.ptr())))
         {
             PyErr_SetString(PyExc_TypeError, "Passed generator is not callable!");
             py::throw_error_already_set();
@@ -30,8 +30,11 @@ struct PopulationGeneratorProxy
     std::optional<ElemParametersType> operator()(size_t index)
     {
         auto res = py::call<py::object>(gen_func_.ptr(), index);
-        if (res.is_none()) return std::nullopt;
-        return *reinterpret_cast<ElemParametersType *>(res.ptr());
+        if (res.is_none())
+        {
+            return std::nullopt;
+        }
+        return py::extract<ElemParametersType>(res);
     }
 
     const py::object &gen_func_;
