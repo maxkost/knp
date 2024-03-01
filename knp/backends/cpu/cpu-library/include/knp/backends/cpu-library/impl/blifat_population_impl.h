@@ -227,7 +227,10 @@ bool calculate_neuron_post_input_state(typename knp::core::Population<BlifatLike
         spike = true;
     }
 
-    if (neuron.potential_ < neuron.min_potential_) neuron.potential_ = neuron.min_potential_;
+    if (neuron.potential_ < neuron.min_potential_)
+    {
+        neuron.potential_ = neuron.min_potential_;
+    }
 
     return spike;
 }
@@ -269,10 +272,15 @@ void calculate_neurons_post_input_state_part(
     size_t part_end = std::min(part_start + part_size, population.size());
     std::vector<size_t> output;
     for (size_t i = part_start; i < part_end; ++i)
-        if (calculate_neuron_post_input_state<BlifatLikeNeuron>(population[i])) output.push_back(i);
+    {
+        if (calculate_neuron_post_input_state<BlifatLikeNeuron>(population[i]))
+        {
+            output.push_back(i);
+        }
+    }
 
     // Updating common neuron indexes.
-    std::lock_guard<std::mutex> lock(mutex);
+    const std::lock_guard<std::mutex> lock(mutex);
     message.neuron_indexes_.reserve(message.neuron_indexes_.size() + output.size());
     message.neuron_indexes_.insert(message.neuron_indexes_.end(), output.begin(), output.end());
 }
@@ -336,7 +344,7 @@ std::optional<knp::core::messaging::SpikeMessage> calculate_blifat_population_im
     if (!neuron_indexes.empty())
     {
         knp::core::messaging::SpikeMessage res_message{{population.get_uid(), step_n}, neuron_indexes};
-        std::lock_guard<std::mutex> guard(mutex);
+        const std::lock_guard<std::mutex> guard(mutex);
         endpoint.send_message(res_message);
         SPDLOG_DEBUG("Sent {} spike(s)", res_message.neuron_indexes_.size());
         return res_message;

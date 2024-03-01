@@ -67,7 +67,7 @@ std::vector<size_t> SingleThreadedCPUBackend::get_supported_population_indexes()
 template <typename AllVariants, typename SupportedVariants>
 SupportedVariants convert_variant(const AllVariants &input)
 {
-    SupportedVariants result = std::visit([](auto &&arg) -> SupportedVariants { return arg; }, input);
+    SupportedVariants result = std::visit([](auto &&arg) { return arg; }, input);
     return result;
 }
 
@@ -79,7 +79,7 @@ void SingleThreadedCPUBackend::_step()
     get_message_endpoint().receive_all_messages();
     // Calculate populations. This is the same as inference.
     std::vector<std::optional<knp::core::messaging::SpikeMessage>> messages;
-    for (auto &e : populations_)
+    for (auto &population : populations_)
     {
         std::visit(
             [this, &messages](auto &arg)
@@ -87,29 +87,33 @@ void SingleThreadedCPUBackend::_step()
                 using T = std::decay_t<decltype(arg)>;
                 if constexpr (
                     boost::mp11::mp_find<SupportedPopulations, T>{} == boost::mp11::mp_size<SupportedPopulations>{})
+                {
                     static_assert(knp::meta::always_false_v<T>, "Population isn't supported by the CPU ST backend!");
+                }
                 auto message_opt = calculate_population(arg);
                 messages.push_back(std::move(message_opt));
             },
-            e);
+            population);
     }
 
     // Continue inference
     get_message_bus().route_messages();
     get_message_endpoint().receive_all_messages();
     // Calculate projections.
-    for (auto &e : projections_)
+    for (auto &projection : projections_)
     {
         std::visit(
-            [this, &e](auto &arg)
+            [this, &projection](auto &arg)
             {
                 using T = std::decay_t<decltype(arg)>;
                 if constexpr (
                     boost::mp11::mp_find<SupportedProjections, T>{} == boost::mp11::mp_size<SupportedProjections>{})
+                {
                     static_assert(knp::meta::always_false_v<T>, "Projection isn't supported by the CPU ST backend!");
-                calculate_projection(arg, e.messages_);
+                }
+                calculate_projection(arg, projection.messages_);
             },
-            e.arg_);
+            projection.arg_);
     }
 
     get_message_bus().route_messages();
@@ -125,7 +129,10 @@ void SingleThreadedCPUBackend::load_populations(const std::vector<PopulationVari
     populations_.clear();
     populations_.reserve(populations.size());
 
-    for (const auto &p : populations) populations_.push_back(p);
+    for (const auto &population : populations)
+    {
+        populations_.push_back(population);
+    }
     SPDLOG_DEBUG("All populations loaded");
 }
 
@@ -136,9 +143,9 @@ void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVari
     projections_.clear();
     projections_.reserve(projections.size());
 
-    for (const auto &p : projections)
+    for (const auto &projection : projections)
     {
-        projections_.push_back(ProjectionWrapper{p});
+        projections_.push_back(ProjectionWrapper{projection});
     }
 
     SPDLOG_DEBUG("All projections loaded");

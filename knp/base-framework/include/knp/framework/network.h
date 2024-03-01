@@ -258,12 +258,12 @@ public:
      * @brief Get population container from the network.
      * @return container of populations.
      */
-    const PopulationContainer &get_populations() const { return populations_; }
+    [[nodiscard]] const PopulationContainer &get_populations() const { return populations_; }
     /**
      * @brief Get projection container from the network.
      * @return container of projections.
      */
-    const ProjectionContainer &get_projections() const { return projections_; }
+    [[nodiscard]] const ProjectionContainer &get_projections() const { return projections_; }
 
 public:
     /**

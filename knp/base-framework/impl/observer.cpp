@@ -7,10 +7,6 @@
 
 #include <knp/framework/monitoring/observer.h>
 
-#include <spdlog/spdlog.h>
-
-#include <algorithm>
-
 #include <boost/preprocessor.hpp>
 
 #define _KNP_INTERNAL
