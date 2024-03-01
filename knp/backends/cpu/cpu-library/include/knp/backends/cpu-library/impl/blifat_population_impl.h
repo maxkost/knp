@@ -114,8 +114,12 @@ void process_inputs(
             auto &neuron = population[impact.postsynaptic_neuron_index_];
             impact_neuron<BlifatLikeNeuron>(neuron, impact.synapse_type_, impact.impact_value_);
             if constexpr (has_dopamine_plasticity<BlifatLikeNeuron>())
+            {
                 if (impact.synapse_type_ == synapse_traits::OutputType::EXCITATORY)
+                {
                     neuron.is_being_forced_ = message.is_forcing_;
+                }
+            }
         }
     }
 }
@@ -139,9 +143,13 @@ void calculate_single_neuron_state(typename knp::core::Population<BlifatLikeNeur
     }
 
     if (neuron.bursting_phase_ && !--neuron.bursting_phase_)
+    {
         neuron.potential_ = neuron.potential_ * neuron.potential_decay_ + neuron.reflexive_weight_;
+    }
     else
+    {
         neuron.potential_ *= neuron.potential_decay_;
+    }
     neuron.pre_impact_potential_ = neuron.potential_;
 }
 
@@ -201,7 +209,9 @@ bool calculate_neuron_post_input_state(typename knp::core::Population<BlifatLike
             std::numeric_limits<int64_t>::max() * ((neuron.total_blocking_period_ == 0) && was_negative);
     }
     else
+    {
         neuron.total_blocking_period_ -= 1;
+    }
 
     if (neuron.inhibitory_conductance_ < 1.0)
     {
@@ -249,7 +259,10 @@ void calculate_neurons_post_input_state(
     SPDLOG_TRACE("Calculate neurons post input state part");
     for (size_t index = 0; index < population.size(); ++index)
     {
-        if (calculate_neuron_post_input_state<BlifatLikeNeuron>(population[index])) neuron_indexes.push_back(index);
+        if (calculate_neuron_post_input_state<BlifatLikeNeuron>(population[index]))
+        {
+            neuron_indexes.push_back(index);
+        }
     }
 }
 
