@@ -31,7 +31,10 @@ public:
     std::optional<messaging::MessageVariant> receive_message() override
     {
         auto message_var = receive_zmq_message();
-        if (!message_var.has_value()) return {};
+        if (!message_var.has_value())
+        {
+            return {};
+        }
 
         auto message = knp::core::messaging::extract_from_envelope(message_var->data());
         return message;

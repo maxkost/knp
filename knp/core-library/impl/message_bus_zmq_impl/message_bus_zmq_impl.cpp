@@ -57,7 +57,7 @@ size_t MessageBusZMQImpl::step()
 
         SPDLOG_DEBUG("Running poll()");
 
-        if (zmq::poll(items, 0ms))
+        if (zmq::poll(items, 0ms) > 0)
         {
             SPDLOG_TRACE("Poll() successful, receiving data");
             do
@@ -65,9 +65,13 @@ size_t MessageBusZMQImpl::step()
                 recv_result = router_socket_.recv(message, zmq::recv_flags::dontwait);
 
                 if (recv_result.has_value())
-                    SPDLOG_TRACE("Bus recieved {} bytes", recv_result.value());
+                {
+                    SPDLOG_TRACE("Bus received {} bytes", recv_result.value());
+                }
                 else
+                {
                     SPDLOG_WARN("Bus receiving error [EAGAIN]!");
+                }
             } while (!recv_result.has_value());
         }
         else
@@ -76,7 +80,10 @@ size_t MessageBusZMQImpl::step()
             return 0;
         }
 
-        if (isit_id(recv_result)) return 1;
+        if (isit_id(recv_result))
+        {
+            return 1;
+        }
 
         SPDLOG_DEBUG("Data was received, bus will re-send the message");
         // send_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
@@ -92,7 +99,8 @@ size_t MessageBusZMQImpl::step()
         SPDLOG_CRITICAL(e.what());
         throw;
     }
-    return recv_result.has_value() && recv_result.value() != 0;
+
+    return recv_result.has_value() && (recv_result.value() != 0) ? 1 : 0;
 }
 
 

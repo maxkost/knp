@@ -51,7 +51,7 @@ MessageEndpoint::MessageEndpoint(MessageEndpoint &&endpoint) noexcept
 }
 
 
-MessageEndpoint::~MessageEndpoint() {}
+MessageEndpoint::~MessageEndpoint() = default;
 
 
 template <typename MessageType>
@@ -65,14 +65,14 @@ Subscription<MessageType> &MessageEndpoint::subscribe(const UID &receiver, const
 
     if (iter != subscriptions_.end())
     {
-        auto &sub = *const_cast<Subscription<MessageType> *>(&std::get<index>(iter->second));
+        auto &sub = std::get<index>(iter->second);
         sub.add_senders(senders);
         return sub;
     }
 
     auto sub_variant = SubscriptionVariant{Subscription<MessageType>{receiver, senders}};
-    auto insert_res = subscriptions_.insert(std::make_pair(std::make_pair(index, receiver), sub_variant));
-    auto &sub = *const_cast<Subscription<MessageType> *>(&std::get<index>(insert_res.first->second));
+    auto insert_res = subscriptions_.emplace(std::make_pair(index, receiver), sub_variant);
+    auto &sub = std::get<index>(insert_res.first->second);
     return sub;
 }
 
@@ -168,7 +168,7 @@ size_t MessageEndpoint::receive_all_messages(const std::chrono::milliseconds &sl
     while (receive_message())
     {
         ++messages_counter;
-        if (sleep_duration.count())
+        if (sleep_duration.count() != 0)
         {
             std::this_thread::sleep_for(sleep_duration);
         }

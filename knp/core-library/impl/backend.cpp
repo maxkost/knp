@@ -35,7 +35,10 @@ Backend::~Backend()
 
 void Backend::pre_start()
 {
-    if (running()) return;
+    if (running())
+    {
+        return;
+    }
 
     SPDLOG_INFO("Starting backend {}...", std::string(base_.uid_));
 
@@ -69,7 +72,7 @@ void Backend::start()
 }
 
 
-void Backend::start(RunPredicate run_predicate)
+void Backend::start(const RunPredicate& run_predicate)
 {
     pre_start();
 
@@ -89,7 +92,7 @@ void Backend::start(RunPredicate run_predicate)
 }
 
 
-void Backend::start(RunPredicate pre_step, RunPredicate post_step)
+void Backend::start(const RunPredicate& pre_step, const RunPredicate& post_step)
 {
     pre_start();
 
@@ -97,9 +100,15 @@ void Backend::start(RunPredicate pre_step, RunPredicate post_step)
     {
         while (running())
         {
-            if (pre_step && !pre_step(step_)) break;
+            if (pre_step && !pre_step(step_))
+            {
+                break;
+            }
             _step();
-            if (post_step && !post_step(step_)) break;
+            if (post_step && !post_step(step_))
+            {
+                break;
+            }
         }
     }
     catch (...)
@@ -113,7 +122,10 @@ void Backend::start(RunPredicate pre_step, RunPredicate post_step)
 
 void Backend::stop()
 {
-    if (!running()) return;
+    if (!running())
+    {
+        return;
+    }
 
     SPDLOG_INFO("Stopping backend {}...", std::string(base_.uid_));
     started_ = false;
@@ -122,7 +134,10 @@ void Backend::stop()
 
 void Backend::_uninit()
 {
-    if (!initialized_) return;
+    if (!initialized_)
+    {
+        return;
+    }
     stop();
     initialized_ = false;
 }

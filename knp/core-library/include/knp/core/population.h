@@ -204,7 +204,7 @@ public:
      * @brief Count number of neurons in the population.
      * @return number of neurons.
      */
-    size_t size() const { return neurons_.size(); }
+    [[nodiscard]] size_t size() const { return neurons_.size(); }
 
 private:
     BaseData base_;

@@ -7,6 +7,8 @@
 
 #include "message_endpoint_zmq_impl.h"
 
+#include <knp/meta/macro.h>
+
 #include <spdlog/spdlog.h>
 
 #include <memory>
@@ -37,6 +39,7 @@ void MessageEndpointZMQImpl::send_zmq_message(const void *data, size_t size)
     try
     {
         SPDLOG_DEBUG("Endpoint sending message");
+        KNP_UNROLL_LOOP()
         do
         {
             SPDLOG_TRACE("Sending {} bytes", size);
@@ -66,17 +69,23 @@ std::optional<zmq::message_t> MessageEndpointZMQImpl::receive_zmq_message()
         std::vector<zmq_pollitem_t> items = {zmq_pollitem_t{.socket = sub_socket_.handle(), .events = ZMQ_POLLIN}};
 
         SPDLOG_DEBUG("Running poll()");
-        if (zmq::poll(items, 0ms))
+        // cppcheck-suppress "cppcheckError"
+        if (zmq::poll(items, 0ms) > 0)
         {
             SPDLOG_TRACE("Poll() successful, receiving data");
+            KNP_UNROLL_LOOP()
             do
             {
                 result = sub_socket_.recv(msg, zmq::recv_flags::dontwait);
 
                 if (result.has_value())
+                {
                     SPDLOG_TRACE("Endpoint received {} bytes", result.value());
+                }
                 else
+                {
                     SPDLOG_WARN("Endpoint receiving error [EAGAIN]!");
+                }
             } while (!result.has_value());
         }
         else

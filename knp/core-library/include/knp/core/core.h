@@ -65,7 +65,7 @@ struct BaseData
      * @brief Entity tags.
      */
     TagMap tags_;
-};
+} __attribute__((aligned(sizeof(size_t) * 8)));
 
 /**
  * @brief Type used to store a step number in the form of a 64-bit unsigned integer.

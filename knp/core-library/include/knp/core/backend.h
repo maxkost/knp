@@ -190,14 +190,14 @@ public:
      * @param pre_step function to run before the current step.
      * @param post_step function to run after the current step.
      */
-    void start(RunPredicate pre_step, RunPredicate post_step);
+    void start(const RunPredicate &pre_step, const RunPredicate &post_step);
     /**
      * @brief Start network execution on the backend.
      * @details If the predicate returns `true`, network execution continues. Otherwise network execution stops./n
      * The predicate gets a step number as a parameter.
      * @param run_predicate predicate function.
      */
-    void start(RunPredicate run_predicate);
+    void start(const RunPredicate &run_predicate);
 
     /**
      * @brief Stop network execution on the backend.
