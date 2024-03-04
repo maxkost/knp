@@ -106,7 +106,7 @@ bool operator==(const SynapticImpactMessage &sm1, const SynapticImpactMessage &s
 
 /**
  * @brief Synaptic messages that the projection will send in the future depending on the network execution step number.
- * todo: remove from there, because needs only for backends.
+ * @todo: remove from there, because needs only for backends.
  */
 typedef std::unordered_map<uint64_t, SynapticImpactMessage> SynapticMessageQueue;
 
