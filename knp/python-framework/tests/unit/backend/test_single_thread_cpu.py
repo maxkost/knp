@@ -10,8 +10,6 @@ from knp.core._knp_python_framework_core import UID, BLIFATNeuronPopulation, Del
 from knp.neuron_traits._knp_python_framework_neuron_traits import BLIFATNeuronParameters
 from knp.synapse_traits._knp_python_framework_synapse_traits import DeltaSynapseParameters, OutputType
 
-BUILD_DIR = '/home/artiom/projects/KNP/build'
-
 
 def neuron_generator(_):  # type: ignore[no-untyped-def]
     return BLIFATNeuronParameters()
@@ -25,7 +23,7 @@ def input_projection_gen(_):  # type: ignore[no-untyped-def]
     return DeltaSynapseParameters(1.0, 1, OutputType.EXCITATORY), 0, 0
 
 
-def test_smallest_network():  # type: ignore[no-untyped-def]
+def test_smallest_network(pytestconfig):  # type: ignore[no-untyped-def]
     population = BLIFATNeuronPopulation(neuron_generator, 1)
 
     loop_projection = DeltaSynapseProjection(population.uid, population.uid, synapse_generator, 1)
@@ -33,7 +31,7 @@ def test_smallest_network():  # type: ignore[no-untyped-def]
 
     input_uid = input_projection.uid
 
-    backend = BackendLoader().load(f'{BUILD_DIR}/lib/libknp-cpu-single-threaded-backend')
+    backend = BackendLoader().load(f'{pytestconfig.rootdir}/../lib/libknp-cpu-single-threaded-backend')
 
     backend.load_all_populations([population])
     backend.load_all_projections([input_projection, loop_projection])
