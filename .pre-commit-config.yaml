@@ -164,15 +164,15 @@ repos:
   #      language_version: python3
 
   - repo: https://github.com/pre-commit/pre-commit
-    rev: v3.3.3
+    rev: v3.6.2
     hooks:
       - id: validate_manifest
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.5.1
+    rev: v1.8.0
     hooks:
       - id: mypy
-        args: ["--config-file", "knp/.mypy.ini", "--install-types", "--check-untyped-defs"]
+        args: ["--config-file", "knp/.mypy.ini", "--install-types", "--explicit-package-bases", "--check-untyped-defs", "--scripts-are-modules", "--strict"]
         additional_dependencies:
           [
             "isort>=5",
@@ -188,7 +188,7 @@ repos:
             "types-PyYAML",
             "types-typed-ast>=1.4.1"
           ]
-#        exclude: tests(/\w*)*/functional/|tests/input|tests(/.*)+/conftest.py|doc/data/messages|tests(/\w*)*data/
+        exclude: tests(/\w*)*/functional/|tests/input|tests(/.*)+/conftest.py|doc/data/messages|tests(/\w*)*data|python/
 
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.10.1

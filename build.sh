@@ -2,13 +2,14 @@
 
 VERBOSE=0
 RELEASE=0
+SINGLE_PROCESS=0
 CMAKE_BINARY=cmake
 CMAKE_ADD_OPTS=${CMAKE_ADD_OPTS:-""}
 MAKE_ADD_OPTS=${MAKE_ADD_OPTS:-""}
 
 CURDIR="$(dirname "$(readlink -f "$0")")"
 
-usage() { echo "Usage: $0 [-v] [-r] [-c]" 1>&2; }
+usage() { echo "Usage: $0 [-v] [-r] [-c] [-s]" 1>&2; }
 
 
 build()
@@ -24,6 +25,7 @@ build()
     BUILD_DIR="build"
   fi
   [ "${CLEAN}" == 1 ] && BUILD_ADD_OPTS="${BUILD_ADD_OPTS} --clean-first"
+  [ "${SINGLE_PROCESS}" == 0] && BUILD_ADD_OPTS="${BUILD_ADD_OPTS} --parallel"
   set -e
   set -o xtrace
 
@@ -39,11 +41,11 @@ build()
         ${CMAKE_ADD_OPTS} \
         -B "${BUILD_DIR}" \
         -S . && \
-  "${CMAKE_BINARY}" --build "${BUILD_DIR}" --parallel ${BUILD_ADD_OPTS}
+  "${CMAKE_BINARY}" --build "${BUILD_DIR}" ${BUILD_ADD_OPTS}
 }
 
 
-while getopts "rcvh" o; do
+while getopts "rcvsh" o; do
   case "${o}" in
     h)
       usage
@@ -57,6 +59,9 @@ while getopts "rcvh" o; do
     ;;
     r)
       RELEASE=1
+    ;;
+    s)
+      SINGLE_PROCESS=1
     ;;
     *)
       usage

@@ -34,11 +34,12 @@ endfunction()
 
 function (knp_add_library lib_name lib_type)
     set(options "")
-    set(one_value_args "ALIAS")
+    set(one_value_args "ALIAS;LIB_PREFIX")
     set(multi_value_args "")
-    cmake_parse_arguments(LIBRARY_PARAMS "${options}" "${one_value_args}" "${multi_value_args}" ${ARGN})
 
-    set(${lib_name}_source ${ARGN})
+    cmake_parse_arguments(PARSED_ARGS "${options}" "${one_value_args}" "${multi_value_args}" ${ARGN})
+
+    set(${lib_name}_source ${PARSED_ARGS_UNPARSED_ARGUMENTS})
 
     string(TOUPPER "${lib_type}" lib_type)
 
@@ -49,26 +50,50 @@ function (knp_add_library lib_name lib_type)
 
         add_library("${lib_name}" SHARED $<TARGET_OBJECTS:${lib_name}_obj>)
         knp_set_target_parameters("${lib_name}")
-        target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${CMAKE_SHARED_LIBRARY_PREFIX}")
-        target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${CMAKE_SHARED_LIBRARY_PREFIX}${lib_name}")
 
         add_library("${lib_name}_static" STATIC $<TARGET_OBJECTS:${lib_name}_obj>)
         knp_set_target_parameters("${lib_name}_static")
-        target_compile_definitions("${lib_name}_static" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${CMAKE_STATIC_LIBRARY_PREFIX}")
-        target_compile_definitions("${lib_name}_static" PRIVATE "KNP_FULL_LIBRARY_NAME=${CMAKE_STATIC_LIBRARY_PREFIX}${lib_name}")
+
+        if (PARSED_ARGS_LIB_PREFIX)
+            target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${PARSED_ARGS_LIB_PREFIX}")
+            target_compile_definitions("${lib_name}_static" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${PARSED_ARGS_LIB_PREFIX}")
+            target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${PARSED_ARGS_LIB_PREFIX}${lib_name}")
+            target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${PARSED_ARGS_LIB_PREFIX}${lib_name}")
+            set_target_properties("${lib_name}" PROPERTIES PREFIX "${PARSED_ARGS_LIB_PREFIX}")
+            set_target_properties("${lib_name}_static" PROPERTIES PREFIX "${PARSED_ARGS_LIB_PREFIX}")
+        else()
+            target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${CMAKE_SHARED_LIBRARY_PREFIX}")
+            target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${CMAKE_SHARED_LIBRARY_PREFIX}${lib_name}")
+            target_compile_definitions("${lib_name}_static" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${CMAKE_STATIC_LIBRARY_PREFIX}")
+            target_compile_definitions("${lib_name}_static" PRIVATE "KNP_FULL_LIBRARY_NAME=${CMAKE_STATIC_LIBRARY_PREFIX}${lib_name}")
+        endif()
 
         set_target_properties("${lib_name}_static" PROPERTIES OUTPUT_NAME "${lib_name}")
     elseif(lib_type STREQUAL SHARED OR lib_type STREQUAL MODULE)
         add_library("${lib_name}" ${lib_type} ${${lib_name}_source})
         target_compile_definitions("${lib_name}" PRIVATE BUILD_SHARED_LIBS)
         knp_set_target_parameters("${lib_name}")
-        target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${CMAKE_SHARED_LIBRARY_PREFIX}")
-        target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${CMAKE_SHARED_LIBRARY_PREFIX}${lib_name}")
+
+        if (PARSED_ARGS_LIB_PREFIX)
+            target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${PARSED_ARGS_LIB_PREFIX}")
+            target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${PARSED_ARGS_LIB_PREFIX}${lib_name}")
+            set_target_properties("${lib_name}" PROPERTIES PREFIX "${PARSED_ARGS_LIB_PREFIX}")
+        else()
+            target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${CMAKE_SHARED_LIBRARY_PREFIX}")
+            target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${CMAKE_SHARED_LIBRARY_PREFIX}${lib_name}")
+        endif()
     elseif(lib_type STREQUAL STATIC)
         add_library("${lib_name}" STATIC ${${lib_name}_source})
         knp_set_target_parameters("${lib_name}")
-        target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${CMAKE_STATIC_LIBRARY_PREFIX}")
-        target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${CMAKE_STATIC_LIBRARY_PREFIX}${lib_name}")
+
+        if (PARSED_ARGS_LIB_PREFIX)
+            target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${PARSED_ARGS_LIB_PREFIX}")
+            target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${PARSED_ARGS_LIB_PREFIX}${lib_name}")
+            set_target_properties("${lib_name}" PROPERTIES PREFIX "${PARSED_ARGS_LIB_PREFIX}")
+        else()
+            target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${CMAKE_STATIC_LIBRARY_PREFIX}")
+            target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${CMAKE_STATIC_LIBRARY_PREFIX}${lib_name}")
+        endif()
     else()
         message(FATAL_ERROR "Incorrect library build type: \"${lib_type}\". Use SHARED/MODULE, STATIC or BOTH.")
     endif()
@@ -102,7 +127,6 @@ macro (knp_set_cmake_common_parameters)
     if(Boost_FOUND)
         include_directories(${Boost_INCLUDE_DIRS})
     endif()
-
 
     set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -D_FORTIFY_SOURCE=2")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -D_FORTIFY_SOURCE=2")
@@ -170,22 +194,40 @@ function(knp_add_python_module name)
             "PARSED_ARGS"
             ""
             ""
-            "LINK_LIBRARIES"
+            "LINK_LIBRARIES;CPP_SOURCE_DIRECTORY;OUTPUT_DIRECTORY"
             ${ARGN}
     )
 
     set(LIB_NAME "${PROJECT_NAME}_${name}")
 
+    if(NOT PARSED_ARGS_CPP_SOURCE_DIRECTORY)
+        set(PARSED_ARGS_CPP_SOURCE_DIRECTORY "cpp")
+    endif()
+
     file(GLOB_RECURSE ${name}_MODULES_SOURCE CONFIGURE_DEPENDS
-            "impl/${name}/*.h"
-            "impl/${name}/*.cpp")
+            "impl/${name}/${PARSED_ARGS_CPP_SOURCE_DIRECTORY}/*.h"
+            "impl/${name}/${PARSED_ARGS_CPP_SOURCE_DIRECTORY}/*.cpp")
 
     knp_add_library(
             "${LIB_NAME}"
-            SHARED
+            MODULE
+            LIB_PREFIX "_"
             ${${name}_MODULES_SOURCE}
     )
 
+    if(NOT PARSED_ARGS_OUTPUT_DIRECTORY)
+        set(PARSED_ARGS_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/knp_python_framework/knp")
+    endif()
+
     target_include_directories("${LIB_NAME}" PRIVATE ${Python_INCLUDE_DIRS})
     target_link_libraries("${LIB_NAME}" PRIVATE Boost::headers Boost::python ${PARSED_ARGS_LINK_LIBRARIES})
+
+    set_target_properties("${LIB_NAME}" PROPERTIES LIBRARY_OUTPUT_DIRECTORY
+            "$<BUILD_INTERFACE:${PARSED_ARGS_OUTPUT_DIRECTORY}/${name}>$<INSTALL_INTERFACE:LIBRARY_OUTPUT_DIRECTORY=${Python_SITEARCH}/knp/${name}>")
+
+    target_compile_definitions("${LIB_NAME}" PRIVATE
+            CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON)
+
+    add_custom_command(TARGET "${LIB_NAME}" POST_BUILD
+                      COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/impl/${name}/python" "$<TARGET_FILE_DIR:${LIB_NAME}>")
 endfunction()

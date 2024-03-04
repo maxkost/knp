@@ -5,25 +5,27 @@ Author: Artiom N.
 Date: 01.03.2024
 """
 
-from lib.libknp_python_framework_base_framework import BackendLoader
-from lib.libknp_python_framework_core import UID, BLIFATNeuronPopulation, DeltaSynapseProjection, SpikeMessage
-from lib.libknp_python_framework_neuron_traits import BLIFATNeuronParameters
-from lib.libknp_python_framework_synapse_traits import DeltaSynapseParameters, OutputType
+from knp.base_framework._knp_python_framework_base_framework import BackendLoader
+from knp.core._knp_python_framework_core import UID, BLIFATNeuronPopulation, DeltaSynapseProjection, SpikeMessage
+from knp.neuron_traits._knp_python_framework_neuron_traits import BLIFATNeuronParameters
+from knp.synapse_traits._knp_python_framework_synapse_traits import DeltaSynapseParameters, OutputType
+
+BUILD_DIR = '/home/artiom/projects/KNP/build'
 
 
-def neuron_generator(_):
+def neuron_generator(_):  # type: ignore[no-untyped-def]
     return BLIFATNeuronParameters()
 
 
-def synapse_generator(_):
+def synapse_generator(_):  # type: ignore[no-untyped-def]
     return DeltaSynapseParameters(1.0, 6, OutputType.EXCITATORY), 0, 0
 
 
-def input_projection_gen(_):
+def input_projection_gen(_):  # type: ignore[no-untyped-def]
     return DeltaSynapseParameters(1.0, 1, OutputType.EXCITATORY), 0, 0
 
 
-def test_smallest_network():
+def test_smallest_network():  # type: ignore[no-untyped-def]
     population = BLIFATNeuronPopulation(neuron_generator, 1)
 
     loop_projection = DeltaSynapseProjection(population.uid, population.uid, synapse_generator, 1)
@@ -31,7 +33,7 @@ def test_smallest_network():
 
     input_uid = input_projection.uid
 
-    backend = BackendLoader().load('lib/libknp-cpu-single-threaded-backend')
+    backend = BackendLoader().load(f'{BUILD_DIR}/lib/libknp-cpu-single-threaded-backend')
 
     backend.load_all_populations([population])
     backend.load_all_projections([input_projection, loop_projection])
@@ -66,7 +68,5 @@ def test_smallest_network():
 
     # Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
     expected_results = [1, 6, 7, 11, 12, 13, 16, 17, 18, 19]
-
-    print('RES', results)
 
     assert results == expected_results
