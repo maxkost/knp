@@ -23,6 +23,7 @@ command = [
     '-e',
     '.*\\.h',
     '--json-summary',
+    '--gcov-ignore-parse-errors',
 ]
 
 result = subprocess.run(command, check=False, stdout=subprocess.PIPE)
