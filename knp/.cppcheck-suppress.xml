@@ -5,5 +5,15 @@
     <id>unusedStructMember</id>
     <fileName>knp/core-library/include/*</fileName>
   </suppress>
+  <suppress>
+    <!-- Skip incorrect cpp-check working with literals -->
+    <id>cppcheckError</id>
+    <fileName>knp/core-library/impl/*</fileName>
+  </suppress>
+  <suppress>
+    <!-- Skip useless file -->
+    <id>syntaxError</id>
+    <fileName>tools/python-bindings-gen/py-gen/CppHeaderParser_l/*</fileName>
+  </suppress>
 
 </suppressions>

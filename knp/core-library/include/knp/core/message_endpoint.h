@@ -24,6 +24,8 @@
 #include <vector>
 
 #include <boost/mp11.hpp>
+#include <boost/noncopyable.hpp>
+
 
 /**
  * @brief Namespace for message bus implementations.
@@ -43,7 +45,7 @@ namespace knp::core
  * @brief The MessageEndpoint class is a definition of message endpoints.
  * @details You can use message endpoints to receive or send messages.
  */
-class MessageEndpoint
+class MessageEndpoint : private boost::noncopyable
 {
 public:
     /**
@@ -75,7 +77,6 @@ public:
      */
     static std::pair<size_t, UID> get_subscription_key(const SubscriptionVariant &subscription);
 
-    // tparams was temporarily disabled, because of the bug in the CLang documentation checker.
     /**
      * @brief Find index of an entity type in its variant.
      * @details For example, you can use the method to find an index of a message type in a message variant or an index
@@ -91,13 +92,7 @@ public:
      * @brief Move constructor for message endpoints.
      * @param endpoint endpoint to move.
      */
-    MessageEndpoint(MessageEndpoint &&endpoint);
-
-    /**
-     * @brief Default copy operator.
-     * @param endpoint endpoint to copy.
-     */
-    MessageEndpoint &operator=(MessageEndpoint &&endpoint) = default;
+    MessageEndpoint(MessageEndpoint &&endpoint) noexcept;
 
     /**
      * @brief Avoid copy assignment of an endpoint.
@@ -151,28 +146,20 @@ public:
     bool receive_message();
 
     /**
+     * @brief Receive all messages that were sent to the endpoint.
+     * @param sleep_duration time interval in milliseconds between the moments of receiving messages.
+     * @return received messages number.
+     */
+    size_t receive_all_messages(const std::chrono::milliseconds &sleep_duration = std::chrono::milliseconds(0));
+
+    /**
      * @brief Read messages of the specified type received via subscription.
      * @note After reading the messages, the method clears them from the subscription.
      * @tparam MessageType type of messages to read.
      * @param receiver_uid receiver UID.
      */
     template <class MessageType>
-    std::vector<MessageType> unload_messages(const knp::core::UID &receiver_uid)
-    {
-        constexpr size_t index = get_type_index<knp::core::messaging::MessageVariant, MessageType>;
-        auto iter = subscriptions_.find(std::make_pair(index, receiver_uid));
-        if (iter == subscriptions_.end()) return {};
-        Subscription<MessageType> &subscription = std::get<index>(iter->second);
-        auto result = std::move(subscription.get_messages());
-        subscription.clear_messages();
-        return result;
-    }
-
-    /**
-     * @brief Receive all messages that were sent to the endpoint.
-     * @param sleep_duration time interval in milliseconds between the moments of receiving messages.
-     */
-    void receive_all_messages(const std::chrono::milliseconds &sleep_duration = std::chrono::milliseconds(0));
+    std::vector<MessageType> unload_messages(const knp::core::UID &receiver_uid);
 
 public:
     /**

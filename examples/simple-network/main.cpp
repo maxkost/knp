@@ -56,7 +56,7 @@ int main(int argc, const char *const argv[])
     model.add_input_channel(i_channel_uid, input_uid);
     model.add_output_channel(o_channel_uid, output_uid);
 
-    auto input_gen = [](knp::core::messaging::Step step) -> knp::core::messaging::SpikeData
+    auto input_gen = [](knp::core::Step step) -> knp::core::messaging::SpikeData
     {
         if (step % 5 == 0)
         {
@@ -77,7 +77,7 @@ int main(int argc, const char *const argv[])
     // Run model.
     me.start([](size_t step) { return step < 20; });
 
-    std::vector<knp::core::messaging::Step> results;
+    std::vector<knp::core::Step> results;
     // Get model results.
     const auto &spikes = out_channel.update();
     results.reserve(spikes.size());

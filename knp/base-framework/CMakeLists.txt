@@ -24,6 +24,7 @@ knp_add_library("${PROJECT_NAME}-core"
     impl/model_executor.cpp
     impl/input_converter.cpp
     impl/output_channel.cpp
+    impl/observer.cpp
 
     ${${PROJECT_NAME}_headers})
 add_library(KNP::BaseFramework::Core ALIAS "${PROJECT_NAME}-core")

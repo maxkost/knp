@@ -60,7 +60,8 @@ TEST(ProjectionSuite, Generation)
 
     DeltaProjection projection(knc::UID{}, knc::UID{}, generator, presynaptic_size * postsynaptic_size);
     ASSERT_EQ(projection.size(), presynaptic_size * postsynaptic_size);
-    ASSERT_EQ(projection[1000].params_.delay_, 11);
+    // todo: replace 0 with "params".
+    ASSERT_EQ(std::get<0>(projection[1000]).delay_, 11);
 }
 
 
@@ -79,7 +80,7 @@ TEST(ProjectionSuite, SynapseAddition)
     SynapseGenerator generator1 = [](uint32_t index) {
         return Synapse{{0.0F, 1, SynapseType::EXCITATORY}, index, index};
     };
-    projection.add_synapses(presynaptic_size, generator1);  // Add 1-to-1 synapses
+    projection.add_synapses(generator1, presynaptic_size);  // Add 1-to-1 synapses
     ASSERT_EQ(projection.size(), presynaptic_size);
     size_t count = projection.add_synapses({Synapse{
         {1.F, 2, SynapseType ::EXCITATORY},
@@ -91,7 +92,8 @@ TEST(ProjectionSuite, SynapseAddition)
     SynapseGenerator generator2 = [](uint32_t index) {
         return Synapse{{0.1F, 2, SynapseType::EXCITATORY}, index, (index + 1) % postsynaptic_size};
     };
-    count = projection.add_synapses(presynaptic_size, generator2);  // Add synapses from pre neuron N to post neuron N+1
+    // Add synapses from pre neuron N to post neuron N+1
+    count = projection.add_synapses(generator2, presynaptic_size);
     ASSERT_EQ(count, presynaptic_size);
     ASSERT_EQ(projection.size(), 2 * presynaptic_size + 1);
 
@@ -99,7 +101,7 @@ TEST(ProjectionSuite, SynapseAddition)
     std::vector<Synapse> connections;
     std::copy_if(
         projection.begin(), projection.end(), std::back_inserter(connections),
-        [](const Synapse &syn) { return syn.id_from_ == neuron_index; });
+        [](const Synapse &syn) { return std::get<1>(syn) == neuron_index; });
 
     ASSERT_EQ(connections.size(), 3);
     for (size_t i = 0; i < 3; ++i)
@@ -108,7 +110,7 @@ TEST(ProjectionSuite, SynapseAddition)
         ASSERT_NE(
             std::find_if(
                 connections.begin(), connections.end(),
-                [&i](const Synapse &syn) { return syn.id_to_ == neuron_index + i; }),
+                [&i](const Synapse &syn) { return std::get<2>(syn) == neuron_index + i; }),
             connections.end());
     }
 }
@@ -129,7 +131,7 @@ TEST(ProjectionSuite, DeletePresynapticTest)
     ASSERT_EQ(
         std::find_if(
             projection.begin(), projection.end(),
-            [&](const Synapse &synapse) { return synapse.id_from_ == neuron_index; }),
+            [&](const Synapse &synapse) { return std::get<1>(synapse) == neuron_index; }),
         projection.end());  // all the synapses that should have been deleted are actually deleted
 }
 
@@ -149,7 +151,7 @@ TEST(ProjectionSuite, DeletePostsynapticTest)
     ASSERT_EQ(
         std::find_if(
             projection.begin(), projection.end(),
-            [&](const Synapse &synapse) { return synapse.id_to_ == neuron_index; }),
+            [&](const Synapse &synapse) { return std::get<2>(synapse) == neuron_index; }),
         projection.end());  // ensure all the synapses that should have been deleted are actually deleted
 }
 
@@ -169,15 +171,15 @@ TEST(ProjectionSuite, SynapseRemoval)
 
     // If we run this generator N * presynaptic size, we'll have 1 to N connections of x->x, x->x+1, ... x->x+N, cycled
     count = projection.add_synapses(
-        total_connections,
         make_cyclic_generator(
-            {presynaptic_size, postsynaptic_size}, {0, 1, knp::synapse_traits::OutputType::EXCITATORY}));
+            {presynaptic_size, postsynaptic_size}, {0, 1, knp::synapse_traits::OutputType::EXCITATORY}),
+        total_connections);
     ASSERT_EQ(count, total_connections);
 
     // Delete a single synapse
     projection.remove_synapse(0);
     ASSERT_EQ(projection.size(), total_connections - 1);  // A synapse is deleted
-    ASSERT_EQ(projection[0].id_from_, 1);                 // the deleted synapse is the correct one
+    ASSERT_EQ(std::get<1>(projection[0]), 1);             // the deleted synapse is the correct one
 
     // Delete all synapses
     projection.clear();
@@ -207,10 +209,11 @@ TEST(ProjectionSuite, DisconnectNeurons)
     ASSERT_EQ(count, 1);
     ASSERT_EQ(
         std::count_if(
-            projection.begin(), projection.end(), [](const Synapse &synapse) { return synapse.id_from_ == 0; }),
+            projection.begin(), projection.end(), [](const Synapse &synapse) { return std::get<1>(synapse) == 0; }),
         postsynaptic_size - 1);
     ASSERT_EQ(
-        std::count_if(projection.begin(), projection.end(), [](const Synapse &synapse) { return synapse.id_to_ == 1; }),
+        std::count_if(
+            projection.begin(), projection.end(), [](const Synapse &synapse) { return std::get<2>(synapse) == 1; }),
         presynaptic_size - 1);
 }
 

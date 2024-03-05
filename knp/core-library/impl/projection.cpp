@@ -42,10 +42,11 @@ namespace knp::core
 using Connection = typename std::tuple<size_t, size_t, size_t>;
 
 template <int N>
-size_t get_nth(const Connection &x)
+size_t get_nth(const Connection &connection)
 {
-    return std::get<N>(x);
+    return std::get<N>(connection);
 }
+
 
 /**
  * @brief A container of Connections, with fast search by any of its fields.
@@ -57,7 +58,7 @@ public:
 
 
 template <typename SynapseType>
-Projection<SynapseType>::Projection(UID presynaptic_uid, UID postsynaptic_uid)
+Projection<SynapseType>::Projection(UID presynaptic_uid, UID postsynaptic_uid)  // !OCLint(Parameters are used)
     : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -67,7 +68,7 @@ Projection<SynapseType>::Projection(UID presynaptic_uid, UID postsynaptic_uid)
 
 
 template <typename SynapseType>
-Projection<SynapseType>::Projection(UID uid, UID presynaptic_uid, UID postsynaptic_uid)
+Projection<SynapseType>::Projection(UID uid, UID presynaptic_uid, UID postsynaptic_uid)  // !OCLint(Parameters are used)
     : base_{uid}, presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -78,7 +79,7 @@ Projection<SynapseType>::Projection(UID uid, UID presynaptic_uid, UID postsynapt
 
 template <typename SynapseType>
 Projection<SynapseType>::Projection(
-    UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator, size_t num_iterations)
+    UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator, size_t num_iterations)  // !OCLint
     : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -97,27 +98,7 @@ Projection<SynapseType>::Projection(
 
 template <typename SynapseType>
 Projection<SynapseType>::Projection(
-    UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator1 generator, size_t num_iterations)
-    : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
-{
-    SPDLOG_DEBUG(
-        "Creating projection with UID = {}, presynaptic UID = {}, postsynaptic UID = {}, i = {}",
-        std::string(get_uid()), std::string(presynaptic_uid_), std::string(postsynaptic_uid_), num_iterations);
-    for (size_t i = 0; i < num_iterations; ++i)
-    {
-        if (auto params = generator(i))
-        {
-            auto &&[p, id_from, id_to] = std::move(params.value());
-            parameters_.emplace_back(Synapse{std::move(p), id_from, id_to});
-        }
-    }
-    reindex();
-}
-
-
-template <typename SynapseType>
-Projection<SynapseType>::Projection(
-    UID uid, UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator1 generator, size_t num_iterations)
+    UID uid, UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator, size_t num_iterations)  // !OCLint
     : base_{uid}, presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -136,12 +117,15 @@ Projection<SynapseType>::Projection(
 
 
 template <typename SynapseType>
-std::vector<size_t> knp::core::Projection<SynapseType>::get_by_presynaptic_neuron(size_t neuron_index) const
+std::vector<size_t> knp::core::Projection<SynapseType>::get_by_presynaptic_neuron(size_t neuron_index) const  // !OCLint
 {
     reindex();
     auto range = index_.find_by_presynaptic(neuron_index);
     std::vector<size_t> result;
-    for (auto iter = range.first; iter != range.second; ++iter) result.push_back(iter->index_);
+    for (auto iter = range.first; iter != range.second; ++iter)
+    {
+        result.push_back(iter->index_);
+    }
     return result;
 }
 
@@ -152,13 +136,16 @@ std::vector<size_t> knp::core::Projection<SynapseType>::get_by_postsynaptic_neur
     reindex();
     auto range = index_.find_by_postsynaptic(neuron_index);
     std::vector<size_t> result;
-    for (auto iter = range.first; iter != range.second; ++iter) result.push_back(iter->index_);
+    for (auto iter = range.first; iter != range.second; ++iter)
+    {
+        result.push_back(iter->index_);
+    }
     return result;
 }
 
 
 template <typename SynapseType>
-size_t knp::core::Projection<SynapseType>::add_synapses(size_t num_iterations, const SynapseGenerator &generator)
+size_t knp::core::Projection<SynapseType>::add_synapses(SynapseGenerator generator, size_t num_iterations)
 {
     const size_t starting_size = parameters_.size();
     is_index_updated_ = false;
@@ -178,15 +165,18 @@ size_t knp::core::Projection<SynapseType>::add_synapses(const std::vector<Synaps
 {
     const size_t starting_size = parameters_.size();
     bool was_index_updated_ = is_index_updated_;
-    is_index_updated_ = false;  // Ensure that index is recalculated on exception
+    // Ensure that index is recalculated on exception.
+    is_index_updated_ = false;
     for (const auto &synapse : synapses)
     {
-        if (was_index_updated_) index_.insert({synapse.id_from_, synapse.id_to_, parameters_.size()});
+        // todo: replace 1, 2 with id_from, id_to.
+        if (was_index_updated_) index_.insert({std::get<1>(synapse), std::get<2>(synapse), parameters_.size()});
         parameters_.push_back(synapse);
     }
     is_index_updated_ = was_index_updated_;
     return parameters_.size() - starting_size;
 }
+
 
 template <typename SynapseType>
 void Projection<SynapseType>::clear()
@@ -197,11 +187,37 @@ void Projection<SynapseType>::clear()
 
 
 template <typename SynapseType>
+void knp::core::Projection<SynapseType>::remove_synapse(size_t index)
+{
+    is_index_updated_ = false;
+    parameters_.erase(parameters_.begin() + index);
+}
+
+
+template <typename SynapseType>
+void knp::core::Projection<SynapseType>::remove_synapses(const std::vector<size_t> &indexes)
+{
+    throw std::runtime_error("Not implemented");
+}
+
+
+template <typename SynapseType>
+size_t knp::core::Projection<SynapseType>::disconnect_if(std::function<bool(const Synapse &)> predicate)
+{
+    const size_t starting_size = parameters_.size();
+    is_index_updated_ = false;
+    parameters_.resize(std::remove_if(parameters_.begin(), parameters_.end(), predicate) - parameters_.begin());
+    return starting_size - parameters_.size();
+}
+
+
+template <typename SynapseType>
 size_t knp::core::Projection<SynapseType>::disconnect_postsynaptic_neuron(size_t neuron_index)
 {
     const size_t starting_size = parameters_.size();
     bool was_index_updated = is_index_updated_;
-    is_index_updated_ = false;  // basic exception safety
+    // Basic exception safety.
+    is_index_updated_ = false;
     auto synapses_to_remove = get_by_postsynaptic_neuron(neuron_index);
     std::sort(synapses_to_remove.begin(), synapses_to_remove.end());
     remove_by_index(parameters_, synapses_to_remove);
@@ -217,7 +233,8 @@ template <typename SynapseType>
 size_t knp::core::Projection<SynapseType>::disconnect_presynaptic_neuron(size_t neuron_index)
 {
     // TODO: We now have a way to find them quickly, make use of it instead of disconnect_if.
-    return disconnect_if([neuron_index](const Synapse &synapse) { return synapse.id_from_ == neuron_index; });
+    // todo: replace 1 with id_from.
+    return disconnect_if([neuron_index](const Synapse &synapse) { return std::get<1>(synapse) == neuron_index; });
 }
 
 
@@ -225,25 +242,32 @@ template <typename SynapseType>
 size_t knp::core::Projection<SynapseType>::disconnect_neurons(size_t neuron_from, size_t neuron_to)
 {
     return disconnect_if([neuron_from, neuron_to](const Synapse &synapse)
-                         { return (synapse.id_from_ == neuron_from) && (synapse.id_to_ == neuron_to); });
+                         // todo: replace 1, 2 with id_from, id_to.
+                         { return (std::get<1>(synapse) == neuron_from) && (std::get<2>(synapse) == neuron_to); });
 }
 
 
 template <typename SynapseType>
 void knp::core::Projection<SynapseType>::reindex() const
 {
-    if (is_index_updated_) return;
+    if (is_index_updated_)
+    {
+        return;
+    }
+
     index_.clear();
     for (size_t i = 0; i < parameters_.size(); ++i)
     {
         auto &synapse = parameters_[i];
-        index_.insert(knp::core::synapse_access::Connection{synapse.id_from_, synapse.id_to_, i});
+        // todo: replace 1, 2 with id_from, id_to.
+        index_.insert(knp::core::synapse_access::Connection{std::get<1>(synapse), std::get<2>(synapse), i});
     }
     is_index_updated_ = true;
 }
 
 
-#define INSTANCE_PROJECTIONS(n, template_for_instance, synapse_type) template class knp::core::Projection<synapse_type>;
+#define INSTANCE_PROJECTIONS(n, template_for_instance, synapse_type) \
+    template class knp::core::Projection<knp::synapse_traits::synapse_type>;
 
 BOOST_PP_SEQ_FOR_EACH(INSTANCE_PROJECTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_SYNAPSES))
 

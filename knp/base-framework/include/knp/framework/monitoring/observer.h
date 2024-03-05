@@ -5,6 +5,9 @@
  * @date 23.08.2023
  */
 #pragma once
+#include <knp/core/message_endpoint.h>
+#include <knp/core/messaging/messaging.h>
+
 #include <filesystem>
 #include <fstream>
 #include <functional>
@@ -15,8 +18,6 @@
 
 #include <boost/mp11.hpp>
 
-#include "knp/core/message_endpoint.h"
-#include "knp/core/messaging/messaging.h"
 
 /**
  * @brief Monitoring namespace.
@@ -83,8 +84,5 @@ using AllObservers = boost::mp11::mp_transform<MessageObserver, core::messaging:
  * @brief Observer variant that contains all possible observers.
  */
 using AnyObserverVariant = boost::mp11::mp_rename<AllObservers, std::variant>;
-
-#define INSTANCE_OBSERVERS(n, template_for_instance, message_type) template class MessageObserver<message_type>;
-BOOST_PP_SEQ_FOR_EACH(INSTANCE_OBSERVERS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES))
 
 }  // namespace knp::framework::monitoring

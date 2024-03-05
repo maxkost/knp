@@ -36,7 +36,7 @@ public:
      * @brief Check if the specified path points to a backend.
      * @param backend_path path to backend.
      */
-    bool is_backend(const std::filesystem::path &backend_path) const;
+    static bool is_backend(const std::filesystem::path &backend_path);
 
 public:
     /**

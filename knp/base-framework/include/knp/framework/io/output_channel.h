@@ -69,8 +69,7 @@ public:
      * @param final_step step after which the method stops reading spike messages.
      * @return vector of messages sent on the specified interval of steps.
      */
-    std::vector<core::messaging::SpikeMessage> read_some_from_buffer(
-        core::messaging::Step starting_step, core::messaging::Step final_step);
+    std::vector<core::messaging::SpikeMessage> read_some_from_buffer(core::Step starting_step, core::Step final_step);
 
 protected:
     /**
@@ -100,8 +99,7 @@ protected:
  */
 template <typename ResultType>
 [[nodiscard]] ResultType output_channel_get(
-    OutputChannel &output_channel, OutputConverter<ResultType> converter, core::messaging::Step step_from,
-    core::messaging::Step step_to)
+    OutputChannel &output_channel, OutputConverter<ResultType> converter, core::Step step_from, core::Step step_to)
 {
     output_channel.update();
     return converter(output_channel.read_some_from_buffer(step_from, step_to));

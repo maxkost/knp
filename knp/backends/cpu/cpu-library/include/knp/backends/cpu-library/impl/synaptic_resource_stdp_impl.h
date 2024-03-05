@@ -32,7 +32,7 @@ bool is_neuroplastic_population(const core::AllPopulationsVariant &population)
     using PopulationType =
         knp::core::Population<knp::neuron_traits::SynapticResourceSTDPNeuron<knp::neuron_traits::BLIFATNeuron>>;
     constexpr size_t expected_index = boost::mp11::mp_find<core::AllPopulations, PopulationType>();
-    size_t index = population.index();
+    const size_t index = population.index();
     return index == expected_index;
 }
 
@@ -46,11 +46,21 @@ std::vector<knp::core::Projection<SynapseType> *> find_projection_by_type_and_po
     constexpr auto type_index = boost::mp11::mp_find<synapse_traits::AllSynapses, SynapseType>();
     for (auto &projection : projections)
     {
-        if (projection.arg_.index() != type_index) continue;
-        ProjectionType *projection_ptr = &(std::get<type_index>(projection.arg_));
-        if (projection_ptr->is_locked() && exclude_locked) continue;
+        if (projection.arg_.index() != type_index)
+        {
+            continue;
+        }
 
-        if (projection_ptr->get_postsynaptic() == post_uid) result.push_back(projection_ptr);
+        ProjectionType *projection_ptr = &(std::get<type_index>(projection.arg_));
+        if (projection_ptr->is_locked() && exclude_locked)
+        {
+            continue;
+        }
+
+        if (projection_ptr->get_postsynaptic() == post_uid)
+        {
+            result.push_back(projection_ptr);
+        }
     }
     return result;
 }
@@ -72,7 +82,7 @@ void recalculate_synapse_weights(std::vector<STDPSynapseParams<WeightedSynapse> 
     // Synapse weight recalculation.
     for (auto synapse_ptr : synapse_params)
     {
-        const auto syn_w = std::max(synapse_ptr->rule_.synaptic_resource_, 0.f);
+        const auto syn_w = std::max(synapse_ptr->rule_.synaptic_resource_, 0.F);
         const auto weight_diff = synapse_ptr->rule_.w_max_ - synapse_ptr->rule_.w_min_;
         synapse_ptr->weight_ = synapse_ptr->rule_.w_min_ + weight_diff * syn_w / (weight_diff + syn_w);
     }
@@ -100,8 +110,11 @@ std::vector<synapse_traits::synapse_parameters<SynapseType> *> get_all_connected
         auto synapses = projection->get_by_postsynaptic_neuron(neuron_index);
         std::transform(
             synapses.begin(), synapses.end(), std::back_inserter(result),
-            [&projection](auto const &index) -> synapse_traits::synapse_parameters<SynapseType> *
-            { return &(*projection)[index].params_; });
+            [&projection](auto const &index)
+            {
+                // todo: replace 0 with "params".
+                return &std::get<0>((*projection)[index]);
+            });
     }
     return result;
 }
@@ -124,33 +137,34 @@ neuron_traits::ISIPeriodType update_isi(
         // Do not update last_step_
         return neuron.isi_status_;
     }
-    else
+
+    switch (neuron.isi_status_)
     {
-        switch (neuron.isi_status_)
-        {
-            case neuron_traits::ISIPeriodType::is_forced:
+        case neuron_traits::ISIPeriodType::is_forced:
+            neuron.isi_status_ = neuron_traits::ISIPeriodType::period_started;
+            neuron.first_isi_spike_ = step;
+            break;
+        case neuron_traits::ISIPeriodType::period_started:
+            if (neuron.last_step_ - step < neuron.isi_max_)
+            {
+                neuron.isi_status_ = neuron_traits::ISIPeriodType::period_continued;
+            }
+            break;
+        case neuron_traits::ISIPeriodType::period_continued:
+            if (neuron.last_step_ - step >= neuron.isi_max_ || neuron.dopamine_value_ != 0)
+            {
                 neuron.isi_status_ = neuron_traits::ISIPeriodType::period_started;
                 neuron.first_isi_spike_ = step;
-                break;
-            case neuron_traits::ISIPeriodType::period_started:
-                if (neuron.last_step_ - step < neuron.isi_max_)
-                    neuron.isi_status_ = neuron_traits::ISIPeriodType::period_continued;
-                break;
-            case neuron_traits::ISIPeriodType::period_continued:
-                if (neuron.last_step_ - step >= neuron.isi_max_ || neuron.dopamine_value_ != 0)
-                {
-                    neuron.isi_status_ = neuron_traits::ISIPeriodType::period_started;
-                    neuron.first_isi_spike_ = step;
-                }
-                break;
-            case neuron_traits::ISIPeriodType::not_in_period:
-                neuron.isi_status_ = neuron_traits::ISIPeriodType::period_started;
-                neuron.first_isi_spike_ = step;
-                break;
-            default:
-                throw std::runtime_error("Not supported ISI status.");
-        }
+            }
+            break;
+        case neuron_traits::ISIPeriodType::not_in_period:
+            neuron.isi_status_ = neuron_traits::ISIPeriodType::period_started;
+            neuron.first_isi_spike_ = step;
+            break;
+        default:
+            throw std::runtime_error("Not supported ISI status.");
     }
+
     neuron.last_step_ = step;
     return neuron.isi_status_;
 }
@@ -181,12 +195,19 @@ void process_spiking_neurons(
         auto &neuron = population[spiked_neuron_index];
         // Calculate neuron ISI status.
         update_isi<neuron_traits::BLIFATNeuron>(neuron, step);
-        if (neuron.isi_status_ == neuron_traits::ISIPeriodType::period_started)
+        if (neuron_traits::ISIPeriodType::period_started == neuron.isi_status_)
+        {
             neuron.stability_ -= neuron.stability_change_at_isi_;
+        }
 
         // This is a new spiking sequence, we can update synapses now.
         if (neuron.isi_status_ != neuron_traits::ISIPeriodType::period_continued)
-            for (auto *synapse : synapse_params) synapse->rule_.had_hebbian_update_ = false;
+        {
+            for (auto *synapse : synapse_params)
+            {
+                synapse->rule_.had_hebbian_update_ = false;
+            }
+        }
 
         // Update synapse-only data
         if (neuron.isi_status_ != neuron_traits::ISIPeriodType::is_forced)
@@ -205,7 +226,7 @@ void process_spiking_neurons(
                     !synapse->rule_.had_hebbian_update_)
                 {
                     // 2. If it did then update synaptic resource value.
-                    const float d_h = neuron.d_h_ * std::min(static_cast<float>(std::pow(2, -neuron.stability_)), 1.f);
+                    const float d_h = neuron.d_h_ * std::min(static_cast<float>(std::pow(2, -neuron.stability_)), 1.F);
                     synapse->rule_.synaptic_resource_ += d_h;
                     neuron.free_synaptic_resource_ -= d_h;
                 }
@@ -236,9 +257,15 @@ void renormalize_resource(
         auto &neuron = population[neuron_index];
         if (step - neuron.last_step_ <= neuron.isi_max_ &&
             neuron.isi_status_ != neuron_traits::ISIPeriodType::is_forced)
-            continue;  // neuron is still in ISI period, skip it.
+        {
+            // Neuron is still in ISI period, skip it.
+            continue;
+        }
 
-        if (abs(neuron.free_synaptic_resource_) < neuron.synaptic_resource_threshold_) continue;
+        if (abs(neuron.free_synaptic_resource_) < neuron.synaptic_resource_threshold_)
+        {
+            continue;
+        }
 
         auto synapse_params = get_all_connected_synapses<SynapseType>(working_projections, neuron_index);
 
@@ -246,7 +273,10 @@ void renormalize_resource(
         auto add_resource_value =
             neuron.free_synaptic_resource_ / (synapse_params.size() + neuron.resource_drain_coefficient_);
 
-        for (auto synapse : synapse_params) synapse->rule_.synaptic_resource_ += add_resource_value;
+        for (auto *synapse : synapse_params)
+        {
+            synapse->rule_.synaptic_resource_ += add_resource_value;
+        }
 
         neuron.free_synaptic_resource_ = 0.0F;
         recalculate_synapse_weights(synapse_params);
@@ -272,7 +302,7 @@ void do_dopamine_plasticity(
             std::vector<SynapseParamType *> synapse_params =
                 get_all_connected_synapses<SynapseType>(working_projections, neuron_index);
             // Change synapse values for both D > 0 and D < 0
-            for (auto synapse : synapse_params)
+            for (auto *synapse : synapse_params)
             {
                 if (step - synapse->rule_.last_spike_step_ < synapse->rule_.dopamine_plasticity_period_)
                 {
@@ -332,8 +362,10 @@ void do_STDP_resource_plasticity(
     // Call learning functions on all found projections:
     // 1. If neurons generated spikes, process these neurons.
     if (message.has_value())
+    {
         knp::backends::cpu::process_spiking_neurons<neuron_traits::BLIFATNeuron>(
             message.value(), working_projections, population, step);
+    }
 
     // 2. Do dopamine plasticity.
     knp::backends::cpu::do_dopamine_plasticity(working_projections, population, step);

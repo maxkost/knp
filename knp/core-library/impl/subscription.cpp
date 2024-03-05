@@ -14,7 +14,7 @@ namespace knp::core
 {
 
 #define INSTANCE_SUBSCRIPTIONS(n, template_for_instance, message_type) \
-    template class knp::core::Subscription<message_type>;
+    template class knp::core::Subscription<knp::core::messaging::message_type>;
 
 // cppcheck-suppress unknownMacro
 BOOST_PP_SEQ_FOR_EACH(INSTANCE_SUBSCRIPTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES))

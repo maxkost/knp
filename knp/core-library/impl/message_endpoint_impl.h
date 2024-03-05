@@ -24,6 +24,12 @@ public:
      */
     virtual void send_message(const MessageVariant &message) = 0;
 
+    MessageEndpointImpl() = default;
+    MessageEndpointImpl(const MessageEndpointImpl &) = default;
+    MessageEndpointImpl(MessageEndpointImpl &&) = default;
+    MessageEndpointImpl &operator=(const MessageEndpointImpl &) = default;
+    MessageEndpointImpl &operator=(MessageEndpointImpl &&) = default;
+
     /**
      * @brief Default virtual destructor.
      */

@@ -22,7 +22,10 @@ std::function<BackendLoader::BackendCreateFunction> BackendLoader::make_creator(
 {
     auto creator_iter = creators_.find(backend_path.string());
 
-    if (creator_iter != creators_.end()) return creator_iter->second;
+    if (creator_iter != creators_.end())
+    {
+        return creator_iter->second;
+    }
 
     SPDLOG_INFO("Loading backend by path \"{}\"", backend_path.string());
 
@@ -45,10 +48,11 @@ std::shared_ptr<core::Backend> BackendLoader::load(const std::filesystem::path &
 }
 
 
-bool BackendLoader::is_backend(const std::filesystem::path &backend_path) const
+bool BackendLoader::is_backend(const std::filesystem::path &backend_path)
 {
     SPDLOG_INFO("Checking library by path \"{}\"", backend_path.string());
-    boost::dll::shared_library lib{boost::filesystem::path(backend_path), boost::dll::load_mode::append_decorations};
+    const boost::dll::shared_library lib{
+        boost::filesystem::path(backend_path), boost::dll::load_mode::append_decorations};
     return lib.has("create_knp_backend");
 }
 

@@ -11,6 +11,7 @@
 #include <knp/core/projection.h>
 
 #include <generators.h>
+#include <spdlog/spdlog.h>
 #include <tests_common.h>
 
 #include <functional>
@@ -28,7 +29,7 @@ class MTestingBack : public knp::backends::multi_threaded_cpu::MultiThreadedCPUB
 {
 public:
     MTestingBack() = default;
-    void init() override { knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::init(); }
+    void _init() override { knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::_init(); }
 };
 
 }  // namespace knp::testing
@@ -51,7 +52,7 @@ TEST(MultiThreadCpuSuite, SmallestNetwork)
     backend.load_populations({population});
     backend.load_projections({input_projection, loop_projection});
 
-    auto endpoint = backend.message_bus_.create_endpoint();
+    auto endpoint = backend.get_message_bus().create_endpoint();
 
     knp::core::UID in_channel_uid;
     knp::core::UID out_channel_uid;
@@ -60,11 +61,11 @@ TEST(MultiThreadCpuSuite, SmallestNetwork)
     backend.subscribe<knp::core::messaging::SpikeMessage>(input_uid, {in_channel_uid});
     endpoint.subscribe<knp::core::messaging::SpikeMessage>(out_channel_uid, {population.get_uid()});
 
-    std::vector<knp::core::messaging::Step> results;
+    std::vector<knp::core::Step> results;
 
-    backend.init();
+    backend._init();
 
-    for (knp::core::messaging::Step step = 0; step < 20; ++step)
+    for (knp::core::Step step = 0; step < 20; ++step)
     {
         // Send inputs on steps 0, 5, 10, 15.
         if (step % 5 == 0)
@@ -72,38 +73,40 @@ TEST(MultiThreadCpuSuite, SmallestNetwork)
             knp::core::messaging::SpikeMessage message{{in_channel_uid, 0}, {0}};
             endpoint.send_message(message);
         }
-        backend.step();
+        backend._step();
         endpoint.receive_all_messages();
-        auto output = endpoint.unload_messages<knp::core::messaging::SpikeMessage>(out_channel_uid);
         // Write up the steps where the network sends a spike.
-        if (!output.empty()) results.push_back(step);
+        if (!endpoint.unload_messages<knp::core::messaging::SpikeMessage>(out_channel_uid).empty())
+        {
+            results.push_back(step);
+        }
     }
 
     // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop).
-    const std::vector<knp::core::messaging::Step> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
+    const std::vector<knp::core::Step> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
     ASSERT_EQ(results, expected_results);
 }
 
 
 TEST(MultiThreadCpuSuite, NeuronsGettingTest)
 {
-    knp::testing::MTestingBack backend;
+    const knp::testing::MTestingBack backend;
 
     auto s_neurons = backend.get_supported_neurons();
 
-    ASSERT_GE(s_neurons.size(), 1);
-    ASSERT_EQ(s_neurons[0], "knp::neuron_traits::BLIFATNeuron");
+    ASSERT_LE(s_neurons.size(), boost::mp11::mp_size<knp::neuron_traits::AllNeurons>());
+    ASSERT_EQ(s_neurons[0], "BLIFATNeuron");
 }
 
 
 TEST(MultiThreadCpuSuite, SynapsesGettingTest)
 {
-    knp::testing::MTestingBack backend;
+    const knp::testing::MTestingBack backend;
 
     auto s_synapses = backend.get_supported_synapses();
 
-    ASSERT_GE(s_synapses.size(), 1);
-    ASSERT_EQ(s_synapses[0], "knp::synapse_traits::DeltaSynapse");
+    ASSERT_LE(s_synapses.size(), boost::mp11::mp_size<knp::synapse_traits::AllSynapses>());
+    ASSERT_EQ(s_synapses[0], "DeltaSynapse");
 }
 
 
@@ -126,10 +129,12 @@ void batch(
     knp::backends::cpu_executors::ThreadPoolContext &pool, uint64_t iterations,
     const std::vector<uint64_t> &start_values, std::vector<uint64_t> &result)
 {
-    knp::backends::cpu_executors::ThreadPoolExecutor executor(pool);
+    knp::backends::cpu_executors::ThreadPoolExecutor const executor(pool);
     result.resize(start_values.size(), 0);
     for (size_t i = 0; i < start_values.size(); ++i)
+    {
         boost::asio::post(executor, std::bind(fibonacci, start_values[i], iterations, &result[i]));
+    }
 }
 
 

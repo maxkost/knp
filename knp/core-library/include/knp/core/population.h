@@ -49,7 +49,7 @@ public:
      */
     using NeuronGenerator = std::function<std::optional<NeuronParameters>(size_t index)>;
 
-public:
+public:  // NOLINT
     /**
      * @brief Construct a population by running a neuron generator.
      * @param generator neuron generator.
@@ -65,7 +65,7 @@ public:
      */
     Population(const knp::core::UID &uid, NeuronGenerator generator, size_t neurons_count);
 
-public:
+public:  // NOLINT
     /**
      * @brief Get population UID.
      * @return population UID.
@@ -86,7 +86,7 @@ public:
      */
     [[nodiscard]] auto &get_tags() const { return base_.tags_; }
 
-public:
+public:  // NOLINT
     /**
      * @brief Get parameters of all neurons in the population.
      * @return vector of neuron parameters.
@@ -96,7 +96,7 @@ public:
     /**
      * @brief Get parameters of the specific neuron in the population.
      * @param index index of the population neuron.
-     * @return vector of neuron parameters.
+     * @return specific neuron parameters.
      */
     [[nodiscard]] const NeuronParameters &get_neuron_parameters(size_t index) const { return neurons_[index]; }
 
@@ -114,7 +114,7 @@ public:
      */
     void set_neurons_parameters(size_t index, const NeuronParameters &parameters) { neurons_[index] = parameters; }
 
-public:
+public:  // NOLINT
     /**
      * @brief Get tags used by neuron with the specified index.
      * @param index index of the population neuron.
@@ -125,7 +125,7 @@ public:
         return base_.tags_.template get_tag<std::vector<TagMap>>("neuron_tags")[index];
     }
 
-public:
+public:  // NOLINT
     /**
      * @brief Add neurons to the population.
      * @param generator type of the neuron generator.
@@ -137,7 +137,10 @@ public:
         for (size_t i = 0; i < count; ++i)
         {
             auto neuron = generator(i);
-            if (neuron.has_value()) neurons_.template emplace_back(std::move(neuron.value()));
+            if (neuron.has_value())
+            {
+                neurons_.template emplace_back(std::move(neuron.value()));
+            }
         }
     }
 
@@ -165,18 +168,18 @@ public:
         neurons_.erase(iter);
     }
 
-public:
+public:  // NOLINT
     /**
      * @brief Get parameter values of a neuron with the given index.
      * @note Constant method.
      * @param index neuron index.
      */
-    const auto &operator[](const size_t index) const { return get_neuron_parameters(index); }
+    const auto &operator[](size_t index) const { return get_neuron_parameters(index); }
     /**
      * @brief Get parameter values of a neuron with the given index.
      * @param index neuron index.
      */
-    auto &operator[](const size_t index) { return neurons_[index]; }
+    auto &operator[](size_t index) { return neurons_[index]; }
 
     /**
      * @brief Get an iterator pointing to the first element of the population.
@@ -199,12 +202,12 @@ public:
      */
     auto end() { return neurons_.end(); }
 
-public:
+public:  // NOLINT
     /**
      * @brief Count number of neurons in the population.
      * @return number of neurons.
      */
-    size_t size() const { return neurons_.size(); }
+    [[nodiscard]] size_t size() const { return neurons_.size(); }
 
 private:
     BaseData base_;

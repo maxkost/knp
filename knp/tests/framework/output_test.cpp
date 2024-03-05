@@ -84,7 +84,7 @@ TEST(OutputSuite, ChannelTest)
     knp::core::messaging::SpikeMessage msg_2{{sender_uid, 3}, {1, 4, 10}};
     knp::core::messaging::SpikeMessage msg_3{{sender_uid, 5}, {1, 4, 7, 12}};
     // Will ignore this.
-    knp::core::messaging::SpikeMessage msg_4{{sender_uid, 6}, {1, 2, 4, 7, 10}};
+    // const knp::core::messaging::SpikeMessage msg_4{{sender_uid, 6}, {1, 2, 4, 7, 10}};
     endpoint.send_message(msg_0);
     endpoint.send_message(msg_1);
     endpoint.send_message(msg_2);

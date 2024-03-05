@@ -26,6 +26,6 @@ namespace knp::framework::input
 /**
  * @brief Functor used for generating input spike messages.
  */
-using DataGenerator = std::function<core::messaging::SpikeData(core::messaging::Step)>;
+using DataGenerator = std::function<core::messaging::SpikeData(core::Step)>;
 
 }  // namespace knp::framework::input

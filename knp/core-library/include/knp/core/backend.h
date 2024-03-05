@@ -39,7 +39,7 @@ public:
      * @details If the predicate returns `true`, network execution continues. Otherwise network execution stops./n
      * The predicate gets a step number as a parameter.
      */
-    using RunPredicate = std::function<bool(knp::core::messaging::Step)>;
+    using RunPredicate = std::function<bool(knp::core::Step)>;
 
 public:
     /**
@@ -128,14 +128,14 @@ public:
      * @return list of devices.
      * @see Device.
      */
-    std::vector<std::unique_ptr<Device>> &get_current_devices() { return devices_; }
+    [[nodiscard]] std::vector<std::unique_ptr<Device>> &get_current_devices() { return devices_; }
     /**
      * @brief Get a list of devices on which the backend runs a network.
      * @note Constant method.
      * @return list of devices.
      * @see Device.
      */
-    const std::vector<std::unique_ptr<Device>> &get_current_devices() const { return devices_; }
+    [[nodiscard]] const std::vector<std::unique_ptr<Device>> &get_current_devices() const { return devices_; }
 
     /**
      * @brief Select devices on which to run the backend.
@@ -145,16 +145,40 @@ public:
 
 public:
     /**
+     * @brief Subscribe internal endpoint to messages.
+     * @details The method is used to get a subscription necessary for receiving messages of the specified type.
+     * @tparam MessageType message type.
+     * @param receiver receiver UID.
+     * @param senders list of possible sender UIDs.
+     * @return subscription.
+     */
+    template <typename MessageType>
+    Subscription<MessageType> &subscribe(const UID &receiver, const std::vector<UID> &senders)
+    {
+        return message_endpoint_.subscribe<MessageType>(receiver, senders);
+    }
+
+    /**
+     * @brief Message bus used by backend.
+     */
+    [[nodiscard]] MessageBus &get_message_bus() { return message_bus_; }
+    /**
+     * @brief Message bus used by backend.
+     * @note Constant method.
+     */
+    [[nodiscard]] const MessageBus &get_message_bus() const { return message_bus_; }
+
+    /**
      * @brief Get message endpoint.
      * @note Constant method.
      * @return message endpoint.
      */
-    virtual const core::MessageEndpoint &get_message_endpoint() const = 0;
+    [[nodiscard]] virtual const core::MessageEndpoint &get_message_endpoint() const { return message_endpoint_; }
     /**
      * @brief Get message endpoint.
      * @return message endpoint.
      */
-    virtual core::MessageEndpoint &get_message_endpoint() = 0;
+    [[nodiscard]] virtual core::MessageEndpoint &get_message_endpoint() { return message_endpoint_; }
 
 public:
     /**
@@ -166,14 +190,14 @@ public:
      * @param pre_step function to run before the current step.
      * @param post_step function to run after the current step.
      */
-    void start(RunPredicate pre_step, RunPredicate post_step);
+    void start(const RunPredicate &pre_step, const RunPredicate &post_step);
     /**
      * @brief Start network execution on the backend.
      * @details If the predicate returns `true`, network execution continues. Otherwise network execution stops./n
      * The predicate gets a step number as a parameter.
      * @param run_predicate predicate function.
      */
-    void start(RunPredicate run_predicate);
+    void start(const RunPredicate &run_predicate);
 
     /**
      * @brief Stop network execution on the backend.
@@ -181,16 +205,10 @@ public:
     void stop();
 
     /**
-     * @brief Make one network execution step.
-     * @details You can use this method for debugging purposes.
-     */
-    virtual void step() = 0;
-
-    /**
      * @brief Get current step.
      * @return step number.
      */
-    core::messaging::Step get_step() const { return step_; }
+    [[nodiscard]] core::Step get_step() const { return step_; }
 
     /**
      * @brief Stop learning.
@@ -207,41 +225,42 @@ public:
      * @brief Get network execution status.
      * @return `true` if network is being executed, `false` if network is not being executed.
      */
-    bool running() const { return started_; }
+    [[nodiscard]] bool running() const { return started_; }
+
+public:
+    /**
+     * @brief Initialize backend before starting network execution.
+     */
+    virtual void _init() = 0;
+
+    /**
+     * @brief Make one network execution step.
+     * @details You can use this method for debugging purposes.
+     */
+    virtual void _step() = 0;
+
+    /**
+     * @brief Set backend to the uninitialized state.
+     */
+    virtual void _uninit();
 
 protected:
     /**
      * @brief Backend default constructor.
      */
-    Backend() : message_bus_(knp::core::MessageBus::construct_cpu_bus()) {}
+    Backend();
 
     /**
      * @brief Backend constructor with custom message bus implementation.
      * @param message_bus message bus.
      */
-    explicit Backend(MessageBus &&message_bus) : message_bus_(std::move(message_bus)) {}
-
-    /**
-     * @brief Initialize backend before starting network execution.
-     */
-    virtual void init() = 0;
-
-    /**
-     * @brief Set backend to the uninitialized state.
-     */
-    void uninit();
+    explicit Backend(MessageBus &&message_bus);
 
     /**
      * @brief Get and increase the number of the  current step.
      * @return step number.
      */
-    core::messaging::Step gad_step() { return step_++; }
-
-public:
-    /**
-     * @brief Message bus used by backend.
-     */
-    MessageBus message_bus_;
+    core::Step gad_step() { return step_++; }
 
 private:
     void pre_start();
@@ -251,7 +270,9 @@ private:
     std::atomic<bool> initialized_ = false;
     volatile std::atomic<bool> started_ = false;
     std::vector<std::unique_ptr<Device>> devices_;
-    core::messaging::Step step_ = 0;
+    MessageBus message_bus_;
+    MessageEndpoint message_endpoint_;
+    core::Step step_ = 0;
 };
 
 }  // namespace knp::core

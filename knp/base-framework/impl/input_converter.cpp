@@ -13,7 +13,7 @@
 namespace knp::framework::input
 {
 
-core::messaging::SpikeData IndexConverter::operator()(core::messaging::Step) const
+core::messaging::SpikeData IndexConverter::operator()(core::Step) const
 {
     core::messaging::SpikeData result;
 

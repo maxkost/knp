@@ -52,33 +52,12 @@ public:
     /**
      * @brief Synapse description structure that contains synapse parameters and indexes of the associated neurons.
      */
-    struct Synapse
-    {
-        /**
-         * @brief Synapse parameters. For example, parameters can contain synapse weight and delay.
-         */
-        SynapseParameters params_;
-
-        /**
-         * @brief Index of a neuron from which the synapse receives spikes (presynaptic neuron).
-         */
-        uint32_t id_from_;
-
-        /**
-         * @brief Index of a neuron that the synapse influences (postsynaptic neuron).
-         */
-        uint32_t id_to_;
-    };
+    using Synapse = std::tuple<SynapseParameters, size_t, size_t>;
 
     /**
      * @brief Synapse generation function.
-     * @deprecated Must be removed.
      */
-    using SynapseGenerator = std::function<std::optional<Synapse>(uint32_t)>;
-    /**
-     * @brief Synapse generation function type.
-     */
-    using SynapseGenerator1 = std::function<std::optional<std::tuple<SynapseParameters, uint32_t, uint32_t>>(uint32_t)>;
+    using SynapseGenerator = std::function<std::optional<Synapse>(size_t)>;
 
 public:
     /**
@@ -109,7 +88,7 @@ public:
         {
             /**
              * @brief STDP messages only.
-             */ 
+             */
             STDPOnly,
             /**
              * @brief STDP messages and spikes.
@@ -156,20 +135,10 @@ public:
      * @brief Construct a projection by running a synapse generator a given number of times.
      * @param presynaptic_uid presynaptic population UID.
      * @param postsynaptic_uid postsynaptic population UID.
-     * @param generator function that generates a synapse.
-     * @param num_iterations number of iterations to run the synapse generator.
-     * @deprecated Must be removed.
-     */
-    Projection(UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator, size_t num_iterations);
-
-    /**
-     * @brief Construct a projection by running a synapse generator a given number of times.
-     * @param presynaptic_uid presynaptic population UID.
-     * @param postsynaptic_uid postsynaptic population UID.
      * @param generator function that generates synapse parameters: `params_`, `id_from_`, `id_to_`.
      * @param num_iterations number of times to run the synapse generator.
      */
-    Projection(UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator1 generator, size_t num_iterations);
+    Projection(UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator, size_t num_iterations);
 
     /**
      * @brief Construct a projection by running a synapse generator a given number of times.
@@ -179,7 +148,7 @@ public:
      * @param generator function that generates synapse parameters: `params_`, `id_from_`, `id_to_`.
      * @param num_iterations number of times to run the synapse generator.
      */
-    Projection(UID uid, UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator1 generator, size_t num_iterations);
+    Projection(UID uid, UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator, size_t num_iterations);
 
 public:
     /**
@@ -225,7 +194,7 @@ public:
     [[nodiscard]] auto end() const { return parameters_.cend(); }
     /**
      * @todo It might be dangerous if you change `index_from` or `index_to` of a synapse without updating.
-     */ 
+     */
     /**
      * @brief Get an iterator pointing to the last element of the projection.
      * @return iterator.
@@ -267,16 +236,17 @@ public:
 
     /**
      * @brief Append connections to the existing projection.
-     * @param num_iterations number of iterations to run the synapse generator.
      * @param generator synapse generation function.
+     * @param num_iterations number of iterations to run the synapse generator.
      * @return number of synapses added to the projection, which can be less or equal to the `num_iterations` value.
      */
-    size_t add_synapses(size_t num_iterations, const SynapseGenerator &generator);
+    size_t add_synapses(SynapseGenerator generator, size_t num_iterations);
 
     /**
      * @brief Add a set of user-defined synapses to the projection.
      * @param synapses vector of synapses to add to the projection.
      * @note The method might create duplicate synapses.
+     * @todo Remove from the Projection to framework.
      * @return number of synapses added to the projection.
      */
     size_t add_synapses(const std::vector<Synapse> &synapses);
@@ -290,34 +260,21 @@ public:
      * @brief Remove a synapse with the given index from the projection.
      * @param index index of the synapse to remove.
      */
-    void remove_synapse(size_t index)
-    {
-        is_index_updated_ = false;
-        parameters_.erase(parameters_.begin() + index);
-    }
+    void remove_synapse(size_t index);
 
     /**
      * @brief Remove synapses with the given indexes from the projection.
      * @param indexes indexes of synapses to remove.
      * @todo Implement this.
      */
-    void remove_synapses(const std::vector<size_t> &indexes) {}  
+    void remove_synapses(const std::vector<size_t> &indexes);
 
     /**
      * @brief Remove synapses according to a given criterion.
-     * @tparam Predicate functor that determines if the synapse must be deleted (derived automatically from `predicate`
-     * if not specified).
      * @param predicate functor that receives a synapse and returns `true` if the synapse must be deleted.
      * @return number of deleted synapses.
      */
-    template <class Predicate>
-    size_t disconnect_if(Predicate predicate)
-    {
-        const size_t starting_size = parameters_.size();
-        is_index_updated_ = false;
-        parameters_.resize(std::remove_if(parameters_.begin(), parameters_.end(), predicate) - parameters_.begin());
-        return starting_size - parameters_.size();
-    }
+    size_t disconnect_if(std::function<bool(const Synapse &)> predicate);
 
     /**
      * @brief Remove all synapses that lead to a neuron with the given index.
@@ -356,7 +313,7 @@ public:
      * @brief Determine if the synapse weight change is locked.
      * @return `true` if the synapse weight change is locked, `false` if the synapse weight change is not locked.
      */
-    bool is_locked() { return is_locked_; }
+    bool is_locked() const { return is_locked_; }
 
 
 public:

@@ -43,7 +43,7 @@ public:
     {
     }
 
-    [[nodiscard]] float stdp_w(float weight_diff)
+    [[nodiscard]] float stdp_w(float weight_diff) const
     {
         // Zhang et al. 1998.
         return weight_diff > 0 ? a_plus_ * std::exp(-weight_diff / tau_plus_)
@@ -51,7 +51,7 @@ public:
     }
 
     [[nodiscard]] float stdp_delta_w(
-        const std::vector<uint32_t> &presynaptic_spikes, const std::vector<uint32_t> &postsynaptic_spikes)
+        const std::vector<uint32_t> &presynaptic_spikes, const std::vector<uint32_t> &postsynaptic_spikes) const
     {
         // Gerstner and al. 1996, Kempter et al. 1999.
 
@@ -60,16 +60,18 @@ public:
         float w_j = 0;
 
         for (const auto &t_f : presynaptic_spikes)
+        {
             for (const auto &t_n : postsynaptic_spikes)
             {
                 // cppcheck-suppress useStlAlgorithm
-                w_j += stdp_w(t_n - t_f);
+                w_j += stdp_w(static_cast<float>(t_n - t_f));
             }
+        }
         return w_j;
     }
 
     [[nodiscard]] float operator()(
-        const std::vector<uint32_t> &presynaptic_spikes, const std::vector<uint32_t> &postsynaptic_spikes)
+        const std::vector<uint32_t> &presynaptic_spikes, const std::vector<uint32_t> &postsynaptic_spikes) const
     {
         return stdp_delta_w(presynaptic_spikes, postsynaptic_spikes);
     }
@@ -95,10 +97,13 @@ void append_spike_times(
         // TODO: Inefficient, MUST be cached.
         for (auto synapse_index : synapse_index_getter(neuron_index))
         {
-            auto &rule = projection[synapse_index].params_.rule_;
+            // todo: replace 0 with "params".
+            auto &rule = std::get<0>(projection[synapse_index]).rule_;
             // Limit spike times queue.
             if ((rule.*spike_queue).size() < rule.tau_minus_ + rule.tau_plus_)
+            {
                 (rule.*spike_queue).push_back(message.header_.send_time_);
+            }
         }
     }
 }
@@ -121,7 +126,9 @@ constexpr bool is_additive_stdp_synapse()
 {
     if constexpr (!std::is_same_v<
                       SynapseType, synapse_traits::STDP<synapse_traits::STDPAdditiveRule, typename SynapseType::Base>>)
+    {
         return is_additive_stdp_synapse<typename SynapseType::Base>();
+    }
 
     using AddSTDPProj =
         typename knp::core::Projection<synapse_traits::STDP<synapse_traits::STDPAdditiveRule, SynapseType>>;
@@ -150,7 +157,10 @@ void register_additive_stdp_spikes(
     for (auto &msg : all_messages)
     {
         const auto &stdp_pop_iter = stdp_pops.find(msg.header_.sender_uid_);
-        if (stdp_pop_iter == stdp_pops.end()) continue;
+        if (stdp_pop_iter == stdp_pops.end())
+        {
+            continue;
+        }
 
         const auto &[uid, processing_type] = *stdp_pop_iter;
         assert(uid == msg.header_.sender_uid_);
@@ -187,18 +197,20 @@ void update_projection_weights_additive_stdp(
         &projection)
 {
     // Update projection parameters
-    for (auto &s : projection)
+    for (auto &proj : projection)
     {
         SPDLOG_TRACE("Applying STDP rule...");
-        auto &rule = s.params_.rule_;
+        // todo: replace 0 with "params".
+        auto &rule = std::get<0>(proj).rule_;
         const auto period = rule.tau_plus_ + rule.tau_minus_;
 
         if (rule.presynaptic_spike_times_.size() >= period && rule.postsynaptic_spike_times_.size() >= period)
         {
             STDPFormula stdp_formula(rule.tau_plus_, rule.tau_minus_, 1, 1);
-            SPDLOG_TRACE("Old weight = {}", s.params_.weight_);
-            s.params_.weight_ += stdp_formula(rule.presynaptic_spike_times_, rule.postsynaptic_spike_times_);
-            SPDLOG_TRACE("New weight = {}", s.params_.weight_);
+            // todo: replace 0 with "params".
+            SPDLOG_TRACE("Old weight = {}", std::get<0>(proj).weight_);
+            std::get<0>(proj).weight_ += stdp_formula(rule.presynaptic_spike_times_, rule.postsynaptic_spike_times_);
+            SPDLOG_TRACE("New weight = {}", std::get<0>(proj).weight_);
             rule.presynaptic_spike_times_.clear();
             rule.postsynaptic_spike_times_.clear();
         }

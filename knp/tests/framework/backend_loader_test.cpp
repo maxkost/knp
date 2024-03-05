@@ -14,24 +14,24 @@ TEST(FrameworkSuite, BackendLoaderLoad)
     knp::framework::BackendLoader backend_loader;
     auto cpu_st_backend{backend_loader.load(knp::testing::get_backend_path())};
 
-    EXPECT_NO_THROW((void)cpu_st_backend->get_uid());
+    EXPECT_NO_THROW((void)cpu_st_backend->get_uid());  // !OCLint(no "goto statement")
 }
 
 
 TEST(FrameworkSuite, BackendLoaderCheck)
 {
-    knp::framework::BackendLoader backend_loader;
+    const knp::framework::BackendLoader backend_loader;
 
     ASSERT_TRUE(backend_loader.is_backend(knp::testing::get_backend_path()));
 }
 
 
-TEST(FrameworkSuite, BackendGetDevices)
+TEST(FrameworkSuite, BackendGetDevices)  // !OCLint(small method complexity)
 {
     knp::framework::BackendLoader backend_loader;
     auto cpu_st_backend = backend_loader.load(knp::testing::get_backend_path());
 
-    std::set<knp::core::UID> dev_uids{knp::core::UID()};
+    const std::set<knp::core::UID> dev_uids{knp::core::UID()};
 
-    ASSERT_THROW(cpu_st_backend->select_devices(dev_uids), std::logic_error);
+    ASSERT_THROW(cpu_st_backend->select_devices(dev_uids), std::logic_error);  // !OCLint(no "goto statement")
 }

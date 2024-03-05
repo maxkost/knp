@@ -23,7 +23,7 @@ namespace knp::core::messaging
 /**
  * @brief List of all message types.
  */
-#define ALL_MESSAGES knp::core::messaging::SpikeMessage, knp::core::messaging::SynapticImpactMessage
+#define ALL_MESSAGES SpikeMessage, SynapticImpactMessage
 
 /**
  * @brief List of `boost::mp11` types. You can use the list to manage your message types.

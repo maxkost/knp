@@ -114,8 +114,12 @@ void process_inputs(
             auto &neuron = population[impact.postsynaptic_neuron_index_];
             impact_neuron<BlifatLikeNeuron>(neuron, impact.synapse_type_, impact.impact_value_);
             if constexpr (has_dopamine_plasticity<BlifatLikeNeuron>())
+            {
                 if (impact.synapse_type_ == synapse_traits::OutputType::EXCITATORY)
+                {
                     neuron.is_being_forced_ = message.is_forcing_;
+                }
+            }
         }
     }
 }
@@ -124,7 +128,7 @@ void process_inputs(
 /**
  * @brief Calculate a single neuron state before impacts.
  * @tparam BlifatLikeNeuron type of neuron which inference can be calculated as for a BLIFAT neuron.
- * @param neuron
+ * @param neuron neuron parameters.
  */
 template <class BlifatLikeNeuron>
 void calculate_single_neuron_state(typename knp::core::Population<BlifatLikeNeuron>::NeuronParameters &neuron)
@@ -139,9 +143,13 @@ void calculate_single_neuron_state(typename knp::core::Population<BlifatLikeNeur
     }
 
     if (neuron.bursting_phase_ && !--neuron.bursting_phase_)
+    {
         neuron.potential_ = neuron.potential_ * neuron.potential_decay_ + neuron.reflexive_weight_;
+    }
     else
+    {
         neuron.potential_ *= neuron.potential_decay_;
+    }
     neuron.pre_impact_potential_ = neuron.potential_;
 }
 
@@ -171,8 +179,8 @@ void calculate_neurons_state_part(
 /**
  *
  * @tparam BlifatLikeNeuron type of neuron which inference can be calculated as for a BLIFAT neuron.
- * @param population
- * @param messages
+ * @param population neurons population.
+ * @param messages messages from the projection to the populations.
  */
 template <class BlifatLikeNeuron>
 void calculate_neurons_state(
@@ -201,21 +209,24 @@ bool calculate_neuron_post_input_state(typename knp::core::Population<BlifatLike
             std::numeric_limits<int64_t>::max() * ((neuron.total_blocking_period_ == 0) && was_negative);
     }
     else
+    {
         neuron.total_blocking_period_ -= 1;
+    }
 
     if (neuron.inhibitory_conductance_ < 1.0)
     {
         neuron.potential_ -=
-            (neuron.potential_ - neuron.reversive_inhibitory_potential_) * neuron.inhibitory_conductance_;
+            (neuron.potential_ - neuron.reverse_inhibitory_potential_) * neuron.inhibitory_conductance_;
     }
     else
     {
-        neuron.potential_ = neuron.reversive_inhibitory_potential_;
+        neuron.potential_ = neuron.reverse_inhibitory_potential_;
     }
 
     if ((neuron.n_time_steps_since_last_firing_ > neuron.absolute_refractory_period_) &&
         (neuron.potential_ >= neuron.activation_threshold_ + neuron.dynamic_threshold_))
     {
+        SPDLOG_TRACE("Neuron spiked");
         // Spike.
         neuron.dynamic_threshold_ += neuron.threshold_increment_;
         neuron.postsynaptic_trace_ += neuron.postsynaptic_trace_increment_;
@@ -226,7 +237,10 @@ bool calculate_neuron_post_input_state(typename knp::core::Population<BlifatLike
         spike = true;
     }
 
-    if (neuron.potential_ < neuron.min_potential_) neuron.potential_ = neuron.min_potential_;
+    if (neuron.potential_ < neuron.min_potential_)
+    {
+        neuron.potential_ = neuron.min_potential_;
+    }
 
     return spike;
 }
@@ -245,7 +259,10 @@ void calculate_neurons_post_input_state(
     SPDLOG_TRACE("Calculate neurons post input state part");
     for (size_t index = 0; index < population.size(); ++index)
     {
-        if (calculate_neuron_post_input_state<BlifatLikeNeuron>(population[index])) neuron_indexes.push_back(index);
+        if (calculate_neuron_post_input_state<BlifatLikeNeuron>(population[index]))
+        {
+            neuron_indexes.push_back(index);
+        }
     }
 }
 
@@ -268,10 +285,15 @@ void calculate_neurons_post_input_state_part(
     size_t part_end = std::min(part_start + part_size, population.size());
     std::vector<size_t> output;
     for (size_t i = part_start; i < part_end; ++i)
-        if (calculate_neuron_post_input_state<BlifatLikeNeuron>(population[i])) output.push_back(i);
+    {
+        if (calculate_neuron_post_input_state<BlifatLikeNeuron>(population[i]))
+        {
+            output.push_back(i);
+        }
+    }
 
     // Updating common neuron indexes.
-    std::lock_guard<std::mutex> lock(mutex);
+    const std::lock_guard<std::mutex> lock(mutex);
     message.neuron_indexes_.reserve(message.neuron_indexes_.size() + output.size());
     message.neuron_indexes_.insert(message.neuron_indexes_.end(), output.begin(), output.end());
 }
@@ -335,7 +357,7 @@ std::optional<knp::core::messaging::SpikeMessage> calculate_blifat_population_im
     if (!neuron_indexes.empty())
     {
         knp::core::messaging::SpikeMessage res_message{{population.get_uid(), step_n}, neuron_indexes};
-        std::lock_guard<std::mutex> guard(mutex);
+        const std::lock_guard<std::mutex> guard(mutex);
         endpoint.send_message(res_message);
         SPDLOG_DEBUG("Sent {} spike(s)", res_message.neuron_indexes_.size());
         return res_message;

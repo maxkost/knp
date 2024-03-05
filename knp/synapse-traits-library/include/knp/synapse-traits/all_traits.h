@@ -20,15 +20,17 @@
 namespace knp::synapse_traits
 {
 
-// Comma-separated list of synapses.
-#define ALL_SYNAPSES                                                                  \
-    knp::synapse_traits::DeltaSynapse, knp::synapse_traits::AdditiveSTDPDeltaSynapse, \
-        knp::synapse_traits::SynapticResourceSTDPDeltaSynapse
+/**
+ * @brief Comma-separated list of synapse tags.
+ */
+#define ALL_SYNAPSES DeltaSynapse, AdditiveSTDPDeltaSynapse, SynapticResourceSTDPDeltaSynapse
+
+
 /**
  * @brief List of synapse types.
  * @details To add a new synapse type to the list, define it in the ALL_SYNAPSES macro. For example,
  * @code{.cpp}
- * #define ALL_SYNAPSES knp::synapse_traits::DeltaSynapse, knp::synapse_traits::AdditiveSTDPDeltaSynapse
+ * #define ALL_SYNAPSES DeltaSynapse, AdditiveSTDPDeltaSynapse
  * @endcode
  */
 using AllSynapses = boost::mp11::mp_list<ALL_SYNAPSES>;
