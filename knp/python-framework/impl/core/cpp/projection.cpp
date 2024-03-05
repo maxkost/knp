@@ -93,7 +93,7 @@ py::class_<core::Synapse>(
                     "remove_synapses", &core::Projection<st::synapse_type>::remove_synapses,                           \
                     "Remove synapses with the given indexes from the projection.")                                     \
                 .add_property(                                                                                         \
-                    "uid", make_handler([](core::Projection<st::synapse_type> &p) { return p.get_uid(); }),            \
+                    "uid", make_handler([](core::Projection<st::synapse_type> &proj) { return proj.get_uid(); }),      \
                     "Get projection UID.")                                                                             \
                 .def(                                                                                                  \
                     "__iter__",                                                                                        \

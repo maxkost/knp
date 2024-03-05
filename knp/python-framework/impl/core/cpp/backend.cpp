@@ -101,19 +101,21 @@ py::class_<BackendWrapper, boost::noncopyable>(
     .def(
         "load_all_populations",
         make_handler(
-            [](core::Backend &self, const py::list &l)
+            [](core::Backend &self, const py::list &populations)
             {
                 using PT = core::AllPopulationsVariant;
-                self.load_all_populations(std::vector<PT>(py::stl_input_iterator<PT>(l), py::stl_input_iterator<PT>()));
+                self.load_all_populations(
+                    std::vector<PT>(py::stl_input_iterator<PT>(populations), py::stl_input_iterator<PT>()));
             }),
         "Add populations to backend.")
     .def(
         "load_all_projections",
         make_handler(
-            [](core::Backend &self, const py::list &l)
+            [](core::Backend &self, const py::list &projections)
             {
                 using PT = core::AllProjectionsVariant;
-                self.load_all_projections(std::vector<PT>(py::stl_input_iterator<PT>(l), py::stl_input_iterator<PT>()));
+                self.load_all_projections(
+                    std::vector<PT>(py::stl_input_iterator<PT>(projections), py::stl_input_iterator<PT>()));
             }),
         "Add projections to backend.")
     .def("load_all_projections", py::pure_virtual(&core::Backend::load_all_projections), "Add projections to backend.")
@@ -210,7 +212,7 @@ py::class_<BackendWrapper, boost::noncopyable>(
             static_cast<core::MessageEndpoint &(core::Backend::*)()>(&core::Backend::get_message_endpoint),  // NOLINT
             py::return_internal_reference<>()),
         "Get message endpoint.")
-    .add_property("uid", make_handler([](core::Backend &b) { return b.get_uid(); }), "Get backend UID.")
+    .add_property("uid", make_handler([](core::Backend &self) { return self.get_uid(); }), "Get backend UID.")
     .add_property("running", &core::Backend::running, "Get network execution status.");
 
 #endif

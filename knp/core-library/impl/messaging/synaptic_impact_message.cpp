@@ -112,6 +112,8 @@ std::vector<uint8_t> pack(const SynapticImpactMessage &msg)
 SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg)
 {
     SPDLOG_TRACE("Unpacking synaptic impact message FlatBuffers class");
+    assert(s_msg);
+
     const marshal::MessageHeader *const s_msg_header{s_msg->header()};
 
     UID sender_uid{false};

@@ -37,10 +37,13 @@ struct Connection
 
     /**
      * @brief Comparison operator.
-     * @param c another connection.
+     * @param connection another connection.
      * @return true if connections have the same parameters and direction.
      */
-    bool operator==(const Connection &c) const { return from_ == c.from_ && to_ == c.to_ && index_ == c.index_; }
+    bool operator==(const Connection &connection) const
+    {
+        return from_ == connection.from_ && to_ == connection.to_ && index_ == connection.index_;
+    }
 };
 
 

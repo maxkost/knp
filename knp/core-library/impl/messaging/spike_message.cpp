@@ -73,6 +73,9 @@ std::vector<uint8_t> pack(const SpikeMessage &msg)
 SpikeMessage unpack(const marshal::SpikeMessage *s_msg)
 {
     SPDLOG_TRACE("Unpacking spike message FlatBuffers class");
+
+    assert(s_msg);
+
     const marshal::MessageHeader *const s_msg_header{s_msg->header()};
 
     UID uid1{false};

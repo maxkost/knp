@@ -42,9 +42,9 @@ namespace knp::core
 using Connection = typename std::tuple<size_t, size_t, size_t>;
 
 template <int N>
-size_t get_nth(const Connection &x)
+size_t get_nth(const Connection &connection)
 {
-    return std::get<N>(x);
+    return std::get<N>(connection);
 }
 
 
@@ -58,7 +58,7 @@ public:
 
 
 template <typename SynapseType>
-Projection<SynapseType>::Projection(UID presynaptic_uid, UID postsynaptic_uid)
+Projection<SynapseType>::Projection(UID presynaptic_uid, UID postsynaptic_uid)  //! OCLint(Parameters are used)
     : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -68,7 +68,7 @@ Projection<SynapseType>::Projection(UID presynaptic_uid, UID postsynaptic_uid)
 
 
 template <typename SynapseType>
-Projection<SynapseType>::Projection(UID uid, UID presynaptic_uid, UID postsynaptic_uid)
+Projection<SynapseType>::Projection(UID uid, UID presynaptic_uid, UID postsynaptic_uid)  //! OCLint(Parameters are used)
     : base_{uid}, presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -79,7 +79,7 @@ Projection<SynapseType>::Projection(UID uid, UID presynaptic_uid, UID postsynapt
 
 template <typename SynapseType>
 Projection<SynapseType>::Projection(
-    UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator, size_t num_iterations)
+    UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator, size_t num_iterations)  //! OCLint
     : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -98,7 +98,7 @@ Projection<SynapseType>::Projection(
 
 template <typename SynapseType>
 Projection<SynapseType>::Projection(
-    UID uid, UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator, size_t num_iterations)
+    UID uid, UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator, size_t num_iterations)  //! OCLint
     : base_{uid}, presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -117,12 +117,15 @@ Projection<SynapseType>::Projection(
 
 
 template <typename SynapseType>
-std::vector<size_t> knp::core::Projection<SynapseType>::get_by_presynaptic_neuron(size_t neuron_index) const
+std::vector<size_t> knp::core::Projection<SynapseType>::get_by_presynaptic_neuron(size_t neuron_index) const  //! OCLint
 {
     reindex();
     auto range = index_.find_by_presynaptic(neuron_index);
     std::vector<size_t> result;
-    for (auto iter = range.first; iter != range.second; ++iter) result.push_back(iter->index_);
+    for (auto iter = range.first; iter != range.second; ++iter)
+    {
+        result.push_back(iter->index_);
+    }
     return result;
 }
 
@@ -133,7 +136,10 @@ std::vector<size_t> knp::core::Projection<SynapseType>::get_by_postsynaptic_neur
     reindex();
     auto range = index_.find_by_postsynaptic(neuron_index);
     std::vector<size_t> result;
-    for (auto iter = range.first; iter != range.second; ++iter) result.push_back(iter->index_);
+    for (auto iter = range.first; iter != range.second; ++iter)
+    {
+        result.push_back(iter->index_);
+    }
     return result;
 }
 
@@ -244,7 +250,11 @@ size_t knp::core::Projection<SynapseType>::disconnect_neurons(size_t neuron_from
 template <typename SynapseType>
 void knp::core::Projection<SynapseType>::reindex() const
 {
-    if (is_index_updated_) return;
+    if (is_index_updated_)
+    {
+        return;
+    }
+
     index_.clear();
     for (size_t i = 0; i < parameters_.size(); ++i)
     {

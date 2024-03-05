@@ -9,8 +9,7 @@
 
 std::shared_ptr<knp::core::Backend> load_backend(cpp_framework::BackendLoader& loader, const py::object& backend_path)
 {
-    std::filesystem::path p{py::extract<std::string>(backend_path)()};
-    return loader.load(p);
+    return loader.load(py::extract<std::string>(backend_path)());
 }
 
 

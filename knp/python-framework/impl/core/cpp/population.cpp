@@ -78,7 +78,8 @@ namespace nt = knp::neuron_traits;
                         &core::Population<nt::neuron_type>::operator[]),                                               \
                     py::return_internal_reference<>(), "Get parameter values of a neuron with the given index.")       \
                 .add_property(                                                                                         \
-                    "uid", make_handler([](core::Population<nt::neuron_type> &p) { return p.get_uid(); }),             \
+                    "uid",                                                                                             \
+                    make_handler([](core::Population<nt::neuron_type> &population) { return population.get_uid(); }),  \
                     "Get population UID.");
 
 

@@ -25,15 +25,15 @@ TEST(FrameworkSuite, ModelExecutorLoad)
     kt::DeltaProjection input_projection =
         kt::DeltaProjection{knp::core::UID{false}, population.get_uid(), kt::input_projection_gen, 1};
 
-    knp::core::UID input_uid = input_projection.get_uid();
-    knp::core::UID output_uid = population.get_uid();
+    const knp::core::UID input_uid = input_projection.get_uid();
+    const knp::core::UID output_uid = population.get_uid();
 
     knp::framework::Network network;
     network.add_population(std::move(population));
     network.add_projection(std::move(input_projection));
     network.add_projection(std::move(loop_projection));
 
-    knp::core::UID i_channel_uid, o_channel_uid;
+    const knp::core::UID i_channel_uid, o_channel_uid;
 
     knp::framework::Model model(std::move(network));
     model.add_input_channel(i_channel_uid, input_uid);
@@ -43,18 +43,18 @@ TEST(FrameworkSuite, ModelExecutorLoad)
     {
         if (step % 5 == 0)
         {
-            knp::core::messaging::SpikeData s;
-            s.push_back(0);
-            return s;
+            knp::core::messaging::SpikeData spike_data;
+            spike_data.push_back(0);
+            return spike_data;
         }
-        return knp::core::messaging::SpikeData();
+        return {};
     };
 
-    knp::framework::ModelExecutor me(model, knp::testing::get_backend_path(), {{i_channel_uid, input_gen}});
+    knp::framework::ModelExecutor model_executor(model, knp::testing::get_backend_path(), {{i_channel_uid, input_gen}});
 
-    auto &out_channel = me.get_output_channel(o_channel_uid);
+    auto &out_channel = model_executor.get_output_channel(o_channel_uid);
 
-    me.start([](size_t step) { return step < 20; });
+    model_executor.start([](size_t step) { return step < 20; });
 
     std::vector<knp::core::Step> results;
     const auto &spikes = out_channel.update();

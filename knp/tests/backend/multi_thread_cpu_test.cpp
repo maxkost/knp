@@ -74,12 +74,12 @@ TEST(MultiThreadCpuSuite, SmallestNetwork)
             endpoint.send_message(message);
         }
         backend._step();
-        size_t msg_count = endpoint.receive_all_messages();
-        SPDLOG_DEBUG("Received {} messages", msg_count);
-        auto output = endpoint.unload_messages<knp::core::messaging::SpikeMessage>(out_channel_uid);
-        SPDLOG_DEBUG("Unloaded {} messages", output.size());
+        endpoint.receive_all_messages();
         // Write up the steps where the network sends a spike.
-        if (!output.empty()) results.push_back(step);
+        if (!endpoint.unload_messages<knp::core::messaging::SpikeMessage>(out_channel_uid).empty())
+        {
+            results.push_back(step);
+        }
     }
 
     // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop).
@@ -90,7 +90,7 @@ TEST(MultiThreadCpuSuite, SmallestNetwork)
 
 TEST(MultiThreadCpuSuite, NeuronsGettingTest)
 {
-    knp::testing::MTestingBack backend;
+    const knp::testing::MTestingBack backend;
 
     auto s_neurons = backend.get_supported_neurons();
 
@@ -101,7 +101,7 @@ TEST(MultiThreadCpuSuite, NeuronsGettingTest)
 
 TEST(MultiThreadCpuSuite, SynapsesGettingTest)
 {
-    knp::testing::MTestingBack backend;
+    const knp::testing::MTestingBack backend;
 
     auto s_synapses = backend.get_supported_synapses();
 
@@ -129,10 +129,12 @@ void batch(
     knp::backends::cpu_executors::ThreadPoolContext &pool, uint64_t iterations,
     const std::vector<uint64_t> &start_values, std::vector<uint64_t> &result)
 {
-    knp::backends::cpu_executors::ThreadPoolExecutor executor(pool);
+    knp::backends::cpu_executors::ThreadPoolExecutor const executor(pool);
     result.resize(start_values.size(), 0);
     for (size_t i = 0; i < start_values.size(); ++i)
+    {
         boost::asio::post(executor, std::bind(fibonacci, start_values[i], iterations, &result[i]));
+    }
 }
 
 

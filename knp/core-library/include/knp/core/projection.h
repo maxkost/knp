@@ -246,6 +246,7 @@ public:
      * @brief Add a set of user-defined synapses to the projection.
      * @param synapses vector of synapses to add to the projection.
      * @note The method might create duplicate synapses.
+     * @todo Remove from the Projection to framework.
      * @return number of synapses added to the projection.
      */
     size_t add_synapses(const std::vector<Synapse> &synapses);
@@ -312,7 +313,7 @@ public:
      * @brief Determine if the synapse weight change is locked.
      * @return `true` if the synapse weight change is locked, `false` if the synapse weight change is not locked.
      */
-    bool is_locked() { return is_locked_; }
+    bool is_locked() const { return is_locked_; }
 
 
 public:
