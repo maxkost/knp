@@ -31,7 +31,7 @@ MultiThreadedCPUBackend::MultiThreadedCPUBackend(
     : population_part_size_(population_part_size),
       projection_part_size_(projection_part_size),
       calc_pool_(std::make_unique<cpu_executors::ThreadPool>(
-          !thread_count ? std::thread::hardware_concurrency() : thread_count))
+          thread_count != 0 ? thread_count : std::thread::hardware_concurrency()))
 {
     SPDLOG_INFO(
         "MT CPU backend instance created, threads count = {}...",

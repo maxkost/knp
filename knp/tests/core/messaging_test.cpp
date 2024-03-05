@@ -36,7 +36,7 @@ TEST(MessageSuite, ImpactToChannelTest)
     const knp::synapse_traits::OutputType type = knp::synapse_traits::OutputType::DOPAMINE;
     const std::vector<knp::core::messaging::SynapticImpact> impacts{{1, 2, type, 3, 4}, {5, 6, type, 7, 8}};
 
-    knp::core::messaging::SynapticImpactMessage message_in{{uid, time}, pre_uid, post_uid, false, impacts};
+    const knp::core::messaging::SynapticImpactMessage message_in{{uid, time}, pre_uid, post_uid, false, impacts};
     knp::core::messaging::SynapticImpactMessage message_out;
 
     std::stringstream stream;
@@ -67,9 +67,11 @@ TEST(MessageSuite, SubscriptionTest)
 TEST(MessageSuite, HeaderIOTest)
 {
     std::stringstream stream;
-    knp::core::UID uid;
-    uint64_t time = 12345;
-    knp::core::messaging::MessageHeader header_in{uid, time}, header_out;
+    const knp::core::UID uid;
+    const uint64_t time = 12345;
+    const knp::core::messaging::MessageHeader header_in{uid, time};
+    knp::core::messaging::MessageHeader header_out;
+
     stream << header_in;
     stream >> header_out;
     ASSERT_EQ(header_in.sender_uid_, header_out.sender_uid_);

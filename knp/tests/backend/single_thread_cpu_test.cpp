@@ -253,7 +253,10 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
         auto output = endpoint.unload_messages<knp::core::messaging::SpikeMessage>(out_channel_uid);
         SPDLOG_DEBUG("Unloaded {} messages", output.size());
         // Write up the steps where the network sends a spike
-        if (!output.empty()) results.push_back(step);
+        if (!output.empty())
+        {
+            results.push_back(step);
+        }
     }
 
     std::vector<float> old_synaptic_weights, new_synaptic_weights;
@@ -273,7 +276,7 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
         std::transform(
             prj.begin(), prj.end(), std::back_inserter(new_synaptic_weights),
             // todo: replace 0 with "params".
-            [](const auto &s) { return std::get<0>(s).weight_; });
+            [](const auto &synapse) { return std::get<0>(synapse).weight_; });
     }
 
     // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)

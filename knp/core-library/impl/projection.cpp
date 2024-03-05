@@ -58,7 +58,7 @@ public:
 
 
 template <typename SynapseType>
-Projection<SynapseType>::Projection(UID presynaptic_uid, UID postsynaptic_uid)  //! OCLint(Parameters are used)
+Projection<SynapseType>::Projection(UID presynaptic_uid, UID postsynaptic_uid)  // !OCLint(Parameters are used)
     : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -68,7 +68,7 @@ Projection<SynapseType>::Projection(UID presynaptic_uid, UID postsynaptic_uid)  
 
 
 template <typename SynapseType>
-Projection<SynapseType>::Projection(UID uid, UID presynaptic_uid, UID postsynaptic_uid)  //! OCLint(Parameters are used)
+Projection<SynapseType>::Projection(UID uid, UID presynaptic_uid, UID postsynaptic_uid)  // !OCLint(Parameters are used)
     : base_{uid}, presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -79,7 +79,7 @@ Projection<SynapseType>::Projection(UID uid, UID presynaptic_uid, UID postsynapt
 
 template <typename SynapseType>
 Projection<SynapseType>::Projection(
-    UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator, size_t num_iterations)  //! OCLint
+    UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator, size_t num_iterations)  // !OCLint
     : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -98,7 +98,7 @@ Projection<SynapseType>::Projection(
 
 template <typename SynapseType>
 Projection<SynapseType>::Projection(
-    UID uid, UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator, size_t num_iterations)  //! OCLint
+    UID uid, UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator, size_t num_iterations)  // !OCLint
     : base_{uid}, presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -117,7 +117,7 @@ Projection<SynapseType>::Projection(
 
 
 template <typename SynapseType>
-std::vector<size_t> knp::core::Projection<SynapseType>::get_by_presynaptic_neuron(size_t neuron_index) const  //! OCLint
+std::vector<size_t> knp::core::Projection<SynapseType>::get_by_presynaptic_neuron(size_t neuron_index) const  // !OCLint
 {
     reindex();
     auto range = index_.find_by_presynaptic(neuron_index);
