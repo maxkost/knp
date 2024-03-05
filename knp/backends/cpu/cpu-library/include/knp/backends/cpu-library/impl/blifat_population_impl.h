@@ -128,7 +128,7 @@ void process_inputs(
 /**
  * @brief Calculate a single neuron state before impacts.
  * @tparam BlifatLikeNeuron type of neuron which inference can be calculated as for a BLIFAT neuron.
- * @param neuron
+ * @param neuron neuron parameters.
  */
 template <class BlifatLikeNeuron>
 void calculate_single_neuron_state(typename knp::core::Population<BlifatLikeNeuron>::NeuronParameters &neuron)
@@ -179,8 +179,8 @@ void calculate_neurons_state_part(
 /**
  *
  * @tparam BlifatLikeNeuron type of neuron which inference can be calculated as for a BLIFAT neuron.
- * @param population
- * @param messages
+ * @param population neurons population.
+ * @param messages messages from the projection to the populations.
  */
 template <class BlifatLikeNeuron>
 void calculate_neurons_state(
