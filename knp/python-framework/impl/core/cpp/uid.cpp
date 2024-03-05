@@ -25,8 +25,8 @@ py::enum_<boost::uuids::uuid::variant_type>("uuid_variant_type")
     .value("FUTURE", boost::uuids::uuid::variant_type::variant_future);
 
 py::class_<boost::uuids::uuid>("uuid", "Boost UUID")
-    .add_property("size", &boost::uuids::uuid::size)
-    .add_property("is_nil", &boost::uuids::uuid::is_nil)
+    .add_property("size", &boost::uuids::uuid::size, "uuid size in bytes")
+    .add_property("is_nil", &boost::uuids::uuid::is_nil, "Does uuid empty?")
     .add_property("variant", &boost::uuids::uuid::variant, "UID format variant");
 
 py::to_python_converter<boost::uuids::uuid, uid_into_python>();

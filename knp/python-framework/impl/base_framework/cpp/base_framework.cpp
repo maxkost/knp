@@ -24,7 +24,8 @@ BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
     py::implicitly_convertible<std::string, std::filesystem::path>();
     py::register_ptr_to_python<std::shared_ptr<knp::core::Backend>>();
 
-    py::class_<cpp_framework::BackendLoader>("BackendLoader")
+    py::class_<cpp_framework::BackendLoader>(
+        "BackendLoader", "The BackendLoader class is a definition of a backend loader.")
         // py::return_value_policy<py::manage_new_object>()
         .def("load", &cpp_framework::BackendLoader::load, "Load backend")
         .def("load", &load_backend, "Load backend")

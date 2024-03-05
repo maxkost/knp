@@ -12,7 +12,8 @@
 #    include "common.h"
 
 
-py::class_<core::messaging::SpikeData>("SpikeData").def(py::vector_indexing_suite<core::messaging::SpikeData>());
+py::class_<core::messaging::SpikeData>("SpikeData", "List of spike indexes.")
+    .def(py::vector_indexing_suite<core::messaging::SpikeData>());
 //    .def("__str__", static_cast<std::ostream &(std::ostream &, const
 //    core::messaging::SpikeData&)>(&core::messaging::operator<<));
 

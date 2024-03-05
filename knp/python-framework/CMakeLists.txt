@@ -32,7 +32,7 @@ get_property(KNP_PYTHON_TARGETS DIRECTORY ${dir} PROPERTY BUILDSYSTEM_TARGETS)
 
 add_custom_target("${PROJECT_NAME}-generate-python-interface-files" ALL
         WORKING_DIRECTORY "${KNP_PYTHON_OUTPUT_DIRECTORY}"
-        COMMAND ${MYPY_STUBGEN} -p "knp" -o "." --include-docstrings --include-private
+        COMMAND ${MYPY_STUBGEN} -p "knp" -o "." --include-private
         DEPENDS ${KNP_PYTHON_TARGETS})
 
 get_property(KNP_PYTHON_TARGETS DIRECTORY ${dir} PROPERTY BUILDSYSTEM_TARGETS)
