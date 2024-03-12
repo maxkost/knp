@@ -24,6 +24,8 @@ knp_add_python_module(base_framework
 
 add_custom_target("${PROJECT_NAME}-copy-python-tests" ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/tests" "${KNP_PYTHON_OUTPUT_DIRECTORY}/tests")
+add_custom_target("${PROJECT_NAME}-copy-common-files" ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/packaging/common" "${KNP_PYTHON_OUTPUT_DIRECTORY}")
 add_custom_target("${PROJECT_NAME}-copy-common-python-files" ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/packaging/python" "${KNP_PYTHON_OUTPUT_DIRECTORY}/knp")
 
