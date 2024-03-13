@@ -1,0 +1,10 @@
+/*
+  Search panel height fitted by the content and panel width.
+ */
+
+#MSearchResultsWindow {
+    height: fit-content !important;
+    resize: horizontal;
+    overflow: auto;
+    width: fit-content !important;
+}
