@@ -1422,7 +1422,9 @@ HTML_EXTRA_FILES       = @DOXYGEN_HTML_EXTRA_FILES@ \
                          @DOXYGEN_SRCDIR@/common_files/icons/symbol-class.svg \
                          @DOXYGEN_SRCDIR@/common_files/icons/symbol-namespace.svg \
                          @DOXYGEN_SRCDIR@/common_files/icons/symbol-class_white.svg \
-                         @DOXYGEN_SRCDIR@/common_files/icons/symbol-namespace_white.svg
+                         @DOXYGEN_SRCDIR@/common_files/icons/symbol-namespace_white.svg \
+                         @DOXYGEN_SRCDIR@/common_files/icons/sync_on.png \
+                         @DOXYGEN_SRCDIR@/common_files/icons/sync_off.png
 
 # The HTML_COLORSTYLE tag can be used to specify if the generated HTML output
 # should be rendered with a dark or light theme.
