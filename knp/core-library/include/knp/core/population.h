@@ -46,6 +46,8 @@ public:
 
     /**
      * @brief Type of the neuron generator.
+     * @param index current neuron index.
+     * @tparam NeuronParameters neuron parameters type.
      */
     using NeuronGenerator = std::function<std::optional<NeuronParameters>(size_t index)>;
 
@@ -104,6 +106,7 @@ public:  // NOLINT
      * @brief Set parameters for the specific neuron in the population.
      * @param index index of the population neuron.
      * @param parameters vector of neuron parameters defined in NeuronParameters for the population.
+     * @note move method.
      */
     void set_neuron_parameters(size_t index, NeuronParameters &&parameters) { neurons_[index] = std::move(parameters); }
 
@@ -111,6 +114,7 @@ public:  // NOLINT
      * @brief Set parameters for the specific neuron in the population.
      * @param index index of the population neuron.
      * @param parameters vector of neuron parameters defined in NeuronParameters for the population.
+     * @note copy method.
      */
     void set_neurons_parameters(size_t index, const NeuronParameters &parameters) { neurons_[index] = parameters; }
 
