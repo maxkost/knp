@@ -47,7 +47,6 @@ public:
     /**
      * @brief Type of the neuron generator.
      * @param index current neuron index.
-     * @tparam NeuronParameters neuron parameters type.
      */
     using NeuronGenerator = std::function<std::optional<NeuronParameters>(size_t index)>;
 
