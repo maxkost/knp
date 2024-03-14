@@ -103,3 +103,19 @@ html.dark-mode td#projectlogo > img {
 .title_screenshot .caption {
     display: none;
 }
+
+
+.navpath li.navelem a:hover
+{
+    text-shadow: none !important;
+    text-decoration: underline;
+	color:#009982;
+}
+
+
+/* Filter generator: https://codepen.io/sosuke/pen/Pjoqqp */
+/*
+#nav-sync {
+    filter: invert(45%) sepia(94%) saturate(598%) hue-rotate(127deg) brightness(89%) contrast(101%);
+}
+*/
