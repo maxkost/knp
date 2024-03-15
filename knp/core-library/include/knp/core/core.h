@@ -17,6 +17,11 @@
 
 
 /**
+ * @namespace knp
+ * @brief General framework namespace.
+ */
+
+/**
  * @brief Core library namespace.
  */
 namespace knp::core

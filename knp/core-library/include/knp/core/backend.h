@@ -23,6 +23,12 @@
 
 #include <boost/config.hpp>
 
+
+/**
+ * @namespace knp::backends
+ * @brief Namespace for the concrete backends implementation.
+ */
+
 /**
  * @brief Core library namespace.
  */
