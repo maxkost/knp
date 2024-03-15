@@ -15,6 +15,11 @@
 
 
 /**
+ * @namespace knp::devices
+ * @brief Concrete devices implementation namespace.
+ */
+
+/**
  * @brief CPU device namespace.
  */
 namespace knp::devices::cpu
