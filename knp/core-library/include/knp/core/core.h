@@ -18,7 +18,7 @@
 
 /**
  * @namespace knp
- * @brief General library namespace.
+ * @brief General framework namespace.
  */
 
 /**
