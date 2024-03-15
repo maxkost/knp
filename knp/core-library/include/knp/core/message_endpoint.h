@@ -148,7 +148,7 @@ public:
     /**
      * @brief Receive all messages that were sent to the endpoint.
      * @param sleep_duration time interval in milliseconds between the moments of receiving messages.
-     * @return received messages number.
+     * @return number of received messages.
      */
     size_t receive_all_messages(const std::chrono::milliseconds &sleep_duration = std::chrono::milliseconds(0));
 

@@ -34,7 +34,7 @@ template <>
 struct default_values<BLIFATNeuron>
 {
     /**
-     * @brief The parameter is the default value of `steps_before_firing` for a BLIFAT neuron.
+     * @brief The parameter defines the default value of `steps_before_firing` for a BLIFAT neuron.
      */
     constexpr static std::size_t steps_before_firing_ = std::numeric_limits<std::size_t>::infinity();
     /**
@@ -47,7 +47,7 @@ struct default_values<BLIFATNeuron>
      */
     constexpr static double min_potential_ = -1.0e9;
     /**
-     * @brief The default value of the threshold for membrane potential.
+     * @brief The parameter defines the default value of the threshold for membrane potential.
      */
     constexpr static double activation_threshold_ = 1.0;
     /**

@@ -53,18 +53,18 @@ struct SpikeMessage
 
 
 /**
- * @brief Equality operator for the spike messages.
+ * @brief Check if two spike messages are the same.
  * @param sm1 first message.
  * @param sm2 second message.
- * @return equality.
+ * @return `true` if both messages are the same.
  */
 bool operator==(const SpikeMessage &sm1, const SpikeMessage &sm2);
 
 
 /**
- * @brief Send spiking neurons indexes to an output stream.
+ * @brief Send spiking neuron indexes to an output stream.
  * @param stream output stream.
- * @param spikes indexes vector.
+ * @param spikes index vector.
  */
 std::ostream &operator<<(std::ostream &stream, const core::messaging::SpikeData &spikes);
 

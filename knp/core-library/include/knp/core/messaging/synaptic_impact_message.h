@@ -96,17 +96,17 @@ struct SynapticImpactMessage
 
 
 /**
- * @brief Equality operator for the synaptic impact messages.
+ * @brief Check if two synaptic impact messages are the same.
  * @param sm1 first message.
  * @param sm2 second message.
- * @return equality.
+ * @return `true` if both messages are the same.
  */
 bool operator==(const SynapticImpactMessage &sm1, const SynapticImpactMessage &sm2);
 
 
 /**
  * @brief Synaptic messages that the projection will send in the future depending on the network execution step number.
- * @todo: remove from there, because needs only for backends.
+ * @todo To remove as it is required only for backends.
  */
 typedef std::unordered_map<uint64_t, SynapticImpactMessage> SynapticMessageQueue;
 

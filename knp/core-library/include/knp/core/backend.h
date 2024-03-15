@@ -159,11 +159,11 @@ public:
     }
 
     /**
-     * @brief Message bus used by backend.
+     * @brief Get message bus used by backend.
      */
     [[nodiscard]] MessageBus &get_message_bus() { return message_bus_; }
     /**
-     * @brief Message bus used by backend.
+     * @brief Get message bus used by backend.
      * @note Constant method.
      */
     [[nodiscard]] const MessageBus &get_message_bus() const { return message_bus_; }
@@ -257,7 +257,7 @@ protected:
     explicit Backend(MessageBus &&message_bus);
 
     /**
-     * @brief Get and increase the number of the  current step.
+     * @brief Get the current step and increase the step number.
      * @return step number.
      */
     core::Step gad_step() { return step_++; }
