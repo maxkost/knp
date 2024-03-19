@@ -12,7 +12,7 @@ include(GNUInstallDirs)
 include(clang-tidy)
 include(knp-functions)
 
-find_package(Boost 1.66.0 COMPONENTS system REQUIRED)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS system REQUIRED)
 
 file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/backends/cpu-multi-threaded/*.h)
 source_group(source REGULAR_EXPRESSION "impl/.*")

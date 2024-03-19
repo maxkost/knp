@@ -7,7 +7,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(knp_python_framework LANGUAGES C CXX)
 
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
-find_package(Boost 1.66.0 COMPONENTS python REQUIRED)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS python REQUIRED)
 
 include(knp-functions)
 

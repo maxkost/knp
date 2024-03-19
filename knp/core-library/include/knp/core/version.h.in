@@ -1,0 +1,19 @@
+/**
+* @file version.h
+* @brief KNP version components.
+* @author Artiom N.
+* @date 19.03.2024
+*/
+
+#pragma once
+
+#include <string>
+
+
+/**
+ * @brief Core library namespace.
+ */
+namespace knp::core
+{
+const std::string version = "@KNP_VERSION@";
+}  // namespace knp::core

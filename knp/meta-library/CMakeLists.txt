@@ -8,7 +8,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp-meta VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 
-find_package(Boost 1.66.0 REQUIRED)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
 find_package(ZeroMQ REQUIRED)
 
 include(GNUInstallDirs)
@@ -20,9 +20,9 @@ source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "includ
 
 add_library("${PROJECT_NAME}"
     INTERFACE
-
     ${${PROJECT_NAME}_headers}
-    )
+)
+
 add_library(KNP::Meta ALIAS "${PROJECT_NAME}")
 
 target_include_directories("${PROJECT_NAME}" INTERFACE

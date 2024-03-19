@@ -4,12 +4,13 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 project(knp-doc)
 
+set(DOXYFILE_IN "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in")
 file(REAL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../knp" KNP_DIR)
 
 message(DEBUG "KNP directory: ${KNP_DIR}")
 
-
 if(KNP_BUILD_DOCUMENTATION)
+    message(STATUS "Generating documentation...")
     include("doxygen")
     foreach(_i
             core-library base-framework
@@ -24,9 +25,9 @@ if(KNP_BUILD_DOCUMENTATION)
 
     list(APPEND _strip_list "${KNP_DIR}")
 
-    add_doxygen(knp-doc "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in"
+    add_doxygen(knp-doc "${DOXYFILE_IN}"
         PROJECT_NAME "Kaspersky Neuromorphic Platform"
-        PROJECT_VERSION "1.0.0"
+        PROJECT_VERSION "${KNP_VERSION}"
         PROJECT_BRIEF "API Reference"
         OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/doc_doxygen"
         INPUT "${KNP_DIR}"
@@ -40,4 +41,6 @@ if(KNP_BUILD_DOCUMENTATION)
     )
     # Automatically build doc.
     add_dependencies(knp-core knp-doc)
+else()
+    message(STATUS "Documentation generating disabled.")
 endif()

@@ -6,7 +6,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp-base-framework VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 
-find_package(Boost 1.66.0 COMPONENTS filesystem REQUIRED)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS filesystem REQUIRED)
 
 include(GNUInstallDirs)
 include(knp-functions)
