@@ -6,12 +6,14 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp-base-framework VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 
+set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/framework")
+
 find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS filesystem REQUIRED)
 
 include(GNUInstallDirs)
 include(knp-functions)
 
-file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/framework/*.h)
+file(GLOB_RECURSE ${PROJECT_NAME}_headers include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/*.h)
 
 source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "include/.*")
@@ -34,10 +36,9 @@ target_link_libraries("${PROJECT_NAME}-core" PUBLIC KNP::Core KNP::Neuron::Trait
 
 install(TARGETS "${PROJECT_NAME}-core"
         EXPORT "${PROJECT_NAME}"
-        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-        INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-        PUBLIC_HEADER
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
-        )
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp")
+
+install(
+        DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
+        FILES_MATCHING PATTERN "*.h")

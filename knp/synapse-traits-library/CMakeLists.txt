@@ -8,17 +8,14 @@ project(knp-synapse-traits LANGUAGES C CXX)
 
 include(knp-functions)
 
+set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/synapse-traits")
+
+file(GLOB_RECURSE ${PROJECT_NAME}_headers include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/*.h)
+
 add_library("${PROJECT_NAME}"
-    INTERFACE
-    include/knp/synapse-traits/type_traits.h
-    include/knp/synapse-traits/delta.h
-    include/knp/synapse-traits/all_traits.h
-    include/knp/synapse-traits/output_types.h
-    include/knp/synapse-traits/stdp_common.h
-    include/knp/synapse-traits/stdp_type_traits.h
-    include/knp/synapse-traits/stdp_add_rule.h
-    include/knp/synapse-traits/stdp_synaptic_resource_rule.h
-)
+        INTERFACE
+        ${${PROJECT_NAME}_headers}
+        )
 add_library(KNP::Synapse::Traits ALIAS "${PROJECT_NAME}")
 
 target_include_directories("${PROJECT_NAME}" INTERFACE
@@ -27,12 +24,7 @@ target_include_directories("${PROJECT_NAME}" INTERFACE
 
 target_link_libraries("${PROJECT_NAME}" INTERFACE KNP::Meta)
 
-install(TARGETS "${PROJECT_NAME}"
-        EXPORT "${PROJECT_NAME}"
-        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-        INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-        PUBLIC_HEADER
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
-        )
+install(
+        DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
+        FILES_MATCHING PATTERN "*.h")

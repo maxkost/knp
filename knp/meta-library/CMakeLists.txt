@@ -8,6 +8,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp-meta VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 
+set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/meta")
+
 find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
 find_package(ZeroMQ REQUIRED)
 
@@ -15,7 +17,7 @@ include(GNUInstallDirs)
 include(clang-tidy)
 include(knp-functions)
 
-file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/meta/*.h)
+file(GLOB_RECURSE ${PROJECT_NAME}_headers include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/*.h)
 source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "include/.*")
 
 add_library("${PROJECT_NAME}"
@@ -32,6 +34,6 @@ target_include_directories("${PROJECT_NAME}" INTERFACE
 target_include_directories("${PROJECT_NAME}" INTERFACE ${Boost_INCLUDE_DIRS})
 
 install(
-    FILES
-    ${${PROJECT_NAME}_headers}
-    DESTINATION "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}")
+        DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
+        FILES_MATCHING PATTERN "*.h")

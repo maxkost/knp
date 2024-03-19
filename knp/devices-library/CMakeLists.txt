@@ -12,7 +12,9 @@ include(GNUInstallDirs)
 include(clang-tidy)
 include(knp-functions)
 
-file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/devices/*.h)
+set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/devices")
+
+file(GLOB_RECURSE ${PROJECT_NAME}_headers include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/*.h)
 
 source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers REGULAR_EXPRESSION "include/.*")
@@ -38,6 +40,7 @@ endif()
 
 install(TARGETS "${PROJECT_NAME}-cpu"
         EXPORT "${PROJECT_NAME}-cpu"
+        COMPONENT "${PROJECT_NAME}"
 #        NAMESPACE KNP::
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -47,15 +50,9 @@ install(TARGETS "${PROJECT_NAME}-cpu"
 
 install(TARGETS "${PROJECT_NAME}-cpu"
         EXPORT "${PROJECT_NAME}-cpu"
-        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-        INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-        PUBLIC_HEADER
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
-        )
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp")
 
 install(
-        FILES
-        ${${PROJECT_NAME}_headers}
-        DESTINATION "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}")
+        DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
+        FILES_MATCHING PATTERN "*.h")

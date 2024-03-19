@@ -23,7 +23,7 @@ function(determine_version_with_git)
             OUTPUT_STRIP_TRAILING_WHITESPACE)
 
     if(GIT_EXECUTION_RESULT)
-        message(WARNING "Could not retrieve version from command 'git describe --tags'")
+        message(STATUS "Could not retrieve version from command 'git describe --tags'")
         return()
     endif()
 

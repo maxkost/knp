@@ -8,26 +8,25 @@ project(knp-neuron-traits LANGUAGES C CXX)
 
 include(knp-functions)
 
+set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/neuron-traits")
+
+file(GLOB_RECURSE ${PROJECT_NAME}_headers include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/*.h)
+
 add_library("${PROJECT_NAME}"
-    INTERFACE
-    include/knp/neuron-traits/type_traits.h
-    include/knp/neuron-traits/blifat.h
-    include/knp/neuron-traits/stdp_synaptic_resource_rule.h
-    include/knp/neuron-traits/all_traits.h
-    include/knp/neuron-traits/stdp_type_traits.h)
+        INTERFACE
+        ${${PROJECT_NAME}_headers}
+)
+
 add_library(KNP::Neuron::Traits ALIAS "${PROJECT_NAME}")
+
+
 target_include_directories("${PROJECT_NAME}" INTERFACE
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
 target_link_libraries("${PROJECT_NAME}" INTERFACE KNP::Meta)
 
-install(TARGETS "${PROJECT_NAME}"
-        EXPORT "${PROJECT_NAME}"
-        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-        INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-        PUBLIC_HEADER
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
-        )
+install(
+    DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
+    FILES_MATCHING PATTERN "*.h")

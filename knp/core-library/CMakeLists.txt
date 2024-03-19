@@ -11,9 +11,9 @@ project(knp-core VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
 find_package(ZeroMQ REQUIRED)
 
+include(GNUInstallDirs)
 # Need for installation.
 include(CMakePackageConfigHelpers)
-include(GNUInstallDirs)
 include(clang-tidy)
 include(knp-functions)
 
@@ -73,8 +73,7 @@ add_library(KNP::Core ALIAS "${PROJECT_NAME}")
 
 source_group(source REGULAR_EXPRESSION "impl/.*")
 
-target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS})
-target_include_directories("${PROJECT_NAME}" PRIVATE "impl")
+target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS} "impl")
 
 # Flatbuffers headers must be generated before core compilation started.
 add_dependencies("${PROJECT_NAME}" "${PROJECT_NAME}_messaging")
@@ -119,13 +118,8 @@ configure_package_config_file(
 
 install(TARGETS "${PROJECT_NAME}"
     EXPORT "${PROJECT_NAME}"
-    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-    PUBLIC_HEADER
-    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
-)
+    COMPONENT "${PROJECT_NAME}"
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp")
 
 install(
     FILES
