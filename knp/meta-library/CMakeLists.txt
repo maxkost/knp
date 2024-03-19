@@ -30,3 +30,8 @@ target_include_directories("${PROJECT_NAME}" INTERFACE
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
 target_include_directories("${PROJECT_NAME}" INTERFACE ${Boost_INCLUDE_DIRS})
+
+install(
+    FILES
+    ${${PROJECT_NAME}_headers}
+    DESTINATION "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}")

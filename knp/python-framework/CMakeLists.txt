@@ -44,3 +44,17 @@ if(KNP_BUILD_TESTS)
             WORKING_DIRECTORY "${KNP_PYTHON_OUTPUT_DIRECTORY}"
             COMMAND ${Python_EXECUTABLE} -m pytest)
 endif()
+
+install(TARGETS
+            "${PROJECT_NAME}_core"
+            "${PROJECT_NAME}_neuron_traits"
+            "${PROJECT_NAME}_synapse_traits"
+            "${PROJECT_NAME}_base_framework"
+        EXPORT "${PROJECT_NAME}"
+        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+        INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+        PUBLIC_HEADER
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+        )
