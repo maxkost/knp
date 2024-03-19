@@ -32,68 +32,66 @@ function(knp_set_target_parameters target)
 endfunction()
 
 
-function (knp_add_library lib_name lib_type)
+function (_knp_add_library lib_name lib_type)
     set(options "")
     set(one_value_args "ALIAS;LIB_PREFIX")
-    set(multi_value_args "")
+    set(multi_value_args "LINK_PRIVATE;LINK_PUBLIC")
 
     cmake_parse_arguments(PARSED_ARGS "${options}" "${one_value_args}" "${multi_value_args}" ${ARGN})
 
     set(${lib_name}_source ${PARSED_ARGS_UNPARSED_ARGUMENTS})
 
+    add_library("${lib_name}" ${lib_type} ${${lib_name}_source})
+    knp_set_target_parameters("${lib_name}")
+
+    if (PARSED_ARGS_ALIAS)
+        add_library(${PARSED_ARGS_ALIAS} ALIAS "${lib_name}")
+    endif()
+
+    if (PARSED_ARGS_LINK_PRIVATE)
+        target_link_libraries("${lib_name}" PRIVATE ${PARSED_ARGS_LINK_PRIVATE})
+    endif()
+
+    if (PARSED_ARGS_LINK_PUBLIC)
+        target_link_libraries("${lib_name}" PUBLIC ${PARSED_ARGS_LINK_PUBLIC})
+    endif()
+
+    if (PARSED_ARGS_LIB_PREFIX)
+        target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${PARSED_ARGS_LIB_PREFIX}")
+        target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${PARSED_ARGS_LIB_PREFIX}${lib_name}")
+        set_target_properties("${lib_name}" PROPERTIES PREFIX "${PARSED_ARGS_LIB_PREFIX}")
+    else()
+        target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${CMAKE_STATIC_LIBRARY_PREFIX}")
+        target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${CMAKE_STATIC_LIBRARY_PREFIX}${lib_name}")
+    endif()
+endfunction()
+
+
+function (knp_add_library lib_name lib_type)
     string(TOUPPER "${lib_type}" lib_type)
-
     if(NOT lib_type OR lib_type STREQUAL "BOTH")
-        # Build common object library.
-        add_library("${lib_name}_obj" OBJECT ${${lib_name}_source})
-        set_target_properties("${lib_name}_obj" PROPERTIES POSITION_INDEPENDENT_CODE ON)
+        _knp_add_library("${lib_name}" SHARED ${ARGN})
 
-        add_library("${lib_name}" SHARED $<TARGET_OBJECTS:${lib_name}_obj>)
-        knp_set_target_parameters("${lib_name}")
-
-        add_library("${lib_name}_static" STATIC $<TARGET_OBJECTS:${lib_name}_obj>)
-        knp_set_target_parameters("${lib_name}_static")
-
-        if (PARSED_ARGS_LIB_PREFIX)
-            target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${PARSED_ARGS_LIB_PREFIX}")
-            target_compile_definitions("${lib_name}_static" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${PARSED_ARGS_LIB_PREFIX}")
-            target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${PARSED_ARGS_LIB_PREFIX}${lib_name}")
-            target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${PARSED_ARGS_LIB_PREFIX}${lib_name}")
-            set_target_properties("${lib_name}" PROPERTIES PREFIX "${PARSED_ARGS_LIB_PREFIX}")
-            set_target_properties("${lib_name}_static" PROPERTIES PREFIX "${PARSED_ARGS_LIB_PREFIX}")
-        else()
-            target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${CMAKE_SHARED_LIBRARY_PREFIX}")
-            target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${CMAKE_SHARED_LIBRARY_PREFIX}${lib_name}")
-            target_compile_definitions("${lib_name}_static" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${CMAKE_STATIC_LIBRARY_PREFIX}")
-            target_compile_definitions("${lib_name}_static" PRIVATE "KNP_FULL_LIBRARY_NAME=${CMAKE_STATIC_LIBRARY_PREFIX}${lib_name}")
+        if (ALIAS IN_LIST ARGN)
+            # Replace alias for the static library.
+            list(FIND ARGN ALIAS _index)
+            math(EXPR _index "${_index} + 1")
+            list(GET ARGN ${_index} _alias_value)
+            list(INSERT ARGN ${_index} "${_alias_value}Static")
+            math(EXPR _index "${_index} + 1")
+            list(REMOVE_AT ARGN ${_index})
         endif()
 
+        _knp_add_library("${lib_name}_static" STATIC ${ARGN})
+
+        target_compile_definitions("${lib_name}" PRIVATE BUILD_SHARED_LIBS)
         set_target_properties("${lib_name}_static" PROPERTIES OUTPUT_NAME "${lib_name}")
     elseif(lib_type STREQUAL SHARED OR lib_type STREQUAL MODULE)
-        add_library("${lib_name}" ${lib_type} ${${lib_name}_source})
+        _knp_add_library("${lib_name}" ${lib_type} ${ARGN})
+
         target_compile_definitions("${lib_name}" PRIVATE BUILD_SHARED_LIBS)
-        knp_set_target_parameters("${lib_name}")
-
-        if (PARSED_ARGS_LIB_PREFIX)
-            target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${PARSED_ARGS_LIB_PREFIX}")
-            target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${PARSED_ARGS_LIB_PREFIX}${lib_name}")
-            set_target_properties("${lib_name}" PROPERTIES PREFIX "${PARSED_ARGS_LIB_PREFIX}")
-        else()
-            target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${CMAKE_SHARED_LIBRARY_PREFIX}")
-            target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${CMAKE_SHARED_LIBRARY_PREFIX}${lib_name}")
-        endif()
     elseif(lib_type STREQUAL STATIC)
-        add_library("${lib_name}" STATIC ${${lib_name}_source})
-        knp_set_target_parameters("${lib_name}")
-
-        if (PARSED_ARGS_LIB_PREFIX)
-            target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${PARSED_ARGS_LIB_PREFIX}")
-            target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${PARSED_ARGS_LIB_PREFIX}${lib_name}")
-            set_target_properties("${lib_name}" PROPERTIES PREFIX "${PARSED_ARGS_LIB_PREFIX}")
-        else()
-            target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${CMAKE_STATIC_LIBRARY_PREFIX}")
-            target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${CMAKE_STATIC_LIBRARY_PREFIX}${lib_name}")
-        endif()
+        _knp_add_library("${lib_name}" STATIC ${ARGN})
     else()
         message(FATAL_ERROR "Incorrect library build type: \"${lib_type}\". Use SHARED/MODULE, STATIC or BOTH.")
     endif()
