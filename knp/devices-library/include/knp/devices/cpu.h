@@ -16,7 +16,7 @@
 
 /**
  * @namespace knp::devices
- * @brief Concrete devices implementation namespace.
+ * @brief Namespace for implementation of concrete devices.
  */
 
 /**

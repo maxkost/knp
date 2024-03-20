@@ -105,7 +105,7 @@ private:
 
 
     /**
-     * @brief Empty function needed to fulfil asio::post requirements
+     * @brief Empty function needed to fulfill asio::post requirements.
      */
     template <class Func, class Alloc>
     // cppcheck-suppress unusedPrivateFunction
@@ -114,7 +114,7 @@ private:
     }
 
     /**
-     * @brief Empty function needed to fulfil asio::post requirements.
+     * @brief Empty function needed to fulfill asio::post requirements.
      */
     template <class Func, class Alloc>
     // cppcheck-suppress unusedPrivateFunction

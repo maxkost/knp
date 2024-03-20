@@ -26,7 +26,7 @@
 
 /**
  * @namespace knp::backends
- * @brief Namespace for the concrete backends implementation.
+ * @brief Namespace for implementation of concrete backends.
  */
 
 /**
