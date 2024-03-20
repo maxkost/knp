@@ -4,7 +4,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(knp-synapse-traits LANGUAGES C CXX)
+project(knp-synapse-traits VERSION "${KNP_VERSION}" LANGUAGES C CXX
+        DESCRIPTION "Kaspersky Neuromorphic Platform synapses properties"
+        HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 include(knp-functions)
 
@@ -14,8 +16,7 @@ file(GLOB_RECURSE ${PROJECT_NAME}_headers include/${${PROJECT_NAME}_PUBLIC_INCLU
 
 add_library("${PROJECT_NAME}"
         INTERFACE
-        ${${PROJECT_NAME}_headers}
-        )
+        ${${PROJECT_NAME}_headers})
 add_library(KNP::Synapse::Traits ALIAS "${PROJECT_NAME}")
 
 target_include_directories("${PROJECT_NAME}" INTERFACE
@@ -24,7 +25,7 @@ target_include_directories("${PROJECT_NAME}" INTERFACE
 
 target_link_libraries("${PROJECT_NAME}" INTERFACE KNP::Meta)
 
-install(
-        DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+        COMPONENT "framework-dev"
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
         FILES_MATCHING PATTERN "*.h")

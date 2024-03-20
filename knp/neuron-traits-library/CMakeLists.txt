@@ -4,7 +4,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(knp-neuron-traits LANGUAGES C CXX)
+project(knp-neuron-traits VERSION "${KNP_VERSION}" LANGUAGES C CXX
+        DESCRIPTION "Kaspersky Neuromorphic Platform neurons properties library"
+        HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 include(knp-functions)
 
@@ -26,7 +28,7 @@ target_include_directories("${PROJECT_NAME}" INTERFACE
 
 target_link_libraries("${PROJECT_NAME}" INTERFACE KNP::Meta)
 
-install(
-    DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
-    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
-    FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+        COMPONENT "framework-dev"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
+        FILES_MATCHING PATTERN "*.h")

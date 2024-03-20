@@ -12,7 +12,7 @@ if(NOT KNP_VERSION)
     message(FATAL_ERROR "KNP version mandatory for build, but can't be determined!")
 endif()
 
-project(knp VERSION ${KNP_VERSION})
+project(knp VERSION "${KNP_VERSION}")
 
 set(KNP_BOOST_MIN_VERSION "1.74.0")
 

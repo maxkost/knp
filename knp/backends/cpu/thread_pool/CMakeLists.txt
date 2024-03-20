@@ -9,7 +9,6 @@ project(knp-thread-pool-library VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 
 find_package(Boost 1.66.0 REQUIRED)
 
-include(GNUInstallDirs)
 include(clang-tidy)
 include(knp-functions)
 
@@ -37,11 +36,5 @@ if(KNP_ENABLE_COVERAGE)
     link_target_with_gcov("${PROJECT_NAME}")
 endif()
 
-install(TARGETS "${PROJECT_NAME}"
-        EXPORT "${PROJECT_NAME}"
-        #        NAMESPACE KNP::
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-        )
+# Internal library, used by backends.
+# This doesn't need installation.

@@ -6,7 +6,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(knp-devices VERSION "${KNP_VERSION}" LANGUAGES C CXX)
+project(knp-devices VERSION "${KNP_VERSION}" LANGUAGES C CXX
+        DESCRIPTION "Kaspersky Neuromorphic devices parameters library"
+        HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 include(GNUInstallDirs)
 include(clang-tidy)
@@ -20,15 +22,24 @@ source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers REGULAR_EXPRESSION "include/.*")
 
 knp_add_library("${PROJECT_NAME}-cpu"
-    STATIC
+    BOTH
     impl/cpu.cpp impl/cpu_power.cpp impl/cpu_power.h
 
     ${${PROJECT_NAME}_headers}
-)
-add_library(KNP::Devices::CPU ALIAS "${PROJECT_NAME}-cpu")
 
-target_link_libraries("${PROJECT_NAME}-cpu" PRIVATE spdlog::spdlog_header_only PCM_STATIC)
-target_link_libraries("${PROJECT_NAME}-cpu" PUBLIC KNP::Core)
+    LINK_PRIVATE
+        spdlog::spdlog_header_only PCM_STATIC
+    LINK_PUBLIC
+        KNP::Core
+
+    ALIAS KNP::Devices::CPU
+)
+
+set_target_properties(
+        "${PROJECT_NAME}-cpu"
+        PROPERTIES
+        VERSION "${CMAKE_PROJECT_VERSION}"
+        SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
 
 #add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
 
@@ -38,21 +49,19 @@ if(KNP_ENABLE_COVERAGE)
     link_target_with_gcov("${PROJECT_NAME}-cpu")
 endif()
 
-install(TARGETS "${PROJECT_NAME}-cpu"
-        EXPORT "${PROJECT_NAME}-cpu"
-        COMPONENT "${PROJECT_NAME}"
-#        NAMESPACE KNP::
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
 
 install(TARGETS "${PROJECT_NAME}-cpu"
-        EXPORT "${PROJECT_NAME}-cpu"
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp")
+        COMPONENT "framework-dev"
+        LIBRARY
+#        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
+        )
 
-install(
-        DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+install(TARGETS "${PROJECT_NAME}-cpu_static"
+        COMPONENT "framework-dev"
+        ARCHIVE
+        )
+
+install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+        COMPONENT "framework-dev"
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
         FILES_MATCHING PATTERN "*.h")

@@ -4,7 +4,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(knp-base-framework VERSION "${KNP_VERSION}" LANGUAGES C CXX)
+project(knp-base-framework VERSION "${KNP_VERSION}" LANGUAGES C CXX
+        DESCRIPTION "Kaspersky Neuromorphic Platform C++ framework"
+        HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/framework")
 
@@ -19,7 +21,7 @@ source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "include/.*")
 
 knp_add_library("${PROJECT_NAME}-core"
-    SHARED
+    BOTH
     impl/backend_loader.cpp
     impl/network.cpp
     impl/model.cpp
@@ -28,17 +30,33 @@ knp_add_library("${PROJECT_NAME}-core"
     impl/output_channel.cpp
     impl/observer.cpp
 
-    ${${PROJECT_NAME}_headers})
-add_library(KNP::BaseFramework::Core ALIAS "${PROJECT_NAME}-core")
+    ${${PROJECT_NAME}_headers}
 
-target_link_libraries("${PROJECT_NAME}-core" PRIVATE spdlog::spdlog_header_only Boost::headers Boost::filesystem)
-target_link_libraries("${PROJECT_NAME}-core" PUBLIC KNP::Core KNP::Neuron::Traits KNP::Synapse::Traits)
+    ALIAS KNP::BaseFramework::Core
+    LINK_PRIVATE
+        spdlog::spdlog_header_only Boost::headers Boost::filesystem
+    LINK_PUBLIC
+        KNP::Core KNP::Neuron::Traits KNP::Synapse::Traits)
+
+set_target_properties(
+        "${PROJECT_NAME}-core"
+        PROPERTIES
+        VERSION "${CMAKE_PROJECT_VERSION}"
+        SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
 
 install(TARGETS "${PROJECT_NAME}-core"
-        EXPORT "${PROJECT_NAME}"
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp")
+        LIBRARY
+#        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
+        COMPONENT "framework")
+#install(EXPORT "${PROJECT_NAME}-core" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cmake")
 
-install(
-        DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+install(TARGETS "${PROJECT_NAME}-core_static"
+        COMPONENT "framework-dev"
+        ARCHIVE
+#        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
+        )
+
+install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+        COMPONENT "framework-dev"
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
         FILES_MATCHING PATTERN "*.h")

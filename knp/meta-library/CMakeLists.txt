@@ -6,7 +6,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(knp-meta VERSION "${KNP_VERSION}" LANGUAGES C CXX)
+project(knp-meta VERSION "${KNP_VERSION}" LANGUAGES C CXX
+        DESCRIPTION "Kaspersky Neuromorphic Platform meta functions and templates library"
+        HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/meta")
 
@@ -33,7 +35,7 @@ target_include_directories("${PROJECT_NAME}" INTERFACE
 
 target_include_directories("${PROJECT_NAME}" INTERFACE ${Boost_INCLUDE_DIRS})
 
-install(
-        DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+        COMPONENT "framework-dev"
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
         FILES_MATCHING PATTERN "*.h")

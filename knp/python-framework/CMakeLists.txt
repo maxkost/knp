@@ -4,7 +4,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(knp_python_framework LANGUAGES C CXX)
+project(knp_python_framework VERSION "${KNP_VERSION}" LANGUAGES C CXX  # PYTHON
+        DESCRIPTION "Kaspersky Neuromorphic Platform Python framework"
+        HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
 find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS python REQUIRED)
@@ -45,16 +47,18 @@ if(KNP_BUILD_TESTS)
             COMMAND ${Python_EXECUTABLE} -m pytest)
 endif()
 
+
 install(TARGETS
             "${PROJECT_NAME}_core"
             "${PROJECT_NAME}_neuron_traits"
             "${PROJECT_NAME}_synapse_traits"
             "${PROJECT_NAME}_base_framework"
-        EXPORT "${PROJECT_NAME}"
-        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-        INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-        PUBLIC_HEADER
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
-        )
+        COMPONENT "python"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/python3"
+)
+
+install(DIRECTORY
+        "${CMAKE_CURRENT_SOURCE_DIR}/packaging/common"
+        "${CMAKE_CURRENT_SOURCE_DIR}/packaging/python"
+        COMPONENT "python"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/python3")

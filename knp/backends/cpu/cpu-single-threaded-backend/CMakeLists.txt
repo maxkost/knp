@@ -6,7 +6,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(knp-cpu-single-threaded-backend VERSION "${KNP_VERSION}" LANGUAGES C CXX)
+project(knp-cpu-single-threaded-backend VERSION "${KNP_VERSION}" LANGUAGES C CXX
+        DESCRIPTION "Kaspersky Neuromorphic Platform CPU single threading backend"
+        HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/backends/cpu-single-threaded")
 
@@ -30,11 +32,25 @@ knp_add_library("${PROJECT_NAME}"
     LINK_PUBLIC KNP::Core KNP::Devices::CPU
 )
 
-install(TARGETS "${PROJECT_NAME}" "${PROJECT_NAME}_static"
-        EXPORT "${PROJECT_NAME}"
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp")
+set_target_properties(
+        "${PROJECT_NAME}"
+        PROPERTIES
+        VERSION "${CMAKE_PROJECT_VERSION}"
+        SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
 
-install(
-        DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+install(TARGETS "${PROJECT_NAME}"
+        COMPONENT "cpu-single-threaded-backend"
+        LIBRARY
+#        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
+        )
+
+install(TARGETS "${PROJECT_NAME}_static"
+        COMPONENT "cpu-single-threaded-backend-dev"
+        ARCHIVE
+#        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
+        )
+
+install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+        COMPONENT "cpu-single-threaded-backend-dev"
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp/backends"
         FILES_MATCHING PATTERN "*.h")
