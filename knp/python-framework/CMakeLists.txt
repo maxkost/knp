@@ -12,6 +12,7 @@ find_package(Python COMPONENTS Interpreter Development REQUIRED)
 find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS python REQUIRED)
 
 include(knp-functions)
+include(file-functions)
 
 set(KNP_PYTHON_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${PROJECT_NAME}")
 
@@ -47,18 +48,9 @@ if(KNP_BUILD_TESTS)
             COMMAND ${Python_EXECUTABLE} -m pytest)
 endif()
 
-
-install(TARGETS
-            "${PROJECT_NAME}_core"
-            "${PROJECT_NAME}_neuron_traits"
-            "${PROJECT_NAME}_synapse_traits"
-            "${PROJECT_NAME}_base_framework"
+install(DIRECTORY
+        "${KNP_PYTHON_OUTPUT_DIRECTORY}/knp"
         COMPONENT "python"
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/python3"
-)
-
-install(DIRECTORY
-        "${CMAKE_CURRENT_SOURCE_DIR}/packaging/common"
-        "${CMAKE_CURRENT_SOURCE_DIR}/packaging/python"
-        COMPONENT "python"
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/python3")
+        PATTERN "__pycache__" EXCLUDE
+        PATTERN "__init__.pyi" EXCLUDE)
