@@ -7,4 +7,4 @@ add_executable("${PROJECT_NAME}" main.cpp)
 target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::BaseFramework::Core)
 
 install(TARGETS "${PROJECT_NAME}"
-        COMPONENT "knp-examples")
+        COMPONENT "examples")

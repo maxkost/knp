@@ -18,3 +18,5 @@ install(FILES
         COMPONENT "documentation"
         TYPE DOC
         RENAME "html/index.html")
+
+set(CPACK_DEBIAN_knp-documentation_PACKAGE_ARCHITECTURE "noarch")
