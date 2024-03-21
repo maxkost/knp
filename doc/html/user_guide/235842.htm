@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="maximum-scale=1.0" />
+    <title> Класс Population </title>
+    <script type="text/javascript" src="../langs.js"></script>
+    <script type="text/javascript">
+        !function ( w, d ) {
+            var scriptsPath="";
+            d.writeln("\x3Cscript type='text/javascript' src='"+scriptsPath+d.documentElement.lang+".js'>\x3C/script>");
+        }( window, document );
+    </script>
+    <script type="text/javascript" src="toc.js"></script>
+
+    <script type="text/javascript" src="aiconverter_result.js"></script>
+    <link rel="stylesheet" type='text/css' href="typography.css"/>
+    <link rel="stylesheet" type='text/css' href="styles.css"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="favicon.png" type="image/png"/>
+
+
+            <!--[if lte IE 9]>
+                <link rel="stylesheet" type="text/css" href="bootstrap.css">
+            <![endif]-->
+            <!--[if lte IE 8]>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+            <![endif]-->
+            </head>
+
+<body id="who-content">
+	<div class="cont">
+	<h3 id="t235842" class="heading3">Класс Population</h3>
+<p class="bodytext">Шаблонный класс <code class="programcharacter">Population</code> реализует контейнер, который содержит <a id="h254021" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254021','h254021')" target="_self">нейроны</a>, принадлежащие одной модели. При использовании шаблона класса <code class="programcharacter">Population</code> вы можете указать один из типов нейронов, поддерживаемых библиотекой характеристик нейронов.</p>
+<div id="d254021" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254021');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Узел нейронной сети, имеющий набор атрибутов. На основе атрибутов нейрона и последовательности входных сигналов происходит вычисление некоторой математической функции, результатом которого является синаптическое воздействие или его отсутствие.</p>
+</div><p class="bodytext">С помощью класса <code class="programcharacter">Population</code> вы можете передать данные популяций на бекенд для вычисления их атрибутов. После вычисления новые атрибуты популяций хранятся на бекенде. Чтобы передать новые атрибуты от бекенда в соответствующие объекты популяций, вы можете вызвать синхронизацию. Если вы вручную изменили атрибуты популяции до вызова синхронизации, вы можете заново передать данные популяции на бекенд для вычисления новых атрибутов. Подробнее о методах популяций и бекендов см. <a id="h252220" class="crossreferencetemplate" href="240504.htm" target="_self">API-документацию Kaspersky Neuromorphic Platform</a>.</p>
+<p class="bodytext">Каждая популяция нейронов содержит следующие атрибуты:</p>
+<ul class="listbullet1"><li class="listbullet1"><a id="h248869" class="crossreferencetemplate" href="248867.htm" target="_self">Базовые данные</a> популяции.</li><li class="listbullet1">Тип нейронов, которые хранятся в популяции. <p class="listcontinue1">Тип нейрона определяет набор атрибутов и функцию этого нейрона. Функция нейрона реализуется для конкретного типа нейрона на бекенде. При получении синаптического воздействия функция нейрона изменяет значения его атрибутов и возвращает состояние генерации спайка.</p>
+</li><li class="listbullet1">Атрибуты нейронов популяции. Состояние нейронов в популяции.</li></ul>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div>
+</body>
+
+</html>
