@@ -1,3 +1,6 @@
+include_guard(GLOBAL)
+
+
 find_program(MEMORYCHECK_COMMAND valgrind)
 if (MEMORYCHECK_COMMAND)
     message(STATUS "Found Valgrind: ${MEMORYCHECK_COMMAND}")

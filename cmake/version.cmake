@@ -2,6 +2,9 @@
 # CMake version reading functions. Artiom N.(cl)2022
 #
 
+include_guard(GLOBAL)
+
+
 function(read_version_file filename)
     message(STATUS "Reading version file...")
     file(READ "${filename}" VERSION_FILE_RAW)

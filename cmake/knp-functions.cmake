@@ -2,8 +2,8 @@
 # KNP build functions. Artiom N.(cl)2023.
 #
 
-
 include_guard(GLOBAL)
+
 
 function(knp_capitalize_string src result)
     # Get first letter and capitalize.
@@ -140,32 +140,6 @@ macro (knp_set_cmake_common_parameters)
 #        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,noexecstack -Wl,-z,relro,-z,now")
     endif()
 endmacro()
-
-
-# Function:                 EXCLUDE_FILES_FROM_DIR_IN_LIST
-# Description:              Exclude all files from a list under a specific directory.
-# Param _InFileList:        Input and returned List
-# Param _excludeDirName:    Name of the directory, which shall be ignored.
-# Param _verbose:           Print the names of the files handled
-
-function(EXCLUDE_FILES_FROM_DIR_IN_LIST _InFileList _excludeDirName _verbose)
-  foreach (ITR ${_InFileList})
-    if ("${_verbose}")
-      message(STATUS "ITR=${ITR}")
-    endif ("${_verbose}")
-
-    # Check if the item matches the directory name in _excludeDirName.
-    if ("${ITR}" MATCHES "(.*)${_excludeDirName}(.*)")
-      message(STATUS "Remove Item from List:${ITR}")
-      # Remove the item from the list.
-      list (REMOVE_ITEM _InFileList ${ITR})
-    endif ("${ITR}" MATCHES "(.*)${_excludeDirName}(.*)")
-
-  endforeach(ITR)
-
-  # Return the SOURCE_FILES variable to the calling parent.
-  set(SOURCE_FILES ${_InFileList} PARENT_SCOPE)
-endfunction(EXCLUDE_FILES_FROM_DIR_IN_LIST)
 
 
 function(CUDA_CONVERT_FLAGS EXISTING_TARGET)

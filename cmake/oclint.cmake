@@ -1,6 +1,8 @@
 # OCLint tool wrapper
 # Artiom N.(cl)2023
 
+include_guard(GLOBAL)
+
 
 function(download_and_extract url out_path)
     get_filename_component(archive_name "${url}" NAME)
@@ -20,6 +22,6 @@ function(download_oclint url version out_path)
 endfunction()
 
 
-function run_oclint()
+function(run_oclint)
 
 endfunction()

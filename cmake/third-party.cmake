@@ -2,6 +2,9 @@
 # CMake third-party support functions. Artiom N.(cl)2022
 #
 
+include_guard(GLOBAL)
+
+
 include("git")
 
 function(add_third_party module_name)
