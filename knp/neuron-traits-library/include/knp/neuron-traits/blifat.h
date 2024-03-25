@@ -33,9 +33,8 @@ struct BLIFATNeuron;
 template <>
 struct default_values<BLIFATNeuron>
 {
-    // TODO: see if there are any problems with this implementation, then change it or delete this TODO
     /**
-     * @brief The parameter defines a number of network steps since the last spike.
+     * @brief The parameter defines the default value of `n_time_steps_since_last_firing_` for a BLIFAT neuron.
      */
     constexpr static std::size_t n_time_steps_since_last_firing_ = std::numeric_limits<std::size_t>::infinity();
 
@@ -43,7 +42,7 @@ struct default_values<BLIFATNeuron>
      * @brief The parameter defines a value to which membrane potential tends (for conductance-based inhibitory
      * synapses)
      */
-    constexpr static double reversive_inhibitory_potential_ = -0.3;
+    constexpr static double reversal_inhibitory_potential_ = -0.3;
 
     /**
      * @brief The parameter defines a value to which membrane potential tends (for current-based inhibitory synapses).
@@ -143,8 +142,8 @@ struct default_values<BLIFATNeuron>
     constexpr static double potential_reset_value_ = 0.;
 
     /**
-     * @brief The parameter defines the number of network execution steps, during which the neuron activity is totally
-     * blocked.
+     * @brief The parameter defines the default value for the number of network execution steps,
+     * during which the neuron activity is totally blocked.
      */
     constexpr static int64_t total_blocking_period_ = std::numeric_limits<int64_t>::max();
 
@@ -162,7 +161,7 @@ template <>
 struct neuron_parameters<BLIFATNeuron>
 {
     /**
-     * @brief The parameter takes the default value of `steps_before_firing` defined for a BLIFAT neuron.
+     * @brief The parameter defines a number of network steps since the last spike.
      */
     std::size_t n_time_steps_since_last_firing_ = default_values<BLIFATNeuron>::n_time_steps_since_last_firing_;
 
@@ -240,7 +239,8 @@ struct neuron_parameters<BLIFATNeuron>
     /**
      * @brief The parameter takes the default value of `reverse_inhibitory_potential` defined for a BLIFAT neuron.
      */
-    double reversive_inhibitory_potential_ = default_values<BLIFATNeuron>::reversive_inhibitory_potential_;
+    double reversal_inhibitory_potential_ = default_values<BLIFATNeuron>::reversal_inhibitory_potential_;
+
     /**
      * @brief The parameter defines a minimum number of network steps before a neuron can generate the next spike.
      */

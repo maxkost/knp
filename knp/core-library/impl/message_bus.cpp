@@ -6,6 +6,7 @@
  */
 
 #include <knp/core/message_bus.h>
+#include <knp/meta/macro.h>
 
 #include <spdlog/spdlog.h>
 
@@ -17,9 +18,9 @@
 
 namespace knp::core
 {
-MessageBus::~MessageBus() {}
+MessageBus::~MessageBus() = default;
 
-MessageBus::MessageBus(MessageBus &&) = default;
+MessageBus::MessageBus(MessageBus &&) noexcept = default;
 
 MessageBus MessageBus::construct_cpu_bus()
 {
@@ -33,15 +34,12 @@ MessageBus MessageBus::construct_zmq_bus()
 }
 
 
-MessageBus MessageBus::construct_bus()
-{
-    return construct_cpu_bus();
-}
-
-
 MessageBus::MessageBus(std::unique_ptr<messaging::impl::MessageBusImpl> &&impl) : impl_(std::move(impl))
 {
-    if (!impl_) throw std::runtime_error("Unavailable message bus implementation");
+    if (!impl_)
+    {
+        throw std::runtime_error("Unavailable message bus implementation");
+    }
 }
 
 
@@ -62,8 +60,14 @@ size_t MessageBus::route_messages()
     SPDLOG_DEBUG("Message routing cycle started...");
     size_t count = 0;
     impl_->update();
-    size_t num_messages;
-    while ((num_messages = step())) count += num_messages;
+    size_t num_messages = step();
+
+    KNP_UNROLL_LOOP()
+    while (num_messages != 0)
+    {
+        count += num_messages;
+        num_messages = step();
+    }
 
     return count;
 }

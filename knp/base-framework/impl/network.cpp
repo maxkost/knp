@@ -74,7 +74,10 @@ typename std::vector<VT>::iterator Network::find_elem(const knp::core::UID &uid,
         [&uid](VT &p_variant) -> bool
         {
             constexpr auto type_n = boost::mp11::mp_find<VT, T>();
-            if (p_variant.index() != type_n) return false;
+            if (p_variant.index() != type_n)
+            {
+                return false;
+            }
             return uid == (std::get<type_n>(p_variant)).get_uid();
         });
     return result;
@@ -132,7 +135,10 @@ PopulationType &Network::get_population(const knp::core::UID &population_uid)
 
     SPDLOG_DEBUG("Get population {}", std::string(population_uid));
     auto pop_iterator = find_elem<PopulationType, core::AllPopulationsVariant>(population_uid, populations_);
-    if (pop_iterator != populations_.end()) return std::get<PopulationType>(*pop_iterator);
+    if (pop_iterator != populations_.end())
+    {
+        return std::get<PopulationType>(*pop_iterator);
+    }
     throw std::runtime_error("Can't find population!");
 }
 
@@ -149,7 +155,10 @@ void Network::remove_population(const core::UID &population_uid)
     SPDLOG_DEBUG("Remove population with uid {}", std::string(population_uid));
     auto result = find_variant<AllPopulations, core::AllPopulationsVariant>(population_uid, populations_);
 
-    if (result == populations_.end()) throw std::runtime_error("Can't find population!");
+    if (result == populations_.end())
+    {
+        throw std::runtime_error("Can't find population!");
+    }
     populations_.erase(result);
 }
 
@@ -198,7 +207,10 @@ ProjectionType &Network::get_projection(const knp::core::UID &projection_uid)
     SPDLOG_DEBUG("Get projection {}", std::string(projection_uid));
 
     auto proj_iterator = find_elem<ProjectionType, core::AllProjectionsVariant>(projection_uid, projections_);
-    if (proj_iterator != projections_.end()) return std::get<ProjectionType>(*proj_iterator);
+    if (proj_iterator != projections_.end())
+    {
+        return std::get<ProjectionType>(*proj_iterator);
+    }
     throw std::runtime_error("Can't find projection!");
 }
 
@@ -215,7 +227,10 @@ void Network::remove_projection(const core::UID &projection_uid)
     SPDLOG_DEBUG("Remove projection with uid {}", std::string(projection_uid));
     auto result = find_variant<core::AllProjections, core::AllProjectionsVariant>(projection_uid, projections_);
 
-    if (result == projections_.end()) throw std::runtime_error("Can't find projection!");
+    if (result == projections_.end())
+    {
+        throw std::runtime_error("Can't find projection!");
+    }
     projections_.erase(result);
 }
 

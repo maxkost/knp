@@ -23,6 +23,15 @@ bool SynapticImpact::operator==(const SynapticImpact &other) const
 }
 
 
+bool operator==(const SynapticImpactMessage &sm1, const SynapticImpactMessage &sm2)
+{
+    return sm1.header_.send_time_ == sm2.header_.send_time_ && sm1.header_.sender_uid_ == sm2.header_.sender_uid_ &&
+           sm1.presynaptic_population_uid_ == sm2.presynaptic_population_uid_ &&
+           sm1.postsynaptic_population_uid_ == sm2.postsynaptic_population_uid_ && sm1.is_forcing_ == sm2.is_forcing_ &&
+           sm1.impacts_ == sm2.impacts_;
+}
+
+
 std::istream &operator>>(std::istream &stream, SynapticImpact &impact)
 {
     int type;
@@ -103,6 +112,8 @@ std::vector<uint8_t> pack(const SynapticImpactMessage &msg)
 SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg)
 {
     SPDLOG_TRACE("Unpacking synaptic impact message FlatBuffers class");
+    assert(s_msg);
+
     const marshal::MessageHeader *const s_msg_header{s_msg->header()};
 
     UID sender_uid{false};

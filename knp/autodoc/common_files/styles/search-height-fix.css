@@ -1,5 +1,0 @@
-/* Search panel height fitted by the content */
-
-#MSearchResultsWindow {
-    height: fit-content !important;
-}

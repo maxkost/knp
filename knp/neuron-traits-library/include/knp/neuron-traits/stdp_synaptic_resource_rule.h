@@ -6,14 +6,18 @@
  */
 
 #pragma once
+
+#include <cinttypes>
 #include <limits>
+
+
 /**
  * @brief Namespace for neuron traits.
  */
 namespace knp::neuron_traits
 {
 /**
- * @brief Neuron type with resource-based STDP learning rule. 
+ * @brief Neuron type with resource-based STDP learning rule.
  * @details You can use this structure as a wrapper over base neuron type.
  * @tparam NeuronType base neuron type.
  */
@@ -38,7 +42,7 @@ enum class ISIPeriodType
      */
     period_continued,
     /**
-     * @brief Sequence of spikes has ended. A new sequence has not started yet. 
+     * @brief Sequence of spikes has ended. A new sequence has not started yet.
      * @note The state is not commonly used as neuron state changes after a spike.
      */
     not_in_period

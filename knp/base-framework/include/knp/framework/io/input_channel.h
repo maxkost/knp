@@ -1,5 +1,6 @@
 /**
- * @brief Input channel header.
+ * @file input_channel.h
+ * @brief Header for input channel.
  * @author Vartenkov Andrey
  * @date 04.05.2023
  */
@@ -74,7 +75,7 @@ public:
      * @param step current step.
      * @return `true` if message was sent, `false` if no message was sent.
      */
-    virtual bool send(core::messaging::Step step) { return send_data(generator_(step), step); }
+    virtual bool send(core::Step step) { return send_data(generator_(step), step); }
 
 protected:
     /**
@@ -83,7 +84,7 @@ protected:
      * @param step current step.
      * @return `true` if messages were sent, `false` otherwise.
      */
-    bool send_data(const core::messaging::SpikeData &spikes, core::messaging::Step step)
+    bool send_data(const core::messaging::SpikeData &spikes, core::Step step)
     {
         if (spikes.empty())
         {

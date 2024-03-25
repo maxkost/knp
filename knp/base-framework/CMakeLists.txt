@@ -27,6 +27,7 @@ knp_add_library("${PROJECT_NAME}-core"
     impl/save_network.cpp
     impl/load_network.cpp
     impl/csv_content.cpp
+    impl/observer.cpp
 
     ${${PROJECT_NAME}_headers})
 add_library(KNP::BaseFramework::Core ALIAS "${PROJECT_NAME}-core")

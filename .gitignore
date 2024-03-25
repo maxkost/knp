@@ -27,6 +27,7 @@ a.out
 *.lib
 /build/**
 /build*/**
+/*-build-*
 *.autosave
 
 # Ignore C++ files in the root directory.

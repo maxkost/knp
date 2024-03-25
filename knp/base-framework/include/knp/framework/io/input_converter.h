@@ -1,5 +1,6 @@
 /**
- * @brief Input converter header.
+ * @file input_converter.h
+ * @brief Header for input converter.
  * @author Vartenkov Andrey
  * @date 25.04.2023
  */
@@ -25,6 +26,6 @@ namespace knp::framework::input
 /**
  * @brief Functor used for generating input spike messages.
  */
-using DataGenerator = std::function<core::messaging::SpikeData(core::messaging::Step)>;
+using DataGenerator = std::function<core::messaging::SpikeData(core::Step)>;
 
 }  // namespace knp::framework::input

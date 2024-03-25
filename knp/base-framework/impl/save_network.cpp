@@ -83,7 +83,7 @@ void add_population_to_h5<core::Population<knp::neuron_traits::BLIFATNeuron>>(
     PUT_NEURON_TO_DATASET(population, potential_decay_, group0)
     PUT_NEURON_TO_DATASET(population, bursting_period_, group0)
     PUT_NEURON_TO_DATASET(population, reflexive_weight_, group0)
-    PUT_NEURON_TO_DATASET(population, reversive_inhibitory_potential_, group0)
+    PUT_NEURON_TO_DATASET(population, reversal_inhibitory_potential_, group0)
     PUT_NEURON_TO_DATASET(population, absolute_refractory_period_, group0)
     PUT_NEURON_TO_DATASET(population, potential_reset_value_, group0)
     PUT_NEURON_TO_DATASET(population, min_potential_, group0)
@@ -117,12 +117,13 @@ void add_projection_to_h5<core::Projection<synapse_traits::DeltaSynapse>>(
 
     for (const auto &v : projection)
     {
-        source_ids.push_back(v.id_from_);
-        target_ids.push_back(v.id_to_);
-        delays.push_back(v.params_.delay_);
-        weights.push_back(v.params_.weight_);
-        out_types.push_back(static_cast<uint32_t>(v.params_.output_type_));
+        source_ids.push_back(std::get<1>(v));
+        target_ids.push_back(std::get<2>(v));
+        delays.push_back(std::get<0>(v).delay_);
+        weights.push_back(std::get<0>(v).weight_);
+        out_types.push_back(static_cast<uint32_t>(std::get<0>(v).output_type_));
     }
+
     HighFive::Group proj_group = file_h5.createGroup("edges/" + std::string(projection.get_uid()));
     HighFive::DataSet source_node_dataset = proj_group.createDataSet("source_node_id", source_ids);
     source_node_dataset.createAttribute("node_population", std::string(projection.get_presynaptic()));

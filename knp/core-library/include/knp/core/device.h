@@ -1,6 +1,6 @@
 /**
  * @file device.h
- * @brief Class defintiion for device base class.
+ * @brief Class definition for device base class.
  * @author Artiom N.
  * @date 26.01.2023
  */

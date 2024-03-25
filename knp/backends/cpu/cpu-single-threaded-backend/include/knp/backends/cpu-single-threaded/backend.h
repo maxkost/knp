@@ -97,7 +97,9 @@ public:
      */
     using ProjectionContainer = std::vector<ProjectionWrapper>;
 
-    // TODO: Make custom iterators.
+    /**
+     * @todo Make custom iterators.
+     */
 
     /**
      * @brief Types of population iterators.
@@ -208,7 +210,9 @@ public:
      */
     PopulationConstIterator end_populations() const;
 
-    // TODO: make iterator, which is returns projections, but not a wrapper.
+    /**
+     * @todo Make iterator which returns projections, but not a wrapper.
+     */
     /**
      * @brief Get an iterator pointing to the first element of the projection loaded to backend.
      * @return projection iterator.
@@ -253,31 +257,9 @@ public:
 
 public:
     /**
-     * @copydoc knp::core::Backend::step()
+     * @copydoc knp::core::Backend::_step()
      */
-    void step() override;
-
-    /**
-     * @brief Subscribe internal endpoint to messages.
-     * @details The method is used to get a subscription necessary for receiving messages of the specified type.
-     * @tparam MessageType message type.
-     * @param receiver receiver UID.
-     * @param senders list of possible sender UIDs.
-     * @return subscription.
-     */
-    template <typename MessageType>
-    knp::core::Subscription<MessageType> &subscribe(
-        const knp::core::UID &receiver, const std::vector<knp::core::UID> &senders)
-    {
-        return message_endpoint_.subscribe<MessageType>(receiver, senders);
-    }
-
-    /**
-     * @brief Get message endpoint.
-     * @return message endpoint.
-     */
-    const core::MessageEndpoint &get_message_endpoint() const override { return message_endpoint_; }
-    core::MessageEndpoint &get_message_endpoint() override { return message_endpoint_; }
+    void _step() override;
 
     /**
      * @brief Stop training by locking all projections.
@@ -293,16 +275,19 @@ public:
      */
     void start_learning() override
     {
-        // TODO: Probably only need to start_learning some of projections: the ones that were locked with lock()
+        /**
+         * @todo Probably only need to use `start_learning` for some of projections: the ones that were locked with
+         * `lock()`.
+         */
         for (ProjectionWrapper &wrapper : projections_)
             std::visit([](auto &entity) { entity.unlock_weights(); }, wrapper.arg_);
     }
 
 protected:
     /**
-     * @copydoc knp::core::Backend::init()
+     * @copydoc knp::core::Backend::_init()
      */
-    void init() override;
+    void _init() override;
 
     /**
      * @brief Calculate population of BLIFAT neurons.
@@ -349,9 +334,10 @@ protected:
         core::messaging::SynapticMessageQueue &message_queue);
 
 private:
+    // cppcheck-suppress unusedStructMember
     PopulationContainer populations_;
+    // cppcheck-suppress unusedStructMember
     ProjectionContainer projections_;
-    core::MessageEndpoint message_endpoint_;
 };
 
 BOOST_DLL_ALIAS(knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::create, create_knp_backend)

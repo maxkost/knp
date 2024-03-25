@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <knp/core/core.h>
 #include <knp/core/uid.h>
 
 #include <iostream>
@@ -18,11 +19,6 @@
  */
 namespace knp::core::messaging
 {
-/**
- * @brief Type used to store a step number in the form of a 64-bit unsigned integer.
- */
-using Step = uint64_t;
-
 /**
  * @brief Common header for messages.
  */

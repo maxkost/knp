@@ -1,5 +1,6 @@
 /**
- * @brief Output converter header.
+ * @file output_converter.h
+ * @brief Header for output converter.
  * @author Vartenkov Andrey
  * @date 05.04.2023
  */

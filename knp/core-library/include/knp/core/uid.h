@@ -18,6 +18,7 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
+
 /**
  * @brief Core library namespace.
  */
@@ -37,13 +38,13 @@ class continuously_uid_generator
 public:
     /**
      * @brief Generate next UID.
-    */
+     */
     ::boost::uuids::uuid operator()() const;
     /**
      * @brief Reset UID counter.
      * @param initial_value UID value from which to restart the counter.
      */
-    void reset(uint64_t initial_value = 1);
+    static void reset(uint64_t initial_value = 1);
 };
 
 #if defined(_ENABLE_PSEUDO_UID_GENERATOR)
@@ -58,17 +59,17 @@ public:
  */
 struct UID
 {
-    // TODO: Optimize it.
     /**
      * @brief Generate a random UID.
      * @param random boolean value that takes the values `true` or `false`.
      *        If `true`, the constructor generates a random UID. If `false`, the constructor generates a null UID.
+     * @todo Optimize it.
      */
     explicit UID(bool random) : tag(random ? uid_generator()() : ::boost::uuids::nil_uuid()) {}
 
     /**
      * @brief Default UID constructor.
-    */
+     */
     UID() : UID(true) {}
 
     /**
@@ -80,7 +81,7 @@ struct UID
      * @brief Create a UID from `boost::uuids::uuid`.
      * @param guid value to store as a UID.
      */
-    explicit UID(::boost::uuids::uuid &&guid) : tag(std::move(guid)) {}
+    explicit UID(::boost::uuids::uuid &&guid) : tag(guid) {}
 
     /**
      * @brief Create a UID from an array of 16 uint8_t integers.
@@ -189,7 +190,7 @@ struct uid_hash
     /**
      * @brief Get a hash value of the specified UID.
      * @param uid UID to convert to a hash value.
-    */
+     */
     auto operator()(const UID &uid) const { return boost::hash<boost::uuids::uuid>()(uid.tag); }
 };
 

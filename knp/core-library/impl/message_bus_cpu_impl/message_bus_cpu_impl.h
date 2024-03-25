@@ -13,14 +13,16 @@
 #include <list>
 #include <memory>
 #include <mutex>
+#include <tuple>
 #include <vector>
+
 
 /**
  * @brief Namespace for implementations of message bus.
  */
 namespace knp::core::messaging::impl
 {
-class MessageEndpointCPUImpl;
+class MessageEndpointCPU;
 
 class MessageBusCPUImpl : public MessageBusImpl
 {
@@ -30,8 +32,12 @@ public:
     [[nodiscard]] core::MessageEndpoint create_endpoint() override;
 
 private:
+    // cppcheck-suppress unusedStructMember
     std::vector<knp::core::messaging::MessageVariant> messages_to_route_;
-    std::list<std::weak_ptr<MessageEndpointCPUImpl>> endpoints_;
+    std::list<std::tuple<
+        std::weak_ptr<std::vector<messaging::MessageVariant>>, std::weak_ptr<std::vector<messaging::MessageVariant>>>>
+        // cppcheck-suppress unusedStructMember
+        endpoint_messages_;
     std::mutex mutex_;
 };
 }  // namespace knp::core::messaging::impl

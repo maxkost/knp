@@ -1036,6 +1036,7 @@ table.fieldtable {
 
 .navpath li.navelem a:hover
 {
+    text-shadow: none !important;
 	color:#009982;
 }
 

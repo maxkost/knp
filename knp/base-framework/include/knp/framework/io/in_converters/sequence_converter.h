@@ -1,5 +1,6 @@
 /**
- * @brief Input sequence converter header.
+ * @file sequence_converter.h
+ * @brief Header for input sequence converter.
  * @author Vartenkov Andrey
  * @date 25.04.2023
  */
@@ -53,7 +54,7 @@ public:
      * @param step current step (not used in the converter).
      * @return vector of spiked neuron indexes.
      */
-    core::messaging::SpikeData operator()(core::messaging::Step step = 0)
+    core::messaging::SpikeData operator()(core::Step step = 0)
     {
         SPDLOG_TRACE("Getting message from a stream using sequence converter.");
 

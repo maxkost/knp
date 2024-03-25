@@ -14,7 +14,7 @@
 namespace knp::core
 {
 template <typename NeuronType>
-Population<NeuronType>::Population(Population<NeuronType>::NeuronGenerator generator, size_t neurons_count)
+Population<NeuronType>::Population(Population<NeuronType>::NeuronGenerator generator, size_t neurons_count)  // !OCLint
 {
     SPDLOG_DEBUG("Creating population with UID = {} and neurons count = {}", std::string(get_uid()), neurons_count);
     add_neurons(generator, neurons_count);
@@ -23,7 +23,8 @@ Population<NeuronType>::Population(Population<NeuronType>::NeuronGenerator gener
 
 template <typename NeuronType>
 Population<NeuronType>::Population(
-    const UID &uid, Population<NeuronType>::NeuronGenerator generator, size_t neurons_count)
+    const UID &uid, Population<NeuronType>::NeuronGenerator generator,
+    size_t neurons_count)  // !OCLint(Parameters used)
     : base_{uid}
 {
     SPDLOG_DEBUG("Creating population with UID = {} and neurons count = {}", std::string(get_uid()), neurons_count);
@@ -31,7 +32,8 @@ Population<NeuronType>::Population(
 }
 
 
-#define INSTANCE_POPULATIONS(n, template_for_instance, neuron_type) template class knp::core::Population<neuron_type>;
+#define INSTANCE_POPULATIONS(n, template_for_instance, neuron_type) \
+    template class knp::core::Population<knp::neuron_traits::neuron_type>;
 
 // cppcheck-suppress unknownMacro
 BOOST_PP_SEQ_FOR_EACH(INSTANCE_POPULATIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_NEURONS))

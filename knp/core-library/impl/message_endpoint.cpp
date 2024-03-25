@@ -45,33 +45,34 @@ std::pair<size_t, UID> MessageEndpoint::get_subscription_key(const MessageEndpoi
 }
 
 
-MessageEndpoint::MessageEndpoint(MessageEndpoint &&endpoint)
+MessageEndpoint::MessageEndpoint(MessageEndpoint &&endpoint) noexcept
     : impl_(std::move(endpoint.impl_)), subscriptions_(std::move(endpoint.subscriptions_))
 {
 }
 
 
-MessageEndpoint::~MessageEndpoint() {}
+MessageEndpoint::~MessageEndpoint() = default;
 
 
 template <typename MessageType>
 Subscription<MessageType> &MessageEndpoint::subscribe(const UID &receiver, const std::vector<UID> &senders)
 {
-    SPDLOG_DEBUG("Subscribing {} to the list of senders...", std::string(receiver));
+    SPDLOG_DEBUG("Subscribing {} to the list of senders [{}]...", std::string(receiver), senders.size());
 
     constexpr size_t index = get_type_index<knp::core::messaging::MessageVariant, MessageType>;
 
     auto iter = subscriptions_.find(std::make_pair(index, receiver));
+
     if (iter != subscriptions_.end())
     {
-        auto &sub = *const_cast<Subscription<MessageType> *>(&std::get<index>(iter->second));
+        auto &sub = std::get<index>(iter->second);
         sub.add_senders(senders);
         return sub;
     }
 
     auto sub_variant = SubscriptionVariant{Subscription<MessageType>{receiver, senders}};
-    auto insert_res = subscriptions_.insert(std::make_pair(std::make_pair(index, receiver), sub_variant));
-    auto &sub = *const_cast<Subscription<MessageType> *>(&std::get<index>(insert_res.first->second));
+    auto insert_res = subscriptions_.emplace(std::make_pair(index, receiver), sub_variant);
+    auto &sub = std::get<index>(insert_res.first->second);
     return sub;
 }
 
@@ -97,7 +98,10 @@ void MessageEndpoint::remove_receiver(const UID &receiver)
 
     for (auto sub_iter = subscriptions_.begin(); sub_iter != subscriptions_.end(); ++sub_iter)
     {
-        if (get_receiver_uid(sub_iter->second) == receiver) subscriptions_.erase(sub_iter);
+        if (get_receiver_uid(sub_iter->second) == receiver)
+        {
+            subscriptions_.erase(sub_iter);
+        }
     }
 }
 
@@ -115,10 +119,16 @@ bool MessageEndpoint::receive_message()
     SPDLOG_DEBUG("Receiving message...");
 
     auto message_opt = impl_->receive_message();
-    if (!message_opt.has_value()) return false;
+    if (!message_opt.has_value())
+    {
+        SPDLOG_TRACE("No message received");
+        return false;
+    }
     auto &message = message_opt.value();
     const UID &sender_uid = get_header(message).sender_uid_;
     const size_t type_index = message.index();
+
+    SPDLOG_TRACE("Subscriptions count = {}", subscriptions_.size());
 
     // Find a subscription.
     for (auto &&[k, sub_variant] : subscriptions_)
@@ -151,19 +161,49 @@ bool MessageEndpoint::receive_message()
 }
 
 
-void MessageEndpoint::receive_all_messages(const std::chrono::milliseconds &sleep_duration)
+size_t MessageEndpoint::receive_all_messages(const std::chrono::milliseconds &sleep_duration)
 {
+    size_t messages_counter = 0;
+
     while (receive_message())
     {
-        if (sleep_duration.count()) std::this_thread::sleep_for(sleep_duration);
+        ++messages_counter;
+        if (sleep_duration.count() != 0)
+        {
+            std::this_thread::sleep_for(sleep_duration);
+        }
     }
+
+    return messages_counter;
 }
 
 
-#define INSTANCE_MESSAGES_FUNCTIONS(n, template_for_instance, message_type)        \
-    template Subscription<message_type> &MessageEndpoint::subscribe<message_type>( \
-        const UID &receiver, const std::vector<UID> &senders);                     \
-    template bool MessageEndpoint::unsubscribe<message_type>(const UID &receiver);
+template <class MessageType>
+std::vector<MessageType> MessageEndpoint::unload_messages(const knp::core::UID &receiver_uid)
+{
+    constexpr size_t index = get_type_index<knp::core::messaging::MessageVariant, MessageType>;
+    auto iter = subscriptions_.find(std::make_pair(index, receiver_uid));
+
+    if (iter == subscriptions_.end())
+    {
+        return {};
+    }
+
+    Subscription<MessageType> &subscription = std::get<index>(iter->second);
+    auto result = std::move(subscription.get_messages());
+    subscription.clear_messages();
+
+    return result;
+}
+
+
+namespace cm = knp::core::messaging;
+
+#define INSTANCE_MESSAGES_FUNCTIONS(n, template_for_instance, message_type)                \
+    template Subscription<cm::message_type> &MessageEndpoint::subscribe<cm::message_type>( \
+        const UID &receiver, const std::vector<UID> &senders);                             \
+    template bool MessageEndpoint::unsubscribe<cm::message_type>(const UID &receiver);     \
+    template std::vector<cm::message_type> MessageEndpoint::unload_messages<cm::message_type>(const UID &receiver_uid);
 
 BOOST_PP_SEQ_FOR_EACH(INSTANCE_MESSAGES_FUNCTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES))
 

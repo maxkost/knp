@@ -13,6 +13,23 @@
 namespace knp::core::messaging
 {
 
+bool operator==(const SpikeMessage &sm1, const SpikeMessage &sm2)
+{
+    return sm1.header_.send_time_ == sm2.header_.send_time_ && sm1.header_.sender_uid_ == sm2.header_.sender_uid_ &&
+           sm1.neuron_indexes_ == sm2.neuron_indexes_;
+}
+
+
+std::ostream &operator<<(std::ostream &stream, const core::messaging::SpikeData &spikes)
+{
+    for (const auto &spike : spikes)
+    {
+        stream << spike << " ";
+    }
+    return stream;
+}
+
+
 std::ostream &operator<<(std::ostream &stream, const SpikeMessage &msg)
 {
     stream << " " << msg.header_.sender_uid_ << " " << msg.header_.send_time_ << " " << msg.neuron_indexes_.size();
@@ -56,6 +73,9 @@ std::vector<uint8_t> pack(const SpikeMessage &msg)
 SpikeMessage unpack(const marshal::SpikeMessage *s_msg)
 {
     SPDLOG_TRACE("Unpacking spike message FlatBuffers class");
+
+    assert(s_msg);
+
     const marshal::MessageHeader *const s_msg_header{s_msg->header()};
 
     UID uid1{false};

@@ -69,7 +69,7 @@ core::Population<neuron_traits::BLIFATNeuron> load_nodes<neuron_traits::BLIFATNe
     LOAD_NEURONS_ATTRIBUTE(target, potential_decay_, snt_population)
     LOAD_NEURONS_ATTRIBUTE(target, bursting_period_, snt_population)
     LOAD_NEURONS_ATTRIBUTE(target, reflexive_weight_, snt_population)
-    LOAD_NEURONS_ATTRIBUTE(target, reversive_inhibitory_potential_, snt_population)
+    LOAD_NEURONS_ATTRIBUTE(target, reversal_inhibitory_potential_, snt_population)
     LOAD_NEURONS_ATTRIBUTE(target, absolute_refractory_period_, snt_population)
     LOAD_NEURONS_ATTRIBUTE(target, potential_reset_value_, snt_population)
     LOAD_NEURONS_ATTRIBUTE(target, min_potential_, snt_population)
@@ -115,18 +115,15 @@ std::vector<knp::core::Projection<knp::synapse_traits::DeltaSynapse>> load_edges
 
         for (size_t i = 0; i < synapses.size(); ++i)
         {
-            synapses[i].params_.weight_ = weights[i];
-            synapses[i].params_.delay_ = delays[i];
-            synapses[i].params_.output_type_ = static_cast<synapse_traits::OutputType>(out_types[i]);
-            synapses[i].id_from_ = source_ids[i];
-            synapses[i].id_to_ = target_ids[i];
+            std::get<0>(synapses[i]).weight_ = weights[i];
+            std::get<0>(synapses[i]).delay_ = delays[i];
+            std::get<0>(synapses[i]).output_type_ = static_cast<synapse_traits::OutputType>(out_types[i]);
+            std::get<1>(synapses[i]) = source_ids[i];
+            std::get<2>(synapses[i]) = target_ids[i];
         }
 
         core::Projection<synapse_traits::DeltaSynapse> proj(
-            uid_own, uid_from, uid_to,
-            [&synapses](size_t i)
-            { return std::make_tuple(synapses[i].params_, synapses[i].id_from_, synapses[i].id_to_); },
-            synapses.size());
+            uid_own, uid_from, uid_to, [&synapses](size_t i) { return synapses[i]; }, synapses.size());
         result.push_back(std::move(proj));
     }
     return result;

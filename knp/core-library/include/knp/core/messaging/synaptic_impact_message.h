@@ -1,5 +1,5 @@
 /**
- * @file spike_message.h
+ * @file synaptic_impact_message.h
  * @brief Synaptic impact message class.
  * @author Artiom N.
  * @date 26.01.2023
@@ -24,7 +24,7 @@ namespace knp::core::messaging
 {
 
 /**
- * @brief Structure that contains the synaptic impact value and indexes of presynaptic and posynaptic neurons.
+ * @brief Structure that contains the synaptic impact value and indexes of presynaptic and postsynaptic neurons.
  * @details Synaptic impact changes parameters of neurons after the synapses state is calculated.
  */
 struct SynapticImpact
@@ -81,10 +81,10 @@ struct SynapticImpactMessage
      */
     UID postsynaptic_population_uid_;
 
-    // TODO: Try to remove this when fixing main; this parameter is too specific to be a part of a general message.
     /**
-     * @brief `true` if the signal is from a projection without plasticity. 
+     * @brief `true` if the signal is from a projection without plasticity.
      * @details The parameter is used in training.
+     * @todo Try to remove this when fixing main; this parameter is too specific to be a part of a general message.
      */
     bool is_forcing_ = false;
 
@@ -94,10 +94,22 @@ struct SynapticImpactMessage
     std::vector<SynapticImpact> impacts_;
 };
 
+
+/**
+ * @brief Check if two synaptic impact messages are the same.
+ * @param sm1 first message.
+ * @param sm2 second message.
+ * @return `true` if both messages are the same.
+ */
+bool operator==(const SynapticImpactMessage &sm1, const SynapticImpactMessage &sm2);
+
+
 /**
  * @brief Synaptic messages that the projection will send in the future depending on the network execution step number.
+ * @todo To remove as it is required only for backends.
  */
 typedef std::unordered_map<uint64_t, SynapticImpactMessage> SynapticMessageQueue;
+
 
 /**
  * @brief Get synaptic impact from an input stream.
@@ -106,6 +118,7 @@ typedef std::unordered_map<uint64_t, SynapticImpactMessage> SynapticMessageQueue
  */
 std::istream &operator>>(std::istream &stream, SynapticImpact &impact);
 
+
 /**
  * @brief Send synaptic impact to an output stream.
  * @param stream output stream.
@@ -113,12 +126,14 @@ std::istream &operator>>(std::istream &stream, SynapticImpact &impact);
  */
 std::ostream &operator<<(std::ostream &stream, const SynapticImpact &impact);
 
+
 /**
  * @brief Send synaptic impact message to an output stream.
  * @param stream output stream.
  * @param msg synaptic impact message to send to the output stream.
  */
 std::ostream &operator<<(std::ostream &stream, const SynapticImpactMessage &msg);
+
 
 /**
  * @brief Get synaptic impact message from an input stream.

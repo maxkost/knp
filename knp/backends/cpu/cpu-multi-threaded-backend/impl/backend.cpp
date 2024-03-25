@@ -30,9 +30,8 @@ MultiThreadedCPUBackend::MultiThreadedCPUBackend(
     size_t thread_count, size_t population_part_size, size_t projection_part_size)
     : population_part_size_(population_part_size),
       projection_part_size_(projection_part_size),
-      message_endpoint_{message_bus_.create_endpoint()},
       calc_pool_(std::make_unique<cpu_executors::ThreadPool>(
-          thread_count ? thread_count : std::thread::hardware_concurrency()))
+          thread_count != 0 ? thread_count : std::thread::hardware_concurrency()))
 {
     SPDLOG_INFO(
         "MT CPU backend instance created, threads count = {}...",
@@ -75,8 +74,10 @@ void MultiThreadedCPUBackend::calculate_populations_pre_impact()
                     using T = std::decay_t<decltype(pop)>;
                     if constexpr (
                         boost::mp11::mp_find<SupportedPopulations, T>{} == boost::mp11::mp_size<SupportedPopulations>{})
+                    {
                         static_assert(
                             knp::meta::always_false_v<T>, "Population isn't supported by the CPU MT backend!");
+                    }
 
                     // Start threads.
                     calc_pool_->post(
@@ -96,7 +97,7 @@ void MultiThreadedCPUBackend::calculate_populations_impact()
     for (auto &population : populations_)
     {
         auto uid = std::visit([](auto &population) { return population.get_uid(); }, population);
-        auto messages = message_endpoint_.unload_messages<knp::core::messaging::SynapticImpactMessage>(uid);
+        auto messages = get_message_endpoint().unload_messages<knp::core::messaging::SynapticImpactMessage>(uid);
         std::visit(
             [this, &messages](auto &pop)
             {
@@ -121,7 +122,7 @@ std::vector<knp::core::messaging::SpikeMessage> MultiThreadedCPUBackend::calcula
         message.header_.send_time_ = get_step();
         message.header_.sender_uid_ = std::visit([](auto &population) { return population.get_uid(); }, population);
 
-        size_t population_size = std::visit([](auto &population) { return population.size(); }, population);
+        const size_t population_size = std::visit([](auto &population) { return population.size(); }, population);
         for (size_t neuron_index = 0; neuron_index < population_size; neuron_index += population_part_size_)
         {
             std::visit(
@@ -152,8 +153,11 @@ void MultiThreadedCPUBackend::calculate_populations()
     // Sending non-empty messages.
     for (const auto &message : spike_messages)
     {
-        if (message.neuron_indexes_.empty()) continue;
-        message_endpoint_.send_message(message);
+        if (message.neuron_indexes_.empty())
+        {
+            continue;
+        }
+        get_message_endpoint().send_message(message);
     }
 }
 
@@ -179,9 +183,12 @@ void MultiThreadedCPUBackend::calculate_projections()
     for (auto &projection : projections_)
     {
         auto uid = std::visit([](auto &proj) { return proj.get_uid(); }, projection.arg_);
-        auto msg_buf = message_endpoint_.unload_messages<knp::core::messaging::SpikeMessage>(uid);
+        auto msg_buf = get_message_endpoint().unload_messages<knp::core::messaging::SpikeMessage>(uid);
         // We might want to add some preliminary function before, even if delta proj doesn't require it.
-        if (msg_buf.empty()) continue;
+        if (msg_buf.empty())
+        {
+            continue;
+        }
 
         // Looping over synapses.
         converted_message_buffer.emplace_back(cpu::convert_spikes(msg_buf[0]));
@@ -208,7 +215,7 @@ void MultiThreadedCPUBackend::calculate_projections()
         auto msg_iter = msg_queue.find(get_step());
         if (msg_iter != msg_queue.end())
         {
-            message_endpoint_.send_message(std::move(msg_iter->second));
+            get_message_endpoint().send_message(std::move(msg_iter->second));
             msg_queue.erase(msg_iter);
         }
     }
@@ -227,40 +234,43 @@ std::vector<size_t> MultiThreadedCPUBackend::get_supported_population_indexes() 
 }
 
 
-void MultiThreadedCPUBackend::step()
+void MultiThreadedCPUBackend::_step()
 {
     SPDLOG_DEBUG("Starting step #{}.", get_step());
     calculate_populations();
-    message_bus_.route_messages();
-    message_endpoint_.receive_all_messages();
+    get_message_bus().route_messages();
+    get_message_endpoint().receive_all_messages();
     calculate_projections();
-    message_bus_.route_messages();
-    message_endpoint_.receive_all_messages();
-    gad_step();
-    SPDLOG_DEBUG("Step #{} finished.", get_step());
+    get_message_bus().route_messages();
+    get_message_endpoint().receive_all_messages();
+    auto step = gad_step();
+    SPDLOG_DEBUG("Step #{} finished.", step);
 }
 
 
 void MultiThreadedCPUBackend::load_populations(const std::vector<PopulationVariants> &populations)
 {
-    SPDLOG_DEBUG("Loading populations");
+    SPDLOG_DEBUG("Loading populations [{}]", populations.size());
     populations_.clear();
     populations_.reserve(populations.size());
 
-    for (const auto &p : populations) populations_.push_back(p);
+    for (const auto &population : populations)
+    {
+        populations_.push_back(population);
+    }
     SPDLOG_DEBUG("All populations loaded");
 }
 
 
 void MultiThreadedCPUBackend::load_projections(const std::vector<ProjectionVariants> &projections)
 {
-    SPDLOG_DEBUG("Loading projections");
+    SPDLOG_DEBUG("Loading populations [{}]", projections.size());
     projections_.clear();
     projections_.reserve(projections.size());
 
-    for (const auto &p : projections)
+    for (const auto &projection : projections)
     {
-        projections_.push_back(ProjectionWrapper{p});
+        projections_.push_back(ProjectionWrapper{projection});
     }
 
     SPDLOG_DEBUG("All projections loaded");
@@ -269,7 +279,7 @@ void MultiThreadedCPUBackend::load_projections(const std::vector<ProjectionVaria
 
 void MultiThreadedCPUBackend::load_all_projections(const std::vector<knp::core::AllProjectionsVariant> &projections)
 {
-    SPDLOG_DEBUG("Loading all projections");
+    SPDLOG_DEBUG("Loading projections [{}]", projections.size());
     knp::meta::load_from_container<SupportedProjections>(projections, projections_);
     SPDLOG_DEBUG("All projections loaded");
 }
@@ -277,7 +287,7 @@ void MultiThreadedCPUBackend::load_all_projections(const std::vector<knp::core::
 
 void MultiThreadedCPUBackend::load_all_populations(const std::vector<knp::core::AllPopulationsVariant> &populations)
 {
-    SPDLOG_DEBUG("Loading all populations");
+    SPDLOG_DEBUG("Loading populations [{}]", populations.size());
     knp::meta::load_from_container<SupportedPopulations>(populations, populations_);
     SPDLOG_DEBUG("All populations loaded");
 }
@@ -301,11 +311,11 @@ std::vector<std::unique_ptr<knp::core::Device>> MultiThreadedCPUBackend::get_dev
 }
 
 
-void MultiThreadedCPUBackend::init()
+void MultiThreadedCPUBackend::_init()
 {
     SPDLOG_DEBUG("Initializing multi-threaded CPU backend...");
 
-    knp::backends::cpu::init(projections_, message_endpoint_);
+    knp::backends::cpu::init(projections_, get_message_endpoint());
 
     SPDLOG_DEBUG("Initializing finished...");
 }

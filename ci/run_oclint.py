@@ -9,7 +9,7 @@ from pathlib import Path
 import requests
 
 
-def download_oclint(url: str, oclint_directory: Path):
+def download_oclint(url: str, oclint_directory: Path) -> None:
     if oclint_directory.exists():
         return
 
@@ -24,7 +24,7 @@ def download_oclint(url: str, oclint_directory: Path):
     print('Downloading finished.')
 
 
-def get_oclint_archive_url():
+def get_oclint_archive_url() -> str:
     oc_base_url = 'https://github.com/oclint/oclint/releases/download'
     oc_version = '22.02'
     oc_llvm_version = 'llvm-13.0.1'
@@ -72,6 +72,8 @@ command = [
     'third-party',
     '-e',
     'examples',
+    '-e',
+    '/usr/include/',
     '--',
     f'-R={oclint_dir / "lib" / "oclint" / "rules"}',
 ]

@@ -17,7 +17,7 @@ namespace knp::core
 namespace
 {
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
-static volatile ::std::atomic_uint64_t tag_counter = 1;
+volatile ::std::atomic_uint64_t tag_counter = 1;
 }  // namespace
 
 
@@ -31,7 +31,7 @@ static volatile ::std::atomic_uint64_t tag_counter = 1;
         sizeof(decltype(tag_counter)::value_type) <= ::boost::uuids::uuid::static_size(), "Uid counter size error!");
     for (size_t i = 0; i < value_size; ++i)
     {
-        auto digit = c_value & 0xff;
+        auto digit = c_value & 0xffU;
         c_value >>= 8;
         *(result.begin() + i) = static_cast<uint8_t>(digit);
     }
