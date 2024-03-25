@@ -35,10 +35,8 @@ public:
 
     void add_row(std::vector<std::string> new_row) { values_.push_back(std::move(new_row)); }
 
-
-    std::string get_value_str(size_t row, const std::string &col) { return values_[row][header_index_[col]]; }
-
-    int get_value_int(size_t row, const std::string &col) { return std::stoi(values_[row][header_index_[col]]); }
+    template <class V>
+    V get_value(size_t row, const std::string &col);
 
     auto get_rc_size() { return std::make_pair(values_.size(), header_.size()); }
 
@@ -51,4 +49,5 @@ private:
     std::unordered_map<std::string, int> header_index_;
     std::vector<std::vector<std::string>> values_;
 };
+
 }  // namespace knp::framework

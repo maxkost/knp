@@ -50,4 +50,17 @@ void CsvContent::save(const fs::path &csv_path)
     writer.write_row(header_);
     writer.write_rows(values_);
 }
+
+
+template <class V>
+V CsvContent::get_value(size_t row, const std::string &col)
+{
+    return values_[row][header_index_[col]];
+}
+
+template <>
+int CsvContent::get_value<int>(size_t row, const std::string &col)
+{
+    return std::stoi(values_[row][header_index_[col]]);
+}
 }  // namespace knp::framework

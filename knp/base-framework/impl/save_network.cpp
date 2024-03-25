@@ -177,7 +177,7 @@ void add_synapse_type_to_csv<synapse_traits::DeltaSynapse>(const fs::path &csv_p
         size_t height = csv_file.get_rc_size().first - 1;
         for (size_t row_id = 0; row_id < height; ++row_id)
         {
-            int type_id = csv_file.get_value_int(row_id, "edge_type_id");
+            int type_id = csv_file.get_value<int>(row_id, "edge_type_id");
             if (type_id == get_synapse_type_id<synapse_traits::DeltaSynapse>())
             {
                 return;  // Type exists, nothing to add. TODO: upddate
@@ -226,7 +226,7 @@ void add_neuron_type_to_csv<neuron_traits::BLIFATNeuron>(const fs::path &csv_pat
         size_t height = csv_file.get_rc_size().first - 1;
         for (size_t row_id = 0; row_id < height; ++row_id)
         {
-            if (csv_file.get_value_int(row_id, "node_type_id") == get_neuron_type_id<neuron_traits::BLIFATNeuron>())
+            if (csv_file.get_value<int>(row_id, "node_type_id") == get_neuron_type_id<neuron_traits::BLIFATNeuron>())
             {
                 return;  // Type exists, nothing to add.
             }
@@ -265,7 +265,7 @@ void add_neuron_type_to_csv<VirtualNeuron>(const fs::path &csv_path)
         size_t height = csv_file.get_rc_size().first - 1;
         for (size_t row_id = 0; row_id < height; ++row_id)
         {
-            if (csv_file.get_value_int(row_id, "node_type_id") == get_neuron_type_id<VirtualNeuron>())
+            if (csv_file.get_value<int>(row_id, "node_type_id") == get_neuron_type_id<VirtualNeuron>())
             {
                 return;  // Type exists, nothing to add.
             }
