@@ -22,3 +22,6 @@
 [submodule "third-party/simdjson"]
 	path = third-party/simdjson
 	url = https://github.com/simdjson/simdjson.git
+[submodule "third-party/libsonata"]
+	path = third-party/libsonata
+	url = https://github.com/BlueBrain/libsonata.git
