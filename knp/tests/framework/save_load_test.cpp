@@ -27,8 +27,31 @@ knp::framework::Network make_simple_network()
 }
 
 
-TEST(SaveLoadSuite, SaveTest)
+TEST(SaveLoadSuit, SaveTest)
 {
     auto network = make_simple_network();
     knp::framework::save_network(network, "");
+    ASSERT_TRUE(std::filesystem::is_directory("network"));
+    ASSERT_TRUE(std::filesystem::is_regular_file("network/network_config.json"));
+    ASSERT_TRUE(std::filesystem::is_regular_file("network/populations.h5"));
+    ASSERT_TRUE(std::filesystem::is_regular_file("network/projections.h5"));
+    ASSERT_TRUE(std::filesystem::is_regular_file("network/neurons.csv"));
+    ASSERT_TRUE(std::filesystem::is_regular_file("network/synapses.csv"));
+}
+
+
+TEST(SaveLoadSuite, SaveLoadTest)
+{
+    auto network = make_simple_network();
+    knp::framework::save_network(network, "");
+    auto network_loaded = knp::framework::load_network("network/network_config.json");
+    ASSERT_EQ(network.populations_count(), network_loaded.populations_count());
+    ASSERT_EQ(network.projections_count(), network_loaded.projections_count());
+    ASSERT_EQ(network.get_uid(), network_loaded.get_uid());
+    knp::core::UID uid_from = std::visit([](auto &proj) { return proj.get_uid(); }, *network.begin_projections());
+    knp::core::UID uid_to = std::visit([](auto &proj) { return proj.get_uid(); }, *network_loaded.begin_projections());
+    ASSERT_EQ(uid_from, uid_to);
+    uid_from = std::visit([](auto &proj) { return proj.get_uid(); }, *network.begin_populations());
+    uid_to = std::visit([](auto &proj) { return proj.get_uid(); }, *network_loaded.begin_populations());
+    ASSERT_EQ(uid_from, uid_to);
 }
