@@ -41,14 +41,20 @@ auto create_entities()
 }
 
 
+TEST(FrameworkSuite, EmptyNetwork)
+{
+    knp::framework::Network network;
+    ASSERT_EQ(network.projections_count(), 0);
+    ASSERT_EQ(network.populations_count(), 0);
+    ASSERT_EQ(network.begin_populations(), network.end_populations());
+    ASSERT_EQ(network.begin_projections(), network.end_projections());
+}
+
+
 TEST(FrameworkSuite, NetworkCreation)
 {
     knp::framework::Network network;
-
     auto [population1, projection1] = create_entities();
-
-    ASSERT_EQ(network.populations_count(), 0);
-    ASSERT_EQ(network.projections_count(), 0);
 
     network.add_population(std::move(population1));
     ASSERT_EQ(network.populations_count(), 1);
