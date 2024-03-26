@@ -43,23 +43,6 @@ MessageBusZMQImpl::MessageBusZMQImpl()
     // zmq::proxy(router_socket_, publish_socket_);
 }
 
-void MessageBusZMQImpl::receive_data(zmq::recv_result_t &recv_result, zmq::message_t &message)
-{
-    do
-    {
-        recv_result = router_socket_.recv(message, zmq::recv_flags::dontwait);
-
-        if (recv_result.has_value())
-        {
-            SPDLOG_TRACE("Bus received {} bytes", recv_result.value());
-        }
-        else
-        {
-            SPDLOG_WARN("Bus receiving error [EAGAIN]!");
-        }
-    } while (!recv_result.has_value());
-}
-
 
 size_t MessageBusZMQImpl::step()
 {
@@ -77,6 +60,19 @@ size_t MessageBusZMQImpl::step()
         if (zmq::poll(items, 0ms) > 0)
         {
             SPDLOG_TRACE("Poll() successful, receiving data");
+            do
+            {
+                recv_result = router_socket_.recv(message, zmq::recv_flags::dontwait);
+
+                if (recv_result.has_value())
+                {
+                    SPDLOG_TRACE("Bus received {} bytes", recv_result.value());
+                }
+                else
+                {
+                    SPDLOG_WARN("Bus receiving error [EAGAIN]!");
+                }
+            } while (!recv_result.has_value());
         }
         else
         {

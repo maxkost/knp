@@ -39,7 +39,6 @@ public:
 
 private:
     bool isit_id(const zmq::recv_result_t &recv_result) const { return recv_result.value() == 5; }
-    void receive_data(zmq::recv_result_t &recv_result, zmq::message_t &message);
 
 private:
     /**
