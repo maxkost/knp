@@ -43,6 +43,7 @@ public:
     }
 };
 
+
 void MessageBusCPUImpl::update()
 {
     std::lock_guard lock(mutex_);
