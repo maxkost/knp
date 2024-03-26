@@ -195,7 +195,7 @@ void knp::core::Projection<SynapseType>::remove_synapse(size_t index)
 
 
 template <typename SynapseType>
-void knp::core::Projection<SynapseType>::remove_synapses(const std::vector<size_t> &indexes)
+void knp::core::Projection<SynapseType>::remove_synapses(const std::vector<size_t> &)
 {
     throw std::runtime_error("Not implemented");
 }

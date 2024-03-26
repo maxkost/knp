@@ -15,7 +15,6 @@
 #include <cstdio>
 #include <filesystem>
 #include <fstream>
-#include <iostream>
 #include <regex>
 
 #include <boost/format.hpp>
@@ -92,6 +91,7 @@ core::Population<neuron_traits::BLIFATNeuron> load_nodes<neuron_traits::BLIFATNe
 template <class Synapse>
 std::vector<knp::core::Projection<Synapse>> load_edges(const fs::path& edge_path);
 
+
 template <>
 std::vector<knp::core::Projection<knp::synapse_traits::DeltaSynapse>> load_edges(const fs::path& edge_path)
 {
@@ -130,39 +130,9 @@ std::vector<knp::core::Projection<knp::synapse_traits::DeltaSynapse>> load_edges
 }
 
 
-std::string readFile(const std::string& path)
-{
-    namespace fs = std::filesystem;
-
-    if (!fs::is_regular_file(path))
-    {
-        throw std::runtime_error("Path `" + path + "` is not a file");
-    }
-
-    std::ifstream file(path);
-
-    if (file.fail())
-    {
-        throw std::runtime_error("Could not open file `" + path + "`");
-    }
-
-    std::string contents;
-
-    file.seekg(0, std::ios::end);
-    contents.reserve(file.tellg());
-    file.seekg(0, std::ios::beg);
-
-    contents.assign((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-
-    return contents;
-}
-
-
 Network load_network(const fs::path& config_path)
 {
     // Open and read config files
-    fs::path nodes_path, edges_path;
-
     auto config = bbp::sonata::CircuitConfig::fromFile(config_path);
     auto list_edges = config.listEdgePopulations();
     auto list_nodes = config.listNodePopulations();
@@ -184,6 +154,6 @@ Network load_network(const fs::path& config_path)
         for (auto& proj : edges) network.add_projection(std::move(proj));
     }
     return network;
-};
+}
 
 }  // namespace knp::framework

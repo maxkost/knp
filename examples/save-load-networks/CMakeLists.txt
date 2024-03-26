@@ -5,4 +5,4 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable("${PROJECT_NAME}" main.cpp)
 set(EXTLIB_FROM_SUBMODULES ON)
-target_link_libraries("${PROJECT_NAME}" PRIVATE HighFive sonata_static KNP::BaseFramework::Core)
+target_link_libraries("${PROJECT_NAME}" PRIVATE HighFive KNP::BaseFramework::Core)
