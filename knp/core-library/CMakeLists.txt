@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp-core VERSION "${KNP_VERSION}" LANGUAGES C CXX
-        DESCRIPTION "Kaspersky Neuromorphic Platform core"
+        DESCRIPTION "Kaspersky Neuromorphic Platform core library"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)

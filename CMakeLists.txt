@@ -14,7 +14,9 @@ if(NOT KNP_VERSION)
     message(FATAL_ERROR "KNP version mandatory for build, but can't be determined!")
 endif()
 
-project(knp VERSION "${KNP_VERSION}")
+project(knp VERSION "${KNP_VERSION}"
+        DESCRIPTION "Kaspersky Neuromorphic Platform"
+        HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 set(KNP_BOOST_MIN_VERSION "1.74.0")
 
@@ -132,6 +134,9 @@ endif()
 
 if(KNP_BUILD_EXAMPLES)
     add_subdirectory(examples)
+    install(DIRECTORY "examples"
+            COMPONENT "examples"
+            DESTINATION "src/knp")
 endif()
 
 #
@@ -152,9 +157,7 @@ set(CPACK_PACKAGE_CONTACT "my@E-MAIL.net")
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${CMAKE_PROJECT_DESCRIPTION}"
         CACHE STRING "Package description for the package metadata")
-set(CPACK_PACKAGE_DESCRIPTION "\
-    Kaspersky Neuromorphic Platform is a spiking networks simulator\n\
-    Core library for development.")
+set(CPACK_PACKAGE_DESCRIPTION "Kaspersky Neuromorphic Platform - spiking networks simulator")
 
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "${CPACK_PACKAGE_NAME}")
 SET(CPACK_OUTPUT_FILE_PREFIX "${CMAKE_BINARY_DIR}/_packages")
@@ -165,7 +168,7 @@ set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
 
-set(CPACK_PACKAGE_INSTALL_DIRECTORY ${CMAKE_INSTALL_PREFIX})
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "${CMAKE_INSTALL_PREFIX}")
 set(CPACK_INSTALL_DEFAULT_DIRECTORY_PERMISSIONS
         OWNER_READ OWNER_WRITE OWNER_EXECUTE
         GROUP_READ GROUP_EXECUTE
@@ -187,13 +190,10 @@ set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION}")
 set(CPACK_DEBIAN_PACKAGE_SECTION "science")
 
 set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-all-dev (>= ${KNP_BOOST_MIN_VERSION}),")
 
 #set(CPACK_DEBIAN_PACKAGE_NAME ${PROJECT_NAME}-dev)
 #set(CPACK_DEBIAN_FILE_NAME "${PROJECT_NAME}-dev_${PROJECT_VERSION}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}.deb")
 set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
-
-set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "cppzmq-dev (>= 4.9.0-1) , cppzmq (4.9.0-1)")
 
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)

@@ -3,6 +3,10 @@ project(simple-network)
 
 set(CMAKE_CXX_STANDARD 17)
 
+if (NOT TARGET KNP::BaseFramework::Core)
+    find_package(knp-framework REQUIRED)
+endif()
+
 add_executable("${PROJECT_NAME}" main.cpp)
 target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::BaseFramework::Core)
 
