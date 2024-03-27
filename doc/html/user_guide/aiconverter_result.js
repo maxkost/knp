@@ -17138,7 +17138,7 @@ Page[69]=new Array("Информация о стороннем коде соде
 Page[70]=new Array("Зарегистрированные товарные знаки и знаки обслуживания являются собственностью их правообладателей.","LTS и Ubuntu&nbsp;являются зарегистрированными товарными знаками Canonical Ltd.","Intel и Core&nbsp;&#8211; товарные знаки Intel Corporation, зарегистрированные в Соединенных Штатах Америки и в других странах.","Linux&nbsp;&#8211; товарный знак Linus Torvalds, зарегистрированный в США и в других странах.","Python &#8211; товарный знак или зарегистрированный товарный знак Python Software Foundation.","Debian&nbsp;&#8211; зарегистрированный товарный знак Software in the Public Interest, Inc.","Уведомления о товарных знаках","240611.htm");
 var PageCount=71;
 var parsedMainTitle = 'Kaspersky Neuromorphic Platform ';
-var PdfOptions = {"pdfName":"OfflineHelp-ru-RU.pdf"};
+var PdfOptions = {"pdfName":"../../pdf/OfflineHelp-ru-RU.pdf"};
 var reviewDate = 1700479849604;
 (function () {
     var maxTextLength = 0;
