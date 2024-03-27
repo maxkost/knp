@@ -25,7 +25,7 @@ public:
 
     void save(const fs::path &csv_path);
 
-    const auto &get_header() { return header_; }
+    const auto &get_header() const { return header_; }
 
     void set_header(std::vector<std::string> header)
     {
@@ -35,10 +35,12 @@ public:
 
     void add_row(std::vector<std::string> new_row) { values_.push_back(std::move(new_row)); }
 
-    template <class V>
-    V get_value(size_t row, const std::string &col);
+    std::vector<std::string> get_row(size_t row_n) { return values_[row_n]; }
 
-    auto get_rc_size() { return std::make_pair(values_.size(), header_.size()); }
+    template <class V>
+    V get_value(size_t row, const std::string &col);  // TODO const
+
+    auto get_rc_size() const { return std::make_pair(values_.size(), header_.size()); }
 
     auto begin() { return values_.begin(); }
 

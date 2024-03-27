@@ -25,6 +25,29 @@ struct DeltaSynapse;
 
 
 /**
+ * @brief Default values for delta synapse parameters.
+ */
+template <>
+struct default_values<DeltaSynapse>
+{
+    /**
+     * @brief Synaptic weight default value.
+     */
+    constexpr static float weight_ = 0.0F;
+
+    /**
+     * @brief Synaptic delay default value. One is the least delay possible.
+     */
+    constexpr static uint32_t delay_ = 1;
+
+    /**
+     * @brief Synapse type default value.
+     */
+    constexpr static OutputType output_type_ = OutputType::EXCITATORY;
+};
+
+
+/**
  * @brief Structure for delta synapse parameters.
  */
 template <>
@@ -33,7 +56,12 @@ struct synapse_parameters<DeltaSynapse>
     /**
      * @brief Default constructor.
      */
-    synapse_parameters() : weight_(0.0F), delay_(1), output_type_(knp::synapse_traits::OutputType::EXCITATORY) {}
+    synapse_parameters()
+        : weight_(default_values<DeltaSynapse>::weight_),
+          delay_(default_values<DeltaSynapse>::delay_),
+          output_type_(default_values<DeltaSynapse>::output_type_)
+    {
+    }
 
     /**
      * @brief Constructor.

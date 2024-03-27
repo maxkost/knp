@@ -61,6 +61,6 @@ int main()
 {
     auto network = make_simple_network();
     knp::framework::save_network(network, "");
-    auto network2 = knp::framework::load_network("./network/network_config.json");
+    auto network2 = knp::framework::load_network_alt("./network/network_config.json");
     std::cout << network2.populations_count() << " " << network2.projections_count() << std::endl;
 }

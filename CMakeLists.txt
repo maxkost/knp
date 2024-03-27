@@ -89,6 +89,7 @@ add_third_party(csv2)
 set(FLATBUFFERS_BUILD_TESTS OFF)
 set(FLATBUFFERS_BUILD_CPP17 ON)
 add_third_party(flatbuffers)
+add_third_party(simdjson)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
