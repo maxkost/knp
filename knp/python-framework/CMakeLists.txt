@@ -31,6 +31,13 @@ add_custom_target("${PROJECT_NAME}-copy-common-files" ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/packaging/common" "${KNP_PYTHON_OUTPUT_DIRECTORY}")
 add_custom_target("${PROJECT_NAME}-copy-common-python-files" ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/packaging/python" "${KNP_PYTHON_OUTPUT_DIRECTORY}/knp")
+add_custom_target("${PROJECT_NAME}-copy-common-project-files" ALL
+        COMMAND ${CMAKE_COMMAND} -E copy
+            "${CMAKE_SOURCE_DIR}/AUTHORS"
+            "${CMAKE_SOURCE_DIR}/LICENSE.txt"
+            "${CMAKE_SOURCE_DIR}/README.md"
+            "${CMAKE_SOURCE_DIR}/VERSION"
+            "${KNP_PYTHON_OUTPUT_DIRECTORY}")
 
 find_program(MYPY_STUBGEN stubgen REQUIRED)
 get_property(KNP_PYTHON_TARGETS DIRECTORY ${dir} PROPERTY BUILDSYSTEM_TARGETS)
@@ -54,3 +61,6 @@ install(DIRECTORY
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/python3"
         PATTERN "__pycache__" EXCLUDE
         PATTERN "__init__.pyi" EXCLUDE)
+
+set(CPACK_DEBIAN_PYTHON_DESCRIPTION "${PROJECT_DESCRIPTION}" PARENT_SCOPE)
+set(CPACK_DEBIAN_PYTHON_PACKAGE_DEPENDS "python3 (>= 3.10)," PARENT_SCOPE)
