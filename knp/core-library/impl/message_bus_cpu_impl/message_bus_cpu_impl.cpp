@@ -102,7 +102,7 @@ core::MessageEndpoint MessageBusCPUImpl::create_endpoint()
 
     auto endpoint = MessageEndpointCPU(std::make_shared<MessageEndpointCPUImpl>(messages_to_send_v, recv_messages_v));
 
-    return endpoint;
+    return std::move(endpoint);
 }
 
 }  // namespace knp::core::messaging::impl
