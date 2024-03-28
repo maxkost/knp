@@ -22,6 +22,7 @@
 #include <highfive/highfive.hpp>
 
 #include "csv_content.h"
+#include "save_load_network.h"
 #include "type_id_defines.h"
 
 namespace knp::framework
@@ -68,24 +69,6 @@ std::vector<Attr> read_attribute(
 }
 
 
-template <class Neuron>
-core::Population<Neuron> load_population(const HighFive::Group &nodes_group, const std::string &population_name);
-
-
-#define LOAD_NEURONS_ATTRIBUTE(target, neuron_type, attribute, h5_group, pop_size)                                 \
-    {                                                                                                              \
-        const auto values =                                                                                        \
-            read_attribute(h5_group, #attribute, pop_size, neuron_traits::default_values<neuron_type>::attribute); \
-        for (size_t i = 0; i < target.size(); ++i) target[i].attribute = values[i];                                \
-    }
-
-#define LOAD_SYNAPSE_ATTRIBUTE(target, synapse_type, attribute, h5_group, proj_size)                                  \
-    {                                                                                                                 \
-        const auto values =                                                                                           \
-            read_attribute(h5_group, #attribute, proj_size, synapse_traits::default_values<synapse_type>::attribute); \
-        for (size_t i = 0; i < target.size(); ++i) target[i].attribute = values[i];                                   \
-    }
-
 template <>
 core::Population<neuron_traits::BLIFATNeuron> load_population<neuron_traits::BLIFATNeuron>(
     const HighFive::Group &nodes_group, const std::string &population_name)
@@ -97,31 +80,31 @@ core::Population<neuron_traits::BLIFATNeuron> load_population<neuron_traits::BLI
     std::vector<core::Population<neuron_traits::BLIFATNeuron>> result;
     // TODO: Load default neuron from json file.
     std::vector<neuron_traits::neuron_parameters<neuron_traits::BLIFATNeuron>> target(group_size);
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, n_time_steps_since_last_firing_, group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, activation_threshold_, group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, threshold_decay_, group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, threshold_increment_, group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, postsynaptic_trace_, group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, postsynaptic_trace_decay_, group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, postsynaptic_trace_increment_, group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, inhibitory_conductance_, group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, inhibitory_conductance_decay_, group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, potential_decay_, group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, bursting_period_, group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, reflexive_weight_, group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, reversal_inhibitory_potential_, group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, absolute_refractory_period_, group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, potential_reset_value_, group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, min_potential_, group, group_size)
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, n_time_steps_since_last_firing_, group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, activation_threshold_, group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, threshold_decay_, group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, threshold_increment_, group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, postsynaptic_trace_, group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, postsynaptic_trace_decay_, group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, postsynaptic_trace_increment_, group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, inhibitory_conductance_, group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, inhibitory_conductance_decay_, group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, potential_decay_, group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, bursting_period_, group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, reflexive_weight_, group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, reversal_inhibitory_potential_, group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, absolute_refractory_period_, group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, potential_reset_value_, group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, min_potential_, group, group_size);
 
     // Dynamic
     auto dyn_group = group.getGroup("dynamics_params");
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, dynamic_threshold_, dyn_group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, potential_, dyn_group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, pre_impact_potential_, dyn_group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, bursting_phase_, dyn_group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, total_blocking_period_, dyn_group, group_size)
-    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, dopamine_value_, dyn_group, group_size)
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, dynamic_threshold_, dyn_group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, potential_, dyn_group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, pre_impact_potential_, dyn_group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, bursting_phase_, dyn_group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, total_blocking_period_, dyn_group, group_size);
+    LOAD_NEURONS_ATTRIBUTE(target, neuron_traits::BLIFATNeuron, dopamine_value_, dyn_group, group_size);
 
     knp::core::UID uid{boost::lexical_cast<boost::uuids::uuid>(population_name)};
     core::Population<neuron_traits::BLIFATNeuron> out_population(
@@ -145,7 +128,7 @@ core::Projection<knp::synapse_traits::DeltaSynapse> load_projection(
 
     std::vector<core::Projection<synapse_traits::DeltaSynapse>::Synapse> target(group_size);
 
-    const auto weights = read_attribute<double>(
+    const auto weights = read_attribute<float>(
         group, "syn_weight", group_size, synapse_traits::default_values<synapse_traits::DeltaSynapse>::weight_);
     const auto delays = read_attribute<size_t>(
         group, "delay", group_size, synapse_traits::default_values<synapse_traits::DeltaSynapse>::delay_);
@@ -155,14 +138,6 @@ core::Projection<knp::synapse_traits::DeltaSynapse> load_projection(
     const auto source_ids = read_attribute<size_t>(projection_group, "source_node_id", group_size, 0);
     const auto target_ids = read_attribute<size_t>(projection_group, "target_node_id", group_size, 0);
 
-    // TEMP
-    //    auto dataset = projection_group.getDataSet("source_node_id");
-    //    std::cout << dataset.getNumberAttributes() << std::endl;
-    //    for (auto &name : dataset.listAttributeNames())
-    //        std::cout << name << " ";
-    //    std::cout << std::endl;
-
-    // END TEMP
     core::UID uid_from{boost::lexical_cast<boost::uuids::uuid>(
         projection_group.getDataSet("source_node_id").getAttribute("node_population").read<std::string>())};
     core::UID uid_to{boost::lexical_cast<boost::uuids::uuid>(
@@ -181,7 +156,7 @@ core::Projection<knp::synapse_traits::DeltaSynapse> load_projection(
         syn.output_type_ = static_cast<synapse_traits::OutputType>(out_types[i]);
         size_t id_from_ = source_ids[i];
         size_t id_to_ = target_ids[i];
-        synapses.push_back(std::make_tuple(syn, id_from_, id_to_));
+        synapses.push_back({syn, id_from_, id_to_});
     }
 
     core::Projection<synapse_traits::DeltaSynapse> proj(
@@ -205,7 +180,7 @@ std::vector<core::AllProjectionsVariant> load_projections(const fs::path &proj_h
             group.getGroup(proj_name).getDataSet("edge_type_id").read<std::vector<int>>()[0];  // one type only
         // Check if type in type_file
         if (proj_type == get_synapse_type_id<synapse_traits::DeltaSynapse>())
-            result.push_back(load_projection<synapse_traits::DeltaSynapse>(group, proj_name));
+            result.emplace_back(load_projection<synapse_traits::DeltaSynapse>(group, proj_name));
         // TODO: Add other supported types or better use a template!
     }
     return result;
@@ -228,7 +203,7 @@ std::vector<core::AllPopulationsVariant> load_populations(const fs::path &pop_h5
             group.getGroup(proj_name).getDataSet("node_type_id").read<std::vector<int>>()[0];  // one type only
         // Check if type in type_file
         if (proj_type == get_neuron_type_id<neuron_traits::BLIFATNeuron>())
-            result.push_back(load_population<neuron_traits::BLIFATNeuron>(group, proj_name));
+            result.emplace_back(load_population<neuron_traits::BLIFATNeuron>(group, proj_name));
         // TODO: Add other supported types or better use a template!
     }
     return result;

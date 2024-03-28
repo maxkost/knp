@@ -24,11 +24,12 @@ knp_add_library("${PROJECT_NAME}-core"
     impl/model_executor.cpp
     impl/input_converter.cpp
     impl/output_channel.cpp
-    impl/save_network.cpp
-    impl/load_network.cpp
-    impl/load_network_alt.cpp
-    impl/type_id_defines.cpp
-    impl/csv_content.cpp
+    impl/sonata/save_network.cpp
+    impl/sonata/load_network_alt.cpp
+    impl/sonata/type_id_defines.cpp
+    impl/sonata/csv_content.cpp
+    impl/sonata/save_load_blifat.cpp
+    impl/sonata/save_load_resource_blifat.cpp
     impl/observer.cpp
 
     ${${PROJECT_NAME}_headers})
