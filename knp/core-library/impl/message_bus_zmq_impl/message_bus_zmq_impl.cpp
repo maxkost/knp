@@ -127,7 +127,7 @@ MessageEndpoint MessageBusZMQImpl::create_endpoint()
     SPDLOG_DEBUG("Sub socket connecting to {}", publish_sock_address_);
     sub_socket.connect(publish_sock_address_);
 
-    return MessageEndpointZMQ(std::move(sub_socket), std::move(pub_socket));
+    return std::move(MessageEndpointZMQ(std::move(sub_socket), std::move(pub_socket)));
 }
 
 }  // namespace knp::core::messaging::impl
