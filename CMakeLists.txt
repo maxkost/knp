@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.25)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include_guard(GLOBAL)
 
-include(in-source-guard)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(knp-functions)
 include(third-party)
@@ -69,7 +69,7 @@ endif()
 set(ENABLE_FAST_MATH ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-if (NOT KNP_MAINTAINER_BUILD)
+if(NOT KNP_MAINTAINER_BUILD)
     execute_process(COMMAND pre-commit install
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
     if(ret AND NOT ret EQUAL 0)
@@ -77,6 +77,10 @@ if (NOT KNP_MAINTAINER_BUILD)
     endif()
     execute_process(COMMAND pre-commit install -t commit-msg
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+endif()
+
+if(KNP_BUILD_TESTS)
+    add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)
 endif()
 
 # Need for the linters.
@@ -93,38 +97,32 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/third-party)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 
-set(CMAKE_TIDY_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/knp/.clang-tidy" CACHE PATH  "Clang-tidy config file")
-
 # Make cache variables for install destinations.
 include(GNUInstallDirs)
 
 file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
 include_directories(third-party ${THIRD_PARTY_INCLUDES})
 
-add_third_party(googletest)
-
-if(KNP_BUILD_TESTS)
-    add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)
-endif()
-
-set(SPDLOG_BUILD_PIC ON)
-add_third_party(spdlog)
-
-add_third_party(pybind11)
-add_third_party(pcm)
-
 set(FLATBUFFERS_BUILD_TESTS OFF)
 set(FLATBUFFERS_BUILD_CPP17 ON)
 add_third_party(flatbuffers)
+
+if(KNP_BUILD_TESTS)
+    add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)
+    add_third_party(googletest)
+endif()
+
+add_third_party(pcm)
+
+set(SPDLOG_BUILD_PIC ON)
+add_third_party(spdlog)
 
 
 #
 # Build KNP.
 #
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_TIDY_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/knp/.clang-tidy" CACHE PATH  "Clang-tidy config file")
 
 add_subdirectory(knp)
 
@@ -134,10 +132,8 @@ endif()
 
 if(KNP_BUILD_EXAMPLES)
     add_subdirectory(examples)
-    install(DIRECTORY "examples"
-            COMPONENT "examples"
-            DESTINATION "src/knp")
 endif()
+
 
 #
 # Packaging.
