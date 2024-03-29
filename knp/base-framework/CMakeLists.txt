@@ -44,32 +44,44 @@ set_target_properties(
         VERSION "${CMAKE_PROJECT_VERSION}"
         SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
 
+set(COMPONENT_NAME framework)
+
 install(TARGETS "${PROJECT_NAME}-core"
         LIBRARY
 #        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
-        COMPONENT "framework")
+        COMPONENT "${COMPONENT_NAME}")
 #install(EXPORT "${PROJECT_NAME}-core" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cmake")
 
 install(TARGETS "${PROJECT_NAME}-core_static"
-        COMPONENT "framework-dev"
+        COMPONENT "${COMPONENT_NAME}-dev"
         ARCHIVE
 #        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
         )
 
 install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
-        COMPONENT "framework-dev"
+        COMPONENT "${COMPONENT_NAME}-dev"
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
         FILES_MATCHING PATTERN "*.h")
 
 install(FILES
         "${CMAKE_SOURCE_DIR}/LICENSE.txt"
         "${CMAKE_SOURCE_DIR}/README.md"
-        COMPONENT "framework"
+        COMPONENT "${COMPONENT_NAME}"
         TYPE DOC)
 
-set(CPACK_DEBIAN_FRAMEWORK_DESCRIPTION "${PROJECT_DESCRIPTION}" PARENT_SCOPE)
-set(CPACK_DEBIAN_FRAMEWORK_PACKAGE_DEPENDS "libboost-all (>= ${KNP_BOOST_MIN_VERSION})," PARENT_SCOPE)
+knp_packaging_set_parameters("${COMPONENT_NAME}" "${PROJECT_NAME}"
+        DESCRIPTION "${PROJECT_DESCRIPTION}"
+        DEPENDS backend)
 
-set(CPACK_DEBIAN_FRAMEWORK-DEV_DESCRIPTION "${PROJECT_DESCRIPTION} development files" PARENT_SCOPE)
-set(CPACK_DEBIAN_FRAMEWORK-DEV_PACKAGE_RECOMMENDS "cppzmq-dev (>= 4.9.0-1), cppzmq (4.9.0-1)" PARENT_SCOPE)
-set(CPACK_DEBIAN_FRAMEWORK-DEV_PACKAGE_DEPENDS "libboost-all-dev (>= ${KNP_BOOST_MIN_VERSION})," PARENT_SCOPE)
+set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_DEPENDS "libboost-all (= ${Boost_VERSION})"
+    CACHE STRING "${PROJECT_NAME} deb package dependencies")
+
+knp_packaging_set_parameters("${COMPONENT_NAME}-dev" "${PROJECT_NAME}"
+        DESCRIPTION "${PROJECT_DESCRIPTION} development files: C++ headers, CMake modules, static libraries"
+        DEPENDS "${COMPONENT_NAME}")
+
+set(CPACK_DEBIAN_${COMPONENT_VAR}-DEV_PACKAGE_DEPENDS "libboost-all-dev (= ${Boost_VERSION})"
+    CACHE STRING "${PROJECT_NAME}-dev deb package dependencies")
+
+set(CPACK_DEBIAN_${COMPONENT_VAR}-DEV_PACKAGE_RECOMMENDS "cppzmq-dev (>= 4.9.0-1), cppzmq (= 4.9.0-1)"
+    CACHE STRING "${PROJECT_NAME}-dev deb package recommendations")

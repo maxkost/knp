@@ -205,3 +205,43 @@ function(knp_add_python_module name)
     add_custom_command(TARGET "${LIB_NAME}" POST_BUILD
                       COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/impl/${name}/python" "$<TARGET_FILE_DIR:${LIB_NAME}>")
 endfunction()
+
+
+function(knp_get_component_name project_name component_name)
+    string(REGEX REPLACE "(knp-)([^ ]*)" "\\2" _component_name "${project_name}")
+    set(${component_name}  ${_component_name} PARENT_SCOPE)
+endfunction()
+
+
+function(knp_get_component_var_name component_name component_var_name)
+    string(TOUPPER "${component_name}" _component_var_name)
+    set(${component_var_name} "${_component_var_name}" PARENT_SCOPE)
+endfunction()
+
+
+function(knp_packaging_set_parameters component_name project_name)
+    cmake_parse_arguments(
+            "PARSED_ARGS"
+            ""
+            "DESCRIPTION"
+            "DEPENDS"
+            ${ARGN}
+    )
+
+    set(LIB_NAME "${PROJECT_NAME}_${name}")
+
+    knp_get_component_var_name("${component_name}" COMPONENT_VAR_NAME)
+
+    if (PARSED_ARGS_DESCRIPTION)
+        set(CPACK_COMPONENT_${COMPONENT_VAR_NAME}_DESCRIPTION "${PARSED_ARGS_DESCRIPTION}"
+            CACHE STRING "${project_name} description")
+    else()
+        unset(CPACK_COMPONENT_${COMPONENT_VAR_NAME}_DESCRIPTION CACHE)
+    endif()
+
+    if (PARSED_ARGS_DEPENDS)
+        set(CPACK_COMPONENT_${COMPONENT_VAR_NAME}_DEPENDS "${PARSED_ARGS_DEPENDS}" CACHE STRING "${project_name} dependencies")
+    else()
+        unset(CPACK_COMPONENT_${COMPONENT_VAR_NAME}_DEPENDS CACHE)
+    endif()
+endfunction()

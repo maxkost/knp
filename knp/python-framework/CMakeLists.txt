@@ -64,5 +64,11 @@ install(DIRECTORY
         PATTERN "__pycache__" EXCLUDE
         PATTERN "__init__.pyi" EXCLUDE)
 
-set(CPACK_DEBIAN_PYTHON_DESCRIPTION "${PROJECT_DESCRIPTION}" PARENT_SCOPE)
-set(CPACK_DEBIAN_PYTHON_PACKAGE_DEPENDS "python3 (>= 3.10)," PARENT_SCOPE)
+knp_packaging_set_parameters("${COMPONENT_NAME}" "${PROJECT_NAME}"
+        DESCRIPTION "${PROJECT_DESCRIPTION}"
+        DEPENDS framework)
+
+knp_get_component_name("${PROJECT_NAME}" COMPONENT_NAME)
+knp_get_component_var_name("${COMPONENT_NAME}" COMPONENT_VAR)
+set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_DEPENDS "python3 (>= 3.10)"
+    CACHE STRING "${PROJECT_NAME} deb package dependencies")

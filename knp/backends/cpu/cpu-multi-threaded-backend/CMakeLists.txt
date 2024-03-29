@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp-cpu-multi-threaded-backend VERSION "${KNP_VERSION}" LANGUAGES C CXX
-        DESCRIPTION "Kaspersky Neuromorphic Platform CPU multi threading backend"
+        DESCRIPTION "CPU multi threading backend"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/backends/cpu-multi-threaded")
@@ -30,7 +30,7 @@ knp_add_library("${PROJECT_NAME}"
     LINK_PRIVATE
         Boost::headers Boost::system spdlog::spdlog_header_only
         KNP::Backends::CPU::Library KNP::Backends::CPU::ThreadPool
-    LINK_PUBLIC KNP::Core KNP::Devices::CPU
+    LINK_PUBLIC KNP::Core KNP::Devices::CPUStatic
 )
 
 set_target_properties(
@@ -39,22 +39,33 @@ set_target_properties(
         VERSION "${CMAKE_PROJECT_VERSION}"
         SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
 
+knp_get_component_name("${PROJECT_NAME}" COMPONENT_NAME)
+knp_get_component_var_name("${COMPONENT_NAME}" COMPONENT_VAR)
+
 install(TARGETS "${PROJECT_NAME}"
-        COMPONENT "cpu-multi-threaded-backend"
+        COMPONENT "${COMPONENT_NAME}"
         LIBRARY
-#        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
+        #        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
         )
 
 install(TARGETS "${PROJECT_NAME}_static"
-        COMPONENT "cpu-multi-threaded-backend-dev"
+        COMPONENT "${COMPONENT_NAME}-dev"
         ARCHIVE
-#        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
+        #        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
         )
 
 install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
-        COMPONENT "cpu-multi-threaded-backend-dev"
+        COMPONENT "${COMPONENT_NAME}-dev"
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp/backends"
         FILES_MATCHING PATTERN "*.h")
 
-set(CPACK_DEBIAN_CPU-MULTI-THREADED-BACKEND_DESCRIPTION "${PROJECT_DESCRIPTION}" PARENT_SCOPE)
-set(CPACK_DEBIAN_CPU-MULTI-THREADED-BACKEND-DEV_DESCRIPTION "${PROJECT_DESCRIPTION} development files" PARENT_SCOPE)
+knp_packaging_set_parameters("${COMPONENT_NAME}" "${PROJECT_NAME}"
+        DESCRIPTION "${PROJECT_DESCRIPTION}")
+
+set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_DEPENDS "libboost-all (= ${Boost_VERSION}), libzmq" CACHE STRING "${PROJECT_NAME} deb package depends")
+
+knp_packaging_set_parameters("${COMPONENT_NAME}-dev" "${PROJECT_NAME}"
+        DESCRIPTION "${PROJECT_DESCRIPTION} development package: C++ headers and CMake modules"
+        DEPENDS "${COMPONENT_NAME}")
+
+set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_PROVIDES "knp-backend" CACHE STRING "${PROJECT_NAME} provides")
