@@ -4,10 +4,10 @@
 
 include_guard(GLOBAL)
 
-find_package(Doxygen)
+find_package(Doxygen REQUIRED dot OPTIONAL_COMPONENTS mscgen dia)
 
 
-macro(add_doxygen target_name doxyfile_in)
+macro(autodoc_add_doxygen target_name doxyfile_in)
     if(NOT DOXYGEN_FOUND)
         message(FATAL_ERROR "Doxygen is needed to build the documentation.")
     endif()
@@ -53,18 +53,46 @@ macro(add_doxygen target_name doxyfile_in)
     message("Doxygen build started.")
 
     # Old variant:
-    add_custom_target("${target_name}"
-                      COMMAND Doxygen::doxygen "${DOXYFILE}"
-                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                      COMMENT "Generating API documentation with Doxygen"
-                      VERBATIM)
+#    add_custom_target("${target_name}"
+#                      COMMAND Doxygen::doxygen "${DOXYFILE}"
+#                      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+#                      COMMENT "Generating API documentation with Doxygen"
+#                      VERBATIM)
     # Config generation, new CMake variant:
-    # unset(DOXYGEN_INPUT)
-    # doxygen_add_docs("${target_name}"
-    #                 ${INPUT}
-    #                 ALL
-    #                 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-    #                 COMMENT "Generating API documentation with Doxygen"
-    # )
-#    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html DESTINATION     share/doc)
+    doxygen_add_docs(
+        "${target_name}"
+        "${CMAKE_CURRENT_SOURCE_DIR}"
+        CONFIG_FILE "${DOXYFILE}"
+        ALL
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        COMMENT "Generating API documentation with Doxygen")
 endmacro()
+
+
+#
+# Following function duplicated here, because documentation package must be independent
+# from the main package components.
+#
+
+# Function:          get_files_and_dir
+# Description:       Get files and directories of the source directory in the two separate lists.
+# Param source_dir:  Directory to list.
+# output dir_list:   Directories in the source directory.
+# output file_list:  Files in the source directory.
+function(autodoc_get_files_and_dir source_dir dir_list file_list)
+    file(GLOB nodes LIST_DIRECTORIES YES ${source_dir}/*)
+
+    set(_dir_list "")
+    set(_file_list "")
+
+    foreach(_node ${nodes})
+        if(IS_DIRECTORY "${_node}")
+            list(APPEND _dir_list "${_node}")
+        else()
+            list(APPEND _file_list "${_node}")
+        endif()
+    endforeach()
+
+    set(${dir_list} ${_dir_list} PARENT_SCOPE)
+    set(${file_list} ${_file_list} PARENT_SCOPE)
+endfunction(autodoc_get_files_and_dir)
