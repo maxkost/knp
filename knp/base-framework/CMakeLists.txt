@@ -84,3 +84,9 @@ set(CPACK_DEBIAN_${COMPONENT_VAR}-DEV_PACKAGE_DEPENDS "libboost-all-dev (= ${Boo
 
 set(CPACK_DEBIAN_${COMPONENT_VAR}-DEV_PACKAGE_RECOMMENDS "cppzmq-dev (>= 4.9.0-1), cppzmq (= 4.9.0-1)"
     CACHE STRING "${PROJECT_NAME}-dev deb package recommendations")
+
+install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake"
+        COMPONENT "framework-dev"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")

@@ -127,9 +127,8 @@ install(TARGETS "${PROJECT_NAME}"
         ARCHIVE
         COMPONENT "framework-dev")
 
-#install(EXPORT "${PROJECT_NAME}" DESTINATION knp
-#        COMPONENT "framework-dev"
-#        )
+install(EXPORT "${PROJECT_NAME}" DESTINATION knp
+        COMPONENT "framework-dev")
 
 install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
         COMPONENT "framework-dev"
@@ -140,9 +139,3 @@ install(FILES
         "${CMAKE_CURRENT_BINARY_DIR}/include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/version.h"
         COMPONENT "framework-dev"
         DESTINATION "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}")
-
-install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake"
-        COMPONENT "framework-dev"
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
