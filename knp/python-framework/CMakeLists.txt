@@ -10,7 +10,7 @@ project(knp_python_framework VERSION "${KNP_VERSION}" LANGUAGES C CXX  # PYTHON
 
 set(Boost_USE_STATIC_LIBS ON)
 
-find_package(Python COMPONENTS Interpreter Development REQUIRED)
+find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS python REQUIRED)
 
 include(knp-functions)
@@ -46,7 +46,7 @@ get_property(KNP_PYTHON_TARGETS DIRECTORY ${dir} PROPERTY BUILDSYSTEM_TARGETS)
 
 add_custom_target("${PROJECT_NAME}-generate-python-interface-files" ALL
         WORKING_DIRECTORY "${KNP_PYTHON_OUTPUT_DIRECTORY}"
-        COMMAND ${MYPY_STUBGEN} -p "knp" -o "." --include-private
+        COMMAND "${MYPY_STUBGEN}" -p "knp" -o "." --include-private
         DEPENDS ${KNP_PYTHON_TARGETS})
 
 get_property(KNP_PYTHON_TARGETS DIRECTORY ${dir} PROPERTY BUILDSYSTEM_TARGETS)
@@ -54,7 +54,7 @@ get_property(KNP_PYTHON_TARGETS DIRECTORY ${dir} PROPERTY BUILDSYSTEM_TARGETS)
 if(KNP_BUILD_TESTS)
     add_test(NAME Pytest
             WORKING_DIRECTORY "${KNP_PYTHON_OUTPUT_DIRECTORY}"
-            COMMAND ${Python_EXECUTABLE} -m pytest)
+            COMMAND "${Python_EXECUTABLE}" -m pytest)
 endif()
 
 install(DIRECTORY
@@ -73,3 +73,24 @@ knp_get_component_name("${PROJECT_NAME}" COMPONENT_NAME)
 knp_get_component_var_name("${COMPONENT_NAME}" COMPONENT_VAR)
 set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_DEPENDS "python3 (>= 3.10)"
     CACHE STRING "${PROJECT_NAME} deb package dependencies")
+
+#
+# PIP packaging.
+#
+
+#message(FATAL_ERROR ${Python3_EXECUTABLE})
+add_custom_command(
+    OUTPUT "${KNP_PYTHON_OUTPUT_DIRECTORY}/dist/knp-${PROJECT_VERSION}-py3-none-any.whl"
+    COMMAND "${Python3_EXECUTABLE}" -m build --wheel
+    WORKING_DIRECTORY "${KNP_PYTHON_OUTPUT_DIRECTORY}"
+)
+
+add_custom_target(
+    "${PROJECT_NAME}-pip-build-package" ALL
+    DEPENDS
+        "${PROJECT_NAME}-copy-python-tests"
+        "${PROJECT_NAME}-copy-common-files"
+        "${PROJECT_NAME}-copy-common-python-files"
+        "${PROJECT_NAME}-copy-common-project-files"
+        "${KNP_PYTHON_OUTPUT_DIRECTORY}/dist/knp-1.0.0-py3-none-any.whl"
+)

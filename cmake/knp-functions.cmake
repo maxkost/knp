@@ -41,7 +41,12 @@ function (_knp_add_library lib_name lib_type)
 
     set(${lib_name}_source ${PARSED_ARGS_UNPARSED_ARGUMENTS})
 
-    add_library("${lib_name}" ${lib_type} ${${lib_name}_source})
+    if ("${lib_type}" STREQUAL "PY_MODULE")
+        python3_add_library("${lib_name}" MODULE ${${lib_name}_source})
+    else()
+        add_library("${lib_name}" ${lib_type} ${${lib_name}_source})
+    endif()
+
     knp_set_target_parameters("${lib_name}")
 
     if (PARSED_ARGS_ALIAS)
@@ -86,7 +91,7 @@ function (knp_add_library lib_name lib_type)
 
         target_compile_definitions("${lib_name}" PRIVATE BUILD_SHARED_LIBS)
         set_target_properties("${lib_name}_static" PROPERTIES OUTPUT_NAME "${lib_name}")
-    elseif(lib_type STREQUAL SHARED OR lib_type STREQUAL MODULE)
+    elseif(lib_type STREQUAL SHARED OR lib_type STREQUAL MODULE OR lib_type STREQUAL PY_MODULE)
         _knp_add_library("${lib_name}" ${lib_type} ${ARGN})
 
         target_compile_definitions("${lib_name}" PRIVATE BUILD_SHARED_LIBS)
@@ -120,7 +125,7 @@ macro (knp_set_cmake_common_parameters)
 
     set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
-    find_package(Boost 1.66.0 REQUIRED)
+    find_package(Boost 1.74.0 REQUIRED)
 
     if(Boost_FOUND)
         include_directories(${Boost_INCLUDE_DIRS})
@@ -182,7 +187,7 @@ function(knp_add_python_module name)
 
     knp_add_library(
             "${LIB_NAME}"
-            MODULE
+            PY_MODULE
             LIB_PREFIX "_"
             ${${name}_MODULES_SOURCE}
     )
@@ -191,8 +196,11 @@ function(knp_add_python_module name)
         set(PARSED_ARGS_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/knp_python_framework/knp")
     endif()
 
-    target_include_directories("${LIB_NAME}" PRIVATE ${Python_INCLUDE_DIRS})
+    target_include_directories("${LIB_NAME}" PRIVATE ${Python3_INCLUDE_DIRS})
     target_link_libraries("${LIB_NAME}" PRIVATE Boost::headers Boost::python ${PARSED_ARGS_LINK_LIBRARIES})
+
+#    set_target_properties(${LIB_NAME} PROPERTIES PREFIX "${PYTHON_MODULE_PREFIX}")
+#    set_target_properties(${LIB_NAME} PROPERTIES SUFFIX "${PYTHON_MODULE_EXTENSION}")
 
     set_target_properties("${LIB_NAME}" PROPERTIES LIBRARY_OUTPUT_DIRECTORY
             "$<BUILD_INTERFACE:${PARSED_ARGS_OUTPUT_DIRECTORY}/${name}>$<INSTALL_INTERFACE:LIBRARY_OUTPUT_DIRECTORY=${Python_SITEARCH}/knp/${name}>")
