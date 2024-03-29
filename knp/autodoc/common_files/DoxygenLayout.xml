@@ -103,17 +103,18 @@
     <memberdecl>
       <nestednamespaces visible="yes" title=""/>
       <constantgroups visible="yes" title=""/>
-      <interfaces visible="yes" title=""/>
-      <classes visible="yes" title=""/>
+      <interfaces visible="no" title=""/>
+      <classes visible="no" title=""/>
       <concepts visible="yes" title=""/>
-      <structs visible="yes" title=""/>
-      <exceptions visible="yes" title=""/>
+      <structs visible="no" title=""/>
+      <exceptions visible="no" title=""/>
       <typedefs title=""/>
       <sequences title=""/>
       <dictionaries title=""/>
       <enums title=""/>
       <functions title=""/>
       <variables title=""/>
+      <properties title=""/>
       <membergroups visible="yes"/>
     </memberdecl>
     <detaileddescription title=""/>
@@ -125,6 +126,7 @@
       <enums title=""/>
       <functions title=""/>
       <variables title=""/>
+      <properties title=""/>
     </memberdef>
     <authorsection visible="yes"/>
   </namespace>
@@ -160,6 +162,7 @@
       <enums title=""/>
       <functions title=""/>
       <variables title=""/>
+      <properties title=""/>
       <membergroups visible="yes"/>
     </memberdecl>
     <detaileddescription title=""/>
@@ -172,6 +175,7 @@
       <enums title=""/>
       <functions title=""/>
       <variables title=""/>
+      <properties title=""/>
     </memberdef>
     <authorsection/>
   </file>
@@ -182,6 +186,7 @@
     <groupgraph visible="$GROUP_GRAPHS"/>
     <memberdecl>
       <nestedgroups visible="yes" title=""/>
+      <modules visible="yes" title=""/>
       <dirs visible="yes" title=""/>
       <files visible="yes" title=""/>
       <namespaces visible="yes" title=""/>
@@ -226,6 +231,25 @@
     </memberdef>
     <authorsection visible="yes"/>
   </group>
+
+  <!-- Layout definition for a C++20 module page -->
+  <module>
+    <briefdescription visible="yes"/>
+    <exportedmodules visible="yes"/>
+    <memberdecl>
+      <concepts visible="yes" title=""/>
+      <classes visible="yes" title=""/>
+      <enums title=""/>
+      <typedefs title=""/>
+      <functions title=""/>
+      <variables title=""/>
+      <membergroups title=""/>
+    </memberdecl>
+    <detaileddescription title=""/>
+    <memberdecl>
+      <files visible="yes"/>
+    </memberdecl>
+  </module>
 
   <!-- Layout definition for a directory page -->
   <directory>
