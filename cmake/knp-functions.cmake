@@ -198,6 +198,8 @@ function(knp_add_python_module name)
             "$<BUILD_INTERFACE:${PARSED_ARGS_OUTPUT_DIRECTORY}/${name}>$<INSTALL_INTERFACE:LIBRARY_OUTPUT_DIRECTORY=${Python_SITEARCH}/knp/${name}>")
 
     target_compile_definitions("${LIB_NAME}" PRIVATE
+            BOOST_PYTHON_STATIC_LIB
+            Py_NO_ENABLE_SHARED
             CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON)
 
     add_custom_command(TARGET "${LIB_NAME}" POST_BUILD
