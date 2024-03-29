@@ -62,7 +62,8 @@ install(DIRECTORY
         COMPONENT "python"
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/python3"
         PATTERN "__pycache__" EXCLUDE
-        PATTERN "__init__.pyi" EXCLUDE)
+        PATTERN "__init__.pyi" EXCLUDE
+        PATTERN "*.egg-info" EXCLUDE)
 
 knp_packaging_set_parameters("${COMPONENT_NAME}" "${PROJECT_NAME}"
         DESCRIPTION "${PROJECT_DESCRIPTION}"
