@@ -35,6 +35,11 @@ target_include_directories("${PROJECT_NAME}" INTERFACE
 
 target_include_directories("${PROJECT_NAME}" INTERFACE ${Boost_INCLUDE_DIRS})
 
+install(TARGETS "${PROJECT_NAME}"
+        EXPORT "${PROJECT_NAME}"
+        COMPONENT "framework-dev"
+        )
+
 install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
         COMPONENT "framework-dev"
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"

@@ -47,16 +47,15 @@ set_target_properties(
 set(COMPONENT_NAME framework)
 
 install(TARGETS "${PROJECT_NAME}-core"
+        EXPORT "${PROJECT_NAME}-core"
         LIBRARY
-#        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
         COMPONENT "${COMPONENT_NAME}")
 #install(EXPORT "${PROJECT_NAME}-core" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cmake")
 
 install(TARGETS "${PROJECT_NAME}-core_static"
+        EXPORT "${PROJECT_NAME}-core_static"
         COMPONENT "${COMPONENT_NAME}-dev"
-        ARCHIVE
-#        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
-        )
+        ARCHIVE)
 
 install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
         COMPONENT "${COMPONENT_NAME}-dev"

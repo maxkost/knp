@@ -24,8 +24,6 @@ macro(autodoc_add_doxygen target_name doxyfile_in)
         ${ARGN}
     )
 
-    set(DOXYGEN_INPUT "")
-
     set(DOXYFILE "${CMAKE_CURRENT_BINARY_DIR}/doxyfile")
     set(DOXYGEN_PROJECT_NAME "${target_name}")
     set(DOXYGEN_PROJECT_NUMBER "${PARSED_ARGS_PROJECT_VERSION}")

@@ -52,11 +52,13 @@ endif()
 
 install(TARGETS "${PROJECT_NAME}-cpu"
         COMPONENT "framework-dev"
+        EXPORT "${PROJECT_NAME}-cpu"
         LIBRARY
 #        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
         )
 
 install(TARGETS "${PROJECT_NAME}-cpu_static"
+        EXPORT "${PROJECT_NAME}-cpu_static"
         COMPONENT "framework-dev"
         ARCHIVE
         )

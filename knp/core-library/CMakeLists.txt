@@ -118,11 +118,18 @@ configure_package_config_file(
     INSTALL_DESTINATION
     "${CMAKE_INSTALL_LIBDIR}/cmake/")
 
+install(TARGETS "${PROJECT_NAME}_messaging"
+        EXPORT "${PROJECT_NAME}_messaging"
+        COMPONENT "framework-dev")
+
 install(TARGETS "${PROJECT_NAME}"
+        EXPORT "${PROJECT_NAME}"
         ARCHIVE
-        COMPONENT "framework-dev"
-#        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
-        )
+        COMPONENT "framework-dev")
+
+#install(EXPORT "${PROJECT_NAME}" DESTINATION knp
+#        COMPONENT "framework-dev"
+#        )
 
 install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
         COMPONENT "framework-dev"

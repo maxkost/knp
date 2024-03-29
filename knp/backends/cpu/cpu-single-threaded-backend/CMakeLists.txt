@@ -42,16 +42,14 @@ knp_get_component_name("${PROJECT_NAME}" COMPONENT_NAME)
 knp_get_component_var_name("${COMPONENT_NAME}" COMPONENT_VAR)
 
 install(TARGETS "${PROJECT_NAME}"
+        EXPORT "${PROJECT_NAME}"
         COMPONENT "${COMPONENT_NAME}"
-        LIBRARY
-#        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
-        )
+        LIBRARY)
 
 install(TARGETS "${PROJECT_NAME}_static"
+        EXPORT "${PROJECT_NAME}_static"
         COMPONENT "${COMPONENT_NAME}-dev"
-        ARCHIVE
-#        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
-        )
+        ARCHIVE)
 
 install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
         COMPONENT "${COMPONENT_NAME}-dev"
