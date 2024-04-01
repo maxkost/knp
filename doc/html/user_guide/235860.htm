@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="maximum-scale=1.0" />
+    <title> Библиотека характеристик синапсов </title>
+    <script type="text/javascript" src="../langs.js"></script>
+    <script type="text/javascript">
+        !function ( w, d ) {
+            var scriptsPath="";
+            d.writeln("\x3Cscript type='text/javascript' src='"+scriptsPath+d.documentElement.lang+".js'>\x3C/script>");
+        }( window, document );
+    </script>
+    <script type="text/javascript" src="toc.js"></script>
+
+    <script type="text/javascript" src="aiconverter_result.js"></script>
+    <link rel="stylesheet" type='text/css' href="typography.css"/>
+    <link rel="stylesheet" type='text/css' href="styles.css"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="favicon.png" type="image/png"/>
+
+
+            <!--[if lte IE 9]>
+                <link rel="stylesheet" type="text/css" href="bootstrap.css">
+            <![endif]-->
+            <!--[if lte IE 8]>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+            <![endif]-->
+            </head>
+
+<body id="who-content">
+	<div class="cont">
+	<h2 id="t235860" class="heading2">Библиотека характеристик синапсов</h2>
+<p class="bodytext">Библиотека характеристик синапсов представляет собой набор атрибутов <a id="h254022" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254022','h254022')" target="_self">синапсов</a>. Вы можете использовать синапсы, представленные в библиотеке, например, при построении проекций.</p>
+<div id="d254022" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254022');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Место соединения нейронов, основная функция которого&nbsp;&#8211; передача сигнала от одного нейрона к другому. Каждый нейрон может быть связан с множеством синапсов.</p>
+</div><p class="bodytext">На текущий момент библиотека поддерживает наборы свойств для следующих синапсов:</p>
+<ul class="listbullet1"><li class="listbullet1">Синапс по модели <code class="programcharacter">DeltaSynapse</code>&nbsp;(далее также &quot;дельта-синапс&quot;). <p class="listcontinue1">После получения <a id="h254019" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254019','h254019')" target="_self">спайка</a> от пресинаптической <a id="h254031" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254031','h254031')" target="_self">популяции</a> синапс генерирует сообщение, содержащее значение <a id="h254029" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254029','h254029')" target="_self">синаптического воздействия</a>. Проекция синапсов отправляет синаптическое воздействие популяции для изменения мембранного потенциала постсинаптического нейрона. При этом отправка сообщения <a id="h254030" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254030','h254030')" target="_self">проекцией</a> происходит без временной задержки. </p>
+<div id="d254030" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254030');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Контейнер, содержащий набор синапсов одного типа, соединяющих нейроны пресинаптической и постсинаптической популяций. </p>
+</div><div id="d254029" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254029');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Значение, формируемое синапсом и предназначенное для изменения значений атрибутов нейронов.</p>
+</div><div id="d254031" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254031');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Контейнер, содержащий набор нейронов и их функцию в соответствии с типом нейронов.</p>
+</div><div id="d254019" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254019');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Кратковременный потенциал действия, сгенерированный нейроном популяции в результате изменения атрибутов нейрона.</p>
+</div><p class="listcontinue1">Отправляемое синаптическое воздействие определяется значением веса дельта-синапса. Вы можете указать <a id="h254034" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254034','h254034')" target="_self">вес синапса</a> в атрибутах его экземпляра.</p>
+<div id="d254034" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254034');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Значение сигнала, который синапс передает нейронам связанной популяции.</p>
+</div></li><li class="listbullet1">Синапс по модели <code class="programcharacter">AdditiveSTDPDeltaSynapse</code>.<p class="listcontinue1">Синапс по модели <code class="programcharacter">AdditiveSTDPDeltaSynapse</code> представляет собой дельта-синапс с синаптической пластичностью, зависимой от времени получения спайка. Если спайк от пресинаптической популяции поступает в проекцию перед генерацией пресинаптического спайка постсинаптическим нейроном, значение веса синапса увеличивается. Если пресинаптический спайк поступает на синапс после генерации спайка постсинаптическим нейроном, значение веса синапса уменьшается. </p>
+<p class="listcontinue1">Вес синапса определяет значение синаптического воздействия, отправляемого в постсинаптическую популяцию.</p>
+<p class="listcontinue1">Изменение веса синапса рассчитывается по формуле, представленной на рисунке ниже, где:</p>
+<ul class="listbullet2"><li class="listbullet2"><em class="emphasischaracter">j</em> соответствует пресинаптическому нейрону.</li><li class="listbullet2"><em class="emphasischaracter">i</em> соответствует постсинаптическому нейрону.</li><li class="listbullet2"><em class="emphasischaracter">n</em> соответствует порядковому номеру пресинаптического нейрона.</li><li class="listbullet2"><em class="emphasischaracter">f</em> соответствует порядковому номеру постсинаптического нейрона.</li><li class="listbullet2"><img id="f260663" src="postsynoptictime.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"> соответствует времени получения синапсом спайков от пресинаптического нейрона.</li><li class="listbullet2"><img id="f260662" src="presynaptictime.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"> соответствует времени генерации спайка постсинаптическим нейроном.</li><li class="listbullet2"><img id="f260664" src="weightchange.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"> соответствует значению изменения веса синапса после получения спайка от пресинаптического нейрона.</li></ul><p class="picture"><img id="f260659" src="additivestdpdeltasynapse.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Формула для расчета изменения веса синапса по модели <code class="programcharacter">AdditiveSTDPDeltaSynapse</code></p>
+</li><li class="listbullet1">Синапс по модели <code class="programcharacter">SynapticResourceSTDPDeltaSynapse</code>.<p class="listcontinue1">Синапс по модели <code class="programcharacter">SynapticResourceSTDPDeltaSynapse</code> представляет собой дельта-синапс с синаптической пластичностью, зависимой от синаптического ресурса. В свою очередь значение синаптического ресурса зависит от используемой синаптической пластичности:</p>
+<ul class="listbullet2"><li class="listbullet2">Хеббовская пластичность. <p class="listcontinue2">Значение синаптического ресурса зависит от периода плотной последовательности спайков (далее также &quot;ППС&quot;). <em class="emphasischaracter">ППС</em>&nbsp;&#8211; это последовательность генерируемых нейроном нефорсированных спайков, в которой все соседние спайки разделены временем не больше, чем <em class="emphasischaracter">ISImax</em>, где <em class="emphasischaracter">ISImax</em>&nbsp;&#8211; это максимальное допустимое расстояние между спайками в ППС. В свою очередь <em class="emphasischaracter">периодом ППС</em> является интервал времени между моментом начала Хеббовской пластичности перед первым спайком в ППС и одним из следующих моментов времени: достижение максимально допустимого расстояния ISImax после последнего спайка в ППС, форсированное срабатывание или приход спайка на дофаминовый синапс.</p>
+<p class="listcontinue2">При получении хотя бы одного спайка в период ППС синаптический ресурс изменяется на величину текущей Хеббовской пластичности. Значение Хеббовской пластичности зависит от переменной стабильности нейрона и рассчитывается по формуле, представленной на рисунке ниже, где: </p>
+<ul class="listbullet3"><li class="listbullet3"><img id="f264566" src="hebbianplasticity.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"> соответствует Хеббовской пластичности.</li><li class="listbullet3"><em class="emphasischaracter">s</em> соответствует переменной стабильности нейрона. В момент первого спайка в период ППС значение стабильности меняется на некоторую константу. Если стабильность уже отрицательная, она не меняется в меньшую сторону.</li></ul></li></ul><p class="picture"><img id="f264604" src="hebbianplasticity_1.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Формула для расчета Хеббовской пластичности</p>
+<ul class="listbullet2"><li class="listbullet2">Безусловная пластичность. <p class="listcontinue2">При ненулевой безусловной пластичности значение синаптического ресурса уменьшается на значение пластичности при получении спайка. Значение безусловной пластичности зависит от переменной стабильности нейрона и рассчитывается по формуле, представленной на рисунке ниже, где: </p>
+<ul class="listbullet3"><li class="listbullet3"><img id="f264566_1" src="hebbianplasticity.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"> соответствует безусловной пластичности. </li><li class="listbullet3"><em class="emphasischaracter">s</em> соответствует переменной стабильности нейрона. В момент первого спайка в период ППС значение стабильности меняется на некоторую константу. Если стабильность уже отрицательная, она не меняется в меньшую сторону.</li></ul></li></ul><p class="picture"><img id="f264604_1" src="hebbianplasticity_1.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Формула для расчета безусловной пластичности</p>
+<ul class="listbullet2"><li class="listbullet2">Дофаминовая пластичность. <p class="listcontinue2">Дофаминовая пластичность применима, когда сумма всех дофаминовых синапсов, получивших спайк в текущий шаг исполнения нейронной сети, не равна нулю. В случае дофаминовой пластичности значение синаптического ресурса изменяется по формуле, представленной на рисунке ниже, где:</p>
+<ul class="listbullet3"><li class="listbullet3"><em class="emphasischaracter">D</em> соответствует сумме дофаминовых синапсов.  </li><li class="listbullet3"><em class="emphasischaracter">s</em> соответствует переменной стабильности нейрона.</li></ul></li></ul><p class="picture"><img id="f264610" src="dopamineplasticity_1.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Формула для расчета синаптического расчета при дофаминовой пластичности</p>
+<p class="listcontinue2">В свою очередь сумма дофаминовых синапсов влияет на переменную стабильности нейрона. Если в момент форсированного срабатывания пришло <em class="emphasischaracter">дофаминовое наказание</em> (сумма дофаминовых синапсов меньше нуля), то значение стабильности нейрона уменьшается на значение <em class="emphasischaracter">rD</em>, где <em class="emphasischaracter">r</em> соответствует некоторой константе, а <em class="emphasischaracter">D</em>&nbsp;&#8211; дофаминовому наказанию.</p>
+<p class="listcontinue2">Если в момент форсированного срабатывания пришло <em class="emphasischaracter">дофаминовое вознаграждение</em> (сумма дофаминовых синапсов выше нуля), то значение стабильности нейрона увеличивается на значение <em class="emphasischaracter">rD</em>, где <em class="emphasischaracter">r</em> соответствует некоторой константе, а <em class="emphasischaracter">D</em>&nbsp;&#8211; дофаминовому вознаграждению. Иначе значение стабильности изменяется на значение, представленное на рисунке ниже, где:</p>
+<ul class="listbullet3"><li class="listbullet3"><em class="emphasischaracter">D</em> соответствует сумме дофаминовых синапсов.</li><li class="listbullet3"><em class="emphasischaracter">ISImax</em> соответствует максимально допустимому расстоянию между спайками в ППС.</li><li class="listbullet3"><img id="f264611" src="timedss.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"> соответствует времени с первого спайка в последнем ППС.</li></ul><p class="listcontinue1">Вес синапса определяет значение синаптического воздействия, отправляемого в постсинаптическую популяцию и связан со значением синаптического ресурса формулой, представленной на рисунке ниже, где:</p>
+</li><li class="listbullet1"><em class="emphasischaracter">w</em>&nbsp;соответствует весу синапса.</li><li class="listbullet1"><em class="emphasischaracter">W</em>&nbsp;соответствует синаптическому ресурсу.</li><li class="listbullet1"><img id="f264192" src="minweight.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0">&nbsp;соответствует некоторому случайно заданному минимальному значению веса.</li><li class="listbullet1"><img id="f264193" src="maxweight.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"> соответствует некоторому случайно заданному максимальному значению веса.<p class="picture"><img id="f264191" src="synapticresourcestdpdeltasynapse_1.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Формула для расчета изменения веса в зависимости от синаптического ресурса</p>
+</li></ul><p class="bodytext">Если требуется, вы можете реализовать и использовать собственные модели синапсов.</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div>
+</body>
+
+</html>

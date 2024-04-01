@@ -1,0 +1,18 @@
+#
+# CMake version reading functions. Artiom N.(cl)2024
+#
+
+include(CMakeFindDependencyMacro)
+
+@PACKAGE_INIT@
+
+set_and_check(KNP_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
+
+
+#check_required_components()
+
+
+find_package(Boost @KNP_BOOST_MIN_VERSION@ REQUIRED)
+find_package(ZeroMQ REQUIRED)
+
+add_library(knp-core ALIAS KNP::Core)

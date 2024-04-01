@@ -1,10 +1,11 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
-project(knp-tester CXX)
+project(knp-tester VERSION "${KNP_VERSION}" LANGUAGES CXX
+        DESCRIPTION "Kaspersky Neuromorphic Platform tester and tests")
 
 option(KNP_ENABLE_COVERAGE "Coverage enabled" ON)
 

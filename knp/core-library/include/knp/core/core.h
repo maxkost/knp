@@ -70,11 +70,10 @@ struct BaseData
      * @brief Entity tags.
      */
     TagMap tags_;
-} 
-
+}
 /**
  * @brief Attribute for alignment.
-*/
+ */
 __attribute__((aligned(sizeof(size_t) * 8)));
 
 /**

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -6,16 +6,22 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(knp-core VERSION "${KNP_VERSION}" LANGUAGES C CXX)
+project(knp-core VERSION "${KNP_VERSION}" LANGUAGES C CXX
+        DESCRIPTION "Kaspersky Neuromorphic Platform core library"
+        HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
-find_package(Boost 1.66.0 REQUIRED)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
 find_package(ZeroMQ REQUIRED)
 
 include(GNUInstallDirs)
+# Need for installation.
+include(CMakePackageConfigHelpers)
 include(clang-tidy)
 include(knp-functions)
 
-file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/core/*.h)
+set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/core")
+
+file(GLOB_RECURSE ${PROJECT_NAME}_headers include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/*.h)
 
 set(${PROJECT_NAME}_FB_SOURCES
     impl/messaging/fbs/message_envelope.fbs
@@ -24,6 +30,11 @@ set(${PROJECT_NAME}_FB_SOURCES
     impl/messaging/fbs/spike_message.fbs
     impl/messaging/fbs/synaptic_impact_message.fbs
 )
+
+
+#
+# Build.
+#
 
 flatbuffers_generate_headers(
     TARGET "${PROJECT_NAME}_messaging"
@@ -59,20 +70,21 @@ knp_add_library("${PROJECT_NAME}"
     impl/subscription.cpp
 
     ${${PROJECT_NAME}_headers}
-    )
-add_library(KNP::Core ALIAS "${PROJECT_NAME}")
+
+    LINK_PRIVATE
+        spdlog::spdlog_header_only zmq flatbuffers "${PROJECT_NAME}_messaging"
+    LINK_PUBLIC
+        # This is using in the library for message parameters.
+        KNP::Neuron::Traits KNP::Synapse::Traits
+    ALIAS KNP::Core
+)
 
 source_group(source REGULAR_EXPRESSION "impl/.*")
 
-target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS})
-target_include_directories("${PROJECT_NAME}" PRIVATE "impl")
+target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS} "impl")
 
 # Flatbuffers headers must be generated before core compilation started.
 add_dependencies("${PROJECT_NAME}" "${PROJECT_NAME}_messaging")
-
-target_link_libraries("${PROJECT_NAME}" PRIVATE spdlog::spdlog_header_only zmq flatbuffers "${PROJECT_NAME}_messaging")
-# This is using in the library for message parameters.
-target_link_libraries("${PROJECT_NAME}" PUBLIC KNP::Neuron::Traits KNP::Synapse::Traits)
 
 # add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
 
@@ -82,11 +94,37 @@ if(KNP_ENABLE_COVERAGE)
     link_target_with_gcov("${PROJECT_NAME}")
 endif()
 
+
+#
+# Installation.
+#
+
+message(STATUS "Installation config...")
+
+set(PACKAGE_INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR}/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR})
+
+configure_file(
+    "${CMAKE_CURRENT_LIST_DIR}/include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/version.h.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/version.h")
+
+install(TARGETS "${PROJECT_NAME}_messaging"
+        EXPORT "${PROJECT_NAME}_messaging"
+        COMPONENT "framework-dev")
+
 install(TARGETS "${PROJECT_NAME}"
         EXPORT "${PROJECT_NAME}"
-#        NAMESPACE KNP::
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+        ARCHIVE
+        COMPONENT "framework-dev")
+
+#install(EXPORT "${PROJECT_NAME}" DESTINATION knp
+#        COMPONENT "framework-dev")
+
+install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+        COMPONENT "framework-dev"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
+        FILES_MATCHING PATTERN "*.h")
+
+install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/version.h"
+        COMPONENT "framework-dev"
+        DESTINATION "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}")

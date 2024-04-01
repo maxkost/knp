@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -6,26 +6,64 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(knp-cpu-single-threaded-backend VERSION "${KNP_VERSION}" LANGUAGES C CXX)
+project(knp-cpu-single-threaded-backend VERSION "${KNP_VERSION}" LANGUAGES C CXX
+        DESCRIPTION "Kaspersky Neuromorphic Platform CPU single threading backend"
+        HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
+
+set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/backends/cpu-single-threaded")
 
 include(GNUInstallDirs)
 include(clang-tidy)
 include(knp-functions)
 
-find_package(Boost 1.66.0 REQUIRED)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
 
-file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/backends/cpu-single-threaded/*.h)
+file(GLOB_RECURSE ${PROJECT_NAME}_headers include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/*.h)
 source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers REGULAR_EXPRESSION "include/.*")
 
 knp_add_library("${PROJECT_NAME}"
-    SHARED
-    impl/backend.cpp
-    ${${PROJECT_NAME}_headers}
+    BOTH
+        impl/backend.cpp
+        ${${PROJECT_NAME}_headers}
+    ALIAS KNP::Backends::CPUSingleThreaded
+    LINK_PRIVATE
+        Boost::headers spdlog::spdlog_header_only KNP::Backends::CPU::Library
+    LINK_PUBLIC KNP::Core KNP::Devices::CPUStatic
 )
 
-add_library(KNP::Backends::CPUSingleThreaded ALIAS "${PROJECT_NAME}")
+set_target_properties(
+        "${PROJECT_NAME}"
+        PROPERTIES
+        VERSION "${CMAKE_PROJECT_VERSION}"
+        SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
 
-target_link_libraries("${PROJECT_NAME}" PRIVATE Boost::headers spdlog::spdlog_header_only)
-target_link_libraries("${PROJECT_NAME}" PUBLIC KNP::Core KNP::Devices::CPU)
-target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Backends::CPU::Library)
+knp_get_component_name("${PROJECT_NAME}" COMPONENT_NAME)
+knp_get_component_var_name("${COMPONENT_NAME}" COMPONENT_VAR)
+
+install(TARGETS "${PROJECT_NAME}"
+        EXPORT "${PROJECT_NAME}"
+        COMPONENT "${COMPONENT_NAME}"
+        LIBRARY)
+
+install(TARGETS "${PROJECT_NAME}_static"
+        EXPORT "${PROJECT_NAME}_static"
+        COMPONENT "${COMPONENT_NAME}-dev"
+        ARCHIVE)
+
+install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+        COMPONENT "${COMPONENT_NAME}-dev"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp/backends"
+        FILES_MATCHING PATTERN "*.h")
+
+knp_packaging_set_parameters("${COMPONENT_NAME}" "${PROJECT_NAME}"
+    DESCRIPTION "${PROJECT_DESCRIPTION}")
+
+set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_DEPENDS "libboost-all (= ${Boost_VERSION}), libzmq" CACHE STRING "${PROJECT_NAME} deb package depends")
+
+knp_packaging_set_parameters("${COMPONENT_NAME}-dev" "${PROJECT_NAME}"
+    DESCRIPTION "${PROJECT_DESCRIPTION} development package: C++ headers and CMake modules"
+    DEPENDS "${COMPONENT_NAME}"
+)
+
+set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_PROVIDES "knp-backend" CACHE STRING "${PROJECT_NAME} provides")

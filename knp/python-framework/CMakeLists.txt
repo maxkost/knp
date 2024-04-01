@@ -1,15 +1,20 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(knp_python_framework LANGUAGES C CXX)
+project(knp_python_framework VERSION "${KNP_VERSION}" LANGUAGES C CXX  # PYTHON
+        DESCRIPTION "Kaspersky Neuromorphic Platform Python framework"
+        HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
-find_package(Python COMPONENTS Interpreter Development REQUIRED)
-find_package(Boost 1.66.0 COMPONENTS python REQUIRED)
+# set(Boost_USE_STATIC_LIBS ON)
+
+find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS python REQUIRED)
 
 include(knp-functions)
+include(file-functions)
 
 set(KNP_PYTHON_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${PROJECT_NAME}")
 
@@ -28,13 +33,20 @@ add_custom_target("${PROJECT_NAME}-copy-common-files" ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/packaging/common" "${KNP_PYTHON_OUTPUT_DIRECTORY}")
 add_custom_target("${PROJECT_NAME}-copy-common-python-files" ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/packaging/python" "${KNP_PYTHON_OUTPUT_DIRECTORY}/knp")
+add_custom_target("${PROJECT_NAME}-copy-common-project-files" ALL
+        COMMAND ${CMAKE_COMMAND} -E copy
+            "${CMAKE_SOURCE_DIR}/AUTHORS"
+            "${CMAKE_SOURCE_DIR}/LICENSE.txt"
+            "${CMAKE_SOURCE_DIR}/README.md"
+            "${CMAKE_SOURCE_DIR}/VERSION"
+            "${KNP_PYTHON_OUTPUT_DIRECTORY}")
 
 find_program(MYPY_STUBGEN stubgen REQUIRED)
 get_property(KNP_PYTHON_TARGETS DIRECTORY ${dir} PROPERTY BUILDSYSTEM_TARGETS)
 
 add_custom_target("${PROJECT_NAME}-generate-python-interface-files" ALL
         WORKING_DIRECTORY "${KNP_PYTHON_OUTPUT_DIRECTORY}"
-        COMMAND ${MYPY_STUBGEN} -p "knp" -o "." --include-private
+        COMMAND "${MYPY_STUBGEN}" -p "knp" -o "." --include-private
         DEPENDS ${KNP_PYTHON_TARGETS})
 
 get_property(KNP_PYTHON_TARGETS DIRECTORY ${dir} PROPERTY BUILDSYSTEM_TARGETS)
@@ -42,5 +54,48 @@ get_property(KNP_PYTHON_TARGETS DIRECTORY ${dir} PROPERTY BUILDSYSTEM_TARGETS)
 if(KNP_BUILD_TESTS)
     add_test(NAME Pytest
             WORKING_DIRECTORY "${KNP_PYTHON_OUTPUT_DIRECTORY}"
-            COMMAND ${Python_EXECUTABLE} -m pytest)
+            COMMAND "${Python_EXECUTABLE}" -m pytest)
 endif()
+
+install(DIRECTORY
+        "${KNP_PYTHON_OUTPUT_DIRECTORY}/knp"
+        COMPONENT "python"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/python3"
+        PATTERN "__pycache__" EXCLUDE
+        PATTERN "__init__.pyi" EXCLUDE
+        PATTERN "*.egg-info" EXCLUDE)
+
+knp_packaging_set_parameters("${COMPONENT_NAME}" "${PROJECT_NAME}"
+        DESCRIPTION "${PROJECT_DESCRIPTION}"
+        DEPENDS framework)
+
+knp_get_component_name("${PROJECT_NAME}" COMPONENT_NAME)
+knp_get_component_var_name("${COMPONENT_NAME}" COMPONENT_VAR)
+set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_DEPENDS "python3 (>= 3.10)"
+    CACHE STRING "${PROJECT_NAME} deb package dependencies")
+
+#
+# PIP packaging.
+#
+
+#message(FATAL_ERROR ${Python3_EXECUTABLE})
+add_custom_command(
+    OUTPUT "${KNP_PYTHON_OUTPUT_DIRECTORY}/dist/knp-${PROJECT_VERSION}-py3-none-any.whl"
+    COMMAND "${Python3_EXECUTABLE}" -m build --wheel
+    WORKING_DIRECTORY "${KNP_PYTHON_OUTPUT_DIRECTORY}"
+)
+
+# TODO: automatically get all targets in CMakeLists.txt.
+add_custom_target(
+    "${PROJECT_NAME}-pip-build-package" ALL
+    DEPENDS
+        "${PROJECT_NAME}_base_framework"
+        "${PROJECT_NAME}_core"
+        "${PROJECT_NAME}_neuron_traits"
+        "${PROJECT_NAME}_synapse_traits"
+        "${PROJECT_NAME}-copy-python-tests"
+        "${PROJECT_NAME}-copy-common-files"
+        "${PROJECT_NAME}-copy-common-python-files"
+        "${PROJECT_NAME}-copy-common-project-files"
+        "${KNP_PYTHON_OUTPUT_DIRECTORY}/dist/knp-${PROJECT_VERSION}-py3-none-any.whl"
+)

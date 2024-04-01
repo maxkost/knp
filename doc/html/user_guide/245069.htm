@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="maximum-scale=1.0" />
+    <title> Исполнение нейронной сети, созданной из проекций и популяций </title>
+    <script type="text/javascript" src="../langs.js"></script>
+    <script type="text/javascript">
+        !function ( w, d ) {
+            var scriptsPath="";
+            d.writeln("\x3Cscript type='text/javascript' src='"+scriptsPath+d.documentElement.lang+".js'>\x3C/script>");
+        }( window, document );
+    </script>
+    <script type="text/javascript" src="toc.js"></script>
+
+    <script type="text/javascript" src="aiconverter_result.js"></script>
+    <link rel="stylesheet" type='text/css' href="typography.css"/>
+    <link rel="stylesheet" type='text/css' href="styles.css"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="favicon.png" type="image/png"/>
+
+
+            <!--[if lte IE 9]>
+                <link rel="stylesheet" type="text/css" href="bootstrap.css">
+            <![endif]-->
+            <!--[if lte IE 8]>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+            <![endif]-->
+            </head>
+
+<body id="who-content">
+	<div class="cont">
+	<h1 id="t245069" class="heading1">Исполнение нейронной сети, созданной из проекций и популяций</h1>
+<p class="bodytext">Этот раздел содержит инструкции по созданию нейронной сети из проекций и популяций, загрузке проекций и популяций на бекенд и исполнению нейронной сети.</p>
+<p class="attentionbody">Этот вариант построения и исполнения нейронной сети используется редко. </p>
+<p class="procedureheading">Чтобы создать нейронную сеть вручную и исполнить ее:</p>
+<ol class="listnumber1"><li class="listnumber1">В директории вашего проекта создайте файл программы формата CPP, в котором будет реализована функция для создания и запуска нейронной сети.</li><li class="listnumber1">В файле программы подключите заголовочные файлы, необходимые для исполнения нейронной сети, с помощью директивы <code class="programcharacter">#include</code>. <p class="listcontinue1">Если требуется, определите псевдонимы с помощью оператора <code class="programcharacter">using</code>.</p>
+<p class="listcontinue1">Пример подключения заголовочных файлов для исполнения нейронной сети с популяцией BLIFAT-нейронов и проекцией дельта-синапсов на однопоточном бекенде для CPU:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">#include &lt;knp/backends/cpu-single-threaded/backend.h&gt;</p>
+<p class="programckos">#include &lt;knp/core/population.h&gt;</p>
+<p class="programckos">#include &lt;knp/core/projection.h&gt;</p>
+<p class="programckos">#include &lt;knp/neuron-traits/blifat.h&gt;</p>
+<p class="programckos">#include &lt;knp/synapse-traits/delta.h&gt;</p>
+<p class="programckos"> </p>
+<p class="programckos">#include &lt;vector&gt;</p>
+<p class="programckos"> </p>
+<p class="programckos"> </p>
+<p class="programckos">using Backend = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend;</p>
+<p class="programckos">using DeltaProjection = knp::core::Projection&lt;knp::synapse_traits::DeltaSynapse&gt;;</p>
+<p class="programckos">using BLIFATPopulation = knp::core::Population&lt;knp::neuron_traits::BLIFATNeuron&gt;;</p>
+<p class="programckos">using Population = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::PopulationVariants;</p>
+<p class="programckos">using Projection = knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::ProjectionVariants;</p>
+</li><li class="listnumber1">Реализуйте генератор нейронов с нужными вам свойствами или используйте готовый генератор из библиотеки фреймворка.<p class="listcontinue1">Пример реализации генератора BLIFAT-нейронов:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">...</p>
+<p class="programckos">// Реализована функция, генерирующая нейроны. </p>
+<p class="programckos">// Функция хранится в переменной neuron_generator.</p>
+<p class="programckos">auto neuron_generator = [](size_t index)</p>
+<p class="programckos">{</p>
+<p class="programckos">    return knp::neuron_traits::neuron_parameters&lt;knp::neuron_traits::BLIFATNeuron&gt;{};</p>
+<p class="programckos">};</p>
+<p class="programckos">...</p>
+</li><li class="listnumber1">Реализуйте генератор синапсов с нужными вам свойствами или используйте готовый генератор из библиотеки фреймворка.<p class="listcontinue1">Пример реализации генератора дельта-синапсов:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">...</p>
+<p class="programckos">// Реализована функция, генерирующая синапсы для проекции, которая будет связана </p>
+<p class="programckos">// с каналом ввода. Функция хранится в переменной input_projection_gen.</p>
+<p class="programckos">DeltaProjection::SynapseGenerator input_projection_gen = [](size_t index) -&gt; std::optional&lt;DeltaProjection::Synapse&gt;</p>
+<p class="programckos">{</p>
+<p class="programckos">    return DeltaProjection::Synapse{{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};</p>
+<p class="programckos">};</p>
+<p class="programckos"> </p>
+<p class="programckos">// Реализована функция, генерирующая синапсы для проекции, которая будет замыкать </p>
+<p class="programckos">// вывод популяции на себя. Функция хранится в переменной synapse_generator.</p>
+<p class="programckos">DeltaProjection::SynapseGenerator synapse_generator = [](size_t index) -&gt; std::optional&lt;DeltaProjection::Synapse&gt;</p>
+<p class="programckos">{</p>
+<p class="programckos">    return DeltaProjection::Synapse{{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};</p>
+<p class="programckos">};</p>
+<p class="programckos">...</p>
+</li><li class="listnumber1">Создайте объект популяции и передайте в конструктор созданный генератор нейронов. <p class="listcontinue1">Пример создания объекта популяции:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">...</p>
+<p class="programckos">// Создает объект популяции</p>
+<p class="programckos">BLIFATPopulation population{neuron_generator, 1};</p>
+<p class="programckos"></p>
+</li><li class="listnumber1">Создайте объект проекции, которая будет замыкать вывод популяции на себя. Передайте в конструктор идентификатор связанной популяции и генератор синапсов.<p class="listcontinue1">Пример создания проекции, замыкающей вывод популяции на себя:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">...</p>
+<p class="programckos">// Создает объект проекции, замыкающей вывод популяции на себя</p>
+<p class="programckos">Projection loop_projection = DeltaProjection{population.get_uid(), population.get_uid(), synapse_generator, 1};</p>
+<p class="programckos">...</p>
+</li><li class="listnumber1">Создайте объект входной проекции. Передайте в конструктор генератор синапсов и идентификатор связанной популяции.<p class="listcontinue1">Пример создания входной проекции, связанной с каналом ввода и популяцией:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">...</p>
+<p class="programckos">// Создает объект входной проекции, которой присваивается нулевой идентификатор </p>
+<p class="programckos">// (knp::core::UID{false}). Проекция принимает спайки от канала ввода и отправляет </p>
+<p class="programckos">// синаптическое воздействие в объект популяции.</p>
+<p class="programckos">Projection input_projection = DeltaProjection{knp::core::UID{false}, population.get_uid(), input_projection_gen, 1};</p>
+<p class="programckos"></p>
+<p class="programckos">// Получает UID входной проекции, которая отправляет популяции синаптическое воздействие</p>
+<p class="programckos">knp::core::UID input_uid = std::visit([](const auto &amp;proj) { return proj.get_uid(); }, input_projection);</p>
+<p class="programckos">...</p>
+</li><li class="listnumber1">Загрузите популяцию и проекции на бекенд.<p class="listcontinue1">Пример загрузки популяции и проекций на бекенд:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">...</p>
+<p class="programckos">Backend backend;</p>
+<p class="programckos">...</p>
+<p class="programckos">// Загружает на бекенд созданный объект популяции</p>
+<p class="programckos">backend.load_populations({population});</p>
+<p class="programckos"></p>
+<p class="programckos">// Загружает на бекенд созданные объекты проекций</p>
+<p class="programckos">backend.load_projections({input_projection, loop_projection});</p>
+</li><li class="listnumber1">Определите объект точки подключения.<p class="listcontinue1">Пример создания точки подключения:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">...</p>
+<p class="programckos">// Создает точку подключения</p>
+<p class="programckos">auto endpoint = backend.message_bus_.create_endpoint();</p>
+<p class="programckos">...</p>
+</li><li class="listnumber1">Подключите канал ввода к входной проекции, а также популяцию к каналу вывода. Задайте для каналов ввода и вывода уникальные идентификаторы и сформируйте для них сообщения.<p class="listcontinue1">Пример подключения к каналам ввода и вывода:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">...</p>
+<p class="programckos">// Создает произвольный UID канала ввода</p>
+<p class="programckos">knp::core::UID in_channel_uid;</p>
+<p class="programckos"> </p>
+<p class="programckos">// Создает произвольный UID канала вывода</p>
+<p class="programckos">knp::core::UID out_channel_uid;</p>
+<p class="programckos"> </p>
+<p class="programckos">// Создает подписку на спайки от канала ввода</p>
+<p class="programckos">backend.subscribe&lt;knp::core::messaging::SpikeMessage&gt;(input_uid, {in_channel_uid});</p>
+<p class="programckos"> </p>
+<p class="programckos">// Создает подписку на спайки от популяции с заданным UID для канала вывода </p>
+<p class="programckos">// с заданным UID</p>
+<p class="programckos">endpoint.subscribe&lt;knp::core::messaging::SpikeMessage&gt;(out_channel_uid, {population.get_uid()});</p>
+<p class="programckos">...</p>
+</li><li class="listnumber1">Настройте передачу сообщений в нейронной сети и укажите параметры исполнения такта нейронной сети.<p class="listcontinue1">Следующий пример исполнения нейронной сети состоит из 20 шагов:</p>
+<p class="codeheadingkos">C++</p>
+<p class="programckos">...</p>
+<p class="programckos">std::vector&lt;size_t&gt; results;</p>
+<p class="programckos">for (size_t step = 0; step &lt; 20; ++step)</p>
+<p class="programckos">{</p>
+<p class="programckos">    // Посылает спайки входной проекции от канала ввода на шагах 0, 5, 10 и 15</p>
+<p class="programckos">    if (step % 5 == 0)</p>
+<p class="programckos">    {</p>
+<p class="programckos">        knp::core::messaging::SpikeMessage message{{in_channel_uid, 0}, {0}};</p>
+<p class="programckos">        endpoint.send_message(message);</p>
+<p class="programckos">    }</p>
+<p class="programckos">    backend.step();</p>
+<p class="programckos">    endpoint.receive_all_messages();</p>
+<p class="programckos">    // Получает спайки, отправленные популяцией на канал вывода</p>
+<p class="programckos">    auto output = endpoint.unload_messages&lt;knp::core::messaging::SpikeMessage&gt;(out_channel_uid);</p>
+<p class="programckos"> </p>
+<p class="programckos">    // Записывает индексы шагов, на которых на канал вывода приходят спайки</p>
+<p class="programckos">    if (!output.empty()) results.push_back(step);</p>
+<p class="programckos">}</p>
+<p class="programckos">...</p>
+<p class="listcontinue1"><a id="h255423" class="expandingblocktemplate" href="javascript:toggleBlock('255423')" target="_self">Шаги исполнения нейронной сети</a></p>
+<div id="d255423" class="expandingblock" style="display:none"><p class="bodytext">Исполнение нейронной сети производится циклично. Действия, описанные в цикле, повторяются каждые 5 шагов исполнения сети.</p>
+<p class="bodytext">На первом шаге цикла канал ввода посылает спайки входной проекции.</p>
+<p class="bodytext">На следующем шаге цикла входная проекция вычисляет синаптические воздействия и отправляет их популяции. После получения синаптического воздействия популяция отправляет спайки каналу вывода и проекции, замыкающей вывод популяции на себя. </p>
+<p class="bodytext">Через 6 шагов цикла после получения спайков, отправленных входной проекцией, проекция, замыкающая вывод популяции на себя, вычисляет синаптические воздействия, и передает воздействия популяции. </p>
+<p class="bodytext">На рисунке ниже представлена схема исполнения нейронной сети.</p>
+<p class="picture"><img id="f266553" src="network_cycle.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Схема исполнения нейронной сети</p>
+<p class="bodytext">В этом примере нейронная сеть исполняется в рамках цикла со следующими шагами: </p>
+<ul class="listbullet1"><li class="listbullet1"><em class="emphasischaracter">Шаг 0</em>. Канал ввода посылает спайки входной проекции. Шаг повторяется каждые 5 шагов цикла исполнения нейронной сети.</li><li class="listbullet1"><em class="emphasischaracter">Шаг 1</em>. Входная проекция вычисляет синаптические воздействия и отправляет их популяции. После получения синаптического воздействия популяция отправляет спайки каналу вывода и проекции, замыкающей вывод популяции на себя. Шаг повторяется каждые 5 шагов исполнения сети. </li><li class="listbullet1"><em class="emphasischaracter">Шаг 7</em>. Проекция, замыкающая вывод популяции на себя, вычисляет синаптические воздействия после получения спайков, отправленных 6 шагов назад, и передает воздействия популяции. Популяция отправляет спайки каналу вывода и проекции, замыкающей вывод популяции на себя. Шаг повторяется каждые 5 шагов исполнения нейронной сети.</li><li class="listbullet1"><em class="emphasischaracter">Шаг 13</em>. Проекция, замыкающая вывод популяции на себя, вычисляет синаптические воздействия после получения спайков, отправленных 6 шагов назад, и передает воздействия популяции. Популяция отправляет спайки каналу вывода и проекции, замыкающей вывод популяции на себя. Шаг повторяется каждые 5 шагов исполнения нейронной сети.</li><li class="listbullet1"><em class="emphasischaracter">Шаг 19</em>. Проекция, замыкающая вывод популяции на себя, вычисляет синаптические воздействия после получения спайков, отправленных на шаге 13, и передает воздействия популяции. Популяция отправляет спайки каналу вывода и проекции, замыкающей вывод популяции на себя. </li></ul><p class="bodytext"></p>
+</div></li></ol>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div>
+</body>
+
+</html>
