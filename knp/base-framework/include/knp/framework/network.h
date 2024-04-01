@@ -106,6 +106,12 @@ public:
      */
     Network() = default;
 
+    /**
+     * @brief Constructor with predefined UID.
+     * @param uid network uid.
+     */
+    explicit Network(const core::UID &uid) : base_({uid, {}}) {}
+
 public:
     /**
      * @brief Add a population to the network.
@@ -283,6 +289,7 @@ public:
      * @return UID.
      */
     [[nodiscard]] const knp::core::UID &get_uid() const { return base_.uid_; }
+
     /**
      * @brief Get tags used by the network.
      * @return tag map.

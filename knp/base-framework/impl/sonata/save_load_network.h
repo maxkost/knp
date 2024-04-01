@@ -2,6 +2,8 @@
 // Created by an_vartenkov on 28.03.24.
 //
 #pragma once
+#include <knp/core/population.h>
+#include <knp/core/projection.h>
 
 #include <algorithm>
 #include <filesystem>
@@ -40,26 +42,55 @@ void add_neuron_type_to_csv(const fs::path &)
     throw std::logic_error("Unknown neuron type");
 }
 
+// Read parameter values for both projections and populations
+template <class Attr>
+std::vector<Attr> read_parameter(
+    const HighFive::Group &population_group, const std::string &param_name, size_t pop_size, const Attr &default_value)
+{
+    std::vector<Attr> result(pop_size);
+    try
+    {
+        auto dataset = population_group.getDataSet(param_name);
+        dataset.read(result);
+    }
+    catch (std::exception &exc)
+    {
+        return std::vector(pop_size, default_value);
+    }
+    return result;
+}
+
 
 template <class Neuron>
-core::Population<Neuron> load_population(const HighFive::Group &nodes_group, const std::string &population_name);
+core::Population<Neuron> load_population(const HighFive::Group &nodes_group, const std::string &population_name)
+{
+    throw std::logic_error("Trying to load an unimplemented population type");
+}
+
+
+template <class Synapse>
+core::Projection<Synapse> load_projection(const HighFive::Group &edges_group, const std::string &projection_name)
+{
+    throw std::logic_error("Trying to load an unimplemented projection type");
+}
+
 
 }  // namespace knp::framework
 
-#define LOAD_NEURONS_ATTRIBUTE(target, neuron_type, attribute, h5_group, pop_size)                                 \
+#define LOAD_NEURONS_PARAMETER(target, neuron_type, parameter, h5_group, pop_size)                                 \
     {                                                                                                              \
         const auto values =                                                                                        \
-            read_attribute(h5_group, #attribute, pop_size, neuron_traits::default_values<neuron_type>::attribute); \
-        for (size_t i = 0; i < target.size(); ++i) target[i].attribute = values[i];                                \
+            read_parameter(h5_group, #parameter, pop_size, neuron_traits::default_values<neuron_type>::parameter); \
+        for (size_t i = 0; i < target.size(); ++i) target[i].parameter = values[i];                                \
     }                                                                                                              \
     static_assert(true, "")
 
 
-#define LOAD_SYNAPSE_ATTRIBUTE(target, synapse_type, attribute, h5_group, proj_size)                                  \
+#define LOAD_SYNAPSE_PARAMETER(target, synapse_type, parameter, h5_group, proj_size)                                  \
     {                                                                                                                 \
         const auto values =                                                                                           \
-            read_attribute(h5_group, #attribute, proj_size, synapse_traits::default_values<synapse_type>::attribute); \
-        for (size_t i = 0; i < target.size(); ++i) target[i].attribute = values[i];                                   \
+            read_parameter(h5_group, #parameter, proj_size, synapse_traits::default_values<synapse_type>::parameter); \
+        for (size_t i = 0; i < target.size(); ++i) target[i].parameter = values[i];                                   \
     }                                                                                                                 \
     static_assert(true, "")
 

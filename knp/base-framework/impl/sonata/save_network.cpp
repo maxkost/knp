@@ -29,12 +29,14 @@ template <>
 void add_projection_to_h5<core::Projection<synapse_traits::DeltaSynapse>>(
     HighFive::File &file_h5, const knp::core::Projection<synapse_traits::DeltaSynapse> &projection)
 {
+    using SynapseParams = synapse_traits::synapse_parameters<synapse_traits::DeltaSynapse>;
+
     if (!file_h5.exist("edges")) throw std::runtime_error("File doesn't contain \"edges\" group.");
 
     std::vector<uint64_t> source_ids, target_ids;
-    std::vector<uint64_t> delays;
-    std::vector<double> weights;
-    std::vector<uint32_t> out_types;
+    std::vector<decltype(SynapseParams::delay_)> delays;
+    std::vector<decltype(SynapseParams::weight_)> weights;
+    std::vector<int> out_types;
     source_ids.reserve(projection.size());
     target_ids.reserve(projection.size());
     delays.reserve(projection.size());
@@ -47,7 +49,7 @@ void add_projection_to_h5<core::Projection<synapse_traits::DeltaSynapse>>(
         target_ids.push_back(std::get<2>(v));
         delays.push_back(std::get<0>(v).delay_);
         weights.push_back(std::get<0>(v).weight_);
-        out_types.push_back(static_cast<uint32_t>(std::get<0>(v).output_type_));
+        out_types.push_back(static_cast<int>(std::get<0>(v).output_type_));
     }
 
     HighFive::Group proj_group = file_h5.createGroup("edges/" + std::string(projection.get_uid()));
@@ -295,8 +297,10 @@ void save_network(const Network &network, const fs::path &dir)
             },
             *iter);
     }
+    h5_pop_file.createAttribute("network_uid", std::string{network.get_uid()});
     // TODO : move this inside add_population or add more neurons
     add_neuron_type_to_csv<neuron_traits::BLIFATNeuron>(path_to_neurons_csv);
+
 
     write_base_config(dir, net_dir);
     write_network_config(

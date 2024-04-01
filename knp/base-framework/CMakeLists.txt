@@ -30,6 +30,7 @@ knp_add_library("${PROJECT_NAME}-core"
     impl/sonata/csv_content.cpp
     impl/sonata/save_load_blifat.cpp
     impl/sonata/save_load_resource_blifat.cpp
+    impl/sonata/save_load_resource_delta.cpp
     impl/observer.cpp
 
     ${${PROJECT_NAME}_headers})

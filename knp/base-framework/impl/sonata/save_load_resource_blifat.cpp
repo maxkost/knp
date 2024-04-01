@@ -7,8 +7,12 @@
 
 #include <spdlog/spdlog.h>
 
+#include <boost/lexical_cast.hpp>
+#include <boost/uuid/uuid.hpp>
+
 #include <highfive/highfive.hpp>
 
+#include "csv_content.h"
 #include "save_load_network.h"
 #include "type_id_defines.h"
 
@@ -26,6 +30,45 @@ template <>
 std::string get_neuron_type_name<neuron_traits::SynapticResourceSTDPBLIFATNeuron>()
 {
     return "knp:SynapticResourceRuleBlifatNeuron";
+}
+
+
+template <>
+void add_neuron_type_to_csv<neuron_traits::SynapticResourceSTDPBLIFATNeuron>(const fs::path &csv_path)
+{
+    CsvContent csv_file;
+    if (fs::is_regular_file(csv_path))
+    {
+        // File already exists, load it.
+        csv_file.load(csv_path);
+        // Check header correctness.
+        auto file_header = csv_file.get_header();
+        for (const auto &column_name : node_file_header)
+        {
+            if (std::find(file_header.begin(), file_header.end(), column_name) == file_header.end())
+                throw std::runtime_error("Couldn't find column: " + column_name + " in file " + csv_path.string());
+        }
+        // Header is okay, check if type exists already.
+        size_t height = csv_file.get_rc_size().first - 1;
+        for (size_t row_id = 0; row_id < height; ++row_id)
+        {
+            if (csv_file.get_value<int>(row_id, "node_type_id") ==
+                get_neuron_type_id<neuron_traits::SynapticResourceSTDPBLIFATNeuron>())
+            {
+                return;  // Type exists, nothing to add.
+            }
+        }
+    }
+    else
+    {
+        csv_file.set_header(node_file_header);
+    }
+    // Add type
+    std::vector<std::string> type_row = {
+        std::to_string(get_neuron_type_id<neuron_traits::SynapticResourceSTDPBLIFATNeuron>()), "point_neuron", "",
+        get_neuron_type_name<neuron_traits::SynapticResourceSTDPBLIFATNeuron>()};
+    csv_file.add_row(type_row);
+    csv_file.save(csv_path);
 }
 
 
@@ -75,14 +118,112 @@ void add_population_to_h5<core::Population<knp::neuron_traits::SynapticResourceS
     PUT_NEURON_TO_DATASET(population, potential_reset_value_, group0);
     PUT_NEURON_TO_DATASET(population, min_potential_, group0);
 
-    auto dynamic_group0 = group0.createGroup("dynamics_params");
+    // Synaptic rule parameters (do we need to split them into static-dynamic as well? probably not)
+    PUT_NEURON_TO_DATASET(population, free_synaptic_resource_, group0);
+    PUT_NEURON_TO_DATASET(population, synaptic_resource_threshold_, group0);
+    PUT_NEURON_TO_DATASET(population, resource_drain_coefficient_, group0);
+    PUT_NEURON_TO_DATASET(population, stability_, group0);
+    PUT_NEURON_TO_DATASET(population, stability_change_parameter_, group0);
+    PUT_NEURON_TO_DATASET(population, stability_change_at_isi_, group0);
+    PUT_NEURON_TO_DATASET(population, isi_max_, group0);
+    PUT_NEURON_TO_DATASET(population, d_h_, group0);
+    PUT_NEURON_TO_DATASET(population, last_step_, group0);
+    PUT_NEURON_TO_DATASET(population, first_isi_spike_, group0);
+    PUT_NEURON_TO_DATASET(population, is_being_forced_, group0);
+    {
+        std::vector<int> data;
+        data.reserve(population.size());
+        std::transform(
+            population.begin(), population.end(), std::back_inserter(data),
+            [](const auto &neuron) { return static_cast<int>(neuron.isi_status_); });
+        group0.createDataSet("isi_status_", data);
+    }
+
     // Dynamic
+    auto dynamic_group0 = group0.createGroup("dynamics_params");
     PUT_NEURON_TO_DATASET(population, dynamic_threshold_, dynamic_group0);
     PUT_NEURON_TO_DATASET(population, potential_, dynamic_group0);
     PUT_NEURON_TO_DATASET(population, pre_impact_potential_, dynamic_group0);
     PUT_NEURON_TO_DATASET(population, bursting_phase_, dynamic_group0);
     PUT_NEURON_TO_DATASET(population, total_blocking_period_, dynamic_group0);
     PUT_NEURON_TO_DATASET(population, dopamine_value_, dynamic_group0);
+}
+
+
+#define LOAD_NEURONS_PARAMETER_DEF(target, parameter, h5_group, pop_size, def_neuron)             \
+    {                                                                                             \
+        const auto values = read_parameter(h5_group, #parameter, pop_size, def_neuron.parameter); \
+        for (size_t i = 0; i < target.size(); ++i) target[i].parameter = values[i];               \
+    }                                                                                             \
+    static_assert(true, "")
+
+
+using ResourceNeuron = neuron_traits::SynapticResourceSTDPBLIFATNeuron;
+using ResourceNeuronParams = neuron_traits::neuron_parameters<ResourceNeuron>;
+
+template <>
+core::Population<neuron_traits::SynapticResourceSTDPBLIFATNeuron>
+load_population<neuron_traits::SynapticResourceSTDPBLIFATNeuron>(
+    const HighFive::Group &nodes_group, const std::string &population_name)
+{
+    SPDLOG_DEBUG("Loading nodes");
+    auto group = nodes_group.getGroup(population_name).getGroup("0");
+    size_t group_size = nodes_group.getGroup(population_name).getDataSet("node_id").getDimensions().at(0);
+
+    // TODO: Load default neuron from json file.
+    ResourceNeuronParams default_params{neuron_traits::neuron_parameters<neuron_traits::BLIFATNeuron>{}};
+    std::vector<ResourceNeuronParams> target(group_size, default_params);
+    // BLIFAT parameters
+    LOAD_NEURONS_PARAMETER_DEF(target, n_time_steps_since_last_firing_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, activation_threshold_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, threshold_decay_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, threshold_increment_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, postsynaptic_trace_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, postsynaptic_trace_decay_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, postsynaptic_trace_increment_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, inhibitory_conductance_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, inhibitory_conductance_decay_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, potential_decay_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, bursting_period_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, reflexive_weight_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, reversal_inhibitory_potential_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, absolute_refractory_period_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, potential_reset_value_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, min_potential_, group, group_size, default_params);
+    // Synaptic rule parameters
+    LOAD_NEURONS_PARAMETER_DEF(target, free_synaptic_resource_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, synaptic_resource_threshold_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, resource_drain_coefficient_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, stability_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, stability_change_parameter_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, stability_change_at_isi_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, isi_max_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, d_h_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, last_step_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, first_isi_spike_, group, group_size, default_params);
+    LOAD_NEURONS_PARAMETER_DEF(target, is_being_forced_, group, group_size, default_params);
+    {
+        const auto values =
+            read_parameter(group, "isi_status_", group_size, static_cast<int>(default_params.isi_status_));
+        for (size_t i = 0; i < target.size(); ++i)
+        {
+            target[i].isi_status_ = static_cast<neuron_traits::ISIPeriodType>(values[i]);
+        }
+    }
+
+    // Dynamic parameters
+    auto dyn_group = group.getGroup("dynamics_params");
+    LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, dynamic_threshold_, dyn_group, group_size);
+    LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, potential_, dyn_group, group_size);
+    LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, pre_impact_potential_, dyn_group, group_size);
+    LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, bursting_phase_, dyn_group, group_size);
+    LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, total_blocking_period_, dyn_group, group_size);
+    LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, dopamine_value_, dyn_group, group_size);
+
+    knp::core::UID uid{boost::lexical_cast<boost::uuids::uuid>(population_name)};
+    core::Population<ResourceNeuron> out_population(
+        uid, [&target](size_t i) { return target[i]; }, group_size);
+    return out_population;
 }
 
 }  // namespace knp::framework
