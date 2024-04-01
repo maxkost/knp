@@ -46,6 +46,17 @@ set_target_properties(
 
 set(COMPONENT_NAME framework)
 
+configure_package_config_file(
+        "${CMAKE_CURRENT_LIST_DIR}/cmake/${PROJECT_NAME}Config.cmake.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake"
+        INSTALL_DESTINATION
+        "${CMAKE_INSTALL_LIBDIR}/cmake/")
+
+write_basic_package_version_file(
+        "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake"
+        VERSION ${PROJECT_VERSION}
+        COMPATIBILITY AnyNewerVersion)
+
 install(TARGETS "${PROJECT_NAME}-core"
         EXPORT "${PROJECT_NAME}-core"
         LIBRARY

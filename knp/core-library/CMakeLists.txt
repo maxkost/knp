@@ -107,17 +107,6 @@ configure_file(
     "${CMAKE_CURRENT_LIST_DIR}/include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/version.h.in"
     "${CMAKE_CURRENT_BINARY_DIR}/include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/version.h")
 
-write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake"
-    VERSION ${PROJECT_VERSION}
-    COMPATIBILITY AnyNewerVersion)
-
-configure_package_config_file(
-    "${CMAKE_CURRENT_LIST_DIR}/cmake/${PROJECT_NAME}Config.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake"
-    INSTALL_DESTINATION
-    "${CMAKE_INSTALL_LIBDIR}/cmake/")
-
 install(TARGETS "${PROJECT_NAME}_messaging"
         EXPORT "${PROJECT_NAME}_messaging"
         COMPONENT "framework-dev")
@@ -127,8 +116,8 @@ install(TARGETS "${PROJECT_NAME}"
         ARCHIVE
         COMPONENT "framework-dev")
 
-install(EXPORT "${PROJECT_NAME}" DESTINATION knp
-        COMPONENT "framework-dev")
+#install(EXPORT "${PROJECT_NAME}" DESTINATION knp
+#        COMPONENT "framework-dev")
 
 install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
         COMPONENT "framework-dev"

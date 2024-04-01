@@ -85,12 +85,17 @@ add_custom_command(
     WORKING_DIRECTORY "${KNP_PYTHON_OUTPUT_DIRECTORY}"
 )
 
+# TODO: automatically get all targets in CMakeLists.txt.
 add_custom_target(
     "${PROJECT_NAME}-pip-build-package" ALL
     DEPENDS
+        "${PROJECT_NAME}_base_framework"
+        "${PROJECT_NAME}_core"
+        "${PROJECT_NAME}_neuron_traits"
+        "${PROJECT_NAME}_synapse_traits"
         "${PROJECT_NAME}-copy-python-tests"
         "${PROJECT_NAME}-copy-common-files"
         "${PROJECT_NAME}-copy-common-python-files"
         "${PROJECT_NAME}-copy-common-project-files"
-        "${KNP_PYTHON_OUTPUT_DIRECTORY}/dist/knp-1.0.0-py3-none-any.whl"
+        "${KNP_PYTHON_OUTPUT_DIRECTORY}/dist/knp-${PROJECT_VERSION}-py3-none-any.whl"
 )
