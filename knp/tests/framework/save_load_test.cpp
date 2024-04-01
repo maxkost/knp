@@ -40,17 +40,58 @@ TEST(SaveLoadSuit, SaveTest)
 }
 
 
+template <class Entity>
+knp::core::UID get_uid(const Entity &entity)
+{
+    return std::visit([](const auto &v) { return v.get_uid(); }, entity);
+}
+
+
+// not efficient, doesn't matter.
+template <class Content>
+bool compare_container_contents(const Content &cont1, const Content &cont2, const knp::core::UID &uid)
+{
+    auto iter1 = std::find_if(cont1.begin(), cont1.end(), [&uid](const auto &value) { return get_uid(value) == uid; });
+    auto iter2 = std::find_if(cont2.begin(), cont2.end(), [&uid](const auto &value) { return get_uid(value) == uid; });
+
+    size_t size1 = std::visit([](auto &vec) { return vec.size(); }, *iter1);
+    size_t size2 = std::visit([](auto &vec) { return vec.size(); }, *iter2);
+    if (size1 != size2 || iter1->index() != iter2->index()) return false;
+    // TODO: It would be nice to compare the contents, but parameter comparison is not yet implemented (1.04.24)
+    return true;
+}
+
+
+// Comparing population vectors without taking order into account.
+template <class Container>
+bool are_similar_containers(const Container &cont1, const Container &cont2)
+{
+    std::set<knp::core::UID> uids1, uids2;
+    for (auto &v : cont1) uids1.insert(get_uid(v));
+    for (auto &v : cont2) uids2.insert(get_uid(v));
+    if (uids1 != uids2) return false;
+
+    if (!std::all_of(
+            uids1.begin(), uids1.end(),
+            [&cont1, &cont2](const knp::core::UID &uid) { return compare_container_contents(cont1, cont2, uid); }))
+        return false;
+    return true;
+}
+
+
+bool are_networks_similar(const knp::framework::Network &current, const knp::framework::Network &other)
+{
+    if (current.get_uid() != other.get_uid()) return false;
+
+    if (!are_similar_containers(current.get_populations(), other.get_populations())) return false;
+    if (!are_similar_containers(current.get_projections(), other.get_projections())) return false;
+    return true;
+}
+
 TEST(SaveLoadSuite, SaveLoadTest)
 {
     auto network = make_simple_network();
     knp::framework::save_network(network, "");
     auto network_loaded = knp::framework::load_network_alt("network/network_config.json");
-    ASSERT_EQ(network.populations_count(), network_loaded.populations_count());
-    ASSERT_EQ(network.projections_count(), network_loaded.projections_count());
-    knp::core::UID uid_from = std::visit([](auto &proj) { return proj.get_uid(); }, *network.begin_projections());
-    knp::core::UID uid_to = std::visit([](auto &proj) { return proj.get_uid(); }, *network_loaded.begin_projections());
-    ASSERT_EQ(uid_from, uid_to);
-    uid_from = std::visit([](auto &proj) { return proj.get_uid(); }, *network.begin_populations());
-    uid_to = std::visit([](auto &proj) { return proj.get_uid(); }, *network_loaded.begin_populations());
-    ASSERT_EQ(uid_from, uid_to);
+    ASSERT_TRUE(are_networks_similar(network, network_loaded));
 }
