@@ -77,8 +77,8 @@ struct is_specialization : std::false_type
 
 /**
  * @class std::true_type
- * @brief Instantiation of integral_constant to represent the bool value false.
- * @see <a href="https://en.cppreference.com/w/cpp/types/integral_constant">std::false_type description</a>
+ * @brief Instantiation of integral_constant to represent the bool value true.
+ * @see <a href="https://en.cppreference.com/w/cpp/types/integral_constant">std::true_type description</a>
  */
 
 
