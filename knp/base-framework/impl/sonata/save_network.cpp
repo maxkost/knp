@@ -73,6 +73,7 @@ void add_projection_to_h5<core::Projection<synapse_traits::DeltaSynapse>>(
     syn_group.createDataSet("syn_weight", weights);
     syn_group.createDataSet("delay", delays);
     syn_group.createDataSet("output_type_", out_types);
+    proj_group.createAttribute("is_locked", projection.is_locked());
 }
 
 

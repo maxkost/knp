@@ -149,7 +149,7 @@ void add_projection_to_h5<core::Projection<ResourceDeltaSynapse>>(
     PUT_SYNAPSE_RULE_TO_DATASET(projection, dopamine_plasticity_period_, syn_group);
     PUT_SYNAPSE_RULE_TO_DATASET(projection, w_max_, syn_group);
     PUT_SYNAPSE_RULE_TO_DATASET(projection, w_min_, syn_group);
-
+    proj_group.createAttribute("is_locked", projection.is_locked());
 
     syn_group.createDataSet("syn_weight", weights);
     syn_group.createDataSet("delay", delays);
@@ -214,6 +214,13 @@ core::Projection<ResourceDeltaSynapse> load_projection(
 
     core::Projection<ResourceDeltaSynapse> proj(
         uid_own, uid_from, uid_to, [&synapses](size_t i) { return synapses[i]; }, synapses.size());
+    if (projection_group.hasAttribute("is_locked"))
+    {
+        if (projection_group.getAttribute("is_locked").read<bool>())
+            proj.lock_weights();
+        else
+            proj.unlock_weights();
+    }
     return proj;
 }
 

@@ -396,13 +396,14 @@ knp::framework::Network create_network_from_monitoring_file(
 
 int main(int argc, char *argv[])
 {
+    std::cout << std::filesystem::absolute(std::filesystem::path(".")) << std::endl;
     knp::core::UID output_population_uid;
     std::vector<knp::core::UID> input_projection_uids;
-    const std::filesystem::path path_to_network = "data/monitoring.8.csv";
+    const std::filesystem::path path_to_network = "../data/monitoring.8.csv";
     knp::framework::Network network_base = create_network_from_monitoring_file(
         path_to_network, /*at_tact*/ 0, {}, input_projection_uids, 3, output_population_uid, {"L"});
-    knp::framework::save_network(network_base, "data/arni_network");
+    knp::framework::save_network(network_base, "../data/arni_network");
     knp::framework::Network loaded_network =
-        knp::framework::load_network_alt("data/arni_network/network/network_config.json");
+        knp::framework::load_network_alt("../data/arni_network/network/network_config.json");
     return 0;
 }
