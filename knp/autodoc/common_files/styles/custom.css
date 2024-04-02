@@ -131,3 +131,14 @@ html.dark-mode td#projectlogo > img {
 #doc-content .contents {
     max-width: unset;
 }
+
+/* Prevents white hover effect on left "space" before menu item */
+#nav-tree .item a:hover > span.arrow {
+    background: transparent;
+}
+
+/* Prevents white underline artefact on hover effect under span with arrow icon */
+#nav-tree .item > a:hover {
+    background: none;
+}
+/* TODO try to cleanup on theme update *****/
