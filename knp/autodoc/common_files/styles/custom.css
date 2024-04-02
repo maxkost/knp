@@ -119,3 +119,26 @@ html.dark-mode td#projectlogo > img {
     filter: invert(45%) sepia(94%) saturate(598%) hue-rotate(127deg) brightness(89%) contrast(101%);
 }
 */
+
+
+/***** TODO try to cleanup on theme update */
+/* Remove unused "gaps" on both sides of content header */
+#doc-content .header .headertitle .title {
+    max-width: unset;
+}
+
+/* Remove unused "gaps" on both sides of content table */
+#doc-content .contents {
+    max-width: unset;
+}
+
+/* Prevents white hover effect on left "space" before menu item */
+#nav-tree .item a:hover > span.arrow {
+    background: transparent;
+}
+
+/* Prevents white underline artefact on hover effect under span with arrow icon */
+#nav-tree .item > a:hover {
+    background: none;
+}
+/* TODO try to cleanup on theme update *****/
