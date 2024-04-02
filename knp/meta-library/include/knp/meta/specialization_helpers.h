@@ -52,6 +52,13 @@ std::string type_name()
 
 
 /**
+ * @class std::false_type
+ * @brief Instantiation of integral_constant to represent the bool value false.
+ * @see <a href="https://en.cppreference.com/w/cpp/types/integral_constant">std::false_type description</a>
+ */
+
+
+/**
  * @brief Specialization test template.
  * @details See <a href="https://stackoverflow.com/questions/31762958/check-if-class-is-a-template-specialization">
  Stack Overflow</a>.
@@ -66,6 +73,13 @@ template <class T, template <class...> class Template>
 struct is_specialization : std::false_type
 {
 };
+
+
+/**
+ * @class std::true_type
+ * @brief Instantiation of integral_constant to represent the bool value true.
+ * @see <a href="https://en.cppreference.com/w/cpp/types/integral_constant">std::true_type description</a>
+ */
 
 
 /**

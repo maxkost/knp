@@ -18,9 +18,8 @@ if(KNP_BUILD_DOCUMENTATION)
     message(STATUS "Generating documentation...")
 
     foreach(_i
-            core-library base-framework
+            core-library base-framework devices-library meta-library
             neuron-traits-library synapse-traits-library
-            devices-library
             backends/cpu/cpu-single-threaded-backend
             backends/cpu/cpu-multi-threaded-backend
             backends/cpu/thread_pool
