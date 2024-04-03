@@ -7,7 +7,9 @@ set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(knp VERSION "${KNP_VERSION}" LANGUAGES C CXX)
+project(knp VERSION "${KNP_VERSION}" LANGUAGES C CXX
+        DESCRIPTION "Kaspersky Neuromorphic Platform"
+        HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 # TODO: Enable for the latest Boost versions: it doesn't work for DLLs on the old versions.
 # set(Boost_USE_STATIC_LIBS ON)

@@ -28,7 +28,7 @@ function(add_git_submodule dir)
     if(EXISTS "${project_list}")
         # get_filename_component(build_dir "${dir}" NAME)
         set(CMAKE_VERIFY_INTERFACE_HEADER_SETS OFF)
-        add_subdirectory("${dir}")
+        add_subdirectory("${dir}" EXCLUDE_FROM_ALL)
     endif()
 
 endfunction()

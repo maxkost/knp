@@ -1,24 +1,22 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(knp-synapse-traits LANGUAGES C CXX)
+project(knp-synapse-traits VERSION "${KNP_VERSION}" LANGUAGES C CXX
+        DESCRIPTION "Kaspersky Neuromorphic Platform synapses properties"
+        HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 include(knp-functions)
 
+set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/synapse-traits")
+
+file(GLOB_RECURSE ${PROJECT_NAME}_headers include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/*.h)
+
 add_library("${PROJECT_NAME}"
-    INTERFACE
-    include/knp/synapse-traits/type_traits.h
-    include/knp/synapse-traits/delta.h
-    include/knp/synapse-traits/all_traits.h
-    include/knp/synapse-traits/output_types.h
-    include/knp/synapse-traits/stdp_common.h
-    include/knp/synapse-traits/stdp_type_traits.h
-    include/knp/synapse-traits/stdp_add_rule.h
-    include/knp/synapse-traits/stdp_synaptic_resource_rule.h
-)
+        INTERFACE
+        ${${PROJECT_NAME}_headers})
 add_library(KNP::Synapse::Traits ALIAS "${PROJECT_NAME}")
 
 target_include_directories("${PROJECT_NAME}" INTERFACE
@@ -26,3 +24,12 @@ target_include_directories("${PROJECT_NAME}" INTERFACE
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
 target_link_libraries("${PROJECT_NAME}" INTERFACE KNP::Meta)
+
+install(TARGETS "${PROJECT_NAME}"
+    EXPORT "${PROJECT_NAME}"
+    COMPONENT "framework-dev")
+
+install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+        COMPONENT "framework-dev"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
+        FILES_MATCHING PATTERN "*.h")

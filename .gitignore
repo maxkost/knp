@@ -30,9 +30,16 @@ a.out
 /*-build-*
 *.autosave
 
+
 # Ignore C++ files in the root directory.
+
 /*.cpp
 /*.h
+
+
+# Installation directory and artifacts.
+
+/install
 
 .cccc
 

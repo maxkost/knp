@@ -141,7 +141,6 @@ std::vector<core::AllPopulationsVariant> load_populations(const fs::path &pop_h5
 {
     if (!fs::is_regular_file(pop_h5_file)) throw std::runtime_error("Couldn't open file " + pop_h5_file.string());
     HighFive::File storage{pop_h5_file};
-    std::cout << storage.getNumberObjects() << std::endl;
     auto group = storage.getGroup("nodes");
     size_t num_projections = group.getNumberObjects();
     std::vector<core::AllPopulationsVariant> result;

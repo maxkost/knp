@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="maximum-scale=1.0" />
+    <title> Добавление нового типа синапса </title>
+    <script type="text/javascript" src="../langs.js"></script>
+    <script type="text/javascript">
+        !function ( w, d ) {
+            var scriptsPath="";
+            d.writeln("\x3Cscript type='text/javascript' src='"+scriptsPath+d.documentElement.lang+".js'>\x3C/script>");
+        }( window, document );
+    </script>
+    <script type="text/javascript" src="toc.js"></script>
+
+    <script type="text/javascript" src="aiconverter_result.js"></script>
+    <link rel="stylesheet" type='text/css' href="typography.css"/>
+    <link rel="stylesheet" type='text/css' href="styles.css"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="favicon.png" type="image/png"/>
+
+            <!--[if lte IE 9]>
+                <link rel="stylesheet" type="text/css" href="bootstrap.css">
+            <![endif]-->
+            <!--[if lte IE 8]>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+            <![endif]-->
+            </head>
+
+<body id="who-content">
+	<div class="cont">
+	<h1 id="t250824" class="heading1">Добавление нового типа синапса</h1>
+<p class="bodytext">На текущий момент Kaspersky Neuromorphic Platform поддерживает наборы свойств и типизацию проекций по модели дельта-синапса. Если требуется, вы можете добавить новый тип синапса.</p>
+<p class="procedureheading">Чтобы добавить новый тип синапса:</p>
+<ol class="listnumber1"><li class="listnumber1">В директории <code class="programcharacter">synapse-traits-library/include/knp/synapse-traits/</code> создайте заголовочный файл для нового типа синапса. </li><li class="listnumber1">В созданном заголовочном файле определите структуру типа синапса и его шаблонные свойства (например, <code class="programcharacter">synapse_parameters</code>).<p class="listcontinue1">Пример определения дельта-синапса:</p>
+<p class="codeheadingkos">synapse-traits-library/include/knp/synapse-traits/delta.h</p>
+<p class="programckos">#include &quot;type_traits.h&quot;</p>
+<p class="programckos"> </p>
+<p class="programckos">namespace knp::synapse_traits</p>
+<p class="programckos"> </p>
+<p class="programckos">{</p>
+<p class="programckos">struct DeltaSynapse;</p>
+<p class="programckos"> </p>
+<p class="programckos">template &lt;&gt;</p>
+<p class="programckos">struct synapse_parameters&lt;DeltaSynapse&gt;</p>
+<p class="programckos"> </p>
+<p class="programckos">{</p>
+<p class="programckos">    // Задает атрибуты синапса.</p>
+<p class="programckos">    synapse_parameters() : weight_(0.0F), delay_(1), output_type_(knp::synapse_traits::OutputType::EXCITATORY) {}</p>
+<p class="programckos"></p>
+<p class="programckos">    synapse_parameters(float weight, uint32_t delay, knp::synapse_traits::OutputType type)</p>
+<p class="programckos">        : weight_(weight), delay_(delay), output_type_(type)</p>
+<p class="programckos"> </p>
+<p class="programckos">    // Вес синапса</p>
+<p class="programckos">    float weight_;</p>
+<p class="programckos">    // Задержка синапса</p>
+<p class="programckos">    std::size_t delay_;</p>
+<p class="programckos">    // Тип синапса на выходе</p>
+<p class="programckos">    knp::synapse_traits::OutputType output_type_;</p>
+<p class="programckos">};</p>
+<p class="programckos"> </p>
+<p class="programckos">}  // namespace knp::synapse_traits</p>
+</li><li class="listnumber1">Добавьте созданный тип синапса в список синапсов, определенных в заголовочном файле <code class="programcharacter">synapse-traits-library/include/knp/synapse-traits/all_traits.h</code>.<p class="listcontinue1">Пример добавления дельта-синапса в список синапсов:</p>
+<p class="codeheadingkos">synapse-traits-library/include/knp/synapse-traits/all_traits.h</p>
+<p class="programckos">#include &quot;delta.h&quot;</p>
+<p class="programckos"> </p>
+<p class="programckos">namespace knp::synapse_traits</p>
+<p class="programckos"> </p>
+<p class="programckos">{</p>
+<p class="programckos">// Список типов синапсов, разделенных запятыми.</p>
+<p class="programckos">#define ALL_SYNAPSES knp::synapse_traits::DeltaSynapse</p>
+<p class="programckos"> </p>
+<p class="programckos">...</p>
+<p class="programckos">}  // namespace knp::neuron_traits</p>
+</li><li class="listnumber1">Реализуйте в нужных бекендах перегруженный метод запуска. <p class="listcontinue1">Например, для бекенда CPU реализуйте перегруженный метод запуска расчета проекций.</p>
+</li></ol>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div>
+</body>
+
+</html>

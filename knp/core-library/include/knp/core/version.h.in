@@ -1,0 +1,27 @@
+/**
+* @file version.h
+* @brief KNP version components.
+* @author Artiom N.
+* @date 19.03.2024
+*/
+
+#pragma once
+
+#include <string>
+
+
+/**
+ * @brief Core library namespace.
+ */
+namespace knp::core
+{
+const uint16_t version_major = @CMAKE_PROJECT_VERSION_MAJOR@;
+const uint16_t version_minor = @CMAKE_PROJECT_VERSION_MINOR@;
+const uint16_t version_patch = @CMAKE_PROJECT_VERSION_PATCH@;
+
+
+/**
+ * @brief Version string.
+ */
+const std::string version = "@CMAKE_PROJECT_VERSION@";
+}  // namespace knp::core

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -7,9 +7,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp-cpu-backends-library VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 
-find_package(Boost 1.66.0 REQUIRED)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
 
-include(GNUInstallDirs)
 include(clang-tidy)
 include(knp-functions)
 
@@ -37,11 +36,5 @@ if(KNP_ENABLE_COVERAGE)
     link_target_with_gcov("${PROJECT_NAME}")
 endif()
 
-install(TARGETS "${PROJECT_NAME}"
-        EXPORT "${PROJECT_NAME}"
-#        NAMESPACE KNP::
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+# Internal library, used by backends.
+# This doesn't need installation.

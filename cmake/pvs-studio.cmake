@@ -6,6 +6,7 @@
 cmake_minimum_required(VERSION 2.8.12)
 cmake_policy(SET CMP0054 NEW)
 
+
 if (PVS_STUDIO_AS_SCRIPT)
     # This code runs at build time.
     # It executes pvs-studio-analyzer and propagates its return value.
@@ -49,10 +50,9 @@ if (PVS_STUDIO_AS_SCRIPT)
     return()
 endif ()
 
-if(__PVS_STUDIO_INCLUDED)
-    return()
-endif()
-set(__PVS_STUDIO_INCLUDED TRUE)
+
+include_guard(GLOBAL)
+
 
 set(PVS_STUDIO_SCRIPT "${CMAKE_CURRENT_LIST_FILE}")
 
@@ -61,6 +61,7 @@ function (pvs_studio_log TEXT)
         message("PVS-Studio: ${TEXT}")
     endif ()
 endfunction ()
+
 
 function (pvs_studio_relative_path VAR ROOT FILEPATH)
     set("${VAR}" "${FILEPATH}" PARENT_SCOPE)
@@ -79,6 +80,7 @@ function (pvs_studio_join_path VAR DIR1 DIR2)
         set("${VAR}" "${DIR1}/${DIR2}" PARENT_SCOPE)
     endif ()
 endfunction ()
+
 
 macro (pvs_studio_append_flags_from_property CXX C DIR PREFIX)
     if (NOT "${PROPERTY}" STREQUAL "NOTFOUND" AND NOT "${PROPERTY}" STREQUAL "PROPERTY-NOTFOUND")
@@ -100,6 +102,7 @@ macro (pvs_studio_append_flags_from_property CXX C DIR PREFIX)
     endif ()
 endmacro ()
 
+
 macro (pvs_studio_append_standard_flag FLAGS STANDARD)
     if ("${STANDARD}" MATCHES "^(99|11|14|17)$")
         if ("${PVS_STUDIO_PREPROCESSOR}" MATCHES "gcc|clang")
@@ -107,6 +110,7 @@ macro (pvs_studio_append_standard_flag FLAGS STANDARD)
         endif ()
     endif ()
 endmacro ()
+
 
 function (pvs_studio_set_directory_flags DIRECTORY CXX C)
     set(CXX_FLAGS "${${CXX}}")
@@ -121,6 +125,7 @@ function (pvs_studio_set_directory_flags DIRECTORY CXX C)
     set("${CXX}" "${CXX_FLAGS}" PARENT_SCOPE)
     set("${C}" "${C_FLAGS}" PARENT_SCOPE)
 endfunction ()
+
 
 function (pvs_studio_set_target_flags TARGET CXX C)
     set(CXX_FLAGS "${${CXX}}")
@@ -137,6 +142,7 @@ function (pvs_studio_set_target_flags TARGET CXX C)
     set("${CXX}" "${CXX_FLAGS}" PARENT_SCOPE)
     set("${C}" "${C_FLAGS}" PARENT_SCOPE)
 endfunction ()
+
 
 function (pvs_studio_set_source_file_flags SOURCE)
     set(LANGUAGE "")
@@ -159,6 +165,7 @@ function (pvs_studio_set_source_file_flags SOURCE)
     set(PVS_STUDIO_LANGUAGE "${LANGUAGE}" PARENT_SCOPE)
     set(PVS_STUDIO_CL_PARAMS "${CL_PARAMS}" PARENT_SCOPE)
 endfunction ()
+
 
 function (pvs_studio_analyze_file SOURCE SOURCE_DIR BINARY_DIR)
     set(PLOGS ${PVS_STUDIO_PLOGS})
