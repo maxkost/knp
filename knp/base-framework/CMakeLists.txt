@@ -39,15 +39,9 @@ knp_add_library("${PROJECT_NAME}-core"
     ${${PROJECT_NAME}_headers}
     ALIAS KNP::BaseFramework::Core
     LINK_PRIVATE
-        spdlog::spdlog_header_only Boost::headers Boost::filesystem
+        spdlog::spdlog_header_only Boost::headers Boost::filesystem HighFive sonata_static simdjson
     LINK_PUBLIC
         KNP::Core KNP::Neuron::Traits KNP::Synapse::Traits)
-
-#target_link_libraries("${PROJECT_NAME}-core" PRIVATE spdlog::spdlog_header_only Boost::headers Boost::filesystem)
-#target_link_libraries("${PROJECT_NAME}-core" PUBLIC KNP::Core KNP::Neuron::Traits KNP::Synapse::Traits)
-#target_link_libraries("${PROJECT_NAME}-core" INTERFACE HighFive ${HDF5_C_LIBRARIES})
-target_link_libraries("${PROJECT_NAME}-core" PRIVATE HighFive sonata_static simdjson)
-target_include_directories("${PROJECT_NAME}-core" INTERFACE HighFive/include/ ${HDF5_INCLUDE_DIRS})
 
 set_target_properties(
         "${PROJECT_NAME}-core"
