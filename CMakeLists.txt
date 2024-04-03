@@ -101,13 +101,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 # Make cache variables for install destinations.
 include(GNUInstallDirs)
 
-file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
-include_directories(third-party ${THIRD_PARTY_INCLUDES})
-
 include(print-variables)
 
 set(SPDLOG_BUILD_PIC ON)
-add_third_party(pybind11)
 set(EXTLIB_FROM_SUBMODULES ON)
 set(SONATA_TESTS OFF)
 set(SONATA_VERSION 1.0)
@@ -132,6 +128,9 @@ add_third_party(spdlog)
 #
 # Build KNP.
 #
+
+file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
+include_directories(third-party ${THIRD_PARTY_INCLUDES})
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
