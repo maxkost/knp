@@ -92,6 +92,6 @@ TEST(SaveLoadSuite, SaveLoadTest)
 {
     auto network = make_simple_network();
     knp::framework::save_network(network, "");
-    auto network_loaded = knp::framework::load_network_alt("network/network_config.json");
+    auto network_loaded = knp::framework::load_network("network/network_config.json");
     ASSERT_TRUE(are_networks_similar(network, network_loaded));
 }

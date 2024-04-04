@@ -201,7 +201,7 @@ core::UID get_network_uid(const fs::path &nodes_path)
 }
 
 
-Network load_network_alt(const fs::path &config_path)
+Network load_network(const fs::path &config_path)
 {
     // Open and read config files
     auto config = read_config_file(config_path);

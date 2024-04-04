@@ -29,7 +29,7 @@ knp_add_library("${PROJECT_NAME}-core"
     impl/input_converter.cpp
     impl/output_channel.cpp
     impl/sonata/save_network.cpp
-    impl/sonata/load_network_alt.cpp
+        impl/sonata/load_network.cpp
     impl/sonata/type_id_defines.cpp
     impl/sonata/csv_content.cpp
     impl/sonata/save_load_blifat.cpp

@@ -401,6 +401,6 @@ int main(int argc, char *argv[])
         path_to_network, /*at_tact*/ 0, {}, input_projection_uids, 3, output_population_uid, {"L"});
     knp::framework::save_network(network_base, "../../data/arni_network");
     knp::framework::Network loaded_network =
-        knp::framework::load_network_alt("../../data/arni_network/network/network_config.json");
+        knp::framework::load_network("../../data/arni_network/network/network_config.json");
     return 0;
 }
