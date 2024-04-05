@@ -150,7 +150,6 @@ if(KNP_BUILD_DOCUMENTATION)
     doxygen_add_docs(
             "${PROJECT_NAME}"
             "${SOURCE_ROOT_DIR}"
-            CONFIG_FILE "${DOXYFILE}"
             ALL
             WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
             COMMENT "Generating API documentation with Doxygen")
