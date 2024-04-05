@@ -12,13 +12,16 @@
 #include <bbp/sonata/config.h>
 // Create an input projection
 
+
 using DeltaProjection = knp::core::Projection<knp::synapse_traits::DeltaSynapse>;
 using BLIFATPopulation = knp::core::Population<knp::neuron_traits::BLIFATNeuron>;
+
 
 inline std::optional<DeltaProjection::Synapse> input_projection_gen(size_t /*index*/)  // NOLINT
 {
     return DeltaProjection::Synapse{{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};
 }
+
 
 // Create a loop projection
 inline std::optional<DeltaProjection::Synapse> synapse_generator(size_t /*index*/)  // NOLINT
@@ -32,6 +35,7 @@ inline knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron> n
 {
     return knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>{};
 }
+
 
 knp::framework::Network make_simple_network()
 {

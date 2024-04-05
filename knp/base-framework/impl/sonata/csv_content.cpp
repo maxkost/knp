@@ -7,6 +7,7 @@
 
 #include "csv_content.h"
 
+
 namespace knp::framework
 {
 void CsvContent::load(const fs::path &csv_path)
@@ -32,7 +33,7 @@ void CsvContent::load(const fs::path &csv_path)
     {
         std::vector<std::string> buf_vector;
         buf_vector.reserve(header_.size());
-        for (const auto cell : row)
+        for (const auto &cell : row)
         {
             buf = "";
             cell.read_value(buf);
@@ -60,6 +61,7 @@ V CsvContent::get_value(size_t row, const std::string &col)
 {
     return values_[row][header_index_[col]];
 }
+
 
 template <>
 int CsvContent::get_value<int>(size_t row, const std::string &col)
