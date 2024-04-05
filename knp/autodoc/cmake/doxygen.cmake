@@ -6,6 +6,9 @@ include_guard(GLOBAL)
 
 find_package(Doxygen REQUIRED dot OPTIONAL_COMPONENTS mscgen dia)
 
+#
+# Old Doxygen generator.
+#
 
 macro(autodoc_add_doxygen target_name doxyfile_in)
     if(NOT DOXYGEN_FOUND)
@@ -50,20 +53,11 @@ macro(autodoc_add_doxygen target_name doxyfile_in)
     configure_file("${doxyfile_in}" "${DOXYFILE}" @ONLY)
     message("Doxygen build started.")
 
-    # Old variant:
-#    add_custom_target("${target_name}"
-#                      COMMAND Doxygen::doxygen "${DOXYFILE}"
-#                      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-#                      COMMENT "Generating API documentation with Doxygen"
-#                      VERBATIM)
-    # Config generation, new CMake variant:
-    doxygen_add_docs(
-        "${target_name}"
-        "${CMAKE_CURRENT_SOURCE_DIR}"
-        CONFIG_FILE "${DOXYFILE}"
-        ALL
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-        COMMENT "Generating API documentation with Doxygen")
+    add_custom_target("${target_name}"
+                      COMMAND Doxygen::doxygen "${DOXYFILE}"
+                      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+                      COMMENT "Generating API documentation with Doxygen"
+                      VERBATIM)
 endmacro()
 
 
