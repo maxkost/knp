@@ -1,6 +1,9 @@
-//
-// Created by an_vartenkov on 29.02.24.
-//
+/**
+ * @file load_network.cpp
+ * @brief network loading source file.
+ * @author An. Vartenkov
+ * @date 29.02.2024
+ */
 
 #include <knp/core/population.h>
 #include <knp/core/projection.h>

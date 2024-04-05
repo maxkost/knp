@@ -1,6 +1,10 @@
-//
-// Created by an_vartenkov on 28.03.24.
-//
+/**
+ * @file save_load_network.cpp
+ * @brief saving and loading network to Sonata format file.
+ * @author An. Vartenkov
+ * @date 28.03.2024
+ */
+
 #pragma once
 #include <knp/core/population.h>
 #include <knp/core/projection.h>

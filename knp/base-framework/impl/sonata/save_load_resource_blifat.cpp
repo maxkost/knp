@@ -1,6 +1,7 @@
-//
-// Created by an_vartenkov on 28.03.24.
-//
+/**
+ * Saving and loading STDP Resource Blifat neuron.
+ */
+
 #include <knp/core/population.h>
 #include <knp/neuron-traits/blifat.h>
 #include <knp/neuron-traits/stdp_synaptic_resource_rule.h>

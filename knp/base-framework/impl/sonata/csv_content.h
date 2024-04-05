@@ -1,7 +1,9 @@
-//
-// Created by an_vartenkov on 22.03.24.
-//
-
+/**
+ * @file csv_content.h
+ * @brief CSV helper file.
+ * @author An. Vartenkov
+ * @date 22.03.2024
+ */
 #pragma once
 
 #include <filesystem>

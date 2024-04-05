@@ -1,6 +1,9 @@
-//
-// Created by an_vartenkov on 22.03.24.
-//
+/**
+ * @file csv_content.cpp
+ * @brief CSV helper file.
+ * @author An. Vartenkov
+ * @date 22.03.2024
+ */
 
 #include "csv_content.h"
 

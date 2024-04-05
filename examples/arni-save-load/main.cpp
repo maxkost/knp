@@ -1,6 +1,6 @@
-//
-// Created by an_vartenkov on 29.03.24.
-//
+/**
+ * Loading model from ARNI format and saving to sonata format example.
+ */
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 #include <knp/framework/network.h>
@@ -10,7 +10,9 @@
 #include <knp/synapse-traits/delta.h>
 #include <knp/synapse-traits/stdp_synaptic_resource_rule.h>
 
-#include "file_processing.h"
+#include <fstream>
+#include <iostream>
+#include <vector>
 
 
 using BLIFATParams = knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>;

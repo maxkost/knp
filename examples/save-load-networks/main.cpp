@@ -1,3 +1,7 @@
+/**
+ * Model saving and loading example.
+ */
+
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 #include <knp/framework/network.h>
@@ -43,18 +47,6 @@ knp::framework::Network make_simple_network()
     network.add_projection(loop_projection);
     return network;
 }
-
-
-// int main()
-//{
-//     auto config = bbp::sonata::CircuitConfig::fromFile("network/network_config.json");
-//     auto list_nodes = config.listNodePopulations();
-//     for (auto &population_name : list_nodes)
-//     {
-//         auto snt_population = config.getNodePopulation(population_name);
-//         std::cout << snt_population.size() << std::endl;
-//     }
-// }
 
 
 int main()

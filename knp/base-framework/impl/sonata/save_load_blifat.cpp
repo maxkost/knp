@@ -1,6 +1,9 @@
-//
-// Created by an_vartenkov on 28.03.24.
-//
+/**
+ * @file save_load_blifat.cpp
+ * @brief BLIFAT neuron procedures file.
+ * @author An. Vartenkov
+ * @date 28.03.2024
+ */
 
 #include <knp/core/population.h>
 #include <knp/neuron-traits/blifat.h>
