@@ -9,7 +9,7 @@ project(knp-autodoc
 
 if(KNP_BUILD_DOCUMENTATION)
     set(DOXYFILE_IN "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in")
-    file(REAL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../knp" SOURCE_ROOT_DIR)
+    file(REAL_PATH "${CMAKE_SOURCE_DIR}/knp" SOURCE_ROOT_DIR)
 
     message(DEBUG "Source root directory: ${SOURCE_ROOT_DIR}")
 
@@ -22,6 +22,7 @@ if(KNP_BUILD_DOCUMENTATION)
             neuron-traits-library synapse-traits-library
             backends/cpu/cpu-single-threaded-backend
             backends/cpu/cpu-multi-threaded-backend
+            backends/cpu/cpu-library
             backends/cpu/thread_pool
         )
         list(APPEND _strip_list "${SOURCE_ROOT_DIR}/${_i}/include")
@@ -29,20 +30,132 @@ if(KNP_BUILD_DOCUMENTATION)
 
     list(APPEND _strip_list "${SOURCE_ROOT_DIR}")
 
-    autodoc_add_doxygen(${PROJECT_NAME} "${DOXYFILE_IN}"
-        PROJECT_NAME "Kaspersky Neuromorphic Platform"
-        PROJECT_VERSION "${PROJECT_VERSION}"
-        PROJECT_BRIEF "API Reference"
-        OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/doc_doxygen"
-        INPUT "${SOURCE_ROOT_DIR}"
-        EXAMPLE_PATH "${SOURCE_ROOT_DIR}/tests"
-        SOURCE_BROWSER YES
-        BUNDLE_ID "com.kaspersky.KNP"
-        PUBLISHER_NAME "Kaspersky Lab"
-        EXCLUDE_PATTERNS "*.descr* */impl/* */tests/*"
-        EXCLUDE_SYMBOLS "*impl*, *testing*"
-        STRIP_FROM_INC_PATH "${_strip_list}"
-    )
+    set(DOXYGEN_BUILTIN_STL_SUPPORT YES)
+    set(DOXYGEN_CALL_GRAPH YES)
+    set(DOXYGEN_CALLER_GRAPH YES)
+    set(DOXYGEN_CASE_SENSE_NAMES YES)
+    set(DOXYGEN_CREATE_SUBDIRS YES)
+    set(DOXYGEN_DOCSET_PUBLISHER_NAME "Kaspersky Lab")
+    set(DOXYGEN_DOT_FONTPATH "")
+    set(DOXYGEN_DOT_IMAGE_FORMAT "svg")
+    set(DOXYGEN_DOT_UML_DETAILS YES)
+    set(DOXYGEN_ENABLED_SECTIONS
+        ADV BE CD CX FD FR XCU XSR XSI XSH XBD OB ML MON MSG PS PSC RPP SD  SHM SIO SS TCT TEF TPI TPP TPS TRC TRI
+        TRL TSA TSH TSS TYM UP UU)
+    set(DOXYGEN_EXAMPLE_PATH "${CMAKE_SOURCE_DIR}/examples")
+    set(DOXYGEN_EXCLUDE_SYMBOLS *impl* *testing*)
+    set(DOXYGEN_EXCLUDE
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files"
+        "${CMAKE_CURRENT_SOURCE_DIR}/cmake"
+        "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt")
+    set(DOXYGEN_EXCLUDE_PATTERNS *.descr* .descr */impl/* */tests/* common_files */cmake/* CMakeLists.txt)
+    set(DOXYGEN_EXTENSION_MAPPING "no_extension=C++")
+    set(DOXYGEN_EXTRACT_ALL YES)
+    set(DOXYGEN_GENERATE_HTML YES)
+    set(DOXYGEN_GENERATE_MAN NO)
+    set(DOXYGEN_GENERATE_TREEVIEW YES)
+    set(DOXYGEN_HTML_TIMESTAMP YES)
+    set(DOXYGEN_HTML_COLORSTYLE_GAMMA 113)
+    set(DOXYGEN_HTML_COLORSTYLE_HUE 209)
+    set(DOXYGEN_HTML_COLORSTYLE_SAT 255)
+    set(DOXYGEN_HTML_DYNAMIC_MENUS YES)
+    set(DOXYGEN_HTML_DYNAMIC_SECTIONS YES)
+    set(DOXYGEN_IMAGE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/icons")
+    set(DOXYGEN_INTERACTIVE_SVG YES)
+    set(DOXYGEN_LAYOUT_FILE "${CMAKE_CURRENT_SOURCE_DIR}/common_files/DoxygenLayout.xml")
+    set(DOXYGEN_MACRO_EXPANSION YES)
+    set(DOXYGEN_MATHJAX_RELPATH "https://cdn.jsdelivr.net/npm/mathjax@2")
+    set(DOXYGEN_NUM_PROC_THREADS 0)
+    set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/doc_doxygen")
+    set(DOXYGEN_PROJECT_NAME "Kaspersky Neuromorphic Platform")
+    set(DOXYGEN_PROJECT_NUMBER "${PROJECT_VERSION}")
+    set(DOXYGEN_PROJECT_BRIEF "API Reference")
+    set(DOXYGEN_PROJECT_LOGO "${CMAKE_CURRENT_SOURCE_DIR}/icons/logo.svg")
+    set(DOXYGEN_PROJECT_ICON "${CMAKE_CURRENT_SOURCE_DIR}/icons/logo.svg")
+    set(DOXYGEN_RECURSIVE YES)
+    set(DOXYGEN_STRIP_FROM_INC_PATH ${_strip_list})
+    set(DOXYGEN_STRIP_FROM_PATH "${CMAKE_SOURCE_DIR}")
+    set(DOXYGEN_TEMPLATE_RELATIONS YES)
+    set(DOXYGEN_TIMESTAMP YES)
+    set(DOXYGEN_TREEVIEW_WIDTH 335)
+    set(DOXYGEN_UML_LOOK YES)
+    set(DOXYGEN_USE_MATHJAX YES)
+    set(DOXYGEN_WARN_AS_ERROR FAIL_ON_WARNINGS)
+    set(DOXYGEN_WARN_NO_PARAMDOC YES)
+
+    set(DOXYGEN_SOURCE_BROWSER YES)
+    set(DOXYGEN_DOCSET_BUNDLE_ID "com.kaspersky.KNP")
+    set(DOXYGEN_DOCSET_PUBLISHER_ID "com.kaspersky.KNP.documentation")
+    set(DOXYGEN_DOCSET_PUBLISHER_NAME "Kaspersky Lab")
+    set(DOXYGEN_VERBATIM_HEADERS YES)
+    set(DOXYGEN_HTML_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/common_files/header.html")
+    set(DOXYGEN_HTML_FOOTER "${CMAKE_CURRENT_SOURCE_DIR}/common_files/footer.html")
+
+    set(DOXYGEN_HTML_EXTRA_STYLESHEET
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display.css"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/styles/doxygen-awesome.css"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/styles/doxygen-awesome-sidebar-only-darkmode-toggle.css"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/styles/custom-alternative.css"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/styles/search-size-fix.css"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/styles/custom.css"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/styles/icons.css")
+
+    set(DOXYGEN_HTML_EXTRA_FILES
+        "${CMAKE_CURRENT_SOURCE_DIR}/icons/logo_dark.svg"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_Bold.eot"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_Bold.ttf"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_Bold.woff"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_Bold.woff2"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display.css"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_ExtraBold.eot"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_ExtraBold.ttf"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_ExtraBold.woff"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_ExtraBold.woff2"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_Light.eot"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_Light.ttf"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_Light.woff"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_Light.woff2"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_Medium.eot"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_Medium.ttf"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_Medium.woff"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_Medium.woff2"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_Regular.eot"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_Regular.ttf"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_Regular.woff"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_Regular.woff2"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_SemiBold.eot"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_SemiBold.ttf"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_SemiBold.woff"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/fonts/Kaspersky_Sans_Display_SemiBold.woff2"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/js/doxygen-awesome-darkmode-toggle.js"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/js/doxygen-awesome-fragment-copy-button.js"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/js/doxygen-awesome-paragraph-link.js"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/js/toggle-alternative-theme.js"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/js/doxygen-awesome-interactive-toc.js"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/js/doxygen-awesome-tabs.js"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/js/icons-add-properties.js"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/icons/symbol-class.svg"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/icons/symbol-namespace.svg"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/icons/symbol-class_white.svg"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/icons/symbol-namespace_white.svg"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/icons/sync_on.png"
+        "${CMAKE_CURRENT_SOURCE_DIR}/common_files/icons/sync_off.png")
+    # @DOXYGEN_SRCDIR@/common_files/styles/decapitalize.css \
+    # @DOXYGEN_SRCDIR@/common_files/styles/doxygen-awesome-sidebar-only.css)
+
+    set(DOXYGEN_DOT_COMMON_ATTR "fontname=Helvetica,fontsize=10")
+    set(DOXYGEN_DOT_EDGE_ATTR "labelfontname=Helvetica,labelfontsize=10")
+
+#    set(DOXYGEN_HTML_STYLESHEET )
+
+    doxygen_add_docs(
+            "${PROJECT_NAME}"
+            "${SOURCE_ROOT_DIR}"
+            CONFIG_FILE "${DOXYFILE}"
+            ALL
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+            COMMENT "Generating API documentation with Doxygen")
+
     # Automatically build doc.
     add_dependencies(knp-core ${PROJECT_NAME})
 
