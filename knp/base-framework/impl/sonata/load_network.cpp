@@ -26,7 +26,7 @@
 
 #include "csv_content.h"
 #include "save_load_network.h"
-#include "type_id_defines.h"
+#include "types/type_id_defines.h"
 
 namespace knp::framework
 {

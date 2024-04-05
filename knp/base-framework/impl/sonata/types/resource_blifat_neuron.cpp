@@ -13,8 +13,8 @@
 
 #include <highfive/highfive.hpp>
 
-#include "csv_content.h"
-#include "save_load_network.h"
+#include "../csv_content.h"
+#include "../save_load_network.h"
 #include "type_id_defines.h"
 
 

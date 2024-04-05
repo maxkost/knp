@@ -1,6 +1,6 @@
-//
-// Created by an_vartenkov on 29.03.24.
-//
+/**
+ * Saving and loading STDP Resource delta synapse.
+ */
 #include <knp/core/projection.h>
 #include <knp/synapse-traits/delta.h>
 #include <knp/synapse-traits/stdp_synaptic_resource_rule.h>
@@ -13,9 +13,10 @@
 
 #include <highfive/highfive.hpp>
 
-#include "csv_content.h"
-#include "save_load_network.h"
+#include "../csv_content.h"
+#include "../save_load_network.h"
 #include "type_id_defines.h"
+
 
 namespace knp::framework
 {
