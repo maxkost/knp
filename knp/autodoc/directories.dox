@@ -1,49 +1,259 @@
 /**
+ * @dir /knp/autodoc
+ * @brief Direcory for auto-generated API documentation files.
+ */
+
+/**
+  * @dir /knp/backends/cpu
+  * @brief CPU backend directory.
+  */
+
+/**
+ * @dir /knp/backends/cpu/cpu-library
+ * @brief CPU library directory.
+ */
+
+/**
+ * @dir /knp/backends/cpu/cpu-library/include
+ * @brief Include directory for CPU library headers.
+ */
+
+/**
+ * @dir /knp/backends/cpu/cpu-library/include/knp
+ * @brief Include directory for CPU library headers.
+ */
+
+/**
+ * @dir /knp/backends/cpu/cpu-library/include/knp/backends
+ * @brief Include directory for CPU library headers.
+ */
+
+/**
  * @dir /knp/backends/cpu/cpu-library/include/knp/backends/cpu-library
- * @brief CPU library include directory.
+ * @brief Include directory for CPU library headers.
+ */
+
+/**
+ * @dir /knp/backends/cpu/cpu-multi-threaded-backend
+ * @brief Multi-threaded CPU backend directory.
+ */
+
+/**
+ * @dir /knp/backends/cpu/cpu-multi-threaded-backend/include
+ * @brief Include directory for multi-threaded backend.
+ */
+
+/**
+ * @dir /knp/backends/cpu/cpu-multi-threaded-backend/include/knp
+ * @brief Include directory for multi-threaded backend.
+ */
+
+/**
+ * @dir /knp/backends/cpu/cpu-multi-threaded-backend/include/knp/backends
+ * @brief Include directory for multi-threaded backend.
  */
 
 /**
  * @dir /knp/backends/cpu/cpu-multi-threaded-backend/include/knp/backends/cpu-multi-threaded
- * @brief KNP multi threaded backend include directory.
+ * @brief Include directory for multi-threaded backend.
+ */
+
+/**
+ * @dir /knp/backends/cpu/cpu-single-threaded-backend
+ * @brief Single-threaded CPU backend directory.
+ */
+
+/**
+ * @dir /knp/backends/cpu/cpu-single-threaded-backend/include
+ * @brief Include directory for single-threaded backend.
+ */
+
+/**
+ * @dir /knp/backends/cpu/cpu-single-threaded-backend/include/knp
+ * @brief Include directory for single-threaded backend.
+ */
+
+/**
+ * @dir /knp/backends/cpu/cpu-single-threaded-backend/include/knp/backends
+ * @brief Include directory for single-threaded backend.
  */
 
 /**
  * @dir /knp/backends/cpu/cpu-single-threaded-backend/include/knp/backends/cpu-single-threaded
- * @brief KNP single threaded backend include directory.
+ * @brief Include directory for single-threaded backend.
+ */
+
+/**
+ * @dir /knp/backends/cpu/thread_pool
+ * @brief Thread pool directory.
+ */
+
+/**
+ * @dir /knp/backends/cpu/thread_pool/include
+ * @brief Include directory for thread pool library headers.
+ */
+
+/**
+ * @dir /knp/backends/cpu/thread_pool/include/knp
+ * @brief Include directory for thread pool library headers.
+ */
+
+/**
+ * @dir /knp/backends/cpu/thread_pool/include/knp/backends
+ * @brief Include directory for thread pool library headers.
  */
 
 /**
  * @dir /knp/backends/cpu/thread_pool/include/knp/backends/thread_pool
- * @brief Thread pool library include directory.
+ * @brief Include directory for thread pool library headers.
+ */
+
+/**
+ * @dir /knp/base-framework
+ * @brief C++ framework directory.
+ */
+
+/**
+ * @dir /knp/base-framework/include
+ * @brief Include directory for C++ framework.
+ */
+
+/**
+ * @dir /knp/base-framework/include/knp
+ * @brief Include directory for C++ framework.
  */
 
 /**
  * @dir /knp/base-framework/include/knp/framework
- * @brief KNP base framework include directory.
+ * @brief Include directory for C++ framework headers.
+ */
+
+/**
+ * @dir /knp/base-framework/include/knp/framework/coordinates
+ * @brief Directory for coordinate headers.
+ */
+
+/**
+ * @dir /knp/base-framework/include/knp/framework/io
+ * @brief Directory for input and output channel headers.
+ */
+
+/**
+ * @dir /knp/base-framework/include/knp/framework/io/in_converters
+ * @brief Directory for input converter headers.
+ */
+
+/**
+ * @dir /knp/base-framework/include/knp/framework/io/out_converters
+ * @brief Directory for output converter headers.
+ */
+
+/**
+ * @dir /knp/base-framework/include/knp/framework/monitoring
+ * @brief Directory for monitoring headers.
+ */
+
+/**
+ * @dir /knp/core-library
+ * @brief Core library directory.
+ */
+
+/**
+ * @dir /knp/core-library/include
+ * @brief Include directory for core library headers.
+ */
+
+/**
+ * @dir /knp/core-library/include/knp
+ * @brief Include directory for core library headers.
  */
 
 /**
  * @dir /knp/core-library/include/knp/core
- * @brief KNP core library include directory.
+ * @brief Include directory for core library headers.
+ */
+
+/**
+ * @dir /knp/core-library/include/knp/core/messaging
+ * @brief Directory for messaging headers.
+ */
+
+/**
+ * @dir /knp/devices-library
+ * @brief Device library directory.
+ */
+
+/**
+ * @dir /knp/devices-library/include
+ * @brief Include directory for devices library.
+ */
+
+/**
+ * @dir /knp/devices-library/include/knp
+ * @brief Include directory for devices library.
  */
 
 /**
  * @dir /knp/devices-library/include/knp/devices
- * @brief KNP devices library include directory.
+ * @brief Include directory for devices library.
+ */
+
+/**
+ * @dir /knp/meta-library
+ * @brief Metaprogramming library directory.
+ */
+
+/**
+ * @dir /knp/meta-library/include
+ * @brief Include directory for metaprogramming library headers.
+ */
+
+/**
+ * @dir /knp/meta-library/include/knp
+ * @brief Include directory for metaprogramming library headers.
  */
 
 /**
  * @dir /knp/meta-library/include/knp/meta
- * @brief KNP meta library include directory.
+ * @brief Include directory for metaprogramming library headers.
+ */
+
+/**
+ * @dir /knp/neuron-traits-library
+ * @brief Neuron traits library directory.
+ */
+
+/**
+ * @dir /knp/neuron-traits-library/include
+ * @brief Include directory for neuron traits library headers.
+ */
+
+/**
+ * @dir /knp/neuron-traits-library/include/knp
+ * @brief Include directory for neuron traits library headers.
  */
 
 /**
  * @dir /knp/neuron-traits-library/include/knp/neuron-traits
- * @brief Neuron traits library headers.
+ * @brief Include directory for neuron traits library headers.
+ */
+
+/**
+ * @dir /knp/synapse-traits-library
+ * @brief Synapse traits library directory.
+ */
+
+/**
+ * @dir /knp/synapse-traits-library/include
+ * @brief Include directory for synapse traits library headers.
+ */
+
+/**
+ * @dir /knp/synapse-traits-library/include/knp
+ * @brief Include directory for synapse traits library headers.
  */
 
 /**
  * @dir /knp/synapse-traits-library/include/knp/synapse-traits
- * @brief Synapse traits library headers.
+ * @brief Include directory for synapse traits library headers.
  */
