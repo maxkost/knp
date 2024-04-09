@@ -1,10 +1,10 @@
-
 /**
  * @file save_network.h
  * @brief Saving and loading networks.
  * @author A. Vartenkov
  * @date 31.01.2024
  */
+
 #pragma once
 #include <knp/framework/network.h>
 
@@ -13,7 +13,7 @@
 /**
  * @brief Framework namespace.
  */
-namespace knp::framework
+namespace knp::framework::sonata
 {
 /**
  * @brief Save network to the disk. Sonata format.
@@ -30,4 +30,4 @@ void save_network(const Network &network, const std::filesystem::path &dir);
  */
 Network load_network(const std::filesystem::path &config_path);
 
-}  // namespace knp::framework
+}  // namespace knp::framework::sonata

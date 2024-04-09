@@ -50,7 +50,6 @@ public:
      */
     using SynapseParameters = typename synapse_traits::synapse_parameters<SynapseType>;
 
-    // TODO: move size_t size_t to SynapseParameters or at the very least make a structure out of it.
     /**
      * @brief Synapse description structure that contains synapse parameters and indexes of the associated neurons.
      */

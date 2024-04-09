@@ -20,7 +20,7 @@
 #include "type_id_defines.h"
 
 
-namespace knp::framework
+namespace knp::framework::sonata
 {
 
 template <>
@@ -172,4 +172,4 @@ core::Population<neuron_traits::BLIFATNeuron> load_population<neuron_traits::BLI
 }
 
 
-}  // namespace knp::framework
+}  // namespace knp::framework::sonata

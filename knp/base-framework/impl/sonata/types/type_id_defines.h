@@ -7,7 +7,7 @@
 #include <string>
 
 
-namespace knp::framework
+namespace knp::framework::sonata
 {
 template <class Synapse>
 int get_synapse_type_id()
@@ -36,4 +36,4 @@ std::string get_neuron_type_name()
     throw std::runtime_error("Undefined neuron name");
 }
 
-}  // namespace knp::framework
+}  // namespace knp::framework::sonata

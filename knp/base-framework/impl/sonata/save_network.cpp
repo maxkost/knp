@@ -20,7 +20,7 @@
 #include "types/type_id_defines.h"
 
 
-namespace knp::framework
+namespace knp::framework::sonata
 {
 namespace fs = std::filesystem;
 
@@ -176,4 +176,4 @@ void save_network(const Network &network, const fs::path &dir)
         synapse_type_filename, network);
 }
 
-}  // namespace knp::framework
+}  // namespace knp::framework::sonata

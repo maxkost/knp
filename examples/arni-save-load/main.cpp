@@ -14,6 +14,8 @@
 #include <iostream>
 #include <vector>
 
+#include "describe_network.h"
+
 
 using BLIFATParams = knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>;
 using StdpBlifatNeuron = knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron;
@@ -251,8 +253,7 @@ knp::framework::Network create_network_from_monitoring_file(
     }
 
     {
-        std::ofstream neuron_population_file(
-            "/home/an_vartenkov/Dev/knpcheck/data/neuron_population.txt", std::ofstream::out);
+        std::ofstream neuron_population_file("../../data/neuron_population.txt", std::ofstream::out);
 
         if (neuron_population_file.good())
         {
@@ -401,8 +402,10 @@ int main(int argc, char *argv[])
     const std::filesystem::path path_to_network = "../../data/monitoring.8.csv";
     knp::framework::Network network_base = create_network_from_monitoring_file(
         path_to_network, /*at_tact*/ 0, {}, input_projection_uids, 3, output_population_uid, {"L"});
-    knp::framework::save_network(network_base, "../../data/arni_network");
+    describe_network(network_base);
+    knp::framework::sonata::save_network(network_base, "../../data/arni_network");
     knp::framework::Network loaded_network =
-        knp::framework::load_network("../../data/arni_network/network/network_config.json");
+        knp::framework::sonata::load_network("../../data/arni_network/network/network_config.json");
+    describe_network(loaded_network);
     return 0;
 }

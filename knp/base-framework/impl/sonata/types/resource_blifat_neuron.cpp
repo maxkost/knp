@@ -18,7 +18,7 @@
 #include "type_id_defines.h"
 
 
-namespace knp::framework
+namespace knp::framework::sonata
 {
 template <>
 int get_neuron_type_id<neuron_traits::SynapticResourceSTDPBLIFATNeuron>()
@@ -227,4 +227,4 @@ load_population<neuron_traits::SynapticResourceSTDPBLIFATNeuron>(
     return out_population;
 }
 
-}  // namespace knp::framework
+}  // namespace knp::framework::sonata

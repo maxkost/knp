@@ -18,7 +18,7 @@
 #include "type_id_defines.h"
 
 
-namespace knp::framework
+namespace knp::framework::sonata
 {
 namespace fs = std::filesystem;
 using ResourceDeltaSynapse = knp::synapse_traits::SynapticResourceSTDPDeltaSynapse;
@@ -226,4 +226,4 @@ core::Projection<ResourceDeltaSynapse> load_projection(
 }
 
 
-}  // namespace knp::framework
+}  // namespace knp::framework::sonata

@@ -16,7 +16,7 @@
 #include <csv2/writer.hpp>
 
 
-namespace knp::framework
+namespace knp::framework::sonata
 {
 namespace fs = std::filesystem;
 
@@ -58,4 +58,4 @@ private:
 const std::vector<std::string> edge_file_header = {"edge_type_id", "dynamics_params", "model_template"};
 const std::vector<std::string> node_file_header = {"node_type_id", "model_type", "model_template", "model_name"};
 
-}  // namespace knp::framework
+}  // namespace knp::framework::sonata

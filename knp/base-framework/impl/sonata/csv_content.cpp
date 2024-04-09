@@ -8,7 +8,7 @@
 #include "csv_content.h"
 
 
-namespace knp::framework
+namespace knp::framework::sonata
 {
 void CsvContent::load(const fs::path &csv_path)
 {
@@ -68,4 +68,4 @@ int CsvContent::get_value<int>(size_t row, const std::string &col)
 {
     return std::stoi(values_[row][header_index_[col]]);
 }
-}  // namespace knp::framework
+}  // namespace knp::framework::sonata

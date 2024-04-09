@@ -26,7 +26,7 @@
 #include "save_load_network.h"
 #include "types/type_id_defines.h"
 
-namespace knp::framework
+namespace knp::framework::sonata
 {
 namespace fs = std::filesystem;
 
@@ -217,4 +217,4 @@ Network load_network(const fs::path &config_path)
     return network;
 };
 
-}  // namespace knp::framework
+}  // namespace knp::framework::sonata

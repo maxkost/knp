@@ -16,7 +16,7 @@
 #include "type_id_defines.h"
 
 
-namespace knp::framework
+namespace knp::framework::sonata
 {
 
 template <>
@@ -127,4 +127,4 @@ void add_synapse_type_to_csv<synapse_traits::DeltaSynapse>(const fs::path &csv_p
     csv_file.add_row(type_row);
     csv_file.save(csv_path);
 }
-}  // namespace knp::framework
+}  // namespace knp::framework::sonata
