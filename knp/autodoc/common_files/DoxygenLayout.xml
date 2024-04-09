@@ -102,20 +102,20 @@
     <briefdescription visible="yes"/>
     <memberdecl>
       <nestednamespaces visible="yes" title=""/>
-      <constantgroups visible="yes" title=""/>
+      <constantgroups visible="no" title=""/>
       <interfaces visible="no" title=""/>
       <classes visible="no" title=""/>
-      <concepts visible="yes" title=""/>
+      <concepts visible="no" title=""/>
       <structs visible="no" title=""/>
       <exceptions visible="no" title=""/>
-      <typedefs title=""/>
-      <sequences title=""/>
-      <dictionaries title=""/>
-      <enums title=""/>
-      <functions title=""/>
-      <variables title=""/>
-      <properties title=""/>
-      <membergroups visible="yes"/>
+      <typedefs visible="no" title=""/>
+      <sequences visible="no" title=""/>
+      <dictionaries visible="no" title=""/>
+      <enums visible="no" title=""/>
+      <functions visible="no" title=""/>
+      <variables visible="no" title=""/>
+      <properties visible="no" title=""/>
+      <membergroups visible="no"/>
     </memberdecl>
     <detaileddescription title=""/>
     <memberdef>
