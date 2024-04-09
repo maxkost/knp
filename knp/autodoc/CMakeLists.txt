@@ -8,7 +8,6 @@ project(knp-autodoc
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 if(KNP_BUILD_DOCUMENTATION)
-    set(DOXYFILE_IN "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in")
     file(REAL_PATH "${CMAKE_SOURCE_DIR}/knp" SOURCE_ROOT_DIR)
 
     message(DEBUG "Source root directory: ${SOURCE_ROOT_DIR}")
@@ -52,7 +51,7 @@ if(KNP_BUILD_DOCUMENTATION)
     set(DOXYGEN_EXTENSION_MAPPING "no_extension=C++")
     set(DOXYGEN_EXTRACT_ALL YES)
     set(DOXYGEN_GENERATE_HTML YES)
-    set(DOXYGEN_GENERATE_MAN NO)
+    set(DOXYGEN_GENERATE_MAN YES)
     set(DOXYGEN_GENERATE_TREEVIEW YES)
     set(DOXYGEN_HTML_COLORSTYLE LIGHT)
     set(DOXYGEN_HTML_COLORSTYLE_GAMMA 113)
@@ -155,7 +154,7 @@ if(KNP_BUILD_DOCUMENTATION)
             COMMENT "Generating API documentation with Doxygen")
 
     # Automatically build doc.
-    add_dependencies(knp-core ${PROJECT_NAME})
+    add_dependencies(knp-core "${PROJECT_NAME}")
 
     autodoc_get_files_and_dir("${CMAKE_BINARY_DIR}/doc_doxygen/html" DOC_DIRS DOC_FILES)
 

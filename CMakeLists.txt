@@ -35,18 +35,18 @@ else()
     set(KNP_BUILD_EXAMPLES_DEFAULT ON)
 endif()
 
-if(KNP_MAINTAINER_BUILD)
-    set(KNP_COVERAGE_DEFAULT OFF)
-else()
-    set(KNP_COVERAGE_DEFAULT ON)
-endif()
-
 if (CMAKE_SYSTEM_PROCESSOR MATCHES "(x86)|(X86)|(amd64)|(AMD64)")
     if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
         set(KNP_ENABLE_AVX_DEFAULT ON)
     endif()
 else()
     set(KNP_ENABLE_AVX_DEFAULT OFF)
+endif()
+
+if(KNP_MAINTAINER_BUILD)
+    set(KNP_COVERAGE_DEFAULT OFF)
+else()
+    set(KNP_COVERAGE_DEFAULT ON)
 endif()
 
 option(KNP_BUILD_TESTS "Build tests" ${KNP_BUILD_TESTS_DEFAULT})
@@ -97,25 +97,24 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/third-party)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 
-# Make cache variables for install destinations.
-include(GNUInstallDirs)
-
 file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
 include_directories(third-party ${THIRD_PARTY_INCLUDES})
+
+include(print-variables)
 
 set(FLATBUFFERS_BUILD_TESTS OFF)
 set(FLATBUFFERS_BUILD_CPP17 ON)
 add_third_party(flatbuffers)
 
-if(KNP_BUILD_TESTS)
-    add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)
-    add_third_party(googletest)
-endif()
-
 add_third_party(pcm)
 
 set(SPDLOG_BUILD_PIC ON)
 add_third_party(spdlog)
+
+if(KNP_BUILD_TESTS)
+    add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)
+    add_third_party(googletest)
+endif()
 
 
 #

@@ -10,6 +10,7 @@
 
 #include <filesystem>
 
+
 using DeltaProjection = knp::core::Projection<knp::synapse_traits::DeltaSynapse>;
 using BLIFATPopulation = knp::core::Population<knp::neuron_traits::BLIFATNeuron>;
 
