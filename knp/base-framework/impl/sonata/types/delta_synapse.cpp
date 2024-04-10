@@ -1,6 +1,10 @@
 /**
- * Saving and loading basic delta synapse.
+ * @file delta_synapse.cpp
+ * @brief Functions for loading and saving delta synapses.
+ * @author A. Vartenkov
+ * @date 09.04.2024
  */
+
 #include <knp/core/projection.h>
 #include <knp/synapse-traits/delta.h>
 
@@ -9,7 +13,6 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid.hpp>
 
-// #include <highfive/highfive.hpp>
 #include "../csv_content.h"
 #include "../highfive.h"
 #include "../save_load_network.h"

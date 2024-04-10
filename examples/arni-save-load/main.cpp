@@ -1,6 +1,10 @@
 /**
- * Loading model from ARNI format and saving to sonata format example.
+ * @file main.cpp
+ * @brief Loading model from ARNI format and saving to sonata format example.
+ * @author A. Vartenkov
+ * @date 04.04.2024
  */
+
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 #include <knp/framework/network.h>
@@ -250,16 +254,6 @@ knp::framework::Network create_network_from_monitoring_file(
         }
         else if (neuron_populations.size())
             break;
-    }
-
-    {
-        std::ofstream neuron_population_file("../../data/neuron_population.txt", std::ofstream::out);
-
-        if (neuron_population_file.good())
-        {
-            for (auto &neuron_pos : neuron_populations)
-                neuron_population_file << neuron_pos.first << " " << neuron_pos.second << "\n";
-        }
     }
 
     if (neuron_populations.empty())

@@ -1,7 +1,7 @@
 /**
  * @file save-load-networks.h
  * @brief Example of saving and loading a simple network.
- * @author A. Varternkov
+ * @author A. Vartenkov
  * @date 04.04.2024
  */
 
@@ -11,7 +11,6 @@
 #include <knp/framework/save_network.h>
 #include <knp/neuron-traits/blifat.h>
 #include <knp/synapse-traits/delta.h>
-// Create an input projection
 
 
 using DeltaProjection = knp::core::Projection<knp::synapse_traits::DeltaSynapse>;

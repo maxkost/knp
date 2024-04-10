@@ -1,5 +1,8 @@
 /**
- * Saving and loading STDP Resource Blifat neuron.
+ * @file resource_blifat_neuron.cpp
+ * @brief Functions for loading and saving resource STDP BLIFAT neurons.
+ * @author A. Vartenkov
+ * @date 09.04.2024
  */
 
 #include <knp/core/population.h>
@@ -11,7 +14,6 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid.hpp>
 
-// #include <highfive/highfive.hpp>
 #include "../csv_content.h"
 #include "../highfive.h"
 #include "../save_load_network.h"

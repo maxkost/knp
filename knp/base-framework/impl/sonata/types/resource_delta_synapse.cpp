@@ -1,6 +1,10 @@
 /**
- * Saving and loading STDP Resource delta synapse.
+ * @file resource_delta_synapse.cpp
+ * @brief Functions for loading and saving Resource STDP compatible delta synapses.
+ * @author A. Vartenkov
+ * @date 09.04.2024
  */
+
 #include <knp/core/projection.h>
 #include <knp/synapse-traits/delta.h>
 #include <knp/synapse-traits/stdp_synaptic_resource_rule.h>
@@ -11,7 +15,6 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid.hpp>
 
-// #include <highfive/highfive.hpp>
 #include "../csv_content.h"
 #include "../highfive.h"
 #include "../save_load_network.h"
