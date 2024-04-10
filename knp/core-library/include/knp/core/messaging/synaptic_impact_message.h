@@ -56,6 +56,7 @@ struct SynapticImpact
 
     /**
      * @brief Compare synaptic impact messages.
+     * @return true, if synaptic impacts are equal.
      */
     bool operator==(const SynapticImpact &) const;
 };
@@ -115,6 +116,7 @@ typedef std::unordered_map<uint64_t, SynapticImpactMessage> SynapticMessageQueue
  * @brief Get synaptic impact from an input stream.
  * @param stream input stream.
  * @param impact synaptic impact to get from the input stream.
+ * @return input stream.
  */
 std::istream &operator>>(std::istream &stream, SynapticImpact &impact);
 
@@ -123,6 +125,7 @@ std::istream &operator>>(std::istream &stream, SynapticImpact &impact);
  * @brief Send synaptic impact to an output stream.
  * @param stream output stream.
  * @param impact synaptic impact to send to the output stream.
+ * @return output stream.
  */
 std::ostream &operator<<(std::ostream &stream, const SynapticImpact &impact);
 
@@ -131,6 +134,7 @@ std::ostream &operator<<(std::ostream &stream, const SynapticImpact &impact);
  * @brief Send synaptic impact message to an output stream.
  * @param stream output stream.
  * @param msg synaptic impact message to send to the output stream.
+ * @return output stream.
  */
 std::ostream &operator<<(std::ostream &stream, const SynapticImpactMessage &msg);
 
@@ -139,6 +143,7 @@ std::ostream &operator<<(std::ostream &stream, const SynapticImpactMessage &msg)
  * @brief Get synaptic impact message from an input stream.
  * @param stream input stream.
  * @param msg synaptic impact message to get from the input stream.
+ * @return input stream.
  */
 std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg);
 

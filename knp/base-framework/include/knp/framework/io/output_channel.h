@@ -60,6 +60,7 @@ public:
     /**
      * @brief Unload spike messages from the endpoint into the message buffer.
      * @details You should call the method before reading data from the channel.
+     * @return vector of spikes.
      */
     std::vector<core::messaging::SpikeMessage> update();
 
@@ -85,7 +86,7 @@ protected:
     /**
      * @brief Messages received from output population.
      */
-    std::vector<core::messaging::SpikeMessage> message_buffer_;
+    std::vector<core::messaging::SpikeMessage> message_buffer_;  // cppcheck-suppress unusedStructMember
 };
 
 

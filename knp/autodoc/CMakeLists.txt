@@ -47,9 +47,9 @@ if(KNP_BUILD_DOCUMENTATION)
         "${CMAKE_CURRENT_SOURCE_DIR}/common_files"
         "${CMAKE_CURRENT_SOURCE_DIR}/cmake"
         "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt")
-    set(DOXYGEN_EXCLUDE_PATTERNS *.descr* .descr */impl/* */tests/* common_files */cmake/* CMakeLists.txt)
+    set(DOXYGEN_EXCLUDE_PATTERNS *.descr* .descr */impl/* */tests/* common_files */cmake/* CMakeLists.txt impexp.h)
     set(DOXYGEN_EXTENSION_MAPPING "no_extension=C++")
-    set(DOXYGEN_EXTRACT_ALL YES)
+    set(DOXYGEN_EXTRACT_ALL NO)
     set(DOXYGEN_GENERATE_HTML YES)
     set(DOXYGEN_GENERATE_MAN YES)
     set(DOXYGEN_GENERATE_TREEVIEW YES)

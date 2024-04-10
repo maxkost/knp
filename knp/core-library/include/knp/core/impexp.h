@@ -7,6 +7,25 @@
 
 #pragma once
 
+/**
+ * @name _KNP_SYMBOL_IMPORT
+ * @brief Symbols import macro.
+ */
+
+/**
+ * @name _KNP_SYMBOL_EXPORT
+ * @brief Symbols export macro.
+ */
+
+/**
+ * @name _KNP_SYMBOL_LOCAL
+ * @brief Local symbol.
+ */
+
+/**
+ * @name _KNP_SYMBOL_EXTERN
+ * @brief External symbol.
+ */
 
 #if defined(_WIN32) || defined(__CYGWIN__)
 #    define _KNP_SYMBOL_EXPORT __attribute__((dllexport))

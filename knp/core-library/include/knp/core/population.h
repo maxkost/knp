@@ -176,11 +176,13 @@ public:  // NOLINT
      * @brief Get parameter values of a neuron with the given index.
      * @note Constant method.
      * @param index neuron index.
+     * @return neuron parameters.
      */
     const auto &operator[](size_t index) const { return get_neuron_parameters(index); }
     /**
      * @brief Get parameter values of a neuron with the given index.
      * @param index neuron index.
+     * @return neuron parameters.
      */
     auto &operator[](size_t index) { return neurons_[index]; }
 

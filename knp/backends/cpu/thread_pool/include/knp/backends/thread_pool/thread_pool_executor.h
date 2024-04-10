@@ -36,6 +36,7 @@ public:
 
     /**
      * @brief Get thread pool context.
+     * @return thread pool context.
      */
     [[nodiscard]] ThreadPoolContext &context() { return context_; }
 
