@@ -1,5 +1,8 @@
 /**
- * Model saving and loading example.
+ * @file save-load-networks.h
+ * @brief Example of saving and loading a simple network.
+ * @author A. Varternkov
+ * @date 04.04.2024
  */
 
 #include <knp/core/population.h>
@@ -8,8 +11,6 @@
 #include <knp/framework/save_network.h>
 #include <knp/neuron-traits/blifat.h>
 #include <knp/synapse-traits/delta.h>
-
-#include <bbp/sonata/config.h>
 // Create an input projection
 
 
@@ -56,7 +57,8 @@ knp::framework::Network make_simple_network()
 int main()
 {
     auto network = make_simple_network();
-    knp::framework::save_network(network, "");
-    auto network2 = knp::framework::load_network("./network/network_config.json");
+    knp::framework::sonata::save_network(network, "");
+    auto network2 = knp::framework::sonata::load_network("./network/network_config.json");
     std::cout << network2.populations_count() << " " << network2.projections_count() << std::endl;
+    return EXIT_SUCCESS;
 }

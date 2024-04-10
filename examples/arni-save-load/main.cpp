@@ -407,5 +407,5 @@ int main(int argc, char *argv[])
     knp::framework::Network loaded_network =
         knp::framework::sonata::load_network("../../data/arni_network/network/network_config.json");
     describe_network(loaded_network);
-    return 0;
+    return EXIT_SUCCESS;
 }
