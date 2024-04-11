@@ -23,9 +23,9 @@ namespace fs = std::filesystem;
 class CsvContent
 {
 public:
-    void load(const fs::path &csv_path);
+    static CsvContent load(const fs::path &csv_path);
 
-    void save(const fs::path &csv_path);
+    void save(const fs::path &csv_path) const;
 
     const auto &get_header() const { return header_; }
 
@@ -40,7 +40,7 @@ public:
     std::vector<std::string> get_row(size_t row_n) { return values_[row_n]; }
 
     template <class V>
-    V get_value(size_t row, const std::string &col);  // TODO const
+    V get_value(size_t row, const std::string &col) const;  // TODO const
 
     auto get_rc_size() const { return std::make_pair(values_.size(), header_.size()); }
 

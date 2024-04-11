@@ -24,13 +24,6 @@ namespace knp::framework::sonata
 {
 
 template <>
-int get_neuron_type_id<neuron_traits::BLIFATNeuron>()
-{
-    return 1000;
-}
-
-
-template <>
 std::string get_neuron_type_name<neuron_traits::BLIFATNeuron>()
 {
     return "knp:BasicBlifatNeuron";
@@ -87,44 +80,6 @@ void add_population_to_h5<core::Population<knp::neuron_traits::BLIFATNeuron>>(
     PUT_NEURON_TO_DATASET(population, bursting_phase_, dynamic_group0);
     PUT_NEURON_TO_DATASET(population, total_blocking_period_, dynamic_group0);
     PUT_NEURON_TO_DATASET(population, dopamine_value_, dynamic_group0);
-}
-
-
-template <>
-void add_neuron_type_to_csv<neuron_traits::BLIFATNeuron>(const fs::path &csv_path)
-{
-    CsvContent csv_file;
-    if (fs::is_regular_file(csv_path))
-    {
-        // File already exists, load it.
-        csv_file.load(csv_path);
-        // Check header correctness.
-        auto file_header = csv_file.get_header();
-        for (const auto &column_name : node_file_header)
-        {
-            if (std::find(file_header.begin(), file_header.end(), column_name) == file_header.end())
-                throw std::runtime_error("Couldn't find column: " + column_name + " in file " + csv_path.string());
-        }
-        // Header is okay, check if type exists already.
-        size_t height = csv_file.get_rc_size().first - 1;
-        for (size_t row_id = 0; row_id < height; ++row_id)
-        {
-            if (csv_file.get_value<int>(row_id, "node_type_id") == get_neuron_type_id<neuron_traits::BLIFATNeuron>())
-            {
-                return;  // Type exists, nothing to add.
-            }
-        }
-    }
-    else
-    {
-        csv_file.set_header(node_file_header);
-    }
-    // Add type
-    std::vector<std::string> type_row = {
-        std::to_string(get_neuron_type_id<neuron_traits::BLIFATNeuron>()), "point_neuron", "",
-        get_neuron_type_name<neuron_traits::BLIFATNeuron>()};
-    csv_file.add_row(type_row);
-    csv_file.save(csv_path);
 }
 
 

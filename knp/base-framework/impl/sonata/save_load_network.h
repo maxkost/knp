@@ -33,19 +33,6 @@ void add_population_to_h5(HighFive::File &, const Population &)
 }
 
 
-template <class Synapse>
-void add_synapse_type_to_csv(const fs::path &)
-{
-    throw std::logic_error("Unknown synapse type");
-}
-
-
-template <class Neuron>
-void add_neuron_type_to_csv(const fs::path &)
-{
-    throw std::logic_error("Unknown neuron type");
-}
-
 // Read parameter values for both projections and populations
 template <class Attr>
 std::vector<Attr> read_parameter(

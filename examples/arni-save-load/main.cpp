@@ -170,8 +170,7 @@ private:
 
 bool can_be_stdp(const std::pair<const ProjectionParams, std::vector<int>> &params)
 {
-    static const int size_threshold = 100;
-    return params.second.size() >= size_threshold;
+    return params.second.size() >= 100;
 }
 
 
@@ -372,7 +371,6 @@ knp::framework::Network create_network_from_monitoring_file(
                 Generator<STDPSynapse>(projection_params.second, all_synapses), projection_params.second.size());
             if (projection_params.first.ind_population_from < 0) input_projection_uids.push_back(pro.get_uid());
             pro.unlock_weights();
-            // save_projection_to_file(pro, "projection_dump.txt", "img8_proj");
             network.add_projection(pro);
         }
         else
@@ -389,17 +387,34 @@ knp::framework::Network create_network_from_monitoring_file(
 }
 
 
-int main(int argc, char *argv[])
+int main(int argc, const char *argv[])
 {
+    if (argc != 3)
+    {
+        std::cout << "Wrong number of arguments. 2 arguments are required: path to data file and folder to save network"
+                  << std::endl;
+        return EXIT_FAILURE;
+    }
+    const std::filesystem::path path_to_network = argv[1];
+    const std::filesystem::path path_save = argv[2];
+    if (!is_regular_file(path_to_network))
+    {
+        std::cout << "Couldn't find file: " << path_to_network << std::endl;
+        return EXIT_FAILURE;
+    }
+    if (!is_directory(path_save))
+    {
+        std::cout << "Wrong directory: " << path_save << std::endl;
+        return EXIT_FAILURE;
+    }
     knp::core::UID output_population_uid;
     std::vector<knp::core::UID> input_projection_uids;
-    const std::filesystem::path path_to_network = "../../data/monitoring.8.csv";
     knp::framework::Network network_base = create_network_from_monitoring_file(
         path_to_network, /*at_tact*/ 0, {}, input_projection_uids, 3, output_population_uid, {"L"});
     describe_network(network_base);
-    knp::framework::sonata::save_network(network_base, "../../data/arni_network");
+    knp::framework::sonata::save_network(network_base, path_save);
     knp::framework::Network loaded_network =
-        knp::framework::sonata::load_network("../../data/arni_network/network/network_config.json");
+        knp::framework::sonata::load_network(path_save / "network/network_config.json");
     describe_network(loaded_network);
     return EXIT_SUCCESS;
 }

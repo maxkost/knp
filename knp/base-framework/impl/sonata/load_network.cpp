@@ -31,18 +31,6 @@ namespace knp::framework::sonata
 namespace fs = std::filesystem;
 
 
-// int find_type_row(const CsvContent &content, int type_id)
-//{
-//     size_t rows = content.get_rc_size().first;
-//     for (size_t i = 0; i < rows; ++i)
-//     {
-//         if (content.get_value<int>(i, "type") == type_id)
-//             return i;
-//     }
-//     return -1;
-// }
-
-
 std::vector<std::string> get_projection_names(const HighFive::File &file)
 {
     auto edges_group = file.getGroup("edges");
@@ -65,9 +53,10 @@ core::Projection<knp::synapse_traits::DeltaSynapse> load_projection(
     auto projection_group = edges_group.getGroup(projection_name);
     auto group = projection_group.getGroup("0");
     size_t group_size = edges_group.getGroup(projection_name).getDataSet("edge_group_id").getDimensions().at(0);
-    using SynapseParams = synapse_traits::synapse_parameters<synapse_traits::DeltaSynapse>;
-    std::vector<core::Projection<synapse_traits::DeltaSynapse>::Synapse> target(group_size);
+    using SynapseParams = core::Projection<synapse_traits::DeltaSynapse>::SynapseParameters;
+    using Synapse = core::Projection<synapse_traits::DeltaSynapse>::Synapse;
 
+    std::vector<Synapse> target(group_size);
     const auto weights = read_parameter<decltype(SynapseParams::weight_)>(
         group, "syn_weight", group_size, synapse_traits::default_values<synapse_traits::DeltaSynapse>::weight_);
     const auto delays = read_parameter<decltype(SynapseParams::delay_)>(
@@ -84,8 +73,7 @@ core::Projection<knp::synapse_traits::DeltaSynapse> load_projection(
         projection_group.getDataSet("target_node_id").getAttribute("node_population").read<std::string>())};
     core::UID uid_own{boost::lexical_cast<boost::uuids::uuid>(projection_name)};
 
-    using SynParams = synapse_traits::synapse_parameters<synapse_traits::DeltaSynapse>;
-    using Synapse = std::tuple<SynParams, size_t, size_t>;
+
     std::vector<Synapse> synapses;
     synapses.reserve(group_size);
     for (size_t i = 0; i < weights.size(); ++i)
@@ -215,6 +203,6 @@ Network load_network(const fs::path &config_path)
 
     // TODO Load network ID too!
     return network;
-};
+}
 
 }  // namespace knp::framework::sonata

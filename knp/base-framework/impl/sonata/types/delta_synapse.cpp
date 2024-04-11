@@ -23,16 +23,9 @@ namespace knp::framework::sonata
 {
 
 template <>
-int get_synapse_type_id<synapse_traits::DeltaSynapse>()
-{
-    return 1000;
-}
-
-
-template <>
 std::string get_synapse_type_name<synapse_traits::DeltaSynapse>()
 {
-    return "knp:BasicDeltaSynapse";
+    return "knp:DeltaSynapse";
 }
 
 
@@ -89,45 +82,4 @@ void add_projection_to_h5<core::Projection<synapse_traits::DeltaSynapse>>(
     proj_group.createAttribute("is_locked", projection.is_locked());
 }
 
-
-template <>
-void add_synapse_type_to_csv<synapse_traits::DeltaSynapse>(const fs::path &csv_path)
-{
-    CsvContent csv_file;
-    if (fs::is_regular_file(csv_path))
-    {
-        // File already exists, load it.
-        csv_file.load(csv_path);
-        // Check header correctness.
-        auto file_header = csv_file.get_header();
-        for (const auto &column_name : edge_file_header)
-        {
-            if (std::find(file_header.begin(), file_header.end(), column_name) == file_header.end())
-                throw std::runtime_error("Couldn't find column: " + column_name + " in file " + csv_path.string());
-        }
-        // Header is okay, check if type exists already.
-        size_t height = csv_file.get_rc_size().first - 1;
-        for (size_t row_id = 0; row_id < height; ++row_id)
-        {
-            int type_id = csv_file.get_value<int>(row_id, "edge_type_id");
-            if (type_id == get_synapse_type_id<synapse_traits::DeltaSynapse>())
-            {
-                return;  // Type exists, nothing to add. TODO: update
-            }
-        }
-        std::vector<std::string> type_row{
-            std::to_string(get_synapse_type_id<synapse_traits::DeltaSynapse>()), "",
-            get_synapse_type_name<synapse_traits::DeltaSynapse>()};
-        csv_file.add_row(type_row);
-        csv_file.save(csv_path);
-        return;
-    }
-    // File doesn't exist.
-    csv_file.set_header(edge_file_header);
-    std::vector<std::string> type_row{
-        std::to_string(get_synapse_type_id<synapse_traits::DeltaSynapse>()), "",
-        get_synapse_type_name<synapse_traits::DeltaSynapse>()};
-    csv_file.add_row(type_row);
-    csv_file.save(csv_path);
-}
 }  // namespace knp::framework::sonata
