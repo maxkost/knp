@@ -65,6 +65,7 @@ bool operator==(const SpikeMessage &sm1, const SpikeMessage &sm2);
  * @brief Send spiking neuron indexes to an output stream.
  * @param stream output stream.
  * @param spikes index vector.
+ * @return output stream.
  */
 std::ostream &operator<<(std::ostream &stream, const core::messaging::SpikeData &spikes);
 
@@ -72,6 +73,7 @@ std::ostream &operator<<(std::ostream &stream, const core::messaging::SpikeData 
  * @brief Send spike message to an output stream.
  * @param stream output stream.
  * @param msg spike message to send to the output stream.
+ * @return output stream.
  */
 std::ostream &operator<<(std::ostream &stream, const SpikeMessage &msg);
 
@@ -79,6 +81,7 @@ std::ostream &operator<<(std::ostream &stream, const SpikeMessage &msg);
  * @brief Get spike message from an input stream.
  * @param stream input stream.
  * @param msg spike message to get from the input stream.
+ * @return input stream.
  */
 std::istream &operator>>(std::istream &stream, SpikeMessage &msg);
 

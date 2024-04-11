@@ -158,6 +158,7 @@ public:
 public:
     /**
      * @brief Create an object of the multi-threaded CPU backend.
+     * @return shared pointer to the backend object.
      */
     static std::shared_ptr<MultiThreadedCPUBackend> create();
 
@@ -179,10 +180,12 @@ public:
     [[nodiscard]] std::vector<std::string> get_supported_synapses() const override;
     /**
      * @brief Get indexes of supported projections.
+     * @return vector of the supported type indexes.
      */
     [[nodiscard]] std::vector<size_t> get_supported_projection_indexes() const override;
     /**
      * @brief Get indexes of supported populations.
+     * @return vector of the supported type indexes.
      */
     [[nodiscard]] std::vector<size_t> get_supported_population_indexes() const override;
 

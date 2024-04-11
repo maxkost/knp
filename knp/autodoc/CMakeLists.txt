@@ -47,9 +47,9 @@ if(KNP_BUILD_DOCUMENTATION)
         "${CMAKE_CURRENT_SOURCE_DIR}/common_files"
         "${CMAKE_CURRENT_SOURCE_DIR}/cmake"
         "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt")
-    set(DOXYGEN_EXCLUDE_PATTERNS *.descr* .descr */impl/* */tests/* common_files */cmake/* CMakeLists.txt)
+    set(DOXYGEN_EXCLUDE_PATTERNS *.descr* .descr */impl/* */tests/* common_files */cmake/* CMakeLists.txt impexp.h)
     set(DOXYGEN_EXTENSION_MAPPING "no_extension=C++")
-    set(DOXYGEN_EXTRACT_ALL YES)
+    set(DOXYGEN_EXTRACT_ALL NO)
     set(DOXYGEN_GENERATE_HTML YES)
     set(DOXYGEN_GENERATE_MAN YES)
     set(DOXYGEN_GENERATE_TREEVIEW YES)
@@ -74,7 +74,7 @@ if(KNP_BUILD_DOCUMENTATION)
     set(DOXYGEN_PROJECT_ICON "${CMAKE_CURRENT_SOURCE_DIR}/icons/logo.svg")
     set(DOXYGEN_RECURSIVE YES)
     set(DOXYGEN_STRIP_FROM_INC_PATH ${_strip_list})
-    set(DOXYGEN_STRIP_FROM_PATH "${CMAKE_SOURCE_DIR}")
+    set(DOXYGEN_STRIP_FROM_PATH "${SOURCE_ROOT_DIR}")
     set(DOXYGEN_TEMPLATE_RELATIONS YES)
     set(DOXYGEN_TIMESTAMP YES)
     set(DOXYGEN_TREEVIEW_WIDTH 335)
@@ -140,6 +140,7 @@ if(KNP_BUILD_DOCUMENTATION)
         "${CMAKE_CURRENT_SOURCE_DIR}/common_files/icons/symbol-namespace_white.svg"
         "${CMAKE_CURRENT_SOURCE_DIR}/common_files/icons/sync_on.png"
         "${CMAKE_CURRENT_SOURCE_DIR}/common_files/icons/sync_off.png")
+
     # @DOXYGEN_SRCDIR@/common_files/styles/decapitalize.css \
     # @DOXYGEN_SRCDIR@/common_files/styles/doxygen-awesome-sidebar-only.css)
 

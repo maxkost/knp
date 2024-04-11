@@ -64,6 +64,7 @@ using mp_supported_indexes =
  * @brief Get supported type indexes.
  * @tparam AllTypes global list of types.
  * @tparam SupportedTypes local list of types.
+ * @return vector with indexes of supported types.
  */
 template <typename AllTypes, typename SupportedTypes>
 std::vector<size_t> get_supported_type_indexes()

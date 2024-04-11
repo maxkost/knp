@@ -30,17 +30,20 @@ public:
     /**
      * @brief Load backend.
      * @param backend_path path to backend.
+     * @return shared pointer to the Backend object.
      */
     std::shared_ptr<core::Backend> load(const std::filesystem::path &backend_path);
     /**
      * @brief Check if the specified path points to a backend.
      * @param backend_path path to backend.
+     * @return true if the library pointed by path is the backend.
      */
     static bool is_backend(const std::filesystem::path &backend_path);
 
 public:
     /**
      * @brief Function type that returns a backend instance.
+     * @return shared pointer to the Backend object.
      */
     typedef std::shared_ptr<core::Backend>(BackendCreateFunction)();
 
@@ -48,6 +51,7 @@ protected:
     /**
      * @brief Create a backend loader that will load and create a backend instance.
      * @param backend_path path to backend.
+     * @return pointer to the backend creation function.
      */
     std::function<BackendCreateFunction> make_creator(const std::filesystem::path &backend_path);
 

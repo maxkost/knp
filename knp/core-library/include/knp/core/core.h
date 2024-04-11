@@ -73,6 +73,7 @@ struct BaseData
 }
 /**
  * @brief Attribute for alignment.
+ * @return none.
  */
 __attribute__((aligned(sizeof(size_t) * 8)));
 

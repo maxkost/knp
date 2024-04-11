@@ -124,6 +124,10 @@ public:
      */
     void start_learning() { backend_->start_learning(); }
 
+    /**
+     * @brief Get pointer to the backend.
+     * @return shared pointer to the Backend object.
+     */
     std::shared_ptr<core::Backend> get_backend() { return backend_; }
 
 protected:
