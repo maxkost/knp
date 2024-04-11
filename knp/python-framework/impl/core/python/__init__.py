@@ -10,7 +10,7 @@ from knp.core._knp_python_framework_core import UID, BLIFATNeuronPopulation, Del
                                                 SynapticImpactMessages, SynapticResourceSTDPBLIFATNeuronPopulation,\
                                                 SynapticResourceSTDPDeltaSynapseParameters,\
                                                 SynapticResourceSTDPDeltaSynapseProjection, TagMap, uid_hash,\
-                                                continuously_uid_generator, uid_hash, uuid, uuid_variant_type
+                                                continuously_uid_generator, uuid, uuid_variant_type
 
 __all__ = [
             'UID', 'BLIFATNeuronPopulation', 'DeltaSynapseProjection', 'SpikeMessage',
@@ -21,5 +21,5 @@ __all__ = [
             'SynapticImpactMessages', 'SynapticResourceSTDPBLIFATNeuronPopulation',
             'SynapticResourceSTDPDeltaSynapseParameters',
             'SynapticResourceSTDPDeltaSynapseProjection', 'TagMap', 'uid_hash',
-            'continuously_uid_generator', 'uid_hash', 'uuid', 'uuid_variant_type',
+            'continuously_uid_generator', 'uuid', 'uuid_variant_type',
 ]
