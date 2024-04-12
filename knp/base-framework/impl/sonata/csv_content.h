@@ -40,13 +40,17 @@ public:
     std::vector<std::string> get_row(size_t row_n) { return values_[row_n]; }
 
     template <class V>
-    V get_value(size_t row, const std::string &col) const;  // TODO const
+    V get_value(size_t row, const std::string &col) const;
 
     auto get_rc_size() const { return std::make_pair(values_.size(), header_.size()); }
 
     auto begin() { return values_.begin(); }
 
+    auto begin() const { return values_.cbegin(); }
+
     auto end() { return values_.end(); }
+
+    auto end() const { return values_.cend(); }
 
 private:
     std::vector<std::string> header_;
