@@ -1,5 +1,5 @@
 """
-Importing knp.core
+Importing knp.core.
 """
 
 from knp.core._knp_python_framework_core import UID, BLIFATNeuronPopulation, DeltaSynapseProjection, SpikeMessage,\
