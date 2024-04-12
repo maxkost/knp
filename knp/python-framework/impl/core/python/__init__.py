@@ -12,6 +12,7 @@ from knp.core._knp_python_framework_core import UID, BLIFATNeuronPopulation, Del
                                                 SynapticResourceSTDPDeltaSynapseProjection, TagMap, uid_hash,\
                                                 continuously_uid_generator, uuid, uuid_variant_type
 
+
 __all__ = [
             'UID', 'BLIFATNeuronPopulation', 'DeltaSynapseProjection', 'SpikeMessage',
             'AdditiveSTDPDeltaSynapseParameters', 'AdditiveSTDPDeltaSynapseProjection',

@@ -10,6 +10,7 @@ from knp.core import UID, BLIFATNeuronPopulation, DeltaSynapseProjection, SpikeM
 from knp.neuron_traits import BLIFATNeuronParameters
 from knp.synapse_traits import DeltaSynapseParameters, OutputType
 
+
 def neuron_generator(_):  # type: ignore[no-untyped-def]
     return BLIFATNeuronParameters()
 
