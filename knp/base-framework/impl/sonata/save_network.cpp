@@ -1,6 +1,10 @@
 /**
- * Saving and loading network.
+ * @file save_network.cpp
+ * @brief Functions for saving and loading network.
+ * @author A. Vartenkov
+ * @date 09.04.2024
  */
+
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 #include <knp/framework/network.h>
@@ -13,7 +17,6 @@
 
 #include <boost/format.hpp>
 
-// #include <highfive/H5File.hpp>
 #include "csv_content.h"
 #include "highfive.h"
 #include "save_load_network.h"

@@ -8,7 +8,7 @@
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 #include <knp/framework/network.h>
-#include <knp/framework/save_network.h>
+#include <knp/framework/network_sonata_io.h>
 #include <knp/neuron-traits/blifat.h>
 #include <knp/synapse-traits/delta.h>
 
