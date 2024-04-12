@@ -1,14 +1,14 @@
 """
-KNP single thread CPU backend tests.
+KNP single thread CPU backend tests
 
 Author: Artiom N.
 Date: 01.03.2024
 """
 
-from knp.base_framework._knp_python_framework_base_framework import BackendLoader
-from knp.core._knp_python_framework_core import UID, BLIFATNeuronPopulation, DeltaSynapseProjection, SpikeMessage
-from knp.neuron_traits._knp_python_framework_neuron_traits import BLIFATNeuronParameters
-from knp.synapse_traits._knp_python_framework_synapse_traits import DeltaSynapseParameters, OutputType
+from knp.base_framework import BackendLoader
+from knp.core import UID, BLIFATNeuronPopulation, DeltaSynapseProjection, SpikeMessage
+from knp.neuron_traits import BLIFATNeuronParameters
+from knp.synapse_traits import DeltaSynapseParameters, OutputType
 
 
 def neuron_generator(_):  # type: ignore[no-untyped-def]
