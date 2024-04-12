@@ -201,7 +201,6 @@ Network load_network(const fs::path &config_path)
     for (auto &proj : projections)
         std::visit([&network](auto &projection) { network.add_projection(projection); }, proj);
 
-    // TODO Load network ID too!
     return network;
 }
 

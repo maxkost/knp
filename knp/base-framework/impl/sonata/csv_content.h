@@ -20,11 +20,10 @@ namespace knp::framework::sonata
 {
 namespace fs = std::filesystem;
 
+
 class CsvContent
 {
 public:
-    static CsvContent load(const fs::path &csv_path);
-
     void save(const fs::path &csv_path) const;
 
     const auto &get_header() const { return header_; }
@@ -58,6 +57,7 @@ private:
     std::vector<std::vector<std::string>> values_;
 };
 
+CsvContent load_csv_content(const fs::path &csv_path);
 
 const std::vector<std::string> edge_file_header = {"edge_type_id", "dynamics_params", "model_template"};
 const std::vector<std::string> node_file_header = {"node_type_id", "model_type", "model_template", "model_name"};

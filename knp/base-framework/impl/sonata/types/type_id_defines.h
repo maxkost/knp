@@ -67,7 +67,7 @@ void add_neuron_type_to_csv(const fs::path &csv_path)
     }
 
     // File already exists, load it.
-    CsvContent csv_file = CsvContent::load(csv_path);
+    CsvContent csv_file = load_csv_content(csv_path);
     // Check header correctness.
     auto file_header = csv_file.get_header();
     for (const auto &column_name : node_file_header)
@@ -95,7 +95,7 @@ void add_synapse_type_to_csv(const fs::path &csv_path)
     if (fs::is_regular_file(csv_path))
     {
         // File already exists, load it.
-        CsvContent csv_file = CsvContent::load(csv_path);
+        CsvContent csv_file = load_csv_content(csv_path);
         // Check header correctness.
         auto file_header = csv_file.get_header();
         for (const auto &column_name : edge_file_header)

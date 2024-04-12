@@ -47,7 +47,7 @@ void add_neuron_type_to_csv<neuron_traits::SynapticResourceSTDPBLIFATNeuron>(con
     }
 
     // File already exists, load it.
-    CsvContent csv_file = CsvContent::load(csv_path);
+    CsvContent csv_file = load_csv_content(csv_path);
     // Check header correctness.
     auto file_header = csv_file.get_header();
     for (const auto &column_name : node_file_header)

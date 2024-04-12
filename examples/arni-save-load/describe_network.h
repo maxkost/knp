@@ -1,5 +1,8 @@
 /**
- * @brief Functions to print network information into console.
+ * @file describe_network.h
+ * @brief Print network statistics to console.
+ * @author A. Vartenkov
+ * @date 04.04.2024
  */
 
 #pragma once
