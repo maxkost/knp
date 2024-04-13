@@ -166,13 +166,13 @@ public:
 
     /**
      * @brief Get message bus used by backend.
-     * @return reference to the message bus.
+     * @return reference to message bus.
      */
     [[nodiscard]] MessageBus &get_message_bus() { return message_bus_; }
     /**
      * @brief Get message bus used by backend.
      * @note Constant method.
-     * @return reference to the message bus.
+     * @return reference to message bus.
      */
     [[nodiscard]] const MessageBus &get_message_bus() const { return message_bus_; }
 

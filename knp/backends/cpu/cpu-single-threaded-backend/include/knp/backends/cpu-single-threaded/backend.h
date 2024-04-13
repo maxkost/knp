@@ -132,7 +132,7 @@ public:
 public:
     /**
      * @brief Create an object of the single-threaded CPU backend.
-     * @return shared pointer to the backend object.
+     * @return shared pointer to backend object.
      */
     static std::shared_ptr<SingleThreadedCPUBackend> create();
 
@@ -305,7 +305,7 @@ protected:
      * @brief Calculate population of `SynapticResourceSTDPNeuron` neurons.
      * @note Population will be changed during calculation.
      * @param population population to calculate.
-     * @return optional SpikeMessage.
+     * @return optional `SpikeMessage`.
      */
     std::optional<core::messaging::SpikeMessage> calculate_population(
         knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population);

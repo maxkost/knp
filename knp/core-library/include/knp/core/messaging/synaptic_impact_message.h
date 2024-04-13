@@ -56,7 +56,7 @@ struct SynapticImpact
 
     /**
      * @brief Compare synaptic impact messages.
-     * @return true, if synaptic impacts are equal.
+     * @return `true` if synaptic impacts are equal.
      */
     bool operator==(const SynapticImpact &) const;
 };

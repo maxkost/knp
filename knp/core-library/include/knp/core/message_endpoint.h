@@ -74,7 +74,7 @@ public:
     /**
      * @brief Get subscription key from a subscription variant.
      * @param subscription subscription variant.
-     * @return pair: subscription index, subscription key
+     * @return pair of subscription index and subscription key.
      */
     static std::pair<size_t, UID> get_subscription_key(const SubscriptionVariant &subscription);
 

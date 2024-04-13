@@ -47,9 +47,9 @@ template <template <typename> typename Rule, typename SynapseType>
 struct subscribe_stdp_projection<knp::synapse_traits::STDP<Rule, SynapseType>>
 {
     /**
-     * @brief Subscription method.
-     * @param p projection.
-     * @param message_endpoint endpoint to subscribe.
+     * @brief Subscribe projection to message endpoint.
+     * @param p projection to subscribe.
+     * @param message_endpoint message endpoint to subscribe.
      */
     static void subscribe(
         const typename core::Projection<knp::synapse_traits::STDP<Rule, SynapseType>> &p,
