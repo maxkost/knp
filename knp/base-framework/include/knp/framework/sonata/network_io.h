@@ -1,5 +1,5 @@
 /**
- * @file network_sonata_io.h
+ * @file network_io.h
  * @brief Saving and loading networks.
  * @author A. Vartenkov
  * @date 31.01.2024

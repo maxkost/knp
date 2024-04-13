@@ -4,7 +4,7 @@
 
 
 #include <knp/core/projection.h>
-#include <knp/framework/network_sonata_io.h>
+#include <knp/framework/sonata/network_io.h>
 
 #include <generators.h>
 #include <tests_common.h>
