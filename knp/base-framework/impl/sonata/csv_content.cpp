@@ -47,16 +47,6 @@ CsvContent load_csv_content(const fs::path &csv_path)
 }
 
 
-void CsvContent::save(const fs::path &csv_path) const
-{
-    std::ofstream csv_file(csv_path);
-    csv2::Writer<csv2::delimiter<' '>> writer(csv_file);
-
-    writer.write_row(header_);
-    writer.write_rows(values_);
-}
-
-
 void save_csv_content(const CsvContent &csv_data, const fs::path &csv_path)
 {
     auto header = csv_data.get_header();

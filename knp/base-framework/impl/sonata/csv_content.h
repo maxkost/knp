@@ -24,8 +24,6 @@ namespace fs = std::filesystem;
 class CsvContent
 {
 public:
-    void save(const fs::path &csv_path) const;
-
     const auto &get_header() const { return header_; }
 
     void set_header(std::vector<std::string> header)

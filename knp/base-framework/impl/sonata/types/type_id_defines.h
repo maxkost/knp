@@ -19,12 +19,12 @@
 
 namespace knp::framework::sonata
 {
+constexpr int BASE_TYPE_ID = 100;
 
 template <class Synapse>
 constexpr int get_synapse_type_id()
 {
-    constexpr int BASE = 100;
-    return boost::mp11::mp_find<synapse_traits::AllSynapses, Synapse>() + BASE;
+    return boost::mp11::mp_find<synapse_traits::AllSynapses, Synapse>() + BASE_TYPE_ID;
 }
 
 
@@ -38,7 +38,7 @@ std::string get_synapse_type_name()
 template <class Neuron>
 constexpr int get_neuron_type_id()
 {
-    return boost::mp11::mp_find<neuron_traits::AllNeurons, Neuron>();
+    return boost::mp11::mp_find<neuron_traits::AllNeurons, Neuron>() + BASE_TYPE_ID;
 }
 
 
@@ -63,7 +63,7 @@ void add_neuron_type_to_csv(const fs::path &csv_path)
         CsvContent csv_file;
         csv_file.set_header(node_file_header);
         csv_file.add_row(type_row);
-        csv_file.save(csv_path);
+        save_csv_content(csv_file, csv_path);
     }
 
     // File already exists, load it.
@@ -85,7 +85,7 @@ void add_neuron_type_to_csv(const fs::path &csv_path)
         }
     }
     csv_file.add_row(type_row);
-    csv_file.save(csv_path);
+    save_csv_content(csv_file, csv_path);
 }
 
 
@@ -116,7 +116,7 @@ void add_synapse_type_to_csv(const fs::path &csv_path)
         std::vector<std::string> type_row{
             std::to_string(get_synapse_type_id<Synapse>()), "", get_synapse_type_name<Synapse>()};
         csv_file.add_row(type_row);
-        csv_file.save(csv_path);
+        save_csv_content(csv_file, csv_path);
         return;
     }
     // File doesn't exist.
@@ -125,7 +125,7 @@ void add_synapse_type_to_csv(const fs::path &csv_path)
     std::vector<std::string> type_row{
         std::to_string(get_synapse_type_id<Synapse>()), "", get_synapse_type_name<Synapse>()};
     csv_file.add_row(type_row);
-    csv_file.save(csv_path);
+    save_csv_content(csv_file, csv_path);
 }
 
 }  // namespace knp::framework::sonata
