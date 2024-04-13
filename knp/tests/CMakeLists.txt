@@ -12,6 +12,7 @@ option(KNP_ENABLE_COVERAGE "Coverage enabled" ON)
 
 if(NOT KNP_BUILD_TESTS)
     message(STATUS "Tests building disabled...")
+    return()
 endif()
 
 include(CTest)

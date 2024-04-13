@@ -1,7 +1,6 @@
-//
-// Testing model save/load.
-//
-
+/**
+ * Testing model save/load.
+ */
 
 #include <knp/core/projection.h>
 #include <knp/framework/sonata/network_io.h>
@@ -9,11 +8,11 @@
 #include <generators.h>
 #include <tests_common.h>
 
+
 knp::framework::Network make_simple_network()
 {
     namespace kt = knp::testing;
     // Create a single neuron network: input -> input_projection -> population <=> loop_projection
-
     kt::BLIFATPopulation population{kt::neuron_generator, 1};
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> loop_projection =
         kt::DeltaProjection{population.get_uid(), population.get_uid(), kt::synapse_generator, 1};
@@ -87,6 +86,7 @@ bool are_networks_similar(const knp::framework::Network &current, const knp::fra
     if (!are_similar_containers(current.get_projections(), other.get_projections())) return false;
     return true;
 }
+
 
 TEST(SaveLoadSuite, SaveLoadTest)
 {
