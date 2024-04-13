@@ -7,6 +7,7 @@
 
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
+#include <knp/core/uid.h>
 #include <knp/framework/network.h>
 
 #include <spdlog/spdlog.h>
@@ -20,11 +21,10 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid.hpp>
 
-// #include <highfive/highfive.hpp>
-
 #include "highfive.h"
 #include "save_load_network.h"
 #include "types/type_id_defines.h"
+
 
 namespace knp::framework::sonata
 {
@@ -42,63 +42,6 @@ std::vector<std::string> get_projection_names(const HighFive::File &file)
         result.push_back(edges_group.getObjectName(i));
     }
     return result;
-}
-
-
-template <>
-core::Projection<knp::synapse_traits::DeltaSynapse> load_projection(
-    const HighFive::Group &edges_group, const std::string &projection_name)
-{
-    SPDLOG_DEBUG("Loading edges");
-    auto projection_group = edges_group.getGroup(projection_name);
-    auto group = projection_group.getGroup("0");
-    size_t group_size = edges_group.getGroup(projection_name).getDataSet("edge_group_id").getDimensions().at(0);
-    using SynapseParams = core::Projection<synapse_traits::DeltaSynapse>::SynapseParameters;
-    using Synapse = core::Projection<synapse_traits::DeltaSynapse>::Synapse;
-
-    std::vector<Synapse> target(group_size);
-    const auto weights = read_parameter<decltype(SynapseParams::weight_)>(
-        group, "syn_weight", group_size, synapse_traits::default_values<synapse_traits::DeltaSynapse>::weight_);
-    const auto delays = read_parameter<decltype(SynapseParams::delay_)>(
-        group, "delay", group_size, synapse_traits::default_values<synapse_traits::DeltaSynapse>::delay_);
-    const auto out_types = read_parameter<int>(
-        group, "output_type_", group_size,
-        static_cast<size_t>(synapse_traits::default_values<synapse_traits::DeltaSynapse>::output_type_));
-    const auto source_ids = read_parameter<size_t>(projection_group, "source_node_id", group_size, 0);
-    const auto target_ids = read_parameter<size_t>(projection_group, "target_node_id", group_size, 0);
-
-    core::UID uid_from{boost::lexical_cast<boost::uuids::uuid>(
-        projection_group.getDataSet("source_node_id").getAttribute("node_population").read<std::string>())};
-    core::UID uid_to{boost::lexical_cast<boost::uuids::uuid>(
-        projection_group.getDataSet("target_node_id").getAttribute("node_population").read<std::string>())};
-    core::UID uid_own{boost::lexical_cast<boost::uuids::uuid>(projection_name)};
-
-
-    std::vector<Synapse> synapses;
-    synapses.reserve(group_size);
-    for (size_t i = 0; i < weights.size(); ++i)
-    {
-        synapse_traits::synapse_parameters<synapse_traits::DeltaSynapse> syn;
-        syn.weight_ = weights[i];
-        syn.delay_ = delays[i];
-        syn.output_type_ = static_cast<synapse_traits::OutputType>(out_types[i]);
-        size_t id_from_ = source_ids[i];
-        size_t id_to_ = target_ids[i];
-        synapses.push_back({syn, id_from_, id_to_});
-    }
-
-    core::Projection<synapse_traits::DeltaSynapse> proj(
-        uid_own, uid_from, uid_to, [&synapses](size_t i) { return synapses[i]; }, synapses.size());
-
-    if (projection_group.hasAttribute("is_locked"))
-    {
-        if (projection_group.getAttribute("is_locked").read<bool>())
-            proj.lock_weights();
-        else
-            proj.unlock_weights();
-    }
-
-    return proj;
 }
 
 
@@ -185,8 +128,7 @@ core::UID get_network_uid(const fs::path &nodes_path)
         auto uid_str = h5_file.getAttribute("network_uid").read<std::string>();
         return core::UID{boost::lexical_cast<boost::uuids::uuid>(uid_str)};
     }
-    else
-        return core::UID{};
+    return core::UID{};
 }
 
 
