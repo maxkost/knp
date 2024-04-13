@@ -74,6 +74,7 @@ public:
     /**
      * @brief Get subscription key from a subscription variant.
      * @param subscription subscription variant.
+     * @return pair: subscription index, subscription key
      */
     static std::pair<size_t, UID> get_subscription_key(const SubscriptionVariant &subscription);
 
@@ -157,6 +158,7 @@ public:
      * @note After reading the messages, the method clears them from the subscription.
      * @tparam MessageType type of messages to read.
      * @param receiver_uid receiver UID.
+     * @return vector of messages.
      */
     template <class MessageType>
     std::vector<MessageType> unload_messages(const knp::core::UID &receiver_uid);

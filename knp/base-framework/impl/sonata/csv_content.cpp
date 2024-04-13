@@ -57,6 +57,29 @@ void CsvContent::save(const fs::path &csv_path) const
 }
 
 
+void save_csv_content(const CsvContent &csv_data, const fs::path &csv_path)
+{
+    auto header = csv_data.get_header();
+    auto rc_size = csv_data.get_rc_size();
+    std::vector<std::vector<std::string>> values;
+    values.reserve(rc_size.first);
+
+    for (size_t row = 0; row < rc_size.first; ++row)
+    {
+        std::vector<std::string> row_values;
+        row_values.reserve(rc_size.second);
+        std::transform(
+            header.begin(), header.end(), std::back_inserter(row_values),
+            [row, &csv_data](const std::string &col) { return csv_data.get_value<std::string>(row, col); });
+        values.push_back(row_values);
+    }
+    std::ofstream csv_file(csv_path);
+    csv2::Writer<csv2::delimiter<' '>> writer(csv_file);
+    writer.write_row(header);
+    writer.write_rows(values);
+}
+
+
 template <class V>
 V CsvContent::get_value(size_t row, const std::string &col) const
 {

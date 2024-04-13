@@ -53,7 +53,7 @@ std::string type_name()
 
 /**
  * @class std::false_type
- * @brief Instantiation of integral_constant to represent the bool value false.
+ * @brief The `integral_constant` instance to represent the `false` bool value.
  * @see <a href="https://en.cppreference.com/w/cpp/types/integral_constant">std::false_type description</a>
  */
 
@@ -77,7 +77,7 @@ struct is_specialization : std::false_type
 
 /**
  * @class std::true_type
- * @brief Instantiation of integral_constant to represent the bool value true.
+ * @brief The `integral_constant` instance to represent the `true` bool value.
  * @see <a href="https://en.cppreference.com/w/cpp/types/integral_constant">std::true_type description</a>
  */
 

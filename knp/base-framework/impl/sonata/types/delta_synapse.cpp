@@ -50,6 +50,7 @@ void add_projection_to_h5<core::Projection<synapse_traits::DeltaSynapse>>(
 
     for (const auto &v : projection)
     {
+        // TODO: change 0, 1, 2 to named.
         source_ids.push_back(std::get<1>(v));
         target_ids.push_back(std::get<2>(v));
         delays.push_back(std::get<0>(v).delay_);

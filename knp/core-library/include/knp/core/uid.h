@@ -38,6 +38,7 @@ class continuously_uid_generator
 public:
     /**
      * @brief Generate next UID.
+     * @return Boost UUID object.
      */
     ::boost::uuids::uuid operator()() const;
     /**
@@ -50,6 +51,9 @@ public:
 #if defined(_ENABLE_PSEUDO_UID_GENERATOR)
 #    define uid_generator continuously_uid_generator
 #else
+/**
+ * @brief Default UID generator.
+ */
 #    define uid_generator ::boost::uuids::random_generator
 #endif
 
@@ -190,6 +194,7 @@ struct uid_hash
     /**
      * @brief Get a hash value of the specified UID.
      * @param uid UID to convert to a hash value.
+     * @return UID hash value.
      */
     auto operator()(const UID &uid) const { return boost::hash<boost::uuids::uuid>()(uid.tag); }
 };

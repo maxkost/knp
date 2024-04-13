@@ -59,7 +59,7 @@ void add_neuron_type_to_csv(const fs::path &csv_path)
 
     if (!fs::is_regular_file(csv_path))
     {
-        // No file
+        // No file, need to create one
         CsvContent csv_file;
         csv_file.set_header(node_file_header);
         csv_file.add_row(type_row);
@@ -73,7 +73,7 @@ void add_neuron_type_to_csv(const fs::path &csv_path)
     for (const auto &column_name : node_file_header)
     {
         if (std::find(file_header.begin(), file_header.end(), column_name) == file_header.end())
-            throw std::runtime_error("Couldn't find column: " + column_name + " in file " + csv_path.string());
+            throw std::runtime_error("Couldn't find column: \"" + column_name + "\" in file " + csv_path.string());
     }
     // Header is okay, check if type exists already.
     size_t height = csv_file.get_rc_size().first - 1;

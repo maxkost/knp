@@ -58,6 +58,7 @@ public:
 
     /**
      * @brief CPU device copy operator.
+     * @return reference to CPU instance.
      */
     CPU &operator=(CPU &&);
 
@@ -90,6 +91,7 @@ private:
 
 /**
  * @brief List all processors on which backend can be initialized.
+ * @return vector of CPUs.
  */
 std::vector<CPU> list_processors();
 

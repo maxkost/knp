@@ -6,12 +6,12 @@
  */
 
 #include <knp/core/population.h>
+#include <knp/core/uid.h>
 #include <knp/neuron-traits/blifat.h>
 
 #include <spdlog/spdlog.h>
 
 #include <boost/lexical_cast.hpp>
-#include <boost/uuid/uuid.hpp>
 
 #include "../csv_content.h"
 #include "../highfive.h"
@@ -33,8 +33,9 @@ template <>
 void add_population_to_h5<core::Population<knp::neuron_traits::BLIFATNeuron>>(
     HighFive::File &file_h5, const core::Population<knp::neuron_traits::BLIFATNeuron> &population)
 {
-    SPDLOG_TRACE("Adding population to hdf5");
+    SPDLOG_TRACE("Adding population {} to hdf5", std::string(population.get_uid()));
 
+    // Check that an external function has created "nodes" group.
     if (!file_h5.exist("nodes")) throw std::runtime_error("File doesn't contain \"nodes\" group");
 
     HighFive::Group population_group = file_h5.createGroup("nodes/" + std::string(population.get_uid()));

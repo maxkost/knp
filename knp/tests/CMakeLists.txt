@@ -16,6 +16,8 @@ endif()
 
 include(CTest)
 
+include(memcheck)
+
 enable_testing()
 
 include(GoogleTest)

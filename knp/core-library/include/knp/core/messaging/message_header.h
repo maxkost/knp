@@ -39,6 +39,7 @@ struct MessageHeader
  * @brief Get message header from an input stream.
  * @param stream input stream.
  * @param header message header to get from the input stream.
+ * @return input stream.
  */
 std::istream &operator>>(std::istream &stream, MessageHeader &header);
 
@@ -46,6 +47,7 @@ std::istream &operator>>(std::istream &stream, MessageHeader &header);
  * @brief Send message header to an output stream.
  * @param stream output stream.
  * @param header message header to send to the output stream.
+ * @return output stream.
  */
 std::ostream &operator<<(std::ostream &stream, const MessageHeader &header);
 

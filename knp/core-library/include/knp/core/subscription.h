@@ -52,11 +52,13 @@ public:
 
     /**
      * @brief Get list of sender UIDs.
+     * @return senders UIDs.
      */
     [[nodiscard]] const UidSet &get_senders() const { return senders_; }
 
     /**
      * @brief Get UID of the entity that receives messages via the subscription.
+     * @return UID.
      */
     [[nodiscard]] UID get_receiver_uid() const { return receiver_; }
 

@@ -132,6 +132,7 @@ public:
 public:
     /**
      * @brief Create an object of the single-threaded CPU backend.
+     * @return shared pointer to the backend object.
      */
     static std::shared_ptr<SingleThreadedCPUBackend> create();
 
@@ -153,10 +154,12 @@ public:
     [[nodiscard]] std::vector<std::string> get_supported_synapses() const override;
     /**
      * @brief Get indexes of supported projections.
+     * @return type indexes.
      */
     [[nodiscard]] std::vector<size_t> get_supported_projection_indexes() const override;
     /**
      * @brief Get indexes of supported populations.
+     * @return type indexes.
      */
     [[nodiscard]] std::vector<size_t> get_supported_population_indexes() const override;
 
@@ -302,6 +305,7 @@ protected:
      * @brief Calculate population of `SynapticResourceSTDPNeuron` neurons.
      * @note Population will be changed during calculation.
      * @param population population to calculate.
+     * @return optional SpikeMessage.
      */
     std::optional<core::messaging::SpikeMessage> calculate_population(
         knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population);

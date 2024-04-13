@@ -4,6 +4,7 @@ include(GNUInstallDirs)
 include(knp-functions)
 
 set(KNP_ENABLE_COVERAGE OFF)
+set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(arni-save-load)
 add_subdirectory(save-load-networks)

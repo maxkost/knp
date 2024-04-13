@@ -35,19 +35,18 @@ else()
     set(KNP_BUILD_EXAMPLES_DEFAULT ON)
 endif()
 
-if(KNP_MAINTAINER_BUILD)
-    set(KNP_COVERAGE_DEFAULT OFF)
-else()
-    set(KNP_COVERAGE_DEFAULT ON)
-endif()
-
-
 if (CMAKE_SYSTEM_PROCESSOR MATCHES "(x86)|(X86)|(amd64)|(AMD64)")
     if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
         set(KNP_ENABLE_AVX_DEFAULT ON)
     endif()
 else()
     set(KNP_ENABLE_AVX_DEFAULT OFF)
+endif()
+
+if(KNP_MAINTAINER_BUILD)
+    set(KNP_COVERAGE_DEFAULT OFF)
+else()
+    set(KNP_COVERAGE_DEFAULT ON)
 endif()
 
 option(KNP_BUILD_TESTS "Build tests" ${KNP_BUILD_TESTS_DEFAULT})
@@ -109,20 +108,25 @@ set(SONATA_TESTS OFF)
 set(SONATA_VERSION 1.0)
 add_third_party(libsonata)
 add_third_party(csv2)
+file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
+include_directories(third-party ${THIRD_PARTY_INCLUDES})
+
+include(print-variables)
+
 set(FLATBUFFERS_BUILD_TESTS OFF)
 set(FLATBUFFERS_BUILD_CPP17 ON)
 add_third_party(flatbuffers)
 add_third_party(simdjson)
 
-if(KNP_BUILD_TESTS)
-    add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)
-    add_third_party(googletest)
-endif()
-
 add_third_party(pcm)
 
 set(SPDLOG_BUILD_PIC ON)
 add_third_party(spdlog)
+
+if(KNP_BUILD_TESTS)
+    add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)
+    add_third_party(googletest)
+endif()
 
 
 #
@@ -172,7 +176,7 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${CMAKE_PROJECT_DESCRIPTION}"
 set(CPACK_PACKAGE_DESCRIPTION "Kaspersky Neuromorphic Platform - spiking networks simulator")
 
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "${CPACK_PACKAGE_NAME}")
-SET(CPACK_OUTPUT_FILE_PREFIX "${CMAKE_BINARY_DIR}/_packages")
+set(CPACK_OUTPUT_FILE_PREFIX "${CMAKE_BINARY_DIR}/_packages")
 
 # https://unix.stackexchange.com/a/11552/254512
 set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
@@ -208,8 +212,8 @@ set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
 #set(CPACK_DEBIAN_FILE_NAME "${PROJECT_NAME}-dev_${PROJECT_VERSION}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}.deb")
 set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 
-set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
-set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS OFF)
+set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS OFF)
 
 
 #

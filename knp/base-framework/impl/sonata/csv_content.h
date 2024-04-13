@@ -43,14 +43,6 @@ public:
 
     auto get_rc_size() const { return std::make_pair(values_.size(), header_.size()); }
 
-    auto begin() { return values_.begin(); }
-
-    auto begin() const { return values_.cbegin(); }
-
-    auto end() { return values_.end(); }
-
-    auto end() const { return values_.cend(); }
-
 private:
     std::vector<std::string> header_;
     std::unordered_map<std::string, int> header_index_;
@@ -58,6 +50,8 @@ private:
 };
 
 CsvContent load_csv_content(const fs::path &csv_path);
+
+void save_csv_content(const CsvContent &csv_data, const fs::path &csv_path);
 
 const std::vector<std::string> edge_file_header = {"edge_type_id", "dynamics_params", "model_template"};
 const std::vector<std::string> node_file_header = {"node_type_id", "model_type", "model_template", "model_name"};
