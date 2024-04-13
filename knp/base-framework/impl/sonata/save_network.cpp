@@ -35,6 +35,7 @@ void write_base_config(const fs::path &config_dir, const fs::path &net_config_di
     boost::format base_config_formatter(base_config);
     base_config = (base_config_formatter % net_config_path.string()).str();
     std::ofstream base_config_file(config_dir / "config.json");
+    base_config_file.exceptions(std::ofstream::badbit | std::ofstream::failbit);
     base_config_file << base_config;
     base_config_file.close();
 }
@@ -122,6 +123,7 @@ void write_network_config(
     auto res_string = (res_format % manifest % net_string).str();
 
     std::ofstream file_out(net_config_path);
+    file_out.exceptions(std::ofstream::badbit | std::ofstream::failbit);
     file_out << res_string;
 }
 
