@@ -84,7 +84,7 @@ source_group(source REGULAR_EXPRESSION "impl/.*")
 target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS} "impl")
 
 # Flatbuffers headers must be generated before core compilation started.
-add_dependencies("${PROJECT_NAME}" "${PROJECT_NAME}_messaging")
+add_dependencies("${PROJECT_NAME}" "GENERATE_${PROJECT_NAME}_messaging" "${PROJECT_NAME}_messaging")
 
 # add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
 
