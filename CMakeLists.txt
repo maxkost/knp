@@ -60,7 +60,12 @@ if (KNP_ENABLE_AVX)
     message(STATUS "AVX enabled.")
     message(STATUS "Setting release optimization flags...")
     # -pipe
-    set(CMAKE_C_FLAGS_RELEASE "-march=native -mtune=native -mno-vzeroupper -Ofast -fopt-info-vec-optimized -funroll-loops -fomit-frame-pointer -finline")
+    set(CMAKE_C_FLAGS_RELEASE "-march=native -mtune=native -mno-vzeroupper -Ofast -funroll-loops -fomit-frame-pointer -finline")
+
+    if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+        set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -fopt-info-vec-optimized")
+    endif()
+
     set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
     add_definitions(-include x86intrin.h)
     # -include bits/stdc++.h
