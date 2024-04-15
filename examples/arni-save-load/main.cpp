@@ -413,8 +413,7 @@ int main(int argc, const char *argv[])
         path_to_network, /*at_tact*/ 0, {}, input_projection_uids, 3, output_population_uid, {"L"});
     describe_network(network_base);
     knp::framework::sonata::save_network(network_base, path_save);
-    knp::framework::Network loaded_network =
-        knp::framework::sonata::load_network(path_save / "network/network_config.json");
+    knp::framework::Network loaded_network = knp::framework::sonata::load_network(path_save);
     describe_network(loaded_network);
     return EXIT_SUCCESS;
 }

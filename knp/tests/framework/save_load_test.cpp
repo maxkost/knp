@@ -1,6 +1,10 @@
 /**
- * Testing model save/load.
+ * @file save_load_test.cpp
+ * @brief Test saving and building networks.
+ * @author A. Vartenkov
+ * @date 22.03.2024
  */
+
 
 #include <knp/core/projection.h>
 #include <knp/framework/sonata/network_io.h>
@@ -29,7 +33,7 @@ knp::framework::Network make_simple_network()
 TEST(SaveLoadSuit, SaveTest)
 {
     auto network = make_simple_network();
-    knp::framework::sonata::save_network(network, "");
+    knp::framework::sonata::save_network(network, ".");
     ASSERT_TRUE(std::filesystem::is_directory("network"));
     ASSERT_TRUE(std::filesystem::is_regular_file("network/network_config.json"));
     ASSERT_TRUE(std::filesystem::is_regular_file("network/populations.h5"));
@@ -91,7 +95,7 @@ bool are_networks_similar(const knp::framework::Network &current, const knp::fra
 TEST(SaveLoadSuite, SaveLoadTest)
 {
     auto network = make_simple_network();
-    knp::framework::sonata::save_network(network, "");
-    auto network_loaded = knp::framework::sonata::load_network("network/network_config.json");
+    knp::framework::sonata::save_network(network, ".");
+    auto network_loaded = knp::framework::sonata::load_network(".");
     ASSERT_TRUE(are_networks_similar(network, network_loaded));
 }

@@ -133,13 +133,12 @@ if(KNP_BUILD_TESTS)
     add_third_party(googletest)
 endif()
 
+file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
+include_directories(third-party ${THIRD_PARTY_INCLUDES})
 
 #
 # Build KNP.
 #
-
-file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
-include_directories(third-party ${THIRD_PARTY_INCLUDES})
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)

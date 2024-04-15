@@ -134,8 +134,10 @@ core::UID get_network_uid(const fs::path &nodes_path)
 
 Network load_network(const fs::path &config_path)
 {
+    // TODO: Get this value from config file at config_path
+    const std::string config_path_suffix = "network/network_config.json";
     // Open and read config files
-    auto config = read_config_file(config_path);
+    auto config = read_config_file(config_path / config_path_suffix);
     Network network{get_network_uid(config.nodes_storage)};
     auto populations = load_populations(config.nodes_storage);
     auto projections = load_projections(config.edges_storage);

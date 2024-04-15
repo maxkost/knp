@@ -1,5 +1,8 @@
 /**
- * Network class testing.
+ * @file network_test.cpp
+ * @brief Network class testing.
+ * @author A. Vartenkov
+ * @date 12.02.2024
  */
 
 #include <knp/framework/network.h>
@@ -43,9 +46,13 @@ auto create_entities()
 
 TEST(FrameworkSuite, EmptyNetwork)
 {
+    // Testing default network constructor: should create an empty network
     knp::framework::Network network;
+    // Number of projections in an empty network is zero
     ASSERT_EQ(network.projections_count(), 0);
+    // Number of populations in an empty network is zero
     ASSERT_EQ(network.populations_count(), 0);
+    // Check iterator correctness
     ASSERT_EQ(network.begin_populations(), network.end_populations());
     ASSERT_EQ(network.begin_projections(), network.end_projections());
 }
