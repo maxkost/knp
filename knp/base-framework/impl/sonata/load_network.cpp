@@ -5,6 +5,8 @@
  * @date 29.02.2024
  */
 
+#include "load_network.h"
+
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 #include <knp/core/uid.h>
@@ -22,7 +24,6 @@
 #include <boost/uuid/uuid.hpp>
 
 #include "highfive.h"
-#include "save_load_network.h"
 #include "types/type_id_defines.h"
 
 

@@ -5,6 +5,8 @@
  * @date 09.04.2024
  */
 
+#include "save_network.h"
+
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 #include <knp/framework/network.h>
@@ -19,7 +21,6 @@
 
 #include "csv_content.h"
 #include "highfive.h"
-#include "save_load_network.h"
 #include "types/type_id_defines.h"
 
 

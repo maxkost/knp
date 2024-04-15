@@ -1,11 +1,12 @@
 /**
- * @file save_load_network.cpp
+ * @file load_network.h
  * @brief saving and loading network to Sonata format file.
  * @author An. Vartenkov
- * @date 28.03.2024
+ * @date 15.04.2024
  */
 
 #pragma once
+
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 
@@ -15,43 +16,12 @@
 #include <string>
 #include <vector>
 
+#include "highfive.h"
+
 
 namespace knp::framework::sonata
 {
 namespace fs = std::filesystem;
-
-template <class Projection>
-void add_projection_to_h5(HighFive::File &, const Projection &)
-{
-    throw std::runtime_error("Couldn't save projection of unknown class");
-}
-
-
-template <class Population>
-void add_population_to_h5(HighFive::File &, const Population &)
-{
-    throw std::runtime_error("Saving model: unknown population type");
-}
-
-
-// Read parameter values for both projections and populations
-template <class Attr>
-std::vector<Attr> read_parameter(
-    const HighFive::Group &population_group, const std::string &param_name, size_t pop_size, const Attr &default_value)
-{
-    std::vector<Attr> result(pop_size);
-    try
-    {
-        auto dataset = population_group.getDataSet(param_name);
-        dataset.read(result);
-    }
-    catch (std::exception &exc)
-    {
-        return std::vector(pop_size, default_value);
-    }
-    return result;
-}
-
 
 template <class Neuron>
 core::Population<Neuron> load_population(const HighFive::Group &nodes_group, const std::string &population_name)
@@ -65,7 +35,6 @@ core::Projection<Synapse> load_projection(const HighFive::Group &edges_group, co
 {
     throw std::logic_error("Trying to load an unimplemented projection type");
 }
-
 
 }  // namespace knp::framework::sonata
 
@@ -85,15 +54,4 @@ core::Projection<Synapse> load_projection(const HighFive::Group &edges_group, co
             read_parameter(h5_group, #parameter, proj_size, synapse_traits::default_values<synapse_type>::parameter); \
         for (size_t i = 0; i < target.size(); ++i) target[i].parameter = values[i];                                   \
     }                                                                                                                 \
-    static_assert(true, "")
-
-
-#define PUT_NEURON_TO_DATASET(pop, param, group)                                                                \
-    {                                                                                                           \
-        std::vector<decltype(pop.begin()->param)> data;                                                         \
-        data.reserve(pop.size());                                                                               \
-        std::transform(                                                                                         \
-            pop.begin(), pop.end(), std::back_inserter(data), [](const auto &neuron) { return neuron.param; }); \
-        group.createDataSet(#param, data);                                                                      \
-    }                                                                                                           \
     static_assert(true, "")

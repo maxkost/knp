@@ -15,7 +15,8 @@
 
 #include "../csv_content.h"
 #include "../highfive.h"
-#include "../save_load_network.h"
+#include "../load_network.h"
+#include "../save_network.h"
 #include "type_id_defines.h"
 
 
