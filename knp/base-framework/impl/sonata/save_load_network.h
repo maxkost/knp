@@ -68,6 +68,7 @@ core::Projection<Synapse> load_projection(const HighFive::Group &edges_group, co
 
 }  // namespace knp::framework::sonata
 
+
 #define LOAD_NEURONS_PARAMETER(target, neuron_type, parameter, h5_group, pop_size)                                 \
     {                                                                                                              \
         const auto values =                                                                                        \

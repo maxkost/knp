@@ -228,7 +228,11 @@ link_libraries(
 link_libraries(
     $<$<LINK_LANG_AND_ID:CXX,Clang,AppleClang>:profile_rt>
     $<$<LINK_LANG_AND_ID:C,Clang,AppleClang>:profile_rt>
-    $<$<LINK_LANG_AND_ID:Fortran,Clang,AppleClang>:profile_rt>)
+    $<$<LINK_LANG_AND_ID:Fortran,Clang,AppleClang>:profile_rt>
+    $<$<LINK_LANG_AND_ID:CXX,Clang,AppleClang>:gcov>
+    $<$<LINK_LANG_AND_ID:C,Clang,AppleClang>:gcov>
+    $<$<LINK_LANG_AND_ID:Fortran,Clang,AppleClang>:gcov>)
+
 
 
 # Defines a target for running and collection code coverage information
