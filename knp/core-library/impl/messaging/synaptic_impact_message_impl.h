@@ -9,8 +9,14 @@
 
 #include <knp/core/messaging/synaptic_impact_message.h>
 
+#ifdef __clang__
+#    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wdocumentation"
+#endif
 #include <knp_gen_headers/synaptic_impact_message_generated.h>
-
+#ifdef __clang__
+#    pragma clang diagnostic pop
+#endif
 
 /**
  * @brief Messaging namespace.
