@@ -56,8 +56,8 @@ knp::framework::Network make_simple_network()
 int main()
 {
     auto network = make_simple_network();
-    knp::framework::sonata::save_network(network, "");
-    auto network2 = knp::framework::sonata::load_network("./network/network_config.json");
+    knp::framework::sonata::save_network(network, ".");
+    auto network2 = knp::framework::sonata::load_network(".");
     std::cout << network2.populations_count() << " " << network2.projections_count() << std::endl;
     return EXIT_SUCCESS;
 }
