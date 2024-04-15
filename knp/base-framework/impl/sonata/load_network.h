@@ -1,6 +1,6 @@
 /**
  * @file load_network.h
- * @brief saving and loading network to Sonata format file.
+ * @brief loading network to Sonata format file.
  * @author An. Vartenkov
  * @date 15.04.2024
  */
