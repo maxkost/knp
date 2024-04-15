@@ -28,13 +28,18 @@ knp_add_library("${PROJECT_NAME}-core"
     impl/model_executor.cpp
     impl/input_converter.cpp
     impl/output_channel.cpp
+    impl/sonata/save_network.cpp
+    impl/sonata/load_network.cpp
+    impl/sonata/csv_content.cpp
+    impl/sonata/types/blifat_neuron.cpp
+    impl/sonata/types/delta_synapse.cpp
+    impl/sonata/types/resource_blifat_neuron.cpp
+    impl/sonata/types/resource_delta_synapse.cpp
     impl/observer.cpp
-
     ${${PROJECT_NAME}_headers}
-
     ALIAS KNP::BaseFramework::Core
     LINK_PRIVATE
-        spdlog::spdlog_header_only Boost::headers Boost::filesystem
+        spdlog::spdlog_header_only Boost::headers Boost::filesystem HighFive sonata_static simdjson
     LINK_PUBLIC
         KNP::Core KNP::Neuron::Traits KNP::Synapse::Traits)
 

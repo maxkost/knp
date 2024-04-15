@@ -42,7 +42,7 @@ py::class_<bn_params>("BLIFATNeuronParameters", "Structure for BLIFAT neuron par
         "The parameter defines a value that increases the `postsynaptic_trace_` value if a neuron generates a spike.")
     .add_property(
         "inhibitory_conductance", &bn_params::inhibitory_conductance_,
-        "The parameter defines speed with which a potential tends to the `reverse_inhibitory_potential` value.")
+        "The parameter defines speed with which a potential tends to the `reversal_inhibitory_potential` value.")
     .add_property(
         "inhibitory_conductance_decay", &bn_params::inhibitory_conductance_decay_,
         "The parameter defines a time constant during which the `inhibitory_conductance_` value decreases.")
@@ -64,8 +64,8 @@ py::class_<bn_params>("BLIFATNeuronParameters", "Structure for BLIFAT neuron par
         "reflexive_weight", &bn_params::reflexive_weight_,
         "The parameter defines a value that increases the membrane potential after a neuron generates a spike.")
     .add_property(
-        "reverse_inhibitory_potential", &bn_params::reverse_inhibitory_potential_,
-        "The parameter takes the default value of `reverse_inhibitory_potential` defined for a BLIFAT neuron.")
+        "reversal_inhibitory_potential", &bn_params::reversal_inhibitory_potential_,
+        "The parameter takes the default value of `reversal_inhibitory_potential` defined for a BLIFAT neuron.")
     .add_property(
         "absolute_refractory_period", &bn_params::absolute_refractory_period_,
         "The parameter defines a minimum number of network steps before a neuron can generate the next spike.")

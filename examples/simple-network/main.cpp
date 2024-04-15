@@ -1,5 +1,8 @@
 /**
- * Model execution example.
+ * @file main.cpp
+ * @brief Example of running a simple network.
+ * @author A. Vartenkov
+ * @date 28.03.2024
  */
 
 #include <knp/framework/io/out_converters/convert_set.h>

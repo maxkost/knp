@@ -60,7 +60,12 @@ if (KNP_ENABLE_AVX)
     message(STATUS "AVX enabled.")
     message(STATUS "Setting release optimization flags...")
     # -pipe
-    set(CMAKE_C_FLAGS_RELEASE "-march=native -mtune=native -mno-vzeroupper -Ofast -fopt-info-vec-optimized -funroll-loops -fomit-frame-pointer -finline")
+    set(CMAKE_C_FLAGS_RELEASE "-march=native -mtune=native -mno-vzeroupper -Ofast -funroll-loops -fomit-frame-pointer -finline")
+
+    if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+        set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -fopt-info-vec-optimized")
+    endif()
+
     set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
     add_definitions(-include x86intrin.h)
     # -include bits/stdc++.h
@@ -97,6 +102,17 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/third-party)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 
+# Make cache variables for install destinations.
+include(GNUInstallDirs)
+
+include(print-variables)
+
+set(SPDLOG_BUILD_PIC ON)
+set(EXTLIB_FROM_SUBMODULES ON)
+set(SONATA_TESTS OFF)
+set(SONATA_VERSION 1.0)
+add_third_party(libsonata)
+add_third_party(csv2)
 file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
 include_directories(third-party ${THIRD_PARTY_INCLUDES})
 
@@ -105,6 +121,7 @@ include(print-variables)
 set(FLATBUFFERS_BUILD_TESTS OFF)
 set(FLATBUFFERS_BUILD_CPP17 ON)
 add_third_party(flatbuffers)
+add_third_party(simdjson)
 
 add_third_party(pcm)
 
@@ -116,6 +133,8 @@ if(KNP_BUILD_TESTS)
     add_third_party(googletest)
 endif()
 
+file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
+include_directories(third-party ${THIRD_PARTY_INCLUDES})
 
 #
 # Build KNP.

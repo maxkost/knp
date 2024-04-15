@@ -160,7 +160,7 @@ foreach(LANG ${LANGUAGES})
   endif()
 endforeach()
 
-set(COVERAGE_COMPILER_FLAGS "" CACHE INTERNAL "")
+set(COVERAGE_COMPILER_FLAGS "-g --coverage" CACHE INTERNAL "")
 
 macro(check_and_set_compiler_flag option_name)
     include(CheckCXXCompilerFlag)
@@ -173,13 +173,10 @@ macro(check_and_set_compiler_flag option_name)
     endif()
 endmacro()
 
-check_and_set_compiler_flag(-ftest-coverage)
-
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
     check_and_set_compiler_flag(-fprofile-abs-path)
     # Need to be linked with gcov to test.
     # check_and_set_compiler_flag(-fprofile-arcs)
-    list(APPEND COVERAGE_COMPILER_FLAGS -fprofile-arcs)
     check_and_set_compiler_flag(-fprofile-instr-generate)
     check_and_set_compiler_flag(-fcoverage-mapping)
 endif()
@@ -229,6 +226,7 @@ link_libraries(
     $<$<LINK_LANG_AND_ID:CXX,Clang,AppleClang>:profile_rt>
     $<$<LINK_LANG_AND_ID:C,Clang,AppleClang>:profile_rt>
     $<$<LINK_LANG_AND_ID:Fortran,Clang,AppleClang>:profile_rt>)
+
 
 
 # Defines a target for running and collection code coverage information

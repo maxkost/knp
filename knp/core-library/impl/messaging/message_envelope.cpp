@@ -6,8 +6,14 @@
  */
 
 #include <knp/core/messaging/message_envelope.h>
-
+#ifdef __clang__
+#    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wdocumentation"
+#endif
 #include <knp_gen_headers/message_envelope_generated.h>
+#ifdef __clang__
+#    pragma clang diagnostic pop
+#endif
 #include <spdlog/spdlog.h>
 
 #include "spike_message_impl.h"
