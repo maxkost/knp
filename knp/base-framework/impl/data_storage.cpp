@@ -1,11 +1,11 @@
 /**
- * @file data_saver.cpp
- * @brief File for loading data.
+ * @file data_storage.cpp
+ * @brief File for saving and loading data.
  * @author An. Vartenkov
  * @date 16.04.2024
  */
 
-#include <knp/framework/io/data_saver.h>
+#include <knp/framework/io/data_storage.h>
 
 #include <hdf5.h>
 

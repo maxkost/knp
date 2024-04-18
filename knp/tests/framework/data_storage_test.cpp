@@ -6,7 +6,7 @@
  */
 
 #include <knp/core/messaging/messaging.h>
-#include <knp/framework/io/data_saver.h>
+#include <knp/framework/io/data_storage.h>
 
 #include <tests_common.h>
 
