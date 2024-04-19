@@ -23,7 +23,7 @@ struct synapse_parameters;
 
 /**
  * @brief Structure for synapse default values.
- * @tparam SynapseType type of synapse.
+ * @tparam SynapseType type of synapses.
  */
 template <typename SynapseType>
 struct default_values;

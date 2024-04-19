@@ -107,8 +107,8 @@ public:
     Network() = default;
 
     /**
-     * @brief Constructor with predefined UID.
-     * @param uid network uid.
+     * @brief Network constructor with pre-defined UID.
+     * @param uid network UID.
      */
     explicit Network(const core::UID &uid) : base_({uid, {}}) {}
 
