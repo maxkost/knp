@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="maximum-scale=1.0" />
+    <title> Библиотека характеристик нейронов </title>
+    <script type="text/javascript" src="../langs.js"></script>
+    <script type="text/javascript">
+        !function ( w, d ) {
+            var scriptsPath="";
+            d.writeln("\x3Cscript type='text/javascript' src='"+scriptsPath+d.documentElement.lang+".js'>\x3C/script>");
+        }( window, document );
+    </script>
+    <script type="text/javascript" src="toc.js"></script>
+    
+    <script type="text/javascript" src="aiconverter_result.js"></script>
+    <link rel="stylesheet" type='text/css' href="typography.css"/>
+    <link rel="stylesheet" type='text/css' href="styles.css"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="favicon.png" type="image/png"/>
+
+
+            <!--[if lte IE 9]>
+                <link rel="stylesheet" type="text/css" href="bootstrap.css">
+            <![endif]-->
+            <!--[if lte IE 8]>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+            <![endif]-->
+            </head>
+
+<body id="who-content">
+	<div class="cont">
+	<h3 id="t272189" class="heading3">Библиотека характеристик нейронов</h3>
+<p class="bodytext">Библиотека характеристик нейронов представляет собой набор атрибутов <a id="h254021" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254021','h254021')" target="_self">нейронов</a>. Вы можете использовать атрибуты нейронов, представленных в библиотеке, например, при построении популяций.</p>
+<div id="d254021" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254021');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Узел нейронной сети, имеющий набор атрибутов. На основе атрибутов нейрона и последовательности входных сигналов происходит вычисление некоторой математической функции, результатом которого является синаптическое воздействие или его отсутствие.</p>
+</div><p class="bodytext">На текущий момент библиотека поддерживает наборы свойств для нейрона по модели <code class="programcharacter">BLIFATNeuron</code> (далее также &quot;BLIFAT-нейроны&quot;).</p>
+<p class="listcontinue1"></p>
+<p class="bodytext">Нейрон по модели <code class="programcharacter">BLIFATNeuron</code> представляет собой нейрон-интегратор с утечкой и адаптивным порогом, генерирующих серию <a id="h254019" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254019','h254019')" target="_self">спайков</a> (англ. Bursting Leaky Integrate-and-Fire with Adaptive Threshold Neuron). BLIFAT-нейрон характеризуется потенциалом мембраны и пороговым значением потенциала мембраны. </p>
+<div id="d254019" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254019');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Кратковременный потенциал действия, сгенерированный нейроном популяции в результате изменения атрибутов нейрона.</p>
+</div><p class="bodytext">Значение потенциала мембраны изменяется в соответствии со значением <a id="h254029" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254029','h254029')" target="_self">синаптического воздействия</a>, поступающего от связанного <a id="h254022" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254022','h254022')" target="_self">синапса</a>. Если потенциал мембраны нейрона достигает порогового значения, нейрон начинает генерировать серию спайков с определенным интервалом. При этом после генерации спайка потенциал мембраны стремится к базовому значению, а пороговое значение изменяется в соответствии с инкрементом. </p>
+<div id="d254022" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254022');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Место соединения нейронов, основная функция которого&nbsp;&#8211; передача сигнала от одного нейрона к другому. Каждый нейрон может быть связан с множеством синапсов.</p>
+</div><div id="d254029" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254029');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Значение, формируемое синапсом и предназначенное для изменения значений атрибутов нейронов.</p>
+</div><p class="bodytext">Если к нейрону не поступают сообщения от связанного синапса в течение определенного времени, потенциал мембраны и его пороговое значение экспоненциально стремятся к базовым значениям. </p>
+<p class="bodytext">Вы можете указать базовое значения потенциала мембраны, базовое пороговое значение, значение инкремента, интервал времени, при достижении которого значения потенциала и порогового значения потенциала мембраны начинают стремиться к базовым, продолжительность серии спайков и интервал генерации спайков в атрибутах экземпляра нейрона. </p>
+<p class="listcontinue1"></p>
+<p class="listcontinue1"></p>
+<p class="listcontinue1"></p>
+<p class="listcontinue1"></p>
+<p class="bodytext">Если требуется, вы можете реализовать и использовать собственные модели нейронов.</p>
+<p class="bodytext"></p>
+<p class="bodytext"></p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div>
+</body>
+
+</html>

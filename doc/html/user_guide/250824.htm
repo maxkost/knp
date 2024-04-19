@@ -15,7 +15,7 @@
         }( window, document );
     </script>
     <script type="text/javascript" src="toc.js"></script>
-
+    
     <script type="text/javascript" src="aiconverter_result.js"></script>
     <link rel="stylesheet" type='text/css' href="typography.css"/>
     <link rel="stylesheet" type='text/css' href="styles.css"/>
@@ -34,8 +34,9 @@
 
 <body id="who-content">
 	<div class="cont">
-	<h1 id="t250824" class="heading1">Добавление нового типа синапса</h1>
-<p class="bodytext">На текущий момент Kaspersky Neuromorphic Platform поддерживает наборы свойств и типизацию проекций по модели дельта-синапса. Если требуется, вы можете добавить новый тип синапса.</p>
+	<h2 id="t250824" class="heading2">Добавление нового типа синапса</h2>
+<p class="bodytext">На текущий момент Kaspersky Neuromorphic Platform поддерживает наборы свойств и типизацию проекций по моделям синапсов <code class="programcharacter">DeltaSynapse</code>, <code class="programcharacter">AdditiveSTDPDeltaSynapse</code> и <code class="programcharacter">SynapticResourceSTDPDeltaSynapse</code>. Если требуется, вы можете добавить новый тип синапса.</p>
+<p class="attentionbody">Вы можете использовать эту инструкцию при работе с исходным кодом платформы.</p>
 <p class="procedureheading">Чтобы добавить новый тип синапса:</p>
 <ol class="listnumber1"><li class="listnumber1">В директории <code class="programcharacter">synapse-traits-library/include/knp/synapse-traits/</code> создайте заголовочный файл для нового типа синапса. </li><li class="listnumber1">В созданном заголовочном файле определите структуру типа синапса и его шаблонные свойства (например, <code class="programcharacter">synapse_parameters</code>).<p class="listcontinue1">Пример определения дельта-синапса:</p>
 <p class="codeheadingkos">synapse-traits-library/include/knp/synapse-traits/delta.h</p>
@@ -45,7 +46,21 @@
 <p class="programckos"> </p>
 <p class="programckos">{</p>
 <p class="programckos">struct DeltaSynapse;</p>
+<p class="programckos"></p>
+<p class="programckos"></p>
+<p class="programckos">template &lt;&gt;</p>
+<p class="programckos">struct default_values&lt;DeltaSynapse&gt;</p>
+<p class="programckos"></p>
+<p class="programckos">{</p>
+<p class="programckos">    // Задает значение веса синапса по умолчанию.</p>
+<p class="programckos">    constexpr static float weight_ = 0.0F;</p>
+<p class="programckos">    // Задает значение задержки синапса по умолчанию.</p>
+<p class="programckos">    constexpr static uint32_t delay_ = 1;</p>
+<p class="programckos">    // Задает тип синапса по умолчанию.</p>
+<p class="programckos">    constexpr static OutputType output_type_ = OutputType::EXCITATORY;</p>
+<p class="programckos">};</p>
 <p class="programckos"> </p>
+<p class="programckos"></p>
 <p class="programckos">template &lt;&gt;</p>
 <p class="programckos">struct synapse_parameters&lt;DeltaSynapse&gt;</p>
 <p class="programckos"> </p>
@@ -73,7 +88,7 @@
 <p class="programckos"> </p>
 <p class="programckos">{</p>
 <p class="programckos">// Список типов синапсов, разделенных запятыми.</p>
-<p class="programckos">#define ALL_SYNAPSES knp::synapse_traits::DeltaSynapse</p>
+<p class="programckos">#define ALL_SYNAPSES DeltaSynapse</p>
 <p class="programckos"> </p>
 <p class="programckos">...</p>
 <p class="programckos">}  // namespace knp::neuron_traits</p>

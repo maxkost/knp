@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="description" content=""/>
     <meta name="viewport" content="maximum-scale=1.0" />
-    <title> Сборка проекта из исходного кода платформы </title>
+    <title> Сборка проекта для разработки решений на C++ </title>
     <script type="text/javascript" src="../langs.js"></script>
     <script type="text/javascript">
         !function ( w, d ) {
@@ -15,7 +15,7 @@
         }( window, document );
     </script>
     <script type="text/javascript" src="toc.js"></script>
-
+    
     <script type="text/javascript" src="aiconverter_result.js"></script>
     <link rel="stylesheet" type='text/css' href="typography.css"/>
     <link rel="stylesheet" type='text/css' href="styles.css"/>
@@ -35,31 +35,17 @@
 
 <body id="who-content">
 	<div class="cont">
-	<h2 id="t255715" class="heading2">Сборка проекта из исходного кода платформы</h2>
+	<h2 id="t255715" class="heading2">Сборка проекта для разработки решений на C++</h2>
 <p class="spacer"></p>
 <p class="showhideparagraph"><a class="jumptemplate" href="javascript:showAll('expandingblock')" target="_self">Развернуть все</a>&nbsp;|&nbsp;<a class="jumptemplate" href="javascript:hideAll('expandingblock')" target="_self">Свернуть все</a></p>
-<p class="bodytext">При работе с исходным кодом платформы вы можете указать параметры сборки вашего проекта в файле скрипта сборки CMakeLists.txt. </p>
-<p class="bodytext">В этом разделе приводится последовательность действий, которые требуется выполнить для настройки параметров сборки проекта, с помощью терминала Linux и текстового редактора vim. Вместо терминала Linux и редактора vim вы можете использовать любой другой инструмент разработки и текстовый редактор для работы с файлом скрипта сборки CMakeLists.txt.</p>
-<p class="bodytext">Подробнее о сборке проектов с помощью CMake см. <a class="hyperlinktemplate" href="https://cmake.org/documentation/" target="_blank">документацию CMake</a>.</p>
-<p class="procedureheading">Чтобы собрать проект из исходного кода на устройстве Linux:</p>
-<ol class="listnumber1"><li class="listnumber1">На вашем устройстве под управлением Linux откройте терминал и перейдите в <a id="h255894" class="crossreferencetemplate" href="235885.htm" target="_self">рабочую директорию</a> с помощью команды <code class="programcharacter">cd</code>:<p class="listcontinue1"><code class="programcharacter">cd &lt;</code><code class="programcharacterlocalized">путь к рабочей директории</code><code class="programcharacter">&gt;</code></p>
-</li><li class="listnumber1">В рабочей директории создайте файл скрипта сборки CMakeLists.txt с помощью текстового редактора vim:<p class="listcontinue1"><code class="programcharacter">vim CMakeLists.txt</code></p>
-<p class="attentioncontinue1">Вместо редактора vim вы можете использовать любой другой текстовый редактор.</p>
-</li><li class="listnumber1">В файле скрипта сборки укажите следующие параметры сборки вашего проекта:<p class="codeheadingkos">CMakeLists.txt</p>
-<p class="programckos"><code class="programcharacter">cmake_minimum_required(VERSION 3.22)</code></p>
-<p class="programckos"><code class="programcharacter">project(&lt;</code><code class="programcharacterlocalized">название проекта</code><code class="programcharacter">&gt;)</code></p>
-<p class="programckos"> </p>
-<p class="programckos"><code class="programcharacter">set(CMAKE_CXX_STANDARD 17)</code></p>
-<p class="programckos"> </p>
-<p class="programckos"><code class="programcharacter">add_subdirectory(KNP)</code></p>
-<p class="programckos"> </p>
-<p class="programckos"><code class="programcharacter">add_executable(&quot;${PROJECT_NAME}&quot; &lt;</code><code class="programcharacterlocalized">файл программы</code><code class="programcharacter">&gt;)</code></p>
-<p class="programckos"><code class="programcharacter">target_link_libraries(&quot;${PROJECT_NAME}&quot; PRIVATE &lt;</code><code class="programcharacterlocalized">подключаемые библиотеки платформы</code><code class="programcharacter">&gt;)</code></p>
-<p class="listcontinue1">где:</p>
-<ul class="listbullet2"><li class="listbullet2"><code class="programcharacter">project(&lt;</code><code class="programcharacterlocalized">название проекта</code><code class="programcharacter">&gt;)</code> определяет название проекта, например, <code class="programcharacter">project (my_project)</code>.</li><li class="listbullet2">&lt;<code class="programcharacterlocalized">файл программы</code>&gt; соответствует названию файла программы, например, main.cpp.</li><li class="listbullet2"><code class="programcharacter">target_link_libraries(&quot;${PROJECT_NAME}&quot; PRIVATE &lt;</code><code class="programcharacterlocalized">подключаемые библиотеки платформы</code><code class="programcharacter">&gt;)</code> определяет библиотеки, которые будут подключены к вашему проекту. Например, <code class="programcharacter">target_link_libraries(&quot;${PROJECT_NAME}&quot; PRIVATE KNP::BaseFramework::Core)</code> подключит к проекту фреймворк.</li></ul><p class="spacer">Примеры файла CMakeLists.txt:</p>
-<p class="listcontinue1">Примеры файла CMakeLists.txt:</p>
+<p class="bodytext">После <a id="h255810" class="crossreferencetemplate" href="235046.htm" target="_self">загрузки и распаковки</a> архива с исходным кодом платформы вы можете собрать проект для разработки прикладных решений на языке программирования C++ с помощью Kaspersky Neuromorphic Platform. Для этого необходимо указать параметры сборки проекта в корневом файле скрипта сборки CMakeLists.txt. </p>
+<p class="bodytext">Корневой файл CMakeLists.txt должен содержать следующие команды:</p>
+<ul class="listbullet1"><li class="listbullet1"><code class="programcharacter">cmake_minimum_required(VERSION 3.25)</code>&nbsp;&#8211; указание минимальной поддерживаемой версии CMake.<p class="listcontinue1">Для сборки проекта на базе Kaspersky Neuromorphic Platform требуется CMake версии не ниже 3.25.</p>
+</li><li class="listbullet1"><code class="programcharacter">project(&lt;</code><code class="programcharacterlocalized">название проекта</code><code class="programcharacter">&gt;)</code>&nbsp;&#8211; указание параметров проекта.</li><li class="listbullet1"><code class="programcharacter">set(CMAKE_CXX_STANDARD 17)</code>&nbsp;&#8211; указание C++ 17 в качестве используемого языкового стандарта. </li><li class="listbullet1"><code class="programcharacter">add_subdirectory(&lt;</code><code class="programcharacterlocalized">имя директории с исходным кодом платформы</code><code class="programcharacter">&gt;)</code>&nbsp;&#8211; указание директории, включающая программу, сборку которых требуется выполнить.</li><li class="listbullet1"><code class="programcharacter">add_executable(&quot;${PROJECT_NAME}&quot; &lt;</code><code class="programcharacterlocalized">файл программы</code><code class="programcharacter">&gt;)</code>&nbsp;&#8211; указание исполняемого файла. </li><li class="listbullet1"><code class="programcharacter">target_link_libraries(&quot;${PROJECT_NAME}&quot; PRIVATE &lt;</code><code class="programcharacterlocalized">подключаемые библиотеки платформы</code><code class="programcharacter">&gt;)</code>&nbsp;&#8211; определение библиотек, которые будут подключены к вашему проекту. </li></ul><p class="bodytext">Подробнее о сборке проектов с помощью CMake см. <a class="hyperlinktemplate" href="https://cmake.org/documentation/" target="_blank">документацию CMake</a>.</p>
+<p class="procedureheading">Чтобы собрать проект для разработки прикладных решений на C++:</p>
+<ol class="listnumber1"><li class="listnumber1">Перейдите в рабочую директорию.</li><li class="listnumber1">В рабочей директории создайте файл скрипта сборки CMakeLists.txt. </li><li class="listnumber1">Откройте созданный файл в любом текстовом редакторе и укажите параметры сборки проекта.<p class="listcontinue1">Примеры файла CMakeLists.txt:</p>
 <ul class="listbullet2"><li class="listbullet2"><a id="h257205" class="expandingblocktemplate" href="javascript:toggleBlock('257205')" target="_self">Пример файла CMakeLists.txt при загрузке динамических библиотек бекенда</a><div id="d257205" class="expandingblock" style="display:none"><p class="codeheadingkos">CMakeLists.txt</p>
-<p class="programckos">cmake_minimum_required(VERSION 3.22)</p>
+<p class="programckos">cmake_minimum_required(VERSION 3.25)</p>
 <p class="programckos">// simple-network&nbsp;&#8211; название проекта</p>
 <p class="programckos">project(simple-network)</p>
 <p class="programckos"> </p>
@@ -74,7 +60,7 @@
 <p class="programckos">target_link_libraries(&quot;${PROJECT_NAME}&quot; PRIVATE KNP::BaseFramework::Core)</p>
 </div></li><li class="listbullet2"><a id="h257207" class="expandingblocktemplate" href="javascript:toggleBlock('257207')" target="_self">Пример файла CMakeLists.txt без загрузки динамических библиотек бекенда</a><div id="d257207" class="expandingblock" style="display:none"><p class="bodytext">При сборке проекта без загрузки динамических библиотек требуется подключить библиотеки нужных бекендов с помощью метода <code class="programcharacter">target_link_libraries</code>. Перечислите необходимые библиотеки через пробел как в приведенном примере.</p>
 <p class="codeheadingkos">CMakeLists.txt</p>
-<p class="programckos">cmake_minimum_required(VERSION 3.22)</p>
+<p class="programckos">cmake_minimum_required(VERSION 3.25)</p>
 <p class="programckos">// digits-recognition&nbsp;&#8211; название проекта</p>
 <p class="programckos">project(digits-recognition)</p>
 <p class="programckos"> </p>
@@ -85,10 +71,9 @@
 <p class="programckos"> </p>
 <p class="programckos">// Добавляет бинарный файл с исходным кодом в файл программы main.cpp</p>
 <p class="programckos">add_executable(&quot;${PROJECT_NAME}&quot; main.cpp)</p>
-<p class="programckos">// Подключает фреймворк и библиотеку однопоточного бекенда для CPU к проекту simple-network. </p>
+<p class="programckos">// Подключает фреймворк и библиотеку однопоточного бекенда для CPU к проекту digits-recognition. </p>
 <p class="programckos">target_link_libraries(&quot;${PROJECT_NAME}&quot; PRIVATE KNP::BaseFramework::Core KNP::Backends::CPUSingleThreaded)</p>
-</div></li></ul></li><li class="listnumber1">Для сохранения изменений в файле скрипта сборки выполните следующие действия:<ol class="listalpha2"><li class="listalpha2">Нажмите на клавишу <kbd class="keycharacter">Esc</kbd>.</li><li class="listalpha2">Введите следующую строку:<p class="listcontinue2"><code class="programcharacter">:wq!</code></p>
-</li><li class="listalpha2">Нажмите на клавишу <kbd class="keycharacter">Enter</kbd>.</li></ol></li></ol>
+</div></li></ul></li><li class="listnumber1">Сохраните изменения в файле CMakeLists.txt.</li></ol>
 
 
 	<a href="#" class="bt-home">В начало</a>

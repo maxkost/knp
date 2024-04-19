@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="description" content=""/>
     <meta name="viewport" content="maximum-scale=1.0" />
-    <title> Форматы данных, обрабатываемые нейронной сетью </title>
+    <title> Форматы данных, обрабатываемые платформой </title>
     <script type="text/javascript" src="../langs.js"></script>
     <script type="text/javascript">
         !function ( w, d ) {
@@ -15,7 +15,7 @@
         }( window, document );
     </script>
     <script type="text/javascript" src="toc.js"></script>
-
+    
     <script type="text/javascript" src="aiconverter_result.js"></script>
     <link rel="stylesheet" type='text/css' href="typography.css"/>
     <link rel="stylesheet" type='text/css' href="styles.css"/>
@@ -34,9 +34,11 @@
 
 <body id="who-content">
 	<div class="cont">
-	<h3 id="t235877" class="heading3">Форматы данных, обрабатываемые нейронной сетью</h3>
-<p class="bodytext">В Kaspersky Neuromorphic Platform используются следующие форматы данных:</p>
-<ul class="listbullet1"><li class="listbullet1">MDF&nbsp;&#8211; формат хранения топологии нейронной сети для фреймворка.</li><li class="listbullet1">CSV&nbsp;&#8211; формат хранения состояния нейронов и синапсов нейронной сети для фреймворка.</li></ul>
+	<h2 id="t235877" class="heading2">Форматы данных, обрабатываемые платформой</h2>
+<p class="bodytext">Для хранения входных и выходных данных в виде временного ряда используется базовый формат Kaspersky Neuromorphic Platform. Файл базового формата содержит следующую информацию: </p>
+<ul class="listbullet1"><li class="listbullet1">Заголовок файла, содержащий следующую информацию:<ul class="listbullet2"><li class="listbullet2">версия формата файла;</li><li class="listbullet2">массив идентификаторов UID отправителей данных для каждого шага исполнения нейронной сети&nbsp;(опционально);</li><li class="listbullet2">массив тегов.</li></ul></li><li class="listbullet1">Входные или выходные данные представляют собой временной ряд, состоящий из списка структур со следующей информацией:<ul class="listbullet2"><li class="listbullet2">шаг исполнения нейронной сети, на котором были сгенерированы спайки;</li><li class="listbullet2">индексы нейронов, сгенерировавших спайки на этой шаге. </li></ul></li></ul><p class="bodytext">С помощью методов Kaspersky Neuromorphic Platform вы можете преобразовать файлы базового формата в сообщения <code class="programcharacter"><a id="h243744" class="crossreferencetemplate" href="243634.htm" target="_self">SpikeMessage</a></code>.</p>
+<p class="bodytext">Сообщения формата KNP сериализуются в следующие нотации:</p>
+<ul class="listbullet1"><li class="listbullet1">HDF5&nbsp;&#8211; основная нотация для хранения данных в бинарном виде;</li><li class="listbullet1">JSON&nbsp;&#8211; нотация объектов JavaScript, которая может быть использована для отладки работы нейронной сети.</li></ul><p class="bodytext">Помимо базового формата входные данные также могут храниться и быть переданы в виде CSV-файлов, в которых содержатся индексы нейронов, сгенерировавших спайки. CSV-файлы с входными данными могут быть переданы в объекты класса <code class="programcharacter"><a id="h244946" class="crossreferencetemplate" href="244944.htm" target="_self">IndexConverter</a></code> для их дальнейшей обработки в каналах ввода.</p>
 
 
 	<a href="#" class="bt-home">В начало</a>

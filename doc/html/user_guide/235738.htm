@@ -15,7 +15,7 @@
         }( window, document );
     </script>
     <script type="text/javascript" src="toc.js"></script>
-
+    
     <script type="text/javascript" src="aiconverter_result.js"></script>
     <link rel="stylesheet" type='text/css' href="typography.css"/>
     <link rel="stylesheet" type='text/css' href="styles.css"/>
@@ -35,7 +35,7 @@
 
 <body id="who-content">
 	<div class="cont">
-	<h2 id="t235738" class="heading2">Библиотека поддержки бекендов</h2>
+	<h3 id="t235738" class="heading3">Библиотека поддержки бекендов</h3>
 <p class="bodytext">В библиотеке поддержки бекендов реализуются интерфейсы к объектам, необходимым для работы бекендов и выполнения прикладных задач. Библиотека содержит пространство имен <code class="programcharacter">core</code>.</p>
 <p class="bodytext">Таблица ниже содержит описание объектов библиотеки.</p>
 <p class="spacerfortables"></p>
@@ -136,9 +136,9 @@
 </table>
 <p class="bodytext"></p>
 <p class="bodytext">На рисунке ниже представлена схема взаимодействия объектов библиотеки.</p>
-<p class="bodytext">В Kaspersky Neuromorphic Platform структура <code class="programcharacter">BaseData</code> содержит базовую информацию об объекте и включает в себя структуру <code class="programcharacter">UID</code> и объект класса <code class="programcharacter">TagMap</code>. Экземпляр структуры <code class="programcharacter">BaseData</code> используется в объектах классов <code class="programcharacter">Projection</code>, <code class="programcharacter">Population</code> и <code class="programcharacter">Backend</code>, соответственно каждый из этих объектов обладает идентификатором <code class="programcharacter">UID</code> и набором тегов и их значениями <code class="programcharacter">TagMap</code>.</p>
-<p class="bodytext">Объекты классов <code class="programcharacter">Population</code> и <code class="programcharacter">Projection</code> принимают и отправляют сообщения из пространства имен <code class="programcharacter">Messaging</code>, которые содержат в своем заголовке UID отправителя. Объект класса <code class="programcharacter">Projection</code> также получает информацию о соединениях из пространства имен <code class="programcharacter">synapse_access</code>. </p>
-<p class="bodytext">Каждый объект <code class="programcharacter">Backend</code> может работать на нескольких устройствах и содержать соответствующее количество экземпляров классов <code class="programcharacter">Device</code> и <code class="programcharacter">MessageBus</code>. Объект <code class="programcharacter">MessageBus</code> создает экземпляры класса <code class="programcharacter">MessageEndpoint</code> и взаимодействует с ними в процессе обмена сообщениями. Каждый объект <code class="programcharacter">MessageEndpoint</code> содержит контейнер подписок класса <code class="programcharacter">Subscription</code>.</p>
+<p class="bodytext">В Kaspersky Neuromorphic Platform структура <code class="programcharacter">BaseData</code> содержит базовую информацию об объекте и включает в себя <code class="programcharacter">UID</code> и <code class="programcharacter">TagMap</code>. Структура <code class="programcharacter">BaseData</code> используется в классах <code class="programcharacter">Projection</code>, <code class="programcharacter">Population</code> и <code class="programcharacter">Backend</code>, соответственно каждый из них обладает идентификатором <code class="programcharacter">UID</code> и набором тегов и их значениями <code class="programcharacter">TagMap</code>.</p>
+<p class="bodytext">Классы <code class="programcharacter">Population</code> и <code class="programcharacter">Projection</code> принимают и отправляют сообщения из пространства имен <code class="programcharacter">Messaging</code>, которые содержат в своем заголовке UID отправителя.  </p>
+<p class="bodytext">Класс <code class="programcharacter">Backend</code> содержит классы <code class="programcharacter">Device</code> и <code class="programcharacter">MessageBus</code>. Шина сообщений <code class="programcharacter">MessageBus</code> создает точки подключения <code class="programcharacter">MessageEndpoint</code> и взаимодействует с ними в процессе обмена сообщениями. Каждая точка подключения <code class="programcharacter">MessageEndpoint</code> содержит контейнер подписок класса <code class="programcharacter">Subscription</code>.</p>
 <p class="picture"><img id="f249625" src="corelibrary.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
 <p class="picturename">Схема взаимодействия объектов библиотеки поддержки бекендов</p>
 

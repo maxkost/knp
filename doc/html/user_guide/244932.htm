@@ -15,7 +15,7 @@
         }( window, document );
     </script>
     <script type="text/javascript" src="toc.js"></script>
-
+    
     <script type="text/javascript" src="aiconverter_result.js"></script>
     <link rel="stylesheet" type='text/css' href="typography.css"/>
     <link rel="stylesheet" type='text/css' href="styles.css"/>
@@ -34,8 +34,8 @@
 
 <body id="who-content">
 	<div class="cont">
-	<h3 id="t244932" class="heading3">Класс MessageBus</h3>
-<p class="bodytext">Класс <code class="programcharacter">MessageBus</code> реализует интерфейс для доступа к шине сообщений, которая обеспечивает прием, распределение и доставку <a id="h243744" class="crossreferencetemplate" href="243634.htm" target="_self">сообщений</a> между объектами, подключенными к <a id="h235739" class="crossreferencetemplate" href="235738.htm" target="_self">библиотеке поддержки бекенда</a>. Объект класса <code class="programcharacter">MessageBus</code> предоставляет множество <a id="h247160" class="crossreferencetemplate" href="247159.htm" target="_self">точек подключения</a>, с помощью которых объекты библиотеки поддержки бекендов могут подписаться на сообщения или отправить их. </p>
+	<h4 id="t244932" class="heading4">Класс MessageBus</h4>
+<p class="bodytext">Класс <code class="programcharacter">MessageBus</code> реализует интерфейс для доступа к шине сообщений, которая обеспечивает прием, распределение и доставку <a id="h243744" class="crossreferencetemplate" href="243634.htm" target="_self">сообщений</a> между подключенными к ней объектами. Объект класса <code class="programcharacter">MessageBus</code> предоставляет множество <a id="h247160" class="crossreferencetemplate" href="247159.htm" target="_self">точек подключения</a>, с помощью которых объекты библиотеки поддержки бекендов могут подписаться на сообщения или отправить их. </p>
 <p class="bodytext">Класс <code class="programcharacter">MessageBus</code> предоставляет методы, которые возвращают используемые точки подключения. Если вы удалите точку подключения, то передача сообщений с помощью этой точки подключения прекратится.</p>
 <p class="bodytext">Использование шины сообщений позволяет реализовать принцип &quot;издатель-подписчик&quot;. Издатель отправляет сообщения через посредника, в качестве которого выступает шина сообщений. <a id="h250728" class="crossreferencetemplate" href="250697.htm" target="_self">Объект подписки</a> фильтрует сообщения и отправляет их подписчикам. Подобный подход позволяет избежать создания большого количества IPC-каналов, поскольку издатель и подписчики не связаны напрямую.</p>
 
