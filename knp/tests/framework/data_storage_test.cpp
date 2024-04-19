@@ -50,7 +50,7 @@ bool is_equal_spike_message_vector(
 }
 
 
-TEST(SaveLoadSuite, SaveLoadDataTest)
+TEST(SaveLoadSuite, Hdf5Test)
 {
     knp::core::UID uid;
     auto messages = generate_random_messages(uid, 200, 20, 0.2);
@@ -58,4 +58,15 @@ TEST(SaveLoadSuite, SaveLoadDataTest)
     knp::framework::save_messages_to_h5(messages, path_to_h5, 1.0F);
     auto loaded_messages = knp::framework::load_messages_from_h5(path_to_h5, uid, 1.0F);
     ASSERT_TRUE(is_equal_spike_message_vector(messages, loaded_messages));
+}
+
+
+TEST(SaveLoadSuite, JsonTest)
+{
+    knp::core::UID uid;
+    auto messages = generate_random_messages(uid, 200, 20, 0.2);
+    std::filesystem::path path_to_json = "data.json";
+    knp::framework::save_messages_to_json(messages, path_to_json);
+    auto loaded_messages = knp::framework::load_messages_from_json(path_to_json, uid);
+    ASSERT_EQ(messages, loaded_messages);
 }

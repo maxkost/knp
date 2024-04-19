@@ -8,8 +8,12 @@
 #include <knp/framework/io/data_storage.h>
 
 #include <hdf5.h>
+#include <simdjson.h>
 
 #include <filesystem>
+#include <fstream>
+
+#include <boost/format.hpp>
 
 #include "sonata/highfive.h"
 
@@ -35,10 +39,45 @@ std::vector<size_t> from_spikes_to_data(
 }
 
 
+std::vector<core::messaging::SpikeMessage> convert_node_time_arrays_to_messages(
+    const std::vector<int64_t> &nodes, const std::vector<float> &timestamps, const knp::core::UID &uid,
+    float time_per_step)
+{
+    if (nodes.size() != timestamps.size()) throw std::runtime_error("Different array sizes: nodes and timestamps.");
+    using Message = core::messaging::SpikeMessage;
+    std::unordered_map<size_t, Message> message_map;  // Result buffer
+    for (size_t i = 0; i < timestamps.size(); ++i)
+    {
+        auto step = static_cast<core::Step>(timestamps[i] / time_per_step);
+        auto index = nodes[i];
+        auto iterator = message_map.find(step);
+        if (iterator == message_map.end())
+        {
+            Message message{{uid, step}, std::vector<core::messaging::SpikeIndex>(1, index)};
+            message_map.insert({step, std::move(message)});
+        }
+        else
+            iterator->second.neuron_indexes_.push_back(index);
+    }
+
+    // move messages from map to vector, O(N_messages)
+    std::vector<Message> result;
+    result.reserve(message_map.size());
+    std::transform(
+        message_map.begin(), message_map.end(), std::back_inserter(result),
+        [](auto &val) { return std::move(val.second); });
+
+    // Sort message vector by message step.
+    std::sort(
+        result.begin(), result.end(),
+        [](const Message &msg1, const Message &msg2) { return msg1.header_.send_time_ < msg2.header_.send_time_; });
+    return result;
+}
+
+
 std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
     const fs::path &path_to_h5, const knp::core::UID &uid, float time_per_step)
 {
-    using Message = knp::core::messaging::SpikeMessage;
     HighFive::File h5_file(path_to_h5);
 
     // Check magic number
@@ -87,35 +126,7 @@ std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
     std::vector<int64_t> nodes(node_dataset.getElementCount());
     node_dataset.read(nodes);
 
-    // Using unordered map: if the file is sorted by node ID, it still allows inserting messages by step in O(1)
-    std::unordered_map<size_t, Message> message_map;  // Result buffer
-    for (size_t i = 0; i < timestamps.size(); ++i)
-    {
-        auto step = static_cast<core::Step>(timestamps[i] / time_per_step);
-        auto index = nodes[i];
-        auto iterator = message_map.find(step);
-        if (iterator == message_map.end())
-        {
-            Message message{{uid, step}, std::vector<core::messaging::SpikeIndex>(1, index)};
-            message_map.insert({step, std::move(message)});
-        }
-        else
-            iterator->second.neuron_indexes_.push_back(index);
-    }
-
-    // move messages from map to vector, O(N_messages)
-    std::vector<Message> result;
-    result.reserve(message_map.size());
-    std::transform(
-        message_map.begin(), message_map.end(), std::back_inserter(result),
-        [](auto &val) { return std::move(val.second); });
-
-    // Sort message vector by message step.
-    std::sort(
-        result.begin(), result.end(),
-        [](const Message &msg1, const Message &msg2) { return msg1.header_.send_time_ < msg2.header_.send_time_; });
-
-    return result;
+    return convert_node_time_arrays_to_messages(nodes, timestamps, uid, time_per_step);
 }
 
 
@@ -157,7 +168,195 @@ void save_messages_to_h5(
 
     // Create datasets
     spike_group.createDataSet("node_ids", nodes);
-    spike_group.createDataSet("timestamps", timestamps).createAttribute("units", "ms");
+    spike_group.createDataSet("timestamps", timestamps).createAttribute("units", "step");
 }
 
+
+// clang-format off // No const operator[] for simdjson document, so no const parameter.
+bool is_json_has_magic(simdjson::ondemand::document &doc)  // cppcheck-suppress constParameter
+// clang-format on
+{
+    auto attributes = doc["attributes"];
+    if (attributes.error()) return false;
+    bool has_magic = false;
+    for (auto group : attributes)
+    {
+        if (group["name"] == "magic")
+        {
+            if (group["value"].get<int64_t>() != 2682) break;
+            has_magic = true;
+            break;
+        }
+    }
+    return has_magic;
+}
+
+
+std::vector<core::messaging::SpikeMessage> load_messages_from_json(
+    const fs::path &path_to_json, const knp::core::UID &uid)
+{
+    simdjson::ondemand::parser parser;
+    auto simdjson_result = simdjson::padded_string::load(path_to_json.string());
+    if (simdjson_result.error()) throw std::runtime_error("Cannot read file " + path_to_json.string());
+    simdjson::ondemand::document doc = parser.iterate(simdjson_result);
+
+    if (!is_json_has_magic(doc)) throw std::runtime_error("Unable to find magic number: wrong file format or version");
+
+    auto spikes_group = doc["spikes"];
+    if (spikes_group.error()) throw std::runtime_error(R"--(Unable to find "spikes" group in data file.)--");
+
+    // Read node ids
+    auto nodes_array = spikes_group["node_ids"];
+    if (nodes_array.error()) throw std::runtime_error(R"--(No "node_ids" array in "spikes" group.)--");
+    auto nodes_array_val = nodes_array["value"];
+    if (nodes_array_val.error()) throw std::runtime_error(R"--(Missing nodes data in json data file.)--");
+    auto pre_array_nodes = nodes_array_val.get_array();
+    if (pre_array_nodes.error()) throw std::runtime_error("Missing node data in json data file");
+    std::vector<int64_t> nodes;
+    nodes.reserve(pre_array_nodes.count_elements());
+    std::transform(
+        pre_array_nodes.begin(), pre_array_nodes.end(), std::back_inserter(nodes),
+        [](auto val) { return val.get_int64(); });  // no const reference val possible
+
+    // Read timestamps
+    auto timestamps_array = spikes_group["timestamps"];
+    if (timestamps_array.error()) throw std::runtime_error(R"--(No "timestamps" array in "spikes" group.)--");
+    auto times_array_val = timestamps_array["value"];
+    auto pre_array_times = times_array_val.get_array();
+    if (times_array_val.error()) throw std::runtime_error(R"--(Missing timestamps data in json data file.)--");
+    if (pre_array_times.error()) throw std::runtime_error("Missing timestamp data in json data file");
+    std::vector<float> timestamps;
+    timestamps.reserve(pre_array_times.count_elements());
+    std::transform(
+        pre_array_times.begin(), pre_array_times.end(), std::back_inserter(timestamps),
+        [](auto val) { return static_cast<float>(val.get_double()); });  // no const reference val possible
+
+
+    return convert_node_time_arrays_to_messages(nodes, timestamps, uid, 1);
+}
+
+
+const char header_string[] =
+    R"--("attributes": [
+{
+    "name": "magic",
+            "type": {
+        "class": "Integer (unsigned)",
+                "size": 32,
+                "endianness": "little-endian"
+    },
+    "value": 2682
+},
+{
+    "name": "version",
+            "shape": [2],
+    "type": {
+        "class": "Integer (unsigned)",
+        "size": 32,
+        "endianness": "little-endian"
+    },
+    "value": [0, 1]
+}
+])--";
+
+
+const char spike_attributes[] =
+    R"--("attributes": [
+      {
+        "name": "sorting",
+        "type": {
+          "class": "Enumeration",
+          "mapping": {
+            "by_id": 1,
+            "by_time": 2,
+            "none": 0
+          }
+        },
+        "value": "by_time"
+      }
+    ])--";
+
+
+const char node_structure[] =
+    R"--("node_ids": {
+      "shape": [%d],
+      "type": {
+        "class": "Integer (unsigned)",
+        "size": 64,
+        "endianness": "little-endian"
+      },
+      "value": [%s]
+    })--";
+
+
+const char timestamp_structure[] =
+    R"--("timestamps": {
+      "attributes": [
+        {
+          "name": "units",
+          "type": {
+            "class": "String",
+            "charSet": "ASCII"
+          },
+          "value": "step"
+        }
+      ],
+      "shape": [%d],
+      "type": {
+        "class": "Float",
+        "endianness": "little-endian"
+      },
+      "value": [%s]
+    })--";
+
+
+const char whole_file_string[] =
+    R"--(
+{
+    %s,
+    "spikes" :
+        {
+            %s,
+            %s,
+            %s
+        }
+    }
+)--";
+
+
+void save_messages_to_json(
+    std::vector<core::messaging::SpikeMessage> messages, const std::filesystem::path &path_to_save)
+{
+    boost::format format_nodes(node_structure);
+    boost::format format_times(timestamp_structure);
+    boost::format format_file(whole_file_string);
+    std::ostringstream node_stream;
+    std::ostringstream time_stream;
+    std::sort(
+        messages.begin(), messages.end(),
+        [](const auto &msg1, const auto &msg2) { return msg1.header_.send_time_ < msg2.header_.send_time_; });
+    size_t count = 0;
+    for (const auto &msg : messages)
+    {
+        for (auto index : msg.neuron_indexes_)
+        {
+            node_stream << index << ", ";
+            time_stream << msg.header_.send_time_ << ", ";
+            ++count;
+        }
+    }
+    std::string node_string = node_stream.str();
+    std::string time_string = time_stream.str();
+    if (node_string.size() > 2)
+    {
+        // remove last comma
+        node_string.resize(node_string.size() - 2);
+        time_string.resize(time_string.size() - 2);
+    }
+    std::string nodes_res = (format_nodes % count % node_string).str();
+    std::string times_res = (format_times % count % time_string).str();
+    std::string file_string = (format_file % header_string % spike_attributes % nodes_res % times_res).str();
+    std::ofstream out_file(path_to_save, std::ofstream::out);
+    out_file << file_string;
+}
 }  // namespace knp::framework
