@@ -116,7 +116,7 @@ add_third_party(NAME "libsonata"
                     "SONATA_TESTS OFF"
                     "SONATA_VERSION 1.0")
 
-add_third_party("gh:p-ranav/csv2")
+add_third_party("gh:p-ranav/csv2@0.1")
 add_third_party("gh:zeromq/libzmq@4.3.5")
 add_third_party("gh:zeromq/cppzmq@4.10.0")
 
