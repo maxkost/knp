@@ -99,14 +99,13 @@ include(print-variables)
 # Build third-party.
 #
 
+set(CPM_SOURCE_CACHE "${CMAKE_CURRENT_SOURCE_DIR/third-party}" CACHE STRING "")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/third-party)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 
 # Make cache variables for install destinations.
 include(GNUInstallDirs)
-
-include(print-variables)
 
 add_third_party(NAME "libsonata"
                 GIT_REPOSITORY "https://github.com/BlueBrain/libsonata"
@@ -117,10 +116,14 @@ add_third_party(NAME "libsonata"
                     "SONATA_VERSION 1.0")
 
 add_third_party("gh:p-ranav/csv2@0.1")
-add_third_party("gh:zeromq/libzmq@4.3.5")
+add_third_party(NAME "ZeroMQ"
+                GIT_REPOSITORY "https://github.com/libzmq"
+                VERSION "4.3.5"
+                OPTIONS
+                    "WITH_DOCS OFF"
+                    "BUILD_TESTS OFF"
+                    "ENABLE_CPACK OFF")
 add_third_party("gh:zeromq/cppzmq@4.10.0")
-
-include(print-variables)
 
 add_third_party(NAME "flatbuffers"
                 GIT_REPOSITORY "https://github.com/google/flatbuffers"

@@ -5,7 +5,6 @@
 include_guard(GLOBAL)
 
 include(CPM)
-set(CPM_)
 # include("git")
 
 
