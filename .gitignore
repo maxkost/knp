@@ -79,6 +79,7 @@ gmon.out
 
 *.gcda
 *.gcno
+*.gcov
 
 
 # OCLint
