@@ -3941,562 +3941,597 @@ input.search__field::-ms-clear {
       -ms-flex-negative: 0;
           flex-shrink: 0;
   display: inline-block;
-  width: 56px;
-  height: 64px;
+  width: 64px;
+  height: 72px;
   background: url(product_logo.png) no-repeat center;
 }
 .top-bar__product_kisa {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -30px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -26px -30px;
 }
 .top-bar__product_kpm {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -106px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -102px -30px;
 }
 .top-bar__product_safe-kids {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -182px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -178px -30px;
 }
 .top-bar__product_safe-browser {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -258px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -254px -30px;
 }
 .top-bar__product_free-tools {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -334px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -330px -30px;
 }
 .top-bar__product_kav {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -410px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -406px -30px;
 }
 .top-bar__product_kis-md {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -486px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -482px -30px;
 }
 .top-bar__product_kts-md {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -562px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -558px -30px;
 }
 .top-bar__product_sec-connection {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -638px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -634px -30px;
 }
 .top-bar__product_kss {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -714px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -710px -30px;
 }
 .top-bar__product_my-kas {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -790px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -786px -30px;
 }
 .top-bar__product_ksu {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -866px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -862px -30px;
 }
 .top-bar__product_kis-mac {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -942px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -938px -30px;
 }
 .top-bar__product_kvs-mac {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1018px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1014px -30px;
 }
 .top-bar__product_saas {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1094px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1090px -30px;
 }
 .top-bar__product_qr-scanner {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1170px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1166px -30px;
 }
 .top-bar__product_kvrt {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1246px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1242px -30px;
 }
 .top-bar__product_whocalls {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1322px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1318px -30px;
 }
 .top-bar__product_bl {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1398px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1394px -30px;
 }
 .top-bar__product_kart-home {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1474px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1470px -30px;
 }
 .top-bar__product_account {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1550px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1546px -30px;
 }
 .top-bar__product_kaspersky {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1626px -30px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1622px -30px;
 }
 .top-bar__product_kes {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -30px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -26px -148px;
 }
 .top-bar__product_ks-virtual {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -106px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -102px -148px;
 }
 .top-bar__product_kfp {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -182px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -178px -148px;
 }
 .top-bar__product_ksos {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -258px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -254px -148px;
 }
 .top-bar__product_kes-cloud {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -334px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -330px -148px;
 }
 .top-bar__product_ks-mail-server {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -410px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -406px -148px;
 }
 .top-bar__product_ks-collab {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -486px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -482px -148px;
 }
 .top-bar__product_threat-data-feeds {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -562px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -558px -148px;
 }
 .top-bar__product_ksws {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -638px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -634px -148px;
 }
 .top-bar__product_industrial-security {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -714px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -710px -148px;
 }
 .top-bar__product_ks-file-server {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -790px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -786px -148px;
 }
 .top-bar__product_ks-mobile-devices {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -866px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -862px -148px;
 }
 .top-bar__product_anti-apt {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -942px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -938px -148px;
 }
 .top-bar__product_arw {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1018px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1014px -148px;
 }
 .top-bar__product_ksc {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1094px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1090px -148px;
 }
 .top-bar__product_kas-maltego {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1170px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1166px -148px;
 }
 .top-bar__product_kfs {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1246px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1242px -148px;
 }
 .top-bar__product_MSP {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1322px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1318px -148px;
 }
 .top-bar__product_ks4mo {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1398px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1394px -148px;
 }
 .top-bar__product_kes-linux {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1474px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1470px -148px;
 }
 .top-bar__product_kes-mac {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1550px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1546px -148px;
 }
 .top-bar__product_webtraffic {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1626px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1622px -148px;
 }
 .top-bar__product_ks-virtual-la {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1702px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1698px -148px;
 }
 .top-bar__product_feed-utility {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1778px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1774px -148px;
 }
 .top-bar__product_scan-engine {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1854px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1850px -148px;
 }
 .top-bar__product_kos {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -1930px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -1926px -148px;
 }
 .top-bar__product_kostc {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -2006px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -2002px -148px;
 }
 .top-bar__product_kesb {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -2082px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -2078px -148px;
 }
 .top-bar__product_iot {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -2158px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -2154px -148px;
 }
 .top-bar__product_sandbox {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -2234px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -2230px -148px;
 }
 .top-bar__product_ksc-cc {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -2310px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -2306px -148px;
 }
 .top-bar__product_ess {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -2386px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -2382px -148px;
 }
 .top-bar__product_kedr {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -2462px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -2458px -148px;
 }
 .top-bar__product_mdr {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -2538px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -2534px -148px;
 }
 .top-bar__product_aot {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -2614px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -2610px -148px;
 }
 .top-bar__product_exchange {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -2690px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -2686px -148px;
 }
 .top-bar__product_smg {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -2766px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -2762px -148px;
 }
 .top-bar__product_linux-mail {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -2842px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -2838px -148px;
 }
 .top-bar__product_asap {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -2918px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -2914px -148px;
 }
 .top-bar__product_kdp {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -2994px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -2990px -148px;
 }
 .top-bar__product_kea {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -3070px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -3066px -148px;
 }
 .top-bar__product_kuma {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -3146px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -3142px -148px;
 }
 .top-bar__product_disconnected {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -3222px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -3218px -148px;
 }
 .top-bar__product_cloud-edr {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -3298px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -3294px -148px;
 }
 .top-bar__product_kics-for-networks {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -3374px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -3370px -148px;
 }
 .top-bar__product_kics-edr {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -3450px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -3446px -148px;
 }
 .top-bar__product_polys {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -3526px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -3522px -148px;
 }
 .top-bar__product_mlad {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -3602px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -3598px -148px;
 }
 .top-bar__product_knp {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -3678px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -3674px -148px;
 }
 .top-bar__product_sd-wan {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -3754px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -3750px -148px;
 }
 .top-bar__product_ksmm {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -3830px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -3826px -148px;
 }
 .top-bar__product_educational-services {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -3906px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -3902px -148px;
 }
 .top-bar__product_xdr {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -3982px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -3978px -148px;
 }
 .top-bar__product_kcs {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -4058px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -4054px -148px;
 }
 .top-bar__product_kess-linux {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -4134px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -4130px -148px;
 }
 .top-bar__product_cybertrace {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -4210px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -4206px -148px;
 }
 .top-bar__product_kips {
-  background-image: url("/static/products-64_34.png");
-  -moz-background-size: 4372px;
-    -o-background-size: 4372px;
-       background-size: 4372px;
-  background-position: -4286px -148px;
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -4282px -148px;
+}
+.top-bar__product_kosmobile {
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -4358px -148px;
+}
+.top-bar__product_kasg {
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -4434px -148px;
+}
+.top-bar__product_appicenter-for-dev {
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -4510px -148px;
+}
+.top-bar__product_next {
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -4586px -148px;
+}
+.top-bar__product_research-sandbox {
+  background-image: url("/static/products-64_39.png");
+  -moz-background-size: 4752px;
+    -o-background-size: 4752px;
+       background-size: 4752px;
+  background-position: -4662px -148px;
 }
 .ie7 .top-bar__product,
 .ie8 .top-bar__product,
@@ -5015,78 +5050,122 @@ input.search__field::-ms-clear {
  *  Vendor
  *
  */
-/*
-github.com style (c) Vasily Polovnyov <vast@whiteants.net>
-*/
-.hljs-comment,
-.hljs-quote {
-  color: #998;
-  font-style: italic;
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
 }
+code.hljs {
+  padding: 3px 5px;
+}
+/*!
+    Theme: GitHub
+    Description: Light theme as seen on github.com
+    Author: github.com
+    Maintainer: @Hirse
+    Updated: 2021-05-15
+  
+    Outdated base version: https://github.com/primer/github-syntax-light
+    Current colors taken from GitHub's CSS
+  */
+.hljs {
+  color: #24292e;
+  background: #ffffff;
+}
+.hljs-doctag,
 .hljs-keyword,
-.hljs-selector-tag,
-.hljs-subst {
-  color: #333;
-  font-weight: bold;
-}
-.hljs-number,
-.hljs-literal,
-.hljs-variable,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
 .hljs-template-variable,
-.hljs-tag .hljs-attr {
-  color: #008080;
-}
-.hljs-string,
-.hljs-doctag {
-  color: #d14;
+.hljs-type,
+.hljs-variable.language_ {
+  /* prettylights-syntax-keyword */
+  color: #d73a49;
 }
 .hljs-title,
-.hljs-section,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+  /* prettylights-syntax-entity */
+  color: #6f42c1;
+}
+.hljs-attr,
+.hljs-attribute,
+.hljs-literal,
+.hljs-meta,
+.hljs-number,
+.hljs-operator,
+.hljs-variable,
+.hljs-selector-attr,
+.hljs-selector-class,
 .hljs-selector-id {
-  color: #900;
-  font-weight: bold;
-}
-.hljs-subst {
-  font-weight: normal;
-}
-.hljs-type,
-.hljs-class .hljs-title {
-  color: #458;
-  font-weight: bold;
-}
-.hljs-tag,
-.hljs-name,
-.hljs-attribute {
-  color: #000080;
-  font-weight: normal;
+  /* prettylights-syntax-constant */
+  color: #005cc5;
 }
 .hljs-regexp,
-.hljs-link {
-  color: #009926;
-}
-.hljs-symbol,
-.hljs-bullet {
-  color: #990073;
+.hljs-string,
+.hljs-meta .hljs-string {
+  /* prettylights-syntax-string */
+  color: #043f83;
 }
 .hljs-built_in,
-.hljs-builtin-name {
-  color: #0086b3;
+.hljs-symbol {
+  /* prettylights-syntax-variable */
+  color: #e36209;
 }
-.hljs-meta {
-  color: #999;
+.hljs-comment,
+.hljs-code,
+.hljs-formula {
+  /* prettylights-syntax-comment */
+  color: #6a737d;
+}
+.hljs-name,
+.hljs-quote,
+.hljs-selector-tag,
+.hljs-selector-pseudo {
+  /* prettylights-syntax-entity-tag */
+  color: #22863a;
+}
+.hljs-subst {
+  /* prettylights-syntax-storage-modifier-import */
+  color: #24292e;
+}
+.hljs-section {
+  /* prettylights-syntax-markup-heading */
+  color: #005cc5;
   font-weight: bold;
 }
-.hljs-deletion {
-  background: #fdd;
-}
-.hljs-addition {
-  background: #dfd;
+.hljs-bullet {
+  /* prettylights-syntax-markup-list */
+  color: #735c0f;
 }
 .hljs-emphasis {
+  /* prettylights-syntax-markup-italic */
+  color: #24292e;
   font-style: italic;
 }
 .hljs-strong {
+  /* prettylights-syntax-markup-bold */
+  color: #24292e;
   font-weight: bold;
+}
+.hljs-addition {
+  /* prettylights-syntax-markup-inserted */
+  color: #22863a;
+  background-color: #f0fff4;
+}
+.hljs-deletion {
+  /* prettylights-syntax-markup-deleted */
+  color: #b31d28;
+  background-color: #ffeef0;
+}
+.hljs-char.escape_,
+.hljs-link,
+.hljs-params,
+.hljs-property,
+.hljs-punctuation,
+.hljs-tag {
+  /* purposely ignored */
 }
 /*
 !*

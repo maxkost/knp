@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="maximum-scale=1.0" />
+    <title> Создание и обучение нейронной сети из тернарных слоев для классификации изображений </title>
+    <script type="text/javascript" src="../langs.js"></script>
+    <script type="text/javascript">
+        !function ( w, d ) {
+            var scriptsPath="";
+            d.writeln("\x3Cscript type='text/javascript' src='"+scriptsPath+d.documentElement.lang+".js'>\x3C/script>");
+        }( window, document );
+    </script>
+    <script type="text/javascript" src="toc.js"></script>
+    
+    <script type="text/javascript" src="aiconverter_result.js"></script>
+    <link rel="stylesheet" type='text/css' href="typography.css"/>
+    <link rel="stylesheet" type='text/css' href="styles.css"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="favicon.png" type="image/png"/>
+
+            <!--[if lte IE 9]>
+                <link rel="stylesheet" type="text/css" href="bootstrap.css">
+            <![endif]-->
+            <!--[if lte IE 8]>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+            <![endif]-->
+            </head>
+
+<body id="who-content">
+	<div class="cont">
+	<h3 id="t273484" class="heading3">Создание и обучение нейронной сети из тернарных слоев для классификации изображений</h3>
+<p class="bodytext">Этот раздел содержит инструкции по созданию нейронной сети для классификации изображений и ее обучению. Нейронная сеть создана с помощью тернарных слоев библиотеки ANN2SNN. </p>
+<p class="procedureheading">Чтобы создать и обучить нейронную сеть из тернарных слоев для классификации изображений:</p>
+<ol class="listnumber1"><li class="listnumber1">В директории вашего проекта создайте файл программы с расширением .py, в котором будет создана и обучена нейронная сеть.</li><li class="listnumber1">В файле программы импортируйте модули библиотек, необходимые для создания и исполнения нейронной сети.<p class="listcontinue1">Если требуется, определите псевдонимы с помощью оператора <code class="programcharacter">as</code>.</p>
+<p class="listcontinue1">Пример подключения объектов для создания и исполнения сверточной нейронной сети:</p>
+<p class="codeheadingkos">Python</p>
+<p class="programpythonkos">from altainn.ternary_tf2.layers import TernaryConv2D, TernaryDense</p>
+<p class="programpythonkos">from tensorflow.keras.models import Sequential</p>
+<p class="programpythonkos">from tensorflow.keras.layers import Flatten, Dense</p>
+<p class="programpythonkos">from altainn.binarynet_tf2.layers import Clip</p>
+<p class="programpythonkos">from altainn.ternary_tf2.ops import heaviside_mod as heaviside</p>
+<p class="programpythonkos">import tensorflow as tf</p>
+</li><li class="listnumber1">Создайте нейронную сеть. Укажите сигмоидную функцию в качестве функции активации для выходного слоя.<p class="listcontinue1">Пример создания нейронной сети с тремя сверточными слоями:</p>
+<p class="codeheadingkos">Python</p>
+<p class="programpythonkos">model = Sequential(</p>
+<p class="programpythonkos">[TernaryConv2D(3, 2, activation=heaviside, input_shape=(28, 28, 1)),</p>
+<p class="programpythonkos">TernaryConv2D(6, 3, activation=heaviside),</p>
+<p class="programpythonkos">TernaryConv2D(6, 3, activation=heaviside),</p>
+<p class="programpythonkos">Flatten(),</p>
+<p class="programpythonkos">TernaryDense(10, activation=&quot;sigmoid&quot;)])</p>
+<p class="programpythonkos">model.compile(optimizer=&quot;adam&quot;, loss=&quot;categorical_crossentropy&quot;, metrics=[&quot;accuracy&quot;])</p>
+</li><li class="listnumber1">Подготовьте данные для обучения.<p class="listcontinue1">Пример подготовки данных MNIST для обучения:</p>
+<p class="codeheadingkos">Python</p>
+<p class="programpythonkos"># Загружает данные MNIST для обучения</p>
+<p class="programpythonkos">(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data() </p>
+<p class="programpythonkos"># Кодирует целевые метки</p>
+<p class="programpythonkos">y_train = tf.keras.utils.to_categorical(y_train) </p>
+<p class="programpythonkos">y_test = tf.keras.utils.to_categorical(y_test) </p>
+<p class="programpythonkos"></p>
+<p class="programpythonkos"># Нормализует входные данные</p>
+<p class="programpythonkos">x_train = x_train / 255.0 </p>
+<p class="programpythonkos">x_test = x_test / 255.0</p>
+<p class="programpythonkos"># Приводит входные данные в бинарный вид</p>
+<p class="programpythonkos">x_train[x_train &gt; 0.5] = 1 </p>
+<p class="programpythonkos">x_train[x_train &lt;= 0.5] = 0</p>
+<p class="programpythonkos">	</p>
+<p class="programpythonkos">x_test[x_test &gt; 0.5] = 1</p>
+<p class="programpythonkos">x_test[x_test &lt;= 0.5] = 0</p>
+<p class="programpythonkos"># Меняет размерность данных из (28, 28) в (28, 28, 1) для правильной работы сверточных слоев	</p>
+<p class="programpythonkos">x_train = x_train.reshape(x_train.shape + (1,)) </p>
+<p class="programpythonkos">x_test = x_test.reshape(x_test.shape + (1,))</p>
+</li><li class="listnumber1">Создайте Callback-функцию для сохранения нейронной сети.<p class="listcontinue1">Пример Callback-функции:</p>
+<p class="codeheadingkos">Python</p>
+<p class="programpythonkos">#Сохраняет обученную нейронную сеть в файле mnist.h5 </p>
+<p class="programpythonkos">model_chekpoint_callback = ModelCheckpoint(</p>
+<p class="programpythonkos">    filepath=&quot;mnist.h5&quot;,</p>
+<p class="programpythonkos">    monitor=&quot;accuracy&quot;,</p>
+<p class="programpythonkos">    mode=&quot;max&quot;,</p>
+<p class="programpythonkos">    save_best_only=True</p>
+</li><li class="listnumber1">Обучите нейронную сеть.<p class="listcontinue1">Пример обучения нейронной сети:</p>
+<p class="codeheadingkos">Python</p>
+<p class="programpythonkos"># Запускает обучение на тренировочных данных</p>
+<p class="programpythonkos">model.fit(x_train, y_train, epochs = 15, verbose = 1, callbacks=[model_chekpoint_callback]) </p>
+<p class="programpythonkos"># Загружает обученную модель</p>
+<p class="programpythonkos">model = load_model(&quot;mnist.h5&quot;, custom_objects = {&quot;heaviside_mod&quot;: heaviside, &quot;TernaryDense&quot;: TernaryDense, </p>
+<p class="programpythonkos">    &quot;TernaryConv2D&quot;: TernaryConv2D, &quot;Clip&quot;: Clip})</p>
+<p class="programpythonkos">#Оценивает точность нейронной сети</p>
+<p class="programpythonkos">print(f&quot;Точность модели: {model.evaluate(x_test, y_test, verbose = 1)[1]*100:.2f}%&quot;) </p>
+</li></ol>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div>
+</body>
+
+</html>

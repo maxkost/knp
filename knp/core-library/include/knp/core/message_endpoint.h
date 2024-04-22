@@ -42,6 +42,12 @@ class MessageEndpointImpl;
 namespace knp::core
 {
 /**
+ * @class boost::noncopyable
+ * @brief Ensure that objects cannot be copied.
+ * @see <a href="https://www.boost.org/doc/libs/1_80_0/boost/core/noncopyable.hpp">boost::noncopyable description</a>
+ */
+
+/**
  * @brief The MessageEndpoint class is a definition of message endpoints.
  * @details You can use message endpoints to receive or send messages.
  */

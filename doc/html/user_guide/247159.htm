@@ -15,7 +15,7 @@
         }( window, document );
     </script>
     <script type="text/javascript" src="toc.js"></script>
-
+    
     <script type="text/javascript" src="aiconverter_result.js"></script>
     <link rel="stylesheet" type='text/css' href="typography.css"/>
     <link rel="stylesheet" type='text/css' href="styles.css"/>
@@ -34,9 +34,9 @@
 
 <body id="who-content">
 	<div class="cont">
-	<h3 id="t247159" class="heading3">Класс MessageEndpoint</h3>
+	<h4 id="t247159" class="heading4">Класс MessageEndpoint</h4>
 <p class="bodytext">Класс <code class="programcharacter">MessageEndpoint</code> реализует интерфейс для доступа к точке подключения, которая обеспечивает подписку на <a id="h243744" class="crossreferencetemplate" href="243634.htm" target="_self">сообщения</a> и их отправку с помощью <a id="h244977" class="crossreferencetemplate" href="244932.htm" target="_self">шины сообщений</a>. </p>
-<p class="bodytext">Объект класса <code class="programcharacter">MessageEndpoint</code> хранит в себе набор объектов класса <code class="programcharacter"><a id="h250728" class="crossreferencetemplate" href="250697.htm" target="_self">Subscription</a></code>, которые используются для фильтрации сообщений. Шина сообщений может иметь несколько точек подключения, каждая из которых хранит свой набор объектов класса <code class="programcharacter">Subscription</code>. </p>
+<p class="bodytext">Объект класса <code class="programcharacter">MessageEndpoint</code> хранит в себе набор объектов класса <code class="programcharacter"><a id="h250728" class="crossreferencetemplate" href="250697.htm" target="_self">Subscription</a></code>, которые используются для фильтрации сообщений. Шина сообщений может иметь несколько точек подключения. </p>
 <p class="bodytext">С помощью методов класса <code class="programcharacter">MessageEndpoint</code> вы можете настроить обмен сообщениями между объектами бекенда и фреймворка. Для передачи сообщений требуется предварительно добавить объект подписки в объект точки подключения. </p>
 <p class="bodytext">Если вы удалите точку подключения, то связанные объекты подписки также будут удалены. Передача сообщений с помощью этой точки подключения прекратится.</p>
 

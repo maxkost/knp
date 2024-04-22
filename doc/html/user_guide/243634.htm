@@ -15,7 +15,7 @@
         }( window, document );
     </script>
     <script type="text/javascript" src="toc.js"></script>
-
+    
     <script type="text/javascript" src="aiconverter_result.js"></script>
     <link rel="stylesheet" type='text/css' href="typography.css"/>
     <link rel="stylesheet" type='text/css' href="styles.css"/>
@@ -35,7 +35,7 @@
 
 <body id="who-content">
 	<div class="cont">
-	<h3 id="t243634" class="heading3">Пространство имен Messaging</h3>
+	<h4 id="t243634" class="heading4">Пространство имен Messaging</h4>
 <p class="bodytext">Пространство имен <code class="programcharacter">Messaging</code> реализует интерфейсы для доступа к сообщениям. Сообщение содержит данные, которыми обмениваются объекты бекенда, а также данные, отправляемые объектами, которые идентифицируются по UID. Обмен сообщениями обеспечивается с помощью шины сообщений <code class="programcharacter"><a id="h244977" class="crossreferencetemplate" href="244932.htm" target="_self">MessageBus</a></code>.</p>
 <p class="bodytext">Каждое сообщение содержит следующие атрибуты:</p>
 <ul class="listbullet1"><li class="listbullet1"><code class="programcharacter">MessageHeader</code>&nbsp;&#8211; заголовок сообщения, содержащий следующую информацию:<ul class="listbullet2"><li class="listbullet2"><code class="programcharacter">sender_uid_</code>&nbsp;&#8211; идентификатор объекта, отправившего сообщение;</li><li class="listbullet2"><code class="programcharacter">send_time_</code>&nbsp;&#8211; время отправки сообщения.</li></ul></li><li class="listbullet1">Тело сообщения, состоящее из совокупности передаваемых атрибутов. Состав передаваемых атрибутов зависит от типа сообщения.</li></ul><p class="bodytext">С помощью сообщений происходит обновление пользовательских структур и синхронизация изменений на бекенде. Таблица ниже содержит описание поддерживаемых типов сообщений бекенда. </p>
@@ -68,8 +68,9 @@
 <td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><code class="programcharacter">header_</code> &#8211; заголовок сообщения, содержащий UID проекции и время отправки сообщения.</p>
 <p class="tablebodytext"><code class="programcharacter">postsynaptic_population_uid_</code> &#8211; UID постсинаптической популяции.</p>
 <p class="tablebodytext"><code class="programcharacter">presynaptic_population_uid_</code> &#8211; UID пресинаптической популяции.</p>
+<p class="tablebodytext"><code class="programcharacter">is_forcing_</code>&nbsp;&#8211; значение типа <code class="programcharacter">boolean</code> для обозначения использования пластичности в проекции синапсов. Если в проекции синапсов используется синаптическая пластичность, то атрибут имеет значение <code class="programcharacter">true</code>, иначе имеет значение <code class="programcharacter">false</code>. </p>
 <p class="tablebodytext"><code class="programcharacter">impacts_</code> &#8211; вектор, содержащий следующие атрибуты:</p>
-<ul class="tablelistbullet"><li class="tablelistbullet"><code class="programcharacter">connection_index_</code> &#8211; индекс соединения.</li><li class="tablelistbullet"><code class="programcharacter">impact_value_</code> &#8211; значение синаптического воздействия.</li><li class="tablelistbullet"><code class="programcharacter">presynaptic_neuron_index_</code> &#8211; индекс пресинаптического нейрона. </li><li class="tablelistbullet"><code class="programcharacter">postsynaptic_neuron_index_</code> &#8211; индекс постсинаптического нейрона, которому будет передано значение синаптического воздействия для изменения значений его атрибутов.</li></ul></td>
+<ul class="tablelistbullet"><li class="tablelistbullet"><code class="programcharacter">connection_index_</code> &#8211; индекс соединения.</li><li class="tablelistbullet"><code class="programcharacter">impact_value_</code> &#8211; значение синаптического воздействия.</li><li class="tablelistbullet"><code class="programcharacter">synapse_type_</code>&nbsp;&#8211; тип синапса.</li><li class="tablelistbullet"><code class="programcharacter">presynaptic_neuron_index_</code> &#8211; индекс пресинаптического нейрона. </li><li class="tablelistbullet"><code class="programcharacter">postsynaptic_neuron_index_</code> &#8211; индекс постсинаптического нейрона, которому будет передано значение синаптического воздействия для изменения значений его атрибутов.</li></ul></td>
 </tr>
 
 </table>

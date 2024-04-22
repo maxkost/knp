@@ -154,6 +154,11 @@
  */
 
 /**
+ * @dir /knp/base-framework/include/knp/framework/sonata
+ * @brief Directory for SONATA format headers.
+ */
+
+/**
  * @dir /knp/core-library
  * @brief Core library directory.
  */

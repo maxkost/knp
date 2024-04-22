@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="maximum-scale=1.0" />
+    <title> Библиотека характеристик синапсов </title>
+    <script type="text/javascript" src="../langs.js"></script>
+    <script type="text/javascript">
+        !function ( w, d ) {
+            var scriptsPath="";
+            d.writeln("\x3Cscript type='text/javascript' src='"+scriptsPath+d.documentElement.lang+".js'>\x3C/script>");
+        }( window, document );
+    </script>
+    <script type="text/javascript" src="toc.js"></script>
+    
+    <script type="text/javascript" src="aiconverter_result.js"></script>
+    <link rel="stylesheet" type='text/css' href="typography.css"/>
+    <link rel="stylesheet" type='text/css' href="styles.css"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="favicon.png" type="image/png"/>
+
+
+            <!--[if lte IE 9]>
+                <link rel="stylesheet" type="text/css" href="bootstrap.css">
+            <![endif]-->
+            <!--[if lte IE 8]>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+            <![endif]-->
+            </head>
+
+<body id="who-content">
+	<div class="cont">
+	<h3 id="t272190" class="heading3">Библиотека характеристик синапсов</h3>
+<p class="bodytext">Библиотека характеристик синапсов представляет собой набор атрибутов <a id="h254022" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254022','h254022')" target="_self">синапсов</a>. Вы можете использовать синапсы, представленные в библиотеке, например, при построении проекций.</p>
+<div id="d254022" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254022');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Место соединения нейронов, основная функция которого&nbsp;&#8211; передача сигнала от одного нейрона к другому. Каждый нейрон может быть связан с множеством синапсов.</p>
+</div><p class="bodytext">На текущий момент библиотека поддерживает наборы свойств для синапса по модели <code class="programcharacter">DeltaSynapse</code>&nbsp;(далее также &quot;дельта-синапс&quot;).</p>
+<p class="listcontinue1"> </p>
+<p class="bodytext">После получения <a id="h254019" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254019','h254019')" target="_self">спайка</a> от пресинаптической <a id="h254031" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254031','h254031')" target="_self">популяции</a> синапс генерирует сообщение, содержащее значение <a id="h254029" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254029','h254029')" target="_self">синаптического воздействия</a>. Проекция синапсов отправляет синаптическое воздействие популяции для изменения мембранного потенциала постсинаптического нейрона. При этом отправка сообщения <a id="h254030" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254030','h254030')" target="_self">проекцией</a> происходит без временной задержки. </p>
+<div id="d254030" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254030');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Контейнер, содержащий набор синапсов одного типа, соединяющих нейроны пресинаптической и постсинаптической популяций. </p>
+</div><div id="d254029" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254029');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Значение, формируемое синапсом и предназначенное для изменения значений атрибутов нейронов.</p>
+</div><div id="d254031" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254031');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Контейнер, содержащий набор нейронов и их функцию в соответствии с типом нейронов.</p>
+</div><div id="d254019" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254019');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Кратковременный потенциал действия, сгенерированный нейроном популяции в результате изменения атрибутов нейрона.</p>
+</div><p class="bodytext">Отправляемое синаптическое воздействие определяется значением веса дельта-синапса. Вы можете указать <a id="h254034" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254034','h254034')" target="_self">вес синапса</a> в атрибутах его экземпляра.</p>
+<div id="d254034" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254034');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Значение сигнала, который синапс передает нейронам связанной популяции.</p>
+</div><p class="listcontinue1"></p>
+<p class="listcontinue1"></p>
+<p class="listcontinue1"></p>
+<p class="listcontinue1"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="bodytext"></p>
+<p class="picturename"></p>
+<p class="listcontinue1"></p>
+<p class="listcontinue1"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue3"></p>
+<p class="listcontinue3"></p>
+<p class="bodytext"></p>
+<p class="bodytext"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue3"></p>
+<p class="listcontinue3"></p>
+<p class="bodytext"></p>
+<p class="bodytext"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue3"></p>
+<p class="listcontinue3"></p>
+<p class="bodytext"></p>
+<p class="bodytext"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue2"></p>
+<p class="listcontinue3"></p>
+<p class="listcontinue3"></p>
+<p class="listcontinue3"></p>
+<p class="bodytext"></p>
+<p class="bodytext"></p>
+<p class="listcontinue1"></p>
+<p class="listcontinue1"></p>
+<p class="listcontinue1"></p>
+<p class="listcontinue1"></p>
+<p class="listcontinue1"></p>
+<p class="bodytext"></p>
+<p class="bodytext"></p>
+<p class="bodytext">Если требуется, вы можете реализовать и использовать собственные модели синапсов.</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div>
+</body>
+
+</html>

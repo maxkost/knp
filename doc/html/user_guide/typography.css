@@ -671,7 +671,8 @@ ol {
 .relateditem {
   margin: .5em 0;
 }
-.tableheading {
+.tableheading,
+.tableheadingkos {
   font-weight: 600;
   font-size: 96%;
   text-align: center;
@@ -764,6 +765,7 @@ ol {
 .buttonunderline,
 .keycharacter,
 .guicharacter,
+.thirdpartyguicharacter,
 .macnote {
   font-weight: 600;
   font-size: 100%;
@@ -773,6 +775,7 @@ ol {
 .ie7 .buttonunderline,
 .ie7 .keycharacter,
 .ie7 .guicharacter,
+.ie7 .thirdpartyguicharacter,
 .ie7 .macnote {
   position: relative;
   zoom: 1;
@@ -781,26 +784,37 @@ ol {
 .boldcharacter .buttonunderline,
 .boldcharacter .keycharacter,
 .boldcharacter .guicharacter,
+.boldcharacter .thirdpartyguicharacter,
 .boldcharacter .macnote,
 .buttonunderline .boldcharacter,
 .buttonunderline .buttonunderline,
 .buttonunderline .keycharacter,
 .buttonunderline .guicharacter,
+.buttonunderline .thirdpartyguicharacter,
 .buttonunderline .macnote,
 .keycharacter .boldcharacter,
 .keycharacter .buttonunderline,
 .keycharacter .keycharacter,
 .keycharacter .guicharacter,
+.keycharacter .thirdpartyguicharacter,
 .keycharacter .macnote,
 .guicharacter .boldcharacter,
 .guicharacter .buttonunderline,
 .guicharacter .keycharacter,
 .guicharacter .guicharacter,
+.guicharacter .thirdpartyguicharacter,
 .guicharacter .macnote,
+.thirdpartyguicharacter .boldcharacter,
+.thirdpartyguicharacter .buttonunderline,
+.thirdpartyguicharacter .keycharacter,
+.thirdpartyguicharacter .guicharacter,
+.thirdpartyguicharacter .thirdpartyguicharacter,
+.thirdpartyguicharacter .macnote,
 .macnote .boldcharacter,
 .macnote .buttonunderline,
 .macnote .keycharacter,
 .macnote .guicharacter,
+.macnote .thirdpartyguicharacter,
 .macnote .macnote {
   font-size: 100%;
 }
@@ -1109,7 +1123,8 @@ ul.settingdescrlistbullet1 {
           border-radius: 3px;
 }
 .attentionbodykos-wrapped,
-.attentioncontinue1kos {
+.attentioncontinue1kos,
+.attentioncontinue2kos {
   border: 1px solid #e5e4e4;
   border-left: 3px solid #00bba3;
   margin-top: 2.3em;
@@ -1118,9 +1133,38 @@ ul.settingdescrlistbullet1 {
   padding-top: 2px;
   padding-bottom: 2px;
 }
-.attentioncontinue1kos {
+.attentioncontinue1kos,
+.attentioncontinue2kos {
   padding-top: 1em;
   padding-bottom: 1em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+dl {
+  margin: 1.5em 0;
+}
+dl dt {
+  font-weight: bold;
+  margin: .5em;
+  color: #5c5f61;
+}
+dl dd {
+  margin: .5em 3em;
+}
+.tableintopic:has(p.tableheadingkos) th,
+.tableintopic:has(p.tableheadingkos) td {
+  border: 1px solid !important;
+  border-color: #e5e4e4 !important;
+  padding: 8px 12px;
+}
+.tableintopic:has(p.tableheadingkos) th {
+  background: #f4f4f5 !important;
+}
+.tableintopic:has(p.tableheadingkos) td {
+  background: none;
+}
+.tableintopic:has(p.tableheadingkos) tr:not(:has(p)) {
+  visibility: collapse;
 }
 .codeheadingkos {
   padding: 4px 8px;
@@ -1138,6 +1182,15 @@ ul.settingdescrlistbullet1 {
   -webkit-border-top-right-radius: 3px;
      -moz-border-radius-topright: 3px;
           border-top-right-radius: 3px;
+}
+.tableintopic .bgprogram,
+.tableintopic .codeheadingkos {
+  padding: 0;
+  border: none;
+  background: none;
+}
+.tableintopic .codeheadingkos {
+  font-weight: bold;
 }
 .codeheadingkos + .bgprogram {
   -webkit-border-top-left-radius: 0px;
@@ -1163,66 +1216,61 @@ ul.settingdescrlistbullet1 {
   *display: inline;
   zoom: 1;
 }
-.programkos,
-.programckos,
-.programmakefilekos,
-.programedlkos,
-.programcdlkos,
-.programidlkos,
-.programcfgkos,
-.programyamlkos {
+.js_code {
   white-space: pre-wrap;
   word-wrap: initial;
   overflow: auto;
   font-family: Consolas, Courier New, monospace;
+  margin: 1.4em 0 1.4em 0;
+  line-height: normal;
 }
-.programkos {
-  margin: 0 0 0 0px;
+.js_code .hljs-doctag,
+.js_code .hljs-keyword,
+.js_code .hljs-meta .hljs-keyword,
+.js_code .hljs-template-tag,
+.js_code .hljs-template-variable,
+.js_code .hljs-type,
+.js_code .hljs-variable.language_ {
+  color: #ff335c;
 }
-[dir="rtl"] .programkos {
-  margin: 0 0px 0 0;
+.js_code .hljs-title,
+.js_code .hljs-title.class_,
+.js_code .hljs-title.class_.inherited__,
+.js_code .hljs-title.function_ {
+  color: #D633FF;
 }
-.programckos {
-  margin: 0 0 0 0px;
+.js_code .hljs-attr,
+.js_code .hljs-attribute,
+.js_code .hljs-literal,
+.js_code .hljs-meta,
+.js_code .hljs-number,
+.js_code .hljs-operator,
+.js_code .hljs-variable,
+.js_code .hljs-selector-attr,
+.js_code .hljs-selector-class,
+.js_code .hljs-selector-id {
+  color: #335CFF;
 }
-[dir="rtl"] .programckos {
-  margin: 0 0px 0 0;
+.js_code .hljs-regexp,
+.js_code .hljs-string,
+.js_code .hljs-meta .hljs-string {
+  color: #7033FF;
 }
-.programmakefilekos {
-  margin: 0 0 0 0px;
+.js_code .hljs-built_in,
+.js_code .hljs-symbol {
+  color: #ff7033;
 }
-[dir="rtl"] .programmakefilekos {
-  margin: 0 0px 0 0;
+.js_code .hljs-name,
+.js_code .hljs-quote,
+.js_code .hljs-selector-tag,
+.js_code .hljs-selector-pseudo {
+  color: #00A88E;
 }
-.programedlkos {
-  margin: 0 0 0 0px;
+.js_code .hljs-section {
+  color: #33C2FF;
 }
-[dir="rtl"] .programedlkos {
-  margin: 0 0px 0 0;
-}
-.programcdlkos {
-  margin: 0 0 0 0px;
-}
-[dir="rtl"] .programcdlkos {
-  margin: 0 0px 0 0;
-}
-.programidlkos {
-  margin: 0 0 0 0px;
-}
-[dir="rtl"] .programidlkos {
-  margin: 0 0px 0 0;
-}
-.programcfgkos {
-  margin: 0 0 0 0px;
-}
-[dir="rtl"] .programcfgkos {
-  margin: 0 0px 0 0;
-}
-.programyamlkos {
-  margin: 0 0 0 0px;
-}
-[dir="rtl"] .programyamlkos {
-  margin: 0 0px 0 0;
+.js_code .hljs-bullet {
+  color: #FF7C92;
 }
 
 /*# sourceMappingURL=typography.css.map */

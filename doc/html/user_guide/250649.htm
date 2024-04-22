@@ -15,7 +15,7 @@
         }( window, document );
     </script>
     <script type="text/javascript" src="toc.js"></script>
-
+    
     <script type="text/javascript" src="aiconverter_result.js"></script>
     <link rel="stylesheet" type='text/css' href="typography.css"/>
     <link rel="stylesheet" type='text/css' href="styles.css"/>
@@ -34,8 +34,9 @@
 
 <body id="who-content">
 	<div class="cont">
-	<h1 id="t250649" class="heading1">Добавление нового типа нейрона</h1>
-<p class="bodytext">На текущий момент Kaspersky Neuromorphic Platform поддерживает наборы свойств и типизацию популяций для модели BLIFAT-нейрона. Если требуется, вы можете добавить новый тип нейрона.</p>
+	<h2 id="t250649" class="heading2">Добавление нового типа нейрона</h2>
+<p class="bodytext">На текущий момент Kaspersky Neuromorphic Platform поддерживает наборы свойств и типизацию популяций по моделям нейронов <code class="programcharacter">BLIFATNeuron</code> и <code class="programcharacter">SynapticResourceSTDPBLIFATNeuron</code>. Если требуется, вы можете добавить новый тип нейрона.</p>
+<p class="attentionbody">Вы можете использовать эту инструкцию при работе с исходным кодом платформы.</p>
 <p class="procedureheading">Чтобы добавить новый тип нейрона:</p>
 <ol class="listnumber1"><li class="listnumber1">В директории <code class="programcharacter">neuron-trait-library/include/knp/neuron-traits/</code> создайте заголовочный файл для нового типа нейрона. </li><li class="listnumber1">В созданном заголовочном файле определите структуру типа нейрона и его шаблонные свойства (например, <code class="programcharacter">default_values</code>, <code class="programcharacter">neuron_parameters</code>).<p class="listcontinue1">Пример определения BLIFAT-нейрона:</p>
 <p class="codeheadingkos">neuron-trait-library/include/knp/neuron-traits/blifat.h</p>
@@ -50,14 +51,28 @@
 <p class="programckos">struct default_values&lt;BLIFATNeuron&gt;</p>
 <p class="programckos"> </p>
 <p class="programckos">{</p>
-<p class="programckos">    // Задает количество шагов нейронной сети с шага последнего спайка.</p>
-<p class="programckos">    constexpr static std::size_t steps_before_firing = std::numeric_limits&lt;std::size_t&gt;::infinity();</p>
-<p class="programckos">    // Задает значение, к которому стремится мембранный потенциал для тормозных синапсов, основанных на проводимости.</p>
+<p class="programckos">    // Задает количество шагов нейронной сети с шага последнего спайка по умолчанию.</p>
+<p class="programckos">    constexpr static std::size_t n_time_steps_since_last_firing_ = std::numeric_limits&lt;std::size_t&gt;::infinity();</p>
+<p class="programckos">    // Задает значение по умолчанию, к которому стремится мембранный потенциал для тормозных синапсов, основанных на проводимости.</p>
 <p class="programckos">    constexpr static double reverse_inhibitory_potential = -0.3;</p>
-<p class="programckos">    // Задает значение, к которому стремится мембранный потенциал для тормозных синапсов, основанных на токе.</p>
+<p class="programckos">    // Задает значение по умолчанию, к которому стремится мембранный потенциал для тормозных синапсов, основанных на токе.</p>
 <p class="programckos">    constexpr static double min_potential = -1.0e9;</p>
+<p class="programckos">    ...</p>
 <p class="programckos">};</p>
-<p class="programckos">...</p>
+<p class="programckos"></p>
+<p class="programckos">template &lt;&gt;</p>
+<p class="programckos">struct neuron_parameters&lt;BLIFATNeuron&gt;</p>
+<p class="programckos"></p>
+<p class="programckos">{</p>
+<p class="programckos">    // Задает количество шагов нейронной сети с шага последнего спайка.</p>
+<p class="programckos">    std::size_t n_time_steps_since_last_firing_ = default_values&lt;BLIFATNeuron&gt;::n_time_steps_since_last_firing_;</p>
+<p class="programckos">    // Задает пороговое значение мембранного потенциала нейрона.</p>
+<p class="programckos">    double activation_threshold_ = default_values&lt;BLIFATNeuron&gt;::activation_threshold_;</p>
+<p class="programckos">    // Задает динамическое пороговое значение мембранного потенциала, после достижения которого нейрон генерирует спайк.</p>
+<p class="programckos">    double dynamic_threshold_ = default_values&lt;BLIFATNeuron&gt;::dynamic_threshold_;</p>
+<p class="programckos">    ...</p>
+<p class="programckos">};</p>
+<p class="programckos"></p>
 <p class="programckos">}  // namespace knp::neuron_traits</p>
 </li><li class="listnumber1">Добавьте созданный тип нейрона в список нейронов, определенных в заголовочном файле <code class="programcharacter">neuron-trait-library/include/knp/neuron-traits/all_traits.h</code>.<p class="listcontinue1">Пример добавления BLIFAT-нейрона в список нейронов:</p>
 <p class="codeheadingkos">neuron-trait-library/include/knp/neuron-traits/all_traits.h</p>
@@ -67,7 +82,7 @@
 <p class="programckos"> </p>
 <p class="programckos">{</p>
 <p class="programckos">// Список типов нейронов, разделенных запятыми.</p>
-<p class="programckos">#define ALL_NEURONS knp::neuron_traits::BLIFATNeuron</p>
+<p class="programckos">#define ALL_NEURONS BLIFATNeuron</p>
 <p class="programckos">...</p>
 <p class="programckos">}  // namespace knp::neuron_traits</p>
 </li><li class="listnumber1">Реализуйте в нужных бекендах перегруженный метод запуска. <p class="listcontinue1">Например, для бекенда CPU реализуйте перегруженный метод запуска расчета популяций.</p>

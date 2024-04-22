@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="maximum-scale=1.0" />
+    <title> Создание и обучение регрессионной модели </title>
+    <script type="text/javascript" src="../langs.js"></script>
+    <script type="text/javascript">
+        !function ( w, d ) {
+            var scriptsPath="";
+            d.writeln("\x3Cscript type='text/javascript' src='"+scriptsPath+d.documentElement.lang+".js'>\x3C/script>");
+        }( window, document );
+    </script>
+    <script type="text/javascript" src="toc.js"></script>
+    
+    <script type="text/javascript" src="aiconverter_result.js"></script>
+    <link rel="stylesheet" type='text/css' href="typography.css"/>
+    <link rel="stylesheet" type='text/css' href="styles.css"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="favicon.png" type="image/png"/>
+
+            <!--[if lte IE 9]>
+                <link rel="stylesheet" type="text/css" href="bootstrap.css">
+            <![endif]-->
+            <!--[if lte IE 8]>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+            <![endif]-->
+            </head>
+
+<body id="who-content">
+	<div class="cont">
+	<h2 id="t273724" class="heading2">Создание и обучение регрессионной модели</h2>
+<p class="bodytext">Этот раздел содержит инструкции по созданию регрессионной модели с обучаемыми блоками, кодирующие и декодирующие данные, и ее обучению. Модель создана с помощью тернарных слоев библиотеки ANN2SNN. </p>
+<p class="attentionbody">Вы можете использовать эту инструкцию при разработке прикладных решений.</p>
+<p class="procedureheading">Чтобы создать и обучить регрессионную модель:</p>
+<ol class="listnumber1"><li class="listnumber1">В директории вашего проекта создайте файл программы с расширением .py, в котором будет создана и обучена модель.</li><li class="listnumber1">В файле программы импортируйте модули библиотек, необходимые для создания и обучения модели.<p class="listcontinue1">Если требуется, определите псевдонимы с помощью оператора <code class="programcharacter">as</code>.</p>
+<p class="listcontinue1">Пример подключения объектов для создания и обучения регрессионной модели:</p>
+<p class="codeheadingkos">Python</p>
+<p class="programpythonkos">from altainn.ternary_tf2.layers import TernaryDense</p>
+<p class="programpythonkos">from tensorflow.keras.models import Sequential, load_model</p>
+<p class="programpythonkos">from tensorflow.keras.layers import Dense</p>
+<p class="programpythonkos">from altainn.ternary_tf2.ops import heaviside_mod as  heaviside</p>
+<p class="programpythonkos">from altainn.binarynet_tf2.layers import Clip</p>
+<p class="programpythonkos">import matplotlib.pyplot as plt</p>
+<p class="programpythonkos">from tensorflow.keras.callbacks import ModelCheckpoint</p>
+<p class="programpythonkos">import numpy as np</p>
+</li><li class="listnumber1">Создайте синусоиду и подготовьте данные для обучения.<p class="listcontinue1">Пример подготовки данных: </p>
+<p class="codeheadingkos">Python</p>
+<p class="programpythonkos"># Создает синусоиду</p>
+<p class="programpythonkos">x = np.arange(4000)</p>
+<p class="programpythonkos">x = x * 0.1</p>
+<p class="programpythonkos">arr = np.sin(x)  </p>
+<p class="programpythonkos"></p>
+<p class="programpythonkos"># Берет для обучения 10 значений, по которым прогнозируются следующие значения</p>
+<p class="programpythonkos"># Формирует тренировочные данные</p>
+<p class="programpythonkos">x_train = []</p>
+<p class="programpythonkos">y_train = []</p>
+<p class="programpythonkos">for i in range(0, 3000-11):</p>
+<p class="programpythonkos">    x_train.append(arr[i:i+10])</p>
+<p class="programpythonkos">    y_train.append(arr[i+11])</p>
+<p class="programpythonkos"></p>
+<p class="programpythonkos"># Формирует тестовые данные</p>
+<p class="programpythonkos">x_test = []</p>
+<p class="programpythonkos">y_test = []</p>
+<p class="programpythonkos"></p>
+<p class="programpythonkos">for i in range(3000, 4000-11):</p>
+<p class="programpythonkos">    x_test.append(arr[i:i+10])</p>
+<p class="programpythonkos">    y_test.append(arr[i+11])</p>
+<p class="programpythonkos">x_train = np.array(x_train)</p>
+<p class="programpythonkos">x_test = np.array(x_test)</p>
+<p class="programpythonkos">y_train = np.array(y_train)</p>
+<p class="programpythonkos">y_test = np.array(y_test)</p>
+</li><li class="listnumber1">Создайте регрессионную модель. Для этого создайте кодирующий блок, импульсную нейронную сеть и декодирующий блок. <p class="listcontinue1">Пример создания регрессионной модели:</p>
+<p class="codeheadingkos">Python</p>
+<p class="programpythonkos"># Создает кодирующий блок с одним слоем, который преобразует данные в спайки</p>
+<p class="programpythonkos">encoder = Sequential([</p>
+<p class="programpythonkos">    Dense(10, activation=heaviside, input_shape=(10,)),</p>
+<p class="programpythonkos">])</p>
+<p class="programpythonkos"></p>
+<p class="programpythonkos"># Создает импульсную нейронную сеть</p>
+<p class="programpythonkos">snn = Sequential([</p>
+<p class="programpythonkos">    TernaryDense(32, activation=heaviside, input_shape=(10,)),</p>
+<p class="programpythonkos">    TernaryDense(32, activation=heaviside),</p>
+<p class="programpythonkos">])</p>
+<p class="programpythonkos"></p>
+<p class="programpythonkos"># Создает декодирующий блок с одним слоем, который преобразует спайки в целевое значение</p>
+<p class="programpythonkos">decoder = Sequential([</p>
+<p class="programpythonkos">    Dense(1, activation=&quot;linear&quot;, input_shape=(32,))</p>
+<p class="programpythonkos">])</p>
+<p class="programpythonkos"></p>
+<p class="programpythonkos"># Создает модель с кодирующим блоком, нейронной сетью и декодирующим блоком</p>
+<p class="programpythonkos">model = Sequential([encoder, snn, decoder])</p>
+<p class="programpythonkos">model.compile(optimizer=&quot;adam&quot;, loss=&quot;mse&quot;)</p>
+</li><li class="listnumber1">Обучите модель.<p class="listcontinue1">Пример обучения модели:</p>
+<p class="codeheadingkos">Python</p>
+<p class="programpythonkos"># Обучает модель на тренировочных данных</p>
+<p class="programpythonkos">checkpoint = ModelCheckpoint('sin_model.h5', monitor='val_loss', verbose=1, save_best_only=True, mode='min')</p>
+<p class="programpythonkos">model.fit(x_train, y_train, epochs=50, validation_data=(x_test, y_test), callbacks=[checkpoint])</p>
+<p class="programpythonkos"> </p>
+<p class="programpythonkos"># Загружает модель</p>
+<p class="programpythonkos">model = load_model('sin_model.h5', custom_objects={'heaviside_mod': heaviside, 'Clip': Clip, &quot;TernaryDense&quot;: TernaryDense})</p>
+<p class="programpythonkos"></p>
+<p class="programpythonkos"># Получает предсказания</p>
+<p class="programpythonkos">predict_test = model.predict(x_test)</p>
+<p class="programpythonkos"></p>
+<p class="programpythonkos"># Строит графики по предсказанным и целевым значениям</p>
+<p class="programpythonkos">plt.plot(predict_test, 'b')</p>
+<p class="programpythonkos">plt.plot(y_test, 'r', alpha=0.5)</p>
+<p class="programpythonkos">plt.show()</p>
+</li></ol>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div>
+</body>
+
+</html>
