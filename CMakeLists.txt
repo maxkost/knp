@@ -99,7 +99,7 @@ include(print-variables)
 # Build third-party.
 #
 
-set(CPM_SOURCE_CACHE "${CMAKE_CURRENT_SOURCE_DIR/third-party}" CACHE STRING "")
+set(CPM_SOURCE_CACHE_DEFAULT "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STRING "")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/third-party)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
@@ -107,9 +107,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 # Make cache variables for install destinations.
 include(GNUInstallDirs)
 
-add_third_party(NAME "libsonata"
-                GIT_REPOSITORY "https://github.com/BlueBrain/libsonata"
-                VERSION "0.1.25"
+add_third_party("gh:BlueBrain/libsonata@0.1.25"
                 OPTIONS
                     "EXTLIB_FROM_SUBMODULES ON"
                     "SONATA_TESTS OFF"
@@ -117,7 +115,7 @@ add_third_party(NAME "libsonata"
 
 add_third_party("gh:p-ranav/csv2@0.1")
 add_third_party(NAME "ZeroMQ"
-                GIT_REPOSITORY "https://github.com/libzmq"
+                GITHUB_REPOSITORY "zeromq/libzmq"
                 VERSION "4.3.5"
                 OPTIONS
                     "WITH_DOCS OFF"
@@ -125,9 +123,7 @@ add_third_party(NAME "ZeroMQ"
                     "ENABLE_CPACK OFF")
 add_third_party("gh:zeromq/cppzmq@4.10.0")
 
-add_third_party(NAME "flatbuffers"
-                GIT_REPOSITORY "https://github.com/google/flatbuffers"
-                VERSION "24.3.25"
+add_third_party("gh:google/flatbuffers@24.3.25"
                 OPTIONS
                     "FLATBUFFERS_BUILD_TESTS OFF"
                     "FLATBUFFERS_BUILD_CPP17 ON")
@@ -135,9 +131,7 @@ add_third_party(NAME "flatbuffers"
 add_third_party("gh:simdjson/simdjson@3.9.1")
 add_third_party("gh:intel/pcm#202403")
 
-add_third_party(NAME "spdlog"
-                GIT_REPOSITORY "https://github.com/gabime/spdlog"
-                VERSION "1.13.0"
+add_third_party("gh:gabime/spdlog@1.13.0"
                 OPTIONS
                     "SPDLOG_BUILD_PIC ON")
 
@@ -146,8 +140,8 @@ if(KNP_BUILD_TESTS)
     add_third_party("gh:google/googletest@1.14.0")
 endif()
 
-#file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
-#include_directories(third-party ${THIRD_PARTY_INCLUDES})
+file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
+include_directories(third-party ${THIRD_PARTY_INCLUDES})
 
 #
 # Build KNP.
