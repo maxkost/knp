@@ -80,8 +80,8 @@ SpikeMessage unpack(const marshal::SpikeMessage *s_msg)
 
     UID uid1{false};
     std::copy(
-        s_msg_header->sender_uid().data()->begin(),
-        s_msg_header->sender_uid().data()->end(),  // clang_sa_ignore [core.CallAndMessage]
+        s_msg_header->sender_uid().data()->begin(),  // clang_sa_ignore [core.CallAndMessage]
+        s_msg_header->sender_uid().data()->end(),    // clang_sa_ignore [core.CallAndMessage]
         uid1.tag.data);
 
     return SpikeMessage{
