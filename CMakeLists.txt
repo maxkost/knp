@@ -57,6 +57,10 @@ option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development p
 option(KNP_ENABLE_COVERAGE "Enable coverage checking" ${KNP_COVERAGE_DEFAULT})
 option(KNP_ENABLE_AVX "Enable AVX and other CPU-specific extensions in the release build" ${KNP_ENABLE_AVX_DEFAULT})
 
+mark_as_advanced(KNP_MAINTAINER_BUILD)
+mark_as_advanced(KNP_ENABLE_COVERAGE)
+mark_as_advanced(KNP_ENABLE_AVX)
+
 if (KNP_ENABLE_AVX)
     message(STATUS "AVX enabled.")
     message(STATUS "Setting release optimization flags...")
@@ -112,6 +116,10 @@ add_third_party("gh:BlueBrain/libsonata@0.1.25"
                     "EXTLIB_FROM_SUBMODULES ON"
                     "SONATA_TESTS OFF"
                     "SONATA_VERSION 1.0")
+
+add_third_party("gh:HDFGroup/hdf5#hdf5_1.14.4"
+                OPTIONS
+                    "HDF5_NO_PACKAGES ON")
 
 add_third_party("gh:p-ranav/csv2@0.1")
 add_third_party(NAME "ZeroMQ"
