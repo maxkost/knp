@@ -10,8 +10,8 @@ project(knp-core VERSION "${KNP_VERSION}" LANGUAGES C CXX
         DESCRIPTION "Kaspersky Neuromorphic Platform core library"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
-find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
-find_package(ZeroMQ REQUIRED)
+#find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
+#find_package(ZeroMQ REQUIRED)
 
 include(GNUInstallDirs)
 # Need for installation.

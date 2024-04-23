@@ -20,13 +20,12 @@ function(add_third_party module_name)
         CPMADDPackage(${ARGN}
                       EXCLUDE_FROM_ALL YES
                       SYSTEM YES
-                      GIT_SHALLOW YES
                       SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third-party/${_repo_name}")
     else()
+        list(GET ARGN 0 _m_name)
         CPMADDPackage("${module_name}" ${ARGN}
                       EXCLUDE_FROM_ALL YES
                       SYSTEM YES
-                      GIT_SHALLOW YES
-                      SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third-party/${module_name}")
+                      SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third-party/${_m_name}")
     endif()
 endfunction()
