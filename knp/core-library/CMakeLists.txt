@@ -18,6 +18,21 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 include(clang-tidy)
 include(knp-functions)
+include(third-party)
+
+add_third_party(NAME "ZeroMQ"
+        GITHUB_REPOSITORY "zeromq/libzmq"
+        VERSION "4.3.5"
+        OPTIONS
+        "WITH_DOCS OFF"
+        "BUILD_TESTS OFF"
+        "ENABLE_CPACK OFF")
+add_third_party("gh:zeromq/cppzmq@4.10.0")
+
+add_third_party("gh:google/flatbuffers@24.3.25"
+        OPTIONS
+        "FLATBUFFERS_BUILD_TESTS OFF"
+        "FLATBUFFERS_BUILD_CPP17 ON")
 
 set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/core")
 
