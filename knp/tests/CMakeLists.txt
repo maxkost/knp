@@ -7,9 +7,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(knp-tester VERSION "${KNP_VERSION}" LANGUAGES CXX
         DESCRIPTION "Kaspersky Neuromorphic Platform tester and tests")
 
-option(KNP_ENABLE_COVERAGE "Coverage enabled" ON)
-
-
 if(NOT KNP_BUILD_TESTS)
     message(STATUS "Tests building disabled...")
     return()

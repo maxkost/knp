@@ -9,6 +9,10 @@ project(knp_python_framework VERSION "${KNP_VERSION}" LANGUAGES C CXX  # PYTHON
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 # set(Boost_USE_STATIC_LIBS ON)
+if(NOT KNP_PYTHON_FRAMEWORK_BUILD)
+    message(STATUS "Python framework building disabled...")
+    return()
+endif()
 
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS python REQUIRED)
@@ -78,24 +82,26 @@ set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_DEPENDS "python3 (>= 3.10)"
 # PIP packaging.
 #
 
-#message(FATAL_ERROR ${Python3_EXECUTABLE})
-add_custom_command(
-    OUTPUT "${KNP_PYTHON_OUTPUT_DIRECTORY}/dist/knp-${PROJECT_VERSION}-py3-none-any.whl"
-    COMMAND "${Python3_EXECUTABLE}" -m build --wheel
-    WORKING_DIRECTORY "${KNP_PYTHON_OUTPUT_DIRECTORY}"
-)
+if(KNP_PYTHON_BUILD_WHEEL)
+    #message(FATAL_ERROR ${Python3_EXECUTABLE})
+    add_custom_command(
+        OUTPUT "${KNP_PYTHON_OUTPUT_DIRECTORY}/dist/knp-${PROJECT_VERSION}-py3-none-any.whl"
+        COMMAND "${Python3_EXECUTABLE}" -m build --wheel
+        WORKING_DIRECTORY "${KNP_PYTHON_OUTPUT_DIRECTORY}"
+    )
 
-# TODO: automatically get all targets in CMakeLists.txt.
-add_custom_target(
-    "${PROJECT_NAME}-pip-build-package" ALL
-    DEPENDS
-        "${PROJECT_NAME}_base_framework"
-        "${PROJECT_NAME}_core"
-        "${PROJECT_NAME}_neuron_traits"
-        "${PROJECT_NAME}_synapse_traits"
-        "${PROJECT_NAME}-copy-python-tests"
-        "${PROJECT_NAME}-copy-common-files"
-        "${PROJECT_NAME}-copy-common-python-files"
-        "${PROJECT_NAME}-copy-common-project-files"
-        "${KNP_PYTHON_OUTPUT_DIRECTORY}/dist/knp-${PROJECT_VERSION}-py3-none-any.whl"
-)
+    # TODO: automatically get all targets in CMakeLists.txt.
+    add_custom_target(
+        "${PROJECT_NAME}-pip-build-package" ALL
+        DEPENDS
+            "${PROJECT_NAME}_base_framework"
+            "${PROJECT_NAME}_core"
+            "${PROJECT_NAME}_neuron_traits"
+            "${PROJECT_NAME}_synapse_traits"
+            "${PROJECT_NAME}-copy-python-tests"
+            "${PROJECT_NAME}-copy-common-files"
+            "${PROJECT_NAME}-copy-common-python-files"
+            "${PROJECT_NAME}-copy-common-project-files"
+            "${KNP_PYTHON_OUTPUT_DIRECTORY}/dist/knp-${PROJECT_VERSION}-py3-none-any.whl"
+    )
+endif()
