@@ -6,7 +6,8 @@
  */
 
 #include <knp/core/messaging/messaging.h>
-#include <knp/framework/io/data_storage.h>
+#include <knp/framework/io/storage/native/data_storage_hdf5.h>
+#include <knp/framework/io/storage/native/data_storage_json.h>
 
 #include <tests_common.h>
 
@@ -55,8 +56,8 @@ TEST(SaveLoadSuite, Hdf5Test)
     knp::core::UID uid;
     auto messages = generate_random_messages(uid, 200, 20, 0.2);
     std::filesystem::path path_to_h5 = "data.h5";
-    knp::framework::save_messages_to_h5(messages, path_to_h5, 1.0F);
-    auto loaded_messages = knp::framework::load_messages_from_h5(path_to_h5, uid, 1.0F);
+    knp::framework::storage::native::save_messages_to_h5(messages, path_to_h5, 1.0F);
+    auto loaded_messages = knp::framework::storage::native::load_messages_from_h5(path_to_h5, uid, 1.0F);
     ASSERT_TRUE(is_equal_spike_message_vector(messages, loaded_messages));
 }
 
@@ -66,7 +67,7 @@ TEST(SaveLoadSuite, JsonTest)
     knp::core::UID uid;
     auto messages = generate_random_messages(uid, 200, 20, 0.2);
     std::filesystem::path path_to_json = "data.json";
-    knp::framework::save_messages_to_json(messages, path_to_json);
-    auto loaded_messages = knp::framework::load_messages_from_json(path_to_json, uid);
+    knp::framework::storage::native::save_messages_to_json(messages, path_to_json);
+    auto loaded_messages = knp::framework::storage::native::load_messages_from_json(path_to_json, uid);
     ASSERT_EQ(messages, loaded_messages);
 }
