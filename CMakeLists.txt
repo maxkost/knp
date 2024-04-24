@@ -140,9 +140,18 @@ add_third_party("gh:BlueBrain/libsonata@0.1.25"
                     "SONATA_TESTS OFF"
                     "SONATA_VERSION 1.0")
 
+#
+# LibHDF5 and it's dependencies.
+#
+
+add_third_party("https://gitlab.dkrz.de/k202009/libaec.git@1.1.3")
+#add_third_party("gh:erdc/szip")
+
 add_third_party("gh:HDFGroup/hdf5#hdf5_1.14.4"
                 OPTIONS
                     "HDF5_NO_PACKAGES ON")
+
+# End of LibHDF5.
 
 add_third_party("gh:p-ranav/csv2@0.1")
 add_third_party("gh:simdjson/simdjson@3.9.1")
