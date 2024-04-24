@@ -49,6 +49,13 @@ if(KNP_MAINTAINER_BUILD)
     set(KNP_COVERAGE_DEFAULT OFF)
 else()
     set(KNP_COVERAGE_DEFAULT ON)
+
+    if(KNP_BUILD_DOCUMENTATION_DEFAULT)
+        find_package(Doxygen OPTIONAL_COMPONENTS dot)
+        if(NOT DOXYGEN_FOUND OR NOT DOXYGEN_HAVE_DOT)
+            set(KNP_BUILD_DOCUMENTATION_DEFAULT OFF)
+        endif()
+    endif()
 endif()
 
 option(KNP_BUILD_TESTS "Build tests" ${KNP_BUILD_TESTS_DEFAULT})
