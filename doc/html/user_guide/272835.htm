@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="maximum-scale=1.0" />
+    <title> О работе бекенда для CPU </title>
+    <script type="text/javascript" src="../langs.js"></script>
+    <script type="text/javascript">
+        !function ( w, d ) {
+            var scriptsPath="";
+            d.writeln("\x3Cscript type='text/javascript' src='"+scriptsPath+d.documentElement.lang+".js'>\x3C/script>");
+        }( window, document );
+    </script>
+    <script type="text/javascript" src="toc.js"></script>
+    
+    <script type="text/javascript" src="aiconverter_result.js"></script>
+    <link rel="stylesheet" type='text/css' href="typography.css"/>
+    <link rel="stylesheet" type='text/css' href="styles.css"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="favicon.png" type="image/png"/>
+
+
+            <!--[if lte IE 9]>
+                <link rel="stylesheet" type="text/css" href="bootstrap.css">
+            <![endif]-->
+            <!--[if lte IE 8]>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+            <![endif]-->
+            </head>
+
+<body id="who-content">
+	<div class="cont">
+	<h2 id="t272835" class="heading2">О работе бекенда для CPU</h2>
+<p class="bodytext">Работа бекенда для CPU основывается на обмене сообщениями между проекциями и популяциями. Объекты библиотеки поддержки бекендов также могут обмениваться сообщениями с объектами внешней среды. Для обмена сообщений бекенд предоставляет шину сообщений <code class="programcharacter">MessageBus</code>. </p>
+<p class="bodytext">Для инициализации бекенда требуется предварительно загрузить проекции, содержащие <a id="h254022" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254022','h254022')" target="_self">синапсы</a>, и популяции, содержащие <a id="h254021" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254021','h254021')" target="_self">нейроны</a>. В процессе инициализации бекенда загруженные проекции синапсов подписываются на <a id="h254019" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254019','h254019')" target="_self">спайки</a> от связанных популяций или каналов ввода, а загруженные популяции подписываются на <a id="h254029" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254029','h254029')" target="_self">синаптические воздействия</a> от связанных проекций. </p>
+<div id="d254029" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254029');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Значение, формируемое синапсом и предназначенное для изменения значений атрибутов нейронов.</p>
+</div><div id="d254019" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254019');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Кратковременный потенциал действия, сгенерированный нейроном популяции в результате изменения атрибутов нейрона.</p>
+</div><div id="d254021" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254021');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Узел нейронной сети, имеющий набор атрибутов. На основе атрибутов нейрона и последовательности входных сигналов происходит вычисление некоторой математической функции, результатом которого является синаптическое воздействие или его отсутствие.</p>
+</div><div id="d254022" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254022');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Место соединения нейронов, основная функция которого&nbsp;&#8211; передача сигнала от одного нейрона к другому. Каждый нейрон может быть связан с множеством синапсов.</p>
+</div><p class="bodytext">Цикл работы бекенда состоит из следующих этапов:</p>
+<ol class="listnumber1"><li class="listnumber1">Каналы ввода отправляют данные в шину сообщений <code class="programcharacter">MessageBus</code>.</li><li class="listnumber1">Бекенд вычисляет функцию популяции нейронов.</li><li class="listnumber1">Популяции нейронов отправляют спайки с результатами вычислений в шину сообщений <code class="programcharacter">MessageBus</code> с помощью точек подключения <code class="programcharacter">MessageEndpoint</code>.</li><li class="listnumber1">Шина сообщений <code class="programcharacter">MessageBus</code> отправляет данные, полученные от популяций, в проекции или каналы вывода.</li><li class="listnumber1">Бекенд вычисляет функцию проекции синапсов. </li><li class="listnumber1">Проекции синапсов отправляют синаптические воздействия с результатами вычислений в шину сообщений <code class="programcharacter">MessageBus</code> с помощью точек подключения <code class="programcharacter">MessageEndpoint</code>.</li><li class="listnumber1">Шина сообщений <code class="programcharacter">MessageBus</code> отправляет данные, полученные от проекций, в связанные популяции нейронов.</li></ol><p class="bodytext"></p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div>
+</body>
+
+</html>

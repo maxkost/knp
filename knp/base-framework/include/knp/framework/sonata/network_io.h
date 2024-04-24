@@ -11,14 +11,15 @@
 #include <filesystem>
 
 /**
- * @brief Framework namespace.
+ * @brief Sonata namespace.
  */
 namespace knp::framework::sonata
 {
 /**
- * @brief Save network to the disk. Sonata format.
- * @param network network to be saved.
- * @param dir directory where the network is saved.
+ * @brief Save network to disk. 
+ * @note The network is saved in the Sonata format.
+ * @param network network to save.
+ * @param dir directory to save the network.
  */
 void save_network(const Network &network, const std::filesystem::path &dir);
 

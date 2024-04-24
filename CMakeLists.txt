@@ -19,6 +19,8 @@ project(knp VERSION "${KNP_VERSION}"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 set(KNP_BOOST_MIN_VERSION "1.74.0")
+set(KNP_ROOT_DIR "${PROJECT_SOURCE_DIR}" CACHE STRING "KNP root directory")
+
 
 #
 # KNP build options set.
@@ -47,6 +49,13 @@ if(KNP_MAINTAINER_BUILD)
     set(KNP_COVERAGE_DEFAULT OFF)
 else()
     set(KNP_COVERAGE_DEFAULT ON)
+
+    if(KNP_BUILD_DOCUMENTATION_DEFAULT)
+        find_package(Doxygen OPTIONAL_COMPONENTS dot)
+        if(NOT DOXYGEN_FOUND OR NOT DOXYGEN_HAVE_DOT)
+            set(KNP_BUILD_DOCUMENTATION_DEFAULT OFF)
+        endif()
+    endif()
 endif()
 
 option(KNP_BUILD_TESTS "Build tests" ${KNP_BUILD_TESTS_DEFAULT})
@@ -55,6 +64,10 @@ option(KNP_BUILD_EXAMPLES "Build usage examples" ${KNP_BUILD_EXAMPLES_DEFAULT})
 option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
 option(KNP_ENABLE_COVERAGE "Enable coverage checking" ${KNP_COVERAGE_DEFAULT})
 option(KNP_ENABLE_AVX "Enable AVX and other CPU-specific extensions in the release build" ${KNP_ENABLE_AVX_DEFAULT})
+
+mark_as_advanced(KNP_MAINTAINER_BUILD)
+mark_as_advanced(KNP_ENABLE_COVERAGE)
+mark_as_advanced(KNP_ENABLE_AVX)
 
 if (KNP_ENABLE_AVX)
     message(STATUS "AVX enabled.")
@@ -98,6 +111,7 @@ include(print-variables)
 # Build third-party.
 #
 
+set(CPM_SOURCE_CACHE_DEFAULT "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STRING "")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/third-party)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
@@ -105,32 +119,27 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 # Make cache variables for install destinations.
 include(GNUInstallDirs)
 
-include(print-variables)
+add_third_party("gh:BlueBrain/libsonata@0.1.25"
+                OPTIONS
+                    "EXTLIB_FROM_SUBMODULES ON"
+                    "SONATA_TESTS OFF"
+                    "SONATA_VERSION 1.0")
 
-set(SPDLOG_BUILD_PIC ON)
-set(EXTLIB_FROM_SUBMODULES ON)
-set(SONATA_TESTS OFF)
-set(SONATA_VERSION 1.0)
-add_third_party(libsonata)
-add_third_party(csv2)
-file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
-include_directories(third-party ${THIRD_PARTY_INCLUDES})
+add_third_party("gh:HDFGroup/hdf5#hdf5_1.14.4"
+                OPTIONS
+                    "HDF5_NO_PACKAGES ON")
 
-include(print-variables)
+add_third_party("gh:p-ranav/csv2@0.1")
+add_third_party("gh:simdjson/simdjson@3.9.1")
+add_third_party("gh:intel/pcm#202403")
 
-set(FLATBUFFERS_BUILD_TESTS OFF)
-set(FLATBUFFERS_BUILD_CPP17 ON)
-add_third_party(flatbuffers)
-add_third_party(simdjson)
-
-add_third_party(pcm)
-
-set(SPDLOG_BUILD_PIC ON)
-add_third_party(spdlog)
+add_third_party("gh:gabime/spdlog@1.13.0"
+                OPTIONS
+                    "SPDLOG_BUILD_PIC ON")
 
 if(KNP_BUILD_TESTS)
     add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)
-    add_third_party(googletest)
+    add_third_party("gh:google/googletest@1.14.0")
 endif()
 
 file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")

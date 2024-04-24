@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="description" content=""/>
     <meta name="viewport" content="maximum-scale=1.0" />
-    <title> Сценарий работы с исходным кодом платформы </title>
+    <title> Участие в разработке платформы </title>
     <script type="text/javascript" src="../langs.js"></script>
     <script type="text/javascript">
         !function ( w, d ) {
@@ -15,7 +15,7 @@
         }( window, document );
     </script>
     <script type="text/javascript" src="toc.js"></script>
-
+    
     <script type="text/javascript" src="aiconverter_result.js"></script>
     <link rel="stylesheet" type='text/css' href="typography.css"/>
     <link rel="stylesheet" type='text/css' href="styles.css"/>
@@ -34,17 +34,18 @@
 
 <body id="who-content">
 	<div class="cont">
-	<h2 id="t255811" class="heading2">Сценарий работы с исходным кодом платформы</h2>
-<p class="bodytext">Сценарий работы с исходным кодом платформы состоит из следующих этапов:</p>
-<ol class="scenariolistnumber"><li class="scenariolistnumber">Подготовка рабочей директории<p class="scenariolistcontinue">Создайте <a id="h255894" class="crossreferencetemplate" href="235885.htm" target="_self">рабочую директорию</a>, в которой будут находиться файлы программ вашего проекта&nbsp;(например, файлы формата CPP). В рабочей директории создайте поддиректорию, в которой будет храниться исходный код платформы, и назовите ее KNP.</p>
-<p class="attentioncontinue1">Директория KNP, в которую будет распакован архив с исходным кодом платформы, должна находиться на уровень ниже файлов программ вашего проекта.</p>
-<p class="attentioncontinue1">Убедитесь, что в пути к директории KNP отсутствуют пробелы и служебные символы.</p>
-</li><li class="scenariolistnumber">Получение исходного кода платформы<p class="listcontinue1">Распакуйте архив платформы, входящий в состав <a id="h255819" class="crossreferencetemplate" href="232787.htm" target="_self">комплекта поставки</a>, в директорию KNP. Например, вы можете распаковать архив платформы с помощью следующей команды:</p>
-<p class="scenariolistcontinue"><code class="programcharacter">tar xf &lt;</code><code class="programcharacterlocalized">путь к архиву платформы</code><code class="programcharacter">&gt; --directory &lt;</code><code class="programcharacterlocalized">путь к директории KNP</code><code class="programcharacter">&gt;</code></p>
-<p class="scenariolistcontinue">Вы также можете <a id="h255810" class="crossreferencetemplate" href="235046.htm" target="_self">выполнить клонирование исходного кода платформы из репозитория</a> с помощью команды <code class="programcharacter">git clone</code>.</p>
-</li><li class="scenariolistnumber">Сборка проекта из исходного кода<p class="scenariolistcontinue">В рабочей директории создайте файла скрипта сборки CMakeLists.txt и <a id="h255898" class="crossreferencetemplate" href="255715.htm" target="_self">укажите параметры сборки проекта</a>. Укажите название вашего проекта. Укажите директорию с исходным кодом платформы с помощью команды <code class="programcharacter">add_subdirectory()</code>. Подключите к вашему проекту необходимые библиотеки платформы с помощью команды <code class="programcharacter">target_link_libraries()</code>.</p>
-</li><li class="scenariolistnumber">Использование платформы<p class="scenariolistcontinue">Если требуется, <a id="h255814" class="crossreferencetemplate" href="250649.htm" target="_self">добавьте новые типы нейронов</a> и/или <a id="h255815" class="crossreferencetemplate" href="250824.htm" target="_self">синапсов</a>. <a id="h257223" class="crossreferencetemplate" href="256877.htm" target="_self">Постройте нейронную сеть</a> и исполните ее.</p>
-</li></ol>
+	<h1 id="t255811" class="heading1">Участие в разработке платформы</h1>
+<p class="bodytext">Вы можете участвовать в разработке Kaspersky Neuromorphic Platform. Для этого необходимо получить исходный код с репозитория платформы.</p>
+<p class="procedureheading">Чтобы участвовать в разработке платформы:</p>
+<ol class="listnumber1"><li class="listnumber1">Откройте терминал и с помощью команды <code class="programcharacter">cd</code> перейдите в рабочую директорию.<p class="listcontinue1">Вы можете использовать любой другой инструмент для работы с Git. </p>
+</li><li class="listnumber1">Для получения исходного кода платформы требуется выполнить следующие действия:<ol class="listalpha2"><li class="listalpha2">В командной строке выполните следующую команду для загрузки репозитория платформы на устройство:<p class="listcontinue2"><code class="programcharacter">git clone --recurse-submodules --remote-submodules &lt;</code><code class="programcharacterlocalized">репозиторий платформы</code><code class="programcharacter">&gt;</code></p>
+<p class="listcontinue2">где:</p>
+<ul class="listbullet3"><li class="listbullet3"><code class="programcharacter">--recurse-submodules</code> означает, что каждый подмодуль в репозитории платформы, включая вложенные подмодули, будет автоматически инициализирован и обновлен.</li><li class="listbullet3"><code class="programcharacter">--remote-submodules</code> означает, что для обновления подмодуля все клонированные подмодули будут использовать статус ветки его удаленного отслеживания.</li><li class="listbullet3"><code class="programcharacter">&lt;</code><code class="programcharacterlocalized">репозиторий платформы</code><code class="programcharacter">&gt;</code> соответствует веб-адресу репозитория платформы, полученному от сотрудников &quot;Лаборатории Касперского&quot;.</li></ul></li><li class="listalpha2">Настройте зависимости для работы с исходным кодом платформы.</li></ol></li><li class="listnumber1">Если требуется, загрузите удаленный репозиторий платформы в ваш локальный репозиторий. Для этого вы можете использовать команду <code class="programcharacter">git pull</code>. </li><li class="listnumber1">В командной строке выполните следующую команду для создания ветки, в которой вы будете вносить изменения в код платформы:<p class="listcontinue1"><code class="programcharacter">git checkout -b &lt;</code><code class="programcharacterlocalized">название ветки</code><code class="programcharacter">&gt;</code></p>
+</li><li class="listnumber1">Внесите изменения в код платформы.</li><li class="listnumber1">Зафиксируйте изменения. <p class="listcontinue1">Например, вы можете использовать следующие команды для публикации изменений: </p>
+<p class="program2">git add &lt;<code class="programcharacterlocalized">имя файла для публикации</code>&gt;</p>
+<p class="program2">git commit -m &quot;&lt;<code class="programcharacterlocalized">сообщение для публикации</code>&gt;&quot;</p>
+<p class="program2">git push origin &lt;<code class="programcharacterlocalized">название ветки</code>&gt;</p>
+</li><li class="listnumber1">Опубликуйте изменения в репозитории платформы.</li></ol>
 
 
 	<a href="#" class="bt-home">В начало</a>

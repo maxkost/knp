@@ -69,6 +69,8 @@ command = [
     '-p',
     str(build_dir),
     '-e',
+    str(build_dir),
+    '-e',
     'third-party',
     '-e',
     'examples',

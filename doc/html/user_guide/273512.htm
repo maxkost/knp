@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="maximum-scale=1.0" />
+    <title> Сценарий исполнения нейронной сети из тернарных слоев для классификации изображений </title>
+    <script type="text/javascript" src="../langs.js"></script>
+    <script type="text/javascript">
+        !function ( w, d ) {
+            var scriptsPath="";
+            d.writeln("\x3Cscript type='text/javascript' src='"+scriptsPath+d.documentElement.lang+".js'>\x3C/script>");
+        }( window, document );
+    </script>
+    <script type="text/javascript" src="toc.js"></script>
+    
+    <script type="text/javascript" src="aiconverter_result.js"></script>
+    <link rel="stylesheet" type='text/css' href="typography.css"/>
+    <link rel="stylesheet" type='text/css' href="styles.css"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="favicon.png" type="image/png"/>
+
+            <!--[if lte IE 9]>
+                <link rel="stylesheet" type="text/css" href="bootstrap.css">
+            <![endif]-->
+            <!--[if lte IE 8]>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+            <![endif]-->
+            </head>
+
+<body id="who-content">
+	<div class="cont">
+	<h2 id="t273512" class="heading2">Сценарий исполнения нейронной сети из тернарных слоев для классификации изображений</h2>
+<p class="attentionbody">Вы можете использовать этот сценарий при разработке прикладных решений.</p>
+<p class="bodytext">Сценарий исполнения нейронной сети из тернарных слоев для классификации изображений состоит из следующих этапов:</p>
+<ol class="scenariolistnumber"><li class="scenariolistnumber">Создание и обучение нейронной сети из тернарных слоев<p class="scenariolistcontinue"><a id="h273521" class="crossreferencetemplate" href="273484.htm" target="_self">Создайте нейронную сеть</a> с помощью <a id="h273482" class="crossreferencetemplate" href="273444.htm" target="_self">тернарных слоев</a> библиотеки ANN2SNN. В качестве функции активации выходного слоя укажите сигмоидную функцию. Подготовьте данные для обучения нейронной сети. Приведите данные для обучения в бинарный вид. Обучите нейронную сеть и оцените результаты обучения.</p>
+</li><li class="scenariolistnumber">Размещение нейронной сети на нейроморфном процессоре Алтай-2<p class="scenariolistcontinue">Разместите нейронную сеть на нейроморфном процессоре Алтай-2 с помощью следующей команды:</p>
+<p class="scenariolistcontinue"><code class="programcharacter">placer.py -p &lt;</code><code class="programcharacterlocalized">путь к файлу с обученной нейронной сетью</code><code class="programcharacter">&gt; -l &lt;</code><code class="programcharacterlocalized">путь к файлу, в который будут записываться журналы утилиты placer</code><code class="programcharacter">&gt; -o &lt;</code><code class="programcharacterlocalized">путь к конфигурационному файлу для загрузки на нейроморфный процессор</code><code class="programcharacter">&gt;</code></p>
+<p class="scenariolistcontinue">Например, <code class="programcharacter">placer.py -p mnist.h5 -l mnist_placer.log -o mnist_altai.json</code></p>
+</li><li class="scenariolistnumber">Запуск инференса нейронной сети<p class="scenariolistcontinue"><a id="h273583" class="crossreferencetemplate" href="273538.htm" target="_self">Укажите</a> конфигурационный файл и компонент для исполнения нейронной сети. Нейронная сеть может быть исполнена как на аппаратном обеспечении нейроморфного процессора Алтай-2, так и на программном эмуляторе. Подготовьте данные для инференса и приведите их в бинарный вид. Запустите инференс.</p>
+</li></ol><table class="relatedtopics belowtopictext" cellpadding="0" cellspacing="0" border="0">
+<tr valign="top">
+<td width= "302">
+<p class="relatedheading">В этом разделе</p><p class="relateditem"><a href="273484.htm" target="_self">Создание и обучение нейронной сети из тернарных слоев для классификации изображений</a></p><p class="relateditem"><a href="273538.htm" target="_self">Запуск инференса нейронной сети из тернарных слоев для классификации изображений</a></p></td>
+</tr>
+</table>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="maximum-scale=1.0" />
+    <title> Библиотека ANN2SNN </title>
+    <script type="text/javascript" src="../langs.js"></script>
+    <script type="text/javascript">
+        !function ( w, d ) {
+            var scriptsPath="";
+            d.writeln("\x3Cscript type='text/javascript' src='"+scriptsPath+d.documentElement.lang+".js'>\x3C/script>");
+        }( window, document );
+    </script>
+    <script type="text/javascript" src="toc.js"></script>
+    
+    <script type="text/javascript" src="aiconverter_result.js"></script>
+    <link rel="stylesheet" type='text/css' href="typography.css"/>
+    <link rel="stylesheet" type='text/css' href="styles.css"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="favicon.png" type="image/png"/>
+
+
+            <!--[if lte IE 9]>
+                <link rel="stylesheet" type="text/css" href="bootstrap.css">
+            <![endif]-->
+            <!--[if lte IE 8]>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+            <![endif]-->
+            </head>
+
+<body id="who-content">
+	<div class="cont">
+	<h3 id="t273090" class="heading3">Библиотека ANN2SNN</h3>
+<p class="bodytext">Библиотека ANN2SNN предназначена для создания нейронных сетей, которые можно преобразовать в импульсные нейронные сети и разместить на нейроморфном процессоре Алтай-2 для их исполнения. Библиотека ANN2SNN реализована на языке программирования Python.</p>
+<p class="bodytext">Для создания нейронных сетей необходимо использовать специальные <a id="h273482" class="crossreferencetemplate" href="273444.htm" target="_self">тернарные слои</a>, в которых учитываются <a id="h272839" class="crossreferencetemplate" href="272837.htm" target="_self">ограничения</a>, характерные для нейроморфного процессора Алтай-2. Тернарные слои, используемые для создания нейронной сети, соответствуют слоям <a class="directhyperlinktemplate" href="https://keras.io/" target="_blank">библиотеки Keras</a>, со следующими основными отличиями:</p>
+<ul class="listbullet1"><li class="listbullet1">Входными и выходными данными каждого из слоев нейронной сети являются бинарные тензоры соответствующей размерности.</li><li class="listbullet1">Все веса слоев нейронной сети находятся в диапазоне {-1,0,1}.</li><li class="listbullet1">Значение смещения в слое нейронной сети находится в диапазоне от -32&nbsp;768 до 32&nbsp;767.</li></ul><p class="bodytext">При обучении нейронной сети, созданной с помощью тернарных слоев, стоит учитывать следующие особенности:</p>
+<ul class="listbullet1"><li class="listbullet1">В случае наличия небинаризованных данных для обучения и/или валидации необходимо сначала их привести к бинарному виду. Для это можно использовать алгоритмы кодирования и декодирования или <a id="h273742" class="crossreferencetemplate" href="273724.htm" target="_self">создать нейросетевые обучаемые блоки, кодирующие и декодирующие данные</a>.</li><li class="listbullet1">При обучении моделей бинарной классификации методом градиентного спуска для дифференцируемости функции потерь необходимо указать <a class="directhyperlinktemplate" href="https://www.tensorflow.org/api_docs/python/tf/keras/activations/sigmoid" target="_blank">сигмоидную функцию</a> (англ. sigmoid function) в качестве функции активации выходного слоя. После проведения обучения нужно заменить сигмоидноую активацию выходного слоя на активацию с <a class="directhyperlinktemplate" href="https://en.wikipedia.org/wiki/Heaviside_step_function" target="_blank">функцией Хевисайда </a>(англ. Heaviside function). </li><li class="listbullet1">При обучении моделей многоклассовой классификации методом градиентного спуска для дифференцируемости функции потерь необходимо указать <a class="directhyperlinktemplate" href="https://www.tensorflow.org/api_docs/python/tf/keras/activations/softmax" target="_blank">многомерную логистическую функцию</a> (англ. softmax function) в качестве функции активации выходного слоя. При размещении такой нейронной сети на нейроморфном процессоре Алтай-2 выходной вектор будет автоматически преобразован к бинарному виду, реализующему индикатор максимальной компоненты значения выходного вектора. </li></ul><p class="bodytext">Сериализация и десериализация нейронных сетей проводится стандартными методами, предоставляемыми библиотекой Keras, с указанием параметра <code class="programcharacter">custom_objects</code> в виде словаря тернарных слоев и функции активации heaviside. </p>
+<p class="bodytext">Во время размещения нейронной сети на нейроморфном процессоре нейронная сеть проверяется на соответствие ограничениям процессора. В результате размещения выдается информация о количестве ядер, необходимых для запуска нейронной сети на нейроморфном процессоре Алтай-2. Если нейронную сеть невозможно разместить на нейроморфном процессоре, выдается соответствующая ошибка. Вы можете провести примерную оценку количества ядер, необходимого для размещения нейронной сети на нейроморфном процессоре Алтай-2, по формуле, представленной на рисунке ниже, где:</p>
+<ul class="listbullet1"><li class="listbullet1"><em class="emphasischaracter">x</em> соответствует необходимому количеству ядер. После расчета количества ядер по формуле округлите результат в большую сторону. </li><li class="listbullet1"><em class="emphasischaracter">i</em> соответствует порядковому номеру слоя нейронной сети.</li><li class="listbullet1"><em class="emphasischaracter">n</em> соответствует количеству слоев нейронной сети.</li><li class="listbullet1"><em class="emphasischaracter">w</em> соответствует первой размерности тензора слоя нейронной сети.</li><li class="listbullet1"><em class="emphasischaracter">h</em> соответствует второй размерности тензора слоя нейронной сети.</li><li class="listbullet1"><em class="emphasischaracter">c</em> соответствует третьей размерности тензора слоя нейронной сети.<p class="picture"><img id="f273483" src="core_number.png" class="linkedpngfiletemplate" alt="CoreNumber" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Формула для примерной оценки необходимого количества ядер</p>
+</li></ul><p class="bodytext">Для нейронных сетей, созданных на базе библиотеки ANN2SNN, возможны следующие варианты инференса:</p>
+<ul class="listbullet1"><li class="listbullet1">Инференс за количество <a id="h273600" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('273600','h273600')" target="_self">тиков</a>, равное количеству слоев в нейронной сети. При этом варианте инференса за тик исполнения нейронной сети вычисляется только один слой нейронной сети, а обработанные данные передаются в последующий слой. Время инференса прямо пропорционально количеству слоев нейронной сети.<div id="d273600" class="popuponclick" style="display:none"><a href="javascript:hidePopup('273600');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Квант времени, за который выполняется вычисление функции всех нейронов в ядре. За время тика все спайки, сгенерированные ядрами или поступившие на входные линии нейронов, доставляются до целевых нейронов.</p>
+</div></li><li class="listbullet1">Инференс за один тик. При этом варианте инференса каждый слой нейронной сети получает данные от предыдущего слоя и обрабатывает их. Время инференса составляет около 1,5&nbsp;мс.</li></ul>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div>
+</body>
+
+</html>

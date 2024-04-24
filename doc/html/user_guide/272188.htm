@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="maximum-scale=1.0" />
+    <title> Библиотека поддержки бекендов </title>
+    <script type="text/javascript" src="../langs.js"></script>
+    <script type="text/javascript">
+        !function ( w, d ) {
+            var scriptsPath="";
+            d.writeln("\x3Cscript type='text/javascript' src='"+scriptsPath+d.documentElement.lang+".js'>\x3C/script>");
+        }( window, document );
+    </script>
+    <script type="text/javascript" src="toc.js"></script>
+    
+    <script type="text/javascript" src="aiconverter_result.js"></script>
+    <link rel="stylesheet" type='text/css' href="typography.css"/>
+    <link rel="stylesheet" type='text/css' href="styles.css"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="favicon.png" type="image/png"/>
+
+
+            <!--[if lte IE 9]>
+                <link rel="stylesheet" type="text/css" href="bootstrap.css">
+            <![endif]-->
+            <!--[if lte IE 8]>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+            <![endif]-->
+            </head>
+
+<body id="who-content">
+	<div class="cont">
+	<h3 id="t272188" class="heading3">Библиотека поддержки бекендов</h3>
+<p class="bodytext">В библиотеке поддержки бекендов реализуются интерфейсы к объектам, необходимым для работы бекендов и выполнения прикладных задач. Библиотека содержит пространство имен <code class="programcharacter">core</code>.</p>
+<p class="bodytext">Таблица ниже содержит описание объектов библиотеки.</p>
+<p class="spacerfortables"></p>
+<table class="tableintopic" width="437" cellpadding="2" cellspacing="0" border="1" style="border-collapse:collapse; border:1px solid #010101">
+<tr align="left" valign="top">
+<th bgcolor="#C0C0C0" style="border:1px solid #010101;" width="219"><p class="tableheading">Объект</p>
+</th>
+<th bgcolor="#C0C0C0" style="border:1px solid #010101;" width="219"><p class="tableheading">Описание</p>
+</th>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h272216" class="crossreferencetemplate" href="272198.htm" target="_self">Backend</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Базовый класс для конкретных реализаций бекендов.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h272213" class="crossreferencetemplate" href="272195.htm" target="_self">BaseData</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Структура, определяющая набор базовых данных.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h272292" class="crossreferencetemplate" href="272193.htm" target="_self">continuously_uid_generator</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Класс, реализующий генератор уникальных идентификаторов.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h272214" class="crossreferencetemplate" href="272199.htm" target="_self">MessageBus</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Класс, реализующий интерфейс к шине сообщений.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h272215" class="crossreferencetemplate" href="272200.htm" target="_self">MessageEndpoint</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Класс, реализующий интерфейс к точке подключения.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h272281" class="crossreferencetemplate" href="272202.htm" target="_self">Messaging</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Пространство имен, определяющее интерфейсы к сообщениям.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h272217" class="crossreferencetemplate" href="272196.htm" target="_self">Population</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Набор классов, реализующих контейнеры <a id="h254021" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254021','h254021')" target="_self">нейронов</a> одной модели.</p>
+<div id="d254021" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254021');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Узел нейронной сети, имеющий набор атрибутов. На основе атрибутов нейрона и последовательности входных сигналов происходит вычисление некоторой математической функции, результатом которого является синаптическое воздействие или его отсутствие.</p>
+</div></td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h272219" class="crossreferencetemplate" href="272197.htm" target="_self">Projection</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Набор классов, реализующих контейнеры <a id="h254022" class="popuponclicktemplate" href="javascript:void(0)" onclick="togglePopup('254022','h254022')" target="_self">синапсов</a> одного типа.</p>
+<div id="d254022" class="popuponclick" style="display:none"><a href="javascript:hidePopup('254022');void(0)"><img src="close.gif" align="right" alt="Close" border="0"></a><p class="bodytext">Место соединения нейронов, основная функция которого&nbsp;&#8211; передача сигнала от одного нейрона к другому. Каждый нейрон может быть связан с множеством синапсов.</p>
+</div></td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h272280" class="crossreferencetemplate" href="272201.htm" target="_self">Subscription</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Набор классов, реализующих подписку на сообщения.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h272221" class="crossreferencetemplate" href="272194.htm" target="_self">TagMap</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Класс, реализующий интерфейс к словарю тегов.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h272220" class="crossreferencetemplate" href="272192.htm" target="_self">UID</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Класс, определяющий уникальные идентификаторы.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h272228" class="crossreferencetemplate" href="272227.htm" target="_self">uid_hash</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Класс, реализующий хеширования UID.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext"><a id="h272293" class="crossreferencetemplate" href="272229.htm" target="_self">UUID</a></p>
+</td>
+<td style="border:1px solid #010101;" width="219"><p class="tablebodytext">Класс, реализующий интерфейс к уникальному идентификатору библиотеки <a class="hyperlinktemplate" href="http://www." target="_blank">Boost:Uuid</a>.</p>
+</td>
+</tr>
+
+</table>
+<p class="bodytext">На рисунке ниже представлена схема взаимодействия объектов библиотеки.</p>
+<p class="bodytext">В Kaspersky Neuromorphic Platform структура <code class="programcharacter">BaseData</code> содержит базовую информацию об объекте и включает в себя <code class="programcharacter">UID</code> и <code class="programcharacter">TagMap</code>. Структура <code class="programcharacter">BaseData</code> используется в классах <code class="programcharacter">Projection</code>, <code class="programcharacter">Population</code> и <code class="programcharacter">Backend</code>, соответственно каждый из них обладает идентификатором <code class="programcharacter">UID</code> и набором тегов и их значениями <code class="programcharacter">TagMap</code>.</p>
+<p class="bodytext">Классы <code class="programcharacter">Population</code> и <code class="programcharacter">Projection</code> принимают и отправляют сообщения из пространства имен <code class="programcharacter">Messaging</code>, которые содержат в своем заголовке UID отправителя. Обмен сообщений осуществляется с помощью методов класса <code class="programcharacter">Backend</code>, в котором хранятся классы <code class="programcharacter">MessageBus</code> и <code class="programcharacter">MessageEndpoint</code>. Шина сообщений <code class="programcharacter">MessageBus</code> создает точки подключения <code class="programcharacter">MessageEndpoint</code> и взаимодействует с ними в процессе обмена сообщениями. Каждая точка подключения <code class="programcharacter">MessageEndpoint</code> содержит контейнер подписок класса <code class="programcharacter">Subscription</code>.</p>
+<p class="picture"><img id="f272709" src="corelibrarypython.png" class="linkedpngfiletemplate" alt="" vspace="0" hspace="0" align="bottom" border="0"></p>
+<p class="picturename">Схема взаимодействия объектов библиотеки поддержки бекендов</p>
+
+
+	<a href="#" class="bt-home">В начало</a>
+	</div>
+</body>
+
+</html>
