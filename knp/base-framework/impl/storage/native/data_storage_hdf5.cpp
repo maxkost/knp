@@ -1,6 +1,6 @@
 /**
- * @file data_storage.cpp
- * @brief File for saving and loading data.
+ * @file data_storage_hdf5.cpp
+ * @brief File for saving and loading data in hdf5 format.
  * @author An. Vartenkov
  * @date 16.04.2024
  */
@@ -13,51 +13,13 @@
 #include <filesystem>
 #include <fstream>
 
-#include "sonata/highfive.h"
+#include "../../sonata/highfive.h"
+#include "data_storage_common.h"
 
 
 namespace knp::framework::storage::native
 {
 namespace fs = std::filesystem;
-
-constexpr int MAGIC_NUMBER = 2682;
-constexpr std::array<int64_t, 2> VERSION{0, 1};
-
-
-std::vector<core::messaging::SpikeMessage> convert_node_time_arrays_to_messages(
-    const std::vector<int64_t> &nodes, const std::vector<float> &timestamps, const knp::core::UID &uid,
-    float time_per_step)
-{
-    if (nodes.size() != timestamps.size()) throw std::runtime_error("Different array sizes: nodes and timestamps.");
-    using Message = core::messaging::SpikeMessage;
-    std::unordered_map<size_t, Message> message_map;  // This is a result buffer.
-    for (size_t i = 0; i < timestamps.size(); ++i)
-    {
-        auto step = static_cast<core::Step>(timestamps[i] / time_per_step);
-        auto index = nodes[i];
-        auto iterator = message_map.find(step);
-        if (iterator == message_map.end())
-        {
-            Message message{{uid, step}, std::vector<core::messaging::SpikeIndex>(1, index)};
-            message_map.insert({step, std::move(message)});
-        }
-        else
-            iterator->second.neuron_indexes_.push_back(index);
-    }
-
-    // Moving messages from map to vector, O(N_messages).
-    std::vector<Message> result;
-    result.reserve(message_map.size());
-    std::transform(
-        message_map.begin(), message_map.end(), std::back_inserter(result),
-        [](auto &val) { return std::move(val.second); });
-
-    // Sort message vector by message step.
-    std::sort(
-        result.begin(), result.end(),
-        [](const Message &msg1, const Message &msg2) { return msg1.header_.send_time_ < msg2.header_.send_time_; });
-    return result;
-}
 
 
 bool check_magic(const HighFive::File &h5_file, bool is_throw)

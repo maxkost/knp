@@ -1,5 +1,5 @@
 /**
- * @file data_storage.h
+ * @file data_storage_hdf5.h
  * @brief Load data from file.
  * @author Vartenkov Andrey
  * @date 22.04.2024

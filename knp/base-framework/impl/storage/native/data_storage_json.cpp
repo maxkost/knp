@@ -17,18 +17,12 @@
 
 #include <boost/format.hpp>
 
-#include "sonata/highfive.h"
+#include "data_storage_common.h"
 
 
 namespace knp::framework::storage::native
 {
 namespace fs = std::filesystem;
-constexpr std::array<int64_t, 2> VERSION = {0, 1};
-
-
-std::vector<core::messaging::SpikeMessage> convert_node_time_arrays_to_messages(
-    const std::vector<int64_t> &nodes, const std::vector<float> &timestamps, const knp::core::UID &uid,
-    float time_per_step);
 
 
 // clang-format off // No const operator[] for simdjson document, so no const parameter.
@@ -42,7 +36,7 @@ bool is_json_has_magic(simdjson::ondemand::document &doc)  // cppcheck-suppress 
     {
         if (group["name"] == "magic")
         {
-            if (group["value"].get<int64_t>() != 2682) break;
+            if (group["value"].get<int64_t>() != MAGIC_NUMBER) break;
             has_magic = true;
             break;
         }
