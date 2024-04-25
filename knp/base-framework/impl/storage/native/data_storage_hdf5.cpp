@@ -122,7 +122,7 @@ void save_messages_to_h5(
     data_file.createAttribute("magic", MAGIC_NUMBER);
     data_file.createAttribute("version", std::array<int, 2>{0, 1});
     auto spike_group = data_file.createGroup("spikes");
-    spike_group.createAttribute("sorting", "by_timestamps");
+    spike_group.createAttribute("sorting", std::string{"by_timestamps"});
 
     // Calculating total number of spikes.
     auto add_size = [](size_t sum, const auto &msg) { return sum + msg.neuron_indexes_.size(); };
@@ -151,7 +151,8 @@ void save_messages_to_h5(
 
     // Creating datasets.
     spike_group.createDataSet("node_ids", nodes);
-    spike_group.createDataSet("timestamps", timestamps).createAttribute("units", "step");
+    auto time_set = spike_group.createDataSet("timestamps", timestamps);
+    time_set.createAttribute("units", std::string{"step"});
 }
 
 }  // namespace knp::framework::storage::native
