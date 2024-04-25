@@ -4,7 +4,6 @@ include_guard(GLOBAL)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-include(knp-functions)
 include(third-party)
 include(version)
 
@@ -79,6 +78,7 @@ option(KNP_ENABLE_COVERAGE "Enable coverage checking" ${KNP_ENABLE_COVERAGE_DEFA
 option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
 option(KNP_PYTHON_BUILD_WHEEL "Build WHL package for the Python framework" ${KNP_PYTHON_BUILD_WHEEL_DEFAULT})
 option(KNP_PYTHON_FRAMEWORK_BUILD "Build KNP Python framework" ${KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT})
+option(KNP_COTIRE_ENABLED "Enable COmpile TIme REducer" ON)
 
 mark_as_advanced(KNP_MAINTAINER_BUILD)
 mark_as_advanced(KNP_ENABLE_COVERAGE)
@@ -108,9 +108,6 @@ if (KNP_ENABLE_AVX)
     # -include bits/stdc++.h
 endif()
 
-set(ENABLE_FAST_MATH ON)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
 if(NOT KNP_MAINTAINER_BUILD)
     execute_process(COMMAND pre-commit install
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -125,9 +122,18 @@ if(KNP_BUILD_TESTS)
     add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)
 endif()
 
+
+#
+# Common parameters.
+#
+
+set(ENABLE_FAST_MATH ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+include(knp-functions)
 include(print-variables)
 
 

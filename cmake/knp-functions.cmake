@@ -4,6 +4,9 @@
 
 include_guard(GLOBAL)
 
+if(KNP_COTIRE_ENABLED)
+    include(cotire)
+endif()
 
 function(knp_capitalize_string src result)
     # Get first letter and capitalize.
@@ -47,6 +50,10 @@ function (_knp_add_library lib_name lib_type)
         add_library("${lib_name}" ${lib_type} ${${lib_name}_source})
     endif()
 
+    if(KNP_COTIRE_ENABLED)
+        cotire("${lib_name}")
+    endif()
+
     knp_set_target_parameters("${lib_name}")
 
     if (PARSED_ARGS_ALIAS)
@@ -73,6 +80,7 @@ endfunction()
 
 
 function (knp_add_library lib_name lib_type)
+
     string(TOUPPER "${lib_type}" lib_type)
     if(NOT lib_type OR lib_type STREQUAL "BOTH")
         _knp_add_library("${lib_name}" SHARED ${ARGN})
@@ -100,6 +108,7 @@ function (knp_add_library lib_name lib_type)
     else()
         message(FATAL_ERROR "Incorrect library build type: \"${lib_type}\". Use SHARED/MODULE, STATIC or BOTH.")
     endif()
+
 endfunction()
 
 
