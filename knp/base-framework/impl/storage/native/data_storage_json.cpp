@@ -24,6 +24,93 @@ namespace knp::framework::storage::native
 {
 namespace fs = std::filesystem;
 
+constexpr char header_string[] =
+    R"--("attributes": [
+{
+    "name": "magic",
+            "type": {
+        "class": "Integer (unsigned)",
+                "size": 32,
+                "endianness": "little-endian"
+    },
+    "value": 2682
+},
+{
+    "name": "version",
+            "shape": [2],
+    "type": {
+        "class": "Integer (unsigned)",
+        "size": 32,
+        "endianness": "little-endian"
+    },
+    "value": [0, 1]
+}
+])--";
+
+
+constexpr char spike_attributes[] =
+    R"--("attributes": [
+  {
+    "name": "sorting",
+    "type": {
+      "class": "Enumeration",
+      "mapping": {
+        "by_id": 1,
+        "by_time": 2,
+        "none": 0
+      }
+    },
+    "value": "by_time"
+  }
+])--";
+
+
+constexpr char node_structure[] =
+    R"--("node_ids": {
+  "shape": [%d],
+  "type": {
+    "class": "Integer (unsigned)",
+    "size": 64,
+    "endianness": "little-endian"
+  },
+  "value": [%s]
+})--";
+
+
+constexpr char timestamp_structure[] =
+    R"--("timestamps": {
+  "attributes": [
+    {
+      "name": "units",
+      "type": {
+        "class": "String",
+        "charSet": "ASCII"
+      },
+      "value": "step"
+    }
+  ],
+  "shape": [%d],
+  "type": {
+    "class": "Float",
+    "endianness": "little-endian"
+  },
+  "value": [%s]
+})--";
+
+
+constexpr char whole_file_string[] =
+    R"--(
+{
+    %s,
+    "spikes" :
+        {
+            %s,
+            %s,
+            %s
+        }
+    }
+)--";
+
 
 // clang-format off // No const operator[] for simdjson document, so no const parameter.
 bool is_json_has_magic(simdjson::ondemand::document &doc)  // cppcheck-suppress constParameter
@@ -118,94 +205,6 @@ std::vector<core::messaging::SpikeMessage> load_messages_from_json(
 
     return convert_node_time_arrays_to_messages(nodes, timestamps, uid, 1);
 }
-
-
-const char header_string[] =
-    R"--("attributes": [
-{
-    "name": "magic",
-            "type": {
-        "class": "Integer (unsigned)",
-                "size": 32,
-                "endianness": "little-endian"
-    },
-    "value": 2682
-},
-{
-    "name": "version",
-            "shape": [2],
-    "type": {
-        "class": "Integer (unsigned)",
-        "size": 32,
-        "endianness": "little-endian"
-    },
-    "value": [0, 1]
-}
-])--";
-
-
-const char spike_attributes[] =
-    R"--("attributes": [
-      {
-        "name": "sorting",
-        "type": {
-          "class": "Enumeration",
-          "mapping": {
-            "by_id": 1,
-            "by_time": 2,
-            "none": 0
-          }
-        },
-        "value": "by_time"
-      }
-    ])--";
-
-
-const char node_structure[] =
-    R"--("node_ids": {
-      "shape": [%d],
-      "type": {
-        "class": "Integer (unsigned)",
-        "size": 64,
-        "endianness": "little-endian"
-      },
-      "value": [%s]
-    })--";
-
-
-const char timestamp_structure[] =
-    R"--("timestamps": {
-      "attributes": [
-        {
-          "name": "units",
-          "type": {
-            "class": "String",
-            "charSet": "ASCII"
-          },
-          "value": "step"
-        }
-      ],
-      "shape": [%d],
-      "type": {
-        "class": "Float",
-        "endianness": "little-endian"
-      },
-      "value": [%s]
-    })--";
-
-
-const char whole_file_string[] =
-    R"--(
-{
-    %s,
-    "spikes" :
-        {
-            %s,
-            %s,
-            %s
-        }
-    }
-)--";
 
 
 void save_messages_to_json(
