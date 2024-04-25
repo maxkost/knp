@@ -169,7 +169,7 @@ core::Projection<ResourceDeltaSynapse> load_projection(
 
 
     core::Projection<ResourceDeltaSynapse> proj(
-        uid_own, uid_from, uid_to, [&synapses](size_t i) { return synapses[i]; }, synapses.size());
+        uid_own, uid_from, uid_to, [&synapses](size_t index) { return synapses[index]; }, synapses.size());
     if (projection_group.hasAttribute("is_locked"))
     {
         if (projection_group.getAttribute("is_locked").read<bool>())

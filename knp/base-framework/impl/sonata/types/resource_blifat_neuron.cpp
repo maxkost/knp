@@ -182,7 +182,7 @@ load_population<neuron_traits::SynapticResourceSTDPBLIFATNeuron>(
 
     knp::core::UID uid{boost::lexical_cast<boost::uuids::uuid>(population_name)};
     core::Population<ResourceNeuron> out_population(
-        uid, [&target](size_t i) { return target[i]; }, group_size);
+        uid, [&target](size_t index) { return target[index]; }, group_size);
     return out_population;
 }
 

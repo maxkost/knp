@@ -123,7 +123,7 @@ core::Population<neuron_traits::BLIFATNeuron> load_population<neuron_traits::BLI
 
     knp::core::UID uid{boost::lexical_cast<boost::uuids::uuid>(population_name)};
     core::Population<neuron_traits::BLIFATNeuron> out_population(
-        uid, [&target](size_t i) { return target[i]; }, group_size);
+        uid, [&target](size_t index) { return target[index]; }, group_size);
     return out_population;
 }
 

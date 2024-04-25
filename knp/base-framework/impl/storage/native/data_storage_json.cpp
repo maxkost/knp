@@ -147,7 +147,7 @@ bool is_correct_version(simdjson::ondemand::document &doc)  // cppcheck-suppress
             auto array = value_group.get_array();
             if (array.error() || VERSION.size() != array.count_elements().value()) return false;
             std::vector<int64_t> version(VERSION.size());
-            std::transform(array.begin(), array.end(), version.begin(), [](auto v) { return v.get_int64(); });
+            std::transform(array.begin(), array.end(), version.begin(), [](auto val) { return val.get_int64(); });
             return std::equal(version.begin(), version.end(), VERSION.begin());
         }
     }
