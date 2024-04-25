@@ -4,21 +4,37 @@
 
 include_guard(GLOBAL)
 
+include(CheckIPOSupported)
 
-function(knp_set_target_parameters target)
-    target_compile_options("${target}" PRIVATE $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wdocumentation>)
-    target_compile_options("${target}" PRIVATE $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-Wdocumentation>)
+
+function(knp_set_target_parameters target visibility)
+    if (${visibility} STREQUAL "INTERFACE")
+        set(pub_visibility "INTERFACE")
+    else()
+        set(pub_visibility "PUBLIC")
+        if(KNP_IPO_ENABLED)
+            check_ipo_supported(RESULT _ipo_result OUTPUT _ipo_output)
+            if (_ipo_result)
+                set_target_properties("${target}" PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
+            else()
+                message(WARNING "IPO is not supported: ${_ipo_output}")
+            endif()
+        endif()
+    endif()
+
+    target_compile_options("${target}" ${visibility} $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wdocumentation>)
+    target_compile_options("${target}" ${visibility} $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-Wdocumentation>)
     # SDL requirements.
-    target_compile_options("${target}" PUBLIC $<$<COMPILE_LANG_AND_ID:C,GNU,Clang>:-Wall -fstack-protector-all -Wformat -Wformat-security>)
-    target_compile_options("${target}" PUBLIC $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang>:-Wall -fstack-protector-all -Wformat -Wformat-security>)
+    target_compile_options("${target}" ${visibility} $<$<COMPILE_LANG_AND_ID:C,GNU,Clang>:-Wall -fstack-protector-all -Wformat -Wformat-security>)
+    target_compile_options("${target}" ${visibility} $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang>:-Wall -fstack-protector-all -Wformat -Wformat-security>)
 
-    target_compile_definitions("${target}" PRIVATE
+    target_compile_definitions("${target}" ${visibility}
                                "KNP_LIBRARY_NAME=${target}")
-    target_compile_features("${target}" PUBLIC cxx_std_17)
+    target_compile_features("${target}" ${pub_visibility} cxx_std_17)
 
-#    target_compile_definitions("${target}" PRIVATE
+    target_compile_definitions("${target}" ${visibility}
 #                                $<$<CONFIG:Debug>:_FORTIFY_SOURCE=2>
-#                                $<$<CONFIG:Release>:_FORTIFY_SOURCE=1>)
+                                $<$<CONFIG:Release>:_FORTIFY_SOURCE=1>)
     # Sanitizer (dynamic analysis).
     # Sanitizers don't work under TFS. Temporarily disabled.
 
@@ -28,38 +44,36 @@ function(knp_set_target_parameters target)
         #        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,noexecstack -Wl,-z,relro,-z,now")
     endif()
 
-    target_include_directories("${target}" PUBLIC
+    target_include_directories("${target}" ${pub_visibility}
             "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
             "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
-
-    if(KNP_PRECOMP_ENABLED)
-#        target_precompile_headers("${target}" PRIVATE impl/precompiled_header.h)
-    endif()
 endfunction()
 
 
 function (_knp_add_library lib_name lib_type)
-    set(options "")
-    set(one_value_args "ALIAS;LIB_PREFIX")
+    set(options "NO_PREFIX")
+    set(one_value_args "ALIAS;LIB_PREFIX;PRECOMP")
     set(multi_value_args "LINK_PRIVATE;LINK_PUBLIC")
 
     cmake_parse_arguments(PARSED_ARGS "${options}" "${one_value_args}" "${multi_value_args}" ${ARGN})
 
     set(${lib_name}_source ${PARSED_ARGS_UNPARSED_ARGUMENTS})
 
-    if ("${lib_type}" STREQUAL "PY_MODULE")
+    if("${lib_type}" STREQUAL "PY_MODULE")
         python3_add_library("${lib_name}" MODULE ${${lib_name}_source})
     else()
         add_library("${lib_name}" ${lib_type} ${${lib_name}_source})
     endif()
 
-    knp_set_target_parameters("${lib_name}")
-
-    if (PARSED_ARGS_ALIAS)
+    if(PARSED_ARGS_ALIAS)
         add_library(${PARSED_ARGS_ALIAS} ALIAS "${lib_name}")
     endif()
 
-    if (PARSED_ARGS_LINK_PRIVATE)
+    if(PARSED_ARGS_PRECOMP)
+        target_precompile_headers("${lib_name}" PRIVATE "${PARSED_ARGS_PRECOMP}")
+    endif()
+
+    if(PARSED_ARGS_LINK_PRIVATE)
         target_link_libraries("${lib_name}" PRIVATE ${PARSED_ARGS_LINK_PRIVATE})
     endif()
 
@@ -67,20 +81,28 @@ function (_knp_add_library lib_name lib_type)
         target_link_libraries("${lib_name}" PUBLIC ${PARSED_ARGS_LINK_PUBLIC})
     endif()
 
-    if (PARSED_ARGS_LIB_PREFIX)
-        target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${PARSED_ARGS_LIB_PREFIX}")
-        target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${PARSED_ARGS_LIB_PREFIX}${lib_name}")
-        set_target_properties("${lib_name}" PROPERTIES PREFIX "${PARSED_ARGS_LIB_PREFIX}")
+    if("${lib_type}" STREQUAL "INTERFACE")
+        knp_set_target_parameters("${lib_name}" INTERFACE)
+        set(_visibility "INTERFACE")
     else()
-        target_compile_definitions("${lib_name}" PRIVATE "KNP_LIBRARY_NAME_PREFIX=${CMAKE_STATIC_LIBRARY_PREFIX}")
-        target_compile_definitions("${lib_name}" PRIVATE "KNP_FULL_LIBRARY_NAME=${CMAKE_STATIC_LIBRARY_PREFIX}${lib_name}")
+        knp_set_target_parameters("${lib_name}" PRIVATE)
+        set(_visibility "PRIVATE")
+    endif()
+
+    if (PARSED_ARGS_LIB_PREFIX)
+        target_compile_definitions("${lib_name}" ${_visibility} "KNP_LIBRARY_NAME_PREFIX=${PARSED_ARGS_LIB_PREFIX}")
+        target_compile_definitions("${lib_name}" ${_visibility} "KNP_FULL_LIBRARY_NAME=${PARSED_ARGS_LIB_PREFIX}${lib_name}")
+        set_target_properties("${lib_name}" PROPERTIES PREFIX "${PARSED_ARGS_LIB_PREFIX}")
+    elseif(NOT PARSED_ARGS_NO_PREFIX)
+        target_compile_definitions("${lib_name}" ${_visibility} "KNP_LIBRARY_NAME_PREFIX=${CMAKE_STATIC_LIBRARY_PREFIX}")
+        target_compile_definitions("${lib_name}" ${_visibility} "KNP_FULL_LIBRARY_NAME=${CMAKE_STATIC_LIBRARY_PREFIX}${lib_name}")
     endif()
 endfunction()
 
 
 function (knp_add_library lib_name lib_type)
-
     string(TOUPPER "${lib_type}" lib_type)
+
     if(NOT lib_type OR lib_type STREQUAL "BOTH")
         _knp_add_library("${lib_name}" SHARED ${ARGN})
 
@@ -107,7 +129,6 @@ function (knp_add_library lib_name lib_type)
     else()
         message(FATAL_ERROR "Incorrect library build type: \"${lib_type}\". Use SHARED/MODULE, STATIC or BOTH.")
     endif()
-
 endfunction()
 
 

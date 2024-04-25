@@ -56,6 +56,11 @@ repos:
       - id: cppcheck
         args: ["-x", "c++", "--inline-suppr", "--template=gcc", "--suppress-xml=knp/.cppcheck-suppress.xml"]  # --cppcheck-build-dir=build]
 
+#      - id: clang-tidy
+#        args: ["--config-file=knp/.clang-tidy",  "-extra-arg-before=-xc++", "-extra-arg=-std=c++17", "-p=build"]
+#        additional_dependencies:
+#          [clang-tidy==18.1.1]
+
       - id: cpplint
         args: ["--exclude=tools/python-bindings-gen/py-gen", "--root", "knp"]
         additional_dependencies:
@@ -70,13 +75,15 @@ repos:
       #   - With a cache tidy is faster.
       #   - I don't know where is the real build directory.
       #   - Hook implementation with a cache is buggy now.
-      - id: clang-tidy
-        name: clang-tidy
-        args: ["--config-file=knp/.clang-tidy",  "-extra-arg-before=-xc++", "-extra-arg=-std=c++17", "-p=build"]
-        entry: tools/hooks/clang_tidy.py
-        description: Find warnings/errors in C, C++, and Objective-C code
-        types_or: [c, c++, c#, objective-c, cuda]
-        language: python
+#      - id: clang-tidy
+#        name: clang-tidy
+#        args: ["--config-file=knp/.clang-tidy",  "-extra-arg-before=-xc++", "-extra-arg=-std=c++17", "-p=build"]
+#        entry: tools/hooks/clang_tidy.py
+#        description: Find warnings/errors in C, C++, and Objective-C code
+#        additional_dependencies:
+#          [clang-tidy==18.1.1]
+#        types_or: [c, c++, g#, objective-c, cuda]
+#        language: python
 #      - id: oclint
 #        name: oclint
 #        entry: tools/hooks/oclint.py

@@ -17,7 +17,7 @@ class ClangTidyCmd(StaticAnalyzerCmd):
 
     def __init__(self, args: List[str]):
         if Path(self.cache_command).exists():
-            args.insert(1, self.command)
+            args.insert(0, self.command)
             self.command = str(self.cache_command)
         super().__init__(self.command, self.lookbehind, args)
         self.parse_args(args)

@@ -76,21 +76,22 @@ option(KNP_BUILD_EXAMPLES "Build usage examples" ${KNP_BUILD_EXAMPLES_DEFAULT})
 option(KNP_BUILD_TESTS "Build tests" ${KNP_BUILD_TESTS_DEFAULT})
 option(KNP_ENABLE_AVX "Enable AVX and other CPU-specific extensions in the release build" ${KNP_ENABLE_AVX_DEFAULT})
 option(KNP_ENABLE_COVERAGE "Enable coverage checking" ${KNP_ENABLE_COVERAGE_DEFAULT})
+option(KNP_IPO_ENABLED "Enable interprocedural optimization" ON)
 option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
 option(KNP_PYTHON_BUILD_WHEEL "Build WHL package for the Python framework" ${KNP_PYTHON_BUILD_WHEEL_DEFAULT})
 option(KNP_PYTHON_FRAMEWORK_BUILD "Build KNP Python framework" ${KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT})
-option(KNP_PRECOMP_ENABLED "Enable using common precompiled header" ON)
 
 mark_as_advanced(KNP_MAINTAINER_BUILD)
 mark_as_advanced(KNP_ENABLE_COVERAGE)
 mark_as_advanced(KNP_ENABLE_AVX)
-mark_as_advanced(KNP_PRECOMP_ENABLED)
+mark_as_advanced(KNP_IPO_ENABLED)
 
 message(STATUS "KNP_BUILD_DOCUMENTATION = ${KNP_BUILD_DOCUMENTATION}")
 message(STATUS "KNP_BUILD_EXAMPLES = ${KNP_BUILD_EXAMPLES}")
 message(STATUS "KNP_BUILD_TESTS = ${KNP_BUILD_TESTS}")
 message(STATUS "KNP_ENABLE_AVX = ${KNP_ENABLE_AVX}")
 message(STATUS "KNP_ENABLE_COVERAGE = ${KNP_ENABLE_COVERAGE}")
+message(STATUS "KNP_IPO_ENABLED = ${KNP_IPO_ENABLED}")
 message(STATUS "KNP_MAINTAINER_BUILD = ${KNP_MAINTAINER_BUILD}")
 message(STATUS "KNP_PYTHON_BUILD_WHEEL = ${KNP_PYTHON_BUILD_WHEEL}")
 message(STATUS "KNP_PYTHON_FRAMEWORK_BUILD = ${KNP_PYTHON_FRAMEWORK_BUILD}")
@@ -134,6 +135,10 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Always enabled for the KNP components.
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -D_FORTIFY_SOURCE=1")
+# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_FORTIFY_SOURCE=2")
 
 include(knp-functions)
 include(print-variables)
@@ -198,7 +203,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 set(CMAKE_TIDY_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/knp/.clang-tidy" CACHE PATH  "Clang-tidy config file")
 
-add_subdirectory(knp)
+add_subdirectory("knp")
 
 if (KNP_BUILD_DOCUMENTATION)
     add_subdirectory(doc)
