@@ -83,6 +83,7 @@ option(KNP_COTIRE_ENABLED "Enable COmpile TIme REducer" ON)
 mark_as_advanced(KNP_MAINTAINER_BUILD)
 mark_as_advanced(KNP_ENABLE_COVERAGE)
 mark_as_advanced(KNP_ENABLE_AVX)
+mark_as_advanced(KNP_COTIRE_ENABLED)
 
 message(STATUS "KNP_BUILD_DOCUMENTATION = ${KNP_BUILD_DOCUMENTATION}")
 message(STATUS "KNP_BUILD_EXAMPLES = ${KNP_BUILD_EXAMPLES}")
@@ -149,12 +150,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 # Make cache variables for install destinations.
 include(GNUInstallDirs)
 
-add_third_party("gh:BlueBrain/libsonata@0.1.25"
-                OPTIONS
-                    "EXTLIB_FROM_SUBMODULES ON"
-                    "SONATA_TESTS OFF"
-                    "SONATA_VERSION 1.0")
-
 #
 # LibHDF5 and it's dependencies.
 #
@@ -163,10 +158,18 @@ add_third_party("https://gitlab.dkrz.de/k202009/libaec.git@1.1.3")
 #add_third_party("gh:erdc/szip")
 
 add_third_party("gh:HDFGroup/hdf5#hdf5_1.14.4"
+                GIT_SHALLOW ON
                 OPTIONS
                     "HDF5_NO_PACKAGES ON")
 
 # End of LibHDF5.
+
+# Must follow after LibHDF5.
+add_third_party("gh:BlueBrain/libsonata@0.1.25"
+        OPTIONS
+        "EXTLIB_FROM_SUBMODULES ON"
+        "SONATA_TESTS OFF"
+        "SONATA_VERSION 1.0")
 
 add_third_party("gh:p-ranav/csv2@0.1")
 add_third_party("gh:simdjson/simdjson@3.9.1")

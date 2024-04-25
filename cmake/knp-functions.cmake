@@ -29,9 +29,10 @@ function(knp_set_target_parameters target)
 
     target_compile_definitions("${target}" PRIVATE "KNP_LIBRARY_NAME=${target}")
 
-    target_include_directories("${target}" PUBLIC
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+    target_include_directories("${lib_name}" PUBLIC
+            "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+
 endfunction()
 
 
@@ -48,10 +49,11 @@ function (_knp_add_library lib_name lib_type)
         python3_add_library("${lib_name}" MODULE ${${lib_name}_source})
     else()
         add_library("${lib_name}" ${lib_type} ${${lib_name}_source})
-    endif()
 
-    if(KNP_COTIRE_ENABLED)
-        cotire("${lib_name}")
+        if(KNP_COTIRE_ENABLED)
+            # Not used for Python modules.
+            cotire("${lib_name}")
+        endif()
     endif()
 
     knp_set_target_parameters("${lib_name}")
