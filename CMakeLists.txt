@@ -55,7 +55,7 @@ else()
 
     if(KNP_BUILD_DOCUMENTATION_DEFAULT)
         find_package(Doxygen OPTIONAL_COMPONENTS dot)
-        if(NOT DOXYGEN_FOUND OR NOT DOXYGEN_HAVE_DOT)
+        if(NOT DOXYGEN_FOUND)
             set(KNP_BUILD_DOCUMENTATION_DEFAULT OFF)
         endif()
     endif()
