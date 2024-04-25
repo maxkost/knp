@@ -46,21 +46,6 @@ std::vector<knp::core::messaging::SpikeMessage> generate_random_messages(
 }
 
 
-bool is_equal_spike_message_vector(
-    const std::vector<knp::core::messaging::SpikeMessage> &msg_list1,
-    const std::vector<knp::core::messaging::SpikeMessage> &msg_list2)
-{
-    if (msg_list1.size() != msg_list2.size()) return false;
-    for (size_t i = 0; i < msg_list1.size(); ++i)
-    {
-        if (msg_list1[i].header_.send_time_ != msg_list2[i].header_.send_time_) return false;
-        if (msg_list1[i].header_.sender_uid_ != msg_list2[i].header_.sender_uid_) return false;
-        if (msg_list1[i].neuron_indexes_ != msg_list2[i].neuron_indexes_) return false;
-    }
-    return true;
-}
-
-
 TEST(SaveLoadSuite, JsonTest)
 {
     namespace data = knp::framework::storage::native;
@@ -104,4 +89,5 @@ TEST(SaveLoadSuite, Hdf5Test)
 
     ASSERT_EQ(messages, data::load_messages_from_h5(path_to_h5, uid, 1.0, false));
     ASSERT_ANY_THROW(data::load_messages_from_h5(path_to_h5, uid, 1.0, true));
+    std::filesystem::remove(path_to_h5);
 }
