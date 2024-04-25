@@ -40,6 +40,8 @@ TEST(SaveLoadSuit, SaveTest)
     ASSERT_TRUE(std::filesystem::is_regular_file("network/projections.h5"));
     ASSERT_TRUE(std::filesystem::is_regular_file("network/neurons.csv"));
     ASSERT_TRUE(std::filesystem::is_regular_file("network/synapses.csv"));
+    std::filesystem::remove_all("network");
+    std::filesystem::remove("config.json");
 }
 
 
@@ -98,4 +100,6 @@ TEST(SaveLoadSuite, SaveLoadTest)
     knp::framework::sonata::save_network(network, ".");
     auto network_loaded = knp::framework::sonata::load_network(".");
     ASSERT_TRUE(are_networks_similar(network, network_loaded));
+    std::filesystem::remove("config.json");
+    std::filesystem::remove_all("network");
 }

@@ -59,7 +59,7 @@ target_include_directories("${PROJECT_NAME}"
     PRIVATE "${GTEST_DIR}/googlemock/include"
 )
 
-target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main spdlog)
+target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main spdlog HighFive)
 target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Core KNP::BaseFramework::Core KNP::Backends::CPUSingleThreaded KNP::Backends::CPUMultiThreaded)
 target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Backends::CPU::ThreadPool)
 

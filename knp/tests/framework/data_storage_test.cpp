@@ -9,8 +9,18 @@
 #include <knp/framework/io/storage/native/data_storage_hdf5.h>
 #include <knp/framework/io/storage/native/data_storage_json.h>
 
+#ifdef __clang__
+#    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wdocumentation"
+#endif
+#include <highfive/highfive.hpp>
+#ifdef __clang__
+#    pragma clang diagnostic pop
+#endif
+
 #include <tests_common.h>
 
+#include <fstream>
 #include <random>
 #include <vector>
 
@@ -51,23 +61,47 @@ bool is_equal_spike_message_vector(
 }
 
 
-TEST(SaveLoadSuite, Hdf5Test)
-{
-    knp::core::UID uid;
-    auto messages = generate_random_messages(uid, 200, 20, 0.2);
-    std::filesystem::path path_to_h5 = "data.h5";
-    knp::framework::storage::native::save_messages_to_h5(messages, path_to_h5, 1.0F);
-    auto loaded_messages = knp::framework::storage::native::load_messages_from_h5(path_to_h5, uid, 1.0F);
-    ASSERT_TRUE(is_equal_spike_message_vector(messages, loaded_messages));
-}
-
-
 TEST(SaveLoadSuite, JsonTest)
 {
+    namespace data = knp::framework::storage::native;
     knp::core::UID uid;
     auto messages = generate_random_messages(uid, 200, 20, 0.2);
     std::filesystem::path path_to_json = "data.json";
-    knp::framework::storage::native::save_messages_to_json(messages, path_to_json);
-    auto loaded_messages = knp::framework::storage::native::load_messages_from_json(path_to_json, uid);
-    ASSERT_EQ(messages, loaded_messages);
+    data::save_messages_to_json(messages, path_to_json);
+
+    // This is the normal case.
+    ASSERT_EQ(messages, data::load_messages_from_json(path_to_json, uid));
+
+    // Here we change format slightly.
+    std::ifstream file(path_to_json);
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    file.close();
+    std::string json_str = buffer.str();
+    json_str.replace(json_str.find("2682"), 4, "1234");
+    std::ofstream out_file(path_to_json);
+    out_file << json_str;
+    ASSERT_EQ(messages, data::load_messages_from_json(path_to_json, uid, false));
+    ASSERT_ANY_THROW(data::load_messages_from_json(path_to_json, uid, true));
+    std::filesystem::remove(path_to_json);
+}
+
+
+TEST(SaveLoadSuite, Hdf5Test)
+{
+    namespace data = knp::framework::storage::native;
+    knp::core::UID uid;
+    auto messages = generate_random_messages(uid, 200, 20, 0.2);
+    std::filesystem::path path_to_h5 = "data.h5";
+    data::save_messages_to_h5(messages, path_to_h5);
+    ASSERT_EQ(messages, data::load_messages_from_h5(path_to_h5, uid));
+
+    // Here we change format slightly.
+    HighFive::File h5_file(path_to_h5, HighFive::File::ReadWrite);
+    h5_file.deleteAttribute("magic");
+    h5_file.createAttribute("magic", 1234);
+    h5_file.flush();
+
+    ASSERT_EQ(messages, data::load_messages_from_h5(path_to_h5, uid, 1.0, false));
+    ASSERT_ANY_THROW(data::load_messages_from_h5(path_to_h5, uid, 1.0, true));
 }
