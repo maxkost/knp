@@ -7,7 +7,6 @@
 
 #include <knp/framework/io/storage/native/data_storage_json.h>
 
-#include <hdf5.h>
 #include <spdlog/spdlog.h>
 
 #include <filesystem>
