@@ -7,7 +7,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(third-party)
 include(version)
 
-get_knp_version()
+knp_get_version()
 
 if(NOT KNP_VERSION)
     message(FATAL_ERROR "KNP version mandatory for build, but can't be determined!")
@@ -79,12 +79,12 @@ option(KNP_ENABLE_COVERAGE "Enable coverage checking" ${KNP_ENABLE_COVERAGE_DEFA
 option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
 option(KNP_PYTHON_BUILD_WHEEL "Build WHL package for the Python framework" ${KNP_PYTHON_BUILD_WHEEL_DEFAULT})
 option(KNP_PYTHON_FRAMEWORK_BUILD "Build KNP Python framework" ${KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT})
-option(KNP_COTIRE_ENABLED "Enable COmpile TIme REducer" ON)
+option(KNP_PRECOMP_ENABLED "Enable using common precompiled header" ON)
 
 mark_as_advanced(KNP_MAINTAINER_BUILD)
 mark_as_advanced(KNP_ENABLE_COVERAGE)
 mark_as_advanced(KNP_ENABLE_AVX)
-mark_as_advanced(KNP_COTIRE_ENABLED)
+mark_as_advanced(KNP_PRECOMP_ENABLED)
 
 message(STATUS "KNP_BUILD_DOCUMENTATION = ${KNP_BUILD_DOCUMENTATION}")
 message(STATUS "KNP_BUILD_EXAMPLES = ${KNP_BUILD_EXAMPLES}")
