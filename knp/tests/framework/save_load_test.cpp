@@ -30,16 +30,30 @@ knp::framework::Network make_simple_network()
 }
 
 
-TEST(SaveLoadSuit, SaveTest)
+class SaveLoadNetworkSuit : public ::testing::Test
+{
+protected:
+    void TearDown() override
+    {
+        std::filesystem::remove_all(path_to_network_ / "network");
+        std::filesystem::remove(path_to_network_ / "config.json");
+    }
+
+    std::filesystem::path path_to_network_;
+};
+
+
+TEST_F(SaveLoadNetworkSuit, SaveTest)
 {
     auto network = make_simple_network();
-    knp::framework::sonata::save_network(network, ".");
-    ASSERT_TRUE(std::filesystem::is_directory("network"));
-    ASSERT_TRUE(std::filesystem::is_regular_file("network/network_config.json"));
-    ASSERT_TRUE(std::filesystem::is_regular_file("network/populations.h5"));
-    ASSERT_TRUE(std::filesystem::is_regular_file("network/projections.h5"));
-    ASSERT_TRUE(std::filesystem::is_regular_file("network/neurons.csv"));
-    ASSERT_TRUE(std::filesystem::is_regular_file("network/synapses.csv"));
+    path_to_network_ = ".";
+    knp::framework::sonata::save_network(network, path_to_network_);
+    ASSERT_TRUE(std::filesystem::is_directory(path_to_network_ / "network"));
+    ASSERT_TRUE(std::filesystem::is_regular_file(path_to_network_ / "network/network_config.json"));
+    ASSERT_TRUE(std::filesystem::is_regular_file(path_to_network_ / "network/populations.h5"));
+    ASSERT_TRUE(std::filesystem::is_regular_file(path_to_network_ / "network/projections.h5"));
+    ASSERT_TRUE(std::filesystem::is_regular_file(path_to_network_ / "network/neurons.csv"));
+    ASSERT_TRUE(std::filesystem::is_regular_file(path_to_network_ / "network/synapses.csv"));
 }
 
 
@@ -92,10 +106,11 @@ bool are_networks_similar(const knp::framework::Network &current, const knp::fra
 }
 
 
-TEST(SaveLoadSuite, SaveLoadTest)
+TEST_F(SaveLoadNetworkSuit, SaveLoadTest)
 {
+    path_to_network_ = ".";
     auto network = make_simple_network();
-    knp::framework::sonata::save_network(network, ".");
-    auto network_loaded = knp::framework::sonata::load_network(".");
+    knp::framework::sonata::save_network(network, path_to_network_);
+    auto network_loaded = knp::framework::sonata::load_network(path_to_network_);
     ASSERT_TRUE(are_networks_similar(network, network_loaded));
 }

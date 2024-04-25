@@ -23,6 +23,9 @@ source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "includ
 knp_add_library("${PROJECT_NAME}-core"
     BOTH
     impl/backend_loader.cpp
+    impl/storage/native/data_storage_common.cpp
+    impl/storage/native/data_storage_json.cpp
+    impl/storage/native/data_storage_hdf5.cpp
     impl/network.cpp
     impl/model.cpp
     impl/model_executor.cpp
@@ -39,7 +42,7 @@ knp_add_library("${PROJECT_NAME}-core"
     ${${PROJECT_NAME}_headers}
     ALIAS KNP::BaseFramework::Core
     LINK_PRIVATE
-        spdlog::spdlog_header_only Boost::headers Boost::filesystem HighFive sonata_static simdjson
+        spdlog::spdlog_header_only Boost::headers Boost::filesystem HighFive simdjson
     LINK_PUBLIC
         KNP::Core KNP::Neuron::Traits KNP::Synapse::Traits)
 
