@@ -39,7 +39,7 @@ function(determine_version_with_git)
 endfunction()
 
 
-function(get_knp_version)
+function(knp_get_version)
     determine_version_with_git()
 
     if (NOT KNP_VERSION)

@@ -4,11 +4,10 @@ include_guard(GLOBAL)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-include(knp-functions)
 include(third-party)
 include(version)
 
-get_knp_version()
+knp_get_version()
 
 if(NOT KNP_VERSION)
     message(FATAL_ERROR "KNP version mandatory for build, but can't be determined!")
@@ -31,10 +30,12 @@ if (NOT CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     set(KNP_BUILD_TESTS_DEFAULT OFF)
     set(KNP_BUILD_DOCUMENTATION_DEFAULT OFF)
     set(KNP_BUILD_EXAMPLES_DEFAULT OFF)
+    set(KNP_MAINTAINER_BUILD OFF)
 else()
     set(KNP_BUILD_TESTS_DEFAULT ON)
     set(KNP_BUILD_DOCUMENTATION_DEFAULT ON)
     set(KNP_BUILD_EXAMPLES_DEFAULT ON)
+    set(KNP_PYTHON_BUILD_WHEEL_DEFAULT OFF)
 endif()
 
 if (CMAKE_SYSTEM_PROCESSOR MATCHES "(x86)|(X86)|(amd64)|(AMD64)")
@@ -46,28 +47,54 @@ else()
 endif()
 
 if(KNP_MAINTAINER_BUILD)
-    set(KNP_COVERAGE_DEFAULT OFF)
+    set(KNP_ENABLE_COVERAGE_DEFAULT OFF)
+    set(KNP_PYTHON_BUILD_WHEEL_DEFAULT ON)
 else()
-    set(KNP_COVERAGE_DEFAULT ON)
+    set(KNP_ENABLE_COVERAGE_DEFAULT ON)
 
     if(KNP_BUILD_DOCUMENTATION_DEFAULT)
         find_package(Doxygen OPTIONAL_COMPONENTS dot)
-        if(NOT DOXYGEN_FOUND OR NOT DOXYGEN_HAVE_DOT)
+        if(NOT DOXYGEN_FOUND)
+            message(WARNING "Doxygen was not found! Documentation build will be disabled by default.")
             set(KNP_BUILD_DOCUMENTATION_DEFAULT OFF)
         endif()
     endif()
 endif()
 
-option(KNP_BUILD_TESTS "Build tests" ${KNP_BUILD_TESTS_DEFAULT})
+find_program(_STUBGEN stubgen NO_CACHE)
+
+if("${_STUBGEN}" STREQUAL "_STUBGEN-NOTFOUND")
+    message(WARNING "MyPy stubgen was not found! Please install MyPy (see requirements.txt)! Python framework build will be disabled.")
+    set(KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT OFF)
+    set(KNP_PYTHON_BUILD_WHEEL_DEFAULT OFF)
+else()
+    set(KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT ON)
+endif()
+
 option(KNP_BUILD_DOCUMENTATION "Build doxygen auto documentation" ${KNP_BUILD_DOCUMENTATION_DEFAULT})
 option(KNP_BUILD_EXAMPLES "Build usage examples" ${KNP_BUILD_EXAMPLES_DEFAULT})
-option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
-option(KNP_ENABLE_COVERAGE "Enable coverage checking" ${KNP_COVERAGE_DEFAULT})
+option(KNP_BUILD_TESTS "Build tests" ${KNP_BUILD_TESTS_DEFAULT})
 option(KNP_ENABLE_AVX "Enable AVX and other CPU-specific extensions in the release build" ${KNP_ENABLE_AVX_DEFAULT})
+option(KNP_ENABLE_COVERAGE "Enable coverage checking" ${KNP_ENABLE_COVERAGE_DEFAULT})
+option(KNP_IPO_ENABLED "Enable interprocedural optimization" ON)
+option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
+option(KNP_PYTHON_BUILD_WHEEL "Build WHL package for the Python framework" ${KNP_PYTHON_BUILD_WHEEL_DEFAULT})
+option(KNP_PYTHON_FRAMEWORK_BUILD "Build KNP Python framework" ${KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT})
 
 mark_as_advanced(KNP_MAINTAINER_BUILD)
 mark_as_advanced(KNP_ENABLE_COVERAGE)
 mark_as_advanced(KNP_ENABLE_AVX)
+mark_as_advanced(KNP_IPO_ENABLED)
+
+message(STATUS "KNP_BUILD_DOCUMENTATION = ${KNP_BUILD_DOCUMENTATION}")
+message(STATUS "KNP_BUILD_EXAMPLES = ${KNP_BUILD_EXAMPLES}")
+message(STATUS "KNP_BUILD_TESTS = ${KNP_BUILD_TESTS}")
+message(STATUS "KNP_ENABLE_AVX = ${KNP_ENABLE_AVX}")
+message(STATUS "KNP_ENABLE_COVERAGE = ${KNP_ENABLE_COVERAGE}")
+message(STATUS "KNP_IPO_ENABLED = ${KNP_IPO_ENABLED}")
+message(STATUS "KNP_MAINTAINER_BUILD = ${KNP_MAINTAINER_BUILD}")
+message(STATUS "KNP_PYTHON_BUILD_WHEEL = ${KNP_PYTHON_BUILD_WHEEL}")
+message(STATUS "KNP_PYTHON_FRAMEWORK_BUILD = ${KNP_PYTHON_FRAMEWORK_BUILD}")
 
 if (KNP_ENABLE_AVX)
     message(STATUS "AVX enabled.")
@@ -84,9 +111,6 @@ if (KNP_ENABLE_AVX)
     # -include bits/stdc++.h
 endif()
 
-set(ENABLE_FAST_MATH ON)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
 if(NOT KNP_MAINTAINER_BUILD)
     execute_process(COMMAND pre-commit install
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -101,9 +125,22 @@ if(KNP_BUILD_TESTS)
     add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)
 endif()
 
+
+#
+# Common parameters.
+#
+
+set(ENABLE_FAST_MATH ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Always enabled for the KNP components.
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -D_FORTIFY_SOURCE=1")
+# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_FORTIFY_SOURCE=2")
+
+include(knp-functions)
 include(print-variables)
 
 
@@ -119,15 +156,26 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 # Make cache variables for install destinations.
 include(GNUInstallDirs)
 
-add_third_party("gh:BlueBrain/libsonata@0.1.25"
-                OPTIONS
-                    "EXTLIB_FROM_SUBMODULES ON"
-                    "SONATA_TESTS OFF"
-                    "SONATA_VERSION 1.0")
+#
+# LibHDF5 and it's dependencies.
+#
+
+add_third_party("https://gitlab.dkrz.de/k202009/libaec.git@1.1.3")
+#add_third_party("gh:erdc/szip")
 
 add_third_party("gh:HDFGroup/hdf5#hdf5_1.14.4"
+                GIT_SHALLOW ON
                 OPTIONS
                     "HDF5_NO_PACKAGES ON")
+
+# End of LibHDF5.
+
+# Must follow after LibHDF5.
+add_third_party("gh:BlueBrain/libsonata@0.1.25"
+        OPTIONS
+        "EXTLIB_FROM_SUBMODULES ON"
+        "SONATA_TESTS OFF"
+        "SONATA_VERSION 1.0")
 
 add_third_party("gh:p-ranav/csv2@0.1")
 add_third_party("gh:simdjson/simdjson@3.9.1")
@@ -155,7 +203,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 set(CMAKE_TIDY_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/knp/.clang-tidy" CACHE PATH  "Clang-tidy config file")
 
-add_subdirectory(knp)
+add_subdirectory("knp")
 
 if (KNP_BUILD_DOCUMENTATION)
     add_subdirectory(doc)

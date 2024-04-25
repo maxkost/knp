@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """
-A simple clang-tidy caching application. Prefix calls to clang-tidy to cache
+A simple clang-tidy caching application.
+
+Prefix calls to clang-tidy to cache
 their results for faster static code analysis.
 
 Source: https://github.com/freedick/cltcache
-
 """
+import configparser
 import gzip
 import hashlib
 import os
@@ -14,7 +16,6 @@ import re
 import subprocess
 import sys
 import time
-import configparser
 
 
 def save_to_file_raw(data, filename):
@@ -121,6 +122,7 @@ def init_cltcache():
 
 
 def cache_clang_tidy(clang_tidy_call):
+    print(f"000Running CLang Tidy: ${clang_tidy_call}")
     cltcache_path, config = init_cltcache()
     cache_path, cat_path, out_path, err_path = (None, None, None, None)
     verbose = config.getboolean("behavior", "verbose", fallback=False)
@@ -157,6 +159,7 @@ def cache_clang_tidy(clang_tidy_call):
         if verbose:
             print("cltcache", e)
             print("cltcache Preprocessing failed! Forwarding call without caching...", file=sys.stderr)
+    print(f"Running CLang Tidy: ${clang_tidy_call}")
     result = run_command(clang_tidy_call)
 
     clt_success = result.returncode == 0

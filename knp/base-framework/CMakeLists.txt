@@ -46,6 +46,8 @@ knp_add_library("${PROJECT_NAME}-core"
     LINK_PUBLIC
         KNP::Core KNP::Neuron::Traits KNP::Synapse::Traits)
 
+target_precompile_headers("${PROJECT_NAME}-core" REUSE_FROM KNP::Core)
+
 set_target_properties(
         "${PROJECT_NAME}-core"
         PROPERTIES
