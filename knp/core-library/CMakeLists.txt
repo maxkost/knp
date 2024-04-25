@@ -85,7 +85,7 @@ knp_add_library("${PROJECT_NAME}"
     impl/subscription.cpp
 
     ${${PROJECT_NAME}_headers}
-
+    PRECOMP impl/common_precomp.h
     LINK_PRIVATE
         spdlog::spdlog_header_only zmq flatbuffers "${PROJECT_NAME}_messaging"
     LINK_PUBLIC
