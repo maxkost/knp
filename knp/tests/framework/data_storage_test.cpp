@@ -51,10 +51,7 @@ protected:
     void SetUp() override { messages_ = generate_random_messages(uid_, 200, 20, 0.2); }
 
 
-    void TearDown() override
-    {
-        if (std::filesystem::is_regular_file(file_path_)) std::filesystem::remove(file_path_);
-    }
+    void TearDown() override { std::filesystem::remove(file_path_); }
 
 
     std::vector<knp::core::messaging::SpikeMessage> messages_;
@@ -98,10 +95,7 @@ protected:
         out_file << json_str;
     }
 
-    void TearDown() override
-    {
-        if (std::filesystem::is_regular_file(path_to_json_)) std::filesystem::remove(path_to_json_);
-    }
+    void TearDown() override { std::filesystem::remove(path_to_json_); }
 
     std::filesystem::path path_to_json_;
     std::vector<knp::core::messaging::SpikeMessage> messages_;
@@ -135,10 +129,7 @@ protected:
         h5_file.createAttribute("magic", 1234);
     }
 
-    void TearDown() override
-    {
-        if (std::filesystem::is_regular_file(path_to_h5_)) std::filesystem::remove(path_to_h5_);
-    }
+    void TearDown() override { std::filesystem::remove(path_to_h5_); }
 
     std::filesystem::path path_to_h5_;
     std::vector<knp::core::messaging::SpikeMessage> messages_;

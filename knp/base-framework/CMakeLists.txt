@@ -42,7 +42,7 @@ knp_add_library("${PROJECT_NAME}-core"
     ${${PROJECT_NAME}_headers}
     ALIAS KNP::BaseFramework::Core
     LINK_PRIVATE
-        spdlog::spdlog_header_only Boost::headers Boost::filesystem HighFive sonata_static simdjson
+        spdlog::spdlog_header_only Boost::headers Boost::filesystem HighFive simdjson
     LINK_PUBLIC
         KNP::Core KNP::Neuron::Traits KNP::Synapse::Traits)
 
