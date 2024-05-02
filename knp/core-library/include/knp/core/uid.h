@@ -110,6 +110,7 @@ struct UID
      * @return stored UID value.
      */
     operator const ::boost::uuids::uuid &() const { return tag; }
+
     /**
      * @brief Convert UID to `boost::uuids::uuid`.
      * @return stored UID value.

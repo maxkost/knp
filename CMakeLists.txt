@@ -193,6 +193,7 @@ endif()
 file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
 include_directories(third-party ${THIRD_PARTY_INCLUDES})
 
+
 #
 # Build KNP.
 #
@@ -219,6 +220,8 @@ endif()
 #
 
 set(CPACK_PACKAGE_NAME "${PROJECT_NAME}" CACHE STRING "The resulting package name")
+
+#SET(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}.${CMAKE_SYSTEM_PROCESSOR}")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}")
 set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
 set(CPACK_PACKAGE_ICON "doc/html/img/neuromorphic-platform.svg")
@@ -230,7 +233,7 @@ set(CPACK_PACKAGE_VERSION_PATCH ${CMAKE_PROJECT_VERSION_PATCH})
 set(CPACK_PACKAGE_VENDOR "Kaspersky Laboratory")
 
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Artiom N.")
-set(CPACK_PACKAGE_CONTACT "my@E-MAIL.net")
+SET(CPACK_PACKAGE_CONTACT "support@kaspersky.com")
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${CMAKE_PROJECT_DESCRIPTION}"
         CACHE STRING "Package description for the package metadata")
