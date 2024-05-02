@@ -11,8 +11,6 @@
 #include <numeric>
 #include <utility>
 
-#include <boost/mp11.hpp>
-
 #include "type_traits.h"
 
 /**
