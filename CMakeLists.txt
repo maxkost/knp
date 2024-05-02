@@ -143,7 +143,6 @@ set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -D_FORTIFY_SOURCE=1")
 include(knp-functions)
 include(print-variables)
 
-
 #
 # Build third-party.
 #
@@ -168,14 +167,12 @@ add_third_party("gh:HDFGroup/hdf5#hdf5_1.14.4"
                 OPTIONS
                     "HDF5_NO_PACKAGES ON")
 
-# End of LibHDF5.
-
-# Must follow after LibHDF5.
-add_third_party("gh:BlueBrain/libsonata@0.1.25"
+add_third_party("gh:BlueBrain/HighFive@2.9.0"
+        GIT_SHALLOW ON
         OPTIONS
-        "EXTLIB_FROM_SUBMODULES ON"
-        "SONATA_TESTS OFF"
-        "SONATA_VERSION 1.0")
+        "HIGHFIVE_FIND_HDF5 OFF")
+
+# End of LibHDF5.
 
 add_third_party("gh:p-ranav/csv2@0.1")
 add_third_party("gh:simdjson/simdjson@3.9.1")

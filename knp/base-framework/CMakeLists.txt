@@ -20,6 +20,14 @@ file(GLOB_RECURSE ${PROJECT_NAME}_headers include/${${PROJECT_NAME}_PUBLIC_INCLU
 source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "include/.*")
 
+if (TARGET HDF5::HDF5)
+    set(HDF5_LIB HDF5::HDF5)
+elseif (TARGET hdf5-static)
+    set(HDF5_LIB hdf5-static)
+else()
+    message(FATAL_ERROR "HDF5 library was not found")
+endif()
+
 knp_add_library("${PROJECT_NAME}-core"
     BOTH
     impl/backend_loader.cpp
@@ -42,7 +50,7 @@ knp_add_library("${PROJECT_NAME}-core"
     ${${PROJECT_NAME}_headers}
     ALIAS KNP::BaseFramework::Core
     LINK_PRIVATE
-        spdlog::spdlog_header_only Boost::headers Boost::filesystem HighFive simdjson
+        spdlog::spdlog_header_only Boost::headers Boost::filesystem HighFive ${HDF5_LIB} simdjson
     LINK_PUBLIC
         KNP::Core KNP::Neuron::Traits KNP::Synapse::Traits)
 
