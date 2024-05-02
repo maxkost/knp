@@ -11,10 +11,10 @@
 
 #include <boost/mp11.hpp>
 
+#include "altai_lif.h"
 #include "blifat.h"
 #include "stdp_synaptic_resource_rule.h"
 #include "stdp_type_traits.h"
-
 
 /**
  * @brief Namespace for neuron traits.
@@ -24,7 +24,7 @@ namespace knp::neuron_traits
 /**
  * @brief Comma-separated list of neuron tags.
  */
-#define ALL_NEURONS BLIFATNeuron, SynapticResourceSTDPBLIFATNeuron
+#define ALL_NEURONS BLIFATNeuron, SynapticResourceSTDPBLIFATNeuron, AltAILIF
 
 
 /**
