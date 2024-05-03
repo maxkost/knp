@@ -155,6 +155,14 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 # Make cache variables for install destinations.
 include(GNUInstallDirs)
 
+add_third_party(NAME "ZeroMQ"
+        GITHUB_REPOSITORY "zeromq/libzmq"
+        VERSION "4.3.5"
+        OPTIONS
+        "WITH_DOCS OFF"
+        "BUILD_TESTS OFF"
+        "ENABLE_CPACK OFF")
+
 #
 # LibHDF5 and it's dependencies.
 #
@@ -182,14 +190,6 @@ add_third_party("gh:intel/pcm#202403")
 add_third_party("gh:gabime/spdlog@1.13.0"
                 OPTIONS
                     "SPDLOG_BUILD_PIC ON")
-
-add_third_party(NAME "ZeroMQ"
-                GITHUB_REPOSITORY "zeromq/libzmq"
-                VERSION "4.3.5"
-                OPTIONS
-                    "WITH_DOCS OFF"
-                    "BUILD_TESTS OFF"
-                    "ENABLE_CPACK OFF")
 
 add_third_party("gh:zeromq/cppzmq@4.10.0")
 add_third_party("gh:google/flatbuffers@24.3.25"
