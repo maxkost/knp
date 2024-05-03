@@ -168,10 +168,10 @@ add_third_party("gh:HDFGroup/hdf5#hdf5_1.14.4"
                     "HDF5_NO_PACKAGES ON")
 
 add_third_party("gh:BlueBrain/HighFive@2.9.0"
-        GIT_SHALLOW ON
-        OPTIONS
-        "HIGHFIVE_FIND_HDF5 OFF"
-        "HIGHFIVE_USE_BOOST OFF")
+                GIT_SHALLOW ON
+                OPTIONS
+                    "HIGHFIVE_FIND_HDF5 OFF"
+                    "HIGHFIVE_USE_BOOST OFF")
 
 # End of LibHDF5.
 
@@ -182,6 +182,20 @@ add_third_party("gh:intel/pcm#202403")
 add_third_party("gh:gabime/spdlog@1.13.0"
                 OPTIONS
                     "SPDLOG_BUILD_PIC ON")
+
+add_third_party(NAME "ZeroMQ"
+                GITHUB_REPOSITORY "zeromq/libzmq"
+                VERSION "4.3.5"
+                OPTIONS
+                    "WITH_DOCS OFF"
+                    "BUILD_TESTS OFF"
+                    "ENABLE_CPACK OFF")
+
+add_third_party("gh:zeromq/cppzmq@4.10.0")
+add_third_party("gh:google/flatbuffers@24.3.25"
+                OPTIONS
+                    "FLATBUFFERS_BUILD_TESTS OFF"
+                    "FLATBUFFERS_BUILD_CPP17 ON")
 
 if(KNP_BUILD_TESTS)
     add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)
