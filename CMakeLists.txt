@@ -170,7 +170,8 @@ add_third_party("gh:HDFGroup/hdf5#hdf5_1.14.4"
 add_third_party("gh:BlueBrain/HighFive@2.9.0"
         GIT_SHALLOW ON
         OPTIONS
-        "HIGHFIVE_FIND_HDF5 OFF")
+        "HIGHFIVE_FIND_HDF5 OFF"
+        "HIGHFIVE_USE_BOOST OFF")
 
 # End of LibHDF5.
 
