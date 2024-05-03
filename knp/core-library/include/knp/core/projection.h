@@ -27,6 +27,14 @@
 namespace knp::core
 {
 
+enum ConnectionElement
+{
+    SynValue = 0,
+    NeuronIdFrom = 1,
+    NeuronIdTo = 2
+};
+
+
 /**
  * @brief The Projection class is a definition of similar connections between the neurons of two populations.
  * @note This class should later be divided to interface and implementation classes.
@@ -228,14 +236,15 @@ public:
      * @param neuron_index index of a presynaptic neuron.
      * @return indexes of all synapses associated with the specified presynaptic neuron.
      */
-    [[nodiscard]] std::vector<size_t> get_by_presynaptic_neuron(size_t neuron_index) const;
+    template <class HowToSearch>
+    [[nodiscard]] std::vector<size_t> find_synapses(size_t neuron_index) const;
 
-    /**
-     * @brief Find synapses connected to the neuron with the given index.
-     * @param neuron_index index of a postsynaptic neuron.
-     * @return indexes of all synapses associated with the specified postsynaptic neuron.
-     */
-    [[nodiscard]] std::vector<size_t> get_by_postsynaptic_neuron(size_t neuron_index) const;
+    //    /**
+    //     * @brief Find synapses connected to the neuron with the given index.
+    //     * @param neuron_index index of a postsynaptic neuron.
+    //     * @return indexes of all synapses associated with the specified postsynaptic neuron.
+    //     */
+    //    [[nodiscard]] std::vector<size_t> get_by_postsynaptic_neuron(size_t neuron_index) const;
 
     /**
      * @brief Append connections to the existing projection.
@@ -332,10 +341,12 @@ public:
      */
     const SharedSynapseParameters &get_shared_parameters() const { return shared_parameters_; }
 
-private:
-    // So far the index is mutable so we can reindex a const object that has a non-updated index.
-    mutable synapse_access::Index index_;
+    /**
+     * @brief Destructor.
+     */
+    ~Projection();
 
+private:
     void reindex() const;
 
     BaseData base_;
@@ -359,9 +370,41 @@ private:
      * @brief Container of synapse parameters.
      */
     std::vector<Synapse> parameters_;
+    // So far the index is mutable so we can reindex a const object that has a non-updated index.
+    struct Connection
+    {
+        size_t from_;
+        size_t to_;
+        size_t index_;
+        bool operator==(const Connection &connection) const
+        {
+            return from_ == connection.from_ && to_ == connection.to_ && index_ == connection.index_;
+        }
+    };
+
+    typedef boost::multi_index::multi_index_container<
+        Connection,
+        boost::multi_index::indexed_by<
+            boost::multi_index::hashed_non_unique<
+                boost::multi_index::tag<struct mi_presynaptic>, BOOST_MULTI_INDEX_MEMBER(Connection, size_t, from_)>,
+            boost::multi_index::hashed_non_unique<
+                boost::multi_index::tag<struct mi_postsynaptic>, BOOST_MULTI_INDEX_MEMBER(Connection, size_t, to_)>,
+            boost::multi_index::hashed_unique<
+                boost::multi_index::tag<struct mi_synapse_index>,
+                BOOST_MULTI_INDEX_MEMBER(Connection, size_t, index_)>>>
+        Index;
+    mutable Index index_;
     mutable bool is_index_updated_ = false;
 
     SharedSynapseParameters shared_parameters_;
+
+public:
+    /**
+     * @brief Helper class for searching in projection
+     */
+    typedef mi_presynaptic ByPresynaptic;
+    typedef mi_postsynaptic ByPostsynaptic;
+    typedef mi_synapse_index BySynapseIndex;
 };
 
 

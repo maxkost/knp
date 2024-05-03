@@ -215,8 +215,7 @@ std::optional<core::messaging::SpikeMessage> SingleThreadedCPUBackend::calculate
 
 
 void SingleThreadedCPUBackend::calculate_projection(
-    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
-    core::messaging::SynapticMessageQueue &message_queue)
+    knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, SynapticMessageQueue &message_queue)
 {
     SPDLOG_TRACE("Calculate Delta synapse projection {}", std::string(projection.get_uid()));
     knp::backends::cpu::calculate_delta_synapse_projection(
@@ -226,7 +225,7 @@ void SingleThreadedCPUBackend::calculate_projection(
 
 void SingleThreadedCPUBackend::calculate_projection(
     knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> &projection,
-    core::messaging::SynapticMessageQueue &message_queue)
+    SynapticMessageQueue &message_queue)
 {
     SPDLOG_TRACE("Calculate AdditiveSTDPDelta synapse projection {}", std::string(projection.get_uid()));
     knp::backends::cpu::calculate_delta_synapse_projection(
@@ -236,7 +235,7 @@ void SingleThreadedCPUBackend::calculate_projection(
 
 void SingleThreadedCPUBackend::calculate_projection(
     knp::core::Projection<knp::synapse_traits::SynapticResourceSTDPDeltaSynapse> &projection,
-    core::messaging::SynapticMessageQueue &message_queue)
+    SynapticMessageQueue &message_queue)
 {
     SPDLOG_TRACE("Calculate STDPSynapticResource synapse projection {}", std::string(projection.get_uid()));
     knp::backends::cpu::calculate_delta_synapse_projection(

@@ -30,7 +30,7 @@ namespace knp::backends::cpu
 /**
  * @brief Type of the message queue.
  */
-using MessageQueue = knp::core::messaging::SynapticMessageQueue;
+using MessageQueue = std::unordered_map<uint64_t, knp::core::messaging::SynapticImpactMessage>;
 
 /**
  * @brief Convert spike vector to unordered map.
@@ -83,18 +83,20 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
         const auto &message_data = message.neuron_indexes_;
         for (const auto &spiked_neuron_index : message_data)
         {
-            auto synapses = projection.get_by_presynaptic_neuron(spiked_neuron_index);
+            auto synapses =
+                projection.template find_synapses<typename ProjectionType::ByPresynaptic>(spiked_neuron_index);
             for (auto synapse_index : synapses)
             {
                 auto &synapse = projection[synapse_index];
                 // todo: replace 0 with "params".
-                WeightUpdateSTDP<SynapseType>::init_synapse(std::get<0>(synapse), step_n);
-                const auto &synapse_params = sp_getter(std::get<0>(synapse));
+                WeightUpdateSTDP<SynapseType>::init_synapse(std::get<core::SynValue>(synapse), step_n);
+                const auto &synapse_params = sp_getter(std::get<core::SynValue>(synapse));
                 // the message is sent on step N - 1, received on N.
                 size_t future_step = synapse_params.delay_ + step_n - 1;
                 knp::core::messaging::SynapticImpact impact{
                     synapse_index, synapse_params.weight_, synapse_params.output_type_,
-                    static_cast<uint32_t>(std::get<1>(synapse)), static_cast<uint32_t>(std::get<2>(synapse))};
+                    static_cast<uint32_t>(std::get<core::NeuronIdFrom>(synapse)),
+                    static_cast<uint32_t>(std::get<core::NeuronIdTo>(synapse))};
 
                 auto iter = future_messages.find(future_step);
                 if (iter != future_messages.end())
@@ -131,7 +133,7 @@ void calculate_projection_part_impl(
         auto &synapse = projection[synapse_index];
         // update_step(synapse.params_, step_n);
         // TODO: Move update logic here too.
-        auto iter = message_in_data.find(std::get<1>(synapse));
+        auto iter = message_in_data.find(std::get<core::NeuronIdFrom>(synapse));
         if (iter == message_in_data.end())
         {
             continue;
@@ -139,11 +141,13 @@ void calculate_projection_part_impl(
 
         // Add new impact
         // the message is sent on step N - 1, received on N.
-        uint64_t key = std::get<0>(synapse).delay_ + step_n - 1;
+        uint64_t key = std::get<core::SynValue>(synapse).delay_ + step_n - 1;
         // todo: replace 1, 2 with id_from, id_to.
         knp::core::messaging::SynapticImpact impact{
-            synapse_index, std::get<0>(synapse).weight_ * iter->second, std::get<0>(synapse).output_type_,
-            static_cast<uint32_t>(std::get<1>(synapse)), static_cast<uint32_t>(std::get<2>(synapse))};
+            synapse_index, std::get<core::SynValue>(synapse).weight_ * iter->second,
+            std::get<core::SynValue>(synapse).output_type_,
+            static_cast<uint32_t>(std::get<core::NeuronIdFrom>(synapse)),
+            static_cast<uint32_t>(std::get<core::NeuronIdTo>(synapse))};
 
         container.emplace_back(key, impact);
     }

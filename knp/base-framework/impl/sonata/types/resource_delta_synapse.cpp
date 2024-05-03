@@ -73,12 +73,12 @@ void add_projection_to_h5<core::Projection<ResourceDeltaSynapse>>(
 
     for (const auto &v : projection)
     {
-        auto &params = std::get<0>(v);
-        source_ids.push_back(std::get<1>(v));
-        target_ids.push_back(std::get<2>(v));
+        auto &params = std::get<knp::core::SynValue>(v);
+        source_ids.push_back(std::get<knp::core::NeuronIdFrom>(v));
+        target_ids.push_back(std::get<knp::core::NeuronIdTo>(v));
         delays.push_back(params.delay_);
         weights.push_back(params.weight_);
-        out_types.push_back(static_cast<int>(std::get<0>(v).output_type_));
+        out_types.push_back(static_cast<int>(std::get<knp::core::SynValue>(v).output_type_));
     }
 
     HighFive::Group proj_group = file_h5.createGroup("edges/" + std::string(projection.get_uid()));
