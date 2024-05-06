@@ -185,7 +185,7 @@ size_t knp::core::Projection<SynapseType>::add_synapses(const std::vector<Synaps
     {
         if (was_index_updated_)
             index_.insert(
-                {std::get<knp::core::NeuronIdFrom>(synapse), std::get<knp::core::NeuronIdTo>(synapse),
+                {std::get<knp::core::source_neuron_id>(synapse), std::get<knp::core::target_neuron_id>(synapse),
                  parameters_.size()});
         parameters_.push_back(synapse);
     }
@@ -250,7 +250,7 @@ size_t knp::core::Projection<SynapseType>::disconnect_presynaptic_neuron(size_t 
 {
     // TODO: We now have a way to find them quickly, make use of it instead of disconnect_if.
     return disconnect_if([neuron_index](const Synapse &synapse)
-                         { return std::get<knp::core::NeuronIdFrom>(synapse) == neuron_index; });
+                         { return std::get<knp::core::source_neuron_id>(synapse) == neuron_index; });
 }
 
 
@@ -260,8 +260,8 @@ size_t knp::core::Projection<SynapseType>::disconnect_neurons(size_t neuron_from
     return disconnect_if(
         [neuron_from, neuron_to](const Synapse &synapse)
         {
-            return (std::get<knp::core::NeuronIdFrom>(synapse) == neuron_from) &&
-                   (std::get<knp::core::NeuronIdTo>(synapse) == neuron_to);
+            return (std::get<knp::core::source_neuron_id>(synapse) == neuron_from) &&
+                   (std::get<knp::core::target_neuron_id>(synapse) == neuron_to);
         });
 }
 
@@ -280,7 +280,8 @@ void knp::core::Projection<SynapseType>::reindex() const
         auto &synapse = parameters_[i];
         insert_to_index(
             index_,
-            Connection{std::get<knp::core::NeuronIdFrom>(synapse), std::get<knp::core::NeuronIdTo>(synapse), i});
+            Connection{
+                std::get<knp::core::source_neuron_id>(synapse), std::get<knp::core::target_neuron_id>(synapse), i});
     }
     is_index_updated_ = true;
 }

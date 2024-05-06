@@ -29,14 +29,14 @@ namespace knp::core
 /**
  * @brief Enumeration used to access connection
  */
-enum ConnectionElement
+enum SynapseElementAccess
 {
     /// Getting synapse parameters.
-    SynValue = 0,
+    synapse_data = 0,
     /// Getting source neuron index.
-    NeuronIdFrom = 1,
+    source_neuron_id = 1,
     /// Getting target neuron index;
-    NeuronIdTo = 2
+    target_neuron_id = 2
 };
 
 

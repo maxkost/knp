@@ -97,7 +97,7 @@ void append_spike_times(
         // TODO: Inefficient, MUST be cached.
         for (auto synapse_index : synapse_index_getter(neuron_index))
         {
-            auto &rule = std::get<core::SynValue>(projection[synapse_index]).rule_;
+            auto &rule = std::get<core::synapse_data>(projection[synapse_index]).rule_;
             // Limit spike times queue.
             if ((rule.*spike_queue).size() < rule.tau_minus_ + rule.tau_plus_)
             {
@@ -201,16 +201,16 @@ void update_projection_weights_additive_stdp(
     for (auto &proj : projection)
     {
         SPDLOG_TRACE("Applying STDP rule...");
-        auto &rule = std::get<knp::core::SynValue>(proj).rule_;
+        auto &rule = std::get<knp::core::synapse_data>(proj).rule_;
         const auto period = rule.tau_plus_ + rule.tau_minus_;
 
         if (rule.presynaptic_spike_times_.size() >= period && rule.postsynaptic_spike_times_.size() >= period)
         {
             STDPFormula stdp_formula(rule.tau_plus_, rule.tau_minus_, 1, 1);
-            SPDLOG_TRACE("Old weight = {}", std::get<knp::core::SynValue>(proj).weight_);
-            std::get<knp::core::SynValue>(proj).weight_ +=
+            SPDLOG_TRACE("Old weight = {}", std::get<knp::core::synapse_data>(proj).weight_);
+            std::get<knp::core::synapse_data>(proj).weight_ +=
                 stdp_formula(rule.presynaptic_spike_times_, rule.postsynaptic_spike_times_);
-            SPDLOG_TRACE("New weight = {}", std::get<knp::core::SynValue>(proj).weight_);
+            SPDLOG_TRACE("New weight = {}", std::get<knp::core::synapse_data>(proj).weight_);
             rule.presynaptic_spike_times_.clear();
             rule.postsynaptic_spike_times_.clear();
         }

@@ -64,7 +64,7 @@ TEST(ProjectionSuite, Generation)
 
     DeltaProjection projection(knc::UID{}, knc::UID{}, generator, presynaptic_size * postsynaptic_size);
     ASSERT_EQ(projection.size(), presynaptic_size * postsynaptic_size);
-    ASSERT_EQ(std::get<knp::core::SynValue>(projection[1000]).delay_, 11);
+    ASSERT_EQ(std::get<knp::core::synapse_data>(projection[1000]).delay_, 11);
 }
 
 
@@ -104,7 +104,7 @@ TEST(ProjectionSuite, SynapseAddition)
     std::vector<Synapse> connections;
     std::copy_if(
         projection.begin(), projection.end(), std::back_inserter(connections),
-        [](const Synapse &syn) { return std::get<knp::core::NeuronIdFrom>(syn) == neuron_index; });
+        [](const Synapse &syn) { return std::get<knp::core::source_neuron_id>(syn) == neuron_index; });
 
     ASSERT_EQ(connections.size(), 3);
     for (size_t i = 0; i < 3; ++i)
@@ -113,7 +113,7 @@ TEST(ProjectionSuite, SynapseAddition)
         ASSERT_NE(
             std::find_if(
                 connections.begin(), connections.end(),
-                [&i](const Synapse &syn) { return std::get<knp::core::NeuronIdTo>(syn) == neuron_index + i; }),
+                [&i](const Synapse &syn) { return std::get<knp::core::target_neuron_id>(syn) == neuron_index + i; }),
             connections.end());
     }
 }
@@ -134,7 +134,7 @@ TEST(ProjectionSuite, DeletePresynapticTest)
     ASSERT_EQ(
         std::find_if(
             projection.begin(), projection.end(),
-            [&](const Synapse &synapse) { return std::get<knp::core::NeuronIdFrom>(synapse) == neuron_index; }),
+            [&](const Synapse &synapse) { return std::get<knp::core::source_neuron_id>(synapse) == neuron_index; }),
         projection.end());  // all the synapses that should have been deleted are actually deleted
 }
 
@@ -154,7 +154,7 @@ TEST(ProjectionSuite, DeletePostsynapticTest)
     ASSERT_EQ(
         std::find_if(
             projection.begin(), projection.end(),
-            [&](const Synapse &synapse) { return std::get<knp::core::NeuronIdTo>(synapse) == neuron_index; }),
+            [&](const Synapse &synapse) { return std::get<knp::core::target_neuron_id>(synapse) == neuron_index; }),
         projection.end());  // ensure all the synapses that should have been deleted are actually deleted
 }
 
@@ -181,8 +181,8 @@ TEST(ProjectionSuite, SynapseRemoval)
 
     // Delete a single synapse
     projection.remove_synapse(0);
-    ASSERT_EQ(projection.size(), total_connections - 1);             // A synapse is deleted
-    ASSERT_EQ(std::get<knp::core::NeuronIdFrom>(projection[0]), 1);  // the deleted synapse is the correct one
+    ASSERT_EQ(projection.size(), total_connections - 1);                 // A synapse is deleted
+    ASSERT_EQ(std::get<knp::core::source_neuron_id>(projection[0]), 1);  // the deleted synapse is the correct one
 
     // Delete all synapses
     projection.clear();
@@ -213,12 +213,12 @@ TEST(ProjectionSuite, DisconnectNeurons)
     ASSERT_EQ(
         std::count_if(
             projection.begin(), projection.end(),
-            [](const Synapse &synapse) { return std::get<knp::core::NeuronIdFrom>(synapse) == 0; }),
+            [](const Synapse &synapse) { return std::get<knp::core::source_neuron_id>(synapse) == 0; }),
         postsynaptic_size - 1);
     ASSERT_EQ(
         std::count_if(
             projection.begin(), projection.end(),
-            [](const Synapse &synapse) { return std::get<knp::core::NeuronIdTo>(synapse) == 1; }),
+            [](const Synapse &synapse) { return std::get<knp::core::target_neuron_id>(synapse) == 1; }),
         presynaptic_size - 1);
 }
 
