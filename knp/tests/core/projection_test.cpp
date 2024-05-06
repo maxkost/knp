@@ -1,5 +1,8 @@
 /**
- * Projection tests
+ * @file projection_test.cpp
+ * @brief Tests for projection entity.
+ * @author Artiom N.
+ * @date 13.04.2023
  */
 
 #include <knp/core/projection.h>
@@ -61,7 +64,6 @@ TEST(ProjectionSuite, Generation)
 
     DeltaProjection projection(knc::UID{}, knc::UID{}, generator, presynaptic_size * postsynaptic_size);
     ASSERT_EQ(projection.size(), presynaptic_size * postsynaptic_size);
-    // todo: replace 0 with "params".
     ASSERT_EQ(std::get<knp::core::SynValue>(projection[1000]).delay_, 11);
 }
 
@@ -69,7 +71,7 @@ TEST(ProjectionSuite, Generation)
 TEST(ProjectionSuite, SynapseAddition)
 {
     using SynapseType = knp::synapse_traits::OutputType;
-    // TODO: add_synapses, remove_presynaptic_neuron, remove_postsynaptic_neuron, disconnect,
+
     const uint32_t presynaptic_size = 1000;
     const uint32_t postsynaptic_size = presynaptic_size;
     const uint32_t neuron_index = 10;  // A specific neuron

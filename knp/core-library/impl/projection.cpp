@@ -19,10 +19,21 @@ void insert_to_index(Index &val, const Connection &connection)
 
 
 template <class Index, class Type>
-auto find_by_type(const Index &val, size_t presynaptic_neuron_index)
+auto find_by_type(const Index &val, size_t neuron_index)
 {
-    return val.template get<Type>().equal_range(presynaptic_neuron_index);
+    return val.template get<Type>().equal_range(neuron_index);
 }
+
+
+template <class Index, class Type>
+std::vector<size_t> find_indexes_by_type(const Index &val, size_t neuron_index)
+{
+    auto range = find_by_type<Index, Type>(val, neuron_index);
+    std::vector<size_t> res;
+    std::transform(range.first, range.second, std::back_inserter(res), [](const auto &val) { return val.index_; });
+    return res;
+}
+
 
 /**
  * @brief Remove a synapse with a given index.
@@ -129,56 +140,21 @@ Projection<SynapseType>::Projection(
 
 
 template <typename SynapseType>
-template <typename HowToSearch>
-std::vector<size_t> knp::core::Projection<SynapseType>::find_synapses(size_t neuron_index) const
+std::vector<size_t> knp::core::Projection<SynapseType>::find_synapses(size_t neuron_id, Search search_criterion) const
 {
     reindex();
-    auto range = find_by_type<decltype(index_), HowToSearch>(index_, neuron_index);
-    std::vector<size_t> result;
-    for (auto iter = range.first; iter != range.second; ++iter) result.push_back(iter->index_);
-    return result;
-}
-
-
-// TODO: Instantiate these in a human way.
-typedef knp::core::Projection<knp::synapse_traits::DeltaSynapse> DeltaProjection;
-typedef knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> StdpDeltaProjection;
-typedef knp::core::Projection<knp::synapse_traits::SynapticResourceSTDPDeltaSynapse> ResourceDeltaProjection;
-
-template <>
-template <>
-std::vector<size_t> DeltaProjection::find_synapses<DeltaProjection::ByPresynaptic>(size_t neuron_index) const
-{
-    reindex();
-    auto range = find_by_type<decltype(index_), DeltaProjection::ByPresynaptic>(index_, neuron_index);
-    std::vector<size_t> result;
-    for (auto iter = range.first; iter != range.second; ++iter) result.push_back(iter->index_);
-    return result;
-}
-
-
-template <>
-template <>
-std::vector<size_t> ResourceDeltaProjection::find_synapses<ResourceDeltaProjection::ByPresynaptic>(
-    size_t neuron_index) const
-{
-    reindex();
-    auto range = find_by_type<decltype(index_), ResourceDeltaProjection::ByPresynaptic>(index_, neuron_index);
-    std::vector<size_t> result;
-    for (auto iter = range.first; iter != range.second; ++iter) result.push_back(iter->index_);
-    return result;
-}
-
-
-template <>
-template <>
-std::vector<size_t> StdpDeltaProjection::find_synapses<StdpDeltaProjection::ByPresynaptic>(size_t neuron_index) const
-{
-    reindex();
-    auto range = find_by_type<decltype(index_), StdpDeltaProjection::ByPresynaptic>(index_, neuron_index);
-    std::vector<size_t> result;
-    for (auto iter = range.first; iter != range.second; ++iter) result.push_back(iter->index_);
-    return result;
+    std::vector<size_t> res;
+    switch (search_criterion)
+    {
+        case Search::by_postsynaptic:
+            res = find_indexes_by_type<decltype(index_), core::Projection<SynapseType>::ByPostsynaptic>(
+                index_, neuron_id);
+            break;
+        case Search::by_presynaptic:
+            res =
+                find_indexes_by_type<decltype(index_), core::Projection<SynapseType>::ByPresynaptic>(index_, neuron_id);
+    }
+    return res;
 }
 
 
@@ -207,7 +183,6 @@ size_t knp::core::Projection<SynapseType>::add_synapses(const std::vector<Synaps
     is_index_updated_ = false;
     for (const auto &synapse : synapses)
     {
-        // todo: replace 1, 2 with id_from, id_to.
         if (was_index_updated_)
             index_.insert(
                 {std::get<knp::core::NeuronIdFrom>(synapse), std::get<knp::core::NeuronIdTo>(synapse),
@@ -259,7 +234,7 @@ size_t knp::core::Projection<SynapseType>::disconnect_postsynaptic_neuron(size_t
     bool was_index_updated = is_index_updated_;
     // Basic exception safety.
     is_index_updated_ = false;
-    auto synapses_to_remove = find_synapses<typename core::Projection<SynapseType>::ByPostsynaptic>(neuron_index);
+    auto synapses_to_remove = find_synapses(neuron_index, Search::by_postsynaptic);
     std::sort(synapses_to_remove.begin(), synapses_to_remove.end());
     remove_by_index(parameters_, synapses_to_remove);
     if (was_index_updated)
@@ -274,7 +249,6 @@ template <typename SynapseType>
 size_t knp::core::Projection<SynapseType>::disconnect_presynaptic_neuron(size_t neuron_index)
 {
     // TODO: We now have a way to find them quickly, make use of it instead of disconnect_if.
-    // todo: replace 1 with id_from.
     return disconnect_if([neuron_index](const Synapse &synapse)
                          { return std::get<knp::core::NeuronIdFrom>(synapse) == neuron_index; });
 }
@@ -304,17 +278,12 @@ void knp::core::Projection<SynapseType>::reindex() const
     for (size_t i = 0; i < parameters_.size(); ++i)
     {
         auto &synapse = parameters_[i];
-        // todo: replace 1, 2 with id_from, id_to.
         insert_to_index(
             index_,
             Connection{std::get<knp::core::NeuronIdFrom>(synapse), std::get<knp::core::NeuronIdTo>(synapse), i});
     }
     is_index_updated_ = true;
 }
-
-
-template <class Synapse>
-Projection<Synapse>::~Projection() = default;
 
 
 #define INSTANCE_PROJECTIONS(n, template_for_instance, synapse_type) \

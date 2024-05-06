@@ -114,7 +114,6 @@ void add_projection_to_h5<core::Projection<synapse_traits::DeltaSynapse>>(
 
     for (const auto &v : projection)
     {
-        // TODO: change 0, 1, 2 to named.
         source_ids.push_back(std::get<knp::core::NeuronIdFrom>(v));
         target_ids.push_back(std::get<knp::core::NeuronIdTo>(v));
         delays.push_back(std::get<knp::core::SynValue>(v).delay_);

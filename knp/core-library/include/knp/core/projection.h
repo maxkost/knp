@@ -26,11 +26,16 @@
  */
 namespace knp::core
 {
-
+/**
+ * @brief Enumeration used to access connection
+ */
 enum ConnectionElement
 {
+    /// Getting synapse parameters.
     SynValue = 0,
+    /// Getting source neuron index.
     NeuronIdFrom = 1,
+    /// Getting target neuron index;
     NeuronIdTo = 2
 };
 
@@ -180,6 +185,7 @@ public:
      * @return synapse parameters and indexes.
      */
     [[nodiscard]] Synapse &operator[](size_t index) { return parameters_[index]; }
+
     /**
      * @brief Get parameter values of a synapse with the given index.
      * @details Constant method.
@@ -193,19 +199,19 @@ public:
      * @return constant projection iterator.
      */
     [[nodiscard]] auto begin() const { return parameters_.cbegin(); }
+
     /**
      * @brief Get an iterator pointing to the first element of the projection.
      * @return projection iterator.
      */
     [[nodiscard]] auto begin() { return parameters_.begin(); }
+
     /**
      * @brief Get an iterator pointing to the last element of the projection.
      * @return constant iterator.
      */
     [[nodiscard]] auto end() const { return parameters_.cend(); }
-    /**
-     * @todo It might be dangerous if you change `index_from` or `index_to` of a synapse without updating.
-     */
+
     /**
      * @brief Get an iterator pointing to the last element of the projection.
      * @return iterator.
@@ -232,19 +238,24 @@ public:
     [[nodiscard]] const UID &get_postsynaptic() const { return postsynaptic_uid_; }
 
     /**
+     * @brief Types of synapse search.
+     */
+    enum class Search
+    {
+        /// Search by presynaptic neuron index.
+        by_presynaptic,
+        /// Search by postsynaptic neuron index.
+        by_postsynaptic
+    };
+
+    /**
      * @brief Find synapses that originate from a neuron with the given index.
-     * @param neuron_index index of a presynaptic neuron.
+     * @param neuron_index index of a neuron.
+     * @param search_method search by presynaptic or postsynaptic neuron.
      * @return indexes of all synapses associated with the specified presynaptic neuron.
      */
-    template <class HowToSearch>
-    [[nodiscard]] std::vector<size_t> find_synapses(size_t neuron_index) const;
+    [[nodiscard]] std::vector<size_t> find_synapses(size_t neuron_index, Search search_method) const;
 
-    //    /**
-    //     * @brief Find synapses connected to the neuron with the given index.
-    //     * @param neuron_index index of a postsynaptic neuron.
-    //     * @return indexes of all synapses associated with the specified postsynaptic neuron.
-    //     */
-    //    [[nodiscard]] std::vector<size_t> get_by_postsynaptic_neuron(size_t neuron_index) const;
 
     /**
      * @brief Append connections to the existing projection.
@@ -341,11 +352,6 @@ public:
      */
     const SharedSynapseParameters &get_shared_parameters() const { return shared_parameters_; }
 
-    /**
-     * @brief Destructor.
-     */
-    ~Projection();
-
 private:
     void reindex() const;
 
@@ -393,18 +399,13 @@ private:
                 boost::multi_index::tag<struct mi_synapse_index>,
                 BOOST_MULTI_INDEX_MEMBER(Connection, size_t, index_)>>>
         Index;
+    using ByPresynaptic = mi_presynaptic;
+    using ByPostsynaptic = mi_postsynaptic;
+
     mutable Index index_;
     mutable bool is_index_updated_ = false;
 
     SharedSynapseParameters shared_parameters_;
-
-public:
-    /**
-     * @brief Helper class for searching in projection
-     */
-    typedef mi_presynaptic ByPresynaptic;
-    typedef mi_postsynaptic ByPostsynaptic;
-    typedef mi_synapse_index BySynapseIndex;
 };
 
 

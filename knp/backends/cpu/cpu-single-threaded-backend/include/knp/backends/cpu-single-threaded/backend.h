@@ -288,6 +288,9 @@ public:
     }
 
 protected:
+    /**
+     * @brief A map used for message construction, it maps message to its future output step.
+     */
     using SynapticMessageQueue = std::unordered_map<uint64_t, core::messaging::SynapticImpactMessage>;
 
     /**

@@ -108,7 +108,7 @@ std::vector<synapse_traits::synapse_parameters<SynapseType> *> get_all_connected
     for (auto *projection : projections_to_neuron)
     {
         auto synapses =
-            projection->template find_synapses<typename core::Projection<SynapseType>::ByPostsynaptic>(neuron_index);
+            projection->template find_synapses(neuron_index, core::Projection<SynapseType>::Search::by_postsynaptic);
         std::transform(
             synapses.begin(), synapses.end(), std::back_inserter(result),
             [&projection](auto const &index)

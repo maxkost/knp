@@ -84,11 +84,10 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
         for (const auto &spiked_neuron_index : message_data)
         {
             auto synapses =
-                projection.template find_synapses<typename ProjectionType::ByPresynaptic>(spiked_neuron_index);
+                projection.template find_synapses(spiked_neuron_index, ProjectionType::Search::by_presynaptic);
             for (auto synapse_index : synapses)
             {
                 auto &synapse = projection[synapse_index];
-                // todo: replace 0 with "params".
                 WeightUpdateSTDP<SynapseType>::init_synapse(std::get<core::SynValue>(synapse), step_n);
                 const auto &synapse_params = sp_getter(std::get<core::SynValue>(synapse));
                 // the message is sent on step N - 1, received on N.
@@ -142,7 +141,6 @@ void calculate_projection_part_impl(
         // Add new impact
         // the message is sent on step N - 1, received on N.
         uint64_t key = std::get<core::SynValue>(synapse).delay_ + step_n - 1;
-        // todo: replace 1, 2 with id_from, id_to.
         knp::core::messaging::SynapticImpact impact{
             synapse_index, std::get<core::SynValue>(synapse).weight_ * iter->second,
             std::get<core::SynValue>(synapse).output_type_,
