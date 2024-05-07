@@ -27,15 +27,21 @@
 namespace knp::core
 {
 /**
- * @brief Enumeration used to access connection
+ * @brief Enumeration used to access connection.
  */
 enum SynapseElementAccess
 {
-    /// Getting synapse parameters.
+    /**
+     * @brief Getting synapse parameters.
+     */ 
     synapse_data = 0,
-    /// Getting source neuron index.
+    /**
+     * @brief Getting source neuron index.
+     */ 
     source_neuron_id = 1,
-    /// Getting target neuron index;
+    /**
+     * @brief Getting target neuron index.
+     */
     target_neuron_id = 2
 };
 
@@ -242,9 +248,13 @@ public:
      */
     enum class Search
     {
-        /// Search by presynaptic neuron index.
+        /**
+         * @brief Search by presynaptic neuron index.
+         */ 
         by_presynaptic,
-        /// Search by postsynaptic neuron index.
+        /**
+         * @brief Search by postsynaptic neuron index.
+         */ 
         by_postsynaptic
     };
 
