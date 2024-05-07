@@ -97,7 +97,7 @@ void append_spike_times(
         // TODO: Inefficient, MUST be cached.
         for (auto synapse_index : synapse_index_getter(neuron_index))
         {
-            auto &rule = std::get<core::synapse_data>(projection[synapse_index]).rule_;
+            auto &rule = std::get<core::SynapseElementAccess::synapse_data>(projection[synapse_index]).rule_;
             // Limit spike times queue.
             if ((rule.*spike_queue).size() < rule.tau_minus_ + rule.tau_plus_)
             {
@@ -178,7 +178,7 @@ void register_additive_stdp_spikes(
             append_spike_times(
                 projection, msg,
                 [&projection](uint32_t neuron_index)
-                { return projection.template find_synapses(neuron_index, ProjectionType::Search::by_postsynaptic); },
+                { return projection.find_synapses(neuron_index, ProjectionType::Search::by_postsynaptic); },
                 &knp::synapse_traits::STDPAdditiveRule<knp::synapse_traits::DeltaSynapse>::presynaptic_spike_times_);
         }
         if (processing_type == ProcessingType::STDPOnly)

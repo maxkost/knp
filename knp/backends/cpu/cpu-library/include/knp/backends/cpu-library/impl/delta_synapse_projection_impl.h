@@ -83,8 +83,7 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
         const auto &message_data = message.neuron_indexes_;
         for (const auto &spiked_neuron_index : message_data)
         {
-            auto synapses =
-                projection.template find_synapses(spiked_neuron_index, ProjectionType::Search::by_presynaptic);
+            auto synapses = projection.find_synapses(spiked_neuron_index, ProjectionType::Search::by_presynaptic);
             for (auto synapse_index : synapses)
             {
                 auto &synapse = projection[synapse_index];
