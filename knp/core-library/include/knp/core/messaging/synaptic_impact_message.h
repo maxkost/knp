@@ -106,13 +106,6 @@ bool operator==(const SynapticImpactMessage &sm1, const SynapticImpactMessage &s
 
 
 /**
- * @brief Synaptic messages that the projection will send in the future depending on the network execution step number.
- * @todo To remove as it is required only for backends.
- */
-typedef std::unordered_map<uint64_t, SynapticImpactMessage> SynapticMessageQueue;
-
-
-/**
  * @brief Get synaptic impact from an input stream.
  * @param stream input stream.
  * @param impact synaptic impact to get from the input stream.

@@ -26,6 +26,19 @@
  */
 namespace knp::core
 {
+/**
+ * @brief Enumeration used to access connection
+ */
+enum SynapseElementAccess
+{
+    /// Getting synapse parameters.
+    synapse_data = 0,
+    /// Getting source neuron index.
+    source_neuron_id = 1,
+    /// Getting target neuron index;
+    target_neuron_id = 2
+};
+
 
 /**
  * @brief The Projection class is a definition of similar connections between the neurons of two populations.
@@ -172,6 +185,7 @@ public:
      * @return synapse parameters and indexes.
      */
     [[nodiscard]] Synapse &operator[](size_t index) { return parameters_[index]; }
+
     /**
      * @brief Get parameter values of a synapse with the given index.
      * @details Constant method.
@@ -185,19 +199,19 @@ public:
      * @return constant projection iterator.
      */
     [[nodiscard]] auto begin() const { return parameters_.cbegin(); }
+
     /**
      * @brief Get an iterator pointing to the first element of the projection.
      * @return projection iterator.
      */
     [[nodiscard]] auto begin() { return parameters_.begin(); }
+
     /**
      * @brief Get an iterator pointing to the last element of the projection.
      * @return constant iterator.
      */
     [[nodiscard]] auto end() const { return parameters_.cend(); }
-    /**
-     * @todo It might be dangerous if you change `index_from` or `index_to` of a synapse without updating.
-     */
+
     /**
      * @brief Get an iterator pointing to the last element of the projection.
      * @return iterator.
@@ -224,18 +238,24 @@ public:
     [[nodiscard]] const UID &get_postsynaptic() const { return postsynaptic_uid_; }
 
     /**
-     * @brief Find synapses that originate from a neuron with the given index.
-     * @param neuron_index index of a presynaptic neuron.
-     * @return indexes of all synapses associated with the specified presynaptic neuron.
+     * @brief Types of synapse search.
      */
-    [[nodiscard]] std::vector<size_t> get_by_presynaptic_neuron(size_t neuron_index) const;
+    enum class Search
+    {
+        /// Search by presynaptic neuron index.
+        by_presynaptic,
+        /// Search by postsynaptic neuron index.
+        by_postsynaptic
+    };
 
     /**
-     * @brief Find synapses connected to the neuron with the given index.
-     * @param neuron_index index of a postsynaptic neuron.
-     * @return indexes of all synapses associated with the specified postsynaptic neuron.
+     * @brief Find synapses that originate from a neuron with the given index.
+     * @param neuron_index index of a neuron.
+     * @param search_method search by presynaptic or postsynaptic neuron.
+     * @return indexes of all synapses associated with the specified presynaptic neuron.
      */
-    [[nodiscard]] std::vector<size_t> get_by_postsynaptic_neuron(size_t neuron_index) const;
+    [[nodiscard]] std::vector<size_t> find_synapses(size_t neuron_index, Search search_method) const;
+
 
     /**
      * @brief Append connections to the existing projection.
@@ -333,9 +353,6 @@ public:
     const SharedSynapseParameters &get_shared_parameters() const { return shared_parameters_; }
 
 private:
-    // So far the index is mutable so we can reindex a const object that has a non-updated index.
-    mutable synapse_access::Index index_;
-
     void reindex() const;
 
     BaseData base_;
@@ -359,6 +376,33 @@ private:
      * @brief Container of synapse parameters.
      */
     std::vector<Synapse> parameters_;
+    // So far the index is mutable so we can reindex a const object that has a non-updated index.
+    struct Connection
+    {
+        size_t from_;
+        size_t to_;
+        size_t index_;
+        bool operator==(const Connection &connection) const
+        {
+            return from_ == connection.from_ && to_ == connection.to_ && index_ == connection.index_;
+        }
+    };
+
+    typedef boost::multi_index::multi_index_container<
+        Connection,
+        boost::multi_index::indexed_by<
+            boost::multi_index::hashed_non_unique<
+                boost::multi_index::tag<struct mi_presynaptic>, BOOST_MULTI_INDEX_MEMBER(Connection, size_t, from_)>,
+            boost::multi_index::hashed_non_unique<
+                boost::multi_index::tag<struct mi_postsynaptic>, BOOST_MULTI_INDEX_MEMBER(Connection, size_t, to_)>,
+            boost::multi_index::hashed_unique<
+                boost::multi_index::tag<struct mi_synapse_index>,
+                BOOST_MULTI_INDEX_MEMBER(Connection, size_t, index_)>>>
+        Index;
+    using ByPresynaptic = mi_presynaptic;
+    using ByPostsynaptic = mi_postsynaptic;
+
+    mutable Index index_;
     mutable bool is_index_updated_ = false;
 
     SharedSynapseParameters shared_parameters_;
