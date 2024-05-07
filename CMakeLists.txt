@@ -47,10 +47,10 @@ else()
 endif()
 
 if(KNP_MAINTAINER_BUILD)
-    set(KNP_ENABLE_COVERAGE_DEFAULT OFF)
+#    set(KNP_ENABLE_COVERAGE_DEFAULT OFF)
     set(KNP_PYTHON_BUILD_WHEEL_DEFAULT ON)
 else()
-    set(KNP_ENABLE_COVERAGE_DEFAULT ON)
+#    set(KNP_ENABLE_COVERAGE_DEFAULT ON)
 
     if(KNP_BUILD_DOCUMENTATION_DEFAULT)
         find_package(Doxygen OPTIONAL_COMPONENTS dot)
@@ -75,7 +75,7 @@ option(KNP_BUILD_DOCUMENTATION "Build doxygen auto documentation" ${KNP_BUILD_DO
 option(KNP_BUILD_EXAMPLES "Build usage examples" ${KNP_BUILD_EXAMPLES_DEFAULT})
 option(KNP_BUILD_TESTS "Build tests" ${KNP_BUILD_TESTS_DEFAULT})
 option(KNP_ENABLE_AVX "Enable AVX and other CPU-specific extensions in the release build" ${KNP_ENABLE_AVX_DEFAULT})
-option(KNP_ENABLE_COVERAGE "Enable coverage checking" ${KNP_ENABLE_COVERAGE_DEFAULT})
+option(KNP_ENABLE_COVERAGE "Enable coverage checking" OFF)
 option(KNP_IPO_ENABLED "Enable interprocedural optimization" ON)
 option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
 option(KNP_PYTHON_BUILD_WHEEL "Build WHL package for the Python framework" ${KNP_PYTHON_BUILD_WHEEL_DEFAULT})
@@ -155,13 +155,18 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 # Make cache variables for install destinations.
 include(GNUInstallDirs)
 
-add_third_party(NAME "ZeroMQ"
-        GITHUB_REPOSITORY "zeromq/libzmq"
-        VERSION "4.3.5"
-        OPTIONS
-        "WITH_DOCS OFF"
-        "BUILD_TESTS OFF"
-        "ENABLE_CPACK OFF")
+# Hack for the CPM in Windows: target name is different from the package name.
+find_package(ZeroMQ)
+
+if(NOT ZeroMQ_FOUND)
+    add_third_party(NAME "libzmq"
+                    GITHUB_REPOSITORY "zeromq/libzmq"
+                    VERSION "4.3.5"
+                    OPTIONS
+                        "WITH_DOCS OFF"
+                        "BUILD_TESTS OFF"
+                        "ENABLE_CPACK OFF")
+endif()
 
 #
 # LibHDF5 and it's dependencies.
@@ -183,7 +188,11 @@ add_third_party("gh:BlueBrain/HighFive@2.9.0"
 
 # End of LibHDF5.
 
-add_third_party("gh:p-ranav/csv2@0.1")
+add_third_party("gh:p-ranav/csv2@0.1"
+                OPTIONS
+                    "CSV2_BUILD_TESTS OFF"
+                    "CSV2_SAMPLES OFF")
+
 add_third_party("gh:simdjson/simdjson@3.9.1")
 add_third_party("gh:intel/pcm#202403")
 
@@ -191,7 +200,9 @@ add_third_party("gh:gabime/spdlog@1.13.0"
                 OPTIONS
                     "SPDLOG_BUILD_PIC ON")
 
-add_third_party("gh:zeromq/cppzmq@4.10.0")
+add_third_party("gh:zeromq/cppzmq@4.10.0"
+                OPTIONS
+                    "CPPZMQ_BUILD_TESTS OFF")
 add_third_party("gh:google/flatbuffers@24.3.25"
                 OPTIONS
                     "FLATBUFFERS_BUILD_TESTS OFF"

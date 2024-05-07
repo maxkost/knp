@@ -70,7 +70,12 @@ function (_knp_add_library lib_name lib_type)
     endif()
 
     if(PARSED_ARGS_PRECOMP)
-        target_precompile_headers("${lib_name}" PRIVATE "${PARSED_ARGS_PRECOMP}")
+        if(NOT KNP_${PARSED_ARGS_PRECOMP}_USED OR "${lib_name}" STREQUAL "${KNP_${PARSED_ARGS_PRECOMP}_USED}")
+            target_precompile_headers("${lib_name}" PRIVATE "${PARSED_ARGS_PRECOMP}")
+            set(KNP_${PARSED_ARGS_PRECOMP}_USED CACHE STRING "${lib_name}")
+        else()
+            target_precompile_headers("${lib_name}" REUSE_FROM "${KNP_${PARSED_ARGS_PRECOMP}_USED}")
+        endif()
     endif()
 
     if(PARSED_ARGS_LINK_PRIVATE)
