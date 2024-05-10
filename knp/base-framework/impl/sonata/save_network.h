@@ -65,5 +65,4 @@ std::vector<Attr> read_parameter(
         std::transform(                                                                                         \
             pop.begin(), pop.end(), std::back_inserter(data), [](const auto &neuron) { return neuron.param; }); \
         group.createDataSet(#param, data);                                                                      \
-    }                                                                                                           \
-    static_assert(true, "")
+    }

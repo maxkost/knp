@@ -10,8 +10,13 @@ project(knp-core VERSION "${KNP_VERSION}" LANGUAGES C CXX
         DESCRIPTION "Kaspersky Neuromorphic Platform core library"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
-#find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
-#find_package(ZeroMQ REQUIRED)
+if(NOT TARGET Boost::headers)
+    find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
+endif()
+
+if(NOT TARGET cppzmq)
+    find_package(cppzmq REQUIRED)
+endif()
 
 include(GNUInstallDirs)
 # Need for installation.
@@ -73,7 +78,7 @@ knp_add_library("${PROJECT_NAME}"
     ${${PROJECT_NAME}_headers}
     PRECOMP impl/common_precomp.h
     LINK_PRIVATE
-        spdlog::spdlog_header_only zmq flatbuffers "${PROJECT_NAME}_messaging"
+        Boost::headers spdlog::spdlog_header_only cppzmq flatbuffers "${PROJECT_NAME}_messaging"
     LINK_PUBLIC
         # This is using in the library for message parameters.
         KNP::Neuron::Traits KNP::Synapse::Traits

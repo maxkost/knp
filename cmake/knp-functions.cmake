@@ -22,19 +22,27 @@ function(knp_set_target_parameters target visibility)
         endif()
     endif()
 
+    if(MSVC)  # AND ($<COMPILE_LANGUAGE> STREQUAL CXX OR $<COMPILE_LANGUAGE> STREQUAL C))
+        set_property(TARGET "${target}" PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    endif()
+
     target_compile_options("${target}" ${visibility} $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wdocumentation>)
     target_compile_options("${target}" ${visibility} $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-Wdocumentation>)
+
     # SDL requirements.
     target_compile_options("${target}" ${visibility} $<$<COMPILE_LANG_AND_ID:C,GNU,Clang>:-Wall -fstack-protector-all -Wformat -Wformat-security>)
     target_compile_options("${target}" ${visibility} $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang>:-Wall -fstack-protector-all -Wformat -Wformat-security>)
 
-    target_compile_definitions("${target}" ${visibility}
-                               "KNP_LIBRARY_NAME=${target}")
+    target_compile_definitions("${target}" ${visibility} "KNP_LIBRARY_NAME=${target}")
     target_compile_features("${target}" ${pub_visibility} cxx_std_17)
 
     target_compile_definitions("${target}" ${visibility}
-#                                $<$<CONFIG:Debug>:_FORTIFY_SOURCE=2>
-                                $<$<CONFIG:Release>:_FORTIFY_SOURCE=1>)
+            #                                $<$<CONFIG:Debug>:_FORTIFY_SOURCE=2>
+            $<$<CONFIG:Release>:_FORTIFY_SOURCE=1>)
+
+    target_compile_definitions("${target}" ${visibility} $<$<COMPILE_LANG_AND_ID:C,MSVC>:NOMINMAX>)
+    target_compile_definitions("${target}" ${visibility} $<$<COMPILE_LANG_AND_ID:CXX,MSVC>:NOMINMAX>)
+
     # Sanitizer (dynamic analysis).
     # Sanitizers don't work under TFS. Temporarily disabled.
 
@@ -70,11 +78,19 @@ function (_knp_add_library lib_name lib_type)
     endif()
 
     if(PARSED_ARGS_PRECOMP)
-        if(NOT KNP_${PARSED_ARGS_PRECOMP}_USED OR "${lib_name}" STREQUAL "${KNP_${PARSED_ARGS_PRECOMP}_USED}")
-            target_precompile_headers("${lib_name}" PRIVATE "${PARSED_ARGS_PRECOMP}")
-            set(KNP_${PARSED_ARGS_PRECOMP}_USED CACHE STRING "${lib_name}")
+        string(REGEX REPLACE "[:-]" "_" _PRECOMP_NAME ${PARSED_ARGS_PRECOMP})
+        if (_KNP_PRECOMP_${_PRECOMP_NAME}_)
+            # Precomp already exists.
+            target_precompile_headers("${lib_name}" REUSE_FROM "${_KNP_PRECOMP_${_PRECOMP_NAME}_}")
         else()
-            target_precompile_headers("${lib_name}" REUSE_FROM "${KNP_${PARSED_ARGS_PRECOMP}_USED}")
+            # New precomp.
+            # PARSED_ARGS_PRECOMP may be a path: must not be changed.
+            target_precompile_headers("${lib_name}" PRIVATE "${PARSED_ARGS_PRECOMP}")
+            set(_KNP_PRECOMP_${_PRECOMP_NAME}_ "${lib_name}" CACHE STRING "Precomp for ${lib_name}")
+            if(PARSED_ARGS_ALIAS)
+                string(REGEX REPLACE "[:-]" "_" _PRECOMP_NAME ${PARSED_ARGS_ALIAS})
+                set(_KNP_PRECOMP_${_PRECOMP_NAME}_ "${lib_name}" CACHE STRING "Precomp for ${lib_name} alias ${PARSED_ARGS_ALIAS}")
+            endif()
         endif()
     endif()
 

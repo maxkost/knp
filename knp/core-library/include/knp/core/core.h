@@ -71,11 +71,16 @@ struct BaseData
      */
     TagMap tags_;
 }
+#if defined(__GNUC__) || defined(__clang__)
 /**
  * @brief Attribute for alignment.
  * @return none.
  */
 __attribute__((aligned(sizeof(size_t) * 8)));
+#else
+;  // NOLINT
+#endif
+
 
 /**
  * @brief Type used to store a step number in the form of a 64-bit unsigned integer.

@@ -29,7 +29,7 @@ public:
     void set_header(std::vector<std::string> header)
     {
         header_ = std::move(header);
-        for (size_t i = 0; i < header_.size(); ++i) header_index_.insert({header_[i], i});
+        for (size_t i = 0; i < header_.size(); ++i) header_index_.emplace(header_[i], i);
     }
 
     void add_row(std::vector<std::string> new_row) { values_.push_back(std::move(new_row)); }
@@ -43,7 +43,7 @@ public:
 
 private:
     std::vector<std::string> header_;
-    std::unordered_map<std::string, int> header_index_;
+    std::unordered_map<std::string, size_t> header_index_;
     std::vector<std::vector<std::string>> values_;
 };
 

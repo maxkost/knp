@@ -49,7 +49,7 @@ std::vector<std::string> get_projection_names(const HighFive::File &file)
 std::vector<core::AllProjectionsVariant> load_projections(const fs::path &proj_h5_file)
 {
     if (!fs::is_regular_file(proj_h5_file)) throw std::runtime_error("Couldn't open file " + proj_h5_file.string());
-    HighFive::File storage{proj_h5_file};
+    HighFive::File storage{proj_h5_file.string()};
     auto group = storage.getGroup("edges");
     size_t num_projections = group.getNumberObjects();
     std::vector<core::AllProjectionsVariant> result;
@@ -72,16 +72,20 @@ std::vector<core::AllProjectionsVariant> load_projections(const fs::path &proj_h
 
 std::vector<core::AllPopulationsVariant> load_populations(const fs::path &pop_h5_file)
 {
-    if (!fs::is_regular_file(pop_h5_file)) throw std::runtime_error("Couldn't open file " + pop_h5_file.string());
-    HighFive::File storage{pop_h5_file};
+    if (!fs::is_regular_file(pop_h5_file))
+    {
+        throw std::runtime_error("Couldn't open file " + pop_h5_file.string());
+    }
+
+    const HighFive::File storage{pop_h5_file.string()};
     auto group = storage.getGroup("nodes");
-    size_t num_projections = group.getNumberObjects();
+    const size_t num_projections = group.getNumberObjects();
     std::vector<core::AllPopulationsVariant> result;
 
     for (size_t i = 0; i < num_projections; ++i)
     {
-        std::string proj_name = group.getObjectName(i);
-        int proj_type =
+        const std::string proj_name = group.getObjectName(i);
+        const int proj_type =
             group.getGroup(proj_name).getDataSet("node_type_id").read<std::vector<int>>()[0];  // one type only
         // Check if type in type_file
         if (proj_type == get_neuron_type_id<neuron_traits::BLIFATNeuron>())
@@ -106,24 +110,19 @@ struct NetworkConfig
 
 NetworkConfig read_config_file(const fs::path &config_path)
 {
-    fs::path network_dir = config_path.parent_path();
-    fs::path edges_storage = network_dir / "projections.h5";
-    fs::path nodes_storage = network_dir / "populations.h5";
-    fs::path edges_types = network_dir / "synapses.csv";
-    fs::path nodes_types = network_dir / "neurons.csv";
-    return NetworkConfig{
-        .config_path{config_path},
-        .edges_storage{edges_storage},
-        .nodes_storage{nodes_storage},
-        .edges_types{edges_types},
-        .nodes_types{nodes_types}};
+    const fs::path network_dir = config_path.parent_path();
+    const fs::path edges_storage = network_dir / "projections.h5";
+    const fs::path nodes_storage = network_dir / "populations.h5";
+    const fs::path edges_types = network_dir / "synapses.csv";
+    const fs::path nodes_types = network_dir / "neurons.csv";
+    return NetworkConfig{config_path, edges_storage, nodes_storage, edges_types, nodes_types};
     // TODO: actually read config
 }
 
 
 core::UID get_network_uid(const fs::path &nodes_path)
 {
-    HighFive::File h5_file(nodes_path);
+    const HighFive::File h5_file(nodes_path.string());
     if (h5_file.hasAttribute("network_uid"))
     {
         auto uid_str = h5_file.getAttribute("network_uid").read<std::string>();
@@ -142,9 +141,15 @@ Network load_network(const fs::path &config_path)
     Network network{get_network_uid(config.nodes_storage)};
     auto populations = load_populations(config.nodes_storage);
     auto projections = load_projections(config.edges_storage);
-    for (auto &pop : populations) std::visit([&network](auto &population) { network.add_population(population); }, pop);
+    for (auto &pop : populations)
+    {
+        std::visit([&network](auto &population) { network.add_population(population); }, pop);
+    }
+
     for (auto &proj : projections)
+    {
         std::visit([&network](auto &projection) { network.add_projection(projection); }, proj);
+    }
 
     return network;
 }

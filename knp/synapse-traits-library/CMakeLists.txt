@@ -10,6 +10,8 @@ project(knp-synapse-traits VERSION "${KNP_VERSION}" LANGUAGES C CXX
 
 include(knp-functions)
 
+find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
+
 set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/synapse-traits")
 
 file(GLOB_RECURSE ${PROJECT_NAME}_headers include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/*.h)
@@ -23,7 +25,7 @@ target_include_directories("${PROJECT_NAME}" INTERFACE
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
-target_link_libraries("${PROJECT_NAME}" INTERFACE KNP::Meta)
+target_link_libraries("${PROJECT_NAME}" INTERFACE Boost::headers KNP::Meta)
 
 install(TARGETS "${PROJECT_NAME}"
     EXPORT "${PROJECT_NAME}"

@@ -244,6 +244,8 @@ void MultiThreadedCPUBackend::_step()
     get_message_bus().route_messages();
     get_message_endpoint().receive_all_messages();
     auto step = gad_step();
+    // Need to suppress "Unused variable" warning.
+    (void)step;
     SPDLOG_DEBUG("Step #{} finished.", step);
 }
 

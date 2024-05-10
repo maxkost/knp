@@ -60,8 +60,7 @@ install(TARGETS "${PROJECT_NAME}-cpu"
 install(TARGETS "${PROJECT_NAME}-cpu_static"
         EXPORT "${PROJECT_NAME}-cpu_static"
         COMPONENT "framework-dev"
-        ARCHIVE
-        )
+        ARCHIVE)
 
 install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
         COMPONENT "framework-dev"

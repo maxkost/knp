@@ -124,7 +124,7 @@ protected:
         path_to_h5_ = "data.h5";
         messages_ = generate_random_messages(uid_, 200, 20, 0.2);
         knp::framework::storage::native::save_messages_to_h5(messages_, path_to_h5_);
-        HighFive::File h5_file(path_to_h5_, HighFive::File::ReadWrite);
+        HighFive::File h5_file(path_to_h5_.string(), HighFive::File::ReadWrite);
         h5_file.deleteAttribute("magic");
         h5_file.createAttribute("magic", 1234);
     }
