@@ -8,7 +8,7 @@ project(knp_python_framework VERSION "${KNP_VERSION}" LANGUAGES C CXX  # PYTHON
         DESCRIPTION "Kaspersky Neuromorphic Platform Python framework"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
-# set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_STATIC_LIBS ON)
 if(NOT KNP_PYTHON_FRAMEWORK_BUILD)
     message(STATUS "Python framework building disabled...")
     return()
