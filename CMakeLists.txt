@@ -14,12 +14,20 @@ if(NOT KNP_VERSION)
     message(FATAL_ERROR "KNP version mandatory for build, but can't be determined!")
 endif()
 
+enable_language(CXX)
+# Enable MSVS library select, using property.
+cmake_policy(SET CMP0091 NEW)
+
 project(knp VERSION "${KNP_VERSION}"
         DESCRIPTION "Kaspersky Neuromorphic Platform"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 set(KNP_BOOST_MIN_VERSION "1.74.0")
 set(KNP_ROOT_DIR "${PROJECT_SOURCE_DIR}" CACHE STRING "KNP root directory")
+set(BOOST_USE_MULTITHREADED ON)
+set(BOOST_USE_STATIC_LIBS ON)
+set(BOOST_USE_STATIC_RUNTIME ON)
+set(BOOST_ALL_DYN_LINK OFF)
 
 
 #
@@ -65,7 +73,7 @@ option(KNP_ENABLE_COVERAGE "Enable coverage checking" OFF)
 option(KNP_IPO_ENABLED "Enable interprocedural optimization" ON)
 option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
 cmake_dependent_option(KNP_PYTHON_FRAMEWORK_BUILD "Build KNP Python framework" ON "KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT" OFF)
-cmake_dependent_option(KNP_PYTHON_BUILD_WHEEL "Build WHL package for the Python framework" ON "KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT;KNP_MAINTAINER_BUILD" OFF)
+cmake_dependent_option(KNP_PYTHON_BUILD_WHEEL "Build WHL package for the Python framework" ON "KNP_PYTHON_FRAMEWORK_BUILD;KNP_MAINTAINER_BUILD" OFF)
 
 mark_as_advanced(KNP_MAINTAINER_BUILD)
 mark_as_advanced(KNP_ENABLE_COVERAGE)
