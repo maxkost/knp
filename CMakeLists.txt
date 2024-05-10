@@ -36,6 +36,8 @@ set(BOOST_ALL_DYN_LINK OFF)
 
 # Build not from source directory, possible via add_subdirectory().
 if (NOT CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    set(KNP_BUILD_AUTONOMOUS FALSE)
+else()
     set(KNP_BUILD_AUTONOMOUS TRUE)
 endif()
 
