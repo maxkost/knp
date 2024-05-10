@@ -191,7 +191,7 @@ function(knp_add_python_module name)
     endif()
 
     target_include_directories("${LIB_NAME}" PRIVATE ${Python3_INCLUDE_DIRS})
-    target_link_libraries("${LIB_NAME}" PRIVATE Boost::headers Boost::python ${PARSED_ARGS_LINK_LIBRARIES})
+    target_link_libraries("${LIB_NAME}" PRIVATE ${PARSED_ARGS_LINK_LIBRARIES} Boost::headers Boost::python)
 
 #    set_target_properties(${LIB_NAME} PROPERTIES PREFIX "${PYTHON_MODULE_PREFIX}")
 #    set_target_properties(${LIB_NAME} PROPERTIES SUFFIX "${PYTHON_MODULE_EXTENSION}")
