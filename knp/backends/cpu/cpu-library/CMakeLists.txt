@@ -15,7 +15,7 @@ include(knp-functions)
 file(GLOB_RECURSE ${PROJECT_NAME}_headers include/knp/backends/cpu-library/*.h)
 
 knp_add_library("${PROJECT_NAME}"
-        STATIC
+        INTERFACE
         include/knp/backends/cpu-library/impl/synaptic_resource_stdp_impl.h
         ${${PROJECT_NAME}_headers})
 add_library(KNP::Backends::CPU::Library ALIAS "${PROJECT_NAME}")
@@ -24,16 +24,16 @@ source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "include/.*")
 source_group(headers REGULAR_EXPRESSION "impl/.*")
 
-target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS})
-target_include_directories("${PROJECT_NAME}" PRIVATE "impl")
+target_include_directories("${PROJECT_NAME}" INTERFACE ${Boost_INCLUDE_DIRS})
+target_include_directories("${PROJECT_NAME}" INTERFACE "impl")
 
-target_link_libraries("${PROJECT_NAME}" PRIVATE Boost::headers spdlog::spdlog_header_only)
-target_link_libraries("${PROJECT_NAME}" PUBLIC KNP::Core KNP::Devices::CPU)
+target_link_libraries("${PROJECT_NAME}" INTERFACE Boost::headers spdlog::spdlog_header_only)
+target_link_libraries("${PROJECT_NAME}" INTERFACE KNP::Core KNP::Devices::CPU)
 
 if(KNP_ENABLE_COVERAGE)
     include(codecoverage)
     append_coverage_compiler_flags()
-    link_target_with_gcov("${PROJECT_NAME}")
+#    link_target_with_gcov("${PROJECT_NAME}")
 endif()
 
 # Internal library, used by backends.

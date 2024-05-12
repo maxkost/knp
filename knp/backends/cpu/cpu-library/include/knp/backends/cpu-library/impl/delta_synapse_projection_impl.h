@@ -43,7 +43,7 @@ std::unordered_map<uint64_t, size_t> convert_spikes(const knp::core::messaging::
 template <class DeltaLikeSynapse>
 void calculate_projection_part_impl(
     knp::core::Projection<DeltaLikeSynapse> &projection, const std::unordered_map<size_t, size_t> &message_in_data,
-    MessageQueue &future_messages, u_int64_t step_n, size_t part_start, size_t part_size, std::mutex &mutex);
+    MessageQueue &future_messages, uint64_t step_n, size_t part_start, size_t part_size, std::mutex &mutex);
 
 
 template <class DeltaLikeSynapse>
@@ -122,7 +122,7 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
 template <class DeltaLikeSynapse>
 void calculate_projection_part_impl(
     knp::core::Projection<DeltaLikeSynapse> &projection, const std::unordered_map<size_t, size_t> &message_in_data,
-    MessageQueue &future_messages, u_int64_t step_n, size_t part_start, size_t part_size, std::mutex &mutex)
+    MessageQueue &future_messages, uint64_t step_n, size_t part_start, size_t part_size, std::mutex &mutex)
 {
     size_t part_end = std::min(part_start + part_size, projection.size());
     std::vector<std::pair<uint64_t, knp::core::messaging::SynapticImpact>> container;

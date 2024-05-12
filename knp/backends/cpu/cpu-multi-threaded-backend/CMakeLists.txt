@@ -22,13 +22,15 @@ file(GLOB_RECURSE ${PROJECT_NAME}_headers include/${${PROJECT_NAME}_PUBLIC_INCLU
 source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers REGULAR_EXPRESSION "include/.*")
 
+find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS system REQUIRED)
+
 knp_add_library("${PROJECT_NAME}"
     BOTH
         impl/backend.cpp
         ${${PROJECT_NAME}_headers}
     ALIAS KNP::Backends::CPUMultiThreaded
     LINK_PRIVATE
-        Boost::headers Boost::system spdlog::spdlog_header_only
+        Boost::headers spdlog::spdlog_header_only
         KNP::Backends::CPU::Library KNP::Backends::CPU::ThreadPool
     LINK_PUBLIC KNP::Core KNP::Devices::CPUStatic
 )

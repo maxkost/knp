@@ -24,10 +24,38 @@ project(knp VERSION "${KNP_VERSION}"
 
 set(KNP_BOOST_MIN_VERSION "1.74.0")
 set(KNP_ROOT_DIR "${PROJECT_SOURCE_DIR}" CACHE STRING "KNP root directory")
+
+# WARNING: Don't change variables register!
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_STATIC_RUNTIME OFF)
+
+if (WIN32)
+    set(Boost_USE_STATIC_RUNTIME ON)
+else()
+    set(Boost_USE_STATIC_RUNTIME OFF)
+endif()
+
 set(Boost_ALL_DYN_LINK OFF)
+
+if (BOOST_ROOT)  # WIN32?
+    # Boost detection setup.
+    if(NOT BOOST_INCLUDEDIR)
+        set(BOOST_INCLUDEDIR "${BOOST_ROOT}")
+    endif()
+
+    if(NOT BOOST_LIBRARYDIR)
+        if(EXISTS "${BOOST_ROOT}/stage")
+            set(BOOST_LIBRARYDIR "${BOOST_ROOT}/stage")
+        else()
+            file(GLOB _BOOST_LIB_DIRS LIST_DIRECTORIES true "${BOOST_ROOT}/lib*-*-*")
+            list(GET _BOOST_LIB_DIRS 0 BOOST_LIBRARYDIR)
+        endif()
+    endif()
+
+    message(STATUS "Boost library dir: ${BOOST_LIBRARYDIR}")
+endif()
+
+set(Boost_DEBUG ON)
 
 
 #
@@ -49,7 +77,7 @@ else()
     set(KNP_ENABLE_AVX_DEFAULT OFF)
 endif()
 
-if(KNP_MAINTAINER_BUILD)
+if (KNP_MAINTAINER_BUILD)
     if(KNP_BUILD_AUTONOMOUS)
         find_package(Doxygen OPTIONAL_COMPONENTS dot)
         if(NOT DOXYGEN_FOUND)
@@ -60,7 +88,7 @@ endif()
 
 find_program(_STUBGEN stubgen NO_CACHE)
 
-if("${_STUBGEN}" STREQUAL "_STUBGEN-NOTFOUND")
+if ("${_STUBGEN}" STREQUAL "_STUBGEN-NOTFOUND")
     message(WARNING "MyPy stubgen was not found! Please install MyPy (see requirements.txt)! Python framework build will be disabled.")
     set(KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT OFF)
 else()
@@ -107,7 +135,7 @@ if (KNP_ENABLE_AVX)
     # -include bits/stdc++.h
 endif()
 
-if(NOT KNP_MAINTAINER_BUILD)
+if (NOT KNP_MAINTAINER_BUILD)
     execute_process(COMMAND pre-commit install
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
     if(ret AND NOT ret EQUAL 0)
@@ -117,7 +145,7 @@ if(NOT KNP_MAINTAINER_BUILD)
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 endif()
 
-if(KNP_BUILD_TESTS)
+if (KNP_BUILD_TESTS)
     add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)
 endif()
 
@@ -154,7 +182,7 @@ include(GNUInstallDirs)
 # Hack for the CPM in Windows: target name is different from the package name.
 find_package(ZeroMQ)
 
-if(NOT ZeroMQ_FOUND)
+if (NOT ZeroMQ_FOUND)
     add_third_party(NAME "libzmq"
                     GITHUB_REPOSITORY "zeromq/libzmq"
                     VERSION "4.3.5"
@@ -174,7 +202,8 @@ add_third_party("https://gitlab.dkrz.de/k202009/libaec.git@1.1.3")
 add_third_party("gh:HDFGroup/hdf5#hdf5_1.14.4"
                 GIT_SHALLOW ON
                 OPTIONS
-                    "HDF5_NO_PACKAGES ON")
+                    "HDF5_NO_PACKAGES ON"
+                    "BUILD_SHARED_LIBS OFF")
 
 add_third_party("gh:BlueBrain/HighFive@2.9.0"
                 GIT_SHALLOW ON
@@ -189,7 +218,11 @@ add_third_party("gh:p-ranav/csv2@0.1"
                     "CSV2_BUILD_TESTS OFF"
                     "CSV2_SAMPLES OFF")
 
-add_third_party("gh:simdjson/simdjson@3.9.1")
+add_third_party("gh:simdjson/simdjson@3.9.1"
+                GIT_SHALLOW ON
+                OPTIONS
+                    "SIMDJSON_BUILD_STATIC_LIB ON")
+
 add_third_party("gh:intel/pcm#202403")
 
 add_third_party("gh:gabime/spdlog@1.13.0"
@@ -204,7 +237,7 @@ add_third_party("gh:google/flatbuffers@24.3.25"
                     "FLATBUFFERS_BUILD_TESTS OFF"
                     "FLATBUFFERS_BUILD_CPP17 ON")
 
-if(KNP_BUILD_TESTS)
+if (KNP_BUILD_TESTS)
     add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)
     add_third_party("gh:google/googletest@1.14.0")
 endif()

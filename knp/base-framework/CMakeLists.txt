@@ -52,7 +52,7 @@ knp_add_library("${PROJECT_NAME}-core"
     ${${PROJECT_NAME}_headers}
     ALIAS KNP::BaseFramework::Core
     LINK_PRIVATE
-        spdlog::spdlog_header_only Boost::headers Boost::filesystem HighFive ${HDF5_LIB} simdjson
+        spdlog::spdlog_header_only Boost::headers Boost::filesystem HighFive ${HDF5_LIB} simdjson::simdjson_static
     LINK_PUBLIC
         KNP::Core KNP::Neuron::Traits KNP::Synapse::Traits
     PRECOMP KNP::Core)
@@ -102,7 +102,7 @@ knp_packaging_set_parameters("${COMPONENT_NAME}" "${PROJECT_NAME}"
         DESCRIPTION "${PROJECT_DESCRIPTION}"
         DEPENDS backend)
 
-set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_DEPENDS "libboost-all (= ${Boost_VERSION})"
+set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_DEPENDS "libboost-all (= ${Boost_VERSION}), libhdf5, libzmq5"
     CACHE STRING "${PROJECT_NAME} deb package dependencies")
 
 knp_packaging_set_parameters("${COMPONENT_NAME}-dev" "${PROJECT_NAME}"

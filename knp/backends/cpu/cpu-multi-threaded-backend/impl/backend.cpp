@@ -129,11 +129,18 @@ std::vector<knp::core::messaging::SpikeMessage> MultiThreadedCPUBackend::calcula
                 [this, &message, neuron_index](auto &pop)
                 {
                     using T = std::decay_t<decltype(pop)>;
+#if defined(_MSC_VER)
+#    pragma warning(push)
+#    pragma warning(disable : 4267)
+#endif
                     calc_pool_->post(
                         knp::backends::cpu::calculate_neurons_post_input_state_part<typename T::PopulationNeuronType>,
                         std::ref(pop), std::ref(message), neuron_index, population_part_size_, std::ref(ep_mutex_));
                 },
                 population);
+#if defined(_MSC_VER)
+#    pragma warning(pop)
+#endif
         }
     }
     calc_pool_->join();
