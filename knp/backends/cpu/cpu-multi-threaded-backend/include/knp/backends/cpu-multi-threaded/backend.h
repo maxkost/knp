@@ -17,6 +17,7 @@
 
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <utility>
 #include <variant>
 #include <vector>
@@ -103,7 +104,7 @@ private:
     struct ProjectionWrapper
     {
         ProjectionVariants arg_;
-        core::messaging::SynapticMessageQueue messages_;
+        std::unordered_map<uint64_t, knp::core::messaging::SynapticImpactMessage> messages_;
     };
 
 public:
@@ -331,13 +332,9 @@ private:
     // Calculating post input changes and outputs.
     std::vector<knp::core::messaging::SpikeMessage> calculate_populations_post_impact();
 
-    // cppcheck-suppress unusedStructMember
     PopulationContainer populations_;
-    // cppcheck-suppress unusedStructMember
     ProjectionContainer projections_;
-    // cppcheck-suppress unusedStructMember
     const size_t population_part_size_;
-    // cppcheck-suppress unusedStructMember
     const size_t projection_part_size_;
     std::unique_ptr<cpu_executors::ThreadPool> calc_pool_;
     std::mutex ep_mutex_;

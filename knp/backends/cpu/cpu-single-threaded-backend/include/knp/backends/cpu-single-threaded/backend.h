@@ -16,6 +16,7 @@
 
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <utility>
 #include <variant>
 #include <vector>
@@ -84,7 +85,7 @@ private:
     struct ProjectionWrapper
     {
         ProjectionVariants arg_;
-        core::messaging::SynapticMessageQueue messages_;
+        std::unordered_map<uint64_t, knp::core::messaging::SynapticImpactMessage> messages_;
     };
 
 public:
@@ -288,6 +289,11 @@ public:
 
 protected:
     /**
+     * @brief Map used for message construction. It maps a message to its future output step.
+     */
+    using SynapticMessageQueue = std::unordered_map<uint64_t, core::messaging::SynapticImpactMessage>;
+
+    /**
      * @copydoc knp::core::Backend::_init()
      */
     void _init() override;
@@ -316,8 +322,7 @@ protected:
      * @param message_queue message queue to send to projection for calculation.
      */
     void calculate_projection(
-        knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection,
-        core::messaging::SynapticMessageQueue &message_queue);
+        knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, SynapticMessageQueue &message_queue);
     /**
      * @brief Calculate projection of `AdditiveSTDPDeltaSynapse` synapses.
      * @note Projection will be changed during calculation.
@@ -326,7 +331,7 @@ protected:
      */
     void calculate_projection(
         knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> &projection,
-        core::messaging::SynapticMessageQueue &message_queue);
+        SynapticMessageQueue &message_queue);
     /**
      * @brief Calculate projection of `SynapticResourceSTDPDeltaSynapse` synapses.
      * @note Projection will be changed during calculation.
@@ -335,12 +340,10 @@ protected:
      */
     void calculate_projection(
         knp::core::Projection<knp::synapse_traits::SynapticResourceSTDPDeltaSynapse> &projection,
-        core::messaging::SynapticMessageQueue &message_queue);
+        SynapticMessageQueue &message_queue);
 
 private:
-    // cppcheck-suppress unusedStructMember
     PopulationContainer populations_;
-    // cppcheck-suppress unusedStructMember
     ProjectionContainer projections_;
 };
 

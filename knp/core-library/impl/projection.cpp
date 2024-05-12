@@ -10,6 +10,44 @@
 #include <spdlog/spdlog.h>
 
 
+// Index functions
+template <class Index, class Connection>
+void insert_to_index(Index &val, const Connection &connection)
+{
+    val.insert(connection);
+}
+
+
+template <class Index, class Type>
+auto find_by_type(const Index &val, size_t neuron_index)
+{
+    return val.template get<Type>().equal_range(neuron_index);
+}
+
+
+template <class Index, class Type>
+std::vector<size_t> find_indexes_by_type(const Index &val, size_t neuron_index)
+{
+    auto range = find_by_type<Index, Type>(val, neuron_index);
+    std::vector<size_t> res;
+    std::transform(range.first, range.second, std::back_inserter(res), [](const auto &val) { return val.index_; });
+    return res;
+}
+
+
+/**
+ * @brief Remove a synapse with a given index.
+ * @param index index of a synapse.
+ * @return true if an element was found and erased.
+ */
+template <class Index, class Projection>
+bool erase_synapse(Index &val, size_t index)
+{
+    auto num_erased = val.template get<typename Projection::mi_synapse_index>().erase(index);
+    return num_erased > 0;
+}
+
+
 /**
  * @brief Helper function, removes elements by their indexes in a single pass.
  * @tparam T value type.
@@ -40,21 +78,6 @@ void remove_by_index(std::vector<T> &data, const IndexContainer &to_remove)
 namespace knp::core
 {
 using Connection = typename std::tuple<size_t, size_t, size_t>;
-
-template <int N>
-size_t get_nth(const Connection &connection)
-{
-    return std::get<N>(connection);
-}
-
-
-/**
- * @brief A container of Connections, with fast search by any of its fields.
- */
-class ProjectionIndex
-{
-public:
-};
 
 
 template <typename SynapseType>
@@ -117,30 +140,21 @@ Projection<SynapseType>::Projection(
 
 
 template <typename SynapseType>
-std::vector<size_t> knp::core::Projection<SynapseType>::get_by_presynaptic_neuron(size_t neuron_index) const  // !OCLint
+std::vector<size_t> knp::core::Projection<SynapseType>::find_synapses(size_t neuron_id, Search search_criterion) const
 {
     reindex();
-    auto range = index_.find_by_presynaptic(neuron_index);
-    std::vector<size_t> result;
-    for (auto iter = range.first; iter != range.second; ++iter)
+    std::vector<size_t> res;
+    switch (search_criterion)
     {
-        result.push_back(iter->index_);
+        case Search::by_postsynaptic:
+            res = find_indexes_by_type<decltype(index_), core::Projection<SynapseType>::ByPostsynaptic>(
+                index_, neuron_id);
+            break;
+        case Search::by_presynaptic:
+            res =
+                find_indexes_by_type<decltype(index_), core::Projection<SynapseType>::ByPresynaptic>(index_, neuron_id);
     }
-    return result;
-}
-
-
-template <typename SynapseType>
-std::vector<size_t> knp::core::Projection<SynapseType>::get_by_postsynaptic_neuron(size_t neuron_index) const
-{
-    reindex();
-    auto range = index_.find_by_postsynaptic(neuron_index);
-    std::vector<size_t> result;
-    for (auto iter = range.first; iter != range.second; ++iter)
-    {
-        result.push_back(iter->index_);
-    }
-    return result;
+    return res;
 }
 
 
@@ -169,8 +183,10 @@ size_t knp::core::Projection<SynapseType>::add_synapses(const std::vector<Synaps
     is_index_updated_ = false;
     for (const auto &synapse : synapses)
     {
-        // todo: replace 1, 2 with id_from, id_to.
-        if (was_index_updated_) index_.insert({std::get<1>(synapse), std::get<2>(synapse), parameters_.size()});
+        if (was_index_updated_)
+            index_.insert(
+                {std::get<knp::core::source_neuron_id>(synapse), std::get<knp::core::target_neuron_id>(synapse),
+                 parameters_.size()});
         parameters_.push_back(synapse);
     }
     is_index_updated_ = was_index_updated_;
@@ -218,7 +234,7 @@ size_t knp::core::Projection<SynapseType>::disconnect_postsynaptic_neuron(size_t
     bool was_index_updated = is_index_updated_;
     // Basic exception safety.
     is_index_updated_ = false;
-    auto synapses_to_remove = get_by_postsynaptic_neuron(neuron_index);
+    auto synapses_to_remove = find_synapses(neuron_index, Search::by_postsynaptic);
     std::sort(synapses_to_remove.begin(), synapses_to_remove.end());
     remove_by_index(parameters_, synapses_to_remove);
     if (was_index_updated)
@@ -233,17 +249,20 @@ template <typename SynapseType>
 size_t knp::core::Projection<SynapseType>::disconnect_presynaptic_neuron(size_t neuron_index)
 {
     // TODO: We now have a way to find them quickly, make use of it instead of disconnect_if.
-    // todo: replace 1 with id_from.
-    return disconnect_if([neuron_index](const Synapse &synapse) { return std::get<1>(synapse) == neuron_index; });
+    return disconnect_if([neuron_index](const Synapse &synapse)
+                         { return std::get<knp::core::source_neuron_id>(synapse) == neuron_index; });
 }
 
 
 template <typename SynapseType>
 size_t knp::core::Projection<SynapseType>::disconnect_neurons(size_t neuron_from, size_t neuron_to)
 {
-    return disconnect_if([neuron_from, neuron_to](const Synapse &synapse)
-                         // todo: replace 1, 2 with id_from, id_to.
-                         { return (std::get<1>(synapse) == neuron_from) && (std::get<2>(synapse) == neuron_to); });
+    return disconnect_if(
+        [neuron_from, neuron_to](const Synapse &synapse)
+        {
+            return (std::get<knp::core::source_neuron_id>(synapse) == neuron_from) &&
+                   (std::get<knp::core::target_neuron_id>(synapse) == neuron_to);
+        });
 }
 
 
@@ -259,8 +278,10 @@ void knp::core::Projection<SynapseType>::reindex() const
     for (size_t i = 0; i < parameters_.size(); ++i)
     {
         auto &synapse = parameters_[i];
-        // todo: replace 1, 2 with id_from, id_to.
-        index_.insert(knp::core::synapse_access::Connection{std::get<1>(synapse), std::get<2>(synapse), i});
+        insert_to_index(
+            index_,
+            Connection{
+                std::get<knp::core::source_neuron_id>(synapse), std::get<knp::core::target_neuron_id>(synapse), i});
     }
     is_index_updated_ = true;
 }
