@@ -55,7 +55,7 @@ if (BOOST_ROOT)  # WIN32?
     message(STATUS "Boost library dir: ${BOOST_LIBRARYDIR}")
 endif()
 
-set(Boost_DEBUG ON)
+# set(Boost_DEBUG ON)
 
 
 #
