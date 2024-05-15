@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -28,10 +29,8 @@ knp_add_library("${PROJECT_NAME}-cpu"
     ${${PROJECT_NAME}_headers}
 
     LINK_PRIVATE
-        spdlog::spdlog_header_only PCM_STATIC
-    LINK_PUBLIC
+        spdlog::spdlog PCM_STATIC
         KNP::Core
-
     ALIAS KNP::Devices::CPU
 )
 
@@ -55,7 +54,7 @@ install(TARGETS "${PROJECT_NAME}-cpu"
         EXPORT "${PROJECT_NAME}-cpu"
         LIBRARY
 #        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
-        )
+)
 
 install(TARGETS "${PROJECT_NAME}-cpu_static"
         EXPORT "${PROJECT_NAME}-cpu_static"

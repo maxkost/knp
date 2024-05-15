@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include <knp/core/impexp.h>
 #include <knp/framework/network.h>
 
 #include <filesystem>
@@ -16,7 +17,7 @@
 namespace knp::framework::sonata
 {
 /**
- * @brief Save network to disk. 
+ * @brief Save network to disk.
  * @note The network is saved in the Sonata format.
  * @param network network to save.
  * @param dir directory to save the network.

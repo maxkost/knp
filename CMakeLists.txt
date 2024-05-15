@@ -15,8 +15,11 @@ if(NOT KNP_VERSION)
 endif()
 
 enable_language(CXX)
-# Enable MSVS library select, using property.
-cmake_policy(SET CMP0091 NEW)
+
+if (POLICY CMP0091)
+    # Enable MSVS library select, using property.
+    cmake_policy(SET CMP0091 NEW)
+endif()
 
 project(knp VERSION "${KNP_VERSION}"
         DESCRIPTION "Kaspersky Neuromorphic Platform"
@@ -49,6 +52,7 @@ if (BOOST_ROOT)  # WIN32?
         else()
             file(GLOB _BOOST_LIB_DIRS LIST_DIRECTORIES true "${BOOST_ROOT}/lib*-*-*")
             list(GET _BOOST_LIB_DIRS 0 BOOST_LIBRARYDIR)
+            # set(Boost_LIB_PREFIX "")
         endif()
     endif()
 
@@ -56,6 +60,11 @@ if (BOOST_ROOT)  # WIN32?
 endif()
 
 # set(Boost_DEBUG ON)
+
+if (MSVC)
+    find_package(Boost ${KNP_BOOST_MIN_VERSION})
+    add_link_options("/LIBPATH:${Boost_LIBRARY_DIR_RELEASE}")
+endif()
 
 
 #
@@ -218,7 +227,7 @@ add_third_party("gh:p-ranav/csv2@0.1"
                     "CSV2_BUILD_TESTS OFF"
                     "CSV2_SAMPLES OFF")
 
-add_third_party("gh:simdjson/simdjson@3.9.1"
+add_third_party("gh:simdjson/simdjson@3.9.2"
                 GIT_SHALLOW ON
                 OPTIONS
                     "SIMDJSON_BUILD_STATIC_LIB ON")

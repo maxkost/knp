@@ -27,7 +27,7 @@
  */
 namespace knp::backends::cpu
 {
-bool is_neuroplastic_population(const core::AllPopulationsVariant &population)
+inline bool is_neuroplastic_population(const core::AllPopulationsVariant &population)
 {
     using PopulationType =
         knp::core::Population<knp::neuron_traits::SynapticResourceSTDPNeuron<knp::neuron_traits::BLIFATNeuron>>;
@@ -88,17 +88,20 @@ void recalculate_synapse_weights(std::vector<STDPSynapseParams<WeightedSynapse> 
     }
 }
 
+
 template <class Synapse>
 using StdpProjection =
     knp::core::Projection<knp::synapse_traits::STDP<knp::synapse_traits::STDPSynapticResourceRule, Synapse>>;
 
-bool is_point_in_interval(uint64_t interval_begin, uint64_t interval_end, uint64_t point)
+
+inline bool is_point_in_interval(uint64_t interval_begin, uint64_t interval_end, uint64_t point)
 {
     const bool is_after_begin = point >= interval_begin;
     const bool is_before_end = point <= interval_end;
     const bool is_overflow = interval_end < interval_begin;
     return (is_after_begin && is_before_end) || ((is_after_begin || is_before_end) && is_overflow);
 }
+
 
 template <class SynapseType>
 std::vector<synapse_traits::synapse_parameters<SynapseType> *> get_all_connected_synapses(
@@ -110,11 +113,7 @@ std::vector<synapse_traits::synapse_parameters<SynapseType> *> get_all_connected
         auto synapses = projection->find_synapses(neuron_index, core::Projection<SynapseType>::Search::by_postsynaptic);
         std::transform(
             synapses.begin(), synapses.end(), std::back_inserter(result),
-            [&projection](auto const &index)
-            {
-                // todo: replace 0 with "params".
-                return &std::get<0>((*projection)[index]);
-            });
+            [&projection](auto const &index) { return &std::get<core::synapse_data>((*projection)[index]); });
     }
     return result;
 }

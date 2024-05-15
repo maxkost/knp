@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -78,7 +79,7 @@ knp_add_library("${PROJECT_NAME}"
     ${${PROJECT_NAME}_headers}
     PRECOMP impl/common_precomp.h
     LINK_PRIVATE
-        Boost::headers spdlog::spdlog_header_only cppzmq flatbuffers "${PROJECT_NAME}_messaging"
+        Boost::headers spdlog::spdlog cppzmq flatbuffers "${PROJECT_NAME}_messaging"
     LINK_PUBLIC
         # This is using in the library for message parameters.
         KNP::Neuron::Traits KNP::Synapse::Traits

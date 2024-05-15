@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp-base-framework VERSION "${KNP_VERSION}" LANGUAGES C CXX
@@ -47,12 +49,14 @@ knp_add_library("${PROJECT_NAME}-core"
     impl/sonata/types/blifat_neuron.cpp
     impl/sonata/types/delta_synapse.cpp
     impl/sonata/types/resource_blifat_neuron.cpp
+    impl/sonata/types/altai_lif_neuron.cpp
     impl/sonata/types/resource_delta_synapse.cpp
+    impl/sonata/types/additive_delta_synapse.cpp
     impl/observer.cpp
     ${${PROJECT_NAME}_headers}
     ALIAS KNP::BaseFramework::Core
     LINK_PRIVATE
-        spdlog::spdlog_header_only Boost::headers Boost::filesystem HighFive ${HDF5_LIB} simdjson::simdjson_static
+        spdlog::spdlog Boost::headers Boost::filesystem HighFive ${HDF5_LIB} simdjson::simdjson_static
     LINK_PUBLIC
         KNP::Core KNP::Neuron::Traits KNP::Synapse::Traits
     PRECOMP KNP::Core)

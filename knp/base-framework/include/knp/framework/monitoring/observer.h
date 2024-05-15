@@ -5,6 +5,7 @@
  * @date 23.08.2023
  */
 #pragma once
+#include <knp/core/impexp.h>
 #include <knp/core/message_endpoint.h>
 #include <knp/core/messaging/messaging.h>
 

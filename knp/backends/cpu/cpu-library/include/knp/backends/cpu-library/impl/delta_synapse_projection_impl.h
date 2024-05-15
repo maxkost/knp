@@ -32,13 +32,6 @@ namespace knp::backends::cpu
  */
 using MessageQueue = std::unordered_map<uint64_t, knp::core::messaging::SynapticImpactMessage>;
 
-/**
- * @brief Convert spike vector to unordered map.
- * @param message spike message.
- * @return unordered map of `{index : number of instances}`. Number of instances usually equals `1`.
- */
-std::unordered_map<uint64_t, size_t> convert_spikes(const knp::core::messaging::SpikeMessage &message);
-
 
 template <class DeltaLikeSynapse>
 void calculate_projection_part_impl(
@@ -89,6 +82,7 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
                 auto &synapse = projection[synapse_index];
                 WeightUpdateSTDP<SynapseType>::init_synapse(std::get<core::synapse_data>(synapse), step_n);
                 const auto &synapse_params = sp_getter(std::get<core::synapse_data>(synapse));
+
                 // the message is sent on step N - 1, received on N.
                 size_t future_step = synapse_params.delay_ + step_n - 1;
                 knp::core::messaging::SynapticImpact impact{
@@ -140,6 +134,7 @@ void calculate_projection_part_impl(
         // Add new impact
         // the message is sent on step N - 1, received on N.
         uint64_t key = std::get<core::synapse_data>(synapse).delay_ + step_n - 1;
+
         knp::core::messaging::SynapticImpact impact{
             synapse_index, std::get<core::synapse_data>(synapse).weight_ * iter->second,
             std::get<core::synapse_data>(synapse).output_type_,
@@ -175,7 +170,12 @@ void calculate_projection_part_impl(
 }
 
 
-std::unordered_map<uint64_t, size_t> convert_spikes(const core::messaging::SpikeMessage &message)
+/**
+ * @brief Convert spike vector to unordered map.
+ * @param message spike message.
+ * @return unordered map of `{index : number of instances}`. Number of instances usually equals `1`.
+ */
+inline std::unordered_map<uint64_t, size_t> convert_spikes(const core::messaging::SpikeMessage &message)
 {
     std::unordered_map<size_t, size_t> result;
     for (auto neuron_idx : message.neuron_indexes_)

@@ -46,7 +46,7 @@ TEST(OutputSuite, ChannelTest)
     knp::core::UID sender_uid;
 
     const size_t out_size = 8;
-    auto count_converter = [](const std::vector<knp::core::messaging::SpikeMessage> &messages)
+    auto count_converter = [=](const std::vector<knp::core::messaging::SpikeMessage> &messages)
     { return knp::framework::output::converter_count(messages, out_size); };
     auto set_converter = knp::framework::output::ConvertToSet(out_size);
     auto max_converter = [&](const std::vector<knp::core::messaging::SpikeMessage> &messages) -> size_t

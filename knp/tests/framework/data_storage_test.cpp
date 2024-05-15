@@ -35,7 +35,7 @@ std::vector<knp::core::messaging::SpikeMessage> generate_random_messages(
 
     for (size_t i = 0; i < steps; ++i)
     {
-        knp::core::messaging::SpikeMessage msg_buf{.header_{uid_from, i}, .neuron_indexes_{}};
+        knp::core::messaging::SpikeMessage msg_buf{{uid_from, i}, {}};
         for (size_t j = 0; j < neurons; ++j)
         {
             if (distribution(engine) <= probability) msg_buf.neuron_indexes_.push_back(j);

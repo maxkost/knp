@@ -139,15 +139,20 @@ function (knp_add_library lib_name lib_type)
         endif()
 
         _knp_add_library("${lib_name}_static" STATIC ${ARGN})
+        target_compile_definitions("${lib_name}" PRIVATE _KNP_BUILD_SHARED_LIBS)
+        target_compile_definitions("${lib_name}_static" PRIVATE _KNP_INTERNAL)
         set_target_properties("${lib_name}_static" PROPERTIES OUTPUT_NAME "${lib_name}")
     elseif(lib_type STREQUAL SHARED OR lib_type STREQUAL MODULE OR lib_type STREQUAL PY_MODULE)
         _knp_add_library("${lib_name}" ${lib_type} ${ARGN})
-        target_compile_definitions("${lib_name}" PRIVATE BUILD_SHARED_LIBS)
+        target_compile_definitions("${lib_name}" PRIVATE _KNP_BUILD_SHARED_LIBS)
     elseif(lib_type STREQUAL STATIC OR lib_type STREQUAL INTERFACE)
         _knp_add_library("${lib_name}" ${lib_type} ${ARGN})
+        # Doesn't need to set export definitions.
+        return()
     else()
         message(FATAL_ERROR "Incorrect library build type: \"${lib_type}\". Use SHARED/MODULE, STATIC or BOTH.")
     endif()
+    target_compile_definitions("${lib_name}" PRIVATE _KNP_INTERNAL)
 endfunction()
 
 
@@ -162,7 +167,7 @@ function(knp_add_python_module name)
     cmake_parse_arguments(
             "PARSED_ARGS"
             ""
-            ""
+            "PY_VER"
             "LINK_LIBRARIES;CPP_SOURCE_DIRECTORY;OUTPUT_DIRECTORY"
             ${ARGN}
     )
@@ -189,7 +194,7 @@ function(knp_add_python_module name)
     endif()
 
     target_include_directories("${LIB_NAME}" PRIVATE ${Python3_INCLUDE_DIRS})
-    target_link_libraries("${LIB_NAME}" PRIVATE ${PARSED_ARGS_LINK_LIBRARIES} Boost::headers Boost::python)
+    target_link_libraries("${LIB_NAME}" PRIVATE Boost::headers Boost::python${PARSED_ARGS_PY_VER} ${PARSED_ARGS_LINK_LIBRARIES})
 
 #    set_target_properties(${LIB_NAME} PROPERTIES PREFIX "${PYTHON_MODULE_PREFIX}")
 #    set_target_properties(${LIB_NAME} PROPERTIES SUFFIX "${PYTHON_MODULE_EXTENSION}")

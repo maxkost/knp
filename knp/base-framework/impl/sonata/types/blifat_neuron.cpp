@@ -1,5 +1,5 @@
 /**
- * @file save_load_blifat.cpp
+ * @file blifat_neuron.cpp
  * @brief BLIFAT neuron procedures file.
  * @author An. Vartenkov
  * @date 28.03.2024
@@ -37,13 +37,15 @@ void add_population_to_h5<core::Population<knp::neuron_traits::BLIFATNeuron>>(
     SPDLOG_TRACE("Adding population {} to hdf5", std::string(population.get_uid()));
 
     // Check that an external function has created "nodes" group.
-    if (!file_h5.exist("nodes")) throw std::runtime_error("File doesn't contain \"nodes\" group");
+    if (!file_h5.exist("nodes"))
+    {
+        throw std::runtime_error("File doesn't contain \"nodes\" group");
+    }
 
-    HighFive::Group population_group = file_h5.createGroup("nodes/" + std::string(population.get_uid()));
+    HighFive::Group population_group = file_h5.createGroup("nodes/" + std::string{population.get_uid()});
 
-    std::vector<int> type_ids;
     std::vector<size_t> neuron_ids;
-    std::vector<int> neuron_type_ids(population.size(), get_neuron_type_id<neuron_traits::BLIFATNeuron>());
+    //    std::vector<int> neuron_type_ids(population.size(), get_neuron_type_id<neuron_traits::BLIFATNeuron>());
     neuron_ids.reserve(population.size());
     for (size_t i = 0; i < population.size(); ++i) neuron_ids.push_back(i);
 
@@ -90,9 +92,8 @@ core::Population<neuron_traits::BLIFATNeuron> load_population<neuron_traits::BLI
 {
     SPDLOG_DEBUG("Loading nodes");
     auto group = nodes_group.getGroup(population_name).getGroup("0");
-    size_t group_size = nodes_group.getGroup(population_name).getDataSet("node_id").getDimensions().at(0);
+    const size_t group_size = nodes_group.getGroup(population_name).getDataSet("node_id").getDimensions().at(0);
 
-    std::vector<core::Population<neuron_traits::BLIFATNeuron>> result;
     // TODO: Load default neuron from json file.
     std::vector<neuron_traits::neuron_parameters<neuron_traits::BLIFATNeuron>> target(group_size);
     LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, n_time_steps_since_last_firing_, group, group_size);
@@ -121,7 +122,7 @@ core::Population<neuron_traits::BLIFATNeuron> load_population<neuron_traits::BLI
     LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, total_blocking_period_, dyn_group, group_size);
     LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, dopamine_value_, dyn_group, group_size);
 
-    knp::core::UID uid{boost::lexical_cast<boost::uuids::uuid>(population_name)};
+    const knp::core::UID uid{boost::lexical_cast<boost::uuids::uuid>(population_name)};
     core::Population<neuron_traits::BLIFATNeuron> out_population(
         uid, [&target](size_t index) { return target[index]; }, group_size);
     return out_population;

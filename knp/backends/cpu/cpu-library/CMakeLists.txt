@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -27,14 +28,14 @@ source_group(headers REGULAR_EXPRESSION "impl/.*")
 target_include_directories("${PROJECT_NAME}" INTERFACE ${Boost_INCLUDE_DIRS})
 target_include_directories("${PROJECT_NAME}" INTERFACE "impl")
 
-target_link_libraries("${PROJECT_NAME}" INTERFACE Boost::headers spdlog::spdlog_header_only)
+target_link_libraries("${PROJECT_NAME}" INTERFACE Boost::headers spdlog::spdlog)
 target_link_libraries("${PROJECT_NAME}" INTERFACE KNP::Core KNP::Devices::CPU)
 
-if(KNP_ENABLE_COVERAGE)
-    include(codecoverage)
-    append_coverage_compiler_flags()
-#    link_target_with_gcov("${PROJECT_NAME}")
-endif()
+#if(KNP_ENABLE_COVERAGE)
+#    include(codecoverage)
+#    append_coverage_compiler_flags()
+##    link_target_with_gcov("${PROJECT_NAME}")
+#endif()
 
 # Internal library, used by backends.
 # This doesn't need installation.

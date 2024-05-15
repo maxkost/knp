@@ -40,12 +40,11 @@ void add_population_to_h5<core::Population<knp::neuron_traits::SynapticResourceS
 
     if (!file_h5.exist("nodes")) throw std::runtime_error("File doesn't contain \"nodes\" group");
 
-    HighFive::Group population_group = file_h5.createGroup("nodes/" + std::string(population.get_uid()));
+    HighFive::Group population_group = file_h5.createGroup("nodes/" + std::string{population.get_uid()});
 
-    std::vector<int> type_ids;
     std::vector<size_t> neuron_ids;
-    std::vector<int> neuron_type_ids(
-        population.size(), get_neuron_type_id<neuron_traits::SynapticResourceSTDPBLIFATNeuron>());
+    //    std::vector<int> neuron_type_ids(
+    //        population.size(), get_neuron_type_id<neuron_traits::SynapticResourceSTDPBLIFATNeuron>());
 
     neuron_ids.reserve(population.size());
 
@@ -114,8 +113,7 @@ void add_population_to_h5<core::Population<knp::neuron_traits::SynapticResourceS
     {                                                                                             \
         const auto values = read_parameter(h5_group, #parameter, pop_size, def_neuron.parameter); \
         for (size_t i = 0; i < target.size(); ++i) target[i].parameter = values[i];               \
-    }                                                                                             \
-    static_assert(true, "")
+    }
 
 
 using ResourceNeuron = neuron_traits::SynapticResourceSTDPBLIFATNeuron;
@@ -128,7 +126,7 @@ load_population<neuron_traits::SynapticResourceSTDPBLIFATNeuron>(
 {
     SPDLOG_DEBUG("Loading nodes for population {}", population_name);
     auto group = nodes_group.getGroup(population_name).getGroup("0");
-    size_t group_size = nodes_group.getGroup(population_name).getDataSet("node_id").getDimensions().at(0);
+    const size_t group_size = nodes_group.getGroup(population_name).getDataSet("node_id").getDimensions().at(0);
 
     // TODO: Load default neuron from json file.
     ResourceNeuronParams default_params{neuron_traits::neuron_parameters<neuron_traits::BLIFATNeuron>{}};
@@ -180,7 +178,7 @@ load_population<neuron_traits::SynapticResourceSTDPBLIFATNeuron>(
     LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, total_blocking_period_, dyn_group, group_size);
     LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, dopamine_value_, dyn_group, group_size);
 
-    knp::core::UID uid{boost::lexical_cast<boost::uuids::uuid>(population_name)};
+    const knp::core::UID uid{boost::lexical_cast<boost::uuids::uuid>(population_name)};
     core::Population<ResourceNeuron> out_population(
         uid, [&target](size_t index) { return target[index]; }, group_size);
     return out_population;

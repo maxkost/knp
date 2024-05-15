@@ -29,10 +29,7 @@ constexpr int get_synapse_type_id()
 
 
 template <class Synapse>
-std::string get_synapse_type_name()
-{
-    throw std::runtime_error("Undefined synapse name");
-}
+std::string get_synapse_type_name();
 
 
 template <class Neuron>
@@ -42,14 +39,9 @@ constexpr int get_neuron_type_id()
 }
 
 
-struct VirtualNeuron;
-
-
 template <class Synapse>
-std::string get_neuron_type_name()
-{
-    throw std::runtime_error("Undefined neuron name");
-}
+std::string get_neuron_type_name();
+
 
 template <class Neuron>
 void add_neuron_type_to_csv(const fs::path &csv_path)

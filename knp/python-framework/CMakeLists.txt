@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp_python_framework VERSION "${KNP_VERSION}" LANGUAGES C CXX  # PYTHON
@@ -15,7 +17,16 @@ if(NOT KNP_PYTHON_FRAMEWORK_BUILD)
 endif()
 
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
-find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS python REQUIRED)
+
+if (WIN32)
+    file(GLOB _KNP_PY_VER "${BOOST_LIBRARYDIR}/*boost_python*.lib")
+    if (_KNP_PY_VER)
+        list(GET _KNP_PY_VER 0 _KNP_PY_VER)
+        string(REGEX REPLACE ".+python([0-9]+).*[\n\r]*" "\\1" _KNP_PY_VER "${_KNP_PY_VER}")
+    endif()
+endif()
+
+find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS python${_KNP_PY_VER} REQUIRED)
 
 include(knp-functions)
 include(file-functions)
@@ -23,13 +34,17 @@ include(file-functions)
 set(KNP_PYTHON_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${PROJECT_NAME}")
 
 knp_add_python_module(core
-        LINK_LIBRARIES KNP::Core)
+        LINK_LIBRARIES KNP::Core
+        PY_VER ${_KNP_PY_VER})
 knp_add_python_module(neuron_traits
-        LINK_LIBRARIES KNP::Neuron::Traits)
+        LINK_LIBRARIES KNP::Neuron::Traits
+        PY_VER ${_KNP_PY_VER})
 knp_add_python_module(synapse_traits
-        LINK_LIBRARIES KNP::Synapse::Traits)
+        LINK_LIBRARIES KNP::Synapse::Traits
+        PY_VER ${_KNP_PY_VER})
 knp_add_python_module(base_framework
-        LINK_LIBRARIES KNP::BaseFramework::Core)
+        LINK_LIBRARIES KNP::BaseFramework::Core
+        PY_VER ${_KNP_PY_VER})
 
 add_custom_target("${PROJECT_NAME}-copy-python-tests" ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/tests" "${KNP_PYTHON_OUTPUT_DIRECTORY}/tests")

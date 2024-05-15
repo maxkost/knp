@@ -91,17 +91,13 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
     using STDPDeltaProjection = knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse>;
 
     // Create an STDP input projection
-    auto stdp_input_projection_gen = [](size_t /*index*/) -> std::optional<STDPDeltaProjection::Synapse>
-    {
-        return STDPDeltaProjection::Synapse{
-            {{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, {.tau_plus_ = 2, .tau_minus_ = 2}}, 0, 0};
+    auto stdp_input_projection_gen = [](size_t /*index*/) -> std::optional<STDPDeltaProjection::Synapse> {
+        return STDPDeltaProjection::Synapse{{{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, {2, 2}}, 0, 0};
     };
 
     // Create an STDP loop projection
-    auto stdp_synapse_generator = [](size_t /*index*/) -> std::optional<STDPDeltaProjection::Synapse>
-    {
-        return STDPDeltaProjection::Synapse{
-            {{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, {.tau_plus_ = 1, .tau_minus_ = 1}}, 0, 0};
+    auto stdp_synapse_generator = [](size_t /*index*/) -> std::optional<STDPDeltaProjection::Synapse> {
+        return STDPDeltaProjection::Synapse{{{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, {1, 1}}, 0, 0};
     };
 
     auto stdp_neurons_generator = [](size_t /*index*/)  // NOLINT
@@ -157,7 +153,8 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
 
     std::transform(
         loop_projection.begin(), loop_projection.end(), std::back_inserter(old_synaptic_weights),
-        [](const auto &synapse) { return std::get<knp::core::synapse_data>(synapse).weight_; });
+        // todo: replace 0 with "params".
+        [](const auto &synapse) { return std::get<0>(synapse).weight_; });
 
     for (auto proj = backend.begin_projections(); proj != backend.end_projections(); ++proj)
     {
@@ -169,7 +166,8 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
 
         std::transform(
             prj.begin(), prj.end(), std::back_inserter(new_synaptic_weights),
-            [](const auto &synapse) { return std::get<knp::core::synapse_data>(synapse).weight_; });
+            // todo: replace 0 with "params".
+            [](const auto &synapse) { return std::get<0>(synapse).weight_; });
     }
 
     // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
@@ -192,14 +190,12 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
     auto stdp_input_projection_gen = [](size_t /*index*/) -> std::optional<STDPDeltaProjection::Synapse>
     {
         return STDPDeltaProjection::Synapse{
-            {{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, {.w_min_ = 1, .w_max_ = 2, .d_u_ = 0.1F}}, 0, 0};
+            {{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, {0, 1, 2, 0.1F}}, 0, 0};
     };
 
     // Create an STDP loop projection
-    auto stdp_synapse_generator = [](size_t /*index*/) -> std::optional<STDPDeltaProjection::Synapse>
-    {
-        return STDPDeltaProjection::Synapse{
-            {{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, {.w_min_ = 1, .w_max_ = 2}}, 0, 0};
+    auto stdp_synapse_generator = [](size_t /*index*/) -> std::optional<STDPDeltaProjection::Synapse> {
+        return STDPDeltaProjection::Synapse{{{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, {0, 1, 2}}, 0, 0};
     };
 
     // Create a single neuron network: input -> input_projection -> population <=> loop_projection
@@ -263,7 +259,8 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
 
     std::transform(
         loop_projection.begin(), loop_projection.end(), std::back_inserter(old_synaptic_weights),
-        [](const auto &synapse) { return std::get<knp::core::synapse_data>(synapse).weight_; });
+        // todo: replace 0 with "params".
+        [](const auto &synapse) { return std::get<0>(synapse).weight_; });
 
     for (auto proj = backend.begin_projections(); proj != backend.end_projections(); ++proj)
     {
@@ -272,7 +269,8 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
 
         std::transform(
             prj.begin(), prj.end(), std::back_inserter(new_synaptic_weights),
-            [](const auto &synapse) { return std::get<knp::core::synapse_data>(synapse).weight_; });
+            // todo: replace 0 with "params".
+            [](const auto &synapse) { return std::get<0>(synapse).weight_; });
     }
 
     // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)

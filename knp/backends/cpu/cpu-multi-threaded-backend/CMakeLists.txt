@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -22,17 +23,16 @@ file(GLOB_RECURSE ${PROJECT_NAME}_headers include/${${PROJECT_NAME}_PUBLIC_INCLU
 source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers REGULAR_EXPRESSION "include/.*")
 
-find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS system REQUIRED)
-
 knp_add_library("${PROJECT_NAME}"
     BOTH
         impl/backend.cpp
         ${${PROJECT_NAME}_headers}
     ALIAS KNP::Backends::CPUMultiThreaded
     LINK_PRIVATE
-        Boost::headers spdlog::spdlog_header_only
+        Boost::headers ${Boost_LIBRARIES} spdlog::spdlog
         KNP::Backends::CPU::Library KNP::Backends::CPU::ThreadPool
-    LINK_PUBLIC KNP::Core KNP::Devices::CPUStatic
+    LINK_PUBLIC
+        KNP::Core KNP::Devices::CPUStatic
 )
 
 set_target_properties(

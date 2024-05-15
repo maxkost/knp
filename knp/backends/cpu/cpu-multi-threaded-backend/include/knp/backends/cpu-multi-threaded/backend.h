@@ -9,6 +9,7 @@
 
 #include <knp/backends/thread_pool/thread_pool.h>
 #include <knp/core/backend.h>
+#include <knp/core/impexp.h>
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 #include <knp/devices/cpu.h>
@@ -57,7 +58,7 @@ const size_t default_projection_part_size = 1000;
 /**
  * @brief The MultiThreadedCPUBackend class is a definition of an interface to the multi-threaded CPU backend.
  */
-class MultiThreadedCPUBackend : public knp::core::Backend
+class KNP_DECLSPEC MultiThreadedCPUBackend : public knp::core::Backend
 {
 public:
     /**
@@ -104,6 +105,7 @@ private:
     struct ProjectionWrapper
     {
         ProjectionVariants arg_;
+        // cppcheck-suppress unusedStructMember
         std::unordered_map<uint64_t, knp::core::messaging::SynapticImpactMessage> messages_;
     };
 
@@ -331,10 +333,12 @@ private:
     void calculate_populations_impact();
     // Calculating post input changes and outputs.
     std::vector<knp::core::messaging::SpikeMessage> calculate_populations_post_impact();
-
+    // cppcheck-suppress unusedStructMember
     PopulationContainer populations_;
     ProjectionContainer projections_;
+    // cppcheck-suppress unusedStructMember
     const size_t population_part_size_;
+    // cppcheck-suppress unusedStructMember
     const size_t projection_part_size_;
     std::unique_ptr<cpu_executors::ThreadPool> calc_pool_;
     std::mutex ep_mutex_;
