@@ -22,15 +22,7 @@ file(GLOB_RECURSE ${PROJECT_NAME}_headers include/${${PROJECT_NAME}_PUBLIC_INCLU
 source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "include/.*")
 
-if (TARGET hdf5-static)
-    message(STATUS "Using static HDF5 library")
-    set(HDF5_LIB hdf5-static)
-elseif (TARGET HDF5::HDF5)
-    message(STATUS "Using dynamic HDF5 library")
-    set(HDF5_LIB HDF5::HDF5)
-else()
-    message(FATAL_ERROR "HDF5 library was not found")
-endif()
+knp_get_hdf5_target(HDF5_LIB)
 
 knp_add_library("${PROJECT_NAME}-core"
     BOTH

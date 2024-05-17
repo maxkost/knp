@@ -7,6 +7,19 @@ include_guard(GLOBAL)
 include(CheckIPOSupported)
 
 
+function(knp_get_hdf5_target target_name)
+    if (TARGET hdf5-static)
+        message(STATUS "Using static HDF5 library")
+        set(${target_name} hdf5-static PARENT_SCOPE)
+    elseif (TARGET HDF5::HDF5)
+        message(STATUS "Using dynamic HDF5 library")
+        set(${target_name} HDF5::HDF5 PARENT_SCOPE)
+    else()
+        message(FATAL_ERROR "HDF5 library was not found")
+    endif()
+endfunction()
+
+
 function(knp_set_target_parameters target visibility)
     if (${visibility} STREQUAL "INTERFACE")
         set(pub_visibility "INTERFACE")

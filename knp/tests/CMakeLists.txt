@@ -34,13 +34,7 @@ target_include_directories("${PROJECT_NAME}"
     PRIVATE "${GTEST_DIR}/googlemock/include"
 )
 
-if (TARGET HDF5::HDF5)
-    set(HDF5_LIB HDF5::HDF5)
-elseif (TARGET hdf5-static)
-    set(HDF5_LIB hdf5-static)
-else()
-    message(FATAL_ERROR "HDF5 library was not found")
-endif()
+knp_get_hdf5_target(HDF5_LIB)
 
 target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main spdlog::spdlog HighFive ${HDF5_LIB})
 target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::BaseFramework::Core KNP::Backends::CPUSingleThreaded KNP::Backends::CPUMultiThreaded
