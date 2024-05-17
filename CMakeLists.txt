@@ -30,9 +30,9 @@ set(KNP_ROOT_DIR "${PROJECT_SOURCE_DIR}" CACHE STRING "KNP root directory")
 
 # WARNING: Don't change variables register!
 set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_LIBS ON)
 
 if (WIN32)
+    set(Boost_USE_STATIC_LIBS ON)
     set(Boost_USE_STATIC_RUNTIME ON)
 else()
     set(Boost_USE_STATIC_RUNTIME OFF)
