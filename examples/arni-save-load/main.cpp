@@ -107,12 +107,12 @@ public:
     {
         BaseSynapse base_synapse = all_[indices_[index]];
         STDPSynapse result;
-        auto &param = std::get<0>(result);
-        std::get<1>(result) = std::get<1>(base_synapse);
-        std::get<2>(result) = std::get<2>(base_synapse);
-        param.weight_ = std::get<0>(base_synapse).weight_;
-        param.output_type_ = std::get<0>(base_synapse).output_type_;
-        param.delay_ = std::get<0>(base_synapse).delay_;
+        auto &param = std::get<knp::core::synapse_data>(result);
+        std::get<knp::core::source_neuron_id>(result) = std::get<knp::core::source_neuron_id>(base_synapse);
+        std::get<knp::core::target_neuron_id>(result) = std::get<knp::core::target_neuron_id>(base_synapse);
+        param.weight_ = std::get<knp::core::synapse_data>(base_synapse).weight_;
+        param.output_type_ = std::get<knp::core::synapse_data>(base_synapse).output_type_;
+        param.delay_ = std::get<knp::core::synapse_data>(base_synapse).delay_;
         param.rule_.w_min_ = default_synapse_rule.min_weight_;
         param.rule_.w_max_ = default_synapse_rule.max_weight_;
         param.rule_.d_u_ = default_synapse_rule.unconditional_resource_increase_;
@@ -299,15 +299,15 @@ knp::framework::Network create_network_from_monitoring_file(
             {
                 ProjectionParams proj;
                 int source;
-                auto &syn_p = std::get<0>(syn);
+                auto &syn_p = std::get<knp::core::synapse_data>(syn);
                 str_stream >> comma >> proj.connection_type >> comma >> k >> comma >> k >> comma >> syn_p.delay_ >>
                     comma >> source;
                 if ((source < 0 || (source - 1 < static_cast<int>(neuron_populations.size()) &&
                                     neuron_populations[source - 1].first >= 0)))
                 {
                     str_stream >> comma >> syn_p.weight_;
-                    std::get<2>(syn) = uint32_t(neuron_populations[neuron].second);
-                    std::get<1>(syn) =
+                    std::get<knp::core::target_neuron_id>(syn) = uint32_t(neuron_populations[neuron].second);
+                    std::get<knp::core::source_neuron_id>(syn) =
                         source < 0 ? uint32_t(-1 - source) : uint32_t(neuron_populations[source - 1].second);
                     syn_p.output_type_ = ArNI_KNP_SynapseTypeTranslation[proj.connection_type];
 

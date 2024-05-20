@@ -17,6 +17,7 @@
 
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <utility>
 #include <variant>
 #include <vector>
@@ -103,7 +104,7 @@ private:
     struct ProjectionWrapper
     {
         ProjectionVariants arg_;
-        core::messaging::SynapticMessageQueue messages_;
+        std::unordered_map<uint64_t, knp::core::messaging::SynapticImpactMessage> messages_;
     };
 
 public:

@@ -158,8 +158,7 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
 
     std::transform(
         loop_projection.begin(), loop_projection.end(), std::back_inserter(old_synaptic_weights),
-        // todo: replace 0 with "params".
-        [](const auto &synapse) { return std::get<0>(synapse).weight_; });
+        [](const auto &synapse) { return std::get<knp::core::synapse_data>(synapse).weight_; });
 
     for (auto proj = backend.begin_projections(); proj != backend.end_projections(); ++proj)
     {
@@ -171,8 +170,7 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
 
         std::transform(
             prj.begin(), prj.end(), std::back_inserter(new_synaptic_weights),
-            // todo: replace 0 with "params".
-            [](const auto &synapse) { return std::get<0>(synapse).weight_; });
+            [](const auto &synapse) { return std::get<knp::core::synapse_data>(synapse).weight_; });
     }
 
     // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
@@ -266,8 +264,7 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
 
     std::transform(
         loop_projection.begin(), loop_projection.end(), std::back_inserter(old_synaptic_weights),
-        // todo: replace 0 with "params".
-        [](const auto &synapse) { return std::get<0>(synapse).weight_; });
+        [](const auto &synapse) { return std::get<knp::core::synapse_data>(synapse).weight_; });
 
     for (auto proj = backend.begin_projections(); proj != backend.end_projections(); ++proj)
     {
@@ -276,8 +273,7 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
 
         std::transform(
             prj.begin(), prj.end(), std::back_inserter(new_synaptic_weights),
-            // todo: replace 0 with "params".
-            [](const auto &synapse) { return std::get<0>(synapse).weight_; });
+            [](const auto &synapse) { return std::get<knp::core::synapse_data>(synapse).weight_; });
     }
 
     // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
