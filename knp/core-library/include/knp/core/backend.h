@@ -188,6 +188,11 @@ public:
      */
     [[nodiscard]] virtual core::MessageEndpoint &get_message_endpoint() { return message_endpoint_; }
 
+    /**
+     * @brief Get iterators for projections and populations.
+     * @return Tuple of pairs begin-end iterator: for projections and for populations, in order.
+     */
+
 public:
     /**
      * @brief Start network execution on the backend.
@@ -251,6 +256,35 @@ public:
      * @brief Set backend to the uninitialized state.
      */
     virtual void _uninit();
+
+public:
+    template <class Type>
+    class BaseValueIterator
+    {
+    public:
+        using iterator_category = std::input_iterator_tag;
+        using value_type = Type;
+        using difference_type = int;
+        virtual Type operator*() const = 0;  // return element by value
+        virtual BaseValueIterator &operator++() = 0;
+        virtual bool operator==(const BaseValueIterator &rhs) const = 0;
+        virtual bool operator!=(const BaseValueIterator &rhs) const { return !(*this == rhs); }
+        virtual ~BaseValueIterator() = default;
+    };
+
+    struct DataRanges
+    {
+        std::pair<
+            std::unique_ptr<BaseValueIterator<knp::core::AllProjectionsVariant>>,
+            std::unique_ptr<BaseValueIterator<knp::core::AllProjectionsVariant>>>
+            projection_range;
+        std::pair<
+            std::unique_ptr<BaseValueIterator<knp::core::AllPopulationsVariant>>,
+            std::unique_ptr<BaseValueIterator<knp::core::AllPopulationsVariant>>>
+            population_range;
+    };
+
+    [[nodiscard]] virtual DataRanges get_model_data() const = 0;
 
 protected:
     /**

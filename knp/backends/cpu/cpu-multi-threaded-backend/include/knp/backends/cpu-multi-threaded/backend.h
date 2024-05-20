@@ -119,20 +119,21 @@ public:
     /**
      * @todo Make custom iterators.
      */
+    using PopulationIterator = PopulationContainer::iterator;
+    using ProjectionIterator = ProjectionContainer::iterator;
 
     /**
-     * @brief Types of population iterators.
+     * @brief Get a set of iterators to projections and populations.
+     * @return DataRanges structure containing iterators.
      */
-    using PopulationIterator = PopulationContainer::iterator;
+    [[nodiscard]] DataRanges get_model_data() const override;
+
+
     /**
      * @brief Types of constant population iterators.
      */
     using PopulationConstIterator = PopulationContainer::const_iterator;
 
-    /**
-     * @brief Types of projection iterators.
-     */
-    using ProjectionIterator = ProjectionContainer::iterator;
     /**
      * @brief Types of constant projection iterators.
      */
@@ -331,19 +332,15 @@ private:
     // Calculating post input changes and outputs.
     std::vector<knp::core::messaging::SpikeMessage> calculate_populations_post_impact();
 
-    // cppcheck-suppress unusedStructMember
     PopulationContainer populations_;
-    // cppcheck-suppress unusedStructMember
     ProjectionContainer projections_;
-    // cppcheck-suppress unusedStructMember
     const size_t population_part_size_;
-    // cppcheck-suppress unusedStructMember
     const size_t projection_part_size_;
     std::unique_ptr<cpu_executors::ThreadPool> calc_pool_;
     std::mutex ep_mutex_;
 };
 
 
-BOOST_DLL_ALIAS(knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::create, create_knp_backend)
+BOOST_DLL_ALIAS(knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::create, create_knp_mcpu_backend)
 
 }  // namespace knp::backends::multi_threaded_cpu

@@ -50,4 +50,25 @@ void load_from_container(const std::vector<AllVariants> &from_container, ToConta
     }
 }
 
+/**
+ * @brief Converting from one set of arguments to another.
+ * @tparam FromArgs
+ */
+template <class... FromArgs>
+struct variant_cast_proxy
+{
+    std::variant<FromArgs...> v;
+    template <class... ToArgs>
+    operator std::variant<ToArgs...>() const
+    {
+        return std::visit([](auto &&arg) -> std::variant<ToArgs...> { return arg; }, v);
+    }
+};
+
+template <class... Args>
+static auto variant_cast(const std::variant<Args...> &v) -> variant_cast_proxy<Args...>
+{
+    return {v};
+}
+
 }  // namespace knp::meta

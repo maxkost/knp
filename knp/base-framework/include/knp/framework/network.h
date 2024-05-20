@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <knp/core/backend.h>
 #include <knp/core/core.h>
 #include <knp/core/impexp.h>
 #include <knp/core/population.h>
@@ -308,5 +309,12 @@ private:
     PopulationContainer populations_;
     ProjectionContainer projections_;
 };
+
+
+/**
+ * @brief Get network data from backend.
+ * @return Network as it currently is on a backend.
+ */
+Network get_network(const knp::core::Backend &backend);
 
 }  // namespace knp::framework

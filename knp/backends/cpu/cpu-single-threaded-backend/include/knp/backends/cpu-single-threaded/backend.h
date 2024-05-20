@@ -100,20 +100,14 @@ public:
     /**
      * @todo Make custom iterators.
      */
-
-    /**
-     * @brief Types of population iterators.
-     */
     using PopulationIterator = typename PopulationContainer::iterator;
+
+    using ProjectionIterator = typename ProjectionContainer::iterator;
+
     /**
      * @brief Types of constant population iterators.
      */
     using PopulationConstIterator = typename PopulationContainer::const_iterator;
-
-    /**
-     * @brief Types of projection iterators.
-     */
-    using ProjectionIterator = typename ProjectionContainer::iterator;
     /**
      * @brief Types of constant projection iterators.
      */
@@ -286,6 +280,12 @@ public:
             std::visit([](auto &entity) { entity.unlock_weights(); }, wrapper.arg_);
     }
 
+    /**
+     * @brief Get a set of iterators to projections and populations.
+     * @return DataRanges structure containing iterators.
+     */
+    [[nodiscard]] DataRanges get_model_data() const override;
+
 protected:
     /**
      * @copydoc knp::core::Backend::_init()
@@ -338,9 +338,7 @@ protected:
         core::messaging::SynapticMessageQueue &message_queue);
 
 private:
-    // cppcheck-suppress unusedStructMember
     PopulationContainer populations_;
-    // cppcheck-suppress unusedStructMember
     ProjectionContainer projections_;
 };
 
