@@ -258,6 +258,10 @@ public:
     virtual void _uninit();
 
 public:
+    /**
+     * @brief Iterator used to access populations or projections by value.
+     * @tparam Type one of "AllProjectionsVariant, AllPopulationsVariant" depending on the goals.
+     */
     template <class Type>
     class BaseValueIterator
     {
@@ -272,6 +276,10 @@ public:
         virtual ~BaseValueIterator() = default;
     };
 
+
+    /**
+     * @brief Structure used to access population and projection data.
+     */
     struct DataRanges
     {
         std::pair<

@@ -309,7 +309,7 @@ public:
         ++it_;
         return *this;
     }
-    core::AllPopulationsVariant operator*() const override { return *it_; }
+    core::AllPopulationsVariant operator*() const override { return knp::meta::variant_cast(*it_); }
 
 private:
     SingleThreadedCPUBackend::PopulationContainer::const_iterator it_;
