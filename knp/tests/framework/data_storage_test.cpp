@@ -127,6 +127,7 @@ protected:
         HighFive::File h5_file(path_to_h5_.string(), HighFive::File::ReadWrite);
         h5_file.deleteAttribute("magic");
         h5_file.createAttribute("magic", 1234);
+        h5_file.flush();
     }
 
     void TearDown() override { std::filesystem::remove(path_to_h5_); }
