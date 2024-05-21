@@ -99,10 +99,13 @@ public:
     using ProjectionContainer = std::vector<ProjectionWrapper>;
 
     /**
-     * @todo Make custom iterators.
+     * @brief Types of non-constant population iterators.
      */
     using PopulationIterator = typename PopulationContainer::iterator;
 
+    /**
+     * @brief Types of non-constant projection iterators.
+     */
     using ProjectionIterator = typename ProjectionContainer::iterator;
 
     /**
