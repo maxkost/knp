@@ -311,10 +311,4 @@ private:
 };
 
 
-/**
- * @brief Get network data from backend.
- * @return Network as it currently is on a backend.
- */
-Network get_network(const knp::core::Backend &backend);
-
 }  // namespace knp::framework

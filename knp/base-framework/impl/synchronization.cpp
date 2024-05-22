@@ -7,11 +7,11 @@
 
 #include <knp/framework/network.h>
 
-namespace knp::framework
+namespace knp::framework::synchronization
 {
-Network get_network(const knp::core::Backend &backend)
+Network get_network_copy(const knp::core::Backend &backend)
 {
-    auto data_ranges = backend.get_model_data();
+    auto data_ranges = backend.get_network_data();
     knp::framework::Network res_network;
     for (auto &iter = *data_ranges.population_range.first; iter != *data_ranges.population_range.second; ++iter)
     {
@@ -25,4 +25,4 @@ Network get_network(const knp::core::Backend &backend)
     }
     return res_network;
 }
-}  // namespace knp::framework
+}  // namespace knp::framework::synchronization

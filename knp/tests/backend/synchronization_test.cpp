@@ -10,6 +10,7 @@
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 #include <knp/framework/network.h>
+#include <knp/framework/synchronization.h>
 #include <knp/neuron-traits/blifat.h>
 #include <knp/synapse-traits/delta.h>
 
@@ -54,7 +55,7 @@ TEST(SynchronizationSuite, SingleThreadCpuTest)
     backend.load_projections({input_projection, loop_projection});
     backend._init();
 
-    auto network = knp::framework::get_network(backend);
+    auto network = knp::framework::synchronization::get_network_copy(backend);
     ASSERT_EQ(network.get_projections().size(), 2);
     ASSERT_EQ(network.get_populations().size(), 1);
     auto &proj0 = std::get<knp::testing::DeltaProjection>(network.get_projections()[0]);
@@ -80,7 +81,7 @@ TEST(SynchronizationSuite, MultiThreadCpuTest)
     backend.load_projections({input_projection, loop_projection});
     backend._init();
 
-    auto network = knp::framework::get_network(backend);
+    auto network = knp::framework::synchronization::get_network_copy(backend);
     ASSERT_EQ(network.get_projections().size(), 2);
     ASSERT_EQ(network.get_populations().size(), 1);
     auto &proj0 = std::get<knp::testing::DeltaProjection>(network.get_projections()[0]);

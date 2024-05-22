@@ -282,17 +282,24 @@ public:
      */
     struct DataRanges
     {
+        /**
+         * @brief projections iterator pair range.
+         */
         std::pair<
             std::unique_ptr<BaseValueIterator<knp::core::AllProjectionsVariant>>,
             std::unique_ptr<BaseValueIterator<knp::core::AllProjectionsVariant>>>
             projection_range;
+
+        /**
+         * @brief population iterator pair range.
+         */
         std::pair<
             std::unique_ptr<BaseValueIterator<knp::core::AllPopulationsVariant>>,
             std::unique_ptr<BaseValueIterator<knp::core::AllPopulationsVariant>>>
             population_range;
     };
 
-    [[nodiscard]] virtual DataRanges get_model_data() const = 0;
+    [[nodiscard]] virtual DataRanges get_network_data() const = 0;
 
 protected:
     /**

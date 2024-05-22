@@ -131,7 +131,7 @@ public:
      * @brief Get a set of iterators to projections and populations.
      * @return DataRanges structure containing iterators.
      */
-    [[nodiscard]] DataRanges get_model_data() const override;
+    [[nodiscard]] DataRanges get_network_data() const override;
 
 
     /**

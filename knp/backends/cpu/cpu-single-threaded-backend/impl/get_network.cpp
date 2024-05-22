@@ -1,21 +1,21 @@
 /**
  * @file get_network.cpp
- * @brief Getting network data from multi-threaded CPU backend.
+ * @brief Getting network data from single-threaded CPU backend.
  * @author An. Vartenkov.
- * @date 20.05.2024
+ * @date 21.05.2024
  */
 
-#include <knp/backends/cpu-multi-threaded/backend.h>
+#include <knp/backends/cpu-single-threaded/backend.h>
 #include <knp/meta/variant_helpers.h>
 
 
-namespace knp::backends::multi_threaded_cpu
+namespace knp::backends::single_threaded_cpu
 {
-class PopulationValueIterator : public MultiThreadedCPUBackend::BaseValueIterator<core::AllPopulationsVariant>
+class PopulationValueIterator : public SingleThreadedCPUBackend::BaseValueIterator<core::AllPopulationsVariant>
 {
 public:
     PopulationValueIterator() = default;
-    explicit PopulationValueIterator(const MultiThreadedCPUBackend::PopulationContainer::const_iterator &it) : it_(it)
+    explicit PopulationValueIterator(const SingleThreadedCPUBackend::PopulationContainer::const_iterator &it) : it_(it)
     {
     }
     bool operator==(const BaseValueIterator<core::AllPopulationsVariant> &rhs) const override
@@ -32,15 +32,15 @@ public:
     core::AllPopulationsVariant operator*() const override { return knp::meta::variant_cast(*it_); }
 
 private:
-    MultiThreadedCPUBackend::PopulationContainer::const_iterator it_;
+    SingleThreadedCPUBackend::PopulationContainer::const_iterator it_;
 };
 
 
-class ProjectionValueIterator : public MultiThreadedCPUBackend::BaseValueIterator<core::AllProjectionsVariant>
+class ProjectionValueIterator : public SingleThreadedCPUBackend::BaseValueIterator<core::AllProjectionsVariant>
 {
 public:
     ProjectionValueIterator() = default;
-    explicit ProjectionValueIterator(const MultiThreadedCPUBackend::ProjectionContainer::const_iterator &it) : it_(it)
+    explicit ProjectionValueIterator(const SingleThreadedCPUBackend::ProjectionContainer::const_iterator &it) : it_(it)
     {
     }
 
@@ -49,20 +49,19 @@ public:
         if (typeid(*this) != typeid(rhs)) return false;
         return dynamic_cast<const ProjectionValueIterator &>(rhs).it_ == it_;
     }
-
     BaseValueIterator<core::AllProjectionsVariant> &operator++() override
     {
         ++it_;
         return *this;
     }
-    core::AllProjectionsVariant operator*() const override { return knp::meta::variant_cast(it_->arg_); }
+    core::AllProjectionsVariant operator*() const override { return it_->arg_; }
 
 private:
-    MultiThreadedCPUBackend::ProjectionContainer::const_iterator it_;
+    SingleThreadedCPUBackend::ProjectionContainer::const_iterator it_;
 };
 
 
-core::Backend::DataRanges MultiThreadedCPUBackend::get_network_data() const
+core::Backend::DataRanges SingleThreadedCPUBackend::get_network_data() const
 {
     using PopIterPtr = std::unique_ptr<BaseValueIterator<core::AllPopulationsVariant>>;
     using ProjIterPtr = std::unique_ptr<BaseValueIterator<core::AllProjectionsVariant>>;
@@ -76,4 +75,4 @@ core::Backend::DataRanges MultiThreadedCPUBackend::get_network_data() const
     auto proj_range = std::make_pair(std::move(proj_begin), std::move(proj_end));
     return DataRanges{.projection_range{std::move(proj_range)}, .population_range{std::move(pop_range)}};
 }
-}  // namespace knp::backends::multi_threaded_cpu
+}  // namespace knp::backends::single_threaded_cpu
