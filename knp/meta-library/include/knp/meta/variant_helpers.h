@@ -58,6 +58,9 @@ void load_from_container(const std::vector<AllVariants> &from_container, ToConta
 template <class... FromArgs>
 struct variant_cast_proxy
 {
+    /**
+     * @brief Buffer variable.
+     */
     std::variant<FromArgs...> v;
     /**
      * @brief Cast operator.
