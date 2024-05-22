@@ -212,7 +212,7 @@ add_third_party("gh:HDFGroup/hdf5#hdf5_1.14.4"
                 GIT_SHALLOW ON
                 OPTIONS
                     "HDF5_NO_PACKAGES ON"
-                    "BUILD_SHARED_LIBS OFF")
+                    "BUILD_SHARED_LIBS ON")
 
 add_third_party("gh:BlueBrain/HighFive@2.9.0"
                 GIT_SHALLOW ON
