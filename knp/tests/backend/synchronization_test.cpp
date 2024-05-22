@@ -4,15 +4,10 @@
  * @date 17.05.24.
  */
 
-
 #include <knp/backends/cpu-multi-threaded/backend.h>
 #include <knp/backends/cpu-single-threaded/backend.h>
 #include <knp/core/population.h>
-#include <knp/core/projection.h>
-#include <knp/framework/network.h>
 #include <knp/framework/synchronization.h>
-#include <knp/neuron-traits/blifat.h>
-#include <knp/synapse-traits/delta.h>
 
 #include <generators.h>
 #include <spdlog/spdlog.h>

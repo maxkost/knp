@@ -266,13 +266,45 @@ public:
     class BaseValueIterator
     {
     public:
+        /**
+         * @brief Iterator tag.
+         */
         using iterator_category = std::input_iterator_tag;
+
+        /**
+         * @brief Value type.
+         */
         using value_type = Type;
-        using difference_type = int;
+
+        /**
+         * @brief Dereference a value iterator.
+         * @return Copy of Type.
+         */
         virtual Type operator*() const = 0;  // return element by value
+
+        /**
+         * @brief Increment an iterator.
+         * @return Reference to iterator.
+         */
         virtual BaseValueIterator &operator++() = 0;
+
+        /**
+         * @brief Iterator equality.
+         * @param rhs Another iterator.
+         * @return true if they point at the same object and have the same type.
+         */
         virtual bool operator==(const BaseValueIterator &rhs) const = 0;
+
+        /**
+         * @brief Iterator inequality.
+         * @param rhs Another iterator.
+         * @return false if they point at the same object and have the same type.
+         */
         virtual bool operator!=(const BaseValueIterator &rhs) const { return !(*this == rhs); }
+
+        /**
+         * @brief Default virtual destructor.
+         */
         virtual ~BaseValueIterator() = default;
     };
 
@@ -299,6 +331,10 @@ public:
             population_range;
     };
 
+    /**
+     * @brief Get iterator ranges for projections and populations.
+     * @return Data range for projections and populations.
+     */
     [[nodiscard]] virtual DataRanges get_network_data() const = 0;
 
 protected:
