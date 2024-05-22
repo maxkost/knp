@@ -50,14 +50,20 @@ void load_from_container(const std::vector<AllVariants> &from_container, ToConta
     }
 }
 
+
 /**
- * @brief Converting from one set of arguments to another.
- * @tparam FromArgs
+ * @brief Converting from one set of arguments to another. It's a helper structure, use variant_cast instead.
+ * @tparam FromArgs Source variant arguments.
  */
 template <class... FromArgs>
 struct variant_cast_proxy
 {
     std::variant<FromArgs...> v;
+    /**
+     * @brief Cast operator.
+     * @tparam ToArgs Target variant parameters.
+     * @return Same value as source, cast to a different variant.
+     */
     template <class... ToArgs>
     operator std::variant<ToArgs...>() const
     {
@@ -65,6 +71,13 @@ struct variant_cast_proxy
     }
 };
 
+
+/**
+ * @brief Cast from one variant type to another.
+ * @tparam Args Source variant arguments
+ * @param v Source value.
+ * @return Source value cast to variant_cast_proxy (which then implicitly converts to target variant).
+ */
 template <class... Args>
 static auto variant_cast(const std::variant<Args...> &v) -> variant_cast_proxy<Args...>
 {

@@ -188,11 +188,6 @@ public:
      */
     [[nodiscard]] virtual core::MessageEndpoint &get_message_endpoint() { return message_endpoint_; }
 
-    /**
-     * @brief Get iterators for projections and populations.
-     * @return Tuple of pairs begin-end iterator: for projections and for populations, in order.
-     */
-
 public:
     /**
      * @brief Start network execution on the backend.
@@ -259,7 +254,7 @@ public:
 
 public:
     /**
-     * @brief Iterator used to access populations or projections by value.
+     * @brief Iterator used to access populations or projections by value. Interface class.
      * @tparam Type one of "AllProjectionsVariant, AllPopulationsVariant" depending on the goals.
      */
     template <class Type>
