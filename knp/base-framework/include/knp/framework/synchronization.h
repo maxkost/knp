@@ -15,6 +15,7 @@ namespace knp::framework::synchronization
 {
 /**
  * @brief Copies network data from backend.
+ * @param backend Backend containing a network.
  * @return Network as it currently is on a backend.
  */
 Network get_network_copy(const knp::core::Backend &backend);
