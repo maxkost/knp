@@ -368,5 +368,4 @@ MultiThreadedCPUBackend::ProjectionConstIterator MultiThreadedCPUBackend::end_pr
     return projections_.cend();
 }
 
-
 }  // namespace knp::backends::multi_threaded_cpu

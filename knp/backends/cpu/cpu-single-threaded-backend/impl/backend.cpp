@@ -245,19 +245,19 @@ void SingleThreadedCPUBackend::calculate_projection(
 
 SingleThreadedCPUBackend::PopulationIterator SingleThreadedCPUBackend::begin_populations()
 {
-    return populations_.begin();
+    return PopulationIterator{populations_.begin()};
 }
 
 
 SingleThreadedCPUBackend::PopulationConstIterator SingleThreadedCPUBackend::begin_populations() const
 {
-    return populations_.cbegin();
+    return {populations_.cbegin()};
 }
 
 
 SingleThreadedCPUBackend::PopulationIterator SingleThreadedCPUBackend::end_populations()
 {
-    return populations_.end();
+    return PopulationIterator{populations_.end()};
 }
 
 
@@ -269,7 +269,7 @@ SingleThreadedCPUBackend::PopulationConstIterator SingleThreadedCPUBackend::end_
 
 SingleThreadedCPUBackend::ProjectionIterator SingleThreadedCPUBackend::begin_projections()
 {
-    return projections_.begin();
+    return ProjectionIterator{projections_.begin()};
 }
 
 
@@ -281,7 +281,7 @@ SingleThreadedCPUBackend::ProjectionConstIterator SingleThreadedCPUBackend::begi
 
 SingleThreadedCPUBackend::ProjectionIterator SingleThreadedCPUBackend::end_projections()
 {
-    return projections_.end();
+    return ProjectionIterator{projections_.end()};
 }
 
 
@@ -289,5 +289,6 @@ SingleThreadedCPUBackend::ProjectionConstIterator SingleThreadedCPUBackend::end_
 {
     return projections_.cend();
 }
+
 
 }  // namespace knp::backends::single_threaded_cpu

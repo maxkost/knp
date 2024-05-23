@@ -25,6 +25,7 @@ source_group(headers REGULAR_EXPRESSION "include/.*")
 knp_add_library("${PROJECT_NAME}"
     BOTH
         impl/backend.cpp
+        impl/get_network.cpp
         ${${PROJECT_NAME}_headers}
     ALIAS KNP::Backends::CPUSingleThreaded
     LINK_PRIVATE

@@ -99,22 +99,19 @@ public:
     using ProjectionContainer = std::vector<ProjectionWrapper>;
 
     /**
-     * @todo Make custom iterators.
-     */
-
-    /**
-     * @brief Types of population iterators.
+     * @brief Types of non-constant population iterators.
      */
     using PopulationIterator = typename PopulationContainer::iterator;
+
+    /**
+     * @brief Types of non-constant projection iterators.
+     */
+    using ProjectionIterator = typename ProjectionContainer::iterator;
+
     /**
      * @brief Types of constant population iterators.
      */
     using PopulationConstIterator = typename PopulationContainer::const_iterator;
-
-    /**
-     * @brief Types of projection iterators.
-     */
-    using ProjectionIterator = typename ProjectionContainer::iterator;
     /**
      * @brief Types of constant projection iterators.
      */
@@ -286,6 +283,12 @@ public:
         for (ProjectionWrapper &wrapper : projections_)
             std::visit([](auto &entity) { entity.unlock_weights(); }, wrapper.arg_);
     }
+
+    /**
+     * @brief Get a set of iterators to projections and populations.
+     * @return DataRanges structure containing iterators.
+     */
+    [[nodiscard]] DataRanges get_network_data() const override;
 
 protected:
     /**

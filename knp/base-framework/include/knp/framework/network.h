@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <knp/core/backend.h>
 #include <knp/core/core.h>
 #include <knp/core/impexp.h>
 #include <knp/core/population.h>
@@ -308,5 +309,6 @@ private:
     PopulationContainer populations_;
     ProjectionContainer projections_;
 };
+
 
 }  // namespace knp::framework
