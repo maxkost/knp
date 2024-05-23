@@ -81,7 +81,7 @@ using Connection = typename std::tuple<size_t, size_t, size_t>;
 
 
 template <typename SynapseType>
-Projection<SynapseType>::Projection(UID presynaptic_uid, UID postsynaptic_uid)  // !OCLint(Parameters are used)
+Projection<SynapseType>::Projection(UID presynaptic_uid, UID postsynaptic_uid)  // !OCLint (Parameters are used)
     : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -153,6 +153,9 @@ std::vector<size_t> knp::core::Projection<SynapseType>::find_synapses(size_t neu
         case Search::by_presynaptic:
             res =
                 find_indexes_by_type<decltype(index_), core::Projection<SynapseType>::ByPresynaptic>(index_, neuron_id);
+            break;
+        default:
+            return {};
     }
     return res;
 }
