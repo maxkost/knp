@@ -139,7 +139,7 @@ TEST(ProjectionSuite, DeletePresynapticTest)
     ASSERT_EQ(
         std::find_if(
             projection.begin(), projection.end(),
-            [&](const Synapse &synapse) { return std::get<1>(synapse) == neuron_index; }),
+            [&](const Synapse &synapse) { return std::get<knp::core::source_neuron_id>(synapse) == neuron_index; }),
         projection.end());  // all the synapses that should have been deleted are actually deleted
 }
 
