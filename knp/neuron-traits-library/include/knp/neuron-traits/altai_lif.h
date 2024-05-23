@@ -35,38 +35,45 @@ template <>
 struct default_values<AltAILIF>
 {
     /**
-     * @brief The parameter defines the default value for `is_diff_` flag of AltAILIF neuron.
-     * This flag defines behaviour of the AltAILIF neuron after it receives a spike.
+     * @brief The parameter defines the default value for `is_diff_` flag of AltAILIF neuron. 
+     * If `is_diff_` flag is set to `true` and neuron potential exceeds one of its threshold value 
+     * after the neuron receives a spike, the `potential_` parameter takes a value by which 
+     * the potential threshold is exceeded.
      */
     constexpr static bool is_diff_ = false;
 
     /**
      * @brief The parameter defines the default value for `is_reset_` flag of AltAILIF neuron.
-     * This flag defines behaviour of the AltAILIF neuron after it receives a spike.
+     * If `is_reset_` flag is set to `true` and neuron potential exceeds its threshold value 
+     * after the neuron receives a spike, the `potential_` parameter takes 
+     * a value of the `potential_reset_value_` parameter.
      */
     constexpr static bool is_reset_ = true;
 
     /**
      * @brief The parameter defines the default value for `leak_rev_` flag of AltAILIF neuron.
-     * This flag defines whether the leak sign will be changed based on the current sign of the `potential_`.
+     * If `leak_rev_` flag is set to `true`, the `potential_leak_` sign automatically changes 
+     * along with the change of the `potential_` value sign.
      */
     constexpr static bool leak_rev_ = true;
 
     /**
      * @brief The parameter defines the default value for `saturate_` flag of AltAILIF neuron.
-     * This flag defines behaviour related to `negative_activation_threshold_` after the neuron receives a spike.
+     * If `saturate_` flag is set to `true` and the neuron potential is less than 
+     * a negative `negative_activation_threshold_` value after the neuron receives a spike, 
+     * the `potential_` parameter takes the `negative_activation_threshold_` value.
      */
     constexpr static bool saturate_ = true;
 
     /**
      * @brief The parameter defines the default value for `do_not_save_` flag of AltAILIF neuron.
-     * This flag defines whether `potential_` will be stored with each timestamp.
+     * If `do_not_save_` flag is set to `false`, the `potential_` value is stored with each timestamp.
      */
     constexpr static bool do_not_save_ = false;
 
     /**
-     * @brief The parameter defines the initial value for `potential_` state of AltAILIF neuron.
-     * @details Additional packet will be sent to AltAI-2 for each neuron with non-zero initial `potential_` value.
+     * @brief The parameter defines the default value for `potential_` state of AltAILIF neuron.
+     * @details Additional packet is sent to AltAI-2 for each neuron with non-zero initial `potential_` value.
      */
     constexpr static int16_t potential_ = 0;
 
@@ -77,8 +84,8 @@ struct default_values<AltAILIF>
 
     /**
      * @brief The parameter defines the default value for `negative_activation_threshold_` of AltAILIF neuron.
-     * @details The default value was chosen for the scenario where negative spikes aren`t used and
-     * `negative_activation_threshold_` with `saturate_`=`true` is used to protect against `potential_` negative
+     * @details The default value was chosen for the scenario where negative spikes are not used and
+     * `negative_activation_threshold_` with `saturate_` set to `true` are used to protect against `potential_` negative
      * overflow.
      */
     constexpr static uint16_t negative_activation_threshold_ = 30000;
@@ -102,7 +109,9 @@ template <>
 struct neuron_parameters<AltAILIF>
 {
     /**
-     * @brief This flag defines behaviour of the AltAILIF neuron after it receives a spike.
+     * @brief If `is_diff_` flag is set to `true` and neuron potential exceeds 
+     * one of its threshold value after the neuron receives a spike, the `potential_` parameter 
+     * takes a value by which the potential threshold is exceeded.
      * @details The code below demonstrates the logic of after-spike flags for AltAILIF neuron:
      * @code{.cpp}
      * if (potential_ >= activation_threshold_)
@@ -123,7 +132,9 @@ struct neuron_parameters<AltAILIF>
     bool is_diff_ = default_values<AltAILIF>::is_diff_;
 
     /**
-     * @brief This flag defines behaviour of the AltAILIF neuron after it receives a spike.
+     * @brief If `is_reset_` flag is set to `true` and neuron potential exceeds 
+     * its threshold value after the neuron receives a spike, the `potential_` parameter 
+     * takes a value of the `potential_reset_value_` parameter.
      * @details The code below demonstrates the logic of after-spike flags for AltAILIF neuron:
      * @code{.cpp}
      * if (potential_ >= activation_threshold_)
@@ -144,7 +155,8 @@ struct neuron_parameters<AltAILIF>
     bool is_reset_ = default_values<AltAILIF>::is_reset_;
 
     /**
-     * @brief This flag defines whether the leak sign will be changed based on the current sign of the `potential_`.
+     * @brief If `leak_rev_` flag is set to `true`, the `potential_leak_` sign automatically changes 
+     * along with the change of the `potential_` value sign.
      * @details The code below demonstrates the logic of `leak_rev` flag:
      * @code{.cpp}
      * if (leak_rev_)
@@ -156,7 +168,9 @@ struct neuron_parameters<AltAILIF>
     bool leak_rev_ = default_values<AltAILIF>::leak_rev_;
 
     /**
-     * @brief This flag defines behaviour of the AltAILIF neuron after it receives a spike.
+     * @brief If `saturate_` flag is set to `true` and the neuron potential is less than 
+     * a negative `negative_activation_threshold_` value after the neuron receives a spike, 
+     * the `potential_` parameter takes the `negative_activation_threshold_` value.
      * @details The code below demonstrates the logic of after-spike flags for AltAILIF neuron:
      * @code{.cpp}
      * if (potential_ >= activation_threshold_)
@@ -177,34 +191,34 @@ struct neuron_parameters<AltAILIF>
     bool saturate_ = default_values<AltAILIF>::saturate_;
 
     /**
-     * @brief This flag defines whether `potential_` will be stored with each timestamp.
-     * @details If `do_not_save_` is true, the potential will be equal to the `potential_reset_value_`
-     *  at the beginning of each subsequent time step (except the first time step, when `potential_`
-     *  is equal to `potential_` default_value).
+     * @brief If `do_not_save_` flag is set to `false`, the `potential_` value is stored with each timestamp.
+     * @details If set to `false`, the potential takes a value of the `potential_reset_value_` parameter 
+     * at the beginning of each subsequent time step (except the first time step, when neuron potential 
+     * takes the `potential_` default value).
      */
     bool do_not_save_ = default_values<AltAILIF>::do_not_save_;
 
     /**
-     * @brief State of the AltAILIF neuron.
+     * @brief The parameter defines the neuron potential value.
      */
     int16_t potential_ = default_values<AltAILIF>::potential_;
 
     /**
-     * @brief Defines the threshold value of the `potential_`, after exceeding which a positive spike can be emitted.
+     * @brief The parameter defines the threshold value of neuron potential, after exceeding which a positive spike can be emitted.
      * @details Positive spike is emitted if `potential_` >= `activation_threshold_`
      * and the neuron has a target for positive spike.
      */
     uint16_t activation_threshold_ = default_values<AltAILIF>::activation_threshold_;
 
     /**
-     * @brief Defines the threshold value of the `potential_`, below which a negative spike can be emitted.
+     * @brief The parameter defines the threshold value of neuron potential, below which a negative spike can be emitted.
      * @details Negative spike is emitted if `potential_` < -`negative_activation_threshold_`
      * and the neuron has a target for negative spike.
      */
     uint16_t negative_activation_threshold_ = default_values<AltAILIF>::negative_activation_threshold_;
 
     /**
-     * @brief Defines the constant leakage of the `potential_` value.
+     * @brief The parameter defines the constant leakage of the neuron potential.
      * @details The code below demonstrates how leakage mechanism works for AltAILIF neuron:
      * @code{.cpp}
      * if (leak_rev_)
@@ -216,7 +230,7 @@ struct neuron_parameters<AltAILIF>
     int16_t potential_leak_ = default_values<AltAILIF>::potential_leak_;
 
     /**
-     * @brief Defines the reset value of the `potential_` after one of the thresholds has been exceeded.
+     * @brief The parameter defines a reset value of the neuron potential after one of the thresholds has been exceeded.
      * @details The code below demonstrates in what case `potential_reset_value_`
      * is used depending on all AltAILIF flags:
      * @code{.cpp}

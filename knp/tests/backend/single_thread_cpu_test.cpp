@@ -7,6 +7,7 @@
 #include <knp/backends/cpu-single-threaded/backend.h>
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
+#include <knp/framework/network.h>
 #include <knp/neuron-traits/blifat.h>
 #include <knp/synapse-traits/delta.h>
 

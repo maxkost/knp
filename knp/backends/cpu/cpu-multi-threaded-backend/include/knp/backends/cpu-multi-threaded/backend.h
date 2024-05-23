@@ -120,22 +120,27 @@ public:
     using ProjectionContainer = std::vector<ProjectionWrapper>;
 
     /**
-     * @todo Make custom iterators.
-     */
-
-    /**
-     * @brief Types of population iterators.
+     * @brief Types of non-constant population iterators.
      */
     using PopulationIterator = PopulationContainer::iterator;
+
+    /**
+     * @brief Types of non-constant projection iterators.
+     */
+    using ProjectionIterator = ProjectionContainer::iterator;
+
+    /**
+     * @brief Get a set of iterators to projections and populations.
+     * @return DataRanges structure containing iterators.
+     */
+    [[nodiscard]] DataRanges get_network_data() const override;
+
+
     /**
      * @brief Types of constant population iterators.
      */
     using PopulationConstIterator = PopulationContainer::const_iterator;
 
-    /**
-     * @brief Types of projection iterators.
-     */
-    using ProjectionIterator = ProjectionContainer::iterator;
     /**
      * @brief Types of constant projection iterators.
      */
@@ -345,6 +350,6 @@ private:
 };
 
 
-BOOST_DLL_ALIAS(knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::create, create_knp_backend)
+BOOST_DLL_ALIAS(knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::create, create_knp_mcpu_backend)
 
 }  // namespace knp::backends::multi_threaded_cpu

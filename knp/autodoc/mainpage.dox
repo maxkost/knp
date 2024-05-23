@@ -3,17 +3,17 @@
 
 @tableofcontents
 
-Kaspersky Neuromorphic Platform (also referred to as "the platform") is a software and hardware platform designed to emulate spiking neural networks and support them on various computers.
+Kaspersky Neuromorphic Platform (also referred to as "the platform") is a software platform designed to emulate spiking neural networks and support them on various computers.
 You can use Kaspersky Neuromorphic Platform to do the following:
-@li Create and train neural networks based on the various types of input data, such as telemetry, events, images, 3D data, audio data and tactile data.
-@li Optimize the structure and hyperparameters of loaded neural networks.
-@li Conduct applied research in the field of input data classification and other application domains of spiking neural networks.
+@li Create neural networks and train them on various types of input data, such as telemetry, events, images, 3D data, audio data and tactile data.
+@li Optimize the structure of loaded neural networks.
+@li Conduct applied research in the field of input data classification and other application domains of neural networks.
 @li Develop new topologies of neural networks, such as spike analogs of convolutional neural networks that imply convolution in space and time.
 @li Develop new models of synaptic plasticity.
 @li Implement new neuron models.
 @li Implement application solutions based on neuromorphic spiking neural networks and artificial intelligence in the field of robotic manipulators, Internet of Things, unmanned systems, human-machine interaction, wearable devices, and optimization planning.
-@li Implement application solutions on devices with low power consumption or using neural processing units (NPU).
-You can use the C++ and Python languages to accomplish these tasks. The platform supports CPU. The Kaspersky Neuromorphic Platform framework can also be used as a backend for the PyNN API.
+@li Implement application solutions on devices with low power consumption or using neuromorphic processors.
+You can use the C++ and Python languages to accomplish these tasks. The platform supports CPU and neuromorphic processor AltAI-2. 
 
 @section doxygen About API Reference
 
@@ -30,8 +30,11 @@ Information about third-party code is contained in the file legal_notices.txt lo
 Registered trademarks and service marks are the property of their respective owners.
 
 LTS and Ubuntu are registered trademarks of Canonical Ltd.\n
+TensorFlow and any related marks are trademarks of Google LLC.\n
 Intel and Core are trademarks of Intel Corporation in the U.S. and/or other countries.\n
 Linux is the registered trademark of Linus Torvalds in the U.S. and other countries.\n
+Microsoft and Windows are trademarks of the Microsoft group of companies.\n
+JavaScript is a registered trademark of Oracle and/or its affiliates.\n
 Python is a trademark or registered trademark of the Python Software Foundation.\n
 Debian is a registered trademark of Software in the Public Interest, Inc.
 

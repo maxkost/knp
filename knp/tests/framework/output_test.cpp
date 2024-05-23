@@ -73,9 +73,7 @@ TEST(OutputSuite, ChannelTest)
     endpoint_3.subscribe<knp::core::messaging::SpikeMessage>(c3_uid, {sender_uid});
     knp::framework::output::OutputChannel channel_max{c3_uid, std::move(endpoint_3)};
 
-    //
     // Do message exchange.
-    //
 
     // Will ignore this.
     knp::core::messaging::SpikeMessage msg_0{{sender_uid, 0}, {0, 1, 2, 3, 4, 5}};

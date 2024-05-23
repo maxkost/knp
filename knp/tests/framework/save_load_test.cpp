@@ -60,7 +60,7 @@ TEST_F(SaveLoadNetworkSuite, SaveTest)
 template <class Entity>
 knp::core::UID get_uid(const Entity &entity)
 {
-    return std::visit([](const auto &v) { return v.get_uid(); }, entity);
+    return std::visit([](const auto &value) { return value.get_uid(); }, entity);
 }
 
 
@@ -81,16 +81,19 @@ bool compare_container_contents(const Content &cont1, const Content &cont2, cons
 
 // Comparing population vectors without taking order into account.
 template <class Container>
-bool are_similar_containers(const Container &cont1, const Container &cont2)
+bool are_similar_containers(const Container &container_1, const Container &container_2)
 {
     std::set<knp::core::UID> uids1, uids2;
-    for (const auto &v : cont1) uids1.insert(get_uid(v));
-    for (const auto &v : cont2) uids2.insert(get_uid(v));
-    if (uids1 != uids2) return false;
+
+    for (const auto &value : container_1) uids1.insert(get_uid(value));
+    for (const auto &value : container_2) uids2.insert(get_uid(value));
+
+    if (uids1 != uids2) retun false;
 
     if (!std::all_of(
             uids1.begin(), uids1.end(),
-            [&cont1, &cont2](const knp::core::UID &uid) { return compare_container_contents(cont1, cont2, uid); }))
+            [&container_1, &container_2](const knp::core::UID &uid)
+            { return compare_container_contents(container_1, container_2, uid); }))
         return false;
     return true;
 }

@@ -33,9 +33,9 @@ std::vector<core::messaging::SpikeMessage> load_messages_from_json(
 
 /**
  * @brief Save a vector of spike messages to JSON file.
+ * @note Passing messages by value is not an error. Messages are sorted inside the function.
  * @param messages vector of spike messages to save.
  * @param path_to_save path to file.
- * @note Passing "messages" by value, they are sorted inside the function.
  */
 void save_messages_to_json(
     std::vector<core::messaging::SpikeMessage> messages, const std::filesystem::path &path_to_save);
