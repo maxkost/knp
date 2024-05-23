@@ -25,8 +25,7 @@ TEST(FrameworkSuite, ModelExecutorLoad)
     kt::DeltaProjection input_projection =
         kt::DeltaProjection{knp::core::UID{false}, population.get_uid(), kt::input_projection_gen, 1};
 
-    const knp::core::UID input_uid = input_projection.get_uid();
-    const knp::core::UID output_uid = population.get_uid();
+    const knp::core::UID input_uid = input_projection.get_uid(), output_uid = population.get_uid();
 
     knp::framework::Network network;
     network.add_population(std::move(population));

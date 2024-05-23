@@ -15,9 +15,11 @@ class PopulationValueIterator : public MultiThreadedCPUBackend::BaseValueIterato
 {
 public:
     PopulationValueIterator() = default;
-    explicit PopulationValueIterator(const MultiThreadedCPUBackend::PopulationContainer::const_iterator &it) : it_(it)
+    explicit PopulationValueIterator(const MultiThreadedCPUBackend::PopulationContainer::const_iterator &iter)
+        : it_(iter)
     {
     }
+
     bool operator==(const BaseValueIterator<core::AllPopulationsVariant> &rhs) const override
     {
         if (typeid(*this) != typeid(rhs)) return false;
@@ -40,7 +42,8 @@ class ProjectionValueIterator : public MultiThreadedCPUBackend::BaseValueIterato
 {
 public:
     ProjectionValueIterator() = default;
-    explicit ProjectionValueIterator(const MultiThreadedCPUBackend::ProjectionContainer::const_iterator &it) : it_(it)
+    explicit ProjectionValueIterator(const MultiThreadedCPUBackend::ProjectionContainer::const_iterator &iter)
+        : it_(iter)
     {
     }
 

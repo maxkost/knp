@@ -275,7 +275,7 @@ public:
          * @brief Dereference a value iterator.
          * @return Copy of Type.
          */
-        virtual Type operator*() const = 0;  // return element by value
+        virtual Type operator*() const = 0;
 
         /**
          * @brief Increment an iterator.
