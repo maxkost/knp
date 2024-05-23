@@ -1,5 +1,8 @@
 /**
- * Projection tests
+ * @file projection_test.cpp
+ * @brief Tests for projection entity.
+ * @author Artiom N.
+ * @date 13.04.2023
  */
 
 #include <knp/core/projection.h>
@@ -61,8 +64,7 @@ TEST(ProjectionSuite, Generation)
 
     DeltaProjection projection(knc::UID{}, knc::UID{}, generator, presynaptic_size * postsynaptic_size);
     ASSERT_EQ(projection.size(), presynaptic_size * postsynaptic_size);
-    // todo: replace 0 with "params".
-    ASSERT_EQ(std::get<0>(projection[1000]).delay_, 11);
+    ASSERT_EQ(std::get<knp::core::synapse_data>(projection[1000]).delay_, 11);
 }
 
 
@@ -115,7 +117,7 @@ TEST(ProjectionSuite, SynapseAddition)
         ASSERT_NE(
             std::find_if(
                 connections.begin(), connections.end(),
-                [&i, neuron_index](const Synapse &syn) { return std::get<2>(syn) == neuron_index + i; }),
+                [&i](const Synapse &syn) { return std::get<knp::core::target_neuron_id>(syn) == neuron_index + i; }),
             connections.end());
     }
 }
@@ -188,7 +190,7 @@ TEST(ProjectionSuite, SynapseRemoval)
     // A synapse was deleted.
     ASSERT_EQ(projection.size(), total_connections - 1);
     // The deleted synapse is the correct one.
-    ASSERT_EQ(std::get<1>(projection[0]), 1);
+    ASSERT_EQ(std::get<knp::core::source_neuron_id>(projection[0]), 1);
 
     // Delete all synapses
     projection.clear();

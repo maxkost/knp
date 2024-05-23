@@ -1,7 +1,9 @@
 /**
- * Test file template
+ * @file population_test.cpp
+ * @brief Tests for population entity.
+ * @author Artiom N.
+ * @date 13.02.2023
  */
-
 
 #include <knp/core/population.h>
 #include <knp/neuron-traits/blifat.h>
