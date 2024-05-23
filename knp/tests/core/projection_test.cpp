@@ -220,11 +220,13 @@ TEST(ProjectionSuite, DisconnectNeurons)
     ASSERT_EQ(count, 1);
     ASSERT_EQ(
         std::count_if(
-            projection.begin(), projection.end(), [](const Synapse &synapse) { return std::get<1>(synapse) == 0; }),
+            projection.begin(), projection.end(),
+            [](const Synapse &synapse) { return std::get<knp::core::source_neuron_id>(synapse) == 0; }),
         postsynaptic_size - 1);
     ASSERT_EQ(
         std::count_if(
-            projection.begin(), projection.end(), [](const Synapse &synapse) { return std::get<2>(synapse) == 1; }),
+            projection.begin(), projection.end(),
+            [](const Synapse &synapse) { return std::get<knp::core::target_neuron_id>(synapse) == 1; }),
         presynaptic_size - 1);
 }
 
