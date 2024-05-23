@@ -88,7 +88,7 @@ bool are_similar_containers(const Container &container_1, const Container &conta
     for (const auto &value : container_1) uids1.insert(get_uid(value));
     for (const auto &value : container_2) uids2.insert(get_uid(value));
 
-    if (uids1 != uids2) retun false;
+    if (uids1 != uids2) return false;
 
     if (!std::all_of(
             uids1.begin(), uids1.end(),

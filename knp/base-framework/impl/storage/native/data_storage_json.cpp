@@ -151,7 +151,7 @@ bool is_correct_version(simdjson::ondemand::document &doc)  // cppcheck-suppress
 
             for (auto val : arr)
             {
-                // std::transform doesn't compiled by MSVC.
+                // std::transform doesn't get compiled by MSVC.
                 version.push_back(val.get_int64());  // cppcheck-suppress useStlAlgorithm
             }
 
