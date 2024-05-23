@@ -108,7 +108,7 @@ TEST(ProjectionSuite, SynapseAddition)
     std::vector<Synapse> connections;
     std::copy_if(
         projection.begin(), projection.end(), std::back_inserter(connections),
-        [=](const Synapse &syn) { return std::get<1>(syn) == neuron_index; });
+        [](const Synapse &syn) { return std::get<knp::core::source_neuron_id>(syn) == neuron_index; });
 
     ASSERT_EQ(connections.size(), 3);
     for (size_t i = 0; i < 3; ++i)
@@ -159,7 +159,7 @@ TEST(ProjectionSuite, DeletePostsynapticTest)
     ASSERT_EQ(
         std::find_if(
             projection.begin(), projection.end(),
-            [&](const Synapse &synapse) { return std::get<2>(synapse) == neuron_index; }),
+            [&](const Synapse &synapse) { return std::get<knp::core::target_neuron_id>(synapse) == neuron_index; }),
         projection.end());  // ensure all the synapses that should have been deleted are actually deleted
 }
 
