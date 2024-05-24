@@ -188,18 +188,14 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 # Make cache variables for install destinations.
 include(GNUInstallDirs)
 
-# Hack for the CPM in Windows: target name is different from the package name.
-find_package(ZeroMQ)
-
-if (NOT ZeroMQ_FOUND)
-    add_third_party(NAME "libzmq"
-                    GITHUB_REPOSITORY "zeromq/libzmq"
-                    VERSION "4.3.5"
-                    OPTIONS
-                        "WITH_DOCS OFF"
-                        "BUILD_TESTS OFF"
-                        "ENABLE_CPACK OFF")
-endif()
+add_third_party(NAME "libzmq"
+                GITHUB_REPOSITORY "zeromq/libzmq"
+                VERSION "4.3.5"
+                FIND_PACKAGE_ARGUMENTS "NAMES ZeroMQ"
+                OPTIONS
+                    "WITH_DOCS OFF"
+                    "BUILD_TESTS OFF"
+                    "ENABLE_CPACK OFF")
 
 #
 # LibHDF5 and it's dependencies.
@@ -210,6 +206,7 @@ add_third_party("https://gitlab.dkrz.de/k202009/libaec.git@1.1.3")
 
 add_third_party("gh:HDFGroup/hdf5#hdf5_1.14.4"
                 GIT_SHALLOW ON
+                FIND_PACKAGE_ARGUMENTS "NAMES hdf5"
                 OPTIONS
                     "HDF5_NO_PACKAGES ON"
                     "BUILD_SHARED_LIBS ON")
