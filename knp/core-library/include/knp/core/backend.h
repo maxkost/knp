@@ -254,8 +254,8 @@ public:
 
 public:
     /**
-     * @brief Iterator used to access populations or projections by value. Interface class.
-     * @tparam Type one of "AllProjectionsVariant, AllPopulationsVariant" depending on the goals.
+     * @brief The BaseValueIterator class is a definition of an interface to the iterator used to access populations or projections by value.
+     * @tparam Type one of types sepcified for `AllProjectionsVariant` or `AllPopulationsVariant` depending on the goal.
      */
     template <class Type>
     class BaseValueIterator
@@ -273,7 +273,7 @@ public:
 
         /**
          * @brief Dereference a value iterator.
-         * @return Copy of Type.
+         * @return Copy of `Type`.
          */
         virtual Type operator*() const = 0;
 
@@ -285,15 +285,15 @@ public:
 
         /**
          * @brief Iterator equality.
-         * @param rhs Another iterator.
-         * @return true if they point at the same object and have the same type.
+         * @param rhs another iterator.
+         * @return `true` if both iterators point at the same object and have the same type.
          */
         virtual bool operator==(const BaseValueIterator &rhs) const = 0;
 
         /**
          * @brief Iterator inequality.
-         * @param rhs Another iterator.
-         * @return false if they point at the same object and have the same type.
+         * @param rhs another iterator.
+         * @return `false` if both iterators point at the same object and have the same type.
          */
         virtual bool operator!=(const BaseValueIterator &rhs) const { return !(*this == rhs); }
 
@@ -310,7 +310,7 @@ public:
     struct DataRanges
     {
         /**
-         * @brief projections iterator pair range.
+         * @brief Projection iterator pair range.
          */
         std::pair<
             std::unique_ptr<BaseValueIterator<knp::core::AllProjectionsVariant>>,
@@ -318,7 +318,7 @@ public:
             projection_range;
 
         /**
-         * @brief population iterator pair range.
+         * @brief Population iterator pair range.
          */
         std::pair<
             std::unique_ptr<BaseValueIterator<knp::core::AllPopulationsVariant>>,
