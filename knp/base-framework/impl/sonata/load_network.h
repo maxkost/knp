@@ -25,16 +25,9 @@ namespace fs = std::filesystem;
 
 template <class Neuron>
 core::Population<Neuron> load_population(const HighFive::Group &nodes_group, const std::string &population_name);
-//{
-//    throw std::logic_error("Trying to load an unimplemented population type");
-//}
-
 
 template <class Synapse>
 core::Projection<Synapse> load_projection(const HighFive::Group &edges_group, const std::string &projection_name);
-//{
-//    throw std::logic_error("Trying to load an unimplemented projection type");
-//}
 
 }  // namespace knp::framework::sonata
 

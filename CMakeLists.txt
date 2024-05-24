@@ -206,7 +206,7 @@ add_third_party("https://gitlab.dkrz.de/k202009/libaec.git@1.1.3")
 
 add_third_party("gh:HDFGroup/hdf5#hdf5_1.14.4"
                 GIT_SHALLOW ON
-                FIND_PACKAGE_ARGUMENTS "NAMES hdf5"
+                FIND_PACKAGE_ARGUMENTS "NAMES hdf5 libhdf5 hdf5-static"
                 OPTIONS
                     "HDF5_NO_PACKAGES ON"
                     "BUILD_SHARED_LIBS ON")
