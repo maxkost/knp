@@ -191,7 +191,7 @@ include(GNUInstallDirs)
 add_third_party(NAME "libzmq"
                 GITHUB_REPOSITORY "zeromq/libzmq"
                 VERSION "4.3.5"
-                FIND_PACKAGE_ARGUMENTS "NAMES ZeroMQ"
+                FIND_PACKAGE_ARGUMENTS "NAMES ZeroMQ libzmq zmq zmq5 libzmq5"
                 OPTIONS
                     "WITH_DOCS OFF"
                     "BUILD_TESTS OFF"
@@ -209,13 +209,17 @@ add_third_party("gh:HDFGroup/hdf5#hdf5_1.14.4"
                 FIND_PACKAGE_ARGUMENTS "NAMES hdf5 libhdf5 hdf5-static"
                 OPTIONS
                     "HDF5_NO_PACKAGES ON"
-                    "BUILD_SHARED_LIBS ON")
+                    "BUILD_SHARED_LIBS ON"
+                    "HDF5_VOL_ALLOW_EXTERNAL YES")
 
 add_third_party("gh:BlueBrain/HighFive@2.9.0"
                 GIT_SHALLOW ON
                 OPTIONS
                     "HIGHFIVE_FIND_HDF5 OFF"
-                    "HIGHFIVE_USE_BOOST OFF")
+                    "HIGHFIVE_EXAMPLES OFF"
+                    "HIGHFIVE_BUILD_DOCS OFF"
+                    "HIGHFIVE_USE_BOOST OFF"
+                    "HDF5_C_LIBRARIES ${HDF5_LIBRARIES_TO_EXPORT}")
 
 # End of LibHDF5.
 
