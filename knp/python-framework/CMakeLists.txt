@@ -4,6 +4,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+#define BOOST_PYTHON_STATIC_LIB
+#define Py_NO_ENABLE_SHARED
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp_python_framework VERSION "${KNP_VERSION}" LANGUAGES C CXX  # PYTHON
@@ -21,7 +24,7 @@ endif()
 
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 
-if (WIN32)
+if (WIN32 OR Boost_ROOT)
     file(GLOB _KNP_PY_VER "${BOOST_LIBRARYDIR}/*boost_python*.lib")
     if (_KNP_PY_VER)
         list(GET _KNP_PY_VER 0 _KNP_PY_VER)
