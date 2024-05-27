@@ -35,13 +35,6 @@ endforeach()
 # WARNING: Don't change variables case!
 set(Boost_USE_MULTITHREADED ON)
 
-if (WIN32)
-    set(Boost_USE_STATIC_LIBS ON)
-    set(Boost_USE_STATIC_RUNTIME ON)
-else()
-    set(Boost_USE_STATIC_RUNTIME OFF)
-endif()
-
 set(Boost_ALL_DYN_LINK OFF)
 
 if (NOT Boost_ROOT)
@@ -53,6 +46,8 @@ if (NOT Boost_ROOT)
 endif()
 
 if (Boost_ROOT)  # WIN32?
+    set(Boost_USE_STATIC_LIBS ON)
+    set(Boost_USE_STATIC_RUNTIME ON)
     set(Boost_USE_STATIC_RUNTIME ON)
     # Boost detection setup.
     if(NOT BOOST_INCLUDEDIR)
