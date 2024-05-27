@@ -110,14 +110,16 @@ void add_population_to_h5<core::Population<knp::neuron_traits::SynapticResourceS
 
 
 #define LOAD_NEURONS_PARAMETER_DEF(target, parameter, h5_group, pop_size, def_neuron)             \
+    do                                                                                            \
     {                                                                                             \
         const auto values = read_parameter(h5_group, #parameter, pop_size, def_neuron.parameter); \
         for (size_t i = 0; i < target.size(); ++i) target[i].parameter = values[i];               \
-    }
+    } while (false)
 
 
 using ResourceNeuron = neuron_traits::SynapticResourceSTDPBLIFATNeuron;
 using ResourceNeuronParams = neuron_traits::neuron_parameters<ResourceNeuron>;
+
 
 template <>
 core::Population<neuron_traits::SynapticResourceSTDPBLIFATNeuron>

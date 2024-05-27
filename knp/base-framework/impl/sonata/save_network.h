@@ -53,10 +53,11 @@ std::vector<Attr> read_parameter(
 
 
 #define PUT_NEURON_TO_DATASET(pop, param, group)                                                                \
+    do                                                                                                          \
     {                                                                                                           \
         std::vector<decltype(pop.begin()->param)> data;                                                         \
         data.reserve(pop.size());                                                                               \
         std::transform(                                                                                         \
             pop.begin(), pop.end(), std::back_inserter(data), [](const auto &neuron) { return neuron.param; }); \
         group.createDataSet(#param, data);                                                                      \
-    }
+    } while (false)
