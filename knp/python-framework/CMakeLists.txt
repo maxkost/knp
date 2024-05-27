@@ -17,22 +17,23 @@ if (WIN32)
     set(Boost_USE_STATIC_LIBS ON)
 endif()
 
-if(NOT KNP_PYTHON_FRAMEWORK_BUILD)
+if (NOT KNP_PYTHON_FRAMEWORK_BUILD)
     message(STATUS "Python framework building disabled...")
     return()
 endif()
 
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 
-if (WIN32 OR Boost_ROOT)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS)
+
+if (NOT BOOST_PYTHON_FOUND)
     file(GLOB _KNP_PY_VER "${BOOST_LIBRARYDIR}/*boost_python*.lib")
     if (_KNP_PY_VER)
         list(GET _KNP_PY_VER 0 _KNP_PY_VER)
         string(REGEX REPLACE ".+python([0-9]+).*[\n\r]*" "\\1" _KNP_PY_VER "${_KNP_PY_VER}")
     endif()
+    find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS python${_KNP_PY_VER} REQUIRED)
 endif()
-
-find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS python${_KNP_PY_VER} REQUIRED)
 
 include(knp-functions)
 include(file-functions)
