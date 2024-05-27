@@ -4,27 +4,24 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-#define BOOST_PYTHON_STATIC_LIB
-#define Py_NO_ENABLE_SHARED
-
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp_python_framework VERSION "${KNP_VERSION}" LANGUAGES C CXX  # PYTHON
         DESCRIPTION "Kaspersky Neuromorphic Platform Python framework"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
-if (WIN32)
-    set(Boost_USE_STATIC_LIBS ON)
-endif()
-
 if (NOT KNP_PYTHON_FRAMEWORK_BUILD)
     message(STATUS "Python framework building disabled...")
     return()
 endif()
 
-find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+if (Boost_ROOT)
+    set(Boost_USE_STATIC_LIBS ON)
+    add_definitions(BOOST_PYTHON_STATIC_LIB Py_NO_ENABLE_SHARED)
+endif()
 
-find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS)
+find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS python)
 
 if (NOT BOOST_PYTHON_FOUND)
     file(GLOB _KNP_PY_VER "${BOOST_LIBRARYDIR}/*boost_python*.[lib|a]")
