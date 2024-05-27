@@ -28,7 +28,11 @@ project(knp VERSION "${KNP_VERSION}"
 set(KNP_BOOST_MIN_VERSION "1.74.0")
 set(KNP_ROOT_DIR "${PROJECT_SOURCE_DIR}" CACHE STRING "KNP root directory")
 
-# WARNING: Don't change variables register!
+foreach (boost_ver RANGE 83 89)
+    list(APPEND Boost_ADDITIONAL_VERSIONS "1.${boost_ver}")
+endforeach()
+
+# WARNING: Don't change variables case!
 set(Boost_USE_MULTITHREADED ON)
 
 if (WIN32)
@@ -46,11 +50,13 @@ if (BOOST_ROOT)  # WIN32?
         set(BOOST_INCLUDEDIR "${BOOST_ROOT}")
     endif()
 
-    if(NOT BOOST_LIBRARYDIR)
-        if(EXISTS "${BOOST_ROOT}/stage")
-            set(BOOST_LIBRARYDIR "${BOOST_ROOT}/stage")
+    if (NOT BOOST_LIBRARYDIR)
+        if(EXISTS "${Boost_ROOT}/stage/lib")
+            set(BOOST_LIBRARYDIR "${Boost_ROOT}/stage/lib")
+        elseif(EXISTS "${Boost_ROOT}/stage")
+            set(BOOST_LIBRARYDIR "${Boost_ROOT}/stage")
         else()
-            file(GLOB _BOOST_LIB_DIRS LIST_DIRECTORIES true "${BOOST_ROOT}/lib*-*-*")
+            file(GLOB _BOOST_LIB_DIRS LIST_DIRECTORIES true "${Boost_ROOT}/lib*-*-*")
             list(GET _BOOST_LIB_DIRS 0 BOOST_LIBRARYDIR)
             # set(Boost_LIB_PREFIX "")
         endif()

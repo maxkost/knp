@@ -27,7 +27,7 @@ find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS)
 
 if (NOT BOOST_PYTHON_FOUND)
-    file(GLOB _KNP_PY_VER "${BOOST_LIBRARYDIR}/*boost_python*.lib")
+    file(GLOB _KNP_PY_VER "${BOOST_LIBRARYDIR}/*boost_python*.[lib|a]")
     if (_KNP_PY_VER)
         list(GET _KNP_PY_VER 0 _KNP_PY_VER)
         string(REGEX REPLACE ".+python([0-9]+).*[\n\r]*" "\\1" _KNP_PY_VER "${_KNP_PY_VER}")

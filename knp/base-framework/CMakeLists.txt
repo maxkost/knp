@@ -52,7 +52,8 @@ knp_add_library("${PROJECT_NAME}-core"
         spdlog::spdlog Boost::headers Boost::filesystem HighFive ${HDF5_LIB} simdjson::simdjson_static
     LINK_PUBLIC
         KNP::Core KNP::Neuron::Traits KNP::Synapse::Traits
-    PRECOMP KNP::Core)
+    #PRECOMP KNP::Core
+)
 
 set_target_properties(
         "${PROJECT_NAME}-core"
