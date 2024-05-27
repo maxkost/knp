@@ -44,7 +44,16 @@ endif()
 
 set(Boost_ALL_DYN_LINK OFF)
 
-if (BOOST_ROOT)  # WIN32?
+if (NOT Boost_ROOT)
+    if (DEFINED ENV{Boost_ROOT})
+        set(Boost_ROOT "$ENV{Boost_ROOT}")
+    elseif(DEFINED ENV{BOOST_ROOT})
+        set(Boost_ROOT "$ENV{BOOST_ROOT}")
+    endif()
+endif()
+
+if (Boost_ROOT)  # WIN32?
+    set(Boost_USE_STATIC_RUNTIME ON)
     # Boost detection setup.
     if(NOT BOOST_INCLUDEDIR)
         set(BOOST_INCLUDEDIR "${BOOST_ROOT}")
