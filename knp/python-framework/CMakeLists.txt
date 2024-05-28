@@ -17,7 +17,7 @@ endif()
 
 if (Boost_ROOT)
     set(Boost_USE_STATIC_LIBS ON)
-    add_compile_definitions(-DBOOST_PYTHON_STATIC_LIB -DPy_NO_ENABLE_SHARED)
+#    add_compile_definitions(-DBOOST_PYTHON_STATIC_LIB -DPy_NO_ENABLE_SHARED)
 endif()
 
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
