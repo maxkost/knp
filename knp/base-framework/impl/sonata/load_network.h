@@ -42,10 +42,9 @@ core::Projection<Synapse> load_projection(const HighFive::Group &edges_group, co
 
 
 #define LOAD_SYNAPSE_PARAMETER(target, synapse_type, parameter, h5_group, proj_size)                                  \
-    fo                                                                                                                \
+    do                                                                                                                \
     {                                                                                                                 \
         const auto values =                                                                                           \
             read_parameter(h5_group, #parameter, proj_size, synapse_traits::default_values<synapse_type>::parameter); \
         for (size_t i = 0; i < target.size(); ++i) target[i].parameter = values[i];                                   \
-    }                                                                                                                 \
-    while (false)
+    } while (false)
