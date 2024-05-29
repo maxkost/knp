@@ -11,12 +11,15 @@
 #include <knp/framework/network.h>
 
 
+/**
+ * @brief Synchronization namespace.
+ */
 namespace knp::framework::synchronization
 {
 /**
- * @brief Copies network data from backend.
- * @param backend Backend containing a network.
- * @return Network as it currently is on a backend.
+ * @brief Copy network data from backend.
+ * @param backend backend containing a network.
+ * @return Network in its current state on backend.
  */
 Network get_network_copy(const knp::core::Backend &backend);
 
