@@ -28,7 +28,7 @@ namespace knp::core
  * @see ALL_NEURONS.
  */
 template <typename NeuronType>
-class Population
+class Population final
 {
 public:
     /**

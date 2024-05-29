@@ -63,7 +63,6 @@ size_t MessageBusZMQImpl::step()
         std::vector<zmq_pollitem_t> items = {
             zmq_pollitem_t{router_socket_.handle(), 0, ZMQ_POLLIN, 0},
         };
-
         SPDLOG_DEBUG("Running poll()");
 
         if (zmq::poll(items, 0ms) > 0)

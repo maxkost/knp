@@ -16,25 +16,25 @@ class PopulationValueIterator : public MultiThreadedCPUBackend::BaseValueIterato
 public:
     PopulationValueIterator() = default;
     explicit PopulationValueIterator(const MultiThreadedCPUBackend::PopulationContainer::const_iterator &iter)
-        : it_(iter)
+        : iter_(iter)
     {
     }
 
     bool operator==(const BaseValueIterator<core::AllPopulationsVariant> &rhs) const override
     {
         if (typeid(*this) != typeid(rhs)) return false;
-        return dynamic_cast<const PopulationValueIterator &>(rhs).it_ == it_;
+        return dynamic_cast<const PopulationValueIterator &>(rhs).iter_ == iter_;
     }
 
     BaseValueIterator<core::AllPopulationsVariant> &operator++() override
     {
-        ++it_;
+        ++iter_;
         return *this;
     }
-    core::AllPopulationsVariant operator*() const override { return knp::meta::variant_cast(*it_); }
+    core::AllPopulationsVariant operator*() const override { return knp::meta::variant_cast(*iter_); }
 
 private:
-    MultiThreadedCPUBackend::PopulationContainer::const_iterator it_;
+    MultiThreadedCPUBackend::PopulationContainer::const_iterator iter_;
 };
 
 
@@ -43,25 +43,25 @@ class ProjectionValueIterator : public MultiThreadedCPUBackend::BaseValueIterato
 public:
     ProjectionValueIterator() = default;
     explicit ProjectionValueIterator(const MultiThreadedCPUBackend::ProjectionContainer::const_iterator &iter)
-        : it_(iter)
+        : iter_(iter)
     {
     }
 
     bool operator==(const BaseValueIterator<core::AllProjectionsVariant> &rhs) const override
     {
         if (typeid(*this) != typeid(rhs)) return false;
-        return dynamic_cast<const ProjectionValueIterator &>(rhs).it_ == it_;
+        return dynamic_cast<const ProjectionValueIterator &>(rhs).iter_ == iter_;
     }
 
     BaseValueIterator<core::AllProjectionsVariant> &operator++() override
     {
-        ++it_;
+        ++iter_;
         return *this;
     }
-    core::AllProjectionsVariant operator*() const override { return knp::meta::variant_cast(it_->arg_); }
+    core::AllProjectionsVariant operator*() const override { return knp::meta::variant_cast(iter_->arg_); }
 
 private:
-    MultiThreadedCPUBackend::ProjectionContainer::const_iterator it_;
+    MultiThreadedCPUBackend::ProjectionContainer::const_iterator iter_;
 };
 
 

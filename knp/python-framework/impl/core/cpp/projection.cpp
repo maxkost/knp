@@ -83,15 +83,6 @@ py::class_<core::Synapse>(
                 .def(                                                                                                  \
                     "add_synapses", &projection_synapses_add_wrapper<st::synapse_type>,                                \
                     "Append connections to the existing projection.")                                                  \
-                .def(                                                                                                  \
-                    "add_synapses",                                                                                    \
-                    static_cast<size_t (core::Projection<st::synapse_type>::*)(                                        \
-                        const std::vector<core::Projection<st::synapse_type>::Synapse> &)>(                            \
-                        &core::Projection<st::synapse_type>::add_synapses),                                            \
-                    "Add a set of user-defined synapses to the projection.")                                           \
-                .def(                                                                                                  \
-                    "remove_synapses", &core::Projection<st::synapse_type>::remove_synapses,                           \
-                    "Remove synapses with the given indexes from the projection.")                                     \
                 .add_property(                                                                                         \
                     "uid", make_handler([](core::Projection<st::synapse_type> &proj) { return proj.get_uid(); }),      \
                     "Get projection UID.")                                                                             \

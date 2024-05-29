@@ -24,7 +24,7 @@ namespace knp::core
  * @tparam MessageT type of messages that are exchanged via the subscription.
  */
 template <class MessageT>
-class Subscription
+class Subscription final
 {
 public:
     /**
