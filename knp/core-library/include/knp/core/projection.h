@@ -8,7 +8,6 @@
 #pragma once
 
 #include <knp/core/core.h>
-#include <knp/core/synaptic_index.h>
 #include <knp/core/uid.h>
 #include <knp/synapse-traits/all_traits.h>
 
@@ -19,6 +18,10 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
+
+#include <boost/multi_index/hashed_index.hpp>
+#include <boost/multi_index/member.hpp>
+#include <boost/multi_index_container.hpp>
 
 
 /**

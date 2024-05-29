@@ -17,7 +17,6 @@
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 #include <knp/core/subscription.h>
-#include <knp/core/synaptic_index.h>
 #include <knp/core/uid.h>
 
 #if defined(__GNUC__)
