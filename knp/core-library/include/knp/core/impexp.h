@@ -27,7 +27,12 @@
  * @brief External symbol.
  */
 
-#if defined(_WIN32) || defined(__CYGWIN__)
+#if defined(_MSC_VER)
+#    define _KNP_SYMBOL_EXPORT __declspec(dllexport)
+#    define _KNP_SYMBOL_IMPORT __declspec(dllimport)
+#    define _KNP_SYMBOL_EXTERN extern
+#    define _KNP_SYMBOL_LOCAL
+#elif defined(_WIN32) && defined(__CYGWIN__)
 #    define _KNP_SYMBOL_EXPORT __attribute__((dllexport))
 #    define _KNP_SYMBOL_IMPORT __attribute__((dllimport))
 #    define _KNP_SYMBOL_EXTERN extern
@@ -45,7 +50,7 @@
 #endif
 
 // Defined if KNP is built as a shared library.
-#if defined(BUILD_SHARED_LIBS)
+#if defined(_KNP_BUILD_SHARED_LIBS)
 #    define KNP_EXPORT _KNP_SYMBOL_EXPORT
 #    define KNP_IMPORT _KNP_SYMBOL_IMPORT
 #    define KNP_EXTERN _KNP_SYMBOL_EXTERN

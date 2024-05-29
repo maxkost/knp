@@ -54,11 +54,11 @@ core::Projection<knp::synapse_traits::DeltaSynapse> load_projection(
     const auto source_ids = read_parameter<size_t>(projection_group, "source_node_id", group_size, 0);
     const auto target_ids = read_parameter<size_t>(projection_group, "target_node_id", group_size, 0);
 
-    core::UID uid_from{boost::lexical_cast<boost::uuids::uuid>(
+    const core::UID uid_from{boost::lexical_cast<boost::uuids::uuid>(
         projection_group.getDataSet("source_node_id").getAttribute("node_population").read<std::string>())};
-    core::UID uid_to{boost::lexical_cast<boost::uuids::uuid>(
+    const core::UID uid_to{boost::lexical_cast<boost::uuids::uuid>(
         projection_group.getDataSet("target_node_id").getAttribute("node_population").read<std::string>())};
-    core::UID uid_own{boost::lexical_cast<boost::uuids::uuid>(projection_name)};
+    const core::UID uid_own{boost::lexical_cast<boost::uuids::uuid>(projection_name)};
 
 
     std::vector<Synapse> synapses;
@@ -69,13 +69,13 @@ core::Projection<knp::synapse_traits::DeltaSynapse> load_projection(
         syn.weight_ = weights[i];
         syn.delay_ = delays[i];
         syn.output_type_ = static_cast<synapse_traits::OutputType>(out_types[i]);
-        size_t id_from_ = source_ids[i];
-        size_t id_to_ = target_ids[i];
-        synapses.push_back({syn, id_from_, id_to_});
+        const size_t id_from = source_ids[i];
+        const size_t id_to = target_ids[i];
+        synapses.emplace_back(syn, id_from, id_to);
     }
 
     core::Projection<synapse_traits::DeltaSynapse> proj(
-        uid_own, uid_from, uid_to, [&synapses](size_t i) { return synapses[i]; }, synapses.size());
+        uid_own, uid_from, uid_to, [&synapses](size_t syn_num) { return synapses[syn_num]; }, synapses.size());
 
     if (projection_group.hasAttribute("is_locked"))
     {

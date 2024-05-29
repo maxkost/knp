@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp-synapse-traits VERSION "${KNP_VERSION}" LANGUAGES C CXX
@@ -9,6 +11,8 @@ project(knp-synapse-traits VERSION "${KNP_VERSION}" LANGUAGES C CXX
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 include(knp-functions)
+
+find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
 
 set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/synapse-traits")
 
@@ -23,7 +27,7 @@ target_include_directories("${PROJECT_NAME}" INTERFACE
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
-target_link_libraries("${PROJECT_NAME}" INTERFACE KNP::Meta)
+target_link_libraries("${PROJECT_NAME}" INTERFACE Boost::headers KNP::Meta)
 
 install(TARGETS "${PROJECT_NAME}"
     EXPORT "${PROJECT_NAME}"

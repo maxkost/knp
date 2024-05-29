@@ -134,13 +134,14 @@ void save_network(const Network &network, const fs::path &dir)
     auto net_dir = dir / "network";
     if (!is_directory(net_dir)) fs::create_directory(net_dir);
 
-    std::string projections_filename = "projections.h5";
-    std::string synapse_type_filename = "synapses.csv";
-    std::string populations_filename = "populations.h5";
-    std::string neuron_type_filename = "neurons.csv";
+    const std::string projections_filename = "projections.h5";
+    const std::string synapse_type_filename = "synapses.csv";
+    const std::string populations_filename = "populations.h5";
+    const std::string neuron_type_filename = "neurons.csv";
 
     fs::path path_to_projections(net_dir / projections_filename);
     fs::path path_to_synapse_csv(net_dir / synapse_type_filename);
+
     HighFive::File h5_proj_file(path_to_projections.string(), HighFive::File::Create | HighFive::File::Overwrite);
     h5_proj_file.createGroup("edges");
 
@@ -148,10 +149,9 @@ void save_network(const Network &network, const fs::path &dir)
     {
         std::visit([&h5_proj_file](const auto &projection) { add_projection_to_h5(h5_proj_file, projection); }, *iter);
         std::visit(
-            [&path_to_synapse_csv](const auto &projection)
-            {
-                using T = std::decay_t<decltype(projection)>;
-                add_synapse_type_to_csv<typename T::ProjectionSynapseType>(path_to_synapse_csv);
+            [&path_to_synapse_csv](const auto &projection) {
+                add_synapse_type_to_csv<typename std::decay_t<decltype(projection)>::ProjectionSynapseType>(
+                    path_to_synapse_csv);
             },
             *iter);
     }
@@ -174,7 +174,6 @@ void save_network(const Network &network, const fs::path &dir)
     h5_pop_file.createAttribute("network_uid", std::string{network.get_uid()});
     // TODO : move this inside add_population or add more neurons
     add_neuron_type_to_csv<neuron_traits::BLIFATNeuron>(path_to_neurons_csv);
-
 
     write_base_config(dir, net_dir);
     write_network_config(

@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -10,8 +11,13 @@ project(knp-core VERSION "${KNP_VERSION}" LANGUAGES C CXX
         DESCRIPTION "Kaspersky Neuromorphic Platform core library"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
-#find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
-#find_package(ZeroMQ REQUIRED)
+if(NOT TARGET Boost::headers)
+    find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
+endif()
+
+if(NOT TARGET cppzmq)
+    find_package(cppzmq REQUIRED)
+endif()
 
 include(GNUInstallDirs)
 # Need for installation.
@@ -20,19 +26,6 @@ include(clang-tidy)
 include(knp-functions)
 include(third-party)
 
-add_third_party(NAME "ZeroMQ"
-        GITHUB_REPOSITORY "zeromq/libzmq"
-        VERSION "4.3.5"
-        OPTIONS
-        "WITH_DOCS OFF"
-        "BUILD_TESTS OFF"
-        "ENABLE_CPACK OFF")
-add_third_party("gh:zeromq/cppzmq@4.10.0")
-
-add_third_party("gh:google/flatbuffers@24.3.25"
-        OPTIONS
-        "FLATBUFFERS_BUILD_TESTS OFF"
-        "FLATBUFFERS_BUILD_CPP17 ON")
 
 set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/core")
 
@@ -43,8 +36,7 @@ set(${PROJECT_NAME}_FB_SOURCES
     impl/messaging/fbs/message_header.fbs
     impl/messaging/fbs/synapse_traits.fbs
     impl/messaging/fbs/spike_message.fbs
-    impl/messaging/fbs/synaptic_impact_message.fbs
-)
+    impl/messaging/fbs/synaptic_impact_message.fbs)
 
 
 #
@@ -85,9 +77,9 @@ knp_add_library("${PROJECT_NAME}"
     impl/subscription.cpp
 
     ${${PROJECT_NAME}_headers}
-    PRECOMP impl/common_precomp.h
+    # PRECOMP impl/common_precomp.h
     LINK_PRIVATE
-        spdlog::spdlog_header_only zmq flatbuffers "${PROJECT_NAME}_messaging"
+        Boost::headers spdlog::spdlog cppzmq flatbuffers "${PROJECT_NAME}_messaging"
     LINK_PUBLIC
         # This is using in the library for message parameters.
         KNP::Neuron::Traits KNP::Synapse::Traits

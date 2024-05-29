@@ -8,6 +8,7 @@
 #pragma once
 
 #include <knp/core/backend.h>
+#include <knp/core/impexp.h>
 
 #include <filesystem>
 #include <memory>

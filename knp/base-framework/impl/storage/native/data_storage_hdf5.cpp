@@ -59,8 +59,7 @@ bool check_version(const HighFive::File &doc)
 std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
     const fs::path &path_to_h5, const knp::core::UID &uid, float time_per_step, bool strict_format)
 {
-    HighFive::File h5_file(path_to_h5);
-
+    HighFive::File h5_file(path_to_h5.string());
 
     // Checking magic number.
     if (!check_magic(h5_file, strict_format)) SPDLOG_WARN("No magic number found, probably wrong file format");
@@ -115,7 +114,7 @@ std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
 void save_messages_to_h5(
     std::vector<core::messaging::SpikeMessage> messages, const std::filesystem::path &path_to_save, float time_per_step)
 {
-    HighFive::File data_file(path_to_save, HighFive::File::Create | HighFive::File::Overwrite);
+    HighFive::File data_file(path_to_save.string(), HighFive::File::Create | HighFive::File::Overwrite);
 
     // Creating base attributes.
     data_file.createAttribute("magic", MAGIC_NUMBER);

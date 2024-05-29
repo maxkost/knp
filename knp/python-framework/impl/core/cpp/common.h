@@ -17,10 +17,16 @@
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 #include <knp/core/subscription.h>
-#include <knp/core/synaptic_index.h>
 #include <knp/core/uid.h>
 
-#include <spdlog/spdlog.h>
+#if defined(__GNUC__)
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wdangling-reference"
+#    include <spdlog/spdlog.h>
+#    pragma GCC diagnostic pop
+#else
+#    include <spdlog/spdlog.h>
+#endif
 
 #include <sstream>
 #include <string>

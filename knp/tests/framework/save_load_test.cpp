@@ -30,7 +30,7 @@ knp::framework::Network make_simple_network()
 }
 
 
-class SaveLoadNetworkSuit : public ::testing::Test
+class SaveLoadNetworkSuite : public ::testing::Test
 {
 protected:
     void TearDown() override
@@ -43,7 +43,7 @@ protected:
 };
 
 
-TEST_F(SaveLoadNetworkSuit, SaveTest)
+TEST_F(SaveLoadNetworkSuite, SaveTest)
 {
     auto network = make_simple_network();
     path_to_network_ = ".";
@@ -84,8 +84,10 @@ template <class Container>
 bool are_similar_containers(const Container &container_1, const Container &container_2)
 {
     std::set<knp::core::UID> uids1, uids2;
-    for (auto &value : container_1) uids1.insert(get_uid(value));
-    for (auto &value : container_2) uids2.insert(get_uid(value));
+
+    for (const auto &value : container_1) uids1.insert(get_uid(value));
+    for (const auto &value : container_2) uids2.insert(get_uid(value));
+
     if (uids1 != uids2) return false;
 
     if (!std::all_of(
@@ -107,7 +109,7 @@ bool are_networks_similar(const knp::framework::Network &current, const knp::fra
 }
 
 
-TEST_F(SaveLoadNetworkSuit, SaveLoadTest)
+TEST_F(SaveLoadNetworkSuite, SaveLoadTest)
 {
     path_to_network_ = ".";
     auto network = make_simple_network();

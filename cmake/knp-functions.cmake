@@ -7,6 +7,19 @@ include_guard(GLOBAL)
 include(CheckIPOSupported)
 
 
+function(knp_get_hdf5_target target_name)
+    if (TARGET hdf5-static)
+        message(STATUS "Using static HDF5 library")
+        set(${target_name} hdf5-static PARENT_SCOPE)
+    elseif (TARGET HDF5::HDF5)
+        message(STATUS "Using dynamic HDF5 library")
+        set(${target_name} HDF5::HDF5 PARENT_SCOPE)
+    else()
+        message(FATAL_ERROR "HDF5 library was not found")
+    endif()
+endfunction()
+
+
 function(knp_set_target_parameters target visibility)
     if (${visibility} STREQUAL "INTERFACE")
         set(pub_visibility "INTERFACE")
@@ -22,19 +35,26 @@ function(knp_set_target_parameters target visibility)
         endif()
     endif()
 
+    if(MSVC)  # AND ($<COMPILE_LANGUAGE> STREQUAL CXX OR $<COMPILE_LANGUAGE> STREQUAL C))
+        set_property(TARGET "${target}" PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    endif()
+
     target_compile_options("${target}" ${visibility} $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wdocumentation>)
     target_compile_options("${target}" ${visibility} $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-Wdocumentation>)
+
     # SDL requirements.
     target_compile_options("${target}" ${visibility} $<$<COMPILE_LANG_AND_ID:C,GNU,Clang>:-Wall -fstack-protector-all -Wformat -Wformat-security>)
     target_compile_options("${target}" ${visibility} $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang>:-Wall -fstack-protector-all -Wformat -Wformat-security>)
 
-    target_compile_definitions("${target}" ${visibility}
-                               "KNP_LIBRARY_NAME=${target}")
     target_compile_features("${target}" ${pub_visibility} cxx_std_17)
 
     target_compile_definitions("${target}" ${visibility}
-#                                $<$<CONFIG:Debug>:_FORTIFY_SOURCE=2>
-                                $<$<CONFIG:Release>:_FORTIFY_SOURCE=1>)
+            #                                $<$<CONFIG:Debug>:_FORTIFY_SOURCE=2>
+            $<$<CONFIG:Release>:_FORTIFY_SOURCE=1>)
+
+    target_compile_definitions("${target}" ${visibility} $<$<COMPILE_LANG_AND_ID:C,MSVC>:NOMINMAX>)
+    target_compile_definitions("${target}" ${visibility} $<$<COMPILE_LANG_AND_ID:CXX,MSVC>:NOMINMAX>)
+
     # Sanitizer (dynamic analysis).
     # Sanitizers don't work under TFS. Temporarily disabled.
 
@@ -70,7 +90,20 @@ function (_knp_add_library lib_name lib_type)
     endif()
 
     if(PARSED_ARGS_PRECOMP)
-        target_precompile_headers("${lib_name}" PRIVATE "${PARSED_ARGS_PRECOMP}")
+        string(REGEX REPLACE "[:-]" "_" _PRECOMP_NAME ${PARSED_ARGS_PRECOMP})
+        if (_KNP_PRECOMP_${_PRECOMP_NAME}_)
+            # Precomp already exists.
+            target_precompile_headers("${lib_name}" REUSE_FROM "${_KNP_PRECOMP_${_PRECOMP_NAME}_}")
+        else()
+            # New precomp.
+            # PARSED_ARGS_PRECOMP may be a path: must not be changed.
+            target_precompile_headers("${lib_name}" PRIVATE "${PARSED_ARGS_PRECOMP}")
+            set(_KNP_PRECOMP_${_PRECOMP_NAME}_ "${lib_name}" CACHE STRING "Precomp for ${lib_name}")
+            if(PARSED_ARGS_ALIAS)
+                string(REGEX REPLACE "[:-]" "_" _PRECOMP_NAME ${PARSED_ARGS_ALIAS})
+                set(_KNP_PRECOMP_${_PRECOMP_NAME}_ "${lib_name}" CACHE STRING "Precomp for ${lib_name} alias ${PARSED_ARGS_ALIAS}")
+            endif()
+        endif()
     endif()
 
     if(PARSED_ARGS_LINK_PRIVATE)
@@ -87,15 +120,17 @@ function (_knp_add_library lib_name lib_type)
     else()
         knp_set_target_parameters("${lib_name}" PRIVATE)
         set(_visibility "PRIVATE")
-    endif()
 
-    if (PARSED_ARGS_LIB_PREFIX)
-        target_compile_definitions("${lib_name}" ${_visibility} "KNP_LIBRARY_NAME_PREFIX=${PARSED_ARGS_LIB_PREFIX}")
-        target_compile_definitions("${lib_name}" ${_visibility} "KNP_FULL_LIBRARY_NAME=${PARSED_ARGS_LIB_PREFIX}${lib_name}")
-        set_target_properties("${lib_name}" PROPERTIES PREFIX "${PARSED_ARGS_LIB_PREFIX}")
-    elseif(NOT PARSED_ARGS_NO_PREFIX)
-        target_compile_definitions("${lib_name}" ${_visibility} "KNP_LIBRARY_NAME_PREFIX=${CMAKE_STATIC_LIBRARY_PREFIX}")
-        target_compile_definitions("${lib_name}" ${_visibility} "KNP_FULL_LIBRARY_NAME=${CMAKE_STATIC_LIBRARY_PREFIX}${lib_name}")
+        target_compile_definitions("${lib_name}" ${_visibility} "KNP_LIBRARY_NAME=${lib_name}")
+
+        if (PARSED_ARGS_LIB_PREFIX)
+            target_compile_definitions("${lib_name}" ${_visibility} "KNP_LIBRARY_NAME_PREFIX=${PARSED_ARGS_LIB_PREFIX}")
+            target_compile_definitions("${lib_name}" ${_visibility} "KNP_FULL_LIBRARY_NAME=${PARSED_ARGS_LIB_PREFIX}${lib_name}")
+            set_target_properties("${lib_name}" PROPERTIES PREFIX "${PARSED_ARGS_LIB_PREFIX}")
+        elseif(NOT PARSED_ARGS_NO_PREFIX)
+            target_compile_definitions("${lib_name}" ${_visibility} "KNP_LIBRARY_NAME_PREFIX=${CMAKE_STATIC_LIBRARY_PREFIX}")
+            target_compile_definitions("${lib_name}" ${_visibility} "KNP_FULL_LIBRARY_NAME=${CMAKE_STATIC_LIBRARY_PREFIX}${lib_name}")
+        endif()
     endif()
 endfunction()
 
@@ -117,18 +152,20 @@ function (knp_add_library lib_name lib_type)
         endif()
 
         _knp_add_library("${lib_name}_static" STATIC ${ARGN})
-
-        target_compile_definitions("${lib_name}" PRIVATE BUILD_SHARED_LIBS)
+        target_compile_definitions("${lib_name}" PRIVATE _KNP_BUILD_SHARED_LIBS)
+        target_compile_definitions("${lib_name}_static" PRIVATE _KNP_INTERNAL)
         set_target_properties("${lib_name}_static" PROPERTIES OUTPUT_NAME "${lib_name}")
     elseif(lib_type STREQUAL SHARED OR lib_type STREQUAL MODULE OR lib_type STREQUAL PY_MODULE)
         _knp_add_library("${lib_name}" ${lib_type} ${ARGN})
-
-        target_compile_definitions("${lib_name}" PRIVATE BUILD_SHARED_LIBS)
-    elseif(lib_type STREQUAL STATIC)
-        _knp_add_library("${lib_name}" STATIC ${ARGN})
+        target_compile_definitions("${lib_name}" PRIVATE _KNP_BUILD_SHARED_LIBS)
+    elseif(lib_type STREQUAL STATIC OR lib_type STREQUAL INTERFACE)
+        _knp_add_library("${lib_name}" ${lib_type} ${ARGN})
+        # Doesn't need to set export definitions.
+        return()
     else()
         message(FATAL_ERROR "Incorrect library build type: \"${lib_type}\". Use SHARED/MODULE, STATIC or BOTH.")
     endif()
+    target_compile_definitions("${lib_name}" PRIVATE _KNP_INTERNAL)
 endfunction()
 
 
@@ -143,7 +180,7 @@ function(knp_add_python_module name)
     cmake_parse_arguments(
             "PARSED_ARGS"
             ""
-            ""
+            "PY_VER"
             "LINK_LIBRARIES;CPP_SOURCE_DIRECTORY;OUTPUT_DIRECTORY"
             ${ARGN}
     )
@@ -170,7 +207,7 @@ function(knp_add_python_module name)
     endif()
 
     target_include_directories("${LIB_NAME}" PRIVATE ${Python3_INCLUDE_DIRS})
-    target_link_libraries("${LIB_NAME}" PRIVATE Boost::headers Boost::python ${PARSED_ARGS_LINK_LIBRARIES})
+    target_link_libraries("${LIB_NAME}" PRIVATE Boost::headers Boost::python${PARSED_ARGS_PY_VER} ${PARSED_ARGS_LINK_LIBRARIES})
 
 #    set_target_properties(${LIB_NAME} PROPERTIES PREFIX "${PYTHON_MODULE_PREFIX}")
 #    set_target_properties(${LIB_NAME} PROPERTIES SUFFIX "${PYTHON_MODULE_EXTENSION}")

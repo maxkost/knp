@@ -48,13 +48,21 @@ size_t MessageBusZMQImpl::step()
 {
     zmq::message_t message;
     zmq::recv_result_t recv_result;
+#if defined(_MSC_VER)
+#    pragma warning(push)
+#    pragma warning(disable : 4455)
+#endif
     using std::chrono_literals::operator""ms;
+#if defined(_MSC_VER)
+#    pragma warning(pop)
+#endif
 
     try
     {
         // recv_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
-        std::vector<zmq_pollitem_t> items = {zmq_pollitem_t{.socket = router_socket_.handle(), .events = ZMQ_POLLIN}};
-
+        std::vector<zmq_pollitem_t> items = {
+            zmq_pollitem_t{router_socket_.handle(), 0, ZMQ_POLLIN, 0},
+        };
         SPDLOG_DEBUG("Running poll()");
 
         if (zmq::poll(items, 0ms) > 0)
@@ -113,14 +121,18 @@ MessageEndpoint MessageBusZMQImpl::create_endpoint()
 //         sub_socket_.set(zmq::sockopt::subscribe, "");
 // #else
 //  Strange version inconsistence: set() exists on Manjaro, but doesn't exist on Debian in the same library versions.
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#if defined(__GNUC__)
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     // pub_socket_.setsockopt(ZMQ_PROBE_ROUTER, 0);
     //    std::string id{UID()};
     //    pub_socket.setsockopt(ZMQ_IDENTITY, id.c_str(), 4);
 
     sub_socket.setsockopt(ZMQ_SUBSCRIBE, nullptr, 0);
-#pragma GCC diagnostic pop
+#    pragma GCC diagnostic pop
+#else
+    sub_socket.setsockopt(ZMQ_SUBSCRIBE, nullptr, 0);
+#endif
     // #endif
     SPDLOG_DEBUG("Pub socket connecting to {}", router_sock_address_);
     pub_socket.connect(router_sock_address_);

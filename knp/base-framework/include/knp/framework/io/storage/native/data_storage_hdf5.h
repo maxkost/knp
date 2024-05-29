@@ -17,13 +17,16 @@
  */
 namespace knp::framework::storage::native
 {
+
+// TODO: return and get iterators.
+
 /**
  * @brief Read spike messages from an HDF5 file.
- * @details For example, if `time_per_step` is set to `1`, then spike messages with timestamps 
+ * @details For example, if `time_per_step` is set to `1`, then spike messages with timestamps
  * `0` and `0.5` will be a part of the same message.
  * @param path_to_h5 path to HDF5 data file.
  * @param uid sender UID.
- * @param time_per_step time per step. 
+ * @param time_per_step time per step.
  * @param strict_format if `true`, method throws exception on wrong format.
  * @return vector of messages sorted by timestamps.
  */

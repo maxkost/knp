@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <knp/core/impexp.h>
 #include <knp/framework/backend_loader.h>
 #include <knp/framework/model.h>
 #include <knp/framework/monitoring/observer.h>

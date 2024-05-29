@@ -18,6 +18,8 @@
 namespace knp::framework::storage::native
 {
 
+// TODO: return and get iterators.
+
 /**
  * @brief Read spike messages from a JSON file.
  * @param path_to_json path to JSON data file.

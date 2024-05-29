@@ -35,7 +35,7 @@ std::vector<knp::core::messaging::SpikeMessage> generate_random_messages(
 
     for (size_t i = 0; i < steps; ++i)
     {
-        knp::core::messaging::SpikeMessage msg_buf{.header_{uid_from, i}, .neuron_indexes_{}};
+        knp::core::messaging::SpikeMessage msg_buf{{uid_from, i}, {}};
         for (size_t j = 0; j < neurons; ++j)
         {
             if (distribution(engine) <= probability) msg_buf.neuron_indexes_.push_back(j);
@@ -124,9 +124,10 @@ protected:
         path_to_h5_ = "data.h5";
         messages_ = generate_random_messages(uid_, 200, 20, 0.2);
         knp::framework::storage::native::save_messages_to_h5(messages_, path_to_h5_);
-        HighFive::File h5_file(path_to_h5_, HighFive::File::ReadWrite);
+        HighFive::File h5_file(path_to_h5_.string(), HighFive::File::ReadWrite);
         h5_file.deleteAttribute("magic");
         h5_file.createAttribute("magic", 1234);
+        h5_file.flush();
     }
 
     void TearDown() override { std::filesystem::remove(path_to_h5_); }

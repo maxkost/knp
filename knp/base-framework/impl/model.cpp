@@ -9,7 +9,7 @@
 
 #include <spdlog/spdlog.h>
 
-#define _KNP_INTERNAL
+// #define _KNP_INTERNAL
 
 namespace knp::framework
 {

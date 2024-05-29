@@ -24,34 +24,27 @@ namespace knp::framework::sonata
 namespace fs = std::filesystem;
 
 template <class Neuron>
-core::Population<Neuron> load_population(const HighFive::Group &nodes_group, const std::string &population_name)
-{
-    throw std::logic_error("Trying to load an unimplemented population type");
-}
-
+core::Population<Neuron> load_population(const HighFive::Group &nodes_group, const std::string &population_name);
 
 template <class Synapse>
-core::Projection<Synapse> load_projection(const HighFive::Group &edges_group, const std::string &projection_name)
-{
-    throw std::logic_error("Trying to load an unimplemented projection type");
-}
+core::Projection<Synapse> load_projection(const HighFive::Group &edges_group, const std::string &projection_name);
 
 }  // namespace knp::framework::sonata
 
 
 #define LOAD_NEURONS_PARAMETER(target, neuron_type, parameter, h5_group, pop_size)                                 \
+    do                                                                                                             \
     {                                                                                                              \
         const auto values =                                                                                        \
             read_parameter(h5_group, #parameter, pop_size, neuron_traits::default_values<neuron_type>::parameter); \
         for (size_t i = 0; i < target.size(); ++i) target[i].parameter = values[i];                                \
-    }                                                                                                              \
-    static_assert(true, "")
+    } while (false)
 
 
 #define LOAD_SYNAPSE_PARAMETER(target, synapse_type, parameter, h5_group, proj_size)                                  \
+    do                                                                                                                \
     {                                                                                                                 \
         const auto values =                                                                                           \
             read_parameter(h5_group, #parameter, proj_size, synapse_traits::default_values<synapse_type>::parameter); \
         for (size_t i = 0; i < target.size(); ++i) target[i].parameter = values[i];                                   \
-    }                                                                                                                 \
-    static_assert(true, "")
+    } while (false)

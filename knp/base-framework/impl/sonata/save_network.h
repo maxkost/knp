@@ -24,17 +24,11 @@ namespace knp::framework::sonata
 namespace fs = std::filesystem;
 
 template <class Projection>
-void add_projection_to_h5(HighFive::File &, const Projection &)
-{
-    throw std::runtime_error("Couldn't save projection of unknown class");
-}
+void add_projection_to_h5(HighFive::File &, const Projection &);
 
 
 template <class Population>
-void add_population_to_h5(HighFive::File &, const Population &)
-{
-    throw std::runtime_error("Saving model: unknown population type");
-}
+void add_population_to_h5(HighFive::File &, const Population &);
 
 
 // Read parameter values for both projections and populations
@@ -59,11 +53,11 @@ std::vector<Attr> read_parameter(
 
 
 #define PUT_NEURON_TO_DATASET(pop, param, group)                                                                \
+    do                                                                                                          \
     {                                                                                                           \
         std::vector<decltype(pop.begin()->param)> data;                                                         \
         data.reserve(pop.size());                                                                               \
         std::transform(                                                                                         \
             pop.begin(), pop.end(), std::back_inserter(data), [](const auto &neuron) { return neuron.param; }); \
         group.createDataSet(#param, data);                                                                      \
-    }                                                                                                           \
-    static_assert(true, "")
+    } while (false)

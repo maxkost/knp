@@ -9,7 +9,7 @@
 
 #include <boost/preprocessor.hpp>
 
-#define _KNP_INTERNAL
+// #define _KNP_INTERNAL
 
 namespace knp::framework::monitoring
 {

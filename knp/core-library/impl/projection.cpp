@@ -178,26 +178,6 @@ size_t knp::core::Projection<SynapseType>::add_synapses(SynapseGenerator generat
 
 
 template <typename SynapseType>
-size_t knp::core::Projection<SynapseType>::add_synapses(const std::vector<Synapse> &synapses)
-{
-    const size_t starting_size = parameters_.size();
-    bool was_index_updated_ = is_index_updated_;
-    // Ensure that index is recalculated on exception.
-    is_index_updated_ = false;
-    for (const auto &synapse : synapses)
-    {
-        if (was_index_updated_)
-            index_.insert(
-                {std::get<knp::core::source_neuron_id>(synapse), std::get<knp::core::target_neuron_id>(synapse),
-                 parameters_.size()});
-        parameters_.push_back(synapse);
-    }
-    is_index_updated_ = was_index_updated_;
-    return parameters_.size() - starting_size;
-}
-
-
-template <typename SynapseType>
 void Projection<SynapseType>::clear()
 {
     parameters_.clear();
@@ -214,14 +194,7 @@ void knp::core::Projection<SynapseType>::remove_synapse(size_t index)
 
 
 template <typename SynapseType>
-void knp::core::Projection<SynapseType>::remove_synapses(const std::vector<size_t> &)
-{
-    throw std::runtime_error("Not implemented");
-}
-
-
-template <typename SynapseType>
-size_t knp::core::Projection<SynapseType>::disconnect_if(std::function<bool(const Synapse &)> predicate)
+size_t knp::core::Projection<SynapseType>::remove_synapse_if(std::function<bool(const Synapse &)> predicate)
 {
     const size_t starting_size = parameters_.size();
     is_index_updated_ = false;
@@ -231,7 +204,7 @@ size_t knp::core::Projection<SynapseType>::disconnect_if(std::function<bool(cons
 
 
 template <typename SynapseType>
-size_t knp::core::Projection<SynapseType>::disconnect_postsynaptic_neuron(size_t neuron_index)
+size_t knp::core::Projection<SynapseType>::remove_postsynaptic_neuron_synapses(size_t neuron_index)
 {
     const size_t starting_size = parameters_.size();
     bool was_index_updated = is_index_updated_;
@@ -249,23 +222,11 @@ size_t knp::core::Projection<SynapseType>::disconnect_postsynaptic_neuron(size_t
 
 
 template <typename SynapseType>
-size_t knp::core::Projection<SynapseType>::disconnect_presynaptic_neuron(size_t neuron_index)
+size_t knp::core::Projection<SynapseType>::remove_presynaptic_neuron_synapses(size_t neuron_index)
 {
     // TODO: We now have a way to find them quickly, make use of it instead of disconnect_if.
-    return disconnect_if([neuron_index](const Synapse &synapse)
-                         { return std::get<knp::core::source_neuron_id>(synapse) == neuron_index; });
-}
-
-
-template <typename SynapseType>
-size_t knp::core::Projection<SynapseType>::disconnect_neurons(size_t neuron_from, size_t neuron_to)
-{
-    return disconnect_if(
-        [neuron_from, neuron_to](const Synapse &synapse)
-        {
-            return (std::get<knp::core::source_neuron_id>(synapse) == neuron_from) &&
-                   (std::get<knp::core::target_neuron_id>(synapse) == neuron_to);
-        });
+    return remove_synapse_if([neuron_index](const Synapse &synapse)
+                             { return std::get<knp::core::source_neuron_id>(synapse) == neuron_index; });
 }
 
 

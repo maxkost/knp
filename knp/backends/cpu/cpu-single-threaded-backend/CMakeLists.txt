@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -16,7 +17,7 @@ include(GNUInstallDirs)
 include(clang-tidy)
 include(knp-functions)
 
-find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS system filesystem REQUIRED)
 
 file(GLOB_RECURSE ${PROJECT_NAME}_headers include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/*.h)
 source_group(source REGULAR_EXPRESSION "impl/.*")
@@ -29,8 +30,9 @@ knp_add_library("${PROJECT_NAME}"
         ${${PROJECT_NAME}_headers}
     ALIAS KNP::Backends::CPUSingleThreaded
     LINK_PRIVATE
-        Boost::headers spdlog::spdlog_header_only KNP::Backends::CPU::Library
-    LINK_PUBLIC KNP::Core KNP::Devices::CPUStatic
+        Boost::headers ${Boost_LIBRARIES} spdlog::spdlog KNP::Backends::CPU::Library
+    LINK_PUBLIC
+        KNP::Core KNP::Devices::CPUStatic
 )
 
 set_target_properties(

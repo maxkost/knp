@@ -92,17 +92,13 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
     using STDPDeltaProjection = knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse>;
 
     // Create an STDP input projection
-    auto stdp_input_projection_gen = [](size_t /*index*/) -> std::optional<STDPDeltaProjection::Synapse>
-    {
-        return STDPDeltaProjection::Synapse{
-            {{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, {.tau_plus_ = 2, .tau_minus_ = 2}}, 0, 0};
+    auto stdp_input_projection_gen = [](size_t /*index*/) -> std::optional<STDPDeltaProjection::Synapse> {
+        return STDPDeltaProjection::Synapse{{{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, {2, 2}}, 0, 0};
     };
 
     // Create an STDP loop projection
-    auto stdp_synapse_generator = [](size_t /*index*/) -> std::optional<STDPDeltaProjection::Synapse>
-    {
-        return STDPDeltaProjection::Synapse{
-            {{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, {.tau_plus_ = 1, .tau_minus_ = 1}}, 0, 0};
+    auto stdp_synapse_generator = [](size_t /*index*/) -> std::optional<STDPDeltaProjection::Synapse> {
+        return STDPDeltaProjection::Synapse{{{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, {1, 1}}, 0, 0};
     };
 
     auto stdp_neurons_generator = [](size_t /*index*/)  // NOLINT
@@ -193,14 +189,12 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
     auto stdp_input_projection_gen = [](size_t /*index*/) -> std::optional<STDPDeltaProjection::Synapse>
     {
         return STDPDeltaProjection::Synapse{
-            {{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, {.w_min_ = 1, .w_max_ = 2, .d_u_ = 0.1F}}, 0, 0};
+            {{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, {0, 1, 2, 0.1F}}, 0, 0};
     };
 
     // Create an STDP loop projection
-    auto stdp_synapse_generator = [](size_t /*index*/) -> std::optional<STDPDeltaProjection::Synapse>
-    {
-        return STDPDeltaProjection::Synapse{
-            {{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, {.w_min_ = 1, .w_max_ = 2}}, 0, 0};
+    auto stdp_synapse_generator = [](size_t /*index*/) -> std::optional<STDPDeltaProjection::Synapse> {
+        return STDPDeltaProjection::Synapse{{{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, {0, 1, 2}}, 0, 0};
     };
 
     // Create a single neuron network: input -> input_projection -> population <=> loop_projection

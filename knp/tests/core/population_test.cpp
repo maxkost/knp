@@ -1,7 +1,9 @@
 /**
- * Test file template
+ * @file population_test.cpp
+ * @brief Tests for population entity.
+ * @author Artiom N.
+ * @date 13.02.2023
  */
-
 
 #include <knp/core/population.h>
 #include <knp/neuron-traits/blifat.h>
@@ -13,7 +15,8 @@ using BLIFATParams = knp::neuron_traits::neuron_parameters<knp::neuron_traits::B
 
 BLIFATParams neuron_generator(size_t index)
 {
-    BLIFATParams params{.potential_ = static_cast<double>(index)};
+    BLIFATParams params;
+    params.potential_ = static_cast<double>(index);
     return params;
 }
 

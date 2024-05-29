@@ -26,7 +26,7 @@ using knp::core::UID;
 using knp::core::messaging::SpikeMessage;
 
 
-const knp::synapse_traits::synapse_parameters<knp::synapse_traits::DeltaSynapse> &get_delta_synapse_params(
+inline const knp::synapse_traits::synapse_parameters<knp::synapse_traits::DeltaSynapse> &get_delta_synapse_params(
     const knp::synapse_traits::synapse_parameters<
         knp::synapse_traits::STDP<knp::synapse_traits::STDPAdditiveRule, knp::synapse_traits::DeltaSynapse>>
         &synapse_params)
@@ -85,7 +85,7 @@ private:
 
 
 template <class DeltaLikeSynapse>
-void append_spike_times(
+inline void append_spike_times(
     knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> &projection, const SpikeMessage &message,
     const std::function<std::vector<size_t>(uint32_t)> &synapse_index_getter,
     std::vector<uint32_t> knp::synapse_traits::STDPAdditiveRule<DeltaLikeSynapse>::*spike_queue)
@@ -108,7 +108,7 @@ void append_spike_times(
 }
 
 
-void append_spike_times(
+inline void append_spike_times(
     knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> &projection,
     const std::vector<SpikeMessage> &spikes, const std::function<std::vector<size_t>(uint32_t)> &syn_index_getter,
     std::vector<uint32_t> knp::synapse_traits::STDPAdditiveRule<knp::synapse_traits::DeltaSynapse>::*spike_queue)

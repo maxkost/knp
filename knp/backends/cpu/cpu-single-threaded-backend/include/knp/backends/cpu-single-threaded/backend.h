@@ -8,6 +8,7 @@
 #pragma once
 
 #include <knp/core/backend.h>
+#include <knp/core/impexp.h>
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 #include <knp/devices/cpu.h>
@@ -34,7 +35,7 @@ namespace knp::backends::single_threaded_cpu
 /**
  * @brief The SingleThreadedCPUBackend class is a definition of an interface to the single-threaded CPU backend.
  */
-class SingleThreadedCPUBackend : public knp::core::Backend
+class KNP_DECLSPEC SingleThreadedCPUBackend : public knp::core::Backend
 {
 public:
     /**
@@ -85,6 +86,7 @@ private:
     struct ProjectionWrapper
     {
         ProjectionVariants arg_;
+        // cppcheck-suppress unusedStructMember
         std::unordered_map<uint64_t, knp::core::messaging::SynapticImpactMessage> messages_;
     };
 
@@ -346,6 +348,7 @@ protected:
         SynapticMessageQueue &message_queue);
 
 private:
+    // cppcheck-suppress unusedStructMember
     PopulationContainer populations_;
     ProjectionContainer projections_;
 };

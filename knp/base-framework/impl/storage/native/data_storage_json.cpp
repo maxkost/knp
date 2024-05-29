@@ -113,7 +113,7 @@ constexpr char whole_file_string[] =
 
 
 // clang-format off // No const operator[] for simdjson document, so no const parameter.
-bool is_json_has_magic(simdjson::ondemand::document &doc)  // cppcheck-suppress constParameter
+bool is_json_has_magic(simdjson::ondemand::document &doc)  // cppcheck-suppress constParameterReference
 // clang-format on
 {
     auto attributes = doc["attributes"];
@@ -133,7 +133,7 @@ bool is_json_has_magic(simdjson::ondemand::document &doc)  // cppcheck-suppress 
 
 
 // clang-format off // No const operator[] for simdjson document, so no const parameter.
-bool is_correct_version(simdjson::ondemand::document &doc)  // cppcheck-suppress constParameter
+bool is_correct_version(simdjson::ondemand::document &doc)  // cppcheck-suppress constParameterReference
 // clang-format on
 {
     auto attributes = doc["attributes"];
@@ -144,10 +144,17 @@ bool is_correct_version(simdjson::ondemand::document &doc)  // cppcheck-suppress
         {
             auto value_group = group["value"];
             if (value_group.error()) return false;
-            auto array = value_group.get_array();
-            if (array.error() || VERSION.size() != array.count_elements().value()) return false;
-            std::vector<int64_t> version(VERSION.size());
-            std::transform(array.begin(), array.end(), version.begin(), [](auto val) { return val.get_int64(); });
+            auto arr = value_group.get_array();
+            if (arr.error() || VERSION.size() != arr.count_elements().value()) return false;
+            std::vector<int64_t> version;
+            version.reserve(VERSION.size());
+
+            for (auto val : arr)
+            {
+                // std::transform doesn't get compiled by MSVC.
+                version.push_back(val.get_int64());  // cppcheck-suppress useStlAlgorithm
+            }
+
             return std::equal(version.begin(), version.end(), VERSION.begin());
         }
     }
@@ -185,9 +192,13 @@ std::vector<core::messaging::SpikeMessage> load_messages_from_json(
     if (pre_array_nodes.error()) throw std::runtime_error("Missing node data in json data file");
     std::vector<int64_t> nodes;
     nodes.reserve(pre_array_nodes.count_elements());
-    std::transform(
-        pre_array_nodes.begin(), pre_array_nodes.end(), std::back_inserter(nodes),
-        [](auto val) { return val.get_int64(); });  // no const reference val possible.
+
+    // No const reference val possible.
+    for (auto val : pre_array_nodes)
+    {
+        // std::transform doesn't compiled by MSVC.
+        nodes.push_back(val.get_int64());  // cppcheck-suppress useStlAlgorithm
+    }
 
     // Reading timestamps.
     auto timestamps_array = spikes_group["timestamps"];
@@ -198,10 +209,12 @@ std::vector<core::messaging::SpikeMessage> load_messages_from_json(
     if (pre_array_times.error()) throw std::runtime_error("Missing timestamp data in json data file");
     std::vector<float> timestamps;
     timestamps.reserve(pre_array_times.count_elements());
-    std::transform(
-        pre_array_times.begin(), pre_array_times.end(), std::back_inserter(timestamps),
-        [](auto val) { return static_cast<float>(val.get_double()); });  // no const reference val possible.
-
+    // No const reference val possible.
+    for (auto val : pre_array_times)
+    {
+        // std::transform doesn't compiled by MSVC.
+        timestamps.push_back(static_cast<float>(val.get_double()));  // cppcheck-suppress useStlAlgorithm
+    }
 
     return convert_node_time_arrays_to_messages(nodes, timestamps, uid, 1);
 }

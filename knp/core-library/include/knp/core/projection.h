@@ -8,7 +8,6 @@
 #pragma once
 
 #include <knp/core/core.h>
-#include <knp/core/synaptic_index.h>
 #include <knp/core/uid.h>
 #include <knp/synapse-traits/all_traits.h>
 
@@ -19,6 +18,10 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
+
+#include <boost/multi_index/hashed_index.hpp>
+#include <boost/multi_index/member.hpp>
+#include <boost/multi_index_container.hpp>
 
 
 /**
@@ -33,11 +36,11 @@ enum SynapseElementAccess
 {
     /**
      * @brief Getting synapse parameters.
-     */ 
+     */
     synapse_data = 0,
     /**
      * @brief Getting source neuron index.
-     */ 
+     */
     source_neuron_id = 1,
     /**
      * @brief Getting target neuron index.
@@ -53,7 +56,7 @@ enum SynapseElementAccess
  * @see ALL_SYNAPSES.
  */
 template <class SynapseType>
-class Projection
+class Projection final
 {
 public:
     /**
@@ -250,11 +253,11 @@ public:
     {
         /**
          * @brief Search by presynaptic neuron index.
-         */ 
+         */
         by_presynaptic,
         /**
          * @brief Search by postsynaptic neuron index.
-         */ 
+         */
         by_postsynaptic
     };
 
@@ -266,7 +269,6 @@ public:
      */
     [[nodiscard]] std::vector<size_t> find_synapses(size_t neuron_index, Search search_method) const;
 
-
     /**
      * @brief Append connections to the existing projection.
      * @param generator synapse generation function.
@@ -274,15 +276,6 @@ public:
      * @return number of synapses added to the projection, which can be less or equal to the `num_iterations` value.
      */
     size_t add_synapses(SynapseGenerator generator, size_t num_iterations);
-
-    /**
-     * @brief Add a set of user-defined synapses to the projection.
-     * @param synapses vector of synapses to add to the projection.
-     * @note The method might create duplicate synapses.
-     * @todo Move from Projection to framework.
-     * @return number of synapses added to the projection.
-     */
-    size_t add_synapses(const std::vector<Synapse> &synapses);
 
     /**
      * @brief Remove all synapses from the projection.
@@ -296,40 +289,25 @@ public:
     void remove_synapse(size_t index);
 
     /**
-     * @brief Remove synapses with the given indexes from the projection.
-     * @param indexes indexes of synapses to remove.
-     * @todo Implement this.
-     */
-    void remove_synapses(const std::vector<size_t> &indexes);
-
-    /**
      * @brief Remove synapses according to a given criterion.
      * @param predicate functor that receives a synapse and returns `true` if the synapse must be deleted.
      * @return number of deleted synapses.
      */
-    size_t disconnect_if(std::function<bool(const Synapse &)> predicate);
+    size_t remove_synapse_if(std::function<bool(const Synapse &)> predicate);
 
     /**
      * @brief Remove all synapses that lead to a neuron with the given index.
      * @param neuron_index index of the postsynaptic neuron which related synapses must be deleted.
      * @return number of deleted synapses.
      */
-    size_t disconnect_postsynaptic_neuron(size_t neuron_index);
+    size_t remove_postsynaptic_neuron_synapses(size_t neuron_index);
 
     /**
      * @brief Remove all synapses that receive signals from a neuron with the given index.
      * @param neuron_index index of the presynaptic neuron which related synapses must be deleted.
      * @return number of deleted synapses.
      */
-    size_t disconnect_presynaptic_neuron(size_t neuron_index);
-
-    /**
-     * @brief Remove all synapses between two neurons with given indexes.
-     * @param neuron_from index of the presynaptic neuron.
-     * @param neuron_to index of the postsynaptic neuron.
-     * @return number of deleted synapses.
-     */
-    size_t disconnect_neurons(size_t neuron_from, size_t neuron_to);
+    size_t remove_presynaptic_neuron_synapses(size_t neuron_index);
 
 public:
     /**
@@ -347,7 +325,6 @@ public:
      * @return `true` if the synapse weight change is locked, `false` if the synapse weight change is not locked.
      */
     bool is_locked() const { return is_locked_; }
-
 
 public:
     /**

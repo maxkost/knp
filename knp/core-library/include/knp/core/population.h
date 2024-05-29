@@ -28,7 +28,7 @@ namespace knp::core
  * @see ALL_NEURONS.
  */
 template <typename NeuronType>
-class Population
+class Population final
 {
 public:
     /**
@@ -142,7 +142,11 @@ public:  // NOLINT
             auto neuron = generator(i);
             if (neuron.has_value())
             {
+#if defined(_MSC_VER)
+                neurons_.emplace_back(std::move(neuron.value()));
+#else
                 neurons_.template emplace_back(std::move(neuron.value()));
+#endif
             }
         }
     }
