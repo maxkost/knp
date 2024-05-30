@@ -67,6 +67,12 @@ set_target_properties(
         VERSION "${CMAKE_PROJECT_VERSION}"
         SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
 
+if(KNP_ENABLE_COVERAGE)
+    include(codecoverage)
+    append_coverage_compiler_flags()
+    link_target_with_gcov("${PROJECT_NAME}-core")
+endif()
+
 set(COMPONENT_NAME framework)
 
 configure_package_config_file(

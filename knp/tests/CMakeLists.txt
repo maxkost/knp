@@ -9,7 +9,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(knp-tester VERSION "${KNP_VERSION}" LANGUAGES CXX
         DESCRIPTION "Kaspersky Neuromorphic Platform tester and tests")
 
-if(NOT KNP_BUILD_TESTS)
+if (NOT KNP_BUILD_TESTS)
     message(STATUS "Tests building disabled...")
     return()
 endif()
@@ -41,13 +41,13 @@ target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::BaseFramework::Core KNP::Ba
         KNP::Devices::CPUStatic)
 target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Backends::CPU::ThreadPool)
 
-if(KNP_ENABLE_COVERAGE)
+if (KNP_ENABLE_COVERAGE)
     include(codecoverage)
     append_coverage_compiler_flags()
     link_target_with_gcov("${PROJECT_NAME}")
 endif()
 
-if(${BUILD_GMOCK})
+if (${BUILD_GMOCK})
     target_link_libraries("${PROJECT_NAME}" PRIVATE gmock gmock_main)
 endif()
 
@@ -57,7 +57,7 @@ gtest_discover_tests("${PROJECT_NAME}"
     PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
-if(KNP_ENABLE_COVERAGE)
+if (KNP_ENABLE_COVERAGE)
     message(STATUS "Coverage enabled")
 
     set(COV_EXECUTABLE "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
@@ -67,7 +67,7 @@ if(KNP_ENABLE_COVERAGE)
 
     set(CODE_COVERAGE_VERBOSE true)
 
-    if(GCOVR_PATH)
+    if (GCOVR_PATH)
         setup_target_for_coverage_gcovr_xml(
             NAME "${COV_NAME}"
             EXECUTABLE ${COV_EXECUTABLE}
@@ -75,7 +75,7 @@ if(KNP_ENABLE_COVERAGE)
             BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
         )
         message(VERBOSE "Gcovr selected")
-    elseif(LCOV_PATH)
+    elseif (LCOV_PATH)
         setup_target_for_coverage_lcov(
             NAME "${COV_NAME}"
             EXECUTABLE ${COV_EXECUTABLE}
@@ -83,7 +83,7 @@ if(KNP_ENABLE_COVERAGE)
             BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
         )
         message(VERBOSE "Lcov selected")
-    elseif(GCOV_PATH)
+    elseif (GCOV_PATH)
         setup_target_for_coverage_gcov_json(
             NAME "${COV_NAME}"
             EXECUTABLE ${COV_EXECUTABLE}

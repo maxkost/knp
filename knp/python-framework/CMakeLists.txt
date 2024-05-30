@@ -50,6 +50,12 @@ knp_add_python_module(base_framework
         LINK_LIBRARIES KNP::BaseFramework::Core
         PY_VER ${_KNP_PY_VER})
 
+if(KNP_ENABLE_COVERAGE)
+#    include(codecoverage)
+#    append_coverage_compiler_flags()
+#    link_target_with_gcov("${PROJECT_NAME}-core")
+endif()
+
 add_custom_target("${PROJECT_NAME}-copy-python-tests" ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/tests" "${KNP_PYTHON_OUTPUT_DIRECTORY}/tests")
 add_custom_target("${PROJECT_NAME}-copy-common-files" ALL
