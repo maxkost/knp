@@ -19,7 +19,7 @@
 #include <knp/core/subscription.h>
 #include <knp/core/uid.h>
 
-#if defined(__GNUC__) && !defined(__clang__)
+#if defined(__GNUC__) && (__GNUC_MINOR__ >= 14)
 #    pragma GCC diagnostic push
 #    pragma GCC diagnostic ignored "-Wdangling-reference"
 #    include <spdlog/spdlog.h>
