@@ -24,6 +24,10 @@ source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "includ
 
 knp_get_hdf5_target(HDF5_LIB)
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    set(ADD_LIBS "supc++")
+endif()
+
 knp_add_library("${PROJECT_NAME}-core"
     BOTH
     impl/backend_loader.cpp
@@ -50,6 +54,8 @@ knp_add_library("${PROJECT_NAME}-core"
     ALIAS KNP::BaseFramework::Core
     LINK_PRIVATE
         spdlog::spdlog Boost::headers Boost::filesystem HighFive ${HDF5_LIB} simdjson::simdjson_static
+        # Hack to build with CLang.
+        ${ADD_LIBS}
     LINK_PUBLIC
         KNP::Core KNP::Neuron::Traits KNP::Synapse::Traits
     #PRECOMP KNP::Core
@@ -60,6 +66,12 @@ set_target_properties(
         PROPERTIES
         VERSION "${CMAKE_PROJECT_VERSION}"
         SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
+
+if(KNP_ENABLE_COVERAGE)
+    include(codecoverage)
+    append_coverage_compiler_flags()
+    link_target_with_gcov("${PROJECT_NAME}-core")
+endif()
 
 set(COMPONENT_NAME framework)
 
