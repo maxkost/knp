@@ -42,7 +42,7 @@ class BOOST_SYMBOL_VISIBLE Backend
 public:
     /**
      * @brief Predicate type.
-     * @details If the predicate returns `true`, network execution continues. Otherwise network execution stops./n
+     * @details If the predicate returns `true`, network execution continues. Otherwise network execution stops.\n
      * The predicate gets a step number as a parameter.
      */
     using RunPredicate = std::function<bool(knp::core::Step)>;
