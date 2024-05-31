@@ -5,25 +5,26 @@
 
 Kaspersky Neuromorphic Platform (also referred to as "the platform") is a software platform designed to emulate spiking neural networks and support them on various computers.
 You can use Kaspersky Neuromorphic Platform to do the following:
-@li Create neural networks and train them on various types of input data, such as telemetry, events, images, 3D data, audio data and tactile data.
+@li Create spiking neural networks and train them on various types of input data, such as telemetry, events, images, 3D data, audio data and tactile data.
+@li Convert artificial neural networks (ANN) into spiking neural networks and train them.
 @li Optimize the structure of loaded neural networks.
 @li Conduct applied research in the field of input data classification and other application domains of neural networks.
 @li Develop new topologies of neural networks, such as spike analogs of convolutional neural networks that imply convolution in space and time.
 @li Develop new models of synaptic plasticity.
 @li Implement new neuron models.
-@li Implement application solutions based on neuromorphic spiking neural networks and artificial intelligence in the field of robotic manipulators, Internet of Things, unmanned systems, human-machine interaction, wearable devices, and optimization planning.
+@li Implement application solutions based on neuromorphic spiking neural networks in the field of robotic manipulators, Internet of Things, unmanned systems, human-machine interaction, wearable devices, and optimization planning.
 @li Implement application solutions on devices with low power consumption or using neuromorphic processors.
 You can use the C++ and Python languages to accomplish these tasks. The platform supports CPU and neuromorphic processor AltAI-2. 
 
 @section doxygen About API Reference
 
-The API reference for Kaspersky Neuromorphic Platform is intended for specialists engaged in the development of secure solutions based on the platform and in the development of the Kaspersky Neuromorphic Platform code base.
+The API reference for Kaspersky Neuromorphic Platform is intended for specialists engaged in the C++ development of secure solutions based on the platform and in the development of the Kaspersky Neuromorphic Platform code base.
 
 For information on the platform concepts and architecture, installation instructions and platform use cases, see <a href="../../../user_guide/index.htm">Kaspersky Neuromorphic Platform Help</a>.
 
 @section thirdparty Information about Third-Party Code
 
-Information about third-party code is contained in the file legal_notices.txt located in the application installation folder (in the 'legal' subfolder).
+Information about third-party code is contained in the `NOTICES.txt` file located in the platform repository.
 
 @section trademark Trademark Notices
 
