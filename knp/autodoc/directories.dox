@@ -149,6 +149,16 @@
  */
 
 /**
+ * @dir /knp/base-framework/include/knp/framework/io/storage
+ * @brief Directory for storage headers.
+ */
+
+ /**
+ * @dir /knp/base-framework/include/knp/framework/io/storage/native
+ * @brief Directory for data storage headers.
+ */
+
+/**
  * @dir /knp/base-framework/include/knp/framework/monitoring
  * @brief Directory for monitoring headers.
  */

@@ -1,6 +1,6 @@
 /**
  * @file synchronization.h
- * @brief Functions to read network back from .
+ * @brief Functions to read network back from.
  * @author Artiom N.
  * @date 22.03.2023
  */

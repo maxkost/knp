@@ -255,7 +255,7 @@ public:
 public:
     /**
      * @brief The BaseValueIterator class is a definition of an interface to the iterator used to access populations or projections by value.
-     * @tparam Type one of types sepcified for `AllProjectionsVariant` or `AllPopulationsVariant` depending on the goal.
+     * @tparam Type one of types specified for `AllProjectionsVariant` or `AllPopulationsVariant` depending on the goal.
      */
     template <class Type>
     class BaseValueIterator
