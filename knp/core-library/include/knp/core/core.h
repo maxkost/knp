@@ -51,6 +51,13 @@ public:
         return std::any_cast<std::decay_t<T> &>(tags_[name]);
     }
 
+    /**
+     * @brief Return tag value.
+     * @param name tag name.
+     * @return tag value.
+     */
+    auto operator[](const std::string &name) { return get_tag(name); }
+
 private:
     std::map<std::string, std::any> tags_;
 };

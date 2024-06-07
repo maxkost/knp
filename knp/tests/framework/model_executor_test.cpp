@@ -1,5 +1,8 @@
 /**
- * Model execution testing.
+ * @file model_executor_test.cpp
+ * @brief Model executor class testing.
+ * @author Artiom N.
+ * @date 13.07.2023
  */
 
 #include <knp/backends/cpu-single-threaded/backend.h>
@@ -10,6 +13,7 @@
 #include <knp/synapse-traits/delta.h>
 
 #include <generators.h>
+#include <spdlog/spdlog.h>
 #include <tests_common.h>
 
 #include <filesystem>
@@ -25,17 +29,20 @@ TEST(FrameworkSuite, ModelExecutorLoad)
     kt::DeltaProjection input_projection =
         kt::DeltaProjection{knp::core::UID{false}, population.get_uid(), kt::input_projection_gen, 1};
 
-    const knp::core::UID input_uid = input_projection.get_uid(), output_uid = population.get_uid();
+    const knp::core::UID input_uid = input_projection.get_uid();
+    const knp::core::UID output_uid = population.get_uid();
 
     knp::framework::Network network;
     network.add_population(std::move(population));
-    network.add_projection(std::move(input_projection));
-    network.add_projection(std::move(loop_projection));
+    network.add_projection<kt::DeltaProjection>(std::move(input_projection));
+    network.add_projection<kt::DeltaProjection>(std::move(loop_projection));
 
     const knp::core::UID i_channel_uid, o_channel_uid;
 
     knp::framework::Model model(std::move(network));
+    SPDLOG_DEBUG("Adding input channel {} to projection {}", std::string(i_channel_uid), std::string(input_uid));
     model.add_input_channel(i_channel_uid, input_uid);
+    SPDLOG_DEBUG("Adding output channel {} to population {}", std::string(o_channel_uid), std::string(output_uid));
     model.add_output_channel(o_channel_uid, output_uid);
 
     auto input_gen = [](knp::core::Step step) -> knp::core::messaging::SpikeData
