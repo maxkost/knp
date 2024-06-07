@@ -73,7 +73,7 @@ struct default_values<AltAILIF>
 
     /**
      * @brief The parameter defines the default value for `potential_` state of AltAILIF neuron.
-     * @details Additional packet is sent to AltAI-2 for each neuron with non-zero initial `potential_` value.
+     * @details Additional packet is sent to AltAI-1 for each neuron with non-zero initial `potential_` value.
      */
     constexpr static int16_t potential_ = 0;
 
