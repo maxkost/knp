@@ -87,7 +87,7 @@ void ModelExecutor::init()
 }
 
 
-const input::InputChannel &ModelExecutor::get_input_channel(const core::UID &channel_uid) const
+const io::input::InputChannel &ModelExecutor::get_input_channel(const core::UID &channel_uid) const
 {
     auto result = std::find_if(
         in_channels_.cbegin(), in_channels_.cend(),
@@ -97,7 +97,7 @@ const input::InputChannel &ModelExecutor::get_input_channel(const core::UID &cha
 }
 
 
-input::InputChannel &ModelExecutor::get_input_channel(const core::UID &channel_uid)
+io::input::InputChannel &ModelExecutor::get_input_channel(const core::UID &channel_uid)
 {
     auto result = std::find_if(
         in_channels_.begin(), in_channels_.end(),
@@ -107,7 +107,7 @@ input::InputChannel &ModelExecutor::get_input_channel(const core::UID &channel_u
 }
 
 
-output::OutputChannel &ModelExecutor::get_output_channel(const core::UID &channel_uid)
+io::output::OutputChannel &ModelExecutor::get_output_channel(const core::UID &channel_uid)
 {
     auto result = std::find_if(
         out_channels_.begin(), out_channels_.end(),
@@ -117,7 +117,7 @@ output::OutputChannel &ModelExecutor::get_output_channel(const core::UID &channe
 }
 
 
-const output::OutputChannel &ModelExecutor::get_output_channel(const core::UID &channel_uid) const
+const io::output::OutputChannel &ModelExecutor::get_output_channel(const core::UID &channel_uid) const
 {
     auto result = std::find_if(
         out_channels_.cbegin(), out_channels_.cend(),

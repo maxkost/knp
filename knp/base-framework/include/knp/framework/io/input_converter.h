@@ -21,11 +21,11 @@
 /**
  * @brief Input channel namespace.
  */
-namespace knp::framework::input
+namespace knp::framework::io::input
 {
 /**
  * @brief Functor used for generating input spike messages.
  */
 using DataGenerator = std::function<core::messaging::SpikeData(core::Step)>;
 
-}  // namespace knp::framework::input
+}  // namespace knp::framework::io::input

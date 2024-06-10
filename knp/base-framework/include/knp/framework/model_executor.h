@@ -9,6 +9,7 @@
 
 #include <knp/core/impexp.h>
 #include <knp/framework/backend_loader.h>
+#include <knp/framework/io/input_converter.h>
 #include <knp/framework/model.h>
 #include <knp/framework/monitoring/observer.h>
 
@@ -34,7 +35,7 @@ public:
     /**
      * @brief Type of the input channel map.
      */
-    using InputChannelMap = std::unordered_map<core::UID, input::DataGenerator, core::uid_hash>;
+    using InputChannelMap = std::unordered_map<core::UID, io::input::DataGenerator, core::uid_hash>;
 
 public:
     /**
@@ -74,7 +75,7 @@ public:
      * @return reference to output channel.
      * @throw std::runtime_error if there is no channel with a given UID.
      */
-    output::OutputChannel &get_output_channel(const core::UID &channel_uid);
+    io::output::OutputChannel &get_output_channel(const core::UID &channel_uid);
     /**
      * @brief Get reference to output channel.
      * @note Constant method.
@@ -82,7 +83,7 @@ public:
      * @return reference to output channel.
      * @throw std::runtime_error if there is no channel with a given UID.
      */
-    const output::OutputChannel &get_output_channel(const core::UID &channel_uid) const;
+    const io::output::OutputChannel &get_output_channel(const core::UID &channel_uid) const;
 
     /**
      * @brief Get reference to input channel by its UID.
@@ -90,7 +91,7 @@ public:
      * @return reference to input channel.
      * @throw std::runtime_error if no channel with the given UID exists.
      */
-    input::InputChannel &get_input_channel(const core::UID &channel_uid);
+    io::input::InputChannel &get_input_channel(const core::UID &channel_uid);
     /**
      * @brief Get reference to input channel by its UID.
      * @note Constant method.
@@ -98,7 +99,7 @@ public:
      * @return reference to input channel.
      * @throw std::runtime_error if no channel with the given UID exists.
      */
-    const input::InputChannel &get_input_channel(const core::UID &channel_uid) const;
+    const io::input::InputChannel &get_input_channel(const core::UID &channel_uid) const;
 
     /**
      * @brief Add observer to executor.
@@ -152,9 +153,9 @@ private:
     knp::framework::Model &model_;
     InputChannelMap i_map_;
     // cppcheck-suppress unusedStructMember
-    std::vector<knp::framework::input::InputChannel> in_channels_;
+    std::vector<knp::framework::io::input::InputChannel> in_channels_;
     // cppcheck-suppress unusedStructMember
-    std::vector<knp::framework::output::OutputChannel> out_channels_;
+    std::vector<knp::framework::io::output::OutputChannel> out_channels_;
     std::vector<monitoring::AnyObserverVariant> observers_;
 };
 }  // namespace knp::framework

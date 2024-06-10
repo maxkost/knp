@@ -24,7 +24,7 @@
 /**
  * @brief Input channel namespace.
  */
-namespace knp::framework::input
+namespace knp::framework::io::input
 {
 /**
  * @brief The IndexConverter class is a definition of a converter that converts lines of integers into spiked neuron
@@ -68,4 +68,4 @@ private:
     const char delim_ = ',';
 };
 
-}  // namespace knp::framework::input
+}  // namespace knp::framework::io::input

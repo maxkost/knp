@@ -14,7 +14,7 @@
 #include <vector>
 
 
-namespace knp::framework::storage::native
+namespace knp::framework::io::storage::native
 {
 std::vector<knp::core::messaging::SpikeMessage> convert_node_time_arrays_to_messages(
     const std::vector<int64_t> &nodes, const std::vector<float> &timestamps, const knp::core::UID &uid,
@@ -50,4 +50,4 @@ std::vector<knp::core::messaging::SpikeMessage> convert_node_time_arrays_to_mess
         [](const Message &msg1, const Message &msg2) { return msg1.header_.send_time_ < msg2.header_.send_time_; });
     return result;
 }
-}  // namespace knp::framework::storage::native
+}  // namespace knp::framework::io::storage::native

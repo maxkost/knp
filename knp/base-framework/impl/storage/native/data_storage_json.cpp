@@ -20,7 +20,7 @@
 #include "data_storage_common.h"
 
 
-namespace knp::framework::storage::native
+namespace knp::framework::io::storage::native
 {
 namespace fs = std::filesystem;
 
@@ -255,4 +255,4 @@ void save_messages_to_json(
     std::ofstream out_file(path_to_save, std::ofstream::out);
     out_file << file_string;
 }
-}  // namespace knp::framework::storage::native
+}  // namespace knp::framework::io::storage::native

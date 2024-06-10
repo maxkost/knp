@@ -16,7 +16,7 @@
 /**
  * @brief Output channel namespace.
  */
-namespace knp::framework::output
+namespace knp::framework::io::output
 {
 /**
  * @brief Function used to convert spike messages into output data.
@@ -25,4 +25,4 @@ namespace knp::framework::output
  */
 template <class ResultType>
 using OutputConverter = std::function<ResultType(const std::vector<core::messaging::SpikeMessage> &messages)>;
-}  // namespace knp::framework::output
+}  // namespace knp::framework::io::output

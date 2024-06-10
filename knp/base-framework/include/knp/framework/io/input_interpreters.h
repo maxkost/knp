@@ -10,7 +10,7 @@
 /**
  * @brief Input channel namespace.
  */
-namespace knp::framework::input
+namespace knp::framework::io::input
 {
 /**
  * @brief Determine if an input value is a spike and convert an input value to boolean.
@@ -38,4 +38,4 @@ auto interpret_with_threshold(ValueType threshold)
     return [threshold](ValueType val) -> bool { return !(val < threshold); };
 }
 
-}  // namespace knp::framework::input
+}  // namespace knp::framework::io::input

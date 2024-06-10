@@ -15,7 +15,7 @@
 /**
  * @brief Output channel namespace.
  */
-namespace knp::framework::output
+namespace knp::framework::io::output
 {
 /**
  * @brief Convert a set of spike messages to a vector where an element value is equal to the number of times that a
@@ -38,4 +38,4 @@ std::vector<size_t> converter_count(const std::vector<core::messaging::SpikeMess
     }
     return result;
 }
-}  // namespace knp::framework::output
+}  // namespace knp::framework::io::output
