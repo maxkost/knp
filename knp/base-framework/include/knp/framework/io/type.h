@@ -15,7 +15,8 @@ namespace knp::framework::io
 /**
  * @brief I/O type tag name.
  */
-constexpr char io_type[]{"io_type"};
+constexpr char io_type_tag[]{"io_type"};
+
 
 /**
  * @brief I/O type tag values.

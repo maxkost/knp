@@ -316,9 +316,7 @@ public:
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
 
 private:
-    template <typename T, typename VT>
-    typename std::vector<VT>::iterator find_elem(const knp::core::UID &uid, std::vector<VT> &container);
-    template <typename Ts, typename VT>
+    template <typename VT>
     typename std::vector<VT>::iterator find_variant(const knp::core::UID &uid, std::vector<VT> &container);
 
 private:

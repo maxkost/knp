@@ -56,7 +56,7 @@ public:
      * @param name tag name.
      * @return tag value.
      */
-    auto operator[](const std::string &name) { return get_tag(name); }
+    auto &operator[](const std::string &name) { return get_tag(name); }
 
 private:
     std::map<std::string, std::any> tags_;

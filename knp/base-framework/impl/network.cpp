@@ -13,7 +13,6 @@
 
 #include <boost/preprocessor.hpp>
 
-// #define _KNP_INTERNAL
 
 namespace knp::framework
 {
@@ -66,31 +65,13 @@ Network::ProjectionConstIterator Network::end_projections() const
 }
 
 
-template <typename T, typename VT>
-typename std::vector<VT>::iterator Network::find_elem(const knp::core::UID &uid, std::vector<VT> &container)
-{
-    auto result = std::find_if(
-        container.begin(), container.end(),
-        [&uid](VT &p_variant) -> bool
-        {
-            constexpr auto type_n = boost::mp11::mp_find<VT, T>();
-            if (p_variant.index() != type_n)
-            {
-                return false;
-            }
-            return uid == (std::get<type_n>(p_variant)).get_uid();
-        });
-    return result;
-}
-
-
-template <typename Ts, typename VT>
+template <typename VT>
 typename std::vector<VT>::iterator Network::find_variant(const knp::core::UID &uid, std::vector<VT> &container)
 {
     auto result = std::find_if(
         container.begin(), container.end(),
         [&uid](VT &p_variant) -> bool
-        { return std::visit([&](auto &var_val) { return uid == var_val.get_uid(); }, p_variant); });
+        { return std::visit([&uid](auto &var_val) { return var_val.get_uid() == uid; }, p_variant); });
     return result;
 }
 
@@ -126,7 +107,7 @@ PopulationType &Network::get_population(const knp::core::UID &population_uid)
         "This population type doesn't supported by the Network class! Add type to the population types list.");
 
     SPDLOG_DEBUG("Get population {}", std::string(population_uid));
-    if (auto pop_iterator = find_elem<PopulationType, core::AllPopulationsVariant>(population_uid, populations_);
+    if (auto pop_iterator = find_variant<core::AllPopulationsVariant>(population_uid, populations_);
         pop_iterator != populations_.end())
     {
         return std::get<PopulationType>(*pop_iterator);
@@ -146,7 +127,7 @@ core::AllPopulationsVariant &Network::get_population(const knp::core::UID &popul
 {
     SPDLOG_DEBUG("Get projection {}", std::string(population_uid));
 
-    auto iter = find_variant<core::AllPopulations, core::AllPopulationsVariant>(population_uid, populations_);
+    auto iter = find_variant<core::AllPopulationsVariant>(population_uid, populations_);
 
     if (populations_.end() == iter)
     {
@@ -160,7 +141,7 @@ core::AllPopulationsVariant &Network::get_population(const knp::core::UID &popul
 void Network::remove_population(const core::UID &population_uid)
 {
     SPDLOG_DEBUG("Remove population with uid {}", std::string(population_uid));
-    auto result = find_variant<AllPopulations, core::AllPopulationsVariant>(population_uid, populations_);
+    auto result = find_variant<core::AllPopulationsVariant>(population_uid, populations_);
 
     if (result == populations_.end())
     {
@@ -213,7 +194,7 @@ ProjectionType &Network::get_projection(const knp::core::UID &projection_uid)
 
     SPDLOG_DEBUG("Get projection {}", std::string(projection_uid));
 
-    auto proj_iterator = find_elem<ProjectionType, core::AllProjectionsVariant>(projection_uid, projections_);
+    auto proj_iterator = find_variant<core::AllProjectionsVariant>(projection_uid, projections_);
     if (proj_iterator != projections_.end())
     {
         return std::get<ProjectionType>(*proj_iterator);
@@ -234,7 +215,7 @@ core::AllProjectionsVariant &Network::get_projection(const knp::core::UID &proje
 {
     SPDLOG_DEBUG("Get projection {}", std::string(projection_uid));
 
-    auto iter = find_variant<core::AllProjections, core::AllProjectionsVariant>(projection_uid, projections_);
+    auto iter = find_variant<core::AllProjectionsVariant>(projection_uid, projections_);
 
     if (projections_.end() == iter)
     {
@@ -248,7 +229,7 @@ core::AllProjectionsVariant &Network::get_projection(const knp::core::UID &proje
 void Network::remove_projection(const core::UID &projection_uid)
 {
     SPDLOG_DEBUG("Remove projection with uid {}", std::string(projection_uid));
-    auto result = find_variant<core::AllProjections, core::AllProjectionsVariant>(projection_uid, projections_);
+    auto result = find_variant<core::AllProjectionsVariant>(projection_uid, projections_);
 
     if (result == projections_.end())
     {

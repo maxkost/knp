@@ -14,4 +14,8 @@ TEST(CoreSuite, TagMapTest)
     tag_map.get_tag("test") = std::string("test_val");
 
     ASSERT_EQ(tag_map.get_tag<std::string>("test"), "test_val");
+
+    tag_map["test"] = std::string("new");
+
+    ASSERT_EQ(tag_map.get_tag<std::string>("test"), "new");
 }

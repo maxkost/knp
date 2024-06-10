@@ -7,6 +7,7 @@
 
 #include <knp/backends/cpu-single-threaded/backend.h>
 #include <knp/framework/io/out_converters/convert_set.h>
+#include <knp/framework/io/type.h>
 #include <knp/framework/model_executor.h>
 #include <knp/framework/network.h>
 #include <knp/neuron-traits/blifat.h>
@@ -72,4 +73,12 @@ TEST(FrameworkSuite, ModelExecutorLoad)
     // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
     const std::vector<knp::core::Step> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
     ASSERT_EQ(results, expected_results);
+
+    auto pop_tag = std::any_cast<knp::framework::io::IOType>(model.get_network()
+                                                                 .get_population<kt::BLIFATPopulation>(output_uid)
+                                                                 .get_tags()[knp::framework::io::io_type_tag]);
+    auto proj_tag = std::any_cast<knp::framework::io::IOType>(
+        model.get_network().get_projection<kt::DeltaProjection>(input_uid).get_tags()[knp::framework::io::io_type_tag]);
+    ASSERT_EQ(pop_tag, knp::framework::io::IOType::output);
+    ASSERT_EQ(proj_tag, knp::framework::io::IOType::input);
 }
