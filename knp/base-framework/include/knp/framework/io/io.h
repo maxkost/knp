@@ -9,4 +9,3 @@
 
 #include "input_channel.h"
 #include "output_channel.h"
-#include "type.h"

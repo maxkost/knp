@@ -5,7 +5,6 @@
  * @date 21.04.2023
  */
 
-#include <knp/framework/io/type.h>
 #include <knp/framework/model_executor.h>
 
 #include <spdlog/spdlog.h>
@@ -57,7 +56,7 @@ void ModelExecutor::gen_input_channel(const core::UID &channel_uid, const std::v
             {
                 SPDLOG_TRACE("Tagging input projection {}...", std::string(proj.get_uid()));
 
-                proj.get_tags()[io::io_type_tag] = io::IOType::input;
+                proj.get_tags()[core::tags::io_type_tag] = core::tags::IOType::input;
             },
             network.get_projection(proj_uid));
     }
@@ -79,7 +78,7 @@ void ModelExecutor::gen_output_channel(const core::UID &channel_uid, const std::
             {
                 SPDLOG_TRACE("Tagging output population {}...", std::string(pop.get_uid()));
 
-                pop.get_tags()[io::io_type_tag] = io::IOType::output;
+                pop.get_tags()[core::tags::io_type_tag] = core::tags::IOType::output;
             },
             network.get_population(pop_uid));
     }
