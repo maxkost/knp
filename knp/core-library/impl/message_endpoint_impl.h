@@ -1,4 +1,9 @@
-
+/**
+ * @file message_endpoint_impl.h.
+ * @brief Bus implementation interface.
+ * @author An. Vartenkov
+ * @date 25.09.2023
+ */
 
 #pragma once
 
