@@ -16,7 +16,7 @@
 /**
  * @brief Output channel namespace.
  */
-namespace knp::framework::output
+namespace knp::framework::io::output
 {
 
 /**
@@ -55,4 +55,4 @@ private:
     const size_t output_size_;
 };
 
-}  // namespace knp::framework::output
+}  // namespace knp::framework::io::output

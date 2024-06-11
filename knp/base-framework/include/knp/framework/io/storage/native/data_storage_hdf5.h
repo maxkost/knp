@@ -15,7 +15,7 @@
 /**
  * @brief Data storage namespace.
  */
-namespace knp::framework::storage::native
+namespace knp::framework::io::storage::native
 {
 
 // TODO: return and get iterators.
@@ -47,4 +47,4 @@ void save_messages_to_h5(
     std::vector<core::messaging::SpikeMessage> messages, const std::filesystem::path &path_to_save,
     float time_per_step = 1.0f);
 
-}  // namespace knp::framework::storage::native
+}  // namespace knp::framework::io::storage::native

@@ -17,7 +17,7 @@
 /**
  * @brief Input channel namespace.
  */
-namespace knp::framework::input
+namespace knp::framework::io::input
 {
 
 /**
@@ -124,4 +124,4 @@ inline void connect_input(
     target_endpoint.subscribe<core::messaging::SpikeMessage>(receiver_uid, {channel.get_uid()});
 }
 
-}  // namespace knp::framework::input
+}  // namespace knp::framework::io::input

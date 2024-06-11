@@ -15,7 +15,7 @@
 /**
  * @brief Output channel namespace.
  */
-namespace knp::framework::output
+namespace knp::framework::io::output
 {
 /**
  * @brief Convert a set of spike messages to a bool vector where an element value is `true` if a neuron with the
@@ -38,4 +38,4 @@ std::vector<bool> converter_bitwise(const std::vector<core::messaging::SpikeMess
     }
     return result;
 }
-}  // namespace knp::framework::output
+}  // namespace knp::framework::io::output

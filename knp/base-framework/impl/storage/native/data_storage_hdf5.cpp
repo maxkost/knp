@@ -16,7 +16,7 @@
 #include "data_storage_common.h"
 
 
-namespace knp::framework::storage::native
+namespace knp::framework::io::storage::native
 {
 namespace fs = std::filesystem;
 
@@ -153,4 +153,4 @@ void save_messages_to_h5(
     time_set.createAttribute("units", std::string{"step"});
 }
 
-}  // namespace knp::framework::storage::native
+}  // namespace knp::framework::io::storage::native

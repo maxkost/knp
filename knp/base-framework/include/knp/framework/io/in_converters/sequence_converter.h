@@ -24,7 +24,7 @@
 /**
  * @brief Input channel namespace.
  */
-namespace knp::framework::input
+namespace knp::framework::io::input
 {
 /**
  * @brief The SequenceConverter class is a definition of a stream-like converter that converts a list of input values
@@ -103,4 +103,4 @@ private:
     size_t data_size_;
 };
 
-}  // namespace knp::framework::input
+}  // namespace knp::framework::io::input

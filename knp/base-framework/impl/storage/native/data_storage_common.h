@@ -11,7 +11,7 @@
 #include <vector>
 
 
-namespace knp::framework::storage::native
+namespace knp::framework::io::storage::native
 {
 constexpr int MAGIC_NUMBER = 2682;
 constexpr std::array<int64_t, 2> VERSION{0, 1};
@@ -20,4 +20,4 @@ constexpr std::array<int64_t, 2> VERSION{0, 1};
 std::vector<knp::core::messaging::SpikeMessage> convert_node_time_arrays_to_messages(
     const std::vector<int64_t> &nodes, const std::vector<float> &timestamps, const knp::core::UID &uid,
     float time_per_step);
-}  // namespace knp::framework::storage::native
+}  // namespace knp::framework::io::storage::native

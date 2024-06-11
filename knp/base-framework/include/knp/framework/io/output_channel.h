@@ -20,7 +20,7 @@
 /**
  * @brief Output channel namespace.
  */
-namespace knp::framework::output
+namespace knp::framework::io::output
 {
 /**
  * @brief The OutputChannel class is a definition of an output channel.
@@ -106,4 +106,4 @@ template <typename ResultType>
     return converter(output_channel.read_some_from_buffer(step_from, step_to));
 }
 
-}  // namespace knp::framework::output
+}  // namespace knp::framework::io::output

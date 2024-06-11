@@ -64,6 +64,9 @@ TEST(FrameworkSuite, NetworkCreation)
     knp::framework::Network network;
     auto [population1, projection1] = create_entities();
 
+    auto pop_uid = population1.get_uid();
+    auto proj_uid = projection1.get_uid();
+
     network.add_population(std::move(population1));
     ASSERT_EQ(network.populations_count(), 1);
     ASSERT_EQ(network.projections_count(), 0);
@@ -71,6 +74,11 @@ TEST(FrameworkSuite, NetworkCreation)
     network.add_projection(std::move(projection1));
     ASSERT_EQ(network.populations_count(), 1);
     ASSERT_EQ(network.projections_count(), 1);
+
+    ASSERT_EQ(
+        network.get_population<knp::core::Population<knp::neuron_traits::BLIFATNeuron>>(pop_uid).get_uid(), pop_uid);
+    ASSERT_EQ(network.get_projection<DeltaProjection>(proj_uid).get_uid(), proj_uid);
+    ASSERT_NE(network.get_projection<DeltaProjection>(proj_uid).get_uid(), pop_uid);
 }
 
 

@@ -10,7 +10,7 @@
 
 // #include <spdlog/spdlog.h>
 
-namespace knp::framework::input
+namespace knp::framework::io::input
 {
 
 core::messaging::SpikeData IndexConverter::operator()(core::Step) const
@@ -33,4 +33,4 @@ core::messaging::SpikeData IndexConverter::operator()(core::Step) const
     return result;
 }
 
-}  // namespace knp::framework::input
+}  // namespace knp::framework::io::input

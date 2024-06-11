@@ -9,7 +9,6 @@
 
 #include <spdlog/spdlog.h>
 
-// #define _KNP_INTERNAL
 
 namespace knp::framework
 {
@@ -24,7 +23,7 @@ void Model::add_input_channel(const core::UID &channel_uid, const core::UID &pro
 void Model::add_output_channel(const core::UID &channel_uid, const core::UID &population_uid)
 {
     // TODO: check if population_uid in network.populations.
-    out_channels_.insert(decltype(in_channels_)::value_type(channel_uid, population_uid));
+    out_channels_.insert(decltype(out_channels_)::value_type(channel_uid, population_uid));
 }
 
 

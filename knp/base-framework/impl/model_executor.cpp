@@ -9,7 +9,6 @@
 
 #include <spdlog/spdlog.h>
 
-// #define _KNP_INTERNAL
 
 namespace knp::framework
 {
@@ -24,10 +23,18 @@ void ModelExecutor::init_channels(
         if (channels.end(i) == bucket_iter) continue;
         auto channel_uid = bucket_iter->first;
 
-        std::vector<core::UID> p_uids(channels.bucket_size(i));
-        std::transform(
-            bucket_iter, channels.end(i), std::back_inserter(p_uids), [](const auto &iter) { return iter.second; });
+        std::vector<core::UID> p_uids;
+        p_uids.reserve(channels.bucket_size(i));
 
+        std::transform(
+            bucket_iter, channels.end(i), std::back_inserter(p_uids),
+            [channel_uid](const auto &bucket)
+            {
+                SPDLOG_TRACE(
+                    "Inserting channel {} peer bucket UID = {}...", std::string(channel_uid),
+                    std::string(bucket.second));
+                return bucket.second;
+            });
         (this->*channel_gen)(channel_uid, p_uids);
     }
 }
@@ -36,9 +43,22 @@ void ModelExecutor::init_channels(
 void ModelExecutor::gen_input_channel(const core::UID &channel_uid, const std::vector<core::UID> &p_uids)
 {
     in_channels_.emplace_back(channel_uid, backend_->get_message_bus().create_endpoint(), i_map_.at(channel_uid));
-    for (const auto &u : p_uids)
+    auto &network = model_.get_network();
+
+    for (const auto &proj_uid : p_uids)
     {
-        backend_->get_message_endpoint().subscribe<knp::core::messaging::SpikeMessage>(u, {channel_uid});
+        SPDLOG_TRACE(
+            "Input projection {} subscribing to the channel {}...", std::string(proj_uid), std::string(channel_uid));
+        backend_->get_message_endpoint().subscribe<knp::core::messaging::SpikeMessage>(proj_uid, {channel_uid});
+
+        std::visit(
+            [](auto &proj)
+            {
+                SPDLOG_TRACE("Tagging input projection {}...", std::string(proj.get_uid()));
+
+                proj.get_tags()[core::tags::io_type_tag] = core::tags::IOType::input;
+            },
+            network.get_projection(proj_uid));
     }
 }
 
@@ -48,25 +68,42 @@ void ModelExecutor::gen_output_channel(const core::UID &channel_uid, const std::
     auto endpoint = backend_->get_message_bus().create_endpoint();
     endpoint.subscribe<knp::core::messaging::SpikeMessage>(channel_uid, p_uids);
     out_channels_.emplace_back(channel_uid, std::move(endpoint));
+
+    auto &network = model_.get_network();
+
+    for (const auto &pop_uid : p_uids)
+    {
+        std::visit(
+            [](auto &pop)
+            {
+                SPDLOG_TRACE("Tagging output population {}...", std::string(pop.get_uid()));
+
+                pop.get_tags()[core::tags::io_type_tag] = core::tags::IOType::output;
+            },
+            network.get_population(pop_uid));
+    }
 }
 
 
 void ModelExecutor::init()
 {
+    SPDLOG_DEBUG("Model executor initializing...");
     const auto &network = model_.get_network();
 
     backend_->load_all_populations(network.get_populations());
     backend_->load_all_projections(network.get_projections());
 
     // Create input.
+    SPDLOG_TRACE("Input channels initializing...");
     init_channels(model_.get_input_channels(), &ModelExecutor::gen_input_channel);
 
     // Create output.
+    SPDLOG_TRACE("Output channels initializing...");
     init_channels(model_.get_output_channels(), &ModelExecutor::gen_output_channel);
 }
 
 
-const input::InputChannel &ModelExecutor::get_input_channel(const core::UID &channel_uid) const
+const io::input::InputChannel &ModelExecutor::get_input_channel(const core::UID &channel_uid) const
 {
     auto result = std::find_if(
         in_channels_.cbegin(), in_channels_.cend(),
@@ -76,7 +113,7 @@ const input::InputChannel &ModelExecutor::get_input_channel(const core::UID &cha
 }
 
 
-input::InputChannel &ModelExecutor::get_input_channel(const core::UID &channel_uid)
+io::input::InputChannel &ModelExecutor::get_input_channel(const core::UID &channel_uid)
 {
     auto result = std::find_if(
         in_channels_.begin(), in_channels_.end(),
@@ -86,7 +123,7 @@ input::InputChannel &ModelExecutor::get_input_channel(const core::UID &channel_u
 }
 
 
-output::OutputChannel &ModelExecutor::get_output_channel(const core::UID &channel_uid)
+io::output::OutputChannel &ModelExecutor::get_output_channel(const core::UID &channel_uid)
 {
     auto result = std::find_if(
         out_channels_.begin(), out_channels_.end(),
@@ -96,7 +133,7 @@ output::OutputChannel &ModelExecutor::get_output_channel(const core::UID &channe
 }
 
 
-const output::OutputChannel &ModelExecutor::get_output_channel(const core::UID &channel_uid) const
+const io::output::OutputChannel &ModelExecutor::get_output_channel(const core::UID &channel_uid) const
 {
     auto result = std::find_if(
         out_channels_.cbegin(), out_channels_.cend(),
@@ -114,6 +151,7 @@ void ModelExecutor::start()
 
 void ModelExecutor::start(core::Backend::RunPredicate run_predicate)
 {
+    SPDLOG_INFO("Starting model execution...");
     backend_->start(
         [this, run_predicate](knp::core::Step step)
         {
@@ -136,6 +174,7 @@ void ModelExecutor::start(core::Backend::RunPredicate run_predicate)
 
             return true;
         });
+    SPDLOG_INFO("Model execution stopped...");
 }
 
 

@@ -7,7 +7,7 @@
 
 #include <knp/framework/io/output_channel.h>
 
-namespace knp::framework::output
+namespace knp::framework::io::output
 {
 auto comp_lower(const core::messaging::SpikeMessage &message, core::Step step)
 {
@@ -52,4 +52,4 @@ std::vector<core::messaging::SpikeMessage> OutputChannel::read_some_from_buffer(
     return result;
 }
 
-}  // namespace knp::framework::output
+}  // namespace knp::framework::io::output
