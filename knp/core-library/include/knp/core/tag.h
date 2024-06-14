@@ -58,22 +58,28 @@ private:
 
 
 /**
- * @brief Some well-known tags.
+ * @brief Namespace for known tags.
  */
 namespace tags
 {
 /**
- * @brief I/O type tag name.
+ * @brief Input and output type tag name.
  */
 constexpr char io_type_tag[]{"io_type"};
 
 
 /**
- * @brief I/O type tag values.
+ * @brief Input and output type tag values.
  */
 enum class IOType
 {
+    /**
+     * @brief Input tag value.
+     */
     input = 0,
+    /**
+     * @brief Output tag value.
+     */
     output = 1
 };
 
