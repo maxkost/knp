@@ -23,6 +23,7 @@ inline std::optional<DeltaProjection::Synapse> input_projection_gen(size_t /*ind
     return DeltaProjection::Synapse{{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};
 }
 
+
 // Create a loop projection
 inline std::optional<DeltaProjection::Synapse> synapse_generator(size_t /*index*/)  // NOLINT
 {
@@ -73,13 +74,16 @@ int main(int argc, const char *const argv[])
 
     auto backend_path =
         std::filesystem::path(argv[0]).parent_path().parent_path() / "lib" / "knp-cpu-single-threaded-backend";
-    // Create model executor.
-    knp::framework::ModelExecutor me(model, backend_path, {{i_channel_uid, input_gen}});
+    knp::framework::BackendLoader backend_loader;
 
-    auto &out_channel = me.get_output_channel(o_channel_uid);
+    // Load backend and create model executor.
+    knp::framework::ModelExecutor model_executor(
+        model, backend_loader.load(backend_path), {{i_channel_uid, input_gen}});
+
+    auto &out_channel = model_executor.get_loader().get_output_channel(o_channel_uid);
 
     // Run model.
-    me.start([](size_t step) { return step < 20; });
+    model_executor.start([](size_t step) { return step < 20; });
 
     std::vector<knp::core::Step> results;
     // Get model results.
