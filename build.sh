@@ -14,7 +14,10 @@ usage() { echo "Usage: $0 [-v] [-r] [-c] [-s]" 1>&2; }
 
 build()
 {
-  [ $VERBOSE == 1 ] && MAKE_ADD_OPTS="${MAKE_ADD_OPTS} VERBOSE=1"
+  if [[ $VERBOSE == 1 ]]; then
+    MAKE_ADD_OPTS="${MAKE_ADD_OPTS} VERBOSE=1"
+  fi
+
   if [[ $RELEASE == 1 ]]; then
     echo "Building release..."
     BUILD_DIR="build_release"
@@ -24,8 +27,15 @@ build()
     CMAKE_ADD_OPTS="${CMAKE_ADD_OPTS} -DCMAKE_BUILD_TYPE=Debug"
     BUILD_DIR="build"
   fi
-  [ "${CLEAN}" == 1 ] && BUILD_ADD_OPTS="${BUILD_ADD_OPTS} --clean-first"
-  [ "${SINGLE_PROCESS}" == 0] && BUILD_ADD_OPTS="${BUILD_ADD_OPTS} --parallel"
+
+  if [[ ${CLEAN} == 1 ]]; then
+    BUILD_ADD_OPTS="${BUILD_ADD_OPTS} --clean-first"
+  fi
+
+  if [[ ${SINGLE_PROCESS} == 0 ]]; then
+    BUILD_ADD_OPTS="${BUILD_ADD_OPTS} --parallel"
+  fi
+
   set -e
   set -o xtrace
 
