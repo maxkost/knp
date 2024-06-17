@@ -56,9 +56,11 @@ TEST(FrameworkSuite, ModelExecutorLoad)
         return {};
     };
 
-    knp::framework::ModelExecutor model_executor(model, knp::testing::get_backend_path(), {{i_channel_uid, input_gen}});
+    knp::framework::BackendLoader backend_loader;
+    knp::framework::ModelExecutor model_executor(
+        model, backend_loader.load(knp::testing::get_backend_path()), {{i_channel_uid, input_gen}});
 
-    auto &out_channel = model_executor.get_output_channel(o_channel_uid);
+    auto &out_channel = model_executor.get_loader().get_output_channel(o_channel_uid);
 
     model_executor.start([](size_t step) { return step < 20; });
 
