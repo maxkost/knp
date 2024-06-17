@@ -73,6 +73,6 @@ core::Backend::DataRanges SingleThreadedCPUBackend::get_network_data() const
     ProjIterPtr proj_begin = std::make_unique<ProjectionValueIterator>(ProjectionValueIterator{projections_.begin()});
     ProjIterPtr proj_end = std::make_unique<ProjectionValueIterator>(ProjectionValueIterator{projections_.end()});
     auto proj_range = std::make_pair(std::move(proj_begin), std::move(proj_end));
-    return DataRanges{.projection_range{std::move(proj_range)}, .population_range{std::move(pop_range)}};
+    return DataRanges{std::move(proj_range), std::move(pop_range)};
 }
 }  // namespace knp::backends::single_threaded_cpu

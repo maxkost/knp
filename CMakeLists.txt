@@ -50,8 +50,8 @@ if (Boost_ROOT)  # WIN32?
     set(Boost_USE_STATIC_RUNTIME ON)
     set(Boost_USE_STATIC_RUNTIME ON)
     # Boost detection setup.
-    if(NOT BOOST_INCLUDEDIR)
-        set(BOOST_INCLUDEDIR "${BOOST_ROOT}")
+    if(NOT BOOST_INCLUDE_DIR)
+        set(BOOST_INCLUDE_DIR "${BOOST_ROOT}")
     endif()
 
     if (NOT BOOST_LIBRARYDIR)
@@ -245,7 +245,8 @@ add_third_party("gh:intel/pcm#202403")
 
 add_third_party("gh:gabime/spdlog@1.13.0"
                 OPTIONS
-                    "SPDLOG_BUILD_PIC ON")
+                    "SPDLOG_BUILD_PIC ON"
+                    "SPDLOG_BUILD_SHARED OFF")
 
 add_third_party("gh:zeromq/cppzmq@4.10.0"
                 OPTIONS
@@ -262,6 +263,13 @@ endif()
 
 file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
 include_directories(third-party ${THIRD_PARTY_INCLUDES})
+
+if (MSVC)
+    knp_get_hdf5_target(HDF5_LIB)
+    foreach (target ${HDF5_LIB} spdlog simdjson_static)
+        set_property(TARGET "${target}" PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    endforeach()
+endif()
 
 
 #
@@ -280,7 +288,7 @@ if (KNP_BUILD_DOCUMENTATION)
     add_subdirectory(doc)
 endif()
 
-if(KNP_BUILD_EXAMPLES)
+if (KNP_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
