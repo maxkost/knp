@@ -91,13 +91,13 @@ public:
 
     /**
      * @brief Get pointer to backend object.
-     * @return shared pointer to Backend object.
+     * @return shared pointer to `Backend` object.
      */
     std::shared_ptr<core::Backend> get_backend() { return loader_.get_backend(); }
 
     /**
      * @brief Get model loader object.
-     * @return reference to ModelLoader object.
+     * @return reference to `ModelLoader` object.
      */
     auto &get_loader() { return loader_; }
 

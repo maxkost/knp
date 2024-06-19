@@ -12,13 +12,13 @@
 #include <filesystem>
 
 /**
- * @brief Sonata namespace.
+ * @brief SONATA namespace.
  */
 namespace knp::framework::sonata
 {
 /**
  * @brief Save network to disk.
- * @note The network is saved in the Sonata format.
+ * @note The network is saved in the SONATA format.
  * @param network network to save.
  * @param dir directory to save the network.
  */

@@ -26,7 +26,7 @@
 namespace knp::framework
 {
 /**
- * @brief The ModelLoader class is a definition of a load that uploaded the model to the specified backend.
+ * @brief The ModelLoader class is a definition of a loader that uploads the model to the specified backend.
  */
 class ModelLoader
 {
@@ -38,8 +38,8 @@ public:
 
 public:
     /**
-     * @brief ModelLoader constructor.
-     * @param backend pointer to backend on which you want to run the model.
+     * @brief Model loader constructor.
+     * @param backend pointer to backend to which you want to load the model.
      * @param i_map input channel map.
      */
     ModelLoader(std::shared_ptr<core::Backend> backend, InputChannelMap i_map)
@@ -49,7 +49,7 @@ public:
 
 public:
     /**
-     * @brief Write model to the backend.
+     * @brief Write model to backend.
      * @param model model to load.
      */
     void load(knp::framework::Model &model);
@@ -88,20 +88,20 @@ public:
     const io::input::InputChannel &get_input_channel(const core::UID &channel_uid) const;
 
     /**
-     * @brief Return in channels.
-     * @return tuple of the in channel vectors.
+     * @brief Get input channels.
+     * @return tuple of input channel vectors.
      */
     auto &get_inputs() noexcept { return in_channels_; }
 
     /**
-     * @brief Return out channels.
-     * @return tuple of the out channel vectors.
+     * @brief Get output channels.
+     * @return tuple of output channel vectors.
      */
     auto &get_outputs() noexcept { return out_channels_; }
 
     /**
      * @brief Get pointer to backend object.
-     * @return shared pointer to Backend object.
+     * @return shared pointer to `Backend` object.
      */
     std::shared_ptr<core::Backend> get_backend() { return backend_; }
 
