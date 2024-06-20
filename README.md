@@ -8,7 +8,7 @@ Platform for the spiking neural networks execution.
   <img src="doc/img/neuromorphic-platform.svg" alt="Logo">
 </div>
 
-Kaspersky Neuromorphic Platform (also referred to as "the platform") is a software platform designed to emulate spiking neural networks and support them on various computers. 
+Kaspersky Neuromorphic Platform (also referred to as KNP or "the platform") is a software platform designed to emulate spiking neural networks and support them on various computers. 
 
 You can use Kaspersky Neuromorphic Platform to do the following:
 
