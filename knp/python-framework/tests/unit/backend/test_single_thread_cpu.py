@@ -1,5 +1,5 @@
 """
-KNP single thread CPU backend tests
+Kaspersky Neuromorphic Platform single thread CPU backend tests
 
 Author: Artiom N.
 Date: 01.03.2024

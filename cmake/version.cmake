@@ -46,10 +46,10 @@ function(knp_get_version)
         read_version_file("${CMAKE_SOURCE_DIR}/VERSION")
     endif()
 
-    message(STATUS "KNP version: ${KNP_VERSION}")
+    message(STATUS "Kaspersky Neuromorphic Platform version: ${KNP_VERSION}")
 
     if (NOT KNP_VERSION)
-        message(WARNING "KNP version can't be determined!")
+        message(WARNING "Kaspersky Neuromorphic Platform version cannot be determined!")
         return()
     endif()
 
@@ -59,5 +59,5 @@ function(knp_get_version)
 
     set(KNP_VERSION "${KNP_VERSION}" PARENT_SCOPE)
 
-    # set(KNP_VERSION ${KNP_VERSION} CACHE STRING "KNP version" FORCE)
+    # set(KNP_VERSION ${KNP_VERSION} CACHE STRING "Kaspersky Neuromorphic Platform version" FORCE)
 endfunction()

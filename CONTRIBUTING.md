@@ -1,4 +1,4 @@
-# KNP contributing guide
+# Kaspersky Neuromorphic Platform contributing guide
 
 # Version control
 

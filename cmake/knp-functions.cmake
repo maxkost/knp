@@ -1,5 +1,5 @@
 #
-# KNP build functions. Artiom N.(cl)2023.
+# Kaspersky Neuromorphic Platform build functions. Artiom N.(cl)2023.
 #
 
 include_guard(GLOBAL)
