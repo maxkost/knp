@@ -1,6 +1,6 @@
 /**
- * @file model_executor.h
- * @brief Model executor interface.
+ * @file model_loader.h
+ * @brief Model loader interface.
  * @author Artiom N.
  * @date 21.04.2023
  */
