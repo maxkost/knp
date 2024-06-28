@@ -16,7 +16,7 @@
 knp::framework::Network make_simple_network()
 {
     namespace kt = knp::testing;
-    // Create a single neuron network: input -> input_projection -> population <=> loop_projection
+    // Create a single neural network: input -> input_projection -> population <=> loop_projection
     kt::BLIFATPopulation population{kt::neuron_generator, 1};
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> loop_projection =
         kt::DeltaProjection{population.get_uid(), population.get_uid(), kt::synapse_generator, 1};
