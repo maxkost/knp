@@ -37,7 +37,7 @@ public:
 
 TEST(SingleThreadCpuSuite, SmallestNetwork)
 {
-    // Create a single neural network: input -> input_projection -> population <=> loop_projection
+    // Create a single-neuron neural network: input -> input_projection -> population <=> loop_projection
     knp::testing::STestingBack backend;
 
     knp::testing::BLIFATPopulation population{knp::testing::neuron_generator, 1};
@@ -105,7 +105,7 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
         -> knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>
     { return knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>{}; };
 
-    // Create a single neural network: input -> input_projection -> population <=> loop_projection
+    // Create a single-neuron neural network: input -> input_projection -> population <=> loop_projection
     kt::STestingBack backend;
 
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> population{knp::core::UID(), stdp_neurons_generator, 1};
@@ -197,7 +197,7 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
         return STDPDeltaProjection::Synapse{{{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, {0, 1, 2}}, 0, 0};
     };
 
-    // Create a single neural network: input -> input_projection -> population <=> loop_projection
+    // Create a single-neuron neural network: input -> input_projection -> population <=> loop_projection
     kt::STestingBack backend;
 
     BlifatStdpPopulation population{
