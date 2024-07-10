@@ -32,7 +32,7 @@ namespace knp::framework
  * @brief The Model class is a definition of a model that contains a network, input and output channels, a monitor and a
  * backend.
  */
-class Model
+class KNP_DECLSPEC Model
 {
 public:
     /**

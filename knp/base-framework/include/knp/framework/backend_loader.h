@@ -25,7 +25,7 @@ namespace knp::framework
 /**
  * @brief The BackendLoader class is a definition of a backend loader.
  */
-class BackendLoader
+class KNP_DECLSPEC BackendLoader
 {
 public:
     /**

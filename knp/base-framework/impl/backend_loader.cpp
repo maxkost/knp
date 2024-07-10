@@ -34,9 +34,9 @@ std::function<BackendLoader::BackendCreateFunction> BackendLoader::make_creator(
 
     SPDLOG_DEBUG("Created backend creator...");
 
-    creators_[backend_path.string()] = creator;
+    // creators_[backend_path.string()] = creator;
 
-    return creator;
+    return std::move(creator);
 }
 
 
@@ -44,7 +44,7 @@ std::shared_ptr<core::Backend> BackendLoader::load(const std::filesystem::path &
 {
     auto creator = make_creator(backend_path);
     SPDLOG_INFO("Create backend instance...");
-    return creator();
+    return std::move(creator());
 }
 
 

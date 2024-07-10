@@ -72,8 +72,7 @@ int main(int argc, const char *const argv[])
         return knp::core::messaging::SpikeData();
     };
 
-    auto backend_path =
-        std::filesystem::path(argv[0]).parent_path().parent_path() / "lib" / "knp-cpu-single-threaded-backend";
+    auto backend_path = std::filesystem::path(argv[0]).parent_path() / "knp-cpu-single-threaded-backend";
     knp::framework::BackendLoader backend_loader;
 
     // Load backend and create model executor.

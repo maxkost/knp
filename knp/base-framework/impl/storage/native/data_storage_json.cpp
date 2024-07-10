@@ -162,7 +162,7 @@ bool is_correct_version(simdjson::ondemand::document &doc)  // cppcheck-suppress
 }
 
 
-std::vector<core::messaging::SpikeMessage> load_messages_from_json(
+KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_json(
     const fs::path &path_to_json, const knp::core::UID &uid, bool strict_format)
 {
     simdjson::ondemand::parser parser;
@@ -220,7 +220,7 @@ std::vector<core::messaging::SpikeMessage> load_messages_from_json(
 }
 
 
-void save_messages_to_json(
+KNP_DECLSPEC void save_messages_to_json(
     std::vector<core::messaging::SpikeMessage> messages, const std::filesystem::path &path_to_save)
 {
     boost::format format_nodes(node_structure);

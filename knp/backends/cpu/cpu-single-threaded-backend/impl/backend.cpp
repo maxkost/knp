@@ -292,5 +292,4 @@ SingleThreadedCPUBackend::ProjectionConstIterator SingleThreadedCPUBackend::end_
     return projections_.cend();
 }
 
-
 }  // namespace knp::backends::single_threaded_cpu

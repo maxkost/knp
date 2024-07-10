@@ -129,7 +129,7 @@ void write_network_config(
 }
 
 
-void save_network(const Network &network, const fs::path &dir)
+KNP_DECLSPEC void save_network(const Network &network, const fs::path &dir)
 {
     auto net_dir = dir / "network";
     if (!is_directory(net_dir)) fs::create_directory(net_dir);

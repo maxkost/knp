@@ -30,7 +30,7 @@ namespace knp::framework
 /**
  * @brief The ModelExecutor class is a definition of an executor that runs the uploaded model on the specified backend.
  */
-class ModelExecutor
+class KNP_DECLSPEC ModelExecutor
 {
 public:
     /**

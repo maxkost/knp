@@ -8,6 +8,7 @@
 #pragma once
 
 #include <knp/core/backend.h>
+#include <knp/core/impexp.h>
 #include <knp/framework/network.h>
 
 
@@ -21,6 +22,6 @@ namespace knp::framework::synchronization
  * @param backend backend containing a network.
  * @return Network in its current state on backend.
  */
-Network get_network_copy(const knp::core::Backend &backend);
+KNP_DECLSPEC Network get_network_copy(const knp::core::Backend &backend);
 
 }  // namespace knp::framework::synchronization

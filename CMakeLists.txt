@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.25)
 
 include_guard(GLOBAL)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(CMakeDependentOption)
@@ -28,14 +32,18 @@ project(knp VERSION "${KNP_VERSION}"
 set(KNP_BOOST_MIN_VERSION "1.74.0")
 set(KNP_ROOT_DIR "${PROJECT_SOURCE_DIR}" CACHE STRING "KNP root directory")
 
-foreach (boost_ver RANGE 83 89)
+if (MSVC)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+    # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+
+    add_compile_options(/EHsc /MP /MDd)
+    # add_link_options(/LTCG:INCREMENTAL)  # /NODEFAULTLIB:LIBCMTD
+    add_compile_definitions(_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING=1 _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS=1)
+endif()
+
+foreach (boost_ver RANGE 81 89)
     list(APPEND Boost_ADDITIONAL_VERSIONS "1.${boost_ver}")
 endforeach()
-
-# WARNING: Don't change variables case!
-set(Boost_USE_MULTITHREADED ON)
-
-set(Boost_ALL_DYN_LINK OFF)
 
 if (NOT Boost_ROOT)
     if (DEFINED ENV{Boost_ROOT})
@@ -46,9 +54,15 @@ if (NOT Boost_ROOT)
 endif()
 
 if (Boost_ROOT)  # WIN32?
-    set(Boost_USE_STATIC_LIBS ON)
-    set(Boost_USE_STATIC_RUNTIME ON)
-    set(Boost_USE_STATIC_RUNTIME ON)
+    # WARNING: Don't change variables case!
+    set(Boost_USE_MULTITHREADED ON)
+
+    if (NOT WIN32)
+        set(Boost_USE_STATIC_LIBS ON)
+        set(Boost_USE_STATIC_RUNTIME ON)
+        set(Boost_ALL_DYN_LINK OFF)
+    endif()
+
     # Boost detection setup.
     if(NOT BOOST_INCLUDE_DIR)
         set(BOOST_INCLUDE_DIR "${BOOST_ROOT}")
@@ -61,9 +75,7 @@ if (Boost_ROOT)  # WIN32?
             set(BOOST_LIBRARYDIR "${Boost_ROOT}/stage")
         else()
             file(GLOB _BOOST_LIB_DIRS LIST_DIRECTORIES true "${Boost_ROOT}/lib*-*-*")
-            if (_BOOST_LIB_DIRS)
-                list(GET _BOOST_LIB_DIRS 0 BOOST_LIBRARYDIR)
-            endif()
+            list(GET _BOOST_LIB_DIRS 0 BOOST_LIBRARYDIR)
             # set(Boost_LIB_PREFIX "")
         endif()
     endif()
@@ -72,9 +84,9 @@ if (Boost_ROOT)  # WIN32?
 endif()
 
 # set(Boost_DEBUG ON)
+find_package(Boost ${KNP_BOOST_MIN_VERSION})
 
 if (MSVC)
-    find_package(Boost ${KNP_BOOST_MIN_VERSION})
     add_link_options("/LIBPATH:${Boost_LIBRARY_DIR_RELEASE}")
 endif()
 
@@ -191,9 +203,6 @@ include(print-variables)
 #
 
 set(CPM_SOURCE_CACHE_DEFAULT "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STRING "")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/third-party)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 
 # Make cache variables for install destinations.
 include(GNUInstallDirs)
@@ -220,7 +229,7 @@ add_third_party("gh:HDFGroup/hdf5#hdf5_1.14.4"
                 OPTIONS
                     "HDF5_NO_PACKAGES ON"
                     "BUILD_SHARED_LIBS ON"
-                    "HDF5_VOL_ALLOW_EXTERNAL YES")
+                    "HDF5_VOL_ALLOW_EXTERNAL YES")  # "HDF5_ALLOW_EXTERNAL_SUPPORT GIT" SZIP_USE_EXTERNAL
 
 add_third_party("gh:BlueBrain/HighFive@2.9.0"
                 GIT_SHALLOW ON
@@ -243,7 +252,10 @@ add_third_party("gh:simdjson/simdjson@3.9.2"
                 OPTIONS
                     "SIMDJSON_BUILD_STATIC_LIB ON")
 
-add_third_party("gh:intel/pcm#202403")
+add_third_party("gh:intel/pcm"
+                GIT_TAG 306aedb
+                OPTIONS
+                    "NO_STATIC_MSVC_RUNTIME_LIBRARY ON")
 
 add_third_party("gh:gabime/spdlog@1.13.0"
                 OPTIONS
@@ -266,21 +278,17 @@ endif()
 file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
 include_directories(third-party ${THIRD_PARTY_INCLUDES})
 
-if (MSVC)
-    knp_get_hdf5_target(HDF5_LIB)
-    foreach (target ${HDF5_LIB} spdlog simdjson_static)
-        set_property(TARGET "${target}" PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-    endforeach()
-endif()
+#if (MSVC)
+#    knp_get_hdf5_target(HDF5_LIB)
+#    foreach (target ${HDF5_LIB} spdlog simdjson_static)
+#        set_property(TARGET "${target}" PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+#    endforeach()
+#endif()
 
 
 #
 # Build KNP.
 #
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 set(CMAKE_TIDY_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/knp/.clang-tidy" CACHE PATH  "Clang-tidy config file")
 

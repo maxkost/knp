@@ -66,12 +66,23 @@ Network::ProjectionConstIterator Network::end_projections() const
 
 
 template <typename VT>
-typename std::vector<VT>::iterator Network::find_variant(const knp::core::UID &uid, std::vector<VT> &container)
+typename std::vector<VT>::iterator find_variant(const knp::core::UID &uid, std::vector<VT> &container)
 {
     auto result = std::find_if(
         container.begin(), container.end(),
         [&uid](VT &p_variant) -> bool
         { return std::visit([&uid](auto &var_val) { return var_val.get_uid() == uid; }, p_variant); });
+    return result;
+}
+
+
+template <typename VT>
+typename std::vector<VT>::const_iterator find_cvariant(const knp::core::UID &uid, const std::vector<VT> &container)
+{
+    auto result = std::find_if(
+        container.cbegin(), container.cend(),
+        [&uid](const VT &p_variant) -> bool
+        { return std::visit([&uid](const auto &var_val) { return var_val.get_uid() == uid; }, p_variant); });
     return result;
 }
 
@@ -119,7 +130,13 @@ PopulationType &Network::get_population(const knp::core::UID &population_uid)
 template <typename PopulationType>
 const PopulationType &Network::get_population(const knp::core::UID &population_uid) const
 {
-    return const_cast<Network *>(this)->get_population<PopulationType>(population_uid);
+    SPDLOG_DEBUG("Get population {}", std::string(population_uid));
+    if (const auto pop_iterator = find_cvariant<core::AllPopulationsVariant>(population_uid, populations_);
+        pop_iterator != populations_.cend())
+    {
+        return std::get<PopulationType>(*pop_iterator);
+    }
+    throw std::runtime_error("Can't find population with uid = " + std::string(population_uid) + "!");
 }
 
 
@@ -207,7 +224,15 @@ ProjectionType &Network::get_projection(const knp::core::UID &projection_uid)
 template <typename ProjectionType>
 const ProjectionType &Network::get_projection(const knp::core::UID &projection_uid) const
 {
-    return const_cast<Network *>(this)->get_projection<ProjectionType>(projection_uid);
+    SPDLOG_DEBUG("Get projection {}", std::string(projection_uid));
+
+    auto proj_iterator = find_cvariant<core::AllProjectionsVariant>(projection_uid, projections_);
+    if (proj_iterator != projections_.cend())
+    {
+        return std::get<ProjectionType>(*proj_iterator);
+    }
+
+    throw std::runtime_error("Can't find projection with uid = " + std::string(projection_uid) + "!");
 }
 
 
@@ -241,28 +266,28 @@ void Network::remove_projection(const core::UID &projection_uid)
 namespace nt = knp::neuron_traits;
 
 #define INSTANCE_POPULATION_FUNCTIONS(n, template_for_instance, neuron_type)                                      \
-    template void Network::add_population<knp::core::Population<nt::neuron_type>>(                                \
+    template KNP_DECLSPEC void Network::add_population<knp::core::Population<nt::neuron_type>>(                   \
         knp::core::Population<nt::neuron_type> &&);                                                               \
-    template void Network::add_population<knp::core::Population<nt::neuron_type>>(                                \
+    template KNP_DECLSPEC void Network::add_population<knp::core::Population<nt::neuron_type>>(                   \
         knp::core::Population<nt::neuron_type> &);                                                                \
-    template knp::core::Population<nt::neuron_type>                                                               \
+    template KNP_DECLSPEC knp::core::Population<nt::neuron_type>                                                  \
         &Network::get_population<knp::core::Population<knp::neuron_traits::neuron_type>>(const knp::core::UID &); \
-    template const knp::core::Population<nt::neuron_type> &                                                       \
+    template KNP_DECLSPEC const knp::core::Population<nt::neuron_type> &                                          \
     Network::get_population<knp::core::Population<knp::neuron_traits::neuron_type>>(const knp::core::UID &) const;
 
 namespace st = knp::synapse_traits;
 
 #define INSTANCE_PROJECTION_FUNCTIONS(n, template_for_instance, synapse_type)                      \
-    template void Network::add_projection<knp::core::Projection<st::synapse_type>>(                \
+    template KNP_DECLSPEC void Network::add_projection<knp::core::Projection<st::synapse_type>>(   \
         knp::core::Projection<st::synapse_type> &&);                                               \
-    template void Network::add_projection<knp::core::Projection<st::synapse_type>>(                \
+    template KNP_DECLSPEC void Network::add_projection<knp::core::Projection<st::synapse_type>>(   \
         knp::core::Projection<st::synapse_type> &);                                                \
-    template void Network::add_projection<st::synapse_type>(                                       \
+    template KNP_DECLSPEC void Network::add_projection<st::synapse_type>(                          \
         knp::core::UID, knp::core::UID, knp::core::UID,                                            \
         typename knp::core::Projection<st::synapse_type>::SynapseGenerator, size_t);               \
-    template knp::core::Projection<st::synapse_type>                                               \
+    template KNP_DECLSPEC knp::core::Projection<st::synapse_type>                                  \
         &Network::get_projection<knp::core::Projection<st::synapse_type>>(const knp::core::UID &); \
-    template const knp::core::Projection<st::synapse_type>                                         \
+    template KNP_DECLSPEC const knp::core::Projection<st::synapse_type>                            \
         &Network::get_projection<knp::core::Projection<st::synapse_type>>(const knp::core::UID &) const;
 
 // cppcheck-suppress unknownMacro

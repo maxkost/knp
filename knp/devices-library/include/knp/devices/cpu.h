@@ -8,6 +8,7 @@
 #pragma once
 
 #include <knp/core/device.h>
+#include <knp/core/impexp.h>
 
 #include <memory>
 #include <string>
@@ -33,7 +34,7 @@ class CpuPower;
 /**
  * @brief The CPU class is a definition of an interface to the CPU device.
  */
-class CPU : public knp::core::Device
+class KNP_DECLSPEC CPU : public knp::core::Device  // cppcheck-suppress class_X_Y
 {
 public:
     /**
@@ -93,6 +94,6 @@ private:
  * @brief List all processors on which backend can be initialized.
  * @return vector of CPUs.
  */
-std::vector<CPU> list_processors();
+KNP_DECLSPEC std::vector<CPU> list_processors();
 
 }  // namespace knp::devices::cpu

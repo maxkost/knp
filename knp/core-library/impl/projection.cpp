@@ -58,20 +58,29 @@ template <class T, class IndexContainer>
 void remove_by_index(std::vector<T> &data, const IndexContainer &to_remove)
 {
     if (to_remove.empty()) return;
-    size_t removed = 0;
-    auto next_to_remove = to_remove.begin();
-    size_t index = *next_to_remove;
-    while (index + removed < data.size())
+
+    size_t cor_counter = 0;
+    for (const auto rem_index : to_remove)
     {
-        while (index + removed == *next_to_remove)
-        {
-            ++next_to_remove;
-            ++removed;
-        }
-        data[index] = std::move(data[index + removed]);
-        ++index;
+        data.erase(std::next(data.begin(), rem_index - cor_counter++));
     }
-    data.resize(data.size() - removed);
+
+    // Cool but incorrect (MSVC\14.40.33807\include\vector(56) : Assertion failed: can't dereference out of range vector
+    // iterator):
+    // size_t removed = 0;
+    // auto next_to_remove = to_remove.begin();
+    // size_t index = *next_to_remove;
+    // while (index + removed < data.size())
+    //{
+    //    while (index + removed == *next_to_remove)
+    //    {
+    //        ++next_to_remove;
+    //        ++removed;
+    //    }
+    //    data[index] = std::move(data[index + removed]);
+    //    ++index;
+    //}
+    // data.resize(data.size() - removed);
 }
 
 

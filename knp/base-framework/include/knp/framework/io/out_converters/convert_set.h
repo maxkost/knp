@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <knp/core/impexp.h>
 #include <knp/core/messaging/spike_message.h>
 
 #include <set>
@@ -23,7 +24,7 @@ namespace knp::framework::io::output
  * @brief The ConvertToSet class is a definition of a converter that gets a set of spiked neuron indexes from spike
  * messages.
  */
-class ConvertToSet
+class KNP_DECLSPEC ConvertToSet
 {
 public:
     /**
