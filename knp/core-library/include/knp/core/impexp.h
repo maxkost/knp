@@ -49,7 +49,7 @@
 #    define _KNP_SYMBOL_LOCAL
 #endif
 
-// Defined if KNP is built as a shared library.
+// Defined if Kaspersky Neuromorphic Platform is built as a shared library.
 #if defined(_KNP_BUILD_SHARED_LIBS)
 #    define KNP_EXPORT _KNP_SYMBOL_EXPORT
 #    define KNP_IMPORT _KNP_SYMBOL_IMPORT

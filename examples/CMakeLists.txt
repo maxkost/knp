@@ -14,5 +14,5 @@ install(DIRECTORY "."
         DESTINATION "src/knp/examples")
 
 knp_packaging_set_parameters(examples examples
-        DESCRIPTION "KNP examples"
+        DESCRIPTION "Kaspersky Neuromorphic Platform examples"
         DEPENDS framework-dev)

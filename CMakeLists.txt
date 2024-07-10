@@ -15,7 +15,7 @@ include(version)
 knp_get_version()
 
 if(NOT KNP_VERSION)
-    message(FATAL_ERROR "KNP version mandatory for build, but can't be determined!")
+    message(FATAL_ERROR "Kaspersky Neuromorphic Platform version is mandatory for build, but cannot be determined!")
 endif()
 
 enable_language(CXX)
@@ -30,7 +30,7 @@ project(knp VERSION "${KNP_VERSION}"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 set(KNP_BOOST_MIN_VERSION "1.74.0")
-set(KNP_ROOT_DIR "${PROJECT_SOURCE_DIR}" CACHE STRING "KNP root directory")
+set(KNP_ROOT_DIR "${PROJECT_SOURCE_DIR}" CACHE STRING "Kaspersky Neuromorphic Platform root directory")
 
 if (MSVC)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
@@ -92,7 +92,7 @@ endif()
 
 
 #
-# KNP build options set.
+# Kaspersky Neuromorphic Platform build options set.
 #
 
 # Build not from source directory, possible via add_subdirectory().
@@ -133,7 +133,7 @@ option(KNP_ENABLE_AVX "Enable AVX and other CPU-specific extensions in the relea
 option(KNP_ENABLE_COVERAGE "Enable coverage checking" OFF)
 option(KNP_IPO_ENABLED "Enable interprocedural optimization" ON)
 option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
-cmake_dependent_option(KNP_PYTHON_FRAMEWORK_BUILD "Build KNP Python framework" ON "KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT" OFF)
+cmake_dependent_option(KNP_PYTHON_FRAMEWORK_BUILD "Build Kaspersky Neuromorphic Platform Python framework" ON "KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT" OFF)
 cmake_dependent_option(KNP_PYTHON_BUILD_WHEEL "Build WHL package for the Python framework" ${KNP_MAINTAINER_BUILD} "KNP_PYTHON_FRAMEWORK_BUILD" OFF)
 
 mark_as_advanced(KNP_MAINTAINER_BUILD)
@@ -191,7 +191,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Always enabled for the KNP components.
+# Always enabled for the Kaspersky Neuromorphic Platform components.
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -D_FORTIFY_SOURCE=1")
 # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_FORTIFY_SOURCE=2")
 
@@ -287,7 +287,7 @@ include_directories(third-party ${THIRD_PARTY_INCLUDES})
 
 
 #
-# Build KNP.
+# Build Kaspersky Neuromorphic Platform.
 #
 
 set(CMAKE_TIDY_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/knp/.clang-tidy" CACHE PATH  "Clang-tidy config file")
@@ -318,7 +318,7 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${CMAKE_PROJECT_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${CMAKE_PROJECT_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${CMAKE_PROJECT_VERSION_PATCH})
 
-set(CPACK_PACKAGE_VENDOR "Kaspersky Laboratory")
+set(CPACK_PACKAGE_VENDOR "AO Kaspersky Lab")
 
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Artiom N.")
 SET(CPACK_PACKAGE_CONTACT "support@kaspersky.com")

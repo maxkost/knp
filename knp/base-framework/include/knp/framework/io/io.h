@@ -9,3 +9,13 @@
 
 #include "input_channel.h"
 #include "output_channel.h"
+
+
+/**
+ * @brief Input and output channel namespace.
+ */
+namespace knp::framework::io
+{
+
+
+}  // namespace knp::framework::io

@@ -1,6 +1,6 @@
 /**
 * @file version.h
-* @brief KNP version components.
+* @brief Kaspersky Neuromorphic Platform version components.
 * @author Artiom N.
 * @date 19.03.2024
 */

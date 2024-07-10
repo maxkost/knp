@@ -83,8 +83,8 @@ struct SynapticImpactMessage
     UID postsynaptic_population_uid_;
 
     /**
-     * @brief `true` if the signal is from a projection without plasticity.
-     * @details The parameter is used in training.
+     * @brief Boolean value that defines whether the signal is from a projection without plasticity.
+     * @details The parameter is used in training. Use `true` if the signal is from a projection without plasticity.
      * @todo Try to remove this when fixing main; this parameter is too specific to be a part of a general message.
      */
     bool is_forcing_ = false;
