@@ -44,7 +44,7 @@ std::shared_ptr<core::Backend> BackendLoader::load(const std::filesystem::path &
 {
     auto creator = make_creator(backend_path);
     SPDLOG_INFO("Create backend instance...");
-    return std::move(creator());
+    return creator();
 }
 
 

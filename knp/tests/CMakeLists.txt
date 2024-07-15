@@ -41,6 +41,8 @@ target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::BaseFramework::Core KNP::Ba
         KNP::Devices::CPUStatic)
 target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Backends::CPU::ThreadPool)
 
+add_dependencies("${PROJECT_NAME}" knp-base-framework-core_static)
+
 if (KNP_ENABLE_COVERAGE)
     include(codecoverage)
     append_coverage_compiler_flags()

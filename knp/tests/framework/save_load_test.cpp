@@ -5,7 +5,6 @@
  * @date 22.03.2024
  */
 
-
 #include <knp/core/projection.h>
 #include <knp/framework/sonata/network_io.h>
 
@@ -35,8 +34,8 @@ class SaveLoadNetworkSuite : public ::testing::Test
 protected:
     void TearDown() override
     {
-        // std::filesystem::remove_all(path_to_network_ / "network");
-        // std::filesystem::remove(path_to_network_ / "config.json");
+        std::filesystem::remove_all(path_to_network_ / "network");
+        std::filesystem::remove(path_to_network_ / "config.json");
     }
 
     std::filesystem::path path_to_network_;

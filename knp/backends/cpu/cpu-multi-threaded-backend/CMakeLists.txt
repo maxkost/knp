@@ -30,7 +30,7 @@ knp_add_library("${PROJECT_NAME}"
         ${${PROJECT_NAME}_headers}
     ALIAS KNP::Backends::CPUMultiThreaded
     LINK_PRIVATE
-        Boost::headers ${Boost_LIBRARIES} spdlog::spdlog
+        Boost::headers spdlog::spdlog
         KNP::Backends::CPU::Library KNP::Backends::CPU::ThreadPool
     LINK_PUBLIC
         KNP::Core KNP::Devices::CPUStatic

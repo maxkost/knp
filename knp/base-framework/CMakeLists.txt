@@ -68,6 +68,11 @@ set_target_properties(
         VERSION "${CMAKE_PROJECT_VERSION}"
         SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
 
+#add_custom_command(TARGET "${PROJECT_NAME}-core" POST_BUILD
+#  COMMAND ${CMAKE_COMMAND} -E copy_if_different D:/boost_1_84_0/lib64-msvc-14.3/boost_filesystem-vc143-mt-gd-x64-1_84.dll "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
+#  COMMAND_EXPAND_LISTS
+#)
+#  $<TARGET_RUNTIME_DLLS:${PROJECT_NAME}-core> "$<TARGET_FILE_DIR:${PROJECT_NAME}-core>"
 if(KNP_ENABLE_COVERAGE)
     include(codecoverage)
     append_coverage_compiler_flags()
