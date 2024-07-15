@@ -252,8 +252,7 @@ add_third_party("gh:simdjson/simdjson@3.9.2"
                 OPTIONS
                     "SIMDJSON_BUILD_STATIC_LIB ON")
 
-add_third_party("gh:intel/pcm"
-                GIT_TAG 306aedb
+add_third_party("gh:intel/pcm#push-2024-07-12"
                 OPTIONS
                     "NO_STATIC_MSVC_RUNTIME_LIBRARY ON"
                     "NO_ASAN ON")
