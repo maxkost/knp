@@ -255,7 +255,8 @@ add_third_party("gh:simdjson/simdjson@3.9.2"
 add_third_party("gh:intel/pcm"
                 GIT_TAG 306aedb
                 OPTIONS
-                    "NO_STATIC_MSVC_RUNTIME_LIBRARY ON")
+                    "NO_STATIC_MSVC_RUNTIME_LIBRARY ON"
+                    "NO_ASAN ON")
 
 add_third_party("gh:gabime/spdlog@1.13.0"
                 OPTIONS
