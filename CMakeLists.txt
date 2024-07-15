@@ -278,14 +278,6 @@ endif()
 file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
 include_directories(third-party ${THIRD_PARTY_INCLUDES})
 
-#if (MSVC)
-#    knp_get_hdf5_target(HDF5_LIB)
-#    foreach (target ${HDF5_LIB} spdlog simdjson_static)
-#        set_property(TARGET "${target}" PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-#    endforeach()
-#endif()
-
-
 #
 # Build Kaspersky Neuromorphic Platform.
 #
@@ -301,7 +293,6 @@ endif()
 if (KNP_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
-
 
 #
 # Packaging.
