@@ -36,7 +36,7 @@ std::function<BackendLoader::BackendCreateFunction> BackendLoader::make_creator(
 
     // creators_[backend_path.string()] = creator;
 
-    return std::move(creator);
+    return creator;
 }
 
 
