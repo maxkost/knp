@@ -33,9 +33,6 @@ set(KNP_BOOST_MIN_VERSION "1.74.0")
 set(KNP_ROOT_DIR "${PROJECT_SOURCE_DIR}" CACHE STRING "Kaspersky Neuromorphic Platform root directory")
 
 if (MSVC)
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-    # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
-
     add_compile_options(/EHsc /MP /MDd)
     # add_link_options(/LTCG:INCREMENTAL)  # /NODEFAULTLIB:LIBCMTD
     add_compile_definitions(_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING=1 _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS=1)
@@ -87,7 +84,7 @@ endif()
 find_package(Boost ${KNP_BOOST_MIN_VERSION})
 
 if (MSVC)
-    add_link_options("/LIBPATH:${Boost_LIBRARY_DIR_RELEASE}")
+    add_link_options("/LIBPATH:${Boost_LIBRARY_DIRS}")
 endif()
 
 
@@ -202,6 +199,10 @@ include(print-variables)
 # Build third-party.
 #
 
+if (MSVC)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+endif()
+
 set(CPM_SOURCE_CACHE_DEFAULT "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STRING "")
 
 # Make cache variables for install destinations.
@@ -250,6 +251,7 @@ add_third_party("gh:p-ranav/csv2@0.1"
 add_third_party("gh:simdjson/simdjson@3.9.2"
                 GIT_SHALLOW ON
                 OPTIONS
+                    "SIMDJSON_USING_LIBRARY 1"
                     "SIMDJSON_BUILD_STATIC_LIB ON")
 
 add_third_party("gh:intel/pcm"
@@ -278,6 +280,11 @@ endif()
 
 file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
 include_directories(third-party ${THIRD_PARTY_INCLUDES})
+
+if (MSVC)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS FALSE)
+endif()
+
 
 #
 # Build Kaspersky Neuromorphic Platform.
