@@ -38,8 +38,7 @@ knp_get_hdf5_target(HDF5_LIB)
 
 target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main spdlog::spdlog HighFive ${HDF5_LIB})
 target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::BaseFramework::Core KNP::Backends::CPUSingleThreaded KNP::Backends::CPUMultiThreaded
-        KNP::Devices::CPUStatic)
-target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Backends::CPU::ThreadPool)
+                                                KNP::Backends::CPU::ThreadPool)
 
 add_dependencies("${PROJECT_NAME}" knp-base-framework-core_static)
 

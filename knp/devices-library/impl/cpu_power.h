@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <knp/core/impexp.h>
+
 #if defined(__clang__)
 #    pragma clang diagnostic push
 #    pragma clang diagnostic ignored "-Wdocumentation"
@@ -14,13 +16,13 @@
 
 #include <pcm/src/cpucounters.h>
 
-#include <chrono>
-#include <cinttypes>
-#include <vector>
-
 #if defined(__clang__)
 #    pragma clang diagnostic pop
 #endif
+
+#include <chrono>
+#include <cinttypes>
+#include <vector>
 
 
 namespace knp::devices::cpu
@@ -28,19 +30,20 @@ namespace knp::devices::cpu
 /**
  * @brief Power getter via Intel PCM.
  */
-class CpuPower
+class KNP_DECLSPEC CpuPower
 {
 public:
     CpuPower();
-
-public:
     float get_power();
 
 private:
     std::chrono::time_point<std::chrono::steady_clock> time_start_;
     pcm::PCM *pcm_instance_ = nullptr;
+    // cppcheck-suppress unusedStructMember
     std::vector<pcm::SocketCounterState> sktstate1_, sktstate2_;
+    // cppcheck-suppress unusedStructMember
     std::vector<pcm::CoreCounterState> /* cstates1, */ cstates2_;
+    // cppcheck-suppress unusedStructMember
     pcm::SystemCounterState sstate1_, sstate2_;
 };
 }  // namespace knp::devices::cpu

@@ -305,7 +305,7 @@ void MultiThreadedCPUBackend::load_all_populations(const std::vector<knp::core::
 std::vector<std::unique_ptr<knp::core::Device>> MultiThreadedCPUBackend::get_devices() const
 {
     std::vector<std::unique_ptr<knp::core::Device>> result;
-    auto processors{knp::devices::cpu::list_processors()};
+    auto &&processors{knp::devices::cpu::list_processors()};
 
     result.reserve(processors.size());
 

@@ -58,10 +58,10 @@ public:
     CPU(CPU &&);
 
     /**
-     * @brief CPU device copy operator.
+     * @brief CPU device move operator.
      * @return reference to CPU instance.
      */
-    CPU &operator=(CPU &&);
+    CPU &operator=(CPU &&) noexcept;
 
 public:
     /**
