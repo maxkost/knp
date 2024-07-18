@@ -199,7 +199,7 @@ void Projection<SynapseType>::clear()
 
 
 template <typename SynapseType>
-void knp::core::Projection<SynapseType>::remove_synapse(size_t index)  //! OCLINT(Parameters used)
+void knp::core::Projection<SynapseType>::remove_synapse(size_t index)  // !OCLINT
 {
     is_index_updated_ = false;
     parameters_.erase(parameters_.begin() + index);
@@ -207,8 +207,7 @@ void knp::core::Projection<SynapseType>::remove_synapse(size_t index)  //! OCLIN
 
 
 template <typename SynapseType>
-size_t knp::core::Projection<SynapseType>::remove_synapse_if(
-    std::function<bool(const Synapse &)> predicate)  //! OCLINT(Parameters used)
+size_t knp::core::Projection<SynapseType>::remove_synapse_if(std::function<bool(const Synapse &)> predicate)  // !OCLINT
 {
     const size_t starting_size = parameters_.size();
     is_index_updated_ = false;
@@ -218,8 +217,7 @@ size_t knp::core::Projection<SynapseType>::remove_synapse_if(
 
 
 template <typename SynapseType>
-size_t knp::core::Projection<SynapseType>::remove_postsynaptic_neuron_synapses(
-    size_t neuron_index)  //! OCLINT(Parameters used)
+size_t knp::core::Projection<SynapseType>::remove_postsynaptic_neuron_synapses(size_t neuron_index)  // !OCLINT
 {
     const size_t starting_size = parameters_.size();
     bool was_index_updated = is_index_updated_;
@@ -237,8 +235,7 @@ size_t knp::core::Projection<SynapseType>::remove_postsynaptic_neuron_synapses(
 
 
 template <typename SynapseType>
-size_t knp::core::Projection<SynapseType>::remove_presynaptic_neuron_synapses(
-    size_t neuron_index)  //! OCLINT(Parameters used)
+size_t knp::core::Projection<SynapseType>::remove_presynaptic_neuron_synapses(size_t neuron_index)  // !OCLINT
 {
     // TODO: We now have a way to find them quickly, make use of it instead of disconnect_if.
     return remove_synapse_if([neuron_index](const Synapse &synapse)
@@ -270,6 +267,6 @@ void knp::core::Projection<SynapseType>::reindex() const
 #define INSTANCE_PROJECTIONS(n, template_for_instance, synapse_type) \
     template class knp::core::Projection<knp::synapse_traits::synapse_type>;
 
-BOOST_PP_SEQ_FOR_EACH(INSTANCE_PROJECTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_SYNAPSES))  //! OCLINT(Parameters used)
+BOOST_PP_SEQ_FOR_EACH(INSTANCE_PROJECTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_SYNAPSES))  // !OCLINT
 
 }  // namespace knp::core
