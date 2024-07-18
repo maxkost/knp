@@ -47,7 +47,13 @@ public:
     {
     }
 
+    /**
+     * @brief Avoid copy of ModelLoader.
+     */
     ModelLoader(const ModelLoader &) = delete;
+    /**
+     * @brief Avoid copy assignment of ModelLoader.
+     */
     ModelLoader operator=(const ModelLoader &) = delete;
 
 public:
