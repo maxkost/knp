@@ -20,6 +20,16 @@
 namespace knp::core::messaging::impl
 {
 
+#if defined(_MSC_VER)
+#    pragma warning(push)
+#    pragma warning(disable : 4455)
+#endif
+using std::chrono_literals::operator""ms;
+#if defined(_MSC_VER)
+#    pragma warning(pop)
+#endif
+
+
 MessageEndpointZMQImpl::MessageEndpointZMQImpl(zmq::socket_t &&sub_socket, zmq::socket_t &&pub_socket)
     : sub_socket_(std::move(sub_socket)), pub_socket_(std::move(pub_socket))
 {
@@ -60,24 +70,14 @@ std::optional<zmq::message_t> MessageEndpointZMQImpl::receive_zmq_message()
     zmq::message_t msg;
     // recv_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
     zmq::recv_result_t result;
-#if defined(_MSC_VER)
-#    pragma warning(push)
-#    pragma warning(disable : 4455)
-#endif
-    using std::chrono_literals::operator""ms;
-#if defined(_MSC_VER)
-#    pragma warning(pop)
-#endif
 
     try
     {
-        SPDLOG_DEBUG("Endpoint receiving message");
-
         std::vector<zmq_pollitem_t> items = {
             zmq_pollitem_t{sub_socket_.handle(), 0, ZMQ_POLLIN, 0},
         };
 
-        SPDLOG_DEBUG("Running poll()");
+        SPDLOG_DEBUG("Running poll() for receiving message");
         // cppcheck-suppress "cppcheckError"
         if (zmq::poll(items, 0ms) > 0)
         {

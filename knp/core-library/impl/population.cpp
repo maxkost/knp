@@ -15,7 +15,7 @@ namespace knp::core
 {
 template <typename NeuronType>
 Population<NeuronType>::Population(
-    Population<NeuronType>::NeuronGenerator generator, size_t neurons_count)  // !OCLint(Parameters used)
+    Population<NeuronType>::NeuronGenerator generator, size_t neurons_count)  //! OCLINT(Parameters used)
 {
     SPDLOG_DEBUG("Creating population with UID = {} and neurons count = {}", std::string(get_uid()), neurons_count);
     add_neurons(generator, neurons_count);
@@ -24,8 +24,8 @@ Population<NeuronType>::Population(
 
 template <typename NeuronType>
 Population<NeuronType>::Population(
-    const UID &uid, Population<NeuronType>::NeuronGenerator generator,
-    size_t neurons_count)  // !OCLint(Parameters used)
+    const UID &uid, Population<NeuronType>::NeuronGenerator generator,  //! OCLINT(Parameters used)
+    size_t neurons_count)                                               //! OCLINT(Parameters used)
     : base_{uid}
 {
     SPDLOG_DEBUG("Creating population with UID = {} and neurons count = {}", std::string(get_uid()), neurons_count);

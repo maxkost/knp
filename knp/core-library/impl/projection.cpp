@@ -90,7 +90,7 @@ using Connection = typename std::tuple<size_t, size_t, size_t>;
 
 
 template <typename SynapseType>
-Projection<SynapseType>::Projection(UID presynaptic_uid, UID postsynaptic_uid)  // !OCLint (Parameters are used)
+Projection<SynapseType>::Projection(UID presynaptic_uid, UID postsynaptic_uid)  //! OCLINT(Parameters used)
     : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -100,7 +100,7 @@ Projection<SynapseType>::Projection(UID presynaptic_uid, UID postsynaptic_uid)  
 
 
 template <typename SynapseType>
-Projection<SynapseType>::Projection(UID uid, UID presynaptic_uid, UID postsynaptic_uid)  // !OCLint(Parameters are used)
+Projection<SynapseType>::Projection(UID uid, UID presynaptic_uid, UID postsynaptic_uid)  //! OCLINT(Parameters used)
     : base_{uid}, presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -111,7 +111,8 @@ Projection<SynapseType>::Projection(UID uid, UID presynaptic_uid, UID postsynapt
 
 template <typename SynapseType>
 Projection<SynapseType>::Projection(
-    UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator, size_t num_iterations)  // !OCLint
+    UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator,
+    size_t num_iterations)  //! OCLINT(Parameters used)
     : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -130,7 +131,8 @@ Projection<SynapseType>::Projection(
 
 template <typename SynapseType>
 Projection<SynapseType>::Projection(
-    UID uid, UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator, size_t num_iterations)  // !OCLint
+    UID uid, UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator,
+    size_t num_iterations)  //! OCLINT(Parameters used)
     : base_{uid}, presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -149,7 +151,8 @@ Projection<SynapseType>::Projection(
 
 
 template <typename SynapseType>
-std::vector<size_t> knp::core::Projection<SynapseType>::find_synapses(size_t neuron_id, Search search_criterion) const
+std::vector<size_t> knp::core::Projection<SynapseType>::find_synapses(
+    size_t neuron_id, Search search_criterion) const  //! OCLINT(Parameters used)
 {
     reindex();
     std::vector<size_t> res;
@@ -171,7 +174,8 @@ std::vector<size_t> knp::core::Projection<SynapseType>::find_synapses(size_t neu
 
 
 template <typename SynapseType>
-size_t knp::core::Projection<SynapseType>::add_synapses(SynapseGenerator generator, size_t num_iterations)
+size_t knp::core::Projection<SynapseType>::add_synapses(
+    SynapseGenerator generator, size_t num_iterations)  //! OCLINT(Parameters used)
 {
     const size_t starting_size = parameters_.size();
     is_index_updated_ = false;
@@ -195,7 +199,7 @@ void Projection<SynapseType>::clear()
 
 
 template <typename SynapseType>
-void knp::core::Projection<SynapseType>::remove_synapse(size_t index)
+void knp::core::Projection<SynapseType>::remove_synapse(size_t index)  //! OCLINT(Parameters used)
 {
     is_index_updated_ = false;
     parameters_.erase(parameters_.begin() + index);
@@ -203,7 +207,8 @@ void knp::core::Projection<SynapseType>::remove_synapse(size_t index)
 
 
 template <typename SynapseType>
-size_t knp::core::Projection<SynapseType>::remove_synapse_if(std::function<bool(const Synapse &)> predicate)
+size_t knp::core::Projection<SynapseType>::remove_synapse_if(
+    std::function<bool(const Synapse &)> predicate)  //! OCLINT(Parameters used)
 {
     const size_t starting_size = parameters_.size();
     is_index_updated_ = false;
@@ -213,7 +218,8 @@ size_t knp::core::Projection<SynapseType>::remove_synapse_if(std::function<bool(
 
 
 template <typename SynapseType>
-size_t knp::core::Projection<SynapseType>::remove_postsynaptic_neuron_synapses(size_t neuron_index)
+size_t knp::core::Projection<SynapseType>::remove_postsynaptic_neuron_synapses(
+    size_t neuron_index)  //! OCLINT(Parameters used)
 {
     const size_t starting_size = parameters_.size();
     bool was_index_updated = is_index_updated_;
@@ -231,7 +237,8 @@ size_t knp::core::Projection<SynapseType>::remove_postsynaptic_neuron_synapses(s
 
 
 template <typename SynapseType>
-size_t knp::core::Projection<SynapseType>::remove_presynaptic_neuron_synapses(size_t neuron_index)
+size_t knp::core::Projection<SynapseType>::remove_presynaptic_neuron_synapses(
+    size_t neuron_index)  //! OCLINT(Parameters used)
 {
     // TODO: We now have a way to find them quickly, make use of it instead of disconnect_if.
     return remove_synapse_if([neuron_index](const Synapse &synapse)
@@ -263,6 +270,6 @@ void knp::core::Projection<SynapseType>::reindex() const
 #define INSTANCE_PROJECTIONS(n, template_for_instance, synapse_type) \
     template class knp::core::Projection<knp::synapse_traits::synapse_type>;
 
-BOOST_PP_SEQ_FOR_EACH(INSTANCE_PROJECTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_SYNAPSES))
+BOOST_PP_SEQ_FOR_EACH(INSTANCE_PROJECTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_SYNAPSES))  //! OCLINT(Parameters used)
 
 }  // namespace knp::core
