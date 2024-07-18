@@ -28,7 +28,7 @@ namespace knp::framework
 /**
  * @brief The ModelLoader class is a definition of a loader that uploads the model to the specified backend.
  */
-class ModelLoader
+class KNP_DECLSPEC ModelLoader
 {
 public:
     /**
@@ -46,6 +46,15 @@ public:
         : backend_(backend), i_map_(std::move(i_map))
     {
     }
+
+    /**
+     * @brief Avoid copy of ModelLoader.
+     */
+    ModelLoader(const ModelLoader &) = delete;
+    /**
+     * @brief Avoid copy assignment of ModelLoader.
+     */
+    ModelLoader operator=(const ModelLoader &) = delete;
 
 public:
     /**

@@ -56,16 +56,22 @@ bool check_version(const HighFive::File &doc)
 }
 
 
-std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
+void check_format(const HighFive::File &h5_file, bool is_throw)
+{
+    // Checking magic number.
+    if (!check_magic(h5_file, is_throw)) SPDLOG_WARN("No magic number found, probably wrong file format");
+
+    // Checking version.
+    if (!check_version(h5_file)) SPDLOG_WARN("Unable to confirm file version");
+}
+
+
+KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
     const fs::path &path_to_h5, const knp::core::UID &uid, float time_per_step, bool strict_format)
 {
     HighFive::File h5_file(path_to_h5.string());
 
-    // Checking magic number.
-    if (!check_magic(h5_file, strict_format)) SPDLOG_WARN("No magic number found, probably wrong file format");
-
-    // Checking version.
-    if (!check_version(h5_file)) SPDLOG_WARN("Unable to confirm file version");
+    check_format(h5_file, strict_format);
 
     // File should have "spikes" group.
     std::vector<std::string> obj_names = h5_file.listObjectNames();
@@ -111,7 +117,7 @@ std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
 }
 
 
-void save_messages_to_h5(
+KNP_DECLSPEC void save_messages_to_h5(
     std::vector<core::messaging::SpikeMessage> messages, const std::filesystem::path &path_to_save, float time_per_step)
 {
     HighFive::File data_file(path_to_save.string(), HighFive::File::Create | HighFive::File::Overwrite);

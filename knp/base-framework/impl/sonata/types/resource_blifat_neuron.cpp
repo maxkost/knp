@@ -181,9 +181,8 @@ load_population<neuron_traits::SynapticResourceSTDPBLIFATNeuron>(
     LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, dopamine_value_, dyn_group, group_size);
 
     const knp::core::UID uid{boost::lexical_cast<boost::uuids::uuid>(population_name)};
-    core::Population<ResourceNeuron> out_population(
+    return core::Population<ResourceNeuron>(
         uid, [&target](size_t index) { return target[index]; }, group_size);
-    return out_population;
 }
 
 }  // namespace knp::framework::sonata

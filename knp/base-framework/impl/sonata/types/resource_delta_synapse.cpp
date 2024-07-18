@@ -98,6 +98,7 @@ void add_projection_to_h5<core::Projection<ResourceDeltaSynapse>>(
     std::vector<uint64_t> group_index;
     group_index.reserve(projection.size());
     for (size_t i = 0; i < projection.size(); ++i) group_index.push_back(i);
+
     proj_group.createDataSet("edge_group_index", group_index);
 
     HighFive::Group syn_group = proj_group.createGroup("0");
@@ -145,19 +146,16 @@ core::Projection<ResourceDeltaSynapse> load_projection(
         projection_group.getDataSet("target_node_id").getAttribute("node_population").read<std::string>())};
     const core::UID uid_own{boost::lexical_cast<boost::uuids::uuid>(projection_name)};
 
-    using SynParams = synapse_traits::synapse_parameters<ResourceDeltaSynapse>;
-    using Synapse = std::tuple<SynParams, size_t, size_t>;
-    std::vector<Synapse> synapses;
+    std::vector<std::tuple<synapse_traits::synapse_parameters<ResourceDeltaSynapse>, size_t, size_t>> synapses;
     synapses.reserve(group_size);
+
     for (size_t i = 0; i < weights.size(); ++i)
     {
         synapse_traits::synapse_parameters<ResourceDeltaSynapse> syn;
         syn.weight_ = weights[i];
         syn.delay_ = delays[i];
         syn.output_type_ = static_cast<synapse_traits::OutputType>(out_types[i]);
-        const size_t id_from = source_ids[i];
-        const size_t id_to = target_ids[i];
-        synapses.emplace_back(syn, id_from, id_to);
+        synapses.emplace_back(syn, source_ids[i], target_ids[i]);
     }
     static const synapse_traits::synapse_parameters<synapse_traits::SynapticResourceSTDPDeltaSynapse> def_params;
 

@@ -53,8 +53,7 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
     backend._init();
     auto endpoint = backend.get_message_bus().create_endpoint();
 
-    const knp::core::UID in_channel_uid;
-    const knp::core::UID out_channel_uid;
+    const knp::core::UID in_channel_uid, out_channel_uid;
 
     // Create input and output
     backend.subscribe<knp::core::messaging::SpikeMessage>(input_uid, {in_channel_uid});
@@ -87,8 +86,6 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
 
 TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
 {
-    namespace kt = knp::testing;
-
     using STDPDeltaProjection = knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse>;
 
     // Create an STDP input projection
@@ -106,7 +103,7 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
     { return knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>{}; };
 
     // Create a single-neuron neural network: input -> input_projection -> population <=> loop_projection
-    kt::STestingBack backend;
+    knp::testing::STestingBack backend;
 
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> population{knp::core::UID(), stdp_neurons_generator, 1};
 
@@ -124,8 +121,7 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
     backend._init();
     auto endpoint = backend.get_message_bus().create_endpoint();
 
-    knp::core::UID in_channel_uid;
-    knp::core::UID out_channel_uid;
+    knp::core::UID in_channel_uid, out_channel_uid;
 
     // Create input and output
     backend.subscribe<knp::core::messaging::SpikeMessage>(input_uid, {in_channel_uid});
@@ -179,9 +175,6 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
 
 TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
 {
-    // TODO: Remove code duplication.
-    namespace kt = knp::testing;
-
     using STDPDeltaProjection = knp::core::Projection<knp::synapse_traits::SynapticResourceSTDPDeltaSynapse>;
     using BlifatStdpPopulation = knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron>;
 
@@ -198,7 +191,7 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
     };
 
     // Create a single-neuron neural network: input -> input_projection -> population <=> loop_projection
-    kt::STestingBack backend;
+    knp::testing::STestingBack backend;
 
     BlifatStdpPopulation population{
         knp::core::UID(),
@@ -246,10 +239,7 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
         auto output = endpoint.unload_messages<knp::core::messaging::SpikeMessage>(out_channel_uid);
         SPDLOG_DEBUG("Unloaded {} messages", output.size());
         // Write up the steps where the network sends a spike
-        if (!output.empty())
-        {
-            results.push_back(step);
-        }
+        if (!output.empty()) results.push_back(step);
     }
 
     std::vector<float> old_synaptic_weights, new_synaptic_weights;

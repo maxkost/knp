@@ -5,11 +5,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 if (NOT TARGET KNP::BaseFramework::Core)
-    find_package(knp-framework REQUIRED)
+    find_package(knp-base-framework REQUIRED)
 endif()
 
 add_executable("${PROJECT_NAME}" main.cpp)
 target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::BaseFramework::Core)
-
-install(TARGETS "${PROJECT_NAME}"
-        COMPONENT "examples")

@@ -23,7 +23,7 @@ namespace knp::framework::io::input
 /**
  * @brief The InputChannel class is a definition of an input channel.
  */
-class InputChannel
+class KNP_DECLSPEC InputChannel
 {
 public:
     /**

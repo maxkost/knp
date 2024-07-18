@@ -19,13 +19,18 @@ if(NOT TARGET cppzmq)
     find_package(cppzmq REQUIRED)
 endif()
 
+if (MSVC)
+    set(CPP_ZMQ cppzmq-static)
+else()
+    set(CPP_ZMQ cppzmq)
+endif()
+
 include(GNUInstallDirs)
 # Need for installation.
 include(CMakePackageConfigHelpers)
 include(clang-tidy)
 include(knp-functions)
 include(third-party)
-
 
 set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/core")
 
@@ -79,7 +84,7 @@ knp_add_library("${PROJECT_NAME}"
     ${${PROJECT_NAME}_headers}
     # PRECOMP impl/common_precomp.h
     LINK_PRIVATE
-        Boost::headers spdlog::spdlog cppzmq flatbuffers "${PROJECT_NAME}_messaging"
+        Boost::headers spdlog::spdlog ${CPP_ZMQ} flatbuffers "${PROJECT_NAME}_messaging"
     LINK_PUBLIC
         # This is using in the library for message parameters.
         KNP::Neuron::Traits KNP::Synapse::Traits

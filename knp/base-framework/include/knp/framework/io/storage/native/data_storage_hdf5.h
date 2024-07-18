@@ -6,6 +6,7 @@
  */
 #pragma once
 
+#include <knp/core/impexp.h>
 #include <knp/core/messaging/messaging.h>
 
 #include <filesystem>
@@ -30,7 +31,7 @@ namespace knp::framework::io::storage::native
  * @param strict_format if `true`, method throws exception on wrong format.
  * @return vector of messages sorted by timestamps.
  */
-std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
+KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
     const std::filesystem::path &path_to_h5, const knp::core::UID &uid, float time_per_step = 1.0f,
     bool strict_format = true);
 
@@ -43,7 +44,7 @@ std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
  * @param path_to_save path to file.
  * @param time_per_step time per step.
  */
-void save_messages_to_h5(
+KNP_DECLSPEC void save_messages_to_h5(
     std::vector<core::messaging::SpikeMessage> messages, const std::filesystem::path &path_to_save,
     float time_per_step = 1.0f);
 

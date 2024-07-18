@@ -5,7 +5,6 @@
  * @date 22.03.2024
  */
 
-
 #include <knp/core/projection.h>
 #include <knp/framework/sonata/network_io.h>
 

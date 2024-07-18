@@ -13,8 +13,8 @@
 int main(int argc, char *argv[])
 {
     spdlog::set_level(spdlog::level::trace);
-
     testing::InitGoogleTest(&argc, argv);
+
     try
     {
         return RUN_ALL_TESTS();

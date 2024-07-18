@@ -6,6 +6,7 @@
  */
 #pragma once
 
+#include <knp/core/impexp.h>
 #include <knp/core/message_endpoint.h>
 #include <knp/core/messaging/spike_message.h>
 #include <knp/core/uid.h>
@@ -30,7 +31,7 @@ namespace knp::framework::io::input
  * @brief The IndexConverter class is a definition of a converter that converts lines of integers into spiked neuron
  * indexes.
  */
-class IndexConverter
+class KNP_DECLSPEC IndexConverter
 {
 public:
     /**

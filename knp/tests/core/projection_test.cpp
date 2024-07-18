@@ -88,7 +88,7 @@ TEST(ProjectionSuite, SynapseAddition)
     projection.add_synapses(generator1, presynaptic_size);
     ASSERT_EQ(projection.size(), presynaptic_size);
     size_t count = projection.add_synapses(
-        [](size_t)  // NOLINT
+        [neuron_index](size_t)  // NOLINT
         {
             return Synapse{
                 {1.F, 2, SynapseType ::EXCITATORY},
@@ -113,7 +113,7 @@ TEST(ProjectionSuite, SynapseAddition)
     std::vector<Synapse> connections;
     std::copy_if(
         projection.begin(), projection.end(), std::back_inserter(connections),
-        [](const Synapse &syn) { return std::get<knp::core::source_neuron_id>(syn) == neuron_index; });
+        [neuron_index](const Synapse &syn) { return std::get<knp::core::source_neuron_id>(syn) == neuron_index; });
 
     ASSERT_EQ(connections.size(), 3);
     for (size_t i = 0; i < 3; ++i)
@@ -122,7 +122,8 @@ TEST(ProjectionSuite, SynapseAddition)
         ASSERT_NE(
             std::find_if(
                 connections.begin(), connections.end(),
-                [&i](const Synapse &syn) { return std::get<knp::core::target_neuron_id>(syn) == neuron_index + i; }),
+                [&i, neuron_index](const Synapse &syn)
+                { return std::get<knp::core::target_neuron_id>(syn) == neuron_index + i; }),
             connections.end());
     }
 }

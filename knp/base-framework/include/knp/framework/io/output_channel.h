@@ -7,6 +7,7 @@
 #pragma once
 
 #include <knp/core/core.h>
+#include <knp/core/impexp.h>
 #include <knp/core/message_endpoint.h>
 #include <knp/core/messaging/messaging.h>
 
@@ -25,7 +26,7 @@ namespace knp::framework::io::output
 /**
  * @brief The OutputChannel class is a definition of an output channel.
  */
-class OutputChannel
+class KNP_DECLSPEC OutputChannel
 {
 public:
     /**

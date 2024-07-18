@@ -19,6 +19,16 @@
 namespace knp::core::messaging::impl
 {
 
+#if defined(_MSC_VER)
+#    pragma warning(push)
+#    pragma warning(disable : 4455)
+#endif
+using std::chrono_literals::operator""ms;
+#if defined(_MSC_VER)
+#    pragma warning(pop)
+#endif
+
+
 class MessageEndpointZMQ : public MessageEndpoint
 {
 public:
@@ -48,14 +58,6 @@ size_t MessageBusZMQImpl::step()
 {
     zmq::message_t message;
     zmq::recv_result_t recv_result;
-#if defined(_MSC_VER)
-#    pragma warning(push)
-#    pragma warning(disable : 4455)
-#endif
-    using std::chrono_literals::operator""ms;
-#if defined(_MSC_VER)
-#    pragma warning(pop)
-#endif
 
     try
     {
