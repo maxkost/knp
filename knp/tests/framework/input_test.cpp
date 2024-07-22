@@ -1,5 +1,7 @@
 /**
- * Input channels and converters tests.
+ * @brief Input channels and converters tests.
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/message_bus.h>

@@ -1,5 +1,7 @@
 /**
- * Device tests.
+ * @brief Device tests.
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/backends/cpu-single-threaded/backend.h>

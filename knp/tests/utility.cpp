@@ -1,5 +1,7 @@
 /**
  * @brief Some common test functions.
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <tests_common.h>

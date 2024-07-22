@@ -1,6 +1,8 @@
 /**
- * Tests runner.
- **/
+ * @brief Tests runner.
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
+ */
 
 #include <gtest/gtest.h>
 #include <spdlog/spdlog.h>

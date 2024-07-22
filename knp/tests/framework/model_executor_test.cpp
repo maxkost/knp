@@ -3,6 +3,8 @@
  * @brief Model executor class testing.
  * @author Artiom N.
  * @date 13.07.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/backends/cpu-single-threaded/backend.h>
