@@ -30,7 +30,7 @@ if(KNP_BUILD_DOCUMENTATION)
     list(APPEND _strip_list "${SOURCE_ROOT_DIR}")
 
     # Additional tag.
-    set(DOXYGEN_ALIASES "license=@par License:\n")
+    set(DOXYGEN_ALIASES "license=@par License:")
 
     set(DOXYGEN_BUILTIN_STL_SUPPORT YES)
     set(DOXYGEN_CALL_GRAPH YES)

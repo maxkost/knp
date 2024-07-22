@@ -3,6 +3,8 @@
  * @brief Multi-threaded CPU backend class implementation.
  * @author Artiom N.
  * @date 21.06.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/backends/cpu-library/blifat_population.h>

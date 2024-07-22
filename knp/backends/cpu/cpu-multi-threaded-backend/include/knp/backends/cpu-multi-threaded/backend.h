@@ -3,6 +3,8 @@
  * @brief Class definition for multi-threaded CPU backend.
  * @author Artiom N.
  * @date 21.06.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once

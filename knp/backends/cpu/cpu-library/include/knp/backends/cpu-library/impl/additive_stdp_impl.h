@@ -3,6 +3,8 @@
  * @brief Additive STDP calculation routines implementation.
  * @author Artiom N.
  * @date 21.08.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 #include <knp/backends/cpu-library/impl/base_stdp_impl.h>
@@ -228,7 +230,7 @@ struct WeightUpdateSTDP<synapse_traits::STDP<synapse_traits::STDPAdditiveRule, D
         register_additive_stdp_spikes(projection, all_messages);
     }
 
-    static void init_synapse(knp::synapse_traits::synapse_parameters<Synapse> &projection, uint64_t step) {}
+    static void init_synapse(const knp::synapse_traits::synapse_parameters<Synapse> &projection, uint64_t step) {}
 
     static void modify_weights(knp::core::Projection<Synapse> &projection)
     {

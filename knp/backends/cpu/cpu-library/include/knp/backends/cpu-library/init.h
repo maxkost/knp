@@ -3,6 +3,8 @@
  * @brief Initializing routines for backend.
  * @author Artiom N.
  * @date 17.08.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
