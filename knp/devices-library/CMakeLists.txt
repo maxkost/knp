@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp-devices VERSION "${KNP_VERSION}" LANGUAGES C CXX
-        DESCRIPTION "Kaspersky Neuromorphic devices parameters library"
+        DESCRIPTION "Kaspersky Neuromorphic Platform device parameters library"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 include(GNUInstallDirs)

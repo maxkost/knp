@@ -31,7 +31,7 @@ MultiThreadedCPUBackend::MultiThreadedCPUBackend(
     : population_part_size_(population_part_size),
       projection_part_size_(projection_part_size),
       calc_pool_(std::make_unique<cpu_executors::ThreadPool>(
-          thread_count != 0 ? thread_count : std::thread::hardware_concurrency()))
+          thread_count ? thread_count : std::thread::hardware_concurrency()))
 {
     SPDLOG_INFO(
         "MT CPU backend instance created, threads count = {}...",
@@ -305,7 +305,7 @@ void MultiThreadedCPUBackend::load_all_populations(const std::vector<knp::core::
 std::vector<std::unique_ptr<knp::core::Device>> MultiThreadedCPUBackend::get_devices() const
 {
     std::vector<std::unique_ptr<knp::core::Device>> result;
-    auto processors{knp::devices::cpu::list_processors()};
+    auto &&processors{knp::devices::cpu::list_processors()};
 
     result.reserve(processors.size());
 

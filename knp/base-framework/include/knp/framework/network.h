@@ -30,7 +30,7 @@ namespace knp::framework
 /**
  * @brief The Network class is a definition of a neural network that contains populations and projections.
  */
-class Network
+class KNP_DECLSPEC Network
 {
 public:
     /**
@@ -314,10 +314,6 @@ public:
      * @see TagMap.
      */
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
-
-private:
-    template <typename VT>
-    typename std::vector<VT>::iterator find_variant(const knp::core::UID &uid, std::vector<VT> &container);
 
 private:
     knp::core::BaseData base_;

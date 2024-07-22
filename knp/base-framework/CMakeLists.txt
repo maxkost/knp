@@ -7,7 +7,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp-base-framework VERSION "${KNP_VERSION}" LANGUAGES C CXX
-        DESCRIPTION "Kaspersky Neuromorphic Platform C++ framework"
+        DESCRIPTION "Kaspersky Neuromorphic Platform C++ framework library"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/framework")
@@ -37,6 +37,7 @@ knp_add_library("${PROJECT_NAME}-core"
     impl/network.cpp
     impl/model.cpp
     impl/model_executor.cpp
+    impl/model_loader.cpp
     impl/input_converter.cpp
     impl/output_channel.cpp
     impl/synchronization.cpp

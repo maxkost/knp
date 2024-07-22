@@ -17,37 +17,53 @@ using DeltaProjection = knp::core::Projection<knp::synapse_traits::DeltaSynapse>
 using BLIFATPopulation = knp::core::Population<knp::neuron_traits::BLIFATNeuron>;
 
 
+// A function is implemented that generates synapses for the projection connected 
+// to an input channel. The function is stored in the input_projection_gen variable.
 inline std::optional<DeltaProjection::Synapse> input_projection_gen(size_t /*index*/)  // NOLINT
 {
     return DeltaProjection::Synapse{{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};
 }
 
 
-// Create a loop projection
+// A function is implemented that generates synapses for the projection, which loops the 
+// population output on itself. The function is stored in the synapse_generator variable.
 inline std::optional<DeltaProjection::Synapse> synapse_generator(size_t /*index*/)  // NOLINT
 {
     return DeltaProjection::Synapse{{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, 0, 0};
 }
 
 
-// Create population
+// A function is implemented that generates neurons. 
+// The function is stored in the neuron_generator variable.
 inline knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron> neuron_generator(size_t)  // NOLINT
 {
     return knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>{};
 }
 
 
+// Creates a simple neural network with the following structure: 
+// input channel -> input_projection -> population <=> loop_projection.
 knp::framework::Network make_simple_network()
 {
-    // Create a single neuron network: input -> input_projection -> population <=> loop_projection
+    // Creates a population object with one BLIFAT neuron.
     BLIFATPopulation population{neuron_generator, 1};
+    // Creates a projection object with one delta synapse, which loops the output of the population 
+    // to itself.
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> loop_projection =
         DeltaProjection{population.get_uid(), population.get_uid(), synapse_generator, 1};
+    // Creates an input projection object with one delta synapse, which is assigned 
+    // a null ID (knp::core::UID{false}). The projection receives spikes from 
+    // the input channel and sends synaptic impact to the population object.
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> input_projection =
         DeltaProjection{knp::core::UID{false}, population.get_uid(), input_projection_gen, 1};
+    // Creates a network object.
     knp::framework::Network network;
+    // Adds the created population object to the neural network object.
     network.add_population(population);
+    // Adds the created input_projection object to the neural network object.
     network.add_projection(input_projection);
+    // Adds the created loop_projection object that loops the 
+    // population output on itself, into the neural network object.
     network.add_projection(loop_projection);
     return network;
 }
@@ -56,7 +72,9 @@ knp::framework::Network make_simple_network()
 int main()
 {
     auto network = make_simple_network();
+    // Saves the neural network in the SONATA format.
     knp::framework::sonata::save_network(network, ".");
+    // Loads the neural network from the SONATA format.
     auto network2 = knp::framework::sonata::load_network(".");
     std::cout << network2.populations_count() << " " << network2.projections_count() << std::endl;
     return EXIT_SUCCESS;

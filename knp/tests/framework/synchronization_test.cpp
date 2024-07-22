@@ -38,7 +38,7 @@ public:
 
 TEST(SynchronizationSuite, SingleThreadCpuTest)
 {
-    // Create a single neuron network: input -> input_projection -> population <=> loop_projection
+    // Create a single-neuron neural network: input -> input_projection -> population <=> loop_projection
     knp::testing::STestingBack backend;
     knp::testing::BLIFATPopulation population{knp::testing::neuron_generator, 1};
     auto loop_projection =
@@ -64,7 +64,7 @@ TEST(SynchronizationSuite, SingleThreadCpuTest)
 
 TEST(SynchronizationSuite, MultiThreadCpuTest)
 {
-    // Create a single neuron network: input -> input_projection -> population <=> loop_projection
+    // Create a single-neuron neural network: input -> input_projection -> population <=> loop_projection
     knp::testing::MTestingBack backend;
     knp::testing::BLIFATPopulation population{knp::testing::neuron_generator, 1};
     auto loop_projection =

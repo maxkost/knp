@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <knp/core/impexp.h>
 #include <knp/core/messaging/spike_message.h>
 
 #include <vector>
@@ -26,7 +27,8 @@ namespace knp::framework::io::output
  * @param output_size output vector size (usually corresponds to the size of an output population).
  * @return bool vector.
  */
-std::vector<bool> converter_bitwise(const std::vector<core::messaging::SpikeMessage> &message_list, size_t output_size)
+std::vector<bool> KNP_DECLSPEC
+converter_bitwise(const std::vector<core::messaging::SpikeMessage> &message_list, size_t output_size)
 {
     std::vector<bool> result(output_size, false);
     for (const auto &message : message_list)

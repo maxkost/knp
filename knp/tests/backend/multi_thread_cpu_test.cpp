@@ -60,7 +60,7 @@ bool receive_messages_smallest_network(const knp::core::UID &out_channel_uid, En
 
 TEST(MultiThreadCpuSuite, SmallestNetwork)
 {
-    // Create a single neuron network: input -> input_projection -> population <=> loop_projection.
+    // Create a single-neuron neural network: input -> input_projection -> population <=> loop_projection.
 
     namespace kt = knp::testing;
     kt::MTestingBack backend;

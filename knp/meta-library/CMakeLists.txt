@@ -17,7 +17,7 @@ include(GNUInstallDirs)
 include(clang-tidy)
 include(knp-functions)
 
-if(NOT TARGET Boost::headers)
+if(NOT TARGET Boost::boost)
     find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
 endif()
 

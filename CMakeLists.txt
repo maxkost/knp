@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.25)
 
 include_guard(GLOBAL)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(CMakeDependentOption)
@@ -11,7 +15,7 @@ include(version)
 knp_get_version()
 
 if(NOT KNP_VERSION)
-    message(FATAL_ERROR "KNP version mandatory for build, but can't be determined!")
+    message(FATAL_ERROR "Kaspersky Neuromorphic Platform version is mandatory for build, but cannot be determined!")
 endif()
 
 enable_language(CXX)
@@ -26,16 +30,17 @@ project(knp VERSION "${KNP_VERSION}"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 set(KNP_BOOST_MIN_VERSION "1.74.0")
-set(KNP_ROOT_DIR "${PROJECT_SOURCE_DIR}" CACHE STRING "KNP root directory")
+set(KNP_ROOT_DIR "${PROJECT_SOURCE_DIR}" CACHE STRING "Kaspersky Neuromorphic Platform root directory")
 
-foreach (boost_ver RANGE 83 89)
+if (MSVC)
+    add_compile_options(/EHsc /MP /MDd)
+    # add_link_options(/LTCG:INCREMENTAL)  # /NODEFAULTLIB:LIBCMTD
+    add_compile_definitions(_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING=1 _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS=1)
+endif()
+
+foreach (boost_ver RANGE 81 89)
     list(APPEND Boost_ADDITIONAL_VERSIONS "1.${boost_ver}")
 endforeach()
-
-# WARNING: Don't change variables case!
-set(Boost_USE_MULTITHREADED ON)
-
-set(Boost_ALL_DYN_LINK OFF)
 
 if (NOT Boost_ROOT)
     if (DEFINED ENV{Boost_ROOT})
@@ -46,12 +51,18 @@ if (NOT Boost_ROOT)
 endif()
 
 if (Boost_ROOT)  # WIN32?
+    # WARNING: Don't change variables case!
+    set(Boost_USE_MULTITHREADED ON)
     set(Boost_USE_STATIC_LIBS ON)
-    set(Boost_USE_STATIC_RUNTIME ON)
-    set(Boost_USE_STATIC_RUNTIME ON)
+    set(Boost_ALL_DYN_LINK OFF)
+
+    if (NOT WIN32)
+        set(Boost_USE_STATIC_RUNTIME ON)
+    endif()
+
     # Boost detection setup.
-    if(NOT BOOST_INCLUDEDIR)
-        set(BOOST_INCLUDEDIR "${BOOST_ROOT}")
+    if(NOT BOOST_INCLUDE_DIR)
+        set(BOOST_INCLUDE_DIR "${BOOST_ROOT}")
     endif()
 
     if (NOT BOOST_LIBRARYDIR)
@@ -70,15 +81,15 @@ if (Boost_ROOT)  # WIN32?
 endif()
 
 # set(Boost_DEBUG ON)
+find_package(Boost ${KNP_BOOST_MIN_VERSION})
 
 if (MSVC)
-    find_package(Boost ${KNP_BOOST_MIN_VERSION})
-    add_link_options("/LIBPATH:${Boost_LIBRARY_DIR_RELEASE}")
+    add_link_options("/LIBPATH:${Boost_LIBRARY_DIRS}")
 endif()
 
 
 #
-# KNP build options set.
+# Kaspersky Neuromorphic Platform build options set.
 #
 
 # Build not from source directory, possible via add_subdirectory().
@@ -119,7 +130,7 @@ option(KNP_ENABLE_AVX "Enable AVX and other CPU-specific extensions in the relea
 option(KNP_ENABLE_COVERAGE "Enable coverage checking" OFF)
 option(KNP_IPO_ENABLED "Enable interprocedural optimization" ON)
 option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
-cmake_dependent_option(KNP_PYTHON_FRAMEWORK_BUILD "Build KNP Python framework" ON "KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT" OFF)
+cmake_dependent_option(KNP_PYTHON_FRAMEWORK_BUILD "Build Kaspersky Neuromorphic Platform Python framework" ON "KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT" OFF)
 cmake_dependent_option(KNP_PYTHON_BUILD_WHEEL "Build WHL package for the Python framework" ${KNP_MAINTAINER_BUILD} "KNP_PYTHON_FRAMEWORK_BUILD" OFF)
 
 mark_as_advanced(KNP_MAINTAINER_BUILD)
@@ -177,7 +188,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Need for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Always enabled for the KNP components.
+# Always enabled for the Kaspersky Neuromorphic Platform components.
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -D_FORTIFY_SOURCE=1")
 # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_FORTIFY_SOURCE=2")
 
@@ -188,10 +199,11 @@ include(print-variables)
 # Build third-party.
 #
 
+if (MSVC)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+endif()
+
 set(CPM_SOURCE_CACHE_DEFAULT "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STRING "")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/third-party)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
 
 # Make cache variables for install destinations.
 include(GNUInstallDirs)
@@ -218,7 +230,7 @@ add_third_party("gh:HDFGroup/hdf5#hdf5_1.14.4"
                 OPTIONS
                     "HDF5_NO_PACKAGES ON"
                     "BUILD_SHARED_LIBS ON"
-                    "HDF5_VOL_ALLOW_EXTERNAL YES")
+                    "HDF5_VOL_ALLOW_EXTERNAL YES")  # "HDF5_ALLOW_EXTERNAL_SUPPORT GIT" SZIP_USE_EXTERNAL
 
 add_third_party("gh:BlueBrain/HighFive@2.9.0"
                 GIT_SHALLOW ON
@@ -239,13 +251,19 @@ add_third_party("gh:p-ranav/csv2@0.1"
 add_third_party("gh:simdjson/simdjson@3.9.2"
                 GIT_SHALLOW ON
                 OPTIONS
+                    "SIMDJSON_USING_LIBRARY 1"
                     "SIMDJSON_BUILD_STATIC_LIB ON")
 
-add_third_party("gh:intel/pcm#202403")
+add_third_party("gh:intel/pcm"
+                GIT_TAG 2f9b0c2
+                OPTIONS
+                    "NO_STATIC_MSVC_RUNTIME_LIBRARY ON"
+                    "NO_ASAN ON")
 
 add_third_party("gh:gabime/spdlog@1.13.0"
                 OPTIONS
-                    "SPDLOG_BUILD_PIC ON")
+                    "SPDLOG_BUILD_PIC ON"
+                    "SPDLOG_BUILD_SHARED OFF")
 
 add_third_party("gh:zeromq/cppzmq@4.10.0"
                 OPTIONS
@@ -263,14 +281,14 @@ endif()
 file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
 include_directories(third-party ${THIRD_PARTY_INCLUDES})
 
+if (MSVC)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS FALSE)
+endif()
+
 
 #
-# Build KNP.
+# Build Kaspersky Neuromorphic Platform.
 #
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 set(CMAKE_TIDY_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/knp/.clang-tidy" CACHE PATH  "Clang-tidy config file")
 
@@ -280,10 +298,9 @@ if (KNP_BUILD_DOCUMENTATION)
     add_subdirectory(doc)
 endif()
 
-if(KNP_BUILD_EXAMPLES)
+if (KNP_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
-
 
 #
 # Packaging.
@@ -300,7 +317,7 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${CMAKE_PROJECT_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${CMAKE_PROJECT_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${CMAKE_PROJECT_VERSION_PATCH})
 
-set(CPACK_PACKAGE_VENDOR "Kaspersky Laboratory")
+set(CPACK_PACKAGE_VENDOR "AO Kaspersky Lab")
 
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Artiom N.")
 SET(CPACK_PACKAGE_CONTACT "support@kaspersky.com")

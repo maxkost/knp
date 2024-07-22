@@ -7,8 +7,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp_python_framework VERSION "${KNP_VERSION}" LANGUAGES C CXX  # PYTHON
-        DESCRIPTION "Kaspersky Neuromorphic Platform Python framework"
+        DESCRIPTION "Kaspersky Neuromorphic Platform Python framework library"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
+
+if (MSVC)
+    message(STATUS "Temporary doesn't build under Windows")
+    return()
+endif()
 
 if (NOT KNP_PYTHON_FRAMEWORK_BUILD)
     message(STATUS "Python framework building disabled...")

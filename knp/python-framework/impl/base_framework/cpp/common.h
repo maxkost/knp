@@ -1,6 +1,6 @@
 /**
  * @file common.h
- * @brief KNP framework traits Python bindings common header.
+ * @brief Kaspersky Neuromorphic Platform framework traits Python bindings common header.
  * @author Artiom N.
  * @date 21.02.2024
  */

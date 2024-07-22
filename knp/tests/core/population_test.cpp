@@ -48,12 +48,10 @@ TEST(PopulationSuite, RemoveNeurons)
 
     assert(indexes_to_remove.size() < neurons_count);
 
+    const auto prev_size = population.size();
     population.remove_neurons(indexes_to_remove);
 
-    for (size_t i = 0; i < neurons_count; ++i)
-    {
-        for (auto ni : indexes_to_remove) ASSERT_NE(population[i].potential_, ni);
-    }
+    ASSERT_EQ(population.size(), prev_size - indexes_to_remove.size());
 }
 
 

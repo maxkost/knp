@@ -16,7 +16,7 @@ std::filesystem::path get_exe_path()
 
 std::filesystem::path get_backend_path(const std::string &backend_name)
 {
-    return knp::testing::get_exe_path().parent_path() / "lib" / backend_name;
+    return knp::testing::get_exe_path() / backend_name;
 }
 
 }  // namespace knp::testing

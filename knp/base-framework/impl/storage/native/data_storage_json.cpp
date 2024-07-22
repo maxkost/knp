@@ -162,7 +162,7 @@ bool is_correct_version(simdjson::ondemand::document &doc)  // cppcheck-suppress
 }
 
 
-std::vector<core::messaging::SpikeMessage> load_messages_from_json(
+KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_json(
     const fs::path &path_to_json, const knp::core::UID &uid, bool strict_format)
 {
     simdjson::ondemand::parser parser;
@@ -179,17 +179,19 @@ std::vector<core::messaging::SpikeMessage> load_messages_from_json(
     }
     if (!is_correct_version(doc)) SPDLOG_WARN("Unable to verify file version");
 
-
     auto spikes_group = doc["spikes"];
-    if (spikes_group.error()) throw std::runtime_error(R"--(Unable to find "spikes" group in data file.)--");
+    if (spikes_group.error()) throw std::runtime_error("Unable to find \"spikes\" group in data file.");
 
     // Reading node ids.
     auto nodes_array = spikes_group["node_ids"];
-    if (nodes_array.error()) throw std::runtime_error(R"--(No "node_ids" array in "spikes" group.)--");
+    if (nodes_array.error()) throw std::runtime_error("No \"node_ids\" array in \"spikes\" group.");
+
     auto nodes_array_val = nodes_array["value"];
-    if (nodes_array_val.error()) throw std::runtime_error(R"--(Missing nodes data in json data file.)--");
+    if (nodes_array_val.error()) throw std::runtime_error("Missing nodes data in json data file.");
+
     auto pre_array_nodes = nodes_array_val.get_array();
-    if (pre_array_nodes.error()) throw std::runtime_error("Missing node data in json data file");
+    if (pre_array_nodes.error()) throw std::runtime_error("Missing nodes data in JSON data file");
+
     std::vector<int64_t> nodes;
     nodes.reserve(pre_array_nodes.count_elements());
 
@@ -202,25 +204,28 @@ std::vector<core::messaging::SpikeMessage> load_messages_from_json(
 
     // Reading timestamps.
     auto timestamps_array = spikes_group["timestamps"];
-    if (timestamps_array.error()) throw std::runtime_error(R"--(No "timestamps" array in "spikes" group.)--");
-    auto times_array_val = timestamps_array["value"];
-    auto pre_array_times = times_array_val.get_array();
-    if (times_array_val.error()) throw std::runtime_error(R"--(Missing timestamps data in json data file.)--");
-    if (pre_array_times.error()) throw std::runtime_error("Missing timestamp data in json data file");
-    std::vector<float> timestamps;
-    timestamps.reserve(pre_array_times.count_elements());
-    // No const reference val possible.
-    for (auto val : pre_array_times)
-    {
-        // std::transform doesn't compiled by MSVC.
-        timestamps.push_back(static_cast<float>(val.get_double()));  // cppcheck-suppress useStlAlgorithm
-    }
+    if (timestamps_array.error()) throw std::runtime_error("No \"timestamps\" array in \"spikes\" group.");
 
-    return convert_node_time_arrays_to_messages(nodes, timestamps, uid, 1);
+    if (auto times_array_val = timestamps_array["value"]; !times_array_val.error())
+    {
+        if (auto pre_array_times = times_array_val.get_array(); !times_array_val.error())
+        {
+            std::vector<float> timestamps;
+            timestamps.reserve(pre_array_times.count_elements());
+            // No const reference val possible.
+            for (auto val : pre_array_times)
+            {
+                // std::transform doesn't compiled by MSVC.
+                timestamps.push_back(static_cast<float>(val.get_double()));  // cppcheck-suppress useStlAlgorithm
+            }
+            return convert_node_time_arrays_to_messages(nodes, timestamps, uid, 1);
+        }
+    }
+    throw std::runtime_error("Missing timestamps data in json data file.");
 }
 
 
-void save_messages_to_json(
+KNP_DECLSPEC void save_messages_to_json(
     std::vector<core::messaging::SpikeMessage> messages, const std::filesystem::path &path_to_save)
 {
     boost::format format_nodes(node_structure);

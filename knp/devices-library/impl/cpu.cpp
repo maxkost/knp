@@ -19,7 +19,7 @@ CPU::~CPU() {}
 CPU::CPU(CPU&& other) : cpu_name_{std::move(other.cpu_name_)}, power_meter_{std::move(other.power_meter_)} {}
 
 
-CPU& CPU::operator=(CPU&& other)
+CPU& CPU::operator=(CPU&& other) noexcept
 {
     cpu_name_.swap(other.cpu_name_);
     power_meter_.swap(other.power_meter_);
