@@ -3,6 +3,8 @@
  * @brief CSV helper file.
  * @author An. Vartenkov
  * @date 22.03.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include "csv_content.h"

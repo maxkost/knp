@@ -3,6 +3,8 @@
  * @brief AltaiLIF neuron procedures file.
  * @author An. Vartenkov
  * @date 15.05.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/population.h>
@@ -31,6 +33,7 @@ std::string get_neuron_type_name<neuron_traits::AltAILIF>()
 
 template <>
 void add_population_to_h5<core::Population<knp::neuron_traits::AltAILIF>>(
+    // cppcheck-suppress constParameterReference
     HighFive::File &file_h5, const core::Population<knp::neuron_traits::AltAILIF> &population)
 {
     SPDLOG_TRACE("Adding population {} to hdf5", std::string(population.get_uid()));

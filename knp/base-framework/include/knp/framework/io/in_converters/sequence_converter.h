@@ -3,6 +3,8 @@
  * @brief Header for input sequence converter.
  * @author Vartenkov Andrey
  * @date 25.04.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 

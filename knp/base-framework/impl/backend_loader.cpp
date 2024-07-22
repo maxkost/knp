@@ -3,6 +3,8 @@
  * @brief Backends loader implementation.
  * @author Artiom N.
  * @date 16.03.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/framework/backend_loader.h>

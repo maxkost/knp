@@ -3,6 +3,8 @@
  * @brief Output channel class.
  * @author Vartenkov Andrey.
  * @date 01.06.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/framework/io/output_channel.h>

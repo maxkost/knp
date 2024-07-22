@@ -3,6 +3,8 @@
  * @brief Model executor class implementation.
  * @author Artiom N.
  * @date 21.04.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/framework/model_executor.h>

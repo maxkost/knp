@@ -3,6 +3,8 @@
  * @brief Common header for I/O.
  * @author Artiom N.
  * @date 10.06.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once

@@ -3,6 +3,8 @@
  * @brief Functions for loading and saving resource STDP BLIFAT neurons.
  * @author A. Vartenkov
  * @date 09.04.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/population.h>

@@ -3,6 +3,8 @@
  * @brief Getting network from backend.
  * @author Vartenkov Andrey.
  * @date 13.05.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/framework/network.h>

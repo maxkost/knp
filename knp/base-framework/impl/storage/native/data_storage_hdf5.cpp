@@ -3,6 +3,8 @@
  * @brief File for saving and loading data in hdf5 format.
  * @author An. Vartenkov
  * @date 16.04.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/framework/io/storage/native/data_storage_json.h>
