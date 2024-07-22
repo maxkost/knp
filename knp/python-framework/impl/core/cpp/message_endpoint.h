@@ -3,6 +3,8 @@
  * @brief Message endpoint Python bindings header.
  * @author Artiom N.
  * @date 26.02.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once

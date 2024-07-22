@@ -3,6 +3,8 @@
  * @brief Python core bindings.
  * @author Artiom N.
  * @date 01.02.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/core.h>

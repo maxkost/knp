@@ -3,6 +3,8 @@
  * @brief Message endpoint Python bindings.
  * @author Artiom N.
  * @date 01.02.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include "message_endpoint.h"

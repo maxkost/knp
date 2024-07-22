@@ -3,6 +3,8 @@
  * @brief Python bindings for UID.
  * @author Artiom N.
  * @date 05.02.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include "uid.h"
