@@ -94,7 +94,7 @@ def get_header(file_name: Path) -> tuple[int, int, str]:
             header_end += 1
             if header_started:
                 header_lines.append(ln)
-                if ln.strip().startswith('*/'):
+                if ln.strip().endswith('*/'):
                     break
                 continue
 
