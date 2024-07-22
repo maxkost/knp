@@ -3,6 +3,8 @@
  * @brief Synaptic resource-based STDP neuron parameters.
  * @author Artiom N.
  * @date 06.10.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -59,6 +61,7 @@ struct default_values<SynapticResourceSTDPNeuron<NeuronType>>
     /**
      * @brief Base neuron default parameters.
      */
+    // cppcheck-suppress unusedStructMember
     default_values<NeuronType> neuron_;
 };
 
