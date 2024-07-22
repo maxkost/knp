@@ -3,6 +3,8 @@
  * @brief Introspection routines.
  * @author Artiom N.
  * @date 10.05.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once

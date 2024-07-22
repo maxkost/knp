@@ -3,6 +3,8 @@
  * @brief Some helpers that are useful for assertions.
  * @author Artiom N.
  * @date 31.08.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
