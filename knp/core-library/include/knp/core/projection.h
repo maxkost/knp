@@ -3,6 +3,8 @@
  * @brief General projection interface.
  * @author Artiom N.
  * @date 18.01.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once

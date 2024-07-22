@@ -3,6 +3,8 @@
  * @brief Subscription class that determines message exchange between entities in the network.
  * @author Vartenkov A.
  * @date 15.03.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once

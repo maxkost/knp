@@ -3,6 +3,8 @@
  * @brief CPU-based message bus implementation.
  * @author Vartenkov A.
  * @date 18.09.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <message_bus_cpu_impl/message_bus_cpu_impl.h>

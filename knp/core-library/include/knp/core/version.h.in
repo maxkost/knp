@@ -1,9 +1,11 @@
 /**
-* @file version.h
-* @brief Kaspersky Neuromorphic Platform version components.
-* @author Artiom N.
-* @date 19.03.2024
-*/
+ * @file version.h
+ * @brief Kaspersky Neuromorphic Platform version components.
+ * @author Artiom N.
+ * @date 19.03.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
+ */
 
 #pragma once
 

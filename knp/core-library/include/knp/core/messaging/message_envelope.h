@@ -3,6 +3,8 @@
  * @brief Message envelope routines.
  * @author Artiom N.
  * @date 13.04.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -50,6 +52,6 @@ MessageVariant extract_from_envelope(const void *buffer);
  * @param buffer message buffer in the `uint8_t` vector format.
  * @return `std::variant` of message types.
  */
-MessageVariant extract_from_envelope(std::vector<uint8_t> &buffer);
+MessageVariant extract_from_envelope(const std::vector<uint8_t> &buffer);
 
 }  // namespace knp::core::messaging

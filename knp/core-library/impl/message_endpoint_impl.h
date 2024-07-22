@@ -3,6 +3,8 @@
  * @brief Bus implementation interface.
  * @author An. Vartenkov
  * @date 25.09.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once

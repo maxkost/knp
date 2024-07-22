@@ -3,6 +3,8 @@
  * @brief UID class and routines.
  * @author Artiom N.
  * @date 01.02.2021
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
