@@ -104,7 +104,8 @@ install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
         FILES_MATCHING PATTERN "*.h")
 
 install(FILES
-        "${CMAKE_SOURCE_DIR}/LICENSE.txt"
+        "${CMAKE_SOURCE_DIR}/packaging/LICENSE.txt"
+        "${CMAKE_SOURCE_DIR}/packaging/NOTICE.txt"
         "${CMAKE_SOURCE_DIR}/README.md"
         COMPONENT "${COMPONENT_NAME}"
         TYPE DOC)
