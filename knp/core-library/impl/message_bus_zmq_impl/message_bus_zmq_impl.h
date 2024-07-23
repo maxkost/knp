@@ -3,6 +3,8 @@
  * @brief Message bus ZeroMQ implementation header.
  * @author Artiom N.
  * @date 31.03.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -44,11 +46,13 @@ private:
     /**
      * @brief Router socket address.
      */
+    // cppcheck-suppress unusedStructMember
     std::string router_sock_address_;
 
     /**
      * @brief Publish socket address.
      */
+    // cppcheck-suppress unusedStructMember
     std::string publish_sock_address_;
 
     /**

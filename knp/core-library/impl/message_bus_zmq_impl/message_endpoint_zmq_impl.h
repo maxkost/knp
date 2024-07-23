@@ -3,6 +3,8 @@
  * @brief Message endpoint ZeroMQ implementation header.
  * @author Artiom N.
  * @date 31.03.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once

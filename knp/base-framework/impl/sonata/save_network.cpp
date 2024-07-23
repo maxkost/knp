@@ -3,6 +3,8 @@
  * @brief Functions for saving and loading network.
  * @author A. Vartenkov
  * @date 09.04.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include "save_network.h"

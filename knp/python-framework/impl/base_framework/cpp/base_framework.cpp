@@ -3,6 +3,8 @@
  * @brief Base C++ framework Python bindings.
  * @author Artiom N.
  * @date 21.02.24
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include "common.h"

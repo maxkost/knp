@@ -3,6 +3,8 @@
  * @brief BLIFAT neuron Python bindings.
  * @author Artiom N.
  * @date 20.02.24
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #if defined(_KNP_IN_NEURON_TRAITS)

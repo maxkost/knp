@@ -1,5 +1,7 @@
 /**
- * Message bus and MessageEndpoint testing.
+ * @brief Message bus and MessageEndpoint testing.
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/message_bus.h>

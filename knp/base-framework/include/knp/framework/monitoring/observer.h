@@ -3,6 +3,8 @@
  * @brief Observer class that unloads messages and stores them.
  * @author Vartenkov A.
  * @date 23.08.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 #include <knp/core/impexp.h>

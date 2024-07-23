@@ -3,6 +3,8 @@
  * @brief Test saving and building networks.
  * @author A. Vartenkov
  * @date 22.03.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/projection.h>

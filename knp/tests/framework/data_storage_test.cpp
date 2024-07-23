@@ -3,6 +3,8 @@
  * @brief Test saving and loading spikes.
  * @author A. Vartenkov
  * @date 18.04.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/messaging/messaging.h>

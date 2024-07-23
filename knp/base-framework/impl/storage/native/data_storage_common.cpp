@@ -3,6 +3,8 @@
  * @brief File for common functions for saving and loading data.
  * @author An. Vartenkov
  * @date 24.04.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include "data_storage_common.h"

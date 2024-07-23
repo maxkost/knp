@@ -2,6 +2,8 @@
  * @brief Single threading backend test.
  * @author Vartenkov An.
  * @date 07.04.23.
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/backends/cpu-single-threaded/backend.h>

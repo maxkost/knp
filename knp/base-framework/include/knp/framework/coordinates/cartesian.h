@@ -3,6 +3,8 @@
  * @brief Representation of Cartesian coordinates.
  * @author Artiom N.
  * @date 22.03.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once

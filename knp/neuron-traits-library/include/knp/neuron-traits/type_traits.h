@@ -3,6 +3,8 @@
  * @brief Common neuron type traits.
  * @author Artiom N.
  * @date 26.01.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once

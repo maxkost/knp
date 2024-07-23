@@ -3,6 +3,8 @@
  * @brief Header for input channel.
  * @author Vartenkov Andrey
  * @date 04.05.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 

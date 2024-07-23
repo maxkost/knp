@@ -3,6 +3,8 @@
  * @brief Load data from file.
  * @author Vartenkov Andrey
  * @date 16.04.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 

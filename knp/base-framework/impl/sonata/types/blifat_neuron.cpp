@@ -3,6 +3,8 @@
  * @brief BLIFAT neuron procedures file.
  * @author An. Vartenkov
  * @date 28.03.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/population.h>

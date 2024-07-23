@@ -3,6 +3,8 @@
  * @brief Input converter routines.
  * @author Artiom N.
  * @date 14.07.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/framework/io/in_converters/index_converter.h>

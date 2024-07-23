@@ -3,6 +3,8 @@
  * @brief Message header I/O operators implementation.
  * @author Vartenkov A.
  * @date 23.03.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/messaging/message_header.h>

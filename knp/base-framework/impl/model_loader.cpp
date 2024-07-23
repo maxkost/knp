@@ -3,6 +3,8 @@
  * @brief Model loader class implementation.
  * @author Artiom N.
  * @date 14.06.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/framework/model_loader.h>

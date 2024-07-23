@@ -3,6 +3,8 @@
  * @brief File header for common functions and definitions for saving and loading data.
  * @author An. Vartenkov
  * @date 24.04.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 #include <knp/core/messaging/messaging.h>

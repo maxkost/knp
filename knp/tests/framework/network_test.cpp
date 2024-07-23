@@ -3,6 +3,8 @@
  * @brief Network class testing.
  * @author A. Vartenkov
  * @date 12.02.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/framework/network.h>

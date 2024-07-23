@@ -3,6 +3,8 @@
  * @brief Rule for synapse resource-based STDP.
  * @author Artiom N.
  * @date 05.09.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once

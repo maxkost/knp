@@ -3,6 +3,8 @@
  * @brief Message envelope implementation.
  * @author Artiom N.
  * @date 13.04.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/messaging/message_envelope.h>
@@ -64,7 +66,7 @@ MessageVariant extract_from_envelope(const void *buffer)
     }
 }
 
-boost::mp11::mp_rename<AllMessages, std::variant> extract_from_envelope(std::vector<uint8_t> &buffer)
+boost::mp11::mp_rename<AllMessages, std::variant> extract_from_envelope(const std::vector<uint8_t> &buffer)
 {
     return extract_from_envelope(buffer.data());
 }

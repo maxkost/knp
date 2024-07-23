@@ -3,6 +3,8 @@
  * @brief Header for import and export control.
  * @author Artiom N.
  * @date 25.10.2021
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once

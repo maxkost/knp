@@ -3,6 +3,8 @@
  * @brief Tests for population entity.
  * @author Artiom N.
  * @date 13.02.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/population.h>

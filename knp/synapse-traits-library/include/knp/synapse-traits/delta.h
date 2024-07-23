@@ -3,6 +3,8 @@
  * @brief Delta synapse type traits.
  * @author Andrey V.
  * @date 26.01.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -19,7 +21,7 @@
 namespace knp::synapse_traits
 {
 /**
- * @brief Delta synapse. 
+ * @brief Delta synapse.
  * @note Use as a template parameter only.
  */
 struct DeltaSynapse;
@@ -37,7 +39,7 @@ struct default_values<DeltaSynapse>
     constexpr static float weight_ = 0.0F;
 
     /**
-     * @brief Synaptic delay default value. 
+     * @brief Synaptic delay default value.
      * @note Value of `1` is the least delay possible.
      */
     constexpr static uint32_t delay_ = 1;

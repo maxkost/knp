@@ -3,6 +3,8 @@
  * @brief Synaptic resource based STDP neurons adapter.
  * @author Artiom N.
  * @date 06.10.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -22,6 +24,8 @@
 #include <vector>
 
 #include <boost/mp11.hpp>
+
+
 /**
  * @brief Namespace for neuron traits.
  */
@@ -338,7 +342,8 @@ struct WeightUpdateSTDP<synapse_traits::STDP<synapse_traits::STDPSynapticResourc
 {
     using Synapse = synapse_traits::STDP<synapse_traits::STDPSynapticResourceRule, DeltaLikeSynapse>;
     static void init_projection(
-        knp::core::Projection<Synapse> &projection, std::vector<core::messaging::SpikeMessage> &messages, uint64_t step)
+        const knp::core::Projection<Synapse> &projection, const std::vector<core::messaging::SpikeMessage> &messages,
+        uint64_t step)
     {
     }
 
@@ -347,7 +352,7 @@ struct WeightUpdateSTDP<synapse_traits::STDP<synapse_traits::STDPSynapticResourc
         params.rule_.last_spike_step_ = step;
     }
 
-    static void modify_weights(knp::core::Projection<Synapse> &projection) {}
+    static void modify_weights(const knp::core::Projection<Synapse> &projection) {}
 };
 
 

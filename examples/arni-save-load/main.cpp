@@ -3,6 +3,8 @@
  * @brief Loading model from ARNI format and saving to sonata format example.
  * @author A. Vartenkov
  * @date 04.04.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/population.h>
@@ -308,9 +310,10 @@ knp::framework::Network create_network_from_monitoring_file(
                     str_stream >> comma >> syn_p.weight_;
                     std::get<knp::core::target_neuron_id>(syn) = uint32_t(neuron_populations[neuron].second);
                     std::get<knp::core::source_neuron_id>(syn) =
+                        // cppcheck-suppress negativeContainerIndex
                         source < 0 ? uint32_t(-1 - source) : uint32_t(neuron_populations[source - 1].second);
                     syn_p.output_type_ = ArNI_KNP_SynapseTypeTranslation[proj.connection_type];
-
+                    // cppcheck-suppress negativeContainerIndex
                     proj.ind_population_from = source < 0 ? -1 : neuron_populations[source - 1].first;
                     proj.ind_population_to = neuron_populations[neuron].first;
 

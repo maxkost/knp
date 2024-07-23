@@ -3,6 +3,8 @@
  * @brief Getting network data from multi-threaded CPU backend.
  * @author An. Vartenkov.
  * @date 20.05.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/backends/cpu-multi-threaded/backend.h>

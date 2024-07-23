@@ -3,6 +3,8 @@
  * @brief Context for reusable thread pool class, a modified example from asio documentation.
  * @author Vartenkov A.
  * @date 27.07.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 
@@ -15,6 +17,7 @@
 
 #include <boost/asio/thread_pool.hpp>
 #include <boost/asio/ts/executor.hpp>
+
 
 /**
  * @brief Namespace for CPU backend executors.
@@ -81,6 +84,7 @@ private:
     std::mutex mutex_;
     std::condition_variable condition_;
     Usage usage_state_ = Usage::READY;
+    // cppcheck-suppress unusedStructMember
     std::queue<std::shared_ptr<Function>> work_queue_;
     boost::asio::thread_pool pool_;
 };

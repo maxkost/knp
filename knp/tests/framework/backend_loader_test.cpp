@@ -1,5 +1,7 @@
 /**
- * Backend loading testing.
+ * @brief Backend loading testing.
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/framework/backend_loader.h>

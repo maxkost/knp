@@ -3,6 +3,8 @@
  * @brief std::optional for Python.
  * @author Artiom N.
  * @date 09.02.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -71,6 +73,7 @@ struct from_python_optional
 
         if (value)
         {
+            // cppcheck-suppress cstyleCast
             void* storage = ((py::converter::rvalue_from_python_storage<std::optional<T>>*)data)->storage.bytes;
             new (storage) std::optional<T>(value);
             data->convertible = storage;

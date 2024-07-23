@@ -3,6 +3,8 @@
  * @brief Common templates for Delta synapse projection.
  * @author A. Vartenkov
  * @date 07.11.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 #include <knp/backends/cpu-library/impl/delta_synapse_projection_impl.h>

@@ -3,6 +3,8 @@
  * @brief CPU device class implementation.
  * @author Artiom N.
  * @date 30.01.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include "cpu_power.h"
