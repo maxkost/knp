@@ -6,6 +6,11 @@
  */
 
 #include "common.h"
+#include "input_channel.h"
+#include "model.h"
+#include "network.h"
+#include "output_channel.h"
+
 
 std::shared_ptr<knp::core::Backend> load_backend(cpp_framework::BackendLoader& loader, const py::object& backend_path)
 {
@@ -15,7 +20,7 @@ std::shared_ptr<knp::core::Backend> load_backend(cpp_framework::BackendLoader& l
 
 BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
 {
-#define _KNP_IN_BASE_FW
+#define KNP_IN_BASE_FW
     // Py_Initialize();
 
     // auto path_type = py::import("pathlib.Path");
@@ -30,6 +35,11 @@ BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
         .def("load", &load_backend, "Load backend")
         .def(
             "is_backend", &cpp_framework::BackendLoader::is_backend, "Check if the specified path points to a backend");
-
-#undef _KNP_IN_BASE_FW
+#include "input_channel.cpp"
+#include "model.cpp"
+#include "network.cpp"
+#include "network_io.cpp"
+#include "observer.cpp"
+#include "output_channel.cpp"
+#undef KNP_IN_BASE_FW
 }

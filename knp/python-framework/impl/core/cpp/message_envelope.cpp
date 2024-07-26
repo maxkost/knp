@@ -4,7 +4,7 @@
  * @author Artiom N.
  * @date 01.02.2024
  */
-#if defined(_KNP_IN_CORE)
+#if defined(KNP_IN_CORE)
 
 // BOOST_PYTHON_MODULE(MessageEnvelope) {}
 

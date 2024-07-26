@@ -10,7 +10,7 @@
 #include "common.h"
 
 
-#if defined(_KNP_IN_CORE)
+#if defined(KNP_IN_CORE)
 
 py_uuid_UUID = py::import("uuid").attr("UUID");
 

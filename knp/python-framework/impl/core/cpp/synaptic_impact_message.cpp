@@ -7,7 +7,7 @@
 #include "common.h"
 
 
-#if defined(_KNP_IN_CORE)
+#if defined(KNP_IN_CORE)
 
 py::class_<core::messaging::SynapticImpact>(
     "SynapticImpact",

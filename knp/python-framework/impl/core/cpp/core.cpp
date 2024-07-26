@@ -65,18 +65,17 @@ BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
     //
     //    boost::python::import("libknp_python_framework_neuron_traits");
 
-#define _KNP_IN_CORE
+#define KNP_IN_CORE
 #include "backend.cpp"                  // NOLINT
 #include "device.cpp"                   // NOLINT
 #include "message_bus.cpp"              // NOLINT
 #include "message_endpoint.cpp"         // NOLINT
 #include "message_header.cpp"           // NOLINT
-#include "messaging.cpp"                // NOLINT
 #include "population.cpp"               // NOLINT
 #include "projection.cpp"               // NOLINT
 #include "spike_message.cpp"            // NOLINT
 #include "subscription.cpp"             // NOLINT
 #include "synaptic_impact_message.cpp"  // NOLINT
 #include "uid.cpp"                      // NOLINT
-#undef _KNP_IN_CORE
+#undef KNP_IN_CORE
 }

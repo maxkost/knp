@@ -5,7 +5,7 @@
  * @date 01.02.2024
  */
 
-#if defined(_KNP_IN_CORE)
+#if defined(KNP_IN_CORE)
 
 #    include <knp/core/subscription.h>
 
@@ -42,7 +42,6 @@ namespace cm = knp::core::messaging;
 //        "Get all messages.")
 
 
-// cppcheck-suppress unknownMacro
 BOOST_PP_SEQ_FOR_EACH(INSTANCE_PY_SUBSCRIPTION, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES))
 
 #endif

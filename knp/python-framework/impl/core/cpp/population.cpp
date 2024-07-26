@@ -5,8 +5,7 @@
  * @date 07.02.2024
  */
 
-
-#if defined(_KNP_IN_CORE)
+#if defined(KNP_IN_CORE)
 
 #    include "population.h"
 
@@ -83,6 +82,5 @@ namespace nt = knp::neuron_traits;
                     "Get population UID.");
 
 
-// cppcheck-suppress unknownMacro
 BOOST_PP_SEQ_FOR_EACH(INSTANCE_PY_POPULATIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_NEURONS))
 #endif
