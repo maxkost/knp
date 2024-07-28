@@ -12,9 +12,8 @@
 
 TEST(DeviceTestSuite, CPUTest)
 {
-    //    knp::devices::cpu::CPU device;
-
-    // std::cout << device.get_name() << std::endl;
+    for (auto &device : knp::devices::cpu::list_processors())
+        std::cout << "NAME ::: " << device.get_name() << std::endl;
 }
 
 

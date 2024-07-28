@@ -62,6 +62,7 @@ public:
      * @brief List of supported projection types based on synapse types specified in `SupportedSynapses`.
      */
     using SupportedProjections = boost::mp11::mp_transform<knp::core::Projection, SupportedSynapses>;
+
     /**
      * @brief Population variant that contains any population type specified in `SupportedPopulations`.
      * @details `PopulationVariants` takes the value of `std::variant<PopulationType_1,..., PopulationType_n>`, where

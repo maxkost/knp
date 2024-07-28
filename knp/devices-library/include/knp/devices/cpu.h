@@ -40,19 +40,14 @@ class KNP_DECLSPEC CPU : public knp::core::Device  // cppcheck-suppress class_X_
 {
 public:
     /**
-     * @brief CPU device constructor.
-     */
-    CPU();
-
-    /**
-     * @brief CPU device destructor.
-     */
-    ~CPU();
-
-    /**
      * @brief Avoid copy assignment of a CPU device.
      */
     CPU(const CPU &) = delete;
+
+    /**
+     * @brief Avoid assignment of a CPU device.
+     */
+    CPU &operator=(const CPU &) = delete;
 
     /**
      * @brief CPU device move constructor.
@@ -64,6 +59,11 @@ public:
      * @return reference to CPU instance.
      */
     CPU &operator=(CPU &&) noexcept;
+
+    /**
+     * @brief CPU destructor.
+     */
+    ~CPU() override;
 
 public:
     /**
@@ -79,12 +79,26 @@ public:
     [[nodiscard]] const std::string &get_name() const override;
 
     /**
+     * @brief Get CPU socket number.
+     * @return socket number.
+     */
+    [[nodiscard]] uint32_t get_socket_number() const;
+
+    /**
      * @brief Get power consumption details for the device.
      * @return amount of consumed power.
      */
     [[nodiscard]] float get_power() const override;
 
 private:
+    /**
+     * @brief CPU device constructor.
+     */
+    explicit CPU(uint32_t cpu_num);
+    friend std::vector<CPU> list_processors();
+
+private:
+    uint32_t cpu_num_;
     // Non const, because of move operator.
     // cppcheck-suppress unusedStructMember
     std::string cpu_name_;
