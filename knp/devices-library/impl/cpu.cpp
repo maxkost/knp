@@ -7,10 +7,12 @@
  * @copyright © 2024 AO Kaspersky Lab
  */
 
-
 #include <knp/devices/cpu.h>
 
 #include <pcm/src/cpucounters.h>
+#include <spdlog/spdlog.h>
+
+#include <exception>
 
 #include <boost/uuid/name_generator.hpp>
 
@@ -72,10 +74,24 @@ float CPU::get_power() const
 
 std::vector<CPU> list_processors()
 {
-    auto pcm_instance = pcm::PCM::getInstance();
-    const pcm::PCM::ErrorCode status = pcm_instance->program(pcm::PCM::DEFAULT_EVENTS, nullptr, true, ::getpid());
+    auto* pcm_instance = pcm::PCM::getInstance();
+    if (nullptr == pcm_instance)
+    {
+        static constexpr const char* msg{"PCM instance get error!"};
+        SPDLOG_WARN(msg);
+        throw std::logic_error(msg);
+    }
 
-    check_pcm_status(status);
+    try
+    {
+        const pcm::PCM::ErrorCode status = pcm_instance->program(pcm::PCM::DEFAULT_EVENTS, nullptr, true, ::getpid());
+        check_pcm_status(status);
+    }
+    catch (const std::exception& e)
+    {
+        SPDLOG_WARN("{}", e.what());
+        throw;
+    }
 
     std::vector<CPU> result;
     result.reserve(pcm_instance->getNumSockets());

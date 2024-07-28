@@ -43,12 +43,13 @@ void check_pcm_status(const pcm::PCM::ErrorCode& status)
 
 CpuPower::CpuPower(uint32_t cpu_sock_no) : cpu_sock_no_(cpu_sock_no), pcm_instance_(pcm::PCM::getInstance())
 {
+    assert(pcm_instance_);
     // This is the instance, memory releasing doesn't need.
     const pcm::PCM::ErrorCode status = pcm_instance_->program(pcm::PCM::DEFAULT_EVENTS, nullptr, true, ::getpid());
-    check_pcm_status(status);
 
     try
     {
+        check_pcm_status(status);
         get_power();
     }
     catch (const std::logic_error& e)
