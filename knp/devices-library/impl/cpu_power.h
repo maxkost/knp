@@ -29,23 +29,28 @@
 
 namespace knp::devices::cpu
 {
+
+void check_pcm_status(const pcm::PCM::ErrorCode &status);
+
 /**
  * @brief Power getter via Intel PCM.
  */
 class KNP_DECLSPEC CpuPower
 {
 public:
-    CpuPower();
+    explicit CpuPower(uint32_t cpu_sock_no);
     float get_power();
 
 private:
+    // cppcheck-suppress unusedStructMember
+    uint32_t cpu_sock_no_;
     std::chrono::time_point<std::chrono::steady_clock> time_start_;
     pcm::PCM *pcm_instance_ = nullptr;
     // cppcheck-suppress unusedStructMember
-    std::vector<pcm::SocketCounterState> sktstate1_, sktstate2_;
+    pcm::SocketCounterState sktstate1_, sktstate2_;
     // cppcheck-suppress unusedStructMember
-    std::vector<pcm::CoreCounterState> /* cstates1, */ cstates2_;
+    // std::vector<pcm::CoreCounterState> /* cstates1, */ cstates2_;
     // cppcheck-suppress unusedStructMember
-    pcm::SystemCounterState sstate1_, sstate2_;
+    // pcm::SystemCounterState sstate1_, sstate2_;
 };
 }  // namespace knp::devices::cpu

@@ -12,23 +12,22 @@
 #include <pcm/src/utils.h>
 #include <spdlog/spdlog.h>
 
+#include <exception>
 #include <utility>
 
 
 namespace knp::devices::cpu
 {
-CpuPower::CpuPower()
+
+void check_pcm_status(const pcm::PCM::ErrorCode& status)
 {
-    // This is the instance, memory releasing doesn't need.
-    pcm_instance_ = pcm::PCM::getInstance();
-    int pid = ::getpid();
-
-    const pcm::PCM::ErrorCode status = pcm_instance_->program(pcm::PCM::DEFAULT_EVENTS, nullptr, false, pid);
-
     switch (status)
     {
         case pcm::PCM::Success:
+        {
+            SPDLOG_TRACE("PCM instance programming is ok");
             break;
+        }
         case pcm::PCM::MSRAccessDenied:
             throw std::logic_error(
                 "Access to Intel(r) Performance Counter Monitor has denied (no MSR or PCI CFG space access).");
@@ -39,28 +38,45 @@ CpuPower::CpuPower()
         default:
             throw std::logic_error("Access to Intel(r) Performance Counter Monitor has denied (Unknown error).");
     }
+}
 
-    get_power();
+
+CpuPower::CpuPower(uint32_t cpu_sock_no) : cpu_sock_no_(cpu_sock_no), pcm_instance_(pcm::PCM::getInstance())
+{
+    assert(pcm_instance_);
+    // This is the instance, memory releasing doesn't need.
+    const pcm::PCM::ErrorCode status = pcm_instance_->program(pcm::PCM::DEFAULT_EVENTS, nullptr, true, ::getpid());
+
+    try
+    {
+        check_pcm_status(status);
+        get_power();
+    }
+    catch (const std::logic_error& e)
+    {
+        SPDLOG_WARN("Error during power consumption counter init: {}", e.what());
+    }
 }
 
 
 float CpuPower::get_power()
 {
-    pcm_instance_->getAllCounterStates(sstate2_, sktstate2_, cstates2_);
-    const auto time_now = std::chrono::steady_clock::now();
-
-    const auto consumed_watts = pcm::getConsumedJoules(sstate1_, sstate2_) /
-                                std::chrono::duration_cast<std::chrono::seconds>(time_now - time_start_).count();
-
-    if (pcm_instance_->packageEnergyMetricsAvailable())
+    if (!pcm_instance_->packageEnergyMetricsAvailable())
     {
-        SPDLOG_INFO("CPU, Watts: {}", consumed_watts);
-        for (uint32_t i = 0; i < pcm_instance_->getNumSockets(); ++i)
-            SPDLOG_DEBUG("Joules: {}", pcm::getConsumedJoules(sktstate1_[i], sktstate2_[i]));
+        throw std::logic_error("Energy metrics unavailable!");
     }
 
-    std::swap(sstate1_, sstate2_);
     std::swap(sktstate1_, sktstate2_);
+
+    sktstate1_ = pcm_instance_->PCM::getSocketCounterState(cpu_sock_no_);
+    // pcm_instance_->getAllCounterStates(sstate2_, sktstate2_, cstates2_);
+    const auto time_now = std::chrono::steady_clock::now();
+    const auto consumed_joules = pcm::getConsumedJoules(sktstate2_, sktstate1_);
+    const auto consumed_watts =
+        consumed_joules / std::chrono::duration_cast<std::chrono::seconds>(time_now - time_start_).count();
+
+    SPDLOG_DEBUG("CPU, Joules = {}, Watts = {}", consumed_joules, consumed_watts);
+
     time_start_ = time_now;
 
     return consumed_watts;
