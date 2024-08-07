@@ -40,12 +40,12 @@ class KNP_DECLSPEC CPU : public knp::core::Device  // cppcheck-suppress class_X_
 {
 public:
     /**
-     * @brief Avoid copy assignment of a CPU device.
+     * @brief Avoid copy of a CPU device.
      */
     CPU(const CPU &) = delete;
 
     /**
-     * @brief Avoid assignment of a CPU device.
+     * @brief Avoid copy assignment of a CPU device.
      */
     CPU &operator=(const CPU &) = delete;
 
@@ -61,7 +61,7 @@ public:
     CPU &operator=(CPU &&) noexcept;
 
     /**
-     * @brief CPU destructor.
+     * @brief CPU device destructor.
      */
     ~CPU() override;
 
@@ -79,7 +79,7 @@ public:
     [[nodiscard]] const std::string &get_name() const override;
 
     /**
-     * @brief Get CPU socket number.
+     * @brief Get CPU device socket number.
      * @return socket number.
      */
     [[nodiscard]] uint32_t get_socket_number() const;
