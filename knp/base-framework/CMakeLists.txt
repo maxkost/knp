@@ -6,6 +6,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+
 project(knp-base-framework VERSION "${KNP_VERSION}" LANGUAGES C CXX
         DESCRIPTION "Kaspersky Neuromorphic Platform C++ framework library"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
