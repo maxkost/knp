@@ -22,15 +22,18 @@ namespace knp::framework::population
 /**
  * @brief Make population from the container.
  * @param container container with neurons parameters.
- * @tparam NeuronType neuron parameters type.
  * @tparam Container container type.
+ * @tparam NeuronType neuron type.
  * @return population.
  */
-template <typename NeuronType, typename Container>
-typename core::Population<NeuronType> from_container(const Container<typename NeuronType>& container)
+template <template <typename> class Container, typename NeuronType>
+typename core::Population<NeuronType> from_container(
+    const Container<typename core::Population<NeuronType>::NeuronParameters>& container)
 {
     return core::Population<NeuronType>(
-        [&container](size_t index) -> std::optional<NeuronParameters> { return container[index]; }, container.size());
+        [&container](size_t index) -> std::optional<typename core::Population<NeuronType>::NeuronParameters>
+        { return container[index]; },
+        container.size());
 }
 
 
@@ -45,13 +48,14 @@ typename core::Population<NeuronType> make_random(size_t neuron_count)
 {
     std::random_device rd;
     std::mt19937 mt(rd());
-    std::uniform_real_distribution<std::uint8_t> dist(0, 255);
+    std::uniform_real_distribution<float> dist(0, 255);
 
     return core::Population<NeuronType>(
-        [&dist, &mt](size_t index) -> std::optional<NeuronParameters>
+        [&dist, &mt](size_t index) -> std::optional<typename core::Population<NeuronType>::NeuronParameters>
         {
-            NeuronParameters params;
-            for (size_t i = 0; i < sizeof(NeuronParameters); ++i) reinterpret_cast<uint8_t*>(&params)[i] = dist(mt);
+            typename core::Population<NeuronType>::NeuronParameters params;
+            for (size_t i = 0; i < sizeof(params); ++i)
+                reinterpret_cast<uint8_t*>(&params)[i] = static_cast<uint8_t>(dist(mt));
 
             return params;
         },
@@ -69,6 +73,8 @@ template <typename NeuronType>
 typename core::Population<NeuronType> make_default(size_t neuron_count)
 {
     return core::Population<NeuronType>(
-        [](size_t index) -> std::optional<NeuronParameters> { return NeuronParameters(); }, neuron_count);
+        [](size_t index) -> std::optional<typename core::Population<NeuronType>::NeuronParameters>
+        { return typename core::Population<NeuronType>::NeuronParameters(); },
+        neuron_count);
 }
 }  // namespace knp::framework::population
