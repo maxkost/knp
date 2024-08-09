@@ -28,6 +28,7 @@
 #    pragma GCC diagnostic pop
 #elif defined(__clang__)
 #    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wunknown-warning-option"
 #    pragma clang diagnostic ignored "-Wnan-infinity-disabled"
 #    include <spdlog/spdlog.h>
 #    pragma clang diagnostic pop
