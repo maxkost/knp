@@ -36,7 +36,7 @@ struct default_values<BLIFATNeuron>
     /**
      * @brief The parameter defines the default value of `n_time_steps_since_last_firing_` for a BLIFAT neuron.
      */
-    constexpr static std::size_t n_time_steps_since_last_firing_ = std::numeric_limits<std::size_t>::infinity();
+    constexpr static std::size_t n_time_steps_since_last_firing_ = std::numeric_limits<std::size_t>::max();
 
     /**
      * @brief The parameter defines a value to which membrane potential tends (for conductance-based inhibitory

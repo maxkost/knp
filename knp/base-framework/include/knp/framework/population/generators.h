@@ -22,12 +22,12 @@ namespace knp::framework::population
 /**
  * @brief Make population from the container.
  * @param container container with neurons parameters.
- * @tparam Container container type.
  * @tparam NeuronType neuron type.
+ * @tparam Container container type.
  * @return population.
  */
-template <template <typename> class Container, typename NeuronType>
-typename core::Population<NeuronType> from_container(
+template <typename NeuronType, template <typename...> class Container>
+[[nodiscard]] typename core::Population<NeuronType> from_container(
     const Container<typename core::Population<NeuronType>::NeuronParameters>& container)
 {
     return core::Population<NeuronType>(
@@ -44,7 +44,7 @@ typename core::Population<NeuronType> from_container(
  * @return population.
  */
 template <typename NeuronType>
-typename core::Population<NeuronType> make_random(size_t neuron_count)
+[[nodiscard]] typename core::Population<NeuronType> make_random(size_t neuron_count)
 {
     std::random_device rd;
     std::mt19937 mt(rd());
@@ -70,7 +70,7 @@ typename core::Population<NeuronType> make_random(size_t neuron_count)
  * @return population.
  */
 template <typename NeuronType>
-typename core::Population<NeuronType> make_default(size_t neuron_count)
+[[nodiscard]] typename core::Population<NeuronType> make_default(size_t neuron_count)
 {
     return core::Population<NeuronType>(
         [](size_t index) -> std::optional<typename core::Population<NeuronType>::NeuronParameters>

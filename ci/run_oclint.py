@@ -76,8 +76,6 @@ command = [
     'examples',
     '-e',
     '/usr/include/',
-    '-e',
-    'knp/tests/framework/population_generators_test.cpp',
     '--',
     f'-R={oclint_dir / "lib" / "oclint" / "rules"}',
 ]

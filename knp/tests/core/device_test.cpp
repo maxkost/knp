@@ -1,13 +1,17 @@
 /**
+ * @file device_test.cpp
  * @brief Device tests.
+ * @date 09.08.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
  */
 
+#if !defined(WIN32)
 extern "C"
 {
-#include <unistd.h>
+#    include <unistd.h>
 }
+#endif
 
 #include <knp/backends/cpu-single-threaded/backend.h>
 #include <knp/devices/cpu.h>
@@ -18,26 +22,30 @@ extern "C"
 
 TEST(DeviceTestSuite, CPUTest)
 {
-    if (geteuid())
+#if !defined(WIN32)
+    if (geteuid() != 0)
     {
         SPDLOG_WARN("This test must be ran under root");
         return;
     }
+#endif
+    auto processors = knp::devices::cpu::list_processors();
 
-    for (auto &device : knp::devices::cpu::list_processors())
-        std::cout << "NAME ::: " << device.get_name() << std::endl;
-    //    knp::devices::cpu::CPU device;
+    ASSERT_GE(processors.size(), 1);
+
+    for (auto &device : processors) SPDLOG_DEBUG("CPU name: {}", device.get_name());
 }
 
 
 TEST(DeviceTestSuite, BackendDevicesTest)
 {
-    if (geteuid())
+#if !defined(WIN32)
+    if (geteuid() != 0)
     {
         SPDLOG_WARN("This test must be ran under root");
         return;
     }
-
+#endif
     knp::backends::single_threaded_cpu::SingleThreadedCPUBackend backend;
 
     auto &devices = backend.get_current_devices();
