@@ -89,7 +89,7 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
     /**
      * @brief Synaptic resource threshold value.
      */
-    float synaptic_resource_threshold_ = std::numeric_limits<float>::infinity();
+    float synaptic_resource_threshold_ = std::numeric_limits<float>::max();
     /**
      * @brief Synaptic resource divided by `number of synapses + resource drain coefficient`.
      */
