@@ -84,7 +84,7 @@ endif()
 find_package(Boost ${KNP_BOOST_MIN_VERSION})
 
 if (MSVC)
-    add_link_options("/LIBPATH:${Boost_LIBRARY_DIRS}")
+    add_link_options("/LIBPATH:${BOOST_LIBRARYDIR}")
 endif()
 
 

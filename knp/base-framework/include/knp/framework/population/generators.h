@@ -19,6 +19,9 @@
 namespace knp::framework::population
 {
 
+#if (!defined(_MSC_VER))
+// Can't be compiled under MSVC.
+
 /**
  * @brief Make population from the container.
  * @param container container with neurons parameters.
@@ -35,6 +38,7 @@ template <typename NeuronType, template <typename...> class Container>
         { return container[index]; },
         container.size());
 }
+#endif
 
 
 /**

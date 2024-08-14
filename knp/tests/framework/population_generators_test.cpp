@@ -14,6 +14,7 @@
 #include <vector>
 
 
+#if (!defined(_MSC_VER))
 TEST(PopulationGenerators, GenerateFromContainer)
 {
     const typename std::vector<knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>> params{
@@ -24,6 +25,7 @@ TEST(PopulationGenerators, GenerateFromContainer)
     ASSERT_EQ(new_pop[0].n_time_steps_since_last_firing_, 1);
     ASSERT_EQ(new_pop[new_pop.size() - 1].n_time_steps_since_last_firing_, new_pop.size());
 }
+#endif
 
 
 TEST(PopulationGenerators, GenerateRandom)
