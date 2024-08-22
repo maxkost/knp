@@ -15,6 +15,8 @@
 #include <limits>
 #include <vector>
 
+#include <boost/program_options.hpp>
+
 #include "visualize_network.h"
 
 
@@ -25,6 +27,8 @@ using DeltaProjection = knp::core::Projection<knp::synapse_traits::DeltaSynapse>
 using BaseSynapse = DeltaProjection::Synapse;
 using STDPDeltaProjection = knp::core::Projection<knp::synapse_traits::SynapticResourceSTDPDeltaSynapse>;
 using STDPSynapse = STDPDeltaProjection::Synapse;
+
+namespace po = boost::program_options;
 
 const double activation_threshold = 8.531;
 
@@ -287,14 +291,14 @@ knp::framework::Network create_network_from_monitoring_file(
     {
         if (str.substr(0, n) == ssneu.str())
         {
-            std::stringstream ss(str.substr(n));
-            double real_number;
-            ss >> neuron;
+            std::stringstream neu_stream(str.substr(n));
+            neu_stream >> neuron;
             if (neuron < static_cast<int>(neuron_populations.size()) && neuron_populations[neuron].first >= 0)
             {
-                ss >> comma >> k >> comma >> k >> comma >> all_neurons[neuron].potential_ >> comma >> real_number >>
-                    comma >> k >> comma >> k >> comma >> all_neurons[neuron].dynamic_threshold_ >> comma >>
-                    all_neurons[neuron].threshold_decay_ >> comma >> all_neurons[neuron].threshold_increment_;
+                double real_number;
+                neu_stream >> comma >> k >> comma >> k >> comma >> all_neurons[neuron].potential_ >> comma >>
+                    real_number >> comma >> k >> comma >> k >> comma >> all_neurons[neuron].dynamic_threshold_ >>
+                    comma >> all_neurons[neuron].threshold_decay_ >> comma >> all_neurons[neuron].threshold_increment_;
                 all_neurons[neuron].potential_decay_ =
                     1 - 1. / populations[neuron_populations[neuron].first].characteristic_time;
                 all_neurons[neuron].min_potential_ = populations[neuron_populations[neuron].first].min_potential;
@@ -303,19 +307,19 @@ knp::framework::Network create_network_from_monitoring_file(
         }
         else if (str.substr(0, n) == sslin.str())
         {
-            std::stringstream ss(str.substr(n));
+            std::stringstream syn_stream(str.substr(n));
             BaseSynapse syn;
-            ss >> neuron;
+            syn_stream >> neuron;
             if (neuron < static_cast<int>(neuron_populations.size()) && neuron_populations[neuron].first >= 0)
             {
                 ProjectionParams proj;
                 int source;
-                ss >> comma >> proj.connection_type >> comma >> k >> comma >> k >> comma >>
+                syn_stream >> comma >> proj.connection_type >> comma >> k >> comma >> k >> comma >>
                     std::get<knp::core::synapse_data>(syn).delay_ >> comma >> source;
                 if ((source < 0 || (source - 1 < static_cast<int>(neuron_populations.size()) &&
                                     neuron_populations[source - 1].first >= 0)))
                 {
-                    ss >> comma >> std::get<knp::core::synapse_data>(syn).weight_;
+                    syn_stream >> comma >> std::get<knp::core::synapse_data>(syn).weight_;
                     std::get<knp::core::target_neuron_id>(syn) = uint32_t(neuron_populations[neuron].second);
                     std::get<knp::core::source_neuron_id>(syn) =
                         source < 0 ? uint32_t(-1 - source) : uint32_t(neuron_populations[source - 1].second);
@@ -403,8 +407,21 @@ int main(int argc, char **argv)
 {
     knp::core::UID output_uid;
     std::vector<knp::core::UID> input_uids;
+    std::string task;
+    std::string path_to_network;
+    po::options_description options;
+    options.add_options()("help,h", "Produce help message")(
+        "task,t", po::value(&task), "Type of task: show, train, infer")(
+        "net-path,p", po::value(&path_to_network), "File or directory for network storage.");
+    po::variables_map options_map;
+    po::store(po::parse_command_line(argc, argv, options), options_map);
+    po::notify(options_map);
+
+    if (!options_map.count("net-path")) return 0;
+
     knp::framework::Network network = create_network_from_monitoring_file(
-        "/home/an_vartenkov/Dev/KNP_mnist/monitoring.5002.csv", 0, {}, input_uids, 0, output_uid);
+        options_map["net-path"].as<std::string>(), 0, {}, input_uids, 0, output_uid);
+
     std::filesystem::create_directory("mnist_network");
     knp::framework::sonata::save_network(network, "mnist_network");
     std::cout << "Loaded" << std::endl;

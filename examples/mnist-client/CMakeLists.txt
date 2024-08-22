@@ -6,6 +6,7 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV 4.0.0 REQUIRED)
+find_package(Boost COMPONENTS program_options REQUIRED )
 include_directories (${OpenCV_INCLUDE_DIRS})
 
 if (NOT TARGET KNP::BaseFramework::Core)
@@ -13,4 +14,4 @@ if (NOT TARGET KNP::BaseFramework::Core)
 endif()
 
 add_executable(MnistExample main.cpp visualize_network.cpp graph_physics.cpp)
-target_link_libraries(MnistExample PRIVATE KNP::BaseFramework::Core ${OpenCV_LIBS})
+target_link_libraries(MnistExample PRIVATE KNP::BaseFramework::Core ${OpenCV_LIBS} ${Boost_LIBRARIES})
