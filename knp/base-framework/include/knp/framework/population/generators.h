@@ -20,8 +20,8 @@ namespace knp::framework::population
 {
 
 /**
- * @brief Make population from the container.
- * @param container container with neurons parameters.
+ * @brief Generate a population from a container.
+ * @param container container with neuron parameters.
  * @tparam NeuronType neuron type.
  * @tparam Container container type.
  * @return population.
@@ -38,9 +38,9 @@ template <typename NeuronType, template <typename...> class Container>
 
 
 /**
- * @brief Make random population.
- * @param neuron_count count of neurons in the population.
- * @tparam NeuronType neuron parameters type.
+ * @brief Generate a random population.
+ * @param neuron_count number of neurons in a population.
+ * @tparam NeuronType type of neuron parameters.
  * @return population.
  */
 template <typename NeuronType>
@@ -64,9 +64,9 @@ template <typename NeuronType>
 
 
 /**
- * @brief Make population where neurons have default parameters values.
- * @param neuron_count count of neurons in the population.
- * @tparam NeuronType neuron parameters type.
+ * @brief Generate a population with default neuron parameter values.
+ * @param neuron_count number of neurons in a population.
+ * @tparam NeuronType type of neuron parameters.
  * @return population.
  */
 template <typename NeuronType>
