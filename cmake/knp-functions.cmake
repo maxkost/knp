@@ -106,12 +106,16 @@ function (_knp_add_library lib_name lib_type)
         endif()
     endif()
 
-    if (PARSED_ARGS_LINK_PRIVATE)
-        target_link_libraries("${lib_name}" PRIVATE ${PARSED_ARGS_LINK_PRIVATE})
-    endif()
-
     if (PARSED_ARGS_LINK_PUBLIC)
         target_link_libraries("${lib_name}" PUBLIC ${PARSED_ARGS_LINK_PUBLIC})
+    endif()
+
+    if (PARSED_ARGS_LINK_PRIVATE)
+        if ("${lib_type}" STREQUAL "STATIC")
+            target_link_libraries("${lib_name}" PUBLIC ${PARSED_ARGS_LINK_PRIVATE})
+        else()
+            target_link_libraries("${lib_name}" PRIVATE ${PARSED_ARGS_LINK_PRIVATE})
+        endif()
     endif()
 
     if ("${lib_type}" STREQUAL "INTERFACE")
