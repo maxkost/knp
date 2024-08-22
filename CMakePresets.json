@@ -17,7 +17,7 @@
       }
     },
     {
-      "name": "windows-msvs",
+      "name": "windows-default",
       "displayName": "Windows x64 Debug",
       "description": "Windows OS with Visual Studio IDE.",
       "generator": "Visual Studio 17 2022",
@@ -34,10 +34,27 @@
       "vendor": { "microsoft.com/VisualStudioSettings/CMake/1.0": { "hostOS": [ "Windows" ] } }
     },
     {
-      "name": "windows-default",
+      "name": "windows-nmake",
       "displayName": "Windows x64 Debug",
       "description": "Windows OS with Visual Studio IDE.",
       "generator": "NMake Makefiles",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "Boost_ROOT": "D:/boost_1_84_0",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/${presetName}"
+      },
+      "vendor": { "microsoft.com/VisualStudioSettings/CMake/1.0": { "hostOS": [ "Windows" ] } }
+    },
+    {
+      "name": "windows-ninja",
+      "displayName": "Windows x64 Debug",
+      "description": "Windows OS with Visual Studio IDE.",
+      "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/${presetName}",
       "architecture": {
         "value": "x64",
