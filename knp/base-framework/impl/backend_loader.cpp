@@ -36,7 +36,7 @@ std::function<BackendLoader::BackendCreateFunction> BackendLoader::make_creator(
 
     SPDLOG_DEBUG("Created backend creator...");
 
-    // creators_[backend_path.string()] = creator;
+    creators_[backend_path.string()] = creator;
 
     return creator;
 }
