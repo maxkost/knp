@@ -208,6 +208,12 @@ set(CPM_SOURCE_CACHE_DEFAULT "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STR
 # Make cache variables for install destinations.
 include(GNUInstallDirs)
 
+if (MSVC AND CMAKE_GENERATOR STREQUAL "Ninja")
+    set(ZMQ_ENABLE_PRECOMPS OFF)
+else()
+    set(ZMQ_ENABLE_PRECOMPS ON)
+endif()
+
 add_third_party(NAME "libzmq"
                 GITHUB_REPOSITORY "zeromq/libzmq"
                 VERSION "4.3.5"
@@ -215,7 +221,8 @@ add_third_party(NAME "libzmq"
                 OPTIONS
                     "WITH_DOCS OFF"
                     "BUILD_TESTS OFF"
-                    "ENABLE_CPACK OFF")
+                    "ENABLE_CPACK OFF"
+                    "ENABLE_PRECOMPILED ${ZMQ_ENABLE_PRECOMPS}")
 
 #
 # LibHDF5 and it's dependencies.

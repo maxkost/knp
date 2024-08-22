@@ -144,7 +144,6 @@ function (knp_add_library lib_name lib_type)
 
     if (NOT lib_type OR lib_type STREQUAL "BOTH")
         _knp_add_library("${lib_name}" SHARED ${ARGN})
-
         if (ALIAS IN_LIST ARGN)
             # Replace alias for the static library.
             list(FIND ARGN ALIAS _index)
@@ -158,7 +157,9 @@ function (knp_add_library lib_name lib_type)
         _knp_add_library("${lib_name}_static" STATIC ${ARGN})
         target_compile_definitions("${lib_name}" PRIVATE _KNP_BUILD_SHARED_LIBS)
         target_compile_definitions("${lib_name}_static" PRIVATE _KNP_INTERNAL)
-        set_target_properties("${lib_name}_static" PROPERTIES OUTPUT_NAME "${lib_name}")
+        if (NOT WIN32)
+            set_target_properties("${lib_name}_static" PROPERTIES OUTPUT_NAME "${lib_name}")
+        endif()
     elseif (lib_type STREQUAL SHARED OR lib_type STREQUAL MODULE OR lib_type STREQUAL PY_MODULE)
         _knp_add_library("${lib_name}" ${lib_type} ${ARGN})
         target_compile_definitions("${lib_name}" PRIVATE _KNP_BUILD_SHARED_LIBS)
