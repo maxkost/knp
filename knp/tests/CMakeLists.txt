@@ -34,11 +34,11 @@ target_include_directories("${PROJECT_NAME}"
     PRIVATE "${GTEST_DIR}/googlemock/include"
 )
 
-knp_get_hdf5_target(HDF5_LIB)
+#knp_get_hdf5_target(HDF5_LIB)
 
-target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main spdlog::spdlog HighFive ${HDF5_LIB})
-target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::BaseFramework::Core KNP::Backends::CPUSingleThreaded KNP::Backends::CPUMultiThreaded
+target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::BaseFramework::CoreStatic KNP::Backends::CPUSingleThreaded KNP::Backends::CPUMultiThreaded
                                                 KNP::Backends::CPU::ThreadPool)
+target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main spdlog::spdlog) #  HighFive
 
 add_dependencies("${PROJECT_NAME}" knp-base-framework-core_static)
 

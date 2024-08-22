@@ -1,0 +1,13 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "knp-tester.exe (bin\\Debug\\knp-tester.exe)",
+      "name": "knp-tester.exe with arguments",
+      "args": [ "--gtest_filter=FrameworkSuite.BackendLoaderLoad" ]
+    }
+  ]
+}

@@ -84,7 +84,7 @@ endif()
 find_package(Boost ${KNP_BOOST_MIN_VERSION})
 
 if (MSVC)
-    add_link_options("/LIBPATH:${Boost_LIBRARY_DIRS}")
+    add_link_options("/LIBPATH:${BOOST_LIBRARYDIR}")
 endif()
 
 
@@ -248,12 +248,6 @@ add_third_party("gh:p-ranav/csv2@0.1"
                     "CSV2_BUILD_TESTS OFF"
                     "CSV2_SAMPLES OFF")
 
-add_third_party("gh:simdjson/simdjson@3.9.2"
-                GIT_SHALLOW ON
-                OPTIONS
-                    "SIMDJSON_USING_LIBRARY 1"
-                    "SIMDJSON_BUILD_STATIC_LIB ON")
-
 add_third_party("gh:intel/pcm"
                 GIT_TAG 2f9b0c2
                 OPTIONS
@@ -268,10 +262,18 @@ add_third_party("gh:gabime/spdlog@1.13.0"
 add_third_party("gh:zeromq/cppzmq@4.10.0"
                 OPTIONS
                     "CPPZMQ_BUILD_TESTS OFF")
+
 add_third_party("gh:google/flatbuffers@24.3.25"
                 OPTIONS
                     "FLATBUFFERS_BUILD_TESTS OFF"
                     "FLATBUFFERS_BUILD_CPP17 ON")
+
+add_third_party("gh:Tencent/rapidjson#7c73dd7"
+                OPTIONS
+                    "RAPIDJSON_BUILD_DOC OFF"
+                    "RAPIDJSON_BUILD_EXAMPLES OFF"
+                    "RAPIDJSON_BUILD_TESTS OFF"
+                    "RAPIDJSON_HAS_STDSTRING ON")
 
 if (KNP_BUILD_TESTS)
     add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)

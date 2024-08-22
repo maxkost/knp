@@ -85,7 +85,7 @@ float CPU::get_power() const
 }
 
 
-std::vector<CPU> list_processors()
+KNP_DECLSPEC std::vector<CPU> list_processors()
 {
     auto* pcm_instance = pcm::PCM::getInstance();
     if (nullptr == pcm_instance)

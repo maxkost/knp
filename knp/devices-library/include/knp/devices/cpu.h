@@ -95,7 +95,7 @@ private:
      * @brief CPU device constructor.
      */
     explicit CPU(uint32_t cpu_num);
-    friend std::vector<CPU> list_processors();
+    friend KNP_DECLSPEC std::vector<CPU> list_processors();
 
 private:
     uint32_t cpu_num_;
