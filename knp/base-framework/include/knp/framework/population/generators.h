@@ -10,6 +10,7 @@
 #include <knp/core/population.h>
 
 #include <cinttypes>
+#include <optional>
 #include <random>
 
 
