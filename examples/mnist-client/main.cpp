@@ -260,17 +260,6 @@ knp::framework::Network create_network_from_monitoring_file(
             break;
     }
 
-    {
-        std::ofstream neuron_population_file(
-            "/home/an_vartenkov/Dev/knpcheck/data/neuron_population.txt", std::ofstream::out);
-
-        if (neuron_population_file.good())
-        {
-            for (auto &neuron_pos : neuron_populations)
-                neuron_population_file << neuron_pos.first << " " << neuron_pos.second << "\n";
-        }
-    }
-
     if (neuron_populations.empty())
         throw std::runtime_error(
             monitoring_file.string() + " has wrong format or does not contain tact #" + std::to_string(tact));
