@@ -4,7 +4,6 @@ project(MnistExample)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-find_package(Eigen3 REQUIRED)
 find_package(OpenCV 4.0.0 REQUIRED)
 find_package(Boost COMPONENTS program_options REQUIRED )
 include_directories (${OpenCV_INCLUDE_DIRS})
