@@ -116,7 +116,7 @@ template <typename SynapseType>
 template <typename SynapseType, template <typename...> class Container>
 [[nodiscard]] knp::core::Projection<SynapseType> from_container(
     const knp::core::UID &presynaptic_uid, const knp::core::UID &postsynaptic_uid,
-    const Container<typename core::Population<SynapseType>::Synapse> &container)
+    const Container<typename core::Projection<SynapseType>::Synapse> &container)
 {
     return knp::core::Projection<SynapseType>(
         presynaptic_uid, postsynaptic_uid,
@@ -147,8 +147,8 @@ template <typename SynapseType, template <typename, typename, typename...> class
         [&iter](size_t index) -> std::optional<typename knp::core::Projection<SynapseType>::Synapse>
         {
             const auto [from_index, to_index] = iter->first;
-            auto synapse = std::make_tuple(from_index, to_index, iter->second);
-            std::advance(iter);
+            auto synapse = std::make_tuple(iter->second, from_index, to_index);
+            std::advance(iter, 1);
             return synapse;
         },
         synapses_map.size());
@@ -222,7 +222,7 @@ template <typename SynapseType>
             const size_t index1 = index / presynaptic_pop_size;
             auto opt_result = syn_gen(index0, index1);
 
-            if (opt_result.has_value()) return std::make_tuple(opt_result.get_value(), index0, index1);
+            if (opt_result.has_value()) return std::make_tuple(opt_result.value(), index0, index1);
             return std::nullopt;
         },
         presynaptic_pop_size *postsynaptic_pop_size);
@@ -307,11 +307,11 @@ template <typename SynapseType>
  * @param presynaptic_uid optional presynaptic population UID.
  * @param postsynaptic_uid optional postsynaptic population UID.
  * @param syn_gen synaptic parameters generator.
- * @tparam SourceSynapseType source projection synapse type.
  * @tparam DestinationSynapseType result synapse parameters generator.
+ * @tparam SourceSynapseType source projection synapse type.
  * @return new projection of the DestinationSynapseType synapses.
  */
-template <typename SourceSynapseType, typename DestinationSynapseType>
+template <typename DestinationSynapseType, typename SourceSynapseType>
 [[nodiscard]] knp::core::Projection<DestinationSynapseType> clone_projection(
     knp::core::Projection<SourceSynapseType> source_proj,
     std::function<typename knp::core::Projection<DestinationSynapseType>::SynapseParameters(size_t)> syn_gen =
@@ -320,8 +320,8 @@ template <typename SourceSynapseType, typename DestinationSynapseType>
     const std::optional<knp::core::UID> &postsynaptic_uid = std::nullopt)
 {
     return knp::core::Projection<DestinationSynapseType>(
-        presynaptic_uid.has_value() ? presynaptic_uid : source_proj.get_presynaptic(),
-        postsynaptic_uid.has_value() ? postsynaptic_uid : source_proj.get_postsynaptic(),
+        presynaptic_uid.value_or(source_proj.get_presynaptic()),
+        postsynaptic_uid.value_or(source_proj.get_postsynaptic()),
         [&source_proj,
          syn_gen](size_t index) -> std::optional<typename knp::core::Projection<DestinationSynapseType>::Synapse>
         {
