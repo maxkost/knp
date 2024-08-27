@@ -32,7 +32,7 @@ namespace knp::framework::projection::connectors
 template <typename SynapseType>
 typename knp::core::Projection<SynapseType>::SynapseParameters default_synapse_gen(size_t)  // NOLINT
 {
-    return knp::core::Projection<SynapseType>::SynapseParameters();
+    return typename knp::core::Projection<SynapseType>::SynapseParameters();
 }
 
 
@@ -44,7 +44,7 @@ typename knp::core::Projection<SynapseType>::SynapseParameters default_synapse_g
 template <typename SynapseType>
 typename knp::core::Projection<SynapseType>::SynapseParameters default_synapse_gen1(size_t, size_t)
 {
-    return knp::core::Projection<SynapseType>::SynapseParameters();
+    return typename knp::core::Projection<SynapseType>::SynapseParameters();
 }
 
 
@@ -65,7 +65,8 @@ template <typename SynapseType>
     std::function<typename knp::core::Projection<SynapseType>::SynapseParameters(size_t, size_t)> syn_gen =
         default_synapse_gen1<SynapseType>)
 {
-    return knp::core::Projection(
+    const auto proj_size = presynaptic_pop_size * postsynaptic_pop_size;
+    return knp::core::Projection<SynapseType>(
         presynaptic_uid, postsynaptic_uid,
         [presynaptic_pop_size, postsynaptic_pop_size,
          syn_gen](size_t index) -> std::optional<typename knp::core::Projection<SynapseType>::Synapse>
@@ -75,7 +76,7 @@ template <typename SynapseType>
 
             return std::make_tuple(syn_gen(index0, index1), index0, index1);
         },
-        presynaptic_pop_size *postsynaptic_pop_size);
+        proj_size);
 }
 
 
@@ -83,29 +84,23 @@ template <typename SynapseType>
  * @brief Make neuron to neuron connections.
  * @param presynaptic_uid presynaptic population UID.
  * @param postsynaptic_uid postsynaptic population UID.
- * @param presynaptic_pop_size presynaptic population neurons count.
- * @param postsynaptic_pop_size postsynaptic population neurons count.
+ * @param population_size populations neurons count.
  * @param syn_gen synaptic parameters generator.
  * @tparam SynapseType projection synapse type.
  * @return projection.
+ * @note Population sizes must be equal.
  */
 template <typename SynapseType>
 [[nodiscard]] knp::core::Projection<SynapseType> one_to_one(
-    const knp::core::UID &presynaptic_uid, const knp::core::UID &postsynaptic_uid, size_t presynaptic_pop_size,
-    size_t postsynaptic_pop_size,
+    const knp::core::UID &presynaptic_uid, const knp::core::UID &postsynaptic_uid, size_t population_size,
     std::function<typename knp::core::Projection<SynapseType>::SynapseParameters(size_t)> syn_gen =
         default_synapse_gen<SynapseType>)
 {
-    if (presynaptic_pop_size != postsynaptic_pop_size)
-    {
-        throw std::logic_error("Populations size must be equal!");
-    }
-
-    return knp::core::Projection(
+    return knp::core::Projection<SynapseType>(
         presynaptic_uid, postsynaptic_uid,
         [syn_gen](size_t index) -> std::optional<typename knp::core::Projection<SynapseType>::Synapse>
         { return std::make_tuple(syn_gen(index), index, index); },
-        presynaptic_pop_size);
+        population_size);
 }
 
 
@@ -123,7 +118,7 @@ template <typename SynapseType, template <typename...> class Container>
     const knp::core::UID &presynaptic_uid, const knp::core::UID &postsynaptic_uid,
     const Container<typename core::Population<SynapseType>::Synapse> &container)
 {
-    return knp::core::Projection(
+    return knp::core::Projection<SynapseType>(
         presynaptic_uid, postsynaptic_uid,
         [&container](size_t index) -> std::optional<typename knp::core::Projection<SynapseType>::Synapse>
         { return container[index]; },
@@ -147,7 +142,7 @@ template <typename SynapseType, template <typename, typename, typename...> class
 {
     auto iter = synapses_map.begin();
 
-    return Projection(
+    return knp::core::Projection<SynapseType>(
         presynaptic_uid, postsynaptic_uid,
         [&iter](size_t index) -> std::optional<typename knp::core::Projection<SynapseType>::Synapse>
         {
@@ -176,7 +171,7 @@ template <typename SynapseType>
     const knp::core::UID &presynaptic_uid, const knp::core::UID &postsynaptic_uid, size_t presynaptic_pop_size,
     size_t postsynaptic_pop_size, double connection_probability,
     std::function<typename knp::core::Projection<SynapseType>::SynapseParameters(size_t, size_t)> syn_gen =
-        &default_synapse_gen<SynapseType>)
+        &default_synapse_gen1<SynapseType>)
 {
     if (connection_probability > 1 || connection_probability < 0)
         throw std::logic_error("Incorrect probability, set probability between 0..1.");
@@ -185,7 +180,7 @@ template <typename SynapseType>
     std::mt19937 mt(rd());
     std::uniform_real_distribution<double> dist(0, 1);
 
-    return knp::core::Projection(
+    return knp::core::Projection<SynapseType>(
         presynaptic_uid, postsynaptic_uid,
         [presynaptic_pop_size, postsynaptic_pop_size, &connection_probability, &dist, &mt,
          syn_gen](size_t index) -> std::optional<typename knp::core::Projection<SynapseType>::Synapse>
@@ -211,14 +206,14 @@ template <typename SynapseType>
  * @return projection.
  */
 template <typename SynapseType>
-[[nodiscard]] knp::core::Projection<SynapseType> index_based_probability(
+[[nodiscard]] knp::core::Projection<SynapseType> index_based(
     const knp::core::UID &presynaptic_uid, const knp::core::UID &postsynaptic_uid, size_t presynaptic_pop_size,
     size_t postsynaptic_pop_size,
     std::function<typename std::optional<typename knp::core::Projection<SynapseType>::SynapseParameters>(
         size_t index0, size_t index1)>
         syn_gen)
 {
-    return knp::core::Projection(
+    return knp::core::Projection<SynapseType>(
         presynaptic_uid, postsynaptic_uid,
         [presynaptic_pop_size, postsynaptic_pop_size,
          syn_gen](size_t index) -> std::optional<typename knp::core::Projection<SynapseType>::Synapse>
@@ -249,15 +244,14 @@ template <typename SynapseType>
 [[nodiscard]] knp::core::Projection<SynapseType> fixed_number_post(
     const knp::core::UID &presynaptic_uid, const knp::core::UID &postsynaptic_uid, size_t presynaptic_pop_size,
     size_t postsynaptic_pop_size, size_t neurons_count,
-    std::function<typename std::optional<typename knp::core::Projection<SynapseType>::SynapseParameters>(
-        size_t index0, size_t index1)>
-        syn_gen)
+    std::function<typename knp::core::Projection<SynapseType>::SynapseParameters(size_t index0, size_t index1)>
+        syn_gen = default_synapse_gen1<SynapseType>)
 {
     std::random_device rd;
     std::mt19937 mt(rd());
     std::uniform_int_distribution<size_t> dist(0, postsynaptic_pop_size - 1);
 
-    return knp::core::Projection(
+    return knp::core::Projection<SynapseType>(
         presynaptic_uid, postsynaptic_uid,
         [presynaptic_pop_size, postsynaptic_pop_size, neurons_count, &mt, &dist,
          syn_gen](size_t index) -> std::optional<typename knp::core::Projection<SynapseType>::Synapse>
@@ -286,15 +280,14 @@ template <typename SynapseType>
 [[nodiscard]] knp::core::Projection<SynapseType> fixed_number_pre(
     const knp::core::UID &presynaptic_uid, const knp::core::UID &postsynaptic_uid, size_t presynaptic_pop_size,
     size_t postsynaptic_pop_size, size_t neurons_count,
-    std::function<typename std::optional<typename knp::core::Projection<SynapseType>::SynapseParameters>(
-        size_t index0, size_t index1)>
-        syn_gen)
+    std::function<typename knp::core::Projection<SynapseType>::SynapseParameters(size_t index0, size_t index1)>
+        syn_gen = default_synapse_gen1<SynapseType>)
 {
     std::random_device rd;
     std::mt19937 mt(rd());
     std::uniform_int_distribution<size_t> dist(0, presynaptic_pop_size - 1);
 
-    return knp::core::Projection(
+    return knp::core::Projection<SynapseType>(
         presynaptic_uid, postsynaptic_uid,
         [presynaptic_pop_size, postsynaptic_pop_size, neurons_count, &mt, &dist,
          syn_gen](size_t index) -> std::optional<typename knp::core::Projection<SynapseType>::Synapse>
@@ -326,7 +319,7 @@ template <typename SourceSynapseType, typename DestinationSynapseType>
     const std::optional<knp::core::UID> &presynaptic_uid = std::nullopt,
     const std::optional<knp::core::UID> &postsynaptic_uid = std::nullopt)
 {
-    return knp::core::Projection(
+    return knp::core::Projection<DestinationSynapseType>(
         presynaptic_uid.has_value() ? presynaptic_uid : source_proj.get_presynaptic(),
         postsynaptic_uid.has_value() ? postsynaptic_uid : source_proj.get_postsynaptic(),
         [&source_proj,
