@@ -11,6 +11,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <gtest/internal/gtest-filepath.h>
+#include <spdlog/spdlog.h>
 
 #include <filesystem>
 #include <string>

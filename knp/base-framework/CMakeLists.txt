@@ -55,11 +55,11 @@ knp_add_library("${PROJECT_NAME}-core"
     ${${PROJECT_NAME}_headers}
     ALIAS KNP::BaseFramework::Core
     LINK_PRIVATE
-        spdlog::spdlog Boost::headers Boost::filesystem RapidJSON
+        spdlog::spdlog Boost::headers Boost::filesystem RapidJSON HighFive ${HDF5_LIB}
         # Hack to build with CLang.
         ${ADD_LIBS}
     LINK_PUBLIC
-        KNP::Core KNP::Neuron::Traits KNP::Synapse::Traits HighFive ${HDF5_LIB}
+        KNP::Core KNP::Neuron::Traits KNP::Synapse::Traits
     #PRECOMP KNP::Core
 )
 
