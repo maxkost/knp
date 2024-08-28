@@ -190,6 +190,7 @@ template <typename SynapseType>
     std::random_device rd;
     std::mt19937 mt(rd());
     std::uniform_real_distribution<double> dist(0, 1);
+    const auto proj_size = presynaptic_pop_size * postsynaptic_pop_size;
 
     return knp::core::Projection<SynapseType>(
         presynaptic_uid, postsynaptic_uid,
@@ -202,7 +203,7 @@ template <typename SynapseType>
             if (dist(mt) < connection_probability) return std::make_tuple(syn_gen(index0, index1), index0, index1);
             return std::nullopt;
         },
-        presynaptic_pop_size *postsynaptic_pop_size);
+        proj_size);
 }
 
 
@@ -224,6 +225,8 @@ template <typename SynapseType>
         size_t index0, size_t index1)>
         syn_gen)
 {
+    const auto proj_size = presynaptic_pop_size * postsynaptic_pop_size;
+
     return knp::core::Projection<SynapseType>(
         presynaptic_uid, postsynaptic_uid,
         [presynaptic_pop_size, postsynaptic_pop_size,
@@ -236,7 +239,7 @@ template <typename SynapseType>
             if (opt_result.has_value()) return std::make_tuple(opt_result.value(), index0, index1);
             return std::nullopt;
         },
-        presynaptic_pop_size *postsynaptic_pop_size);
+        proj_size);
 }
 
 
@@ -263,6 +266,7 @@ template <typename SynapseType>
     std::random_device rd;
     std::mt19937 mt(rd());
     std::uniform_int_distribution<size_t> dist(0, postsynaptic_pop_size - 1);
+    const auto proj_size = presynaptic_pop_size * neurons_count;
 
     return knp::core::Projection<SynapseType>(
         presynaptic_uid, postsynaptic_uid,
@@ -274,7 +278,7 @@ template <typename SynapseType>
 
             return std::make_tuple(syn_gen(index0, index1), index0, index1);
         },
-        presynaptic_pop_size *neurons_count);
+        proj_size);
 }
 
 
@@ -286,7 +290,7 @@ template <typename SynapseType>
  * @param postsynaptic_uid postsynaptic population UID.
  * @param presynaptic_pop_size presynaptic population neurons count.
  * @param postsynaptic_pop_size postsynaptic population neurons count.
- * @param neurons_count count of the postsynaptic neurons.
+ * @param neurons_count count of the presynaptic neurons.
  * @param syn_gen synaptic parameters generator.
  * @tparam SynapseType projection synapse type.
  * @return projection.
@@ -301,6 +305,7 @@ template <typename SynapseType>
     std::random_device rd;
     std::mt19937 mt(rd());
     std::uniform_int_distribution<size_t> dist(0, presynaptic_pop_size - 1);
+    const auto proj_size = postsynaptic_pop_size * neurons_count;
 
     return knp::core::Projection<SynapseType>(
         presynaptic_uid, postsynaptic_uid,
@@ -312,7 +317,7 @@ template <typename SynapseType>
 
             return std::make_tuple(syn_gen(index0, index1), index0, index1);
         },
-        postsynaptic_pop_size *neurons_count);
+        proj_size);
 }
 
 

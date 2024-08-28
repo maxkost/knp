@@ -38,7 +38,7 @@ struct default_values<AltAILIF>
 {
     /**
      * @brief The parameter defines the default value for `is_diff_` flag of AltAILIF neuron.
-     * If `is_diff_` flag is set to `true` and neuron potential exceeds one of its threshold value
+     * @details If `is_diff_` flag is set to `true` and neuron potential exceeds one of its threshold value
      * after the neuron receives a spike, the `potential_` parameter takes a value by which
      * the potential threshold is exceeded.
      */
@@ -46,7 +46,7 @@ struct default_values<AltAILIF>
 
     /**
      * @brief The parameter defines the default value for `is_reset_` flag of AltAILIF neuron.
-     * If `is_reset_` flag is set to `true` and neuron potential exceeds its threshold value
+     * @details If `is_reset_` flag is set to `true` and neuron potential exceeds its threshold value
      * after the neuron receives a spike, the `potential_` parameter takes
      * a value of the `potential_reset_value_` parameter.
      */
@@ -54,14 +54,14 @@ struct default_values<AltAILIF>
 
     /**
      * @brief The parameter defines the default value for `leak_rev_` flag of AltAILIF neuron.
-     * If `leak_rev_` flag is set to `true`, the `potential_leak_` sign automatically changes
+     * @details If `leak_rev_` flag is set to `true`, the `potential_leak_` sign automatically changes
      * along with the change of the `potential_` value sign.
      */
     constexpr static bool leak_rev_ = true;
 
     /**
      * @brief The parameter defines the default value for `saturate_` flag of AltAILIF neuron.
-     * If `saturate_` flag is set to `true` and the neuron potential is less than
+     * @details If `saturate_` flag is set to `true` and the neuron potential is less than
      * a negative `negative_activation_threshold_` value after the neuron receives a spike,
      * the `potential_` parameter takes the `negative_activation_threshold_` value.
      */
@@ -69,7 +69,7 @@ struct default_values<AltAILIF>
 
     /**
      * @brief The parameter defines the default value for `do_not_save_` flag of AltAILIF neuron.
-     * If `do_not_save_` flag is set to `false`, the `potential_` value is stored with each timestamp.
+     * @details If `do_not_save_` flag is set to `false`, the `potential_` value is stored with each timestamp.
      */
     constexpr static bool do_not_save_ = false;
 

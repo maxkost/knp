@@ -16,7 +16,6 @@ extern "C"
 #include <knp/backends/cpu-single-threaded/backend.h>
 #include <knp/devices/cpu.h>
 
-#include <spdlog/spdlog.h>
 #include <tests_common.h>
 
 #if !defined(WIN32)
