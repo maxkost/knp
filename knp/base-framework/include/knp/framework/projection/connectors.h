@@ -50,6 +50,10 @@ typename knp::core::Projection<SynapseType>::SynapseParameters default_synapse_g
 
 /**
  * @brief Make all to all neurons connections.
+ * @details Simple connector generates connections from source neuron index to the all destination indexes and
+ * otherwise. For the populations NxM: 0 -> 0, 0 -> 1, 0 -> 2, ..., 0 -> M, ..., 1 -> 0, 1 -> 1, ..., 1 -> M, ..., N ->
+ * M.
+ * @warning It doesn't get "real" populations and can't be used with populations, contains non-contiguous indexes.
  * @param presynaptic_uid presynaptic population UID.
  * @param postsynaptic_uid postsynaptic population UID.
  * @param presynaptic_pop_size presynaptic population neurons count.
@@ -82,6 +86,10 @@ template <typename SynapseType>
 
 /**
  * @brief Make neuron to neuron connections.
+ * @details Simple connector generates connections from source neuron index to the equal destination index.
+ * For the populations NxN: 0 -> 0, 1 -> 1, 2 -> 2, ..., N -> N.
+ * @pre Population sizes must be equal.
+ * @warning It doesn't get "real" populations and can't be used with populations, contains non-contiguous indexes.
  * @param presynaptic_uid presynaptic population UID.
  * @param postsynaptic_uid postsynaptic population UID.
  * @param population_size populations neurons count.
@@ -106,6 +114,7 @@ template <typename SynapseType>
 
 /**
  * @brief Make projection from the container.
+ * @details Container must contain "synapses" as tuples (parameters, from_index, to_index).
  * @param presynaptic_uid presynaptic population UID.
  * @param postsynaptic_uid postsynaptic population UID.
  * @param container container with synapses.
@@ -128,6 +137,7 @@ template <typename SynapseType, template <typename...> class Container>
 
 /**
  * @brief Make projection from the map.
+ * @details Map must contain synapse parameters as values and (from_index, to_index) tuples as keys.
  * @param presynaptic_uid presynaptic population UID.
  * @param postsynaptic_uid postsynaptic population UID.
  * @param synapses_map map with key - tuple with from and to ids and value - synapse parameters.
@@ -157,6 +167,7 @@ template <typename SynapseType, template <typename, typename, typename...> class
 
 /**
  * @brief Make all to all neurons connections with some probability.
+ * @warning It doesn't get "real" populations and can't be used with populations, contains non-contiguous indexes.
  * @param presynaptic_uid presynaptic population UID.
  * @param postsynaptic_uid postsynaptic population UID.
  * @param presynaptic_pop_size presynaptic population neurons count.
@@ -231,6 +242,8 @@ template <typename SynapseType>
 
 /**
  * @brief Make connection of the presynaptic neuron with fixed count of the random postsynaptic.
+ * @details This connector uses MT19937 generator with uniform int distribution.
+ * @warning It doesn't get "real" populations and can't be used with populations, contains non-contiguous indexes.
  * @param presynaptic_uid presynaptic population UID.
  * @param postsynaptic_uid postsynaptic population UID.
  * @param presynaptic_pop_size presynaptic population neurons count.
@@ -267,6 +280,8 @@ template <typename SynapseType>
 
 /**
  * @brief Make connection of the postsynaptic neuron with fixed count of the random presynaptic.
+ * @details This connector uses MT19937 generator with uniform int distribution.
+ * @warning It doesn't get "real" populations and can't be used with populations, contains non-contiguous indexes.
  * @param presynaptic_uid presynaptic population UID.
  * @param postsynaptic_uid postsynaptic population UID.
  * @param presynaptic_pop_size presynaptic population neurons count.
@@ -303,6 +318,8 @@ template <typename SynapseType>
 
 /**
  * @brief Get Projection and make destination, with duplicated source connections.
+ * @details Projections can have different types.
+ * @todo: Make synapse parameters clone when projections types are the same.
  * @param source_proj source projection.
  * @param presynaptic_uid optional presynaptic population UID.
  * @param postsynaptic_uid optional postsynaptic population UID.
