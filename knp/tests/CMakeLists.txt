@@ -97,11 +97,9 @@ if (KNP_ENABLE_COVERAGE)
     endif()
 endif()
 
-#[[
-add_custom_target(test_memcheck
+add_custom_target(test_with_memcheck
     COMMAND ${CMAKE_CTEST_COMMAND}
         --force-new-ctest-process --test-action memcheck
         --rerun-failed --output-on-failure
     COMMAND cat "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log"
-    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data")
-]]
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
