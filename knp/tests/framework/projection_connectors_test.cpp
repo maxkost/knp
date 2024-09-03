@@ -83,8 +83,9 @@ TEST(ProjectionConnectors, FromContainer)
             knp::core::Projection<knp::synapse_traits::DeltaSynapse>::SynapseParameters(), i, e_count - i));
     }
 
-    auto proj = knp::framework::projection::connectors::from_container<typename knp::synapse_traits::DeltaSynapse>(
-        knp::core::UID(), knp::core::UID(), container);
+    auto proj =
+        knp::framework::projection::connectors::from_container<typename knp::synapse_traits::DeltaSynapse, std::vector>(
+            knp::core::UID(), knp::core::UID(), container);
 
     int i = 0;
     for (const auto& synapse : proj)
@@ -110,7 +111,7 @@ TEST(ProjectionConnectors, FromMap)
             knp::core::Projection<knp::synapse_traits::DeltaSynapse>::SynapseParameters();
     }
 
-    auto proj = knp::framework::projection::connectors::from_map<typename knp::synapse_traits::DeltaSynapse>(
+    auto proj = knp::framework::projection::connectors::from_map<typename knp::synapse_traits::DeltaSynapse, std::map>(
         knp::core::UID(), knp::core::UID(), syn_map);
 
     for (const auto& synapse : proj)
