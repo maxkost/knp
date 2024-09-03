@@ -15,7 +15,7 @@
 
 
 /**
- * @brief Framework population routines namespace.
+ * @brief Namespace for framework population routines.
  */
 namespace knp::framework::population
 {
@@ -26,7 +26,6 @@ namespace knp::framework::population
  * @param container container with neuron parameters.
  * @tparam NeuronType neuron type.
  * @tparam Container container type.
- * @warning Now this generator can't be compiled with MSVC under Windows OS.
  * @return population.
  */
 template <typename NeuronType, template <typename...> class Container>
@@ -42,8 +41,8 @@ template <typename NeuronType, template <typename...> class Container>
 
 /**
  * @brief Generate a random population.
- * @details This generator uses MT19937 RNG with uniform int distribution.
- * @warning Neurons parameters are absolutely random: generator doesn't pay attention on the limits!
+ * @details This generator uses MT19937 RNG with uniform integer distribution.
+ * @warning Neurons parameters are absolutely random: generator doesn't pay attention to the limits.
  * @param neuron_count number of neurons in a population.
  * @tparam NeuronType type of neuron parameters.
  * @return population.

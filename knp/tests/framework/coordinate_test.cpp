@@ -1,5 +1,5 @@
 /**
- * @brief Coordinates testing.
+ * @brief Tests for coordinates.
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
  */

@@ -1,6 +1,6 @@
 /**
  * @file polar.h
- * @brief Implementations of polar coordinates.
+ * @brief Implementations of radial coordinates.
  * @author Artiom N.
  * @date 22.03.2023
  * @license Apache 2.0
@@ -13,26 +13,29 @@
 
 
 /**
- * @brief Namespace for the cartesian framework coordinates.
+ * @brief Namespace for the radial coordinates.
  */
 namespace knp::framework::coordinates::radial
 {
 
+/**
+ * @brief Namespace for polar coordinates.
+ */
 namespace d2
 {
 
 /**
- * @brief Predefined tag name for the one coordinate.
+ * @brief Predefined tag name for one coordinate.
  */
 constexpr char coordinate_tag_name[]{"polar_coordinate"};
 /**
- * @brief Predefined tag name for the coordinates array.
+ * @brief Predefined tag name for array of coordinates.
  */
 constexpr char coordinate_array_tag_name[]{"polar_coordinates_array"};
 
 /**
  * @brief Polar coordinates.
- * @tparam CoordinateType type of the coordinate value.
+ * @tparam CoordinateType coordinate value type.
  * @tparam DegreeOrRadian coordinate angle type.
  */
 template <
@@ -42,12 +45,12 @@ class coordinate : public boost::geometry::model::point<CoordinateType, 2, Coord
 {
 public:
     /**
-     * @brief constructor_default_no_init
+     * @brief Default constructor.
      */
     constexpr coordinate() = default;
 
     /**
-     * @brief Constructor with radius/phi values
+     * @brief Constructor that uses radius and phi values.
      * @param radius radial distance.
      * @param phi polar angle.
      */
@@ -82,20 +85,24 @@ public:
 };
 }  // namespace d2
 
+
+/**
+ * @brief Namespace for spherical coordinates.
+ */
 namespace d3
 {
 /**
- * @brief Predefined tag name for the one coordinate.
+ * @brief Predefined tag name for one coordinate.
  */
 constexpr char coordinate_tag_name[]{"spherical_coordinate"};
 /**
- * @brief Predefined tag name for the coordinates array.
+ * @brief Predefined tag name for array of coordinates.
  */
 constexpr char coordinate_array_tag_name[]{"spherical_coordinates_array"};
 
 /**
  * @brief Spherical coordinates.
- * @tparam CoordinateType type of the coordinate value.
+ * @tparam CoordinateType coordinate value type.
  * @tparam DegreeOrRadian coordinate angle type.
  */
 template <
@@ -105,12 +112,12 @@ class coordinate : public boost::geometry::model::point<CoordinateType, 3, Coord
 {
 public:
     /**
-     * @brief constructor_default_no_init.
+     * @brief Default constructor.
      */
     constexpr coordinate() = default;
 
     /**
-     * @brief Constructor with radius/phi values
+     * @brief Constructor that uses radius, theta, and phi values.
      * @param radius radial distance.
      * @param theta polar angle.
      * @param phi azimuthal angle.

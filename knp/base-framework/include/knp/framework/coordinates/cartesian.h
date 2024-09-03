@@ -13,19 +13,22 @@
 
 
 /**
- * @brief Namespace for the cartesian framework coordinates.
+ * @brief Namespace for Cartesian coordinates.
  */
 namespace knp::framework::coordinates::cartesian
 {
 
+/**
+ * @brief Namespace for two-demensional Cartesian coordinates.
+ */
 namespace d2
 {
 /**
- * @brief Predefined tag name for the one coordinate.
+ * @brief Predefined tag name for one coordinate.
  */
 constexpr char coordinate_tag_name[]{"ortho_coordinate_2d"};
 /**
- * @brief Predefined tag name for the coordinates array.
+ * @brief Predefined tag name for array of coordinates.
  */
 constexpr char coordinate_array_tag_name[]{"ortho_coordinates_2d_array"};
 
@@ -35,17 +38,20 @@ constexpr char coordinate_array_tag_name[]{"ortho_coordinates_2d_array"};
  */
 template <typename CoordinateType>
 using coordinate = boost::geometry::model::d2::point_xy<CoordinateType>;
-}  // namespace d2
+}  // d2
 
 
+/**
+ * @brief Namespace for three-demensional Cartesian coordinates.
+ */
 namespace d3
 {
 /**
- * @brief Predefined tag name for the one coordinate.
+ * @brief Predefined tag name for one coordinate.
  */
 constexpr char coordinate_tag_name[]{"ortho_coordinate_3d"};
 /**
- * @brief Predefined tag name for the coordinates array.
+ * @brief Predefined tag name for array of coordinates.
  */
 constexpr char coordinate_array_tag_name[]{"ortho_coordinates_3d_array"};
 

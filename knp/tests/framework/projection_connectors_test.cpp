@@ -1,6 +1,6 @@
 /**
  * @file projection_connectors_test.cpp
- * @brief Projection connectors tests.
+ * @brief Tests for projection connectors.
  * @date 27.08.2024
  * @license Apache 2.0
  * @author Artiom N.
@@ -32,7 +32,7 @@ TEST(ProjectionConnectors, AllToAll)
         const auto target_syn_index = std::get<knp::core::target_neuron_id>(synapse);
         const auto source_syn_index = std::get<knp::core::source_neuron_id>(synapse);
 
-        SPDLOG_DEBUG("Synapse: {} -> {}", target_syn_index, source_syn_index);
+        SPDLOG_DEBUG("Synapse: {} -> {}.", target_syn_index, source_syn_index);
         conn_count[target_syn_index].push_back(source_syn_index);
     }
 
@@ -59,7 +59,7 @@ TEST(ProjectionConnectors, OneToOne)
         const auto target_syn_index = std::get<knp::core::target_neuron_id>(synapse);
         const auto source_syn_index = std::get<knp::core::source_neuron_id>(synapse);
 
-        SPDLOG_DEBUG("Synapse: {} -> {}", target_syn_index, source_syn_index);
+        SPDLOG_DEBUG("Synapse: {} -> {}.", target_syn_index, source_syn_index);
         conn_count[target_syn_index].push_back(source_syn_index);
     }
 
@@ -170,7 +170,7 @@ TEST(ProjectionConnectors, FixedNumberPost)
         const auto target_syn_index = std::get<knp::core::target_neuron_id>(synapse);
         const auto source_syn_index = std::get<knp::core::source_neuron_id>(synapse);
 
-        SPDLOG_DEBUG("Synapse: {} -> {}", target_syn_index, source_syn_index);
+        SPDLOG_DEBUG("Synapse: {} -> {}.", target_syn_index, source_syn_index);
 
         ++index_map[source_syn_index];
     }
@@ -200,7 +200,7 @@ TEST(ProjectionConnectors, FixedNumberPre)
         const auto target_syn_index = std::get<knp::core::target_neuron_id>(synapse);
         const auto source_syn_index = std::get<knp::core::source_neuron_id>(synapse);
 
-        SPDLOG_DEBUG("Synapse: {} -> {}", target_syn_index, source_syn_index);
+        SPDLOG_DEBUG("Synapse: {} -> {}.", target_syn_index, source_syn_index);
 
         ++index_map[target_syn_index];
     }
