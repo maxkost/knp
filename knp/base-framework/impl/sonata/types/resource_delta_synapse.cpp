@@ -1,6 +1,6 @@
 /**
  * @file resource_delta_synapse.cpp
- * @brief Functions for loading and saving Resource STDP compatible delta synapses.
+ * @brief Functions for loading and saving resource-based STDP-compatible delta synapses.
  * @author A. Vartenkov
  * @date 09.04.2024
  * @license Apache 2.0
@@ -63,7 +63,7 @@ void add_projection_to_h5<core::Projection<ResourceDeltaSynapse>>(
 {
     if (!file_h5.exist("edges"))
     {
-        throw std::runtime_error("File doesn't contain \"edges\" group.");
+        throw std::runtime_error("File does not contain the \"edges\" group.");
     }
 
     std::vector<uint64_t> source_ids, target_ids;

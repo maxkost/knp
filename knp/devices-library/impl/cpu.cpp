@@ -90,7 +90,7 @@ KNP_DECLSPEC std::vector<CPU> list_processors()
     auto* pcm_instance = pcm::PCM::getInstance();
     if (nullptr == pcm_instance)
     {
-        static constexpr const char* msg{"PCM instance get error!"};
+        static constexpr const char* msg{"PCM instance received an error."};
         SPDLOG_WARN(msg);
         throw std::logic_error(msg);
     }

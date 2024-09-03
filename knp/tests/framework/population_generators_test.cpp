@@ -1,6 +1,6 @@
 /**
  * @file population_generators_test.cpp
- * @brief Population generators tests.
+ * @brief Tests for population generators.
  * @date 08.08.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

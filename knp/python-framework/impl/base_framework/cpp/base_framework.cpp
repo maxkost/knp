@@ -1,6 +1,6 @@
 /**
  * @file base_framework.cpp
- * @brief Base C++ framework Python bindings.
+ * @brief Python bindings for C++ framework.
  * @author Artiom N.
  * @date 21.02.24
  * @license Apache 2.0

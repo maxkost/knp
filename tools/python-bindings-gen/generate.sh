@@ -26,11 +26,11 @@ fi
 echo "Generating..."
 
 for in_dir in $(find "${IN_PATH}" -type d); do
-    echo "Processing ${in_dir}"
+    echo "Processing ${in_dir}..."
     files=$(find "${in_dir}" -maxdepth 1 -type f -iname \*.h)
 
     if [ -z "${files}" ]; then
-        echo "No files..."
+        echo "No files."
         continue
     fi
 

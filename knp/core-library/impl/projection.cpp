@@ -12,7 +12,7 @@
 #include <spdlog/spdlog.h>
 
 
-// Index functions
+// Index functions.
 template <class Index, class Connection>
 void insert_to_index(Index &val, const Connection &connection)
 {
@@ -51,10 +51,11 @@ bool erase_synapse(Index &val, size_t index)
 
 
 /**
- * @brief Helper function, removes elements by their indexes in a single pass.
+ * @brief Remove elements by their indexes in a single pass.
  * @tparam T value type.
  * @param data vector that will be modified by deletion.
- * @param to_remove indexes of the elements to be removed. MUST BE SORTED!
+ * @param to_remove indexes of the elements to remove 
+ * @warning Indexes must be sorted.
  */
 template <class T, class IndexContainer>
 void remove_by_index(std::vector<T> &data, const IndexContainer &to_remove)
@@ -96,7 +97,7 @@ Projection<SynapseType>::Projection(UID presynaptic_uid, UID postsynaptic_uid)  
     : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
-        "Creating projection with UID = {}, presynaptic UID = {}, postsynaptic UID = {}", std::string(get_uid()),
+        "Creating projection with UID = {}, presynaptic UID = {}, postsynaptic UID = {}...", std::string(get_uid()),
         std::string(presynaptic_uid_), std::string(postsynaptic_uid_));
 }
 
@@ -106,7 +107,7 @@ Projection<SynapseType>::Projection(UID uid, UID presynaptic_uid, UID postsynapt
     : base_{uid}, presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
-        "Creating projection with UID = {}, presynaptic UID = {}, postsynaptic UID = {}", std::string(get_uid()),
+        "Creating projection with UID = {}, presynaptic UID = {}, postsynaptic UID = {}...", std::string(get_uid()),
         std::string(presynaptic_uid_), std::string(postsynaptic_uid_));
 }
 
@@ -118,7 +119,7 @@ Projection<SynapseType>::Projection(
     : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
-        "Creating projection with UID = {}, presynaptic UID = {}, postsynaptic UID = {}, i = {}",
+        "Creating projection with UID = {}, presynaptic UID = {}, postsynaptic UID = {}, i = {}...",
         std::string(get_uid()), std::string(presynaptic_uid_), std::string(postsynaptic_uid_), num_iterations);
     for (size_t i = 0; i < num_iterations; ++i)
     {
@@ -138,7 +139,7 @@ Projection<SynapseType>::Projection(
     : base_{uid}, presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
-        "Creating projection with UID = {}, presynaptic UID = {}, postsynaptic UID = {}, i = {}",
+        "Creating projection with UID = {}, presynaptic UID = {}, postsynaptic UID = {}, i = {}...",
         std::string(get_uid()), std::string(presynaptic_uid_), std::string(postsynaptic_uid_), num_iterations);
     for (size_t i = 0; i < num_iterations; ++i)
     {

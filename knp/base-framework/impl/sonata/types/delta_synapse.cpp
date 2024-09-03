@@ -38,7 +38,7 @@ template <>
 core::Projection<knp::synapse_traits::DeltaSynapse> load_projection(
     const HighFive::Group &edges_group, const std::string &projection_name)
 {
-    SPDLOG_DEBUG("Loading edges for projection {}", projection_name);
+    SPDLOG_DEBUG("Loading edges for projection {}...", projection_name);
     auto projection_group = edges_group.getGroup(projection_name);
     auto group = projection_group.getGroup("0");
     size_t group_size = edges_group.getGroup(projection_name).getDataSet("edge_group_id").getDimensions().at(0);
@@ -101,7 +101,7 @@ void add_projection_to_h5<core::Projection<synapse_traits::DeltaSynapse>>(
 {
     using SynapseParams = synapse_traits::synapse_parameters<synapse_traits::DeltaSynapse>;
 
-    if (!file_h5.exist("edges")) throw std::runtime_error("File doesn't contain \"edges\" group.");
+    if (!file_h5.exist("edges")) throw std::runtime_error("File does not contain the \"edges\" group.");
 
     std::vector<uint64_t> source_ids, target_ids;
     std::vector<decltype(SynapseParams::delay_)> delays;
@@ -130,7 +130,7 @@ void add_projection_to_h5<core::Projection<synapse_traits::DeltaSynapse>>(
     HighFive::DataSet target_node_dataset = proj_group.createDataSet("target_node_id", target_ids);
     target_node_dataset.createAttribute("node_population", std::string(projection.get_postsynaptic()));
 
-    // Right now we only support one synapse group.
+    // At the moment we support only one synapse group.
     proj_group.createDataSet("edge_group_id", std::vector(projection.size(), 0));
     proj_group.createDataSet(
         "edge_type_id", std::vector(projection.size(), get_synapse_type_id<synapse_traits::DeltaSynapse>()));

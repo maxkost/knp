@@ -42,7 +42,7 @@ py::class_<core::Synapse>(
     "Synapse description structure that contains synapse parameters and indexes of the associated neurons.")
 
     py::class_<core::SharedSynapseParametersT>(
-        "SharedSynapseParametersT", "Shared synapses parameters for the non-STDP variant of the projection.")
+        "SharedSynapseParametersT", "Shared synapse parameters for the non-STDP variant of the projection.")
 
         py::class_<SharedSynapseParametersT<core::synapse_traits::STDP<Rule, SynapseT>>>(
             "SharedSynapseParametersT<knp::synapse_traits::STDP<Rule,SynapseT>>",

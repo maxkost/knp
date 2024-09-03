@@ -1,6 +1,6 @@
 /**
  * @file subscription.cpp
- * @brief Subscription Python bindings.
+ * @brief Python bindings for Subscription.
  * @author Artiom N.
  * @date 01.02.2024
  * @license Apache 2.0
@@ -19,7 +19,7 @@ namespace cm = knp::core::messaging;
 #    define INSTANCE_PY_SUBSCRIPTION(n, template_for_instance, message_type)                                        \
         py::class_<core::Subscription<cm::message_type>>(                                                           \
             BOOST_PP_STRINGIZE(BOOST_PP_CAT(message_type, Subscription)),                                           \
-                               "The Subscription class is used for message exchange between the network entities.", \
+                               "The Subscription class is used for message exchange between network entities.", \
                                py::no_init)                                                                         \
                 .def(                                                                                               \
                     "remove_sender", &core::Subscription<cm::message_type>::remove_sender,                          \

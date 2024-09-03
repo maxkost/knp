@@ -1,6 +1,6 @@
 /**
  * @file message_endpoint.h
- * @brief Message endpoint Python bindings header.
+ * @brief Python bindings header for message endpoint.
  * @author Artiom N.
  * @date 26.02.2024
  * @license Apache 2.0

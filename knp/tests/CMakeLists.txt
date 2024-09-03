@@ -10,7 +10,7 @@ project(knp-tester VERSION "${KNP_VERSION}" LANGUAGES CXX
         DESCRIPTION "Kaspersky Neuromorphic Platform tester and tests")
 
 if (NOT KNP_BUILD_TESTS)
-    message(STATUS "Tests building disabled...")
+    message(STATUS "Building of tests is disabled.")
     return()
 endif()
 
@@ -53,13 +53,13 @@ if (${BUILD_GMOCK})
 endif()
 
 gtest_discover_tests("${PROJECT_NAME}"
-    # Set a working directory to find test data via paths relative to the project root
+    # Set a working directory to find test data via paths relative to the project root.
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
 if (KNP_ENABLE_COVERAGE)
-    message(STATUS "Coverage enabled")
+    message(STATUS "Coverage enabled.")
 
     set(COV_EXECUTABLE "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
     set(COV_NAME "${PROJECT_NAME}_coverage")
@@ -75,7 +75,7 @@ if (KNP_ENABLE_COVERAGE)
             DEPENDENCIES ${COV_DEPENDENCIES}
             BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
         )
-        message(VERBOSE "Gcovr selected")
+        message(VERBOSE "Gcovr selected.")
     elseif (LCOV_PATH)
         setup_target_for_coverage_lcov(
             NAME "${COV_NAME}"
@@ -83,7 +83,7 @@ if (KNP_ENABLE_COVERAGE)
             DEPENDENCIES ${COV_DEPENDENCIES}
             BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
         )
-        message(VERBOSE "Lcov selected")
+        message(VERBOSE "Lcov selected.")
     elseif (GCOV_PATH)
         setup_target_for_coverage_gcov_json(
             NAME "${COV_NAME}"
@@ -91,9 +91,9 @@ if (KNP_ENABLE_COVERAGE)
             DEPENDENCIES ${COV_DEPENDENCIES}
             BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
         )
-        message(STATUS "Gcov selected")
+        message(STATUS "Gcov selected.")
     else()
-        message(WARNING "Coverage can't be enabled!")
+        message(WARNING "Coverage cannot be enabled.")
     endif()
 endif()
 

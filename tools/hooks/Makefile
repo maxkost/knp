@@ -1,4 +1,4 @@
-# Simple makefile to do simple tasks
+# Simple makefile to do simple tasks.
 .PHONY: all test test_fresh_installs install upload
 
 clean:
@@ -10,7 +10,7 @@ install:
 test: install
 	pytest -x -vvv --pdb
 
-# Test with fresh installs of downloaded utilities
+# Test with fresh installations of downloaded utilities.
 test_fresh_installs:
 	./tests/run_tests.sh
 

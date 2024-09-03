@@ -12,7 +12,7 @@ function(read_version_file filename)
     string(STRIP "${VERSION_FILE_RAW}" KNP_VERSION)
     set(KNP_VERSION ${KNP_VERSION} PARENT_SCOPE)
 
-    message(STATUS "Version from file: ${KNP_VERSION}")
+    message(STATUS "Version from file: ${KNP_VERSION}.")
 endfunction()
 
 
@@ -26,16 +26,16 @@ function(determine_version_with_git)
             OUTPUT_STRIP_TRAILING_WHITESPACE)
 
     if(GIT_EXECUTION_RESULT)
-        message(STATUS "Could not retrieve version from command 'git describe --tags'")
+        message(STATUS "Could not retrieve version from command 'git describe --tags'.")
         return()
     endif()
 
     string(FIND ${VERSION} "." VALID_VERSION)
     if(VALID_VERSION EQUAL -1)
-        message(WARNING "Version string ${VERSION} retrieved with git describe is invalid")
+        message(WARNING "Version string ${VERSION} retrieved with `git describe` is invalid.")
         return()
     endif()
-    message(STATUS "Version string determined with git describe: ${VERSION}")
+    message(STATUS "Version string determined with `git describe`: ${VERSION}.")
 endfunction()
 
 
@@ -46,10 +46,10 @@ function(knp_get_version)
         read_version_file("${CMAKE_SOURCE_DIR}/VERSION")
     endif()
 
-    message(STATUS "Kaspersky Neuromorphic Platform version: ${KNP_VERSION}")
+    message(STATUS "Kaspersky Neuromorphic Platform version: ${KNP_VERSION}.")
 
     if (NOT KNP_VERSION)
-        message(WARNING "Kaspersky Neuromorphic Platform version cannot be determined!")
+        message(WARNING "Kaspersky Neuromorphic Platform version cannot be determined.")
         return()
     endif()
 

@@ -29,13 +29,13 @@ namespace knp::backends::single_threaded_cpu
 
 SingleThreadedCPUBackend::SingleThreadedCPUBackend()
 {
-    SPDLOG_INFO("ST CPU backend instance created...");
+    SPDLOG_INFO("Single-threaded CPU backend instance created.");
 }
 
 
 std::shared_ptr<SingleThreadedCPUBackend> SingleThreadedCPUBackend::create()
 {
-    SPDLOG_DEBUG("Creating ST CPU backend instance...");
+    SPDLOG_DEBUG("Creating single-threaded CPU backend instance...");
     return std::make_shared<SingleThreadedCPUBackend>();
 }
 
@@ -76,7 +76,7 @@ SupportedVariants convert_variant(const AllVariants &input)
 
 void SingleThreadedCPUBackend::_step()
 {
-    SPDLOG_DEBUG("Starting step #{}", get_step());
+    SPDLOG_DEBUG("Starting step #{}...", get_step());
     get_message_bus().route_messages();
     get_message_endpoint().receive_all_messages();
     // Calculate populations. This is the same as inference.
@@ -90,7 +90,7 @@ void SingleThreadedCPUBackend::_step()
                 if constexpr (
                     boost::mp11::mp_find<SupportedPopulations, T>{} == boost::mp11::mp_size<SupportedPopulations>{})
                 {
-                    static_assert(knp::meta::always_false_v<T>, "Population isn't supported by the CPU ST backend!");
+                    static_assert(knp::meta::always_false_v<T>, "Population is not supported by the single-threaded CPU backend.");
                 }
                 auto message_opt = calculate_population(arg);
                 messages.push_back(std::move(message_opt));
@@ -98,7 +98,7 @@ void SingleThreadedCPUBackend::_step()
             population);
     }
 
-    // Continue inference
+    // Continue inference.
     get_message_bus().route_messages();
     get_message_endpoint().receive_all_messages();
     // Calculate projections.
@@ -111,7 +111,7 @@ void SingleThreadedCPUBackend::_step()
                 if constexpr (
                     boost::mp11::mp_find<SupportedProjections, T>{} == boost::mp11::mp_size<SupportedProjections>{})
                 {
-                    static_assert(knp::meta::always_false_v<T>, "Projection isn't supported by the CPU ST backend!");
+                    static_assert(knp::meta::always_false_v<T>, "Projection is not supported by the single-threaded CPU backend.");
                 }
                 calculate_projection(arg, projection.messages_);
             },
@@ -123,13 +123,13 @@ void SingleThreadedCPUBackend::_step()
     auto step = gad_step();
     // Need to suppress "Unused variable" warning.
     (void)step;
-    SPDLOG_DEBUG("Step finished #{}", step);
+    SPDLOG_DEBUG("Step finished #{}.", step);
 }
 
 
 void SingleThreadedCPUBackend::load_populations(const std::vector<PopulationVariants> &populations)
 {
-    SPDLOG_DEBUG("Loading populations [{}]", populations.size());
+    SPDLOG_DEBUG("Loading populations [{}]...", populations.size());
     populations_.clear();
     populations_.reserve(populations.size());
 
@@ -137,13 +137,13 @@ void SingleThreadedCPUBackend::load_populations(const std::vector<PopulationVari
     {
         populations_.push_back(population);
     }
-    SPDLOG_DEBUG("All populations loaded");
+    SPDLOG_DEBUG("All populations loaded.");
 }
 
 
 void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVariants> &projections)
 {
-    SPDLOG_DEBUG("Loading projections [{}]", projections.size());
+    SPDLOG_DEBUG("Loading projections [{}]...", projections.size());
     projections_.clear();
     projections_.reserve(projections.size());
 
@@ -152,23 +152,23 @@ void SingleThreadedCPUBackend::load_projections(const std::vector<ProjectionVari
         projections_.push_back(ProjectionWrapper{projection});
     }
 
-    SPDLOG_DEBUG("All projections loaded");
+    SPDLOG_DEBUG("All projections loaded.");
 }
 
 
 void SingleThreadedCPUBackend::load_all_projections(const std::vector<knp::core::AllProjectionsVariant> &projections)
 {
-    SPDLOG_DEBUG("Loading projections [{}]", projections.size());
+    SPDLOG_DEBUG("Loading projections [{}]...", projections.size());
     knp::meta::load_from_container<SupportedProjections>(projections, projections_);
-    SPDLOG_DEBUG("All projections loaded");
+    SPDLOG_DEBUG("All projections loaded.");
 }
 
 
 void SingleThreadedCPUBackend::load_all_populations(const std::vector<knp::core::AllPopulationsVariant> &populations)
 {
-    SPDLOG_DEBUG("Loading populations [{}]", populations.size());
+    SPDLOG_DEBUG("Loading populations [{}]...", populations.size());
     knp::meta::load_from_container<SupportedPopulations>(populations, populations_);
-    SPDLOG_DEBUG("All populations loaded");
+    SPDLOG_DEBUG("All populations loaded.");
 }
 
 
@@ -181,11 +181,11 @@ std::vector<std::unique_ptr<knp::core::Device>> SingleThreadedCPUBackend::get_de
 
     for (auto &&cpu : processors)
     {
-        SPDLOG_DEBUG("Device CPU \"{}\"", cpu.get_name());
+        SPDLOG_DEBUG("Device CPU \"{}\".", cpu.get_name());
         result.push_back(std::make_unique<knp::devices::cpu::CPU>(std::move(cpu)));
     }
 
-    SPDLOG_DEBUG("CPUs count = {}", result.size());
+    SPDLOG_DEBUG("CPU count = {}.", result.size());
     return result;
 }
 
@@ -196,14 +196,14 @@ void SingleThreadedCPUBackend::_init()
 
     knp::backends::cpu::init(projections_, get_message_endpoint());
 
-    SPDLOG_DEBUG("Initializing finished...");
+    SPDLOG_DEBUG("Initialization finished.");
 }
 
 
 std::optional<core::messaging::SpikeMessage> SingleThreadedCPUBackend::calculate_population(
     core::Population<knp::neuron_traits::BLIFATNeuron> &population)
 {
-    SPDLOG_TRACE("Calculate BLIFAT population {}", std::string(population.get_uid()));
+    SPDLOG_TRACE("Calculate BLIFAT population {}.", std::string(population.get_uid()));
     return knp::backends::cpu::calculate_blifat_population(population, get_message_endpoint(), get_step());
 }
 
@@ -211,7 +211,7 @@ std::optional<core::messaging::SpikeMessage> SingleThreadedCPUBackend::calculate
 std::optional<core::messaging::SpikeMessage> SingleThreadedCPUBackend::calculate_population(
     knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population)
 {
-    SPDLOG_TRACE("Calculate resource-based STDP supported BLIFAT population {}", std::string(population.get_uid()));
+    SPDLOG_TRACE("Calculate resource-based STDP-compatible BLIFAT population {}.", std::string(population.get_uid()));
     return knp::backends::cpu::calculate_resource_stdp_population<
         neuron_traits::BLIFATNeuron, synapse_traits::DeltaSynapse, ProjectionContainer>(
         population, projections_, get_message_endpoint(), get_step());
@@ -221,7 +221,7 @@ std::optional<core::messaging::SpikeMessage> SingleThreadedCPUBackend::calculate
 void SingleThreadedCPUBackend::calculate_projection(
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> &projection, SynapticMessageQueue &message_queue)
 {
-    SPDLOG_TRACE("Calculate Delta synapse projection {}", std::string(projection.get_uid()));
+    SPDLOG_TRACE("Calculate delta synapse projection {}.", std::string(projection.get_uid()));
     knp::backends::cpu::calculate_delta_synapse_projection(
         projection, get_message_endpoint(), message_queue, get_step());
 }
@@ -231,7 +231,7 @@ void SingleThreadedCPUBackend::calculate_projection(
     knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse> &projection,
     SynapticMessageQueue &message_queue)
 {
-    SPDLOG_TRACE("Calculate AdditiveSTDPDelta synapse projection {}", std::string(projection.get_uid()));
+    SPDLOG_TRACE("Calculate AdditiveSTDPDelta synapse projection {}.", std::string(projection.get_uid()));
     knp::backends::cpu::calculate_delta_synapse_projection(
         projection, get_message_endpoint(), message_queue, get_step());
 }
@@ -241,7 +241,7 @@ void SingleThreadedCPUBackend::calculate_projection(
     knp::core::Projection<knp::synapse_traits::SynapticResourceSTDPDeltaSynapse> &projection,
     SynapticMessageQueue &message_queue)
 {
-    SPDLOG_TRACE("Calculate STDPSynapticResource synapse projection {}", std::string(projection.get_uid()));
+    SPDLOG_TRACE("Calculate STDPSynapticResource synapse projection {}.", std::string(projection.get_uid()));
     knp::backends::cpu::calculate_delta_synapse_projection(
         projection, get_message_endpoint(), message_queue, get_step());
 }

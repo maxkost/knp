@@ -4,14 +4,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
 
-# Need for the linters.
+# Required for linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp VERSION "${KNP_VERSION}" LANGUAGES C CXX
         DESCRIPTION "Kaspersky Neuromorphic Platform"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
-# TODO: Enable for the latest Boost versions: it doesn't work for DLLs on the old versions.
+# TODO: Enable the latest Boost versions: this doesn't work for DLLs on the old versions.
 # set(Boost_USE_STATIC_LIBS ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 

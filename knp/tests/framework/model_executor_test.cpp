@@ -42,9 +42,9 @@ TEST(FrameworkSuite, ModelExecutorLoad)
     const knp::core::UID i_channel_uid, o_channel_uid;
 
     knp::framework::Model model(std::move(network));
-    SPDLOG_DEBUG("Adding input channel {} to projection {}", std::string(i_channel_uid), std::string(input_uid));
+    SPDLOG_DEBUG("Adding input channel {} to projection {}...", std::string(i_channel_uid), std::string(input_uid));
     model.add_input_channel(i_channel_uid, input_uid);
-    SPDLOG_DEBUG("Adding output channel {} to population {}", std::string(o_channel_uid), std::string(output_uid));
+    SPDLOG_DEBUG("Adding output channel {} to population {}...", std::string(o_channel_uid), std::string(output_uid));
     model.add_output_channel(o_channel_uid, output_uid);
 
     auto input_gen = [](knp::core::Step step) -> knp::core::messaging::SpikeData
@@ -73,7 +73,7 @@ TEST(FrameworkSuite, ModelExecutorLoad)
     std::transform(
         spikes.cbegin(), spikes.cend(), std::back_inserter(results),
         [](const auto &spike_msg) { return spike_msg.header_.send_time_; });
-    // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
+    // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop).
     const std::vector<knp::core::Step> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
     ASSERT_EQ(results, expected_results);
 

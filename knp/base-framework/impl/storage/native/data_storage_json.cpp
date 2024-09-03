@@ -1,6 +1,6 @@
 /**
  * @file data_storage_json.cpp
- * @brief File for saving and loading data from json format.
+ * @brief Saving and loading data from JSON format.
  * @author An. Vartenkov
  * @date 16.04.2024
  * @license Apache 2.0
@@ -163,7 +163,7 @@ bool is_correct_version(const rapidjson::Document &doc)  // cppcheck-suppress co
 
             for (auto val_iter = version_arr.Begin(); val_iter != version_arr.End(); ++val_iter)
             {
-                // std::transform doesn't get compiled by MSVC.
+                // std::transform isn't compiled by MSVC.
                 version.push_back(val_iter->GetInt());  // cppcheck-suppress useStlAlgorithm
             }
 
@@ -179,28 +179,28 @@ KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_json(
 {
     rapidjson::Document doc;
     rapidjson::IStreamWrapper isw{input_stream};
-    if (doc.ParseStream(isw).HasParseError()) throw std::runtime_error("Can't parse stream");
+    if (doc.ParseStream(isw).HasParseError()) throw std::runtime_error("Cannot parse stream.");
 
     if (!is_json_has_magic(doc))
     {
         if (strict_format)
-            throw std::runtime_error("Unable to find magic number: wrong file format or version");
+            throw std::runtime_error("Unable to find magic number: wrong file format or version.");
         else
-            SPDLOG_WARN("Unable to find magic number: wrong file format or version");
+            SPDLOG_WARN("Unable to find magic number: wrong file format or version.");
     }
-    if (!is_correct_version(doc)) SPDLOG_WARN("Unable to verify file version");
+    if (!is_correct_version(doc)) SPDLOG_WARN("Unable to verify file version.");
 
     if (!doc.HasMember("spikes") || !doc["spikes"].IsObject())
         throw std::runtime_error("Unable to find \"spikes\" group in data file.");
     const auto &spikes_group = doc["spikes"].GetObject();
 
-    // Reading node ids.
+    // Reading node IDs.
     if (!spikes_group.HasMember("node_ids") || !spikes_group["node_ids"].IsObject())
         throw std::runtime_error("No \"node_ids\" array in \"spikes\" group.");
     const auto &nodes_ids = spikes_group["node_ids"].GetObject();
 
     if (!nodes_ids.HasMember("value") || !nodes_ids["value"].IsArray())
-        throw std::runtime_error("Missing nodes data in JSON data file.");
+        throw std::runtime_error("Missing node data in JSON data file.");
     const auto &nodes_array = nodes_ids["value"].GetArray();
 
     std::vector<int64_t> nodes;
@@ -209,7 +209,7 @@ KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_json(
     // No const reference val possible.
     for (auto val_iter = nodes_array.Begin(); val_iter != nodes_array.End(); ++val_iter)
     {
-        // std::transform doesn't compiled by MSVC.
+        // std::transform isn't compiled by MSVC.
         nodes.push_back(val_iter->GetInt());  // cppcheck-suppress useStlAlgorithm
     }
 
@@ -227,12 +227,12 @@ KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_json(
     // No const reference val possible.
     for (auto val_iter = timestamps_array.Begin(); val_iter != timestamps_array.End(); ++val_iter)
     {
-        // std::transform doesn't compiled by MSVC.
+        // std::transform isn't compiled by MSVC.
         timestamps.push_back(static_cast<float>(val_iter->GetDouble()));  // cppcheck-suppress useStlAlgorithm
     }
     return convert_node_time_arrays_to_messages(nodes, timestamps, uid, 1);
 
-    throw std::runtime_error("Missing timestamps data in json data file.");
+    throw std::runtime_error("Missing timestamp data in JSON data file.");
 }
 
 
@@ -240,8 +240,6 @@ KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_json(
     const fs::path &path_to_json, const knp::core::UID &uid, bool strict_format)
 {
     std::ifstream json_stream(path_to_json, std::ios::in);
-
-    //     if (simdjson_result.error()) throw std::runtime_error("Cannot read file " + path_to_json.string());
 
     return load_messages_from_json(json_stream, uid, strict_format);
 }

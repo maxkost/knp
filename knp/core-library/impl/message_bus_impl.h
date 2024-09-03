@@ -32,13 +32,13 @@ public:
     virtual size_t step() = 0;
 
     /**
-     * @brief Creates an endpoint that can be used for message exchange.
-     * @return a new endpoint.
+     * @brief Create an endpoint that can be used for message exchange.
+     * @return new endpoint.
      */
     [[nodiscard]] virtual MessageEndpoint create_endpoint() = 0;
 
     /**
-     * @brief Update if needed, to be called once before message routing.
+     * @brief Update if needed. The function is to to be called once before message routing.
      */
     virtual void update() {}
 };

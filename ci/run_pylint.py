@@ -31,7 +31,7 @@ class TeeIO(io.StringIO):
     def write(self, text: str):
         print(text, end='')
         if self._file is None:
-            raise OSError('File must be opened!')
+            raise OSError('File must be opened.')
         self._file.write(text)
 
 
@@ -60,7 +60,7 @@ def get_pylint_suppressors(
         elif gf.is_file() and gf.name.endswith('.py'):
             with open(gf, encoding='utf8') as pf:
                 for n, ln in enumerate(pf.readlines()):
-                    # This is not totally correct, but this is a variant, used in the MLAD bash script.
+                    # This is not totally correct.
                     if 'pylint:' not in ln:
                         continue
                     lines_list = lines.setdefault(gf.relative_to(starting_directory), [])
@@ -113,14 +113,14 @@ with open(PYLINT_REPORT_FILE, encoding='utf8') as f:
         if expr_regex.search(line):
             critical_lines.append(line.strip())
 
-    print(f'Errors count = {len(critical_lines)}')
+    print(f'Error count = {len(critical_lines)}')
 
     with TeeIO(PYLINT_PATH / 'pylint-report-critical-only.txt') as crf:
         crf.write('\n'.join(critical_lines))
 
-    # Errors and warnings make build fail only
+    # Errors and warnings make the build only fail.
     if critical_lines:
-        print('Pylint found Errors and Warnings. Fix or explain then rerun.')
+        print('Pylint found Errors and Warnings. Fix or explain, then rerun.')
         if os.environ.get('BYPASS_BLOCKING_PYLINT') is None:
             ExitSuppressor.real_exit(1)
         else:

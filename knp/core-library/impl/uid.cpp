@@ -30,7 +30,7 @@ volatile ::std::atomic_uint64_t tag_counter = 1;
     constexpr auto value_size = sizeof(c_value);
 
     static_assert(
-        sizeof(decltype(tag_counter)::value_type) <= ::boost::uuids::uuid::static_size(), "Uid counter size error!");
+        sizeof(decltype(tag_counter)::value_type) <= ::boost::uuids::uuid::static_size(), "UID counter size error.");
     for (size_t i = 0; i < value_size; ++i)
     {
         auto digit = c_value & 0xffU;

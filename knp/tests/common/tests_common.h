@@ -24,7 +24,7 @@ namespace testing::internal
 ::std::vector<std::string> GetArgvs();
 
 #if GTEST_HAS_FILE_SYSTEM
-//// Returns the current application's name, removing directory path if that
+//// Return the current application name, removing directory path if it
 //// is present.
 FilePath GetCurrentExecutableName();
 #endif

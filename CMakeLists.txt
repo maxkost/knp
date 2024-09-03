@@ -15,13 +15,13 @@ include(version)
 knp_get_version()
 
 if(NOT KNP_VERSION)
-    message(FATAL_ERROR "Kaspersky Neuromorphic Platform version is mandatory for build, but cannot be determined!")
+    message(FATAL_ERROR "Kaspersky Neuromorphic Platform version is mandatory for build, but it cannot be determined.")
 endif()
 
 enable_language(CXX)
 
 if (POLICY CMP0091)
-    # Enable MSVS library select, using property.
+    # Enable MSVS library selection using property.
     cmake_policy(SET CMP0091 NEW)
 endif()
 
@@ -51,7 +51,7 @@ if (NOT Boost_ROOT)
 endif()
 
 if (Boost_ROOT)  # WIN32?
-    # WARNING: Don't change variables case!
+    # WARNING: Do not change variable case.
     set(Boost_USE_MULTITHREADED ON)
     set(Boost_USE_STATIC_LIBS ON)
     set(Boost_ALL_DYN_LINK OFF)
@@ -77,7 +77,7 @@ if (Boost_ROOT)  # WIN32?
         endif()
     endif()
 
-    message(STATUS "Boost library dir: ${BOOST_LIBRARYDIR}")
+    message(STATUS "Boost library directory: ${BOOST_LIBRARYDIR}.")
 endif()
 
 # set(Boost_DEBUG ON)
@@ -90,10 +90,10 @@ endif()
 
 
 #
-# Kaspersky Neuromorphic Platform build options set.
+# Kaspersky Neuromorphic Platform build option set.
 #
 
-# Build not from source directory, possible via add_subdirectory().
+# Build is not from source directory, it is possible to specify it via add_subdirectory().
 if (NOT CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     set(KNP_BUILD_AUTONOMOUS FALSE)
 else()
@@ -111,14 +111,14 @@ endif()
 if (KNP_BUILD_AUTONOMOUS OR KNP_MAINTAINER_BUILD)
     find_package(Doxygen OPTIONAL_COMPONENTS dot)
     if(NOT DOXYGEN_FOUND)
-        message(WARNING "Doxygen was not found! Documentation build will be disabled by default.")
+        message(WARNING "Doxygen was not found. Documentation build will be disabled by default.")
     endif()
 endif()
 
 find_program(_STUBGEN stubgen NO_CACHE)
 
 if ("${_STUBGEN}" STREQUAL "_STUBGEN-NOTFOUND")
-    message(WARNING "MyPy stubgen was not found! Please install MyPy (see requirements.txt)! Python framework build will be disabled.")
+    message(WARNING "MyPy stubgen was not found. Please install MyPy (see requirements.txt). Python framework build will be disabled.")
     set(KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT OFF)
 else()
     set(KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT ON)
@@ -168,7 +168,7 @@ if (NOT KNP_MAINTAINER_BUILD)
     execute_process(COMMAND pre-commit install
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
     if(ret AND NOT ret EQUAL 0)
-        message(FATAL_ERROR "Can't install pre-commit hooks!")
+        message(FATAL_ERROR "Cannot install pre-commit hooks.")
     endif()
     execute_process(COMMAND pre-commit install -t commit-msg
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -186,7 +186,7 @@ endif()
 set(ENABLE_FAST_MATH ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# Need for the linters.
+# Required for linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Always enabled for the Kaspersky Neuromorphic Platform components.
@@ -206,7 +206,7 @@ endif()
 
 set(CPM_SOURCE_CACHE_DEFAULT "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STRING "")
 
-# Make cache variables for install destinations.
+# Make cache variables for installation destinations.
 include(GNUInstallDirs)
 
 if (MSVC AND CMAKE_GENERATOR STREQUAL "Ninja")
@@ -226,7 +226,7 @@ add_third_party(NAME "libzmq"
                     "ENABLE_PRECOMPILED ${ZMQ_ENABLE_PRECOMPS}")
 
 #
-# LibHDF5 and it's dependencies.
+# LibHDF5 and its dependencies.
 #
 
 add_third_party("https://gitlab.dkrz.de/k202009/libaec.git@1.1.3")
@@ -351,7 +351,7 @@ set(CPACK_INSTALL_DEFAULT_DIRECTORY_PERMISSIONS
         GROUP_READ GROUP_EXECUTE
         WORLD_READ WORLD_EXECUTE)
 
-# On Linux grouping must be ignored: one component - one package.
+# On Linux, grouping must be ignored: one component corresponds to one package.
 set(CPACK_COMPONENTS_GROUPING IGNORE)
 set(CPACK_DEBIAN_ENABLE_COMPONENT_DEPENDS ON)
 

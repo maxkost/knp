@@ -1,6 +1,6 @@
 /**
  * @file neuron_traits.cpp
- * @brief Neurons properties Python bindings.
+ * @brief Python bindings for neuron traits.
  * @author Artiom N.
  * @date 20.02.24
  * @license Apache 2.0

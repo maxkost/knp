@@ -58,7 +58,7 @@ public:
      */
     core::messaging::SpikeData operator()(core::Step step = 0)
     {
-        SPDLOG_TRACE("Getting message from a stream using sequence converter.");
+        SPDLOG_TRACE("Getting message from a stream using sequence converter...");
 
         core::messaging::SpikeData message_data;
         for (size_t i = 0; i < data_size_; ++i)
@@ -70,7 +70,7 @@ public:
                 message_data.push_back(i);
             }
         }
-        SPDLOG_TRACE("Finished loading a message, it contains {} spikes", message_data.size());
+        SPDLOG_TRACE("Finished loading a message, it contains {} spikes.", message_data.size());
         return message_data;
     }
 

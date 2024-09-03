@@ -31,7 +31,7 @@ Backend::Backend(MessageBus&& message_bus)
 Backend::~Backend()
 {
     stop();
-    SPDLOG_INFO("Backend {} unloaded", std::string(base_.uid_));
+    SPDLOG_INFO("Backend {} unloaded.", std::string(base_.uid_));
 }
 
 
@@ -149,19 +149,19 @@ void Backend::select_devices(const std::set<UID>& uids)
 {
     for (auto&& device : get_devices())
     {
-        SPDLOG_DEBUG("Trying UID {}", std::string(device->get_uid()));
+        SPDLOG_DEBUG("Trying UID {}...", std::string(device->get_uid()));
         if (uids.find(device->get_uid()) != uids.end())
         {
-            SPDLOG_INFO("Device with UID {} was selected", std::string(device->get_uid()));
+            SPDLOG_INFO("Device with UID {} was selected.", std::string(device->get_uid()));
             devices_.push_back(std::move(device));
             return;
         }
-        SPDLOG_TRACE("Device with UID {} was not selected", std::string(device->get_uid()));
+        SPDLOG_TRACE("Device with UID {} was not selected.", std::string(device->get_uid()));
     }
 
     if (uids.size() != devices_.size())
     {
-        throw std::logic_error("Not all device UIDs were selected!");
+        throw std::logic_error("Not all devices were selected.");
     }
 }
 

@@ -54,7 +54,7 @@ public:
     void join() { executor_.join(); }
 
 private:
-    // Don't change the order of declarations.
+    // Do not change the order of declarations.
     std::unique_ptr<ThreadPoolContext> context_;
     ThreadPoolExecutor executor_;
 };

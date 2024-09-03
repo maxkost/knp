@@ -1,6 +1,6 @@
 /**
  * @file message_header.cpp
- * @brief Message header Python bindings.
+ * @brief Python bindings for message header.
  * @author Artiom N.
  * @date 01.02.2024
  * @license Apache 2.0

@@ -129,7 +129,7 @@ def _process_overloaded_method(class_name, meth, py_method_name, parameters):
     doxygen = meth.get('doxygen')
     brk = ')' if doxygen is None else f', {process_docstring(doxygen)})'
 
-    # overloaded method
+    # Overloaded method.
     params = ', '.join(p['raw_type'] for p in parameters)
     overload = f'({meth["returns"]} ({class_name}::*)({params}))'
 
@@ -139,7 +139,7 @@ def _process_overloaded_method(class_name, meth, py_method_name, parameters):
 
 
 def _process_method(class_name, meth, hooks, overloaded=False):
-    # skip destructor
+    # Skip destructor.
     if meth.get('destructor', False):
         return []
 
@@ -147,7 +147,7 @@ def _process_method(class_name, meth, hooks, overloaded=False):
     method_name: str = meth['name']
     parameters = meth['parameters']
 
-    # fix types that are enums
+    # Fix types that are enums.
     for p in parameters:
         if p.get('enum'):
             p['raw_type'] = p['enum']
@@ -167,7 +167,7 @@ def _process_method(class_name, meth, hooks, overloaded=False):
 
         modified = False
 
-        # data that hooks can modify
+        # Data that hooks can modify.
         hook_data = MethodHookData(method_name, in_params, ret_names, [], [])
 
         for hook in hooks.get('method_hooks', []):
@@ -195,16 +195,16 @@ def _process_class(cls, hooks):
     brk = ')' if 'doxygen' not in cls else f', {process_docstring(cls["doxygen"])})'
     ret = [f'py::class_<{class_name}>("{class_name}"{brk}']
 
-    # Collect methods first to determine if there are overloads
-    # ... yes, we're ignoring base classes here
+    # Collect methods first to determine if there are overloads.
+    # We're ignoring base classes here.
     methods = cls['methods']['public']
     if methods:
-        # collapse them to find overloads
+        # Collapse them to find overloads.
         meths: Dict[str, List[Callable]] = {}
         for meth in methods:
             meths.setdefault(meth['name'], []).append(meth)
 
-        # process it
+        # Process it.
         for ml in meths.values():
             for mh in ml:
                 ret += _process_method(class_name, mh, hooks, len(ml) != 1)
@@ -219,7 +219,7 @@ def _process_class(cls, hooks):
 
 
 def process_header(fname, hooks):
-    """Returns a list of lines."""
+    """Return a list of lines."""
 
     header = CppHeader(fname)
     output = []
@@ -240,13 +240,13 @@ def process_header(fname, hooks):
 
 
 #
-# Hooks
+# Hooks.
 #
 
 
 # Method hook parameters:
 #   class_name: name of the class
-#   method: a method dictionary from cppheaderparser
+#   method: method dictionary from cppheaderparser
 #   in_params: copy of method['parameters']
 #   ret_names: variables to return
 #   pre: statements to insert before function call
@@ -275,7 +275,7 @@ def _ctr_hook(_, method, hook_data):
 
 def process_module(module_name, headers, hooks, add_namespaces=None):
     for header in headers:
-        print(f'#include <{header}>')  # TODO, not usually the actual path
+        print(f'#include <{header}>')  # TODO: Not usually the actual path.
 
     print('\n')
     print('#include <boost/python.hpp>')
@@ -287,7 +287,7 @@ def process_module(module_name, headers, hooks, add_namespaces=None):
             if not ns:
                 continue
 
-            print(f'using namespace {ns};')
+            print(f'Using namespace {ns};')
 
     print('\n\n')
 

@@ -24,7 +24,7 @@ struct PopulationGeneratorProxy
     {
         if (!static_cast<bool>(PyCallable_Check(gen_func.ptr())))
         {
-            PyErr_SetString(PyExc_TypeError, "Passed generator is not callable!");
+            PyErr_SetString(PyExc_TypeError, "Passed generator is not callable.");
             py::throw_error_already_set();
         }
     }

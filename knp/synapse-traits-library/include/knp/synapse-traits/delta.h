@@ -28,7 +28,7 @@ struct DeltaSynapse;
 
 
 /**
- * @brief Default values for Delta synapse parameters.
+ * @brief Default values for delta synapse parameters.
  */
 template <>
 struct default_values<DeltaSynapse>

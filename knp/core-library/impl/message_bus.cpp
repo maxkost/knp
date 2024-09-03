@@ -40,7 +40,7 @@ MessageBus::MessageBus(std::unique_ptr<messaging::impl::MessageBusImpl> &&impl) 
 {
     if (!impl_)
     {
-        throw std::runtime_error("Unavailable message bus implementation");
+        throw std::runtime_error("Unavailable message bus implementation.");
     }
 }
 
@@ -59,7 +59,7 @@ size_t MessageBus::step()
 
 size_t MessageBus::route_messages()
 {
-    SPDLOG_DEBUG("Message routing cycle started...");
+    SPDLOG_DEBUG("Message routing cycle started.");
     size_t count = 0;
     impl_->update();
     size_t num_messages = step();

@@ -1,6 +1,6 @@
 /**
  * @file spike_message.h
- * @brief SpikeMessage Python bindings header.
+ * @brief Python bindings header for SpikeMessage.
  * @author Artiom N.
  * @date 28.02.2024
  * @license Apache 2.0

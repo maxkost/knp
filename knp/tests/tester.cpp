@@ -1,5 +1,5 @@
 /**
- * @brief Tests runner.
+ * @brief Runner for tests.
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
  */

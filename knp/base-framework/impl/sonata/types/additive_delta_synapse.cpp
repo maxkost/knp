@@ -42,7 +42,7 @@ void add_projection_to_h5<core::Projection<AdditiveDeltaSynapse>>(
     // cppcheck-suppress constParameterReference
     HighFive::File &file_h5, const knp::core::Projection<AdditiveDeltaSynapse> &projection)
 {
-    throw std::runtime_error("AdditiveDeltaSynapse add unimplemented!");
+    throw std::runtime_error("AdditiveDeltaSynapse saving unimplemented.");
 }
 
 
@@ -50,7 +50,7 @@ template <>
 core::Projection<AdditiveDeltaSynapse> load_projection(
     const HighFive::Group &edges_group, const std::string &projection_name)
 {
-    throw std::runtime_error("AdditiveDeltaSynapse load unimplemented!");
+    throw std::runtime_error("AdditiveDeltaSynapse loading unimplemented.");
 }
 
 }  // namespace knp::framework::sonata

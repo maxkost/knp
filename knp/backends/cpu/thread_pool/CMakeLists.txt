@@ -36,4 +36,4 @@ if(KNP_ENABLE_COVERAGE)
 endif()
 
 # Internal library, used by backends.
-# This doesn't need installation.
+# This doesn't require installation.

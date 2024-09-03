@@ -7,9 +7,9 @@ include_guard(GLOBAL)
 
 # Function:                 exclude_files_from_dir_in_list
 # Description:              Exclude all files from a list under a specific directory.
-# Param _InFileList:        Input and returned List
+# Param _InFileList:        Input and return list.
 # Param _excludeDirName:    Name of the directory, which shall be ignored.
-# Param _verbose:           Print the names of the files handled
+# Param _verbose:           Print the names of the files handled.
 function(exclude_files_from_dir_in_list _InFileList _excludeDirName _verbose)
   foreach (ITR ${_InFileList})
     if ("${_verbose}")
@@ -18,7 +18,7 @@ function(exclude_files_from_dir_in_list _InFileList _excludeDirName _verbose)
 
     # Check if the item matches the directory name in _excludeDirName.
     if ("${ITR}" MATCHES "(.*)${_excludeDirName}(.*)")
-      message(STATUS "Remove Item from List:${ITR}")
+      message(STATUS "Remove Item from List:${ITR}.")
       # Remove the item from the list.
       list (REMOVE_ITEM _InFileList ${ITR})
     endif ("${ITR}" MATCHES "(.*)${_excludeDirName}(.*)")
@@ -31,7 +31,7 @@ endfunction(exclude_files_from_dir_in_list)
 
 
 # Function:          get_files_and_dir
-# Description:       Get files and directories of the source directory in the two separate lists.
+# Description:       Get files and directories of the source directory in two separate lists.
 # Param source_dir:  Directory to list.
 # output dir_list:   Directories in the source directory.
 # output file_list:  Files in the source directory.

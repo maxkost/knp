@@ -67,7 +67,7 @@ endmacro()
 #
 
 # Function:          get_files_and_dir
-# Description:       Get files and directories of the source directory in the two separate lists.
+# Description:       Get files and directories of the source directory in two separate lists.
 # Param source_dir:  Directory to list.
 # output dir_list:   Directories in the source directory.
 # output file_list:  Files in the source directory.

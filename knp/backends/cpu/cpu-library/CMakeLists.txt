@@ -38,4 +38,4 @@ target_link_libraries("${PROJECT_NAME}" INTERFACE KNP::Core KNP::Devices::CPU)
 #endif()
 
 # Internal library, used by backends.
-# This doesn't need installation.
+# This doesn't require installation.

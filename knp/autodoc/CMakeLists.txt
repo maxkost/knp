@@ -10,7 +10,7 @@ project(knp-autodoc
 if(KNP_BUILD_DOCUMENTATION)
     file(REAL_PATH "${CMAKE_SOURCE_DIR}/knp" SOURCE_ROOT_DIR)
 
-    message(DEBUG "Source root directory: ${SOURCE_ROOT_DIR}")
+    message(DEBUG "Source root directory: ${SOURCE_ROOT_DIR}.")
 
     include("doxygen")
 

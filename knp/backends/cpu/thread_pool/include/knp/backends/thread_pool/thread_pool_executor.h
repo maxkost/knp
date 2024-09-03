@@ -104,7 +104,7 @@ private:
     void on_work_finished()
     {
         std::lock_guard lock(context_.mutex_);
-        context_.do_work_finished(task_count_);  // locks
+        context_.do_work_finished(task_count_);  // Locks.
     }
 
 

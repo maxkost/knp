@@ -1,6 +1,6 @@
 /**
  * @file messaging.cpp
- * @brief Messaging Python bindings.
+ * @brief Python bindings for messaging namespace.
  * @author Artiom N.
  * @date 01.02.2024
  * @license Apache 2.0

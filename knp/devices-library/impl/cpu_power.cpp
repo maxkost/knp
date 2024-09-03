@@ -25,18 +25,18 @@ void check_pcm_status(const pcm::PCM::ErrorCode& status)
     {
         case pcm::PCM::Success:
         {
-            SPDLOG_TRACE("PCM instance programming is ok");
+            SPDLOG_TRACE("PCM instance programming is ok.");
             break;
         }
         case pcm::PCM::MSRAccessDenied:
             throw std::logic_error(
-                "Access to Intel(r) Performance Counter Monitor has denied (no MSR or PCI CFG space access).");
+                "Access to Intel(r) Performance Counter Monitor was denied (no MSR or PCI CFG space access).");
         case pcm::PCM::PMUBusy:
             throw std::logic_error(
-                "Access to Intel(r) Performance Counter Monitor has denied (Performance Monitoring Unit is occupied by "
+                "Access to Intel(r) Performance Counter Monitor was denied (Performance Monitoring Unit is occupied by "
                 "other application). Try to stop the application that uses PMU.");
         default:
-            throw std::logic_error("Access to Intel(r) Performance Counter Monitor has denied (Unknown error).");
+            throw std::logic_error("Access to Intel(r) Performance Counter Monitor was denied (Unknown error).");
     }
 }
 
@@ -44,7 +44,7 @@ void check_pcm_status(const pcm::PCM::ErrorCode& status)
 CpuPower::CpuPower(uint32_t cpu_sock_no) : cpu_sock_no_(cpu_sock_no), pcm_instance_(pcm::PCM::getInstance())
 {
     assert(pcm_instance_);
-    // This is the instance, memory releasing doesn't need.
+    // This is an instance, memory releasing is not required.
     const pcm::PCM::ErrorCode status = pcm_instance_->program(pcm::PCM::DEFAULT_EVENTS, nullptr, true, ::getpid());
 
     try
@@ -54,7 +54,7 @@ CpuPower::CpuPower(uint32_t cpu_sock_no) : cpu_sock_no_(cpu_sock_no), pcm_instan
     }
     catch (const std::logic_error& e)
     {
-        SPDLOG_WARN("Error during power consumption counter init: {}", e.what());
+        SPDLOG_WARN("Error during power consumption counter initialization: {}.", e.what());
     }
 }
 
@@ -63,7 +63,7 @@ float CpuPower::get_power()
 {
     if (!pcm_instance_->packageEnergyMetricsAvailable())
     {
-        throw std::logic_error("Energy metrics unavailable!");
+        throw std::logic_error("Energy metrics are unavailable.");
     }
 
     std::swap(sktstate1_, sktstate2_);
@@ -75,7 +75,7 @@ float CpuPower::get_power()
     const auto consumed_watts =
         consumed_joules / std::chrono::duration_cast<std::chrono::seconds>(time_now - time_start_).count();
 
-    SPDLOG_DEBUG("CPU, Joules = {}, Watts = {}", consumed_joules, consumed_watts);
+    SPDLOG_DEBUG("CPU, Joules = {}, Watts = {}.", consumed_joules, consumed_watts);
 
     time_start_ = time_now;
 

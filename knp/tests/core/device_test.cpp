@@ -23,7 +23,7 @@ TEST(DeviceTestSuite, CPUTest)
 {
     if (geteuid() != 0)
     {
-        SPDLOG_WARN("This test must be ran under root");
+        SPDLOG_WARN("This test must be run under root.");
         return;
     }
 
@@ -31,7 +31,7 @@ TEST(DeviceTestSuite, CPUTest)
 
     ASSERT_GE(processors.size(), 1);
 
-    for (auto &device : processors) SPDLOG_DEBUG("CPU name: {}", device.get_name());
+    for (auto &device : processors) SPDLOG_DEBUG("CPU name: {}.", device.get_name());
 }
 
 
@@ -39,7 +39,7 @@ TEST(DeviceTestSuite, BackendDevicesTest)
 {
     if (geteuid() != 0)
     {
-        SPDLOG_WARN("This test must be ran under root");
+        SPDLOG_WARN("This test must be run under root.");
         return;
     }
 

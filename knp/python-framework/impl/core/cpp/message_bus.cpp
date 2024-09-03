@@ -1,6 +1,6 @@
 /**
  * @file message_bus.cpp
- * @brief Message bus Python bindings.
+ * @brief Python bindings for message bus.
  * @author Artiom N.
  * @date 01.02.2024
  * @license Apache 2.0

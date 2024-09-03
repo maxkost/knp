@@ -57,7 +57,7 @@ function(add_clang_tidy target)
 
     list(APPEND CLANG_TIDY_COMMAND ${CMAKE_CXX_CLANG_TIDY} ${TIDY_ARGS})
 
-    message(STATUS "Setting clang-tidy on \"${target}\": ${CLANG_TIDY_COMMAND}")
+    message(STATUS "Setting clang-tidy on \"${target}\": ${CLANG_TIDY_COMMAND}...")
 
     if("${target}" STREQUAL "ALL")
         set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}" CACHE STRING "CMake wrapped clang-tidy")

@@ -11,12 +11,12 @@ project(knp_python_framework VERSION "${KNP_VERSION}" LANGUAGES C CXX  # PYTHON
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 if (MSVC)
-    message(STATUS "Temporary doesn't build under Windows")
+    message(STATUS "Temporarily cannot be built under Windows.")
     return()
 endif()
 
 if (NOT KNP_PYTHON_FRAMEWORK_BUILD)
-    message(STATUS "Python framework building disabled...")
+    message(STATUS "Python framework building disabled.")
     return()
 endif()
 
@@ -120,7 +120,7 @@ if(KNP_PYTHON_BUILD_WHEEL)
         WORKING_DIRECTORY "${KNP_PYTHON_OUTPUT_DIRECTORY}"
     )
 
-    # TODO: automatically get all targets in CMakeLists.txt.
+    # TODO: Automatically get all targets in CMakeLists.txt.
     add_custom_target(
         "${PROJECT_NAME}-pip-build-package" ALL
         DEPENDS
