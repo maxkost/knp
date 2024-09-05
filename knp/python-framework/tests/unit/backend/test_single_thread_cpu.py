@@ -1,5 +1,5 @@
 """
-Kaspersky Neuromorphic Platform single-thread CPU backend tests
+Kaspersky Neuromorphic Platform single-thread CPU backend tests.
 
 Author: Artiom N.
 Date: 01.03.2024
@@ -31,7 +31,7 @@ def test_smallest_network(pytestconfig):  # type: ignore[no-untyped-def]
 
     input_uid = input_projection.uid
 
-    backend = BackendLoader().load(f'{pytestconfig.rootdir}/../lib/libknp-cpu-single-threaded-backend')
+    backend = BackendLoader().load(f'{pytestconfig.rootdir}/../bin/libknp-cpu-single-threaded-backend')
 
     backend.load_all_populations([population])
     backend.load_all_projections([input_projection, loop_projection])
