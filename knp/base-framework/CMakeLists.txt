@@ -64,10 +64,10 @@ knp_add_library("${PROJECT_NAME}-core"
 )
 
 set_target_properties(
-        "${PROJECT_NAME}-core"
-        PROPERTIES
-        VERSION "${CMAKE_PROJECT_VERSION}"
-        SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
+    "${PROJECT_NAME}-core"
+    PROPERTIES
+    VERSION "${CMAKE_PROJECT_VERSION}"
+    SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
 
 if(KNP_ENABLE_COVERAGE)
     include(codecoverage)
