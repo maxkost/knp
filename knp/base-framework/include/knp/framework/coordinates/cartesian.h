@@ -38,7 +38,7 @@ constexpr char coordinate_array_tag_name[]{"ortho_coordinates_2d_array"};
  */
 template <typename CoordinateType>
 using coordinate = boost::geometry::model::d2::point_xy<CoordinateType>;
-}  // d2
+}  // namespace d2
 
 
 /**
