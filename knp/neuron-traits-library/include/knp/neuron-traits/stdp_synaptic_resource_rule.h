@@ -61,7 +61,6 @@ struct default_values<SynapticResourceSTDPNeuron<NeuronType>>
     /**
      * @brief Base neuron default parameters.
      */
-    // cppcheck-suppress unusedStructMember
     default_values<NeuronType> neuron_;
 };
 
@@ -82,6 +81,12 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
         : neuron_parameters<NeuronType>(base_neuron)
     {
     }
+
+    /**
+     * @brief Time parameter for dopamine plasticity. TODO: Remove it when 3-phase learning is ready.
+     */
+    uint32_t dopamine_plasticity_time_ = 1;
+
     /**
      * @brief Free synaptic resource.
      */
