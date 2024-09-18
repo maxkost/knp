@@ -1,6 +1,6 @@
 /**
- * @file generators.h
- * @brief Population generators.
+ * @file connectors.h
+ * @brief Projection connectors.
  * @author Artiom N.
  * @date 10.08.2024
  * @license Apache 2.0
