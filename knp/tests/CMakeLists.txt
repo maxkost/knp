@@ -97,9 +97,13 @@ if (KNP_ENABLE_COVERAGE)
     endif()
 endif()
 
+
+set(CTEST_MEMORYCHECK_COMMAND "/usr/bin/valgrind")
+set(CTEST_MEMORYCHECK_COMMAND_OPTIONS "--tool=memcheck --leak-check=full --time-stamp=yes --trace-children=yes --track-fds=yes --track-origins=yes --error-limit=no --gen-suppressions=all --undef-value-errors=yes --error-exitcode=1")
+
 add_custom_target(test_with_memcheck
     COMMAND ${CMAKE_CTEST_COMMAND}
         --force-new-ctest-process --test-action memcheck
         --rerun-failed --output-on-failure
-    COMMAND cat "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log"
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    COMMAND cat "Testing/Temporary/MemoryChecker.*.log"
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/knp/tests")
