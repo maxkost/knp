@@ -1,7 +1,6 @@
 /**
  * @file graph_physics.h
  * @brief Building a graph structure.
- * @author A. Vartenkov
  * @date 26.07.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -18,6 +17,7 @@ using AdjacencyList = std::vector<std::vector<size_t>>;
 
 struct PhysicsPoint
 {
+    // cppcheck-suppress unusedStructMember
     int index_;
     cv::Vec2d pos_;
     cv::Vec2d vel_;

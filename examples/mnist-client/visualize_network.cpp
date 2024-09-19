@@ -11,7 +11,10 @@
 
 #include <knp/framework/network.h>
 
+#include <spdlog/spdlog.h>
+
 #include <algorithm>
+#include <string>
 #include <unordered_set>
 
 #include <opencv2/highgui.hpp>
@@ -31,7 +34,31 @@ struct DrawingParameters
     const int node_radius = 10;
     const int arrow_len = 20;
     const double arrow_width = 0.3;
+    const int text_margin = 5;
 };
+
+template <class Entity>
+std::string get_name(const Entity &pop)
+{
+    const size_t uid_part_size = 8;
+    knp::core::TagMap tags = std::visit([](const auto &p) { return p.get_tags(); }, pop);
+    knp::core::UID uid = std::visit([](const auto &p) { return p.get_uid(); }, pop);
+    std::string name;
+    auto tag = tags.get_tag("name");
+    if (tag.has_value())
+    {
+        try
+        {
+            name = std::any_cast<std::string>(tag);
+        }
+        catch (std::bad_any_cast &exc)
+        {
+            SPDLOG_WARN("Wrong name tag type.");
+        }
+    }
+    if (name.empty()) name = std::string{uid}.substr(0, uid_part_size);
+    return name;
+}
 
 
 NetworkGraph::NetworkGraph(const knp::framework::Network &network)
@@ -40,7 +67,7 @@ NetworkGraph::NetworkGraph(const knp::framework::Network &network)
     {
         size_t pop_size = std::visit([](const auto &p) { return p.size(); }, pop);
         knp::core::UID uid = std::visit([](const auto &p) { return p.get_uid(); }, pop);
-        nodes_.push_back(Node{pop_size, uid, pop.index()});
+        nodes_.push_back(Node{pop_size, uid, get_name(pop), pop.index()});
     }
 
     for (const auto &proj : network.get_projections())
@@ -55,7 +82,7 @@ NetworkGraph::NetworkGraph(const knp::framework::Network &network)
             if (uid_from == nodes_[i].uid_) id_from = i;
             if (uid_to == nodes_[i].uid_) id_to = i;
         }
-        edges_.push_back(Edge{proj_size, id_from, id_to, uid, proj.index()});
+        edges_.push_back(Edge{proj_size, id_from, id_to, uid, get_name(proj), proj.index()});
     }
 }
 
@@ -73,7 +100,7 @@ AdjacencyList build_adjacency_list(const NetworkGraph &graph)
     for (const auto &edge : graph.edges_)
     {
         int index = edge.index_from_;
-        if (index < 0) index = graph.nodes_.size();
+        if (index < 0) index = static_cast<int>(graph.nodes_.size());
         adj_list[index].push_back(edge.index_to_);
     }
     return adj_list;
@@ -143,6 +170,47 @@ void draw_edges(
                 params.edge_color);
         }
     }
+}
+
+
+cv::Mat draw_annotated_subgraph(
+    const NetworkGraph &graph, const AdjacencyList &adj_list, const std::vector<int> &nodes,
+    const std::vector<cv::Point2i> &points, const std::vector<int> &inputs, const cv::Size &img_size,
+    const DrawingParameters &params = DrawingParameters{})
+{
+    cv::Mat out_img{img_size, CV_8UC3, params.back_color};
+    // Draw inputs (black arrow from above)
+    for (auto input : inputs)
+    {
+        auto target_node_iter = std::find(nodes.begin(), nodes.end(), input);
+        if (target_node_iter == nodes.end()) continue;
+        cv::Point2i point = points[target_node_iter - nodes.begin()];
+        draw_simple_arrow_line(
+            out_img, point - cv::Point2i(0, 2 * params.arrow_len + params.node_radius), point, params.arrow_len,
+            params.arrow_width, params.node_radius, params.node_color);
+    }
+
+    draw_edges(out_img, adj_list, nodes, points, params);
+
+    // Draw nodes
+    for (size_t i = 0; i < nodes.size(); ++i)
+    {
+        // Drawing
+        const auto &point = points[i];
+        cv::circle(
+            out_img, {static_cast<int>(point.x), static_cast<int>(point.y)}, params.node_radius, params.node_color, -1);
+        cv::Point2i text_start = point;
+        std::string name = graph.nodes_[i].name_;
+        int baseline = 0;
+        auto text_size = cv::getTextSize(name, cv::FONT_HERSHEY_SIMPLEX, 0.7, 2, &baseline);
+        text_start.x = std::max(params.text_margin, text_start.x - text_size.width / 2);
+        if (text_start.x + text_size.width / 2 > img_size.width - params.text_margin)
+            text_start.x = img_size.width - text_size.width - params.text_margin;
+        text_start.y += params.node_radius + params.text_margin + text_size.height;
+        if (text_start.y > img_size.height) text_start.y = point.y - params.node_radius - params.text_margin;
+        cv::putText(out_img, name, text_start, cv::FONT_HERSHEY_SIMPLEX, 0.7, {0, 0, 0}, 2);
+    }
+    return out_img;
 }
 
 
@@ -314,12 +382,15 @@ void position_network_test(
     // Create inputs
     std::vector<int> inputs;
     inputs.reserve(adj_list.back().size());
-    for (auto v : adj_list.back()) inputs.push_back(static_cast<int>(v));
+    std::transform(
+        adj_list.back().begin(), adj_list.back().end(), std::back_inserter(inputs),
+        [](size_t v) { return static_cast<int>(v); });
+    // for (auto v : adj_list.back()) inputs.push_back(static_cast<int>(v));
 
     while (key != 27)
     {
         auto points = vis_graph.scale_graph(screen_size, margin);
-        cv::Mat img = draw_subgraph(adj_list, nodes, points, inputs, screen_size);
+        cv::Mat img = draw_annotated_subgraph(graph, adj_list, nodes, points, inputs, screen_size);
         cv::imshow("Graph", img);
         key = cv::waitKey(50) & 255;
         vis_graph.iterate(1);

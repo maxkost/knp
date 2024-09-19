@@ -18,42 +18,6 @@
 
 VisualGraph::VisualGraph(const std::vector<int> &nodes, const AdjacencyList &adj_list) : base_graph_(adj_list)
 {
-    class VisualGraph
-    {
-    public:
-        // Construct graph visualizer.
-        // nodes - subgraph node indexes.
-        // adj_list - whole graph adjacency list.
-        explicit VisualGraph(const std::vector<int> &nodes, const AdjacencyList &adj_list);
-
-        // Calculate forces, modify point velocities and move points around.
-        void iterate();
-
-        // iterate() n times.
-        void iterate(int n);
-
-        // Fit graph to image size, get point coordinates for the image.
-        [[nodiscard]] std::vector<cv::Point2i> scale_graph(const cv::Size &screen_size, int margin) const;
-
-        // Get point positions
-        [[nodiscard]] std::vector<cv::Point2d> get_positions() const;
-
-    private:
-        // Data
-        AdjacencyList base_graph_;
-        std::vector<std::vector<bool>> edges_mat_;
-        std::vector<PhysicsPoint> points_;
-
-        // Hyperparameters
-        double spring_strength = 1.0f;
-        double spring_len = 1.0f;
-        double repel_coeff = 0.3f;
-        double resistance_ = 1.0f;
-
-        // Calculates force from one point to another. Force consists of "repel", "spring" and "resistance" components.
-        [[nodiscard]] cv::Vec2d get_force(
-            const PhysicsPoint &target, const PhysicsPoint &influence, bool has_edge) const;
-    };
     edges_mat_.resize(base_graph_.size());
     for (auto &edge : edges_mat_) edge.resize(base_graph_.size());
 
@@ -111,7 +75,10 @@ void VisualGraph::iterate(int n)
 {
     std::vector<cv::Point2d> result;
     result.reserve(points_.size());
-    for (const auto &point : points_) result.push_back(cv::Point2d(point.pos_[0], point.pos_[1]));
+    // for (const auto &point : points_) result.push_back(cv::Point2d(point.pos_[0], point.pos_[1]));
+    std::transform(
+        points_.begin(), points_.end(), std::back_inserter(result),
+        [](const auto &v) { return cv::Point2d(v.pos_[0], v.pos_[1]); });
     return result;
 }
 

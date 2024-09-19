@@ -68,6 +68,13 @@ public:
      */
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
 
+    /**
+     * @brief Get tags used by the backend.
+     * @return backend tag map.
+     * @see TagMap
+     */
+    [[nodiscard]] const auto &get_tags() const { return base_.tags_; }
+
 public:
     /**
      * @brief Define if plasticity is supported.

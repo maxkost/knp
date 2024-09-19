@@ -87,7 +87,7 @@ public:  // NOLINT
      * @return population tag map.
      * @see TagMap.
      */
-    [[nodiscard]] auto &get_tags() const { return base_.tags_; }
+    [[nodiscard]] const auto &get_tags() const { return base_.tags_; }
 
 public:  // NOLINT
     /**
