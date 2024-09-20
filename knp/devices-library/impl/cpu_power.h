@@ -1,6 +1,6 @@
 /**
  * @file cpu_power.h
- * @brief CPU power consumption get via Intel PCM library.
+ * @brief CPU power consumption received via Intel PCM library.
  * @author Artiom N.
  * @date 20.02.2023
  * @license Apache 2.0
@@ -33,7 +33,7 @@ namespace knp::devices::cpu
 void check_pcm_status(const pcm::PCM::ErrorCode &status);
 
 /**
- * @brief Power getter via Intel PCM.
+ * @brief Power meter via Intel PCM.
  */
 class KNP_DECLSPEC CpuPower
 {

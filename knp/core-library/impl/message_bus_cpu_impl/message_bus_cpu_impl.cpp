@@ -74,14 +74,14 @@ void MessageBusCPUImpl::update()
 size_t MessageBusCPUImpl::step()
 {
     const std::lock_guard lock(mutex_);
-    if (messages_to_route_.empty()) return 0;  // no more messages left for endpoints to receive.
+    if (messages_to_route_.empty()) return 0;  // No more messages left for endpoints to receive.
     // Sending a message to every endpoint.
     auto message = std::move(messages_to_route_.back());
     size_t message_counter = 0;
     for (auto endpoint_message_containers : endpoint_messages_)
     {
         auto recv_ptr = std::get<1>(endpoint_message_containers).lock();
-        // Skipping all endpoints deleted after previous update(). Will delete them at the next update().
+        // Skip all endpoints deleted after previous update(). They will be deleted at the next update().
         if (!recv_ptr) continue;
         recv_ptr->emplace_back(message);
         ++message_counter;

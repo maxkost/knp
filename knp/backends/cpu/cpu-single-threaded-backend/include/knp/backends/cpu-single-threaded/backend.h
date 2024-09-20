@@ -324,7 +324,7 @@ protected:
     std::optional<core::messaging::SpikeMessage> calculate_population(
         knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population);
     /**
-     * @brief Calculate projection of Delta synapses.
+     * @brief Calculate projection of delta synapses.
      * @note Projection will be changed during calculation.
      * @param projection projection to calculate.
      * @param message_queue message queue to send to projection for calculation.

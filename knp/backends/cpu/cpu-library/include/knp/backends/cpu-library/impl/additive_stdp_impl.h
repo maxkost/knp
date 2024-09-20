@@ -1,6 +1,6 @@
 /**
  * @file additive_stdp_impl.h
- * @brief Additive STDP calculation routines implementation.
+ * @brief Implementation of additive STDP calculation routines.
  * @author Artiom N.
  * @date 21.08.2023
  * @license Apache 2.0
@@ -92,10 +92,10 @@ inline void append_spike_times(
     const std::function<std::vector<size_t>(uint32_t)> &synapse_index_getter,
     std::vector<uint32_t> knp::synapse_traits::STDPAdditiveRule<DeltaLikeSynapse>::*spike_queue)
 {
-    // Filling synapses spike queue.
+    // Fill synapses spike queue.
     for (auto neuron_index : message.neuron_indexes_)
     {
-        // Might be able to change it into "traces"
+        // Might be able to change it into "traces".
         // TODO: Inefficient, MUST be cached.
         for (auto synapse_index : synapse_index_getter(neuron_index))
         {
@@ -143,7 +143,7 @@ void register_additive_stdp_spikes(
         &projection,
     std::vector<SpikeMessage> &all_messages)
 {
-    SPDLOG_DEBUG("Calculating Additive STDP Delta synapse projection");
+    SPDLOG_DEBUG("Calculating additive STDP delta synapse projection...");
 
     using ProjectionType = typename std::decay_t<decltype(projection)>;
     using ProcessingType = typename ProjectionType::SharedSynapseParameters::ProcessingType;
@@ -167,7 +167,7 @@ void register_additive_stdp_spikes(
         assert(uid == msg.header_.sender_uid_);
         if (processing_type == ProcessingType::STDPOnly || processing_type == ProcessingType::STDPAndSpike)
         {
-            SPDLOG_TRACE("Add spikes to STDP projection postsynaptic history");
+            SPDLOG_TRACE("Add spikes to STDP projection postsynaptic history.");
             append_spike_times(
                 projection, msg,
                 [&projection](uint32_t neuron_index)
@@ -176,7 +176,7 @@ void register_additive_stdp_spikes(
         }
         if (processing_type == ProcessingType::STDPAndSpike)
         {
-            SPDLOG_TRACE("Add spikes to STDP projection presynaptic history");
+            SPDLOG_TRACE("Add spikes to STDP projection presynaptic history.");
             append_spike_times(
                 projection, msg,
                 [&projection](uint32_t neuron_index)
@@ -185,7 +185,7 @@ void register_additive_stdp_spikes(
         }
         if (processing_type == ProcessingType::STDPOnly)
         {
-            SPDLOG_TRACE("STDP only synapse, remove message from list");
+            SPDLOG_TRACE("STDP-only synapse, remove message from list.");
             msg.neuron_indexes_ = {};
         }
 
@@ -199,7 +199,7 @@ void update_projection_weights_additive_stdp(
     knp::core::Projection<knp::synapse_traits::STDP<knp::synapse_traits::STDPAdditiveRule, DeltaLikeSynapse>>
         &projection)
 {
-    // Update projection parameters
+    // Update projection parameters.
     for (auto &proj : projection)
     {
         SPDLOG_TRACE("Applying STDP rule...");
@@ -209,10 +209,10 @@ void update_projection_weights_additive_stdp(
         if (rule.presynaptic_spike_times_.size() >= period && rule.postsynaptic_spike_times_.size() >= period)
         {
             STDPFormula stdp_formula(rule.tau_plus_, rule.tau_minus_, 1, 1);
-            SPDLOG_TRACE("Old weight = {}", std::get<knp::core::synapse_data>(proj).weight_);
+            SPDLOG_TRACE("Old weight = {}.", std::get<knp::core::synapse_data>(proj).weight_);
             std::get<knp::core::synapse_data>(proj).weight_ +=
                 stdp_formula(rule.presynaptic_spike_times_, rule.postsynaptic_spike_times_);
-            SPDLOG_TRACE("New weight = {}", std::get<knp::core::synapse_data>(proj).weight_);
+            SPDLOG_TRACE("New weight = {}.", std::get<knp::core::synapse_data>(proj).weight_);
             rule.presynaptic_spike_times_.clear();
             rule.postsynaptic_spike_times_.clear();
         }

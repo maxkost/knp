@@ -1,6 +1,6 @@
 /**
  * @file population_generators_test.cpp
- * @brief Population generators tests.
+ * @brief Tests for population generators.
  * @date 08.08.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -18,7 +18,7 @@ TEST(PopulationGenerators, GenerateFromContainer)
 {
     const typename std::vector<knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>> params{
         {1}, {2}, {3}};
-    auto new_pop{knp::framework::population::from_container<knp::neuron_traits::BLIFATNeuron>(params)};
+    auto new_pop{knp::framework::population::from_container<knp::neuron_traits::BLIFATNeuron, std::vector>(params)};
 
     ASSERT_EQ(new_pop.size(), params.size());
     ASSERT_EQ(new_pop[0].n_time_steps_since_last_firing_, 1);

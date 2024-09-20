@@ -21,7 +21,7 @@ namespace knp::core::messaging::impl
 {
 
 /**
- * @brief internal message bus class, not intended for user code.
+ * @brief Internal message bus class, not intended for user code.
  */
 class MessageBusZMQImpl : public MessageBusImpl
 {
@@ -29,13 +29,13 @@ public:
     MessageBusZMQImpl();
 
     /**
-     * @brief send a message from one socket to another.
+     * @brief Send a message from one socket to another.
      */
     size_t step() override;
 
     /**
-     * @brief Creates an endpoint that can be used for message exchange.
-     * @return a new endpoint.
+     * @brief Create an endpoint that can be used for message exchange.
+     * @return new endpoint.
      */
     [[nodiscard]] MessageEndpoint create_endpoint() override;
 

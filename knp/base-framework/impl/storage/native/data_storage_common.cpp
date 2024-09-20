@@ -1,6 +1,6 @@
 /**
  * @file data_storage_common.cpp
- * @brief File for common functions for saving and loading data.
+ * @brief Common functions for saving and loading data.
  * @author An. Vartenkov
  * @date 24.04.2024
  * @license Apache 2.0

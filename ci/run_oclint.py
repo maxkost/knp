@@ -21,7 +21,7 @@ def download_oclint(url: str, oclint_directory: Path) -> None:
             else:
                 tf.extractall()  # nosec B202
 
-    print('Downloading finished.')
+    print('Download finished.')
 
 
 def get_oclint_archive_url() -> str:
@@ -38,7 +38,7 @@ def get_oclint_archive_url() -> str:
         oc_os = 'darwin-macos'
         os_ver = '12.2-xcode-13.2'
     else:
-        raise RuntimeError(f'Can\'t download OCLint for the OS "{system}"')
+        raise RuntimeError(f'Cannot download OCLint for the OS "{system}"')
 
     machine = platform.machine().lower()
     if machine in ['amd64', 'x86_64']:
@@ -48,7 +48,7 @@ def get_oclint_archive_url() -> str:
     elif machine in ['arm64']:
         oc_arch = 'arm64'
     else:
-        raise RuntimeError(f'Can\'t download OCLint for the machine "{machine}"')
+        raise RuntimeError(f'Cannot download OCLint for the machine "{machine}"')
 
     return f'{oc_base_url}/v{oc_version}/oclint-{oc_version}-{oc_llvm_version}-{oc_arch}-{oc_os}-{os_ver}.tar.gz'
 

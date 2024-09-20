@@ -1,5 +1,5 @@
 /**
- * @brief Test file template
+ * @brief Test file template.
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
  */

@@ -1,6 +1,6 @@
 /**
  * @file common.h
- * @brief Python bindings common header.
+ * @brief Common header for Python bindings.
  * @author Artiom N.
  * @date 05.02.2024
  * @license Apache 2.0

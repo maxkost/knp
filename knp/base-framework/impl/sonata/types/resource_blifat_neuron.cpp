@@ -38,9 +38,9 @@ void add_population_to_h5<core::Population<knp::neuron_traits::SynapticResourceS
     HighFive::File &file_h5, const core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population)
 {
     // TODO: It would be better if such functions were generated automatically.
-    SPDLOG_TRACE("Adding population {} to hdf5", std::string(population.get_uid()));
+    SPDLOG_TRACE("Adding population {} to HDF5...", std::string(population.get_uid()));
 
-    if (!file_h5.exist("nodes")) throw std::runtime_error("File doesn't contain \"nodes\" group");
+    if (!file_h5.exist("nodes")) throw std::runtime_error("File does not contain the \"nodes\" group.");
 
     HighFive::Group population_group = file_h5.createGroup("nodes/" + std::string{population.get_uid()});
 
@@ -60,8 +60,8 @@ void add_population_to_h5<core::Population<knp::neuron_traits::SynapticResourceS
         std::vector<size_t>(population.size(), get_neuron_type_id<neuron_traits::SynapticResourceSTDPBLIFATNeuron>()));
     auto group0 = population_group.createGroup("0");
 
-    // TODO: This function need to check if all parameters are the same, then not save those into h5.
-    // Static parameters, they don't change during inference
+    // TODO: Need to check if all parameters are the same. If not, then save them into h5.
+    // Static parameters, they don't change during inference.
     PUT_NEURON_TO_DATASET(population, n_time_steps_since_last_firing_, group0);
     PUT_NEURON_TO_DATASET(population, activation_threshold_, group0);
     PUT_NEURON_TO_DATASET(population, threshold_decay_, group0);
@@ -79,7 +79,8 @@ void add_population_to_h5<core::Population<knp::neuron_traits::SynapticResourceS
     PUT_NEURON_TO_DATASET(population, potential_reset_value_, group0);
     PUT_NEURON_TO_DATASET(population, min_potential_, group0);
 
-    // Synaptic rule parameters (do we need to split them into static-dynamic as well? probably not)
+    // Synaptic rule parameters.
+    // TODO: Do we need to split them into static-dynamic as well? Probably not.
     PUT_NEURON_TO_DATASET(population, free_synaptic_resource_, group0);
     PUT_NEURON_TO_DATASET(population, synaptic_resource_threshold_, group0);
     PUT_NEURON_TO_DATASET(population, resource_drain_coefficient_, group0);
@@ -100,7 +101,8 @@ void add_population_to_h5<core::Population<knp::neuron_traits::SynapticResourceS
         group0.createDataSet("isi_status_", data);
     }
 
-    // Dynamic parameters (current neuron state, can change at inference)
+    // Dynamic parameters.
+    // They describe the current neuron state. They can change at inference.
     auto dynamic_group0 = group0.createGroup("dynamics_params");
     PUT_NEURON_TO_DATASET(population, dynamic_threshold_, dynamic_group0);
     PUT_NEURON_TO_DATASET(population, potential_, dynamic_group0);
@@ -128,14 +130,14 @@ core::Population<neuron_traits::SynapticResourceSTDPBLIFATNeuron>
 load_population<neuron_traits::SynapticResourceSTDPBLIFATNeuron>(
     const HighFive::Group &nodes_group, const std::string &population_name)
 {
-    SPDLOG_DEBUG("Loading nodes for population {}", population_name);
+    SPDLOG_DEBUG("Loading nodes for population {}...", population_name);
     auto group = nodes_group.getGroup(population_name).getGroup("0");
     const size_t group_size = nodes_group.getGroup(population_name).getDataSet("node_id").getDimensions().at(0);
 
-    // TODO: Load default neuron from json file.
+    // TODO: Load default neuron from JSON file.
     ResourceNeuronParams default_params{neuron_traits::neuron_parameters<neuron_traits::BLIFATNeuron>{}};
     std::vector<ResourceNeuronParams> target(group_size, default_params);
-    // BLIFAT parameters
+    // BLIFAT parameters.
     LOAD_NEURONS_PARAMETER_DEF(target, n_time_steps_since_last_firing_, group, group_size, default_params);
     LOAD_NEURONS_PARAMETER_DEF(target, activation_threshold_, group, group_size, default_params);
     LOAD_NEURONS_PARAMETER_DEF(target, threshold_decay_, group, group_size, default_params);
@@ -152,7 +154,7 @@ load_population<neuron_traits::SynapticResourceSTDPBLIFATNeuron>(
     LOAD_NEURONS_PARAMETER_DEF(target, absolute_refractory_period_, group, group_size, default_params);
     LOAD_NEURONS_PARAMETER_DEF(target, potential_reset_value_, group, group_size, default_params);
     LOAD_NEURONS_PARAMETER_DEF(target, min_potential_, group, group_size, default_params);
-    // Synaptic rule parameters
+    // Synaptic rule parameters.
     LOAD_NEURONS_PARAMETER_DEF(target, free_synaptic_resource_, group, group_size, default_params);
     LOAD_NEURONS_PARAMETER_DEF(target, synaptic_resource_threshold_, group, group_size, default_params);
     LOAD_NEURONS_PARAMETER_DEF(target, resource_drain_coefficient_, group, group_size, default_params);
@@ -173,7 +175,7 @@ load_population<neuron_traits::SynapticResourceSTDPBLIFATNeuron>(
         }
     }
 
-    // Dynamic parameters
+    // Dynamic parameters.
     auto dyn_group = group.getGroup("dynamics_params");
     LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, dynamic_threshold_, dyn_group, group_size);
     LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, potential_, dyn_group, group_size);

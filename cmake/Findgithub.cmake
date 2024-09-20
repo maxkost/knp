@@ -1,7 +1,7 @@
-# - Find GitHub for Windows
+# - Find GitHub for Windows.
 #
-#   GITHUB_FOUND    - Was GitHub for Windows found
-#   GITHUB_BIN_DIR  - Path to the bin-directory where useful bash tools can be found
+#   GITHUB_FOUND    - Was GitHub for Windows found.
+#   GITHUB_BIN_DIR  - Path to the bin-directory where useful bash tools can be found.
 #
 # Example usage:
 #   find_package(GitHub)
@@ -9,7 +9,7 @@
 
 if(WIN32 AND NOT GITHUB_FOUND)
 
-    # Check install Path
+    # Check install Path.
     find_path(
         GITHUB_DIR
         shell.ps1

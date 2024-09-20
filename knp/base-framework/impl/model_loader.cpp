@@ -52,7 +52,7 @@ void ModelLoader::gen_input_channel(
     for (const auto &proj_uid : p_uids)
     {
         SPDLOG_TRACE(
-            "Input projection {} subscribing to the channel {}...", std::string(proj_uid), std::string(channel_uid));
+            "Input projection {} subscribing to channel {}...", std::string(proj_uid), std::string(channel_uid));
         backend_->get_message_endpoint().subscribe<knp::core::messaging::SpikeMessage>(proj_uid, {channel_uid});
 
         std::visit(
@@ -113,7 +113,7 @@ const io::input::InputChannel &ModelLoader::get_input_channel(const core::UID &c
     auto result = std::find_if(
         in_channels_.cbegin(), in_channels_.cend(),
         [&channel_uid](const auto &input_channel) { return input_channel.get_uid() == channel_uid; });
-    if (in_channels_.cend() == result) throw std::runtime_error("Wrong input channel UID");
+    if (in_channels_.cend() == result) throw std::runtime_error("Wrong input channel UID.");
     return *result;
 }
 
@@ -123,7 +123,7 @@ io::input::InputChannel &ModelLoader::get_input_channel(const core::UID &channel
     auto result = std::find_if(
         in_channels_.begin(), in_channels_.end(),
         [&channel_uid](const auto &input_channel) { return input_channel.get_uid() == channel_uid; });
-    if (in_channels_.end() == result) throw std::runtime_error("Wrong input channel UID");
+    if (in_channels_.end() == result) throw std::runtime_error("Wrong input channel UID.");
     return *result;
 }
 
@@ -133,7 +133,7 @@ io::output::OutputChannel &ModelLoader::get_output_channel(const core::UID &chan
     auto result = std::find_if(
         out_channels_.begin(), out_channels_.end(),
         [&channel_uid](const auto &output_channel) { return output_channel.get_uid() == channel_uid; });
-    if (out_channels_.end() == result) throw std::runtime_error("Wrong output channel UID");
+    if (out_channels_.end() == result) throw std::runtime_error("Wrong output channel UID.");
     return *result;
 }
 
@@ -143,7 +143,7 @@ const io::output::OutputChannel &ModelLoader::get_output_channel(const core::UID
     auto result = std::find_if(
         out_channels_.cbegin(), out_channels_.cend(),
         [&channel_uid](const auto &output_channel) { return output_channel.get_uid() == channel_uid; });
-    if (out_channels_.cend() == result) throw std::runtime_error("Wrong output channel UID");
+    if (out_channels_.cend() == result) throw std::runtime_error("Wrong output channel UID.");
     return *result;
 }
 

@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Need for the linters.
+# Required for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp-meta VERSION "${KNP_VERSION}" LANGUAGES C CXX

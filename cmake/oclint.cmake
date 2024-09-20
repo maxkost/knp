@@ -1,4 +1,4 @@
-# OCLint tool wrapper
+# OCLint tool wrapper.
 # Artiom N.(cl)2023
 
 include_guard(GLOBAL)
@@ -8,7 +8,7 @@ function(download_and_extract url out_path)
     get_filename_component(archive_name "${url}" NAME)
     set(archive "${out_path}/${archive_name}")
     file(DOWNLOAD "${url}" "${archive}" SHOW_PROGRESS TLS_VERIFY ON)
-    message(STATUS "Extracting: ${archive}")
+    message(STATUS "Extracting ${archive}...")
     file(ARCHIVE_EXTRACT INPUT "${archive}" VERBOSE DESTINATION "${out_path}/")
     file(REMOVE "${archive}")
 endfunction()

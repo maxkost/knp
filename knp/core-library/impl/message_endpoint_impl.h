@@ -13,7 +13,7 @@
 
 namespace knp::core::messaging::impl
 {
-/**F
+/**
  * @brief Base class for all message endpoint implementations.
  */
 class MessageEndpointImpl
@@ -27,7 +27,7 @@ public:
 
     /**
      * @brief Send a message to a message bus.
-     * @param message message to be sent.
+     * @param message message to send.
      */
     virtual void send_message(const MessageVariant &message) = 0;
 

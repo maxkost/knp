@@ -12,7 +12,7 @@ class StaticAnalyzerCmd(Command):
         super().__init__(command, look_behind, args)
 
     def run_command(self, args: List[str]):
-        """Run the command and check for errors. Args includes options and filepaths"""
+        """Run the command and check for errors. Arguments include options and filepaths."""
         args = [self.command, *args]
         sp_child = sp.run(args, stdout=sp.PIPE, stderr=sp.PIPE)
         self.stdout += sp_child.stdout

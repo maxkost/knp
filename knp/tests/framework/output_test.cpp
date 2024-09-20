@@ -1,5 +1,5 @@
 /**
- * @brief Output channels and converters tests.
+ * @brief Tests for output channels and converters.
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
  */
@@ -57,19 +57,19 @@ TEST(OutputSuite, ChannelTest)
         return std::max_element(result_container.begin(), result_container.end()) - result_container.begin();
     };
 
-    // Initialize counting channel
+    // Initialize counting channel.
     auto endpoint_1 = bus.create_endpoint();
     auto c1_uid = knp::core::UID();
     endpoint_1.subscribe<knp::core::messaging::SpikeMessage>(c1_uid, {sender_uid});
     knp::framework::io::output::OutputChannel channel_count{c1_uid, std::move(endpoint_1)};
 
-    // Initialize neuron set channel
+    // Initialize neuron set channel.
     auto endpoint_2 = bus.create_endpoint();
     auto c2_uid = knp::core::UID();
     endpoint_2.subscribe<knp::core::messaging::SpikeMessage>(c2_uid, {sender_uid});
     knp::framework::io::output::OutputChannel channel_set{c2_uid, std::move(endpoint_2)};
 
-    // Create a custom "max activations by neuron" channel
+    // Create a custom "max activations by neuron" channel.
     auto endpoint_3 = bus.create_endpoint();
     auto c3_uid = knp::core::UID();
     endpoint_3.subscribe<knp::core::messaging::SpikeMessage>(c3_uid, {sender_uid});
@@ -77,13 +77,12 @@ TEST(OutputSuite, ChannelTest)
 
     // Do message exchange.
 
-    // Will ignore this.
+    // The message with delay 0 will be ignored.
     knp::core::messaging::SpikeMessage msg_0{{sender_uid, 0}, {0, 1, 2, 3, 4, 5}};
     // All indexes over 7 should also be ignored.
     knp::core::messaging::SpikeMessage msg_1{{sender_uid, 1}, {1, 3, 8}};
     knp::core::messaging::SpikeMessage msg_2{{sender_uid, 3}, {1, 4, 10}};
     knp::core::messaging::SpikeMessage msg_3{{sender_uid, 5}, {1, 4, 7, 12}};
-    // Will ignore this.
     // const knp::core::messaging::SpikeMessage msg_4{{sender_uid, 6}, {1, 2, 4, 7, 10}};
     endpoint.send_message(msg_0);
     endpoint.send_message(msg_1);
@@ -92,20 +91,20 @@ TEST(OutputSuite, ChannelTest)
     bus.route_messages();
     endpoint.receive_all_messages();
 
-    // Use channels
+    // Use channels.
     std::vector<size_t> count_result =
         knp::framework::io::output::output_channel_get<std::vector<size_t>>(channel_count, count_converter, 1, 5);
-    decltype(count_result) expected_count{0, 3, 0, 1, 2, 0, 0, 1};  // Expected result
+    decltype(count_result) expected_count{0, 3, 0, 1, 2, 0, 0, 1};  // Expected result. Each number corresponds to the target neuron count of each index in messages.
 
     std::set<knp::core::messaging::SpikeIndex> set_result =
         knp::framework::io::output::output_channel_get<std::set<knp::core::messaging::SpikeIndex>>(
             channel_set, set_converter, 1, 5);
-    decltype(set_result) expected_set{1, 3, 4, 7};  // Expected result
+    decltype(set_result) expected_set{1, 3, 4, 7};  // Expected result.
 
     size_t index = knp::framework::io::output::output_channel_get<size_t>(channel_max, max_converter, 1, 5);
-    decltype(index) expected_index = 1;  // Expected result
+    decltype(index) expected_index = 1;  // Expected result.
 
-    // Compare with expected
+    // Compare with expected result.
     ASSERT_EQ(count_result, expected_count);
     ASSERT_EQ(set_result, expected_set);
     ASSERT_EQ(index, expected_index);

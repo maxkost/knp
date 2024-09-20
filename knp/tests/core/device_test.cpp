@@ -16,36 +16,33 @@ extern "C"
 #include <knp/backends/cpu-single-threaded/backend.h>
 #include <knp/devices/cpu.h>
 
-#include <spdlog/spdlog.h>
 #include <tests_common.h>
 
-
+#if !defined(WIN32)
 TEST(DeviceTestSuite, CPUTest)
 {
-#if !defined(WIN32)
     if (geteuid() != 0)
     {
-        SPDLOG_WARN("This test must be ran under root");
+        SPDLOG_WARN("This test must be run under root.");
         return;
     }
-#endif
+
     auto processors = knp::devices::cpu::list_processors();
 
     ASSERT_GE(processors.size(), 1);
 
-    for (auto &device : processors) SPDLOG_DEBUG("CPU name: {}", device.get_name());
+    for (auto &device : processors) SPDLOG_DEBUG("CPU name: {}.", device.get_name());
 }
 
 
 TEST(DeviceTestSuite, BackendDevicesTest)
 {
-#if !defined(WIN32)
     if (geteuid() != 0)
     {
-        SPDLOG_WARN("This test must be ran under root");
+        SPDLOG_WARN("This test must be run under root.");
         return;
     }
-#endif
+
     knp::backends::single_threaded_cpu::SingleThreadedCPUBackend backend;
 
     auto &devices = backend.get_current_devices();
@@ -61,3 +58,4 @@ TEST(DeviceTestSuite, BackendDevicesTest)
 
     // std::cout << device.get_name() << std::endl;
 }
+#endif

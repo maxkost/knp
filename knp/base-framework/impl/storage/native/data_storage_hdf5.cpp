@@ -1,6 +1,6 @@
 /**
  * @file data_storage_hdf5.cpp
- * @brief File for saving and loading data in hdf5 format.
+ * @brief Saving and loading data in HDF5 format.
  * @author An. Vartenkov
  * @date 16.04.2024
  * @license Apache 2.0
@@ -39,8 +39,8 @@ bool check_magic(const HighFive::File &h5_file, bool is_throw)
         if (is_throw)
         {
             throw std::runtime_error(
-                "Wrong magic number " + std::to_string(magic_number) + ". It should be " +
-                std::to_string(MAGIC_NUMBER));
+                "Wrong magic number \"" + std::to_string(magic_number) + "\". It should be \"" +
+                std::to_string(MAGIC_NUMBER) + "\".");
         }
         else
             return false;
@@ -61,10 +61,10 @@ bool check_version(const HighFive::File &doc)
 void check_format(const HighFive::File &h5_file, bool is_throw)
 {
     // Checking magic number.
-    if (!check_magic(h5_file, is_throw)) SPDLOG_WARN("No magic number found, probably wrong file format");
+    if (!check_magic(h5_file, is_throw)) SPDLOG_WARN("No magic number found, probably wrong file format.");
 
     // Checking version.
-    if (!check_version(h5_file)) SPDLOG_WARN("Unable to confirm file version");
+    if (!check_version(h5_file)) SPDLOG_WARN("Unable to confirm file version.");
 }
 
 
@@ -78,7 +78,7 @@ KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
     // File should have "spikes" group.
     std::vector<std::string> obj_names = h5_file.listObjectNames();
     if (std::find(obj_names.begin(), obj_names.end(), std::string("spikes")) == obj_names.end())
-        throw std::runtime_error("No \"spikes\" group in file " + path_to_h5.string());
+        throw std::runtime_error("No \"spikes\" group in file \"" + path_to_h5.string() + "\".");
     auto data_group = h5_file.getGroup("spikes");
 
     // Checking if "internal" is needed.
@@ -99,7 +99,7 @@ KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
 
     // Checking that timestamp dataset exists.
     if (std::find(obj_names.begin(), obj_names.end(), std::string("timestamps")) == obj_names.end())
-        throw std::runtime_error(R"--(Couldn't find "timestamps" dataset in data file.)--");
+        throw std::runtime_error(R"--(Could not find "timestamps" dataset in data file.)--");
 
     // Loading datasets.
     const auto node_dataset = data_group.getDataSet(node_name);
@@ -140,7 +140,8 @@ KNP_DECLSPEC void save_messages_to_h5(
     timestamps.reserve(total_size);
     nodes.reserve(total_size);
 
-    // Sorting messages by step (dataset is "sorted by timestamp").
+    // Sorting messages by step.
+    // Dataset is sorted by timestamp.
     std::sort(
         messages.begin(), messages.end(),
         [](const core::messaging::SpikeMessage &msg1, const core::messaging::SpikeMessage &msg2)

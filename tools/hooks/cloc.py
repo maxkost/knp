@@ -42,14 +42,14 @@ class ClocCmd(StaticAnalyzerCmd):
 
             if code_lines_count >= self.max_code_lines:
                 self.raise_error(
-                    f'file "{n}" code lines count exceeds code line count limit',
-                    f'File contains {code_lines_count} lines of code, but maximum is {self.max_code_lines}',
+                    f'File "{n}" code line count exceeds code line count limit.',
+                    f'File contains {code_lines_count} lines of code, but maximum is {self.max_code_lines}.',
                 )
 
             if text_lines_count >= self.max_text_lines:
                 self.raise_error(
-                    f'file "{n}" lines count exceeds line count limit',
-                    f'File contains {code_lines_count} lines of text, but maximum is {self.max_text_lines}',
+                    f'File "{n}" line count exceeds line count limit.',
+                    f'File contains {code_lines_count} lines of text, but maximum is {self.max_text_lines}.',
                 )
 
 

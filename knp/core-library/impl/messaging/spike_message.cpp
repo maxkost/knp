@@ -1,6 +1,6 @@
 /**
  * @file spike_message.cpp
- * @brief Spike message I/O operators implementation.
+ * @brief Implementation of spike message I/O operators.
  * @author Vartenkov A.
  * @date 23.03.2023
  * @license Apache 2.0
@@ -64,7 +64,7 @@ std::istream &operator>>(std::istream &stream, SpikeMessage &msg)
 
 std::vector<uint8_t> pack(const SpikeMessage &msg)
 {
-    // TODO: don't create instance every time.
+    // TODO: Don't create an instance every time.
     ::flatbuffers::FlatBufferBuilder builder;
     auto s_msg = pack_internal(builder, msg);
     marshal::FinishSpikeMessageBuffer(builder, ::flatbuffers::Offset<marshal::SpikeMessage>(s_msg));
@@ -74,7 +74,7 @@ std::vector<uint8_t> pack(const SpikeMessage &msg)
 
 SpikeMessage unpack(const marshal::SpikeMessage *s_msg)
 {
-    SPDLOG_TRACE("Unpacking spike message FlatBuffers class");
+    SPDLOG_TRACE("Unpacking spike message FlatBuffers class...");
 
     assert(s_msg);
 
@@ -94,7 +94,7 @@ SpikeMessage unpack(const marshal::SpikeMessage *s_msg)
 /*
 SpikeMessage unpack(const void *buffer)
 {
-    SPDLOG_TRACE("Unpacking spike message buffer");
+    SPDLOG_TRACE("Unpacking spike message buffer...");
     const marshal::SpikeMessage *const s_msg{marshal::GetSpikeMessage(buffer)};
     return unpack(s_msg);
 }
@@ -102,7 +102,7 @@ SpikeMessage unpack(const void *buffer)
 
 SpikeMessage unpack(std::vector<uint8_t> &buffer)
 {
-    SPDLOG_TRACE("Unpacking spike message vector buffer");
+    SPDLOG_TRACE("Unpacking spike message vector buffer...");
     return unpack(buffer.data());
 }
 */

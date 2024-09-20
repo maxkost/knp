@@ -1,6 +1,6 @@
 /**
  * @file data_storage_json.cpp
- * @brief File for saving and loading data from json format.
+ * @brief Saving and loading data from JSON format.
  * @author An. Vartenkov
  * @date 16.04.2024
  * @license Apache 2.0
@@ -9,13 +9,16 @@
 
 #include <knp/framework/io/storage/native/data_storage_json.h>
 
-#include <simdjson.h>
+#include <rapidjson/document.h>
+#include <rapidjson/istreamwrapper.h>
 #include <spdlog/spdlog.h>
 
 #include <algorithm>
 #include <array>
 #include <filesystem>
 #include <fstream>
+#include <istream>
+#include <vector>
 
 #include <boost/format.hpp>
 
@@ -115,17 +118,20 @@ constexpr char whole_file_string[] =
 
 
 // clang-format off // No const operator[] for simdjson document, so no const parameter.
-bool is_json_has_magic(simdjson::ondemand::document &doc)  // cppcheck-suppress constParameterReference
+bool is_json_has_magic(const rapidjson::Document &doc)  // cppcheck-suppress constParameterReference
 // clang-format on
 {
-    auto attributes = doc["attributes"];
-    if (attributes.error()) return false;
+    const std::string magic = "magic";
+    if (!doc.HasMember("attributes")) return false;
+    const auto &attributes = doc["attributes"].GetArray();
+
     bool has_magic = false;
-    for (auto group : attributes)
+    for (auto group_iter = attributes.Begin(); group_iter != attributes.End(); ++group_iter)
     {
-        if (group["name"] == "magic")
+        const auto &group = group_iter->GetObject();
+        if (group.HasMember("name") && group["name"].GetString() == magic)
         {
-            if (group["value"].get<int64_t>() != MAGIC_NUMBER) break;
+            if (group.HasMember("value") && group["value"].GetInt() != MAGIC_NUMBER) break;
             has_magic = true;
             break;
         }
@@ -135,26 +141,30 @@ bool is_json_has_magic(simdjson::ondemand::document &doc)  // cppcheck-suppress 
 
 
 // clang-format off // No const operator[] for simdjson document, so no const parameter.
-bool is_correct_version(simdjson::ondemand::document &doc)  // cppcheck-suppress constParameterReference
+bool is_correct_version(const rapidjson::Document &doc)  // cppcheck-suppress constParameterReference
 // clang-format on
 {
-    auto attributes = doc["attributes"];
-    if (attributes.error()) return false;
-    for (auto group : attributes)
+    const std::string version_str = "version";
+
+    if (!doc.HasMember("attributes")) return false;
+    const auto &attributes = doc["attributes"].GetArray();
+
+    for (auto group_iter = attributes.Begin(); group_iter != attributes.End(); ++group_iter)
     {
-        if (group["name"] == "version")
+        const auto &group = group_iter->GetObject();
+
+        if (group.HasMember("name") && group["name"].GetString() == version_str)
         {
-            auto value_group = group["value"];
-            if (value_group.error()) return false;
-            auto arr = value_group.get_array();
-            if (arr.error() || VERSION.size() != arr.count_elements().value()) return false;
+            if (!group.HasMember("value") || !group["value"].IsArray()) return false;
+            const auto &version_arr = group["value"].GetArray();
+            if (VERSION.size() != version_arr.Size()) return false;
             std::vector<int64_t> version;
             version.reserve(VERSION.size());
 
-            for (auto val : arr)
+            for (auto val_iter = version_arr.Begin(); val_iter != version_arr.End(); ++val_iter)
             {
-                // std::transform doesn't get compiled by MSVC.
-                version.push_back(val.get_int64());  // cppcheck-suppress useStlAlgorithm
+                // std::transform isn't compiled by MSVC.
+                version.push_back(val_iter->GetInt());  // cppcheck-suppress useStlAlgorithm
             }
 
             return std::equal(version.begin(), version.end(), VERSION.begin());
@@ -165,65 +175,73 @@ bool is_correct_version(simdjson::ondemand::document &doc)  // cppcheck-suppress
 
 
 KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_json(
-    const fs::path &path_to_json, const knp::core::UID &uid, bool strict_format)
+    std::istream &input_stream, const knp::core::UID &uid, bool strict_format)
 {
-    simdjson::ondemand::parser parser;
-    auto simdjson_result = simdjson::padded_string::load(path_to_json.string());
-    if (simdjson_result.error()) throw std::runtime_error("Cannot read file " + path_to_json.string());
-    simdjson::ondemand::document doc = parser.iterate(simdjson_result);
+    rapidjson::Document doc;
+    rapidjson::IStreamWrapper isw{input_stream};
+    if (doc.ParseStream(isw).HasParseError()) throw std::runtime_error("Cannot parse stream.");
 
     if (!is_json_has_magic(doc))
     {
         if (strict_format)
-            throw std::runtime_error("Unable to find magic number: wrong file format or version");
+            throw std::runtime_error("Unable to find magic number: wrong file format or version.");
         else
-            SPDLOG_WARN("Unable to find magic number: wrong file format or version");
+            SPDLOG_WARN("Unable to find magic number: wrong file format or version.");
     }
-    if (!is_correct_version(doc)) SPDLOG_WARN("Unable to verify file version");
+    if (!is_correct_version(doc)) SPDLOG_WARN("Unable to verify file version.");
 
-    auto spikes_group = doc["spikes"];
-    if (spikes_group.error()) throw std::runtime_error("Unable to find \"spikes\" group in data file.");
+    if (!doc.HasMember("spikes") || !doc["spikes"].IsObject())
+        throw std::runtime_error("Unable to find \"spikes\" group in data file.");
+    const auto &spikes_group = doc["spikes"].GetObject();
 
-    // Reading node ids.
-    auto nodes_array = spikes_group["node_ids"];
-    if (nodes_array.error()) throw std::runtime_error("No \"node_ids\" array in \"spikes\" group.");
+    // Reading node IDs.
+    if (!spikes_group.HasMember("node_ids") || !spikes_group["node_ids"].IsObject())
+        throw std::runtime_error("No \"node_ids\" array in \"spikes\" group.");
+    const auto &nodes_ids = spikes_group["node_ids"].GetObject();
 
-    auto nodes_array_val = nodes_array["value"];
-    if (nodes_array_val.error()) throw std::runtime_error("Missing nodes data in json data file.");
-
-    auto pre_array_nodes = nodes_array_val.get_array();
-    if (pre_array_nodes.error()) throw std::runtime_error("Missing nodes data in JSON data file");
+    if (!nodes_ids.HasMember("value") || !nodes_ids["value"].IsArray())
+        throw std::runtime_error("Missing node data in JSON data file.");
+    const auto &nodes_array = nodes_ids["value"].GetArray();
 
     std::vector<int64_t> nodes;
-    nodes.reserve(pre_array_nodes.count_elements());
+    nodes.reserve(nodes_array.Size());
 
     // No const reference val possible.
-    for (auto val : pre_array_nodes)
+    for (auto val_iter = nodes_array.Begin(); val_iter != nodes_array.End(); ++val_iter)
     {
-        // std::transform doesn't compiled by MSVC.
-        nodes.push_back(val.get_int64());  // cppcheck-suppress useStlAlgorithm
+        // std::transform isn't compiled by MSVC.
+        nodes.push_back(val_iter->GetInt());  // cppcheck-suppress useStlAlgorithm
     }
 
     // Reading timestamps.
-    auto timestamps_array = spikes_group["timestamps"];
-    if (timestamps_array.error()) throw std::runtime_error("No \"timestamps\" array in \"spikes\" group.");
+    if (!spikes_group.HasMember("timestamps") || !spikes_group["timestamps"].IsObject())
+        throw std::runtime_error("No \"timestamps\" array in \"spikes\" group.");
+    const auto &timestamps_group = spikes_group["timestamps"];
 
-    if (auto times_array_val = timestamps_array["value"]; !times_array_val.error())
+    if (!timestamps_group.HasMember("value") || !timestamps_group["value"].IsArray())
+        throw std::runtime_error("No \"value\" array in \"timestamps\" group.");
+    const auto &timestamps_array = timestamps_group["value"].GetArray();
+
+    std::vector<float> timestamps;
+    timestamps.reserve(timestamps_array.Size());
+    // No const reference val possible.
+    for (auto val_iter = timestamps_array.Begin(); val_iter != timestamps_array.End(); ++val_iter)
     {
-        if (auto pre_array_times = times_array_val.get_array(); !times_array_val.error())
-        {
-            std::vector<float> timestamps;
-            timestamps.reserve(pre_array_times.count_elements());
-            // No const reference val possible.
-            for (auto val : pre_array_times)
-            {
-                // std::transform doesn't compiled by MSVC.
-                timestamps.push_back(static_cast<float>(val.get_double()));  // cppcheck-suppress useStlAlgorithm
-            }
-            return convert_node_time_arrays_to_messages(nodes, timestamps, uid, 1);
-        }
+        // std::transform isn't compiled by MSVC.
+        timestamps.push_back(static_cast<float>(val_iter->GetDouble()));  // cppcheck-suppress useStlAlgorithm
     }
-    throw std::runtime_error("Missing timestamps data in json data file.");
+    return convert_node_time_arrays_to_messages(nodes, timestamps, uid, 1);
+
+    throw std::runtime_error("Missing timestamp data in JSON data file.");
+}
+
+
+KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_json(
+    const fs::path &path_to_json, const knp::core::UID &uid, bool strict_format)
+{
+    std::ifstream json_stream(path_to_json, std::ios::in);
+
+    return load_messages_from_json(json_stream, uid, strict_format);
 }
 
 

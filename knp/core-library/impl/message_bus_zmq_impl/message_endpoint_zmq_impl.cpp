@@ -46,17 +46,17 @@ void MessageEndpointZMQImpl::send_zmq_message(const std::vector<uint8_t> &data)
 
 void MessageEndpointZMQImpl::send_zmq_message(const void *data, size_t size)
 {
-    // send_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
+    // `send_result` is `std::optional` and if it doesn't contain a value, EAGAIN is returned by the call.
     zmq::send_result_t result;
     try
     {
-        SPDLOG_DEBUG("Endpoint sending message");
+        SPDLOG_DEBUG("Endpoint sending message...");
         KNP_UNROLL_LOOP()
         do
         {
-            SPDLOG_TRACE("Sending {} bytes", size);
+            SPDLOG_TRACE("Sending {} bytes...", size);
             result = pub_socket_.send(zmq::message_t(data, size), zmq::send_flags::dontwait);
-            SPDLOG_TRACE("{} bytes was sent", size);
+            SPDLOG_TRACE("{} bytes were sent.", size);
         } while (!result.has_value());
     }
     catch (const zmq::error_t &e)
@@ -70,7 +70,7 @@ void MessageEndpointZMQImpl::send_zmq_message(const void *data, size_t size)
 std::optional<zmq::message_t> MessageEndpointZMQImpl::receive_zmq_message()
 {
     zmq::message_t msg;
-    // recv_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
+    // `recv_result` is `std::optional` and if it doesn't contain a value, `EAGAIN` is returned by the call.
     zmq::recv_result_t result;
 
     try
@@ -79,11 +79,11 @@ std::optional<zmq::message_t> MessageEndpointZMQImpl::receive_zmq_message()
             zmq_pollitem_t{sub_socket_.handle(), 0, ZMQ_POLLIN, 0},
         };
 
-        SPDLOG_DEBUG("Running poll() for receiving message");
+        SPDLOG_DEBUG("Running poll() to receive a message...");
         // cppcheck-suppress "cppcheckError"
         if (zmq::poll(items, 0ms) > 0)
         {
-            SPDLOG_TRACE("Poll() successful, receiving data");
+            SPDLOG_TRACE("poll() was successful, receiving data...");
             KNP_UNROLL_LOOP()
             do
             {
@@ -91,17 +91,17 @@ std::optional<zmq::message_t> MessageEndpointZMQImpl::receive_zmq_message()
 
                 if (result.has_value())
                 {
-                    SPDLOG_TRACE("Endpoint received {} bytes", result.value());
+                    SPDLOG_TRACE("Endpoint received {} bytes.", result.value());
                 }
                 else
                 {
-                    SPDLOG_WARN("Endpoint receiving error [EAGAIN]!");
+                    SPDLOG_WARN("Endpoint receivied error [EAGAIN].");
                 }
             } while (!result.has_value());
         }
         else
         {
-            SPDLOG_DEBUG("Poll() returned 0, exiting");
+            SPDLOG_DEBUG("poll() returned 0, exiting...");
             return std::nullopt;
         }
     }

@@ -1,6 +1,6 @@
 /**
  * @file synaptic_resource_stdp_impl.h
- * @brief Synaptic resource based STDP neurons adapter.
+ * @brief Synaptic resource based STDP neuron adapter.
  * @author Artiom N.
  * @date 06.10.2023
  * @license Apache 2.0
@@ -77,7 +77,7 @@ using STDPSynapseParams = knp::synapse_traits::synapse_parameters<
 
 /**
  * @brief Recalculate synapse weights from synaptic resource.
- * @tparam WeightedSynapse synapse that has "weight_" parameter.
+ * @tparam WeightedSynapse synapse that has `weight_` parameter.
  * @param synapse_params synapse parameters.
  */
 template <class WeightedSynapse>
@@ -134,10 +134,10 @@ template <class NeuronType>
 neuron_traits::ISIPeriodType update_isi(
     neuron_traits::neuron_parameters<neuron_traits::SynapticResourceSTDPNeuron<NeuronType>> &neuron, uint64_t step)
 {
-    if (neuron.is_being_forced_)  // This neuron got a forcing spike this turn and doesn't continue its spiking sequence
+    if (neuron.is_being_forced_)  // This neuron got a forcing spike this turn and doesn't continue its spiking sequence.
     {
         neuron.isi_status_ = neuron_traits::ISIPeriodType::is_forced;
-        // Do not update last_step_
+        // Do not update last_step_.
         return neuron.isi_status_;
     }
 
@@ -175,10 +175,10 @@ neuron_traits::ISIPeriodType update_isi(
 
 /**
  * @brief Apply STDP to all presynaptic connections of a single population.
- * @tparam NeuronType A type of neuron that is compatible with STDP.
+ * @tparam NeuronType type of neuron that is compatible with STDP.
  * @param msg spikes emited by population.
- * @param working_projections All projections. The ones that are not connected, are locked or are of a wrong type are
- * skipped.
+ * @param working_projections all projections (those that are not connected, locked or are of a wrong type are
+ * skipped).
  * @param population population.
  * @param step current network step.
  * @note all projections are supposed to be of the same type.
@@ -191,7 +191,7 @@ void process_spiking_neurons(
 {
     using SynapseType = synapse_traits::STDP<synapse_traits::STDPSynapticResourceRule, synapse_traits::DeltaSynapse>;
     // It's very important that during this function no projection invalidates iterators.
-    // Loop over neurons
+    // Loop over neurons.
     for (const auto &spiked_neuron_index : msg.neuron_indexes_)
     {
         auto synapse_params = get_all_connected_synapses<SynapseType>(working_projections, spiked_neuron_index);
@@ -212,23 +212,23 @@ void process_spiking_neurons(
             }
         }
 
-        // Update synapse-only data
+        // Update synapse-only data.
         if (neuron.isi_status_ != neuron_traits::ISIPeriodType::is_forced)
         {
             for (auto *synapse : synapse_params)
             {
                 // Unconditional decreasing synaptic resource.
-                // TODO: NOT HERE! Shouldn't matter now as d_u_ is zero for our task, but the logic is wrong.
+                // TODO: NOT HERE. This shouldn't matter now as d_u_ is zero for our task, but the logic is wrong.
                 synapse->rule_.synaptic_resource_ -= synapse->rule_.d_u_;
                 neuron.free_synaptic_resource_ += synapse->rule_.d_u_;
                 // Hebbian plasticity.
-                // 1. check if synapse ever got a spike in the current ISI period
+                // 1. Check if synapse ever got a spike in the current ISI period.
 
                 if (is_point_in_interval(
                         neuron.first_isi_spike_ - neuron.isi_max_, step, synapse->rule_.last_spike_step_) &&
                     !synapse->rule_.had_hebbian_update_)
                 {
-                    // 2. If it did then update synaptic resource value.
+                    // 2. If it did, then update synaptic resource value.
                     const float d_h = neuron.d_h_ * std::min(static_cast<float>(std::pow(2, -neuron.stability_)), 1.F);
                     synapse->rule_.synaptic_resource_ += d_h;
                     neuron.free_synaptic_resource_ -= d_h;
@@ -242,9 +242,9 @@ void process_spiking_neurons(
 
 
 /**
- * @brief If a neuron's resource is greater than 1 or -1 it should be distributed among all synapses.
- * @tparam NeuronType type of base neuron. BLIFAT for SynapticResourceSTDPBlifat.
- * @param working_projections a list of STDP projections. Right now only supports DeltaSynapse.
+ * @brief If a neuron resource is greater than `1` or `-1` it should be distributed among all synapses.
+ * @tparam NeuronType type of base neuron (BLIFAT for SynapticResourceSTDPBlifat).
+ * @param working_projections list of STDP projections (`DeltaSynapse` only is supported now).
  * @param population reference to population.
  * @param step current step.
  */
@@ -304,28 +304,28 @@ void do_dopamine_plasticity(
         {
             std::vector<SynapseParamType *> synapse_params =
                 get_all_connected_synapses<SynapseType>(working_projections, neuron_index);
-            // Change synapse values for both D > 0 and D < 0
+            // Change synapse values for both `D > 0` and `D < 0`.
             for (auto *synapse : synapse_params)
             {
                 if (step - synapse->rule_.last_spike_step_ < synapse->rule_.dopamine_plasticity_period_)
                 {
-                    // Change synapse resource
+                    // Change synapse resource.
                     float d_r = neuron.dopamine_value_ *
                                 std::min(static_cast<float>(std::pow(2, -neuron.stability_)), 1.F) / 1000.0F;
                     synapse->rule_.synaptic_resource_ += d_r;
                     neuron.free_synaptic_resource_ -= d_r;
                 }
             }
-            // Stability changes
+            // Stability changes.
             if (neuron.is_being_forced_ || neuron.dopamine_value_ < 0)
             {
-                // A dopamine reward when forced or a dopamine punishment reduce stability by r*D
+                // A dopamine reward when forced or a dopamine punishment reduce stability by `r * D`.
                 neuron.stability_ -= neuron.dopamine_value_ * neuron.stability_change_parameter_;
                 neuron.stability_ = std::max(neuron.stability_, 0.0F);
             }
             else
             {
-                // A dopamine reward when non-forced changes stability by D max(2 - |t(TSS) - ISImax| / ISImax, -1)
+                // A dopamine reward when non-forced changes stability by `D max(2 - |t(TSS) - ISImax| / ISImax, -1)`.
                 const double dopamine_constant = 2.0;
                 const double difference = step - neuron.first_isi_spike_ - neuron.isi_max_;
                 neuron.stability_ += neuron.stability_change_parameter_ * neuron.dopamine_value_ *

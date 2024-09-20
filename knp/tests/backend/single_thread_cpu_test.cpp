@@ -1,5 +1,5 @@
 /**
- * @brief Single threading backend test.
+ * @brief Single-threaded backend test.
  * @author Vartenkov An.
  * @date 07.04.23.
  * @license Apache 2.0
@@ -39,7 +39,7 @@ public:
 
 TEST(SingleThreadCpuSuite, SmallestNetwork)
 {
-    // Create a single-neuron neural network: input -> input_projection -> population <=> loop_projection
+    // Create a single-neuron neural network: input -> input_projection -> population <=> loop_projection.
     knp::testing::STestingBack backend;
 
     knp::testing::BLIFATPopulation population{knp::testing::neuron_generator, 1};
@@ -57,7 +57,7 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
 
     const knp::core::UID in_channel_uid, out_channel_uid;
 
-    // Create input and output
+    // Create input and output.
     backend.subscribe<knp::core::messaging::SpikeMessage>(input_uid, {in_channel_uid});
     endpoint.subscribe<knp::core::messaging::SpikeMessage>(out_channel_uid, {population.get_uid()});
 
@@ -65,7 +65,7 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
 
     for (knp::core::Step step = 0; step < 20; ++step)
     {
-        // Send inputs on steps 0, 5, 10, 15
+        // Send inputs on steps 0, 5, 10, 15.
         if (step % 5 == 0)
         {
             knp::core::messaging::SpikeMessage message{{in_channel_uid, step}, {0}};
@@ -73,14 +73,14 @@ TEST(SingleThreadCpuSuite, SmallestNetwork)
         }
         backend._step();
         endpoint.receive_all_messages();
-        // Write up the steps where the network sends a spike
+        // Write the steps on which the network sends a spike.
         if (!endpoint.unload_messages<knp::core::messaging::SpikeMessage>(out_channel_uid).empty())
         {
             results.push_back(step);
         }
     }
 
-    // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
+    // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop).
     const std::vector<knp::core::Step> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
     ASSERT_EQ(results, expected_results);
 }
@@ -90,12 +90,12 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
 {
     using STDPDeltaProjection = knp::core::Projection<knp::synapse_traits::AdditiveSTDPDeltaSynapse>;
 
-    // Create an STDP input projection
+    // Create an STDP input projection.
     auto stdp_input_projection_gen = [](size_t /*index*/) -> std::optional<STDPDeltaProjection::Synapse> {
         return STDPDeltaProjection::Synapse{{{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, {2, 2}}, 0, 0};
     };
 
-    // Create an STDP loop projection
+    // Create an STDP loop projection.
     auto stdp_synapse_generator = [](size_t /*index*/) -> std::optional<STDPDeltaProjection::Synapse> {
         return STDPDeltaProjection::Synapse{{{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, {1, 1}}, 0, 0};
     };
@@ -104,7 +104,7 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
         -> knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>
     { return knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>{}; };
 
-    // Create a single-neuron neural network: input -> input_projection -> population <=> loop_projection
+    // Create a single-neuron neural network: input -> input_projection -> population <=> loop_projection.
     knp::testing::STestingBack backend;
 
     knp::core::Population<knp::neuron_traits::BLIFATNeuron> population{knp::core::UID(), stdp_neurons_generator, 1};
@@ -125,7 +125,7 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
 
     knp::core::UID in_channel_uid, out_channel_uid;
 
-    // Create input and output
+    // Create input and output.
     backend.subscribe<knp::core::messaging::SpikeMessage>(input_uid, {in_channel_uid});
     endpoint.subscribe<knp::core::messaging::SpikeMessage>(out_channel_uid, {population.get_uid()});
 
@@ -133,7 +133,7 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
 
     for (knp::core::Step step = 0; step < 20; ++step)
     {
-        // Send inputs on steps 0, 5, 10, 15
+        // Send inputs on steps 0, 5, 10, 15.
         if (step % 5 == 0)
         {
             knp::core::messaging::SpikeMessage message{{in_channel_uid, 0}, {0}};
@@ -142,7 +142,7 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
         backend._step();
         endpoint.receive_all_messages();
         auto output = endpoint.unload_messages<knp::core::messaging::SpikeMessage>(out_channel_uid);
-        // Write up the steps where the network sends a spike
+        // Write the steps on which the network sends a spike.
         if (!output.empty()) results.push_back(step);
     }
 
@@ -167,7 +167,7 @@ TEST(SingleThreadCpuSuite, AdditiveSTDPNetwork)
             [](const auto &synapse) { return std::get<knp::core::synapse_data>(synapse).weight_; });
     }
 
-    // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
+    // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop).
     const std::vector<knp::core::Step> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
 
     ASSERT_EQ(results, expected_results);
@@ -180,19 +180,19 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
     using STDPDeltaProjection = knp::core::Projection<knp::synapse_traits::SynapticResourceSTDPDeltaSynapse>;
     using BlifatStdpPopulation = knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron>;
 
-    // Create an STDP input projection
+    // Create an STDP input projection.
     auto stdp_input_projection_gen = [](size_t /*index*/) -> std::optional<STDPDeltaProjection::Synapse>
     {
         return STDPDeltaProjection::Synapse{
             {{1.0, 1, knp::synapse_traits::OutputType::EXCITATORY}, {0, 1, 2, 0.1F}}, 0, 0};
     };
 
-    // Create an STDP loop projection
+    // Create an STDP loop projection.
     auto stdp_synapse_generator = [](size_t /*index*/) -> std::optional<STDPDeltaProjection::Synapse> {
         return STDPDeltaProjection::Synapse{{{1.0, 6, knp::synapse_traits::OutputType::EXCITATORY}, {0, 1, 2}}, 0, 0};
     };
 
-    // Create a single-neuron neural network: input -> input_projection -> population <=> loop_projection
+    // Create a single-neuron neural network: input -> input_projection -> population <=> loop_projection.
     knp::testing::STestingBack backend;
 
     BlifatStdpPopulation population{
@@ -221,7 +221,7 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
     const knp::core::UID in_channel_uid;
     const knp::core::UID out_channel_uid;
 
-    // Create input and output
+    // Create input and output.
     backend.subscribe<knp::core::messaging::SpikeMessage>(input_uid, {in_channel_uid});
     endpoint.subscribe<knp::core::messaging::SpikeMessage>(out_channel_uid, {population.get_uid()});
 
@@ -229,7 +229,7 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
 
     for (knp::core::Step step = 0; step < 20; ++step)
     {
-        // Send inputs on steps 0, 5, 10, 15
+        // Send inputs on steps 0, 5, 10, 15.
         if (step % 5 == 0)
         {
             knp::core::messaging::SpikeMessage message{{in_channel_uid, step}, {0}};
@@ -237,10 +237,10 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
         }
         backend._step();
         size_t msg_count = endpoint.receive_all_messages();
-        SPDLOG_DEBUG("Received {} messages", msg_count);
+        SPDLOG_DEBUG("Received {} messages.", msg_count);
         auto output = endpoint.unload_messages<knp::core::messaging::SpikeMessage>(out_channel_uid);
-        SPDLOG_DEBUG("Unloaded {} messages", output.size());
-        // Write up the steps where the network sends a spike
+        SPDLOG_DEBUG("Unloaded {} messages.", output.size());
+        // Write the steps on which the network sends a spike.
         if (!output.empty()) results.push_back(step);
     }
 
@@ -262,7 +262,7 @@ TEST(SingleThreadCpuSuite, ResourceSTDPNetwork)
             [](const auto &synapse) { return std::get<knp::core::synapse_data>(synapse).weight_; });
     }
 
-    // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
+    // Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop).
     const std::vector<knp::core::Step> expected_results = {1, 6, 7, 11, 12, 13, 16, 17, 18, 19};
 
     ASSERT_EQ(results, expected_results);

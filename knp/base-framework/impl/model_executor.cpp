@@ -51,7 +51,7 @@ void ModelExecutor::start(core::Backend::RunPredicate run_predicate)
 
             return true;
         });
-    SPDLOG_INFO("Model execution stopped...");
+    SPDLOG_INFO("Model execution stopped.");
 }
 
 

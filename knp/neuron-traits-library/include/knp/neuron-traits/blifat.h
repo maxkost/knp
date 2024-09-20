@@ -105,8 +105,8 @@ struct default_values<BLIFATNeuron>
     constexpr static double potential_ = 0;
 
     /**
-     * @brief This parameter is used if there was a blocking signal. Then all potential changes due to synapses are
-     * ignored.
+     * @brief This parameter is used if there was a blocking signal.
+     * @details If used, all potential changes due to synapses are ignored.
      */
     constexpr static double pre_impact_potential_ = 0;
 
@@ -212,8 +212,8 @@ struct neuron_parameters<BLIFATNeuron>
      */
     double potential_ = default_values<BLIFATNeuron>::potential_;
     /**
-     * @brief This parameter is used if there was a blocking signal. Then all potential changes due to synapses are
-     * ignored.
+     * @brief This parameter is used if there was a blocking signal.
+     * @details If used, all potential changes due to synapses are ignored.
      */
     double pre_impact_potential_ = default_values<BLIFATNeuron>::pre_impact_potential_;
     /**

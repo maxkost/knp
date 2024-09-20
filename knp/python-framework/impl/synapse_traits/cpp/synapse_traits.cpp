@@ -1,6 +1,6 @@
 /**
  * @file synapse_traits.cpp
- * @brief Neurons properties Python bindings.
+ * @brief Python bindings for synapse traits.
  * @author Artiom N.
  * @date 21.02.24
  * @license Apache 2.0

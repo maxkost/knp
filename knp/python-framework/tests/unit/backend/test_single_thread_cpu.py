@@ -1,5 +1,5 @@
 """
-Kaspersky Neuromorphic Platform single thread CPU backend tests
+Kaspersky Neuromorphic Platform single-thread CPU backend tests.
 
 Author: Artiom N.
 Date: 01.03.2024
@@ -31,7 +31,7 @@ def test_smallest_network(pytestconfig):  # type: ignore[no-untyped-def]
 
     input_uid = input_projection.uid
 
-    backend = BackendLoader().load(f'{pytestconfig.rootdir}/../lib/libknp-cpu-single-threaded-backend')
+    backend = BackendLoader().load(f'{pytestconfig.rootdir}/../bin/libknp-cpu-single-threaded-backend')
 
     backend.load_all_populations([population])
     backend.load_all_projections([input_projection, loop_projection])
@@ -50,7 +50,7 @@ def test_smallest_network(pytestconfig):  # type: ignore[no-untyped-def]
     results = []
 
     for step in range(0, 20):
-        # Send inputs on steps 0, 5, 10, 15
+        # Send inputs on steps 0, 5, 10, 15.
         if step % 5 == 0:
             print(f'STEP {step}')
             message = SpikeMessage((in_channel_uid, step), [0])
@@ -58,13 +58,13 @@ def test_smallest_network(pytestconfig):  # type: ignore[no-untyped-def]
 
         backend._step()
         messages_count = endpoint.receive_all_messages()
-        print(f'Received {messages_count} messages...')
+        print(f'Received {messages_count} messages.')
         output = endpoint.unload_messages(SpikeMessage, out_channel_uid)
-        # Write up the steps where the network sends a spike
+        # Write the steps on which the network sends a spike.
         if len(output):
             results.append(step)
 
-    # Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop)
+    # Spikes on steps "5n + 1" (input) and on "previous_spike_n + 6" (positive feedback loop).
     expected_results = [1, 6, 7, 11, 12, 13, 16, 17, 18, 19]
 
     assert results == expected_results

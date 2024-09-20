@@ -1,5 +1,5 @@
 /**
- * @brief Message bus and MessageEndpoint testing.
+ * @brief Message bus and message endpoint testing.
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
  */
@@ -33,15 +33,15 @@ TEST(MessageBusSuite, SubscribeUnsubscribe)
     knp::core::MessageBus bus = knp::core::MessageBus::construct_bus();
     auto entry_point{bus.create_endpoint()};
     const knp::core::UID sender{true}, receiver{true}, false_uid{true};
-    // Add subscription for spike messages
+    // Add subscription for spike messages.
     entry_point.subscribe<knp::core::messaging::SpikeMessage>(receiver, {sender});
-    // Try to remove subscription with a wrong id, should return false.
+    // Try removing subscription with a wrong ID. This should return false.
     EXPECT_EQ(entry_point.unsubscribe<knp::core::messaging::SpikeMessage>(false_uid), false);
-    // Try to remove subscription to a wrong type of messages, should remove false.
+    // Try removing subscription to a wrong message type. This should return false.
     EXPECT_EQ(entry_point.unsubscribe<knp::core::messaging::SynapticImpactMessage>(receiver), false);
-    // Try to remove an existing subscription, should remove true.
+    // Try removing an existing subscription. This should return true.
     EXPECT_EQ(entry_point.unsubscribe<knp::core::messaging::SpikeMessage>(receiver), true);
-    // Try to remove it again. Should return false as it's already deleted.
+    // Try removing the subscribtion again. This should return false as it's already deleted.
     EXPECT_EQ(entry_point.unsubscribe<knp::core::messaging::SpikeMessage>(receiver), false);
 }
 
@@ -59,7 +59,7 @@ TEST(MessageBusSuite, CreateBusAndEndpointZMQ)
     auto &subscription = ep2.subscribe<SpikeMessage>(knp::core::UID(), {msg.header_.sender_uid_});
 
     ep1.send_message(msg);
-    // ID message and data message.
+    // Message ID and message data.
     EXPECT_EQ(bus.route_messages(), 2);
     ep2.receive_all_messages();
 
@@ -84,7 +84,7 @@ TEST(MessageBusSuite, CreateBusAndEndpointCPU)
     auto &subscription = ep2.subscribe<SpikeMessage>(knp::core::UID(), {msg.header_.sender_uid_});
 
     ep1.send_message(msg);
-    // ID message and data message.
+    // Message ID and message data.
     EXPECT_EQ(bus.route_messages(), 2);
     ep2.receive_all_messages();
 
@@ -113,7 +113,7 @@ TEST(MessageBusSuite, SynapticImpactMessageSendZMQ)
     auto &subscription = ep1.subscribe<SynapticImpactMessage>(knp::core::UID(), {msg.header_.sender_uid_});
 
     ep1.send_message(msg);
-    // ID message and data message.
+    // Message ID and message data.
     EXPECT_EQ(bus.route_messages(), 2);
     ep1.receive_all_messages();
 
@@ -144,7 +144,7 @@ TEST(MessageBusSuite, SynapticImpactMessageSendCPU)
     auto &subscription = ep1.subscribe<SynapticImpactMessage>(knp::core::UID(), {msg.header_.sender_uid_});
 
     ep1.send_message(msg);
-    // ID message and data message.
+    // Message ID and message data.
     EXPECT_EQ(bus.route_messages(), 1);
     ep1.receive_all_messages();
 

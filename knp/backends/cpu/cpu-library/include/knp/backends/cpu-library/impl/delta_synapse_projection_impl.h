@@ -1,6 +1,6 @@
 /**
  * @file delta_synapse_projection_impl.h
- * @brief DeltaSynapse calculation routines definition.
+ * @brief Definition of DeltaSynapse calculation routines.
  * @author Artiom N.
  * @date 21.02.2023
  * @license Apache 2.0
@@ -69,7 +69,7 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
         const typename ProjectionType::SynapseParameters &)>
         sp_getter = [](const typename ProjectionType::SynapseParameters &synapse_params) { return synapse_params; })
 {
-    SPDLOG_TRACE("Calculating Delta synapse projection data");
+    SPDLOG_TRACE("Calculating delta synapse projection data...");
     using SynapseType = typename ProjectionType::ProjectionSynapseType;
     WeightUpdateSTDP<SynapseType>::init_projection(projection, messages, step_n);
 
@@ -85,7 +85,7 @@ MessageQueue::const_iterator calculate_delta_synapse_projection_data(
                 WeightUpdateSTDP<SynapseType>::init_synapse(std::get<core::synapse_data>(synapse), step_n);
                 const auto &synapse_params = sp_getter(std::get<core::synapse_data>(synapse));
 
-                // the message is sent on step N - 1, received on N.
+                // The message is sent on step N - 1, received on step N.
                 size_t future_step = synapse_params.delay_ + step_n - 1;
                 knp::core::messaging::SynapticImpact impact{
                     synapse_index, synapse_params.weight_, synapse_params.output_type_,
@@ -133,8 +133,8 @@ void calculate_projection_part_impl(
             continue;
         }
 
-        // Add new impact
-        // the message is sent on step N - 1, received on N.
+        // Add new impact.
+        // The message is sent on step N - 1, received on step N.
         uint64_t key = std::get<core::synapse_data>(synapse).delay_ + step_n - 1;
 
         knp::core::messaging::SynapticImpact impact{
@@ -201,13 +201,13 @@ void calculate_delta_synapse_projection_impl(
     knp::core::Projection<DeltaLikeSynapseType> &projection, knp::core::MessageEndpoint &endpoint,
     MessageQueue &future_messages, size_t step_n)
 {
-    SPDLOG_DEBUG("Calculating Delta synapse projection");
+    SPDLOG_DEBUG("Calculating delta synapse projection...");
 
     auto messages = endpoint.unload_messages<core::messaging::SpikeMessage>(projection.get_uid());
     auto out_iter = calculate_delta_synapse_projection_data(projection, messages, future_messages, step_n);
     if (out_iter != future_messages.end())
     {
-        SPDLOG_TRACE("Projection is sending an impact message");
+        SPDLOG_TRACE("Projection is sending an impact message.");
         // Send a message and remove it from the queue.
         endpoint.send_message(out_iter->second);
         future_messages.erase(out_iter);

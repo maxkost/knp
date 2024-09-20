@@ -1,6 +1,6 @@
 /**
  * @file common.h
- * @brief Neuron traits Python bindings common header.
+ * @brief Python bindings common header for neuron traits.
  * @author Artiom N.
  * @date 20.02.2024
  * @license Apache 2.0

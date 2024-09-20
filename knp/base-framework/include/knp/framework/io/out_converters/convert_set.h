@@ -48,7 +48,7 @@ public:
             result.insert(message.neuron_indexes_.cbegin(), message.neuron_indexes_.cend());
         }
 
-        // Ignore extra neurons
+        // Ignore extra neurons.
         auto iter = result.lower_bound(output_size_);
         result.erase(iter, result.end());
         return result;

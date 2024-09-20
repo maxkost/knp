@@ -28,7 +28,7 @@ struct DeltaSynapse;
 
 
 /**
- * @brief Default values for Delta synapse parameters.
+ * @brief Default values for delta synapse parameters.
  */
 template <>
 struct default_values<DeltaSynapse>
@@ -85,12 +85,14 @@ struct synapse_parameters<DeltaSynapse>
     float weight_;
 
     /**
-     * @brief Synaptic delay. Delay of `N` means that a spike sent on step `X` will be received on step `X + N`.
+     * @brief Synaptic delay.
+     * @details Delay of `N` means that a spike sent on step `X` will be received on step `X + N`.
      */
     uint32_t delay_;
 
     /**
-     * @brief Synapse type. Various types have different influences on neuron parameters, as defined by neuron
+     * @brief Synapse type.
+     * @details Various types have different influences on neuron parameters, as defined by neuron
      * function.
      */
     knp::synapse_traits::OutputType output_type_;

@@ -1,6 +1,6 @@
 /**
  * @file synaptic_impact_message.cpp
- * @brief SynapticImpact message Python bindings.
+ * @brief Python bindings for SynapticImpactMessage.
  * @author Artiom N.
  * @date 01.02.2024
  * @license Apache 2.0

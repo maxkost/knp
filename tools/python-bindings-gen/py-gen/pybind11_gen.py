@@ -55,7 +55,7 @@ def _process_fn(fn):
 
 
 def _process_method(class_name, meth, hooks, overloaded=False):
-    # skip destructor
+    # Skip destructor.
     if meth.get('destructor', False):
         return []
 
@@ -63,7 +63,7 @@ def _process_method(class_name, meth, hooks, overloaded=False):
     method_name: str = meth['name']
     parameters = meth['parameters']
 
-    # fix types that are enums
+    # Fix types that are enums.
     for p in parameters:
         if p.get('enum'):
             p['raw_type'] = p['enum']
@@ -84,7 +84,7 @@ def _process_method(class_name, meth, hooks, overloaded=False):
 
         modified = False
 
-        # data that hooks can modify
+        # Data that hooks can modify.
         hook_data = MethodHookData(method_name, in_params, ret_names, pre, post)
 
         for hook in hooks.get('method_hooks', []):
@@ -142,7 +142,7 @@ def _process_method(class_name, meth, hooks, overloaded=False):
         else:
             overload = ''
             if overloaded:
-                # overloaded method
+                # Overloaded method.
                 params = ', '.join(p['raw_type'] for p in parameters)
                 overload = '({} ({}::*)({}))'.format(meth['returns'], class_name, params)
 
@@ -159,18 +159,18 @@ def _process_class(cls, hooks):
 
     ret = ['py::class_<{}> {}(m, "{}");'.format(class_name, varname, class_name)]
 
-    # Collect methods first to determine if there are overloads
-    # ... yes, we're ignoring base classes here
+    # Collect methods first to determine if there are overloads.
+    # We're ignoring base classes here.
     methods = cls['methods']['public']
     if methods:
         ret.append(varname)
 
-        # collapse them to find overloads
+        # Collapse them to find overloads.
         meths = collections.OrderedDict()
         for meth in methods:
             meths.setdefault(meth['name'], []).append(meth)
 
-        # process it
+        # Process it.
         for ml in meths.values():
             if len(ml) == 1:
                 ret += _process_method(class_name, ml[0], hooks)
@@ -188,7 +188,7 @@ def _process_class(cls, hooks):
 
 
 def process_header(fname, hooks):
-    """Returns a list of lines."""
+    """Return a list of lines."""
 
     header = CppHeaderParser.CppHeader(fname)
     output = []
@@ -209,12 +209,12 @@ def process_header(fname, hooks):
 
 
 #
-# Hooks
+# Hooks.
 #
 
 # Method hook parameters:
 #   class_name: name of the class
-#   method: a method dictionary from cppheaderparser
+#   method: method dictionary from cppheaderparser
 #   in_params: copy of method['parameters']
 #   ret_names: variables to return
 #   pre: statements to insert before function call
@@ -241,7 +241,7 @@ def _ctr_hook(class_name, method, hook_data):
 
 def process_module(module_name, headers, hooks, add_namespaces=None):
     for header in headers:
-        print('#include <%s>' % header)  # TODO, not usually the actual path
+        print('#include <%s>' % header)  # TODO: Not usually the actual path.
 
     print()
     print('#include <pybind11/pybind11.h>')
@@ -252,7 +252,7 @@ def process_module(module_name, headers, hooks, add_namespaces=None):
             if not ns:
                 continue
 
-            print('using namespace %s;' % ns)
+            print('Using namespace %s;' % ns)
     print()
 
     print()

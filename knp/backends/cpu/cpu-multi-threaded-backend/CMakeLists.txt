@@ -4,11 +4,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Need for the linters.
+# Required for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp-cpu-multi-threaded-backend VERSION "${KNP_VERSION}" LANGUAGES C CXX
-        DESCRIPTION "CPU multi threading backend"
+        DESCRIPTION "CPU multi-threaded backend"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/backends/cpu-multi-threaded")
@@ -63,7 +63,7 @@ install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
 knp_packaging_set_parameters("${COMPONENT_NAME}" "${PROJECT_NAME}"
         DESCRIPTION "${PROJECT_DESCRIPTION}")
 
-set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_DEPENDS "libboost-all (= ${Boost_VERSION}), libzmq" CACHE STRING "${PROJECT_NAME} deb package depends")
+set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_DEPENDS "libboost-all (= ${Boost_VERSION}), libzmq" CACHE STRING "${PROJECT_NAME} deb package dependencies")
 
 knp_packaging_set_parameters("${COMPONENT_NAME}-dev" "${PROJECT_NAME}"
         DESCRIPTION "${PROJECT_DESCRIPTION} development package: C++ headers and CMake modules"

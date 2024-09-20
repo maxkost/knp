@@ -1,5 +1,5 @@
 /**
- * @brief Input channels and converters tests.
+ * @brief Input channel and converter tests.
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
  */
@@ -17,7 +17,7 @@
 TEST(InputSuite, SequenceConverterTest)
 {
     auto stream = std::make_unique<std::stringstream>();
-    // float values equivalent to (0 1 1 0 0 1 1 0 1 0)
+    // Float values equivalent to (0 1 1 0 0 1 1 0 1 0).
     *stream << "0.7 1.1 1.0 -0.2 0.1 3 2 0.7 11 -1";
     knp::framework::io::input::SequenceConverter<float> converter(
         std::move(stream), knp::framework::io::input::interpret_with_threshold<float>(1.0f), 10);
@@ -58,20 +58,19 @@ TEST(InputSuite, ChannelTest)
 
     auto &stream = dynamic_cast<std::stringstream &>(converter.get_stream());
 
-    // Connect to output
+    // Connect to output.
     knp::core::UID output_uid;
     knp::framework::io::input::connect_input(channel, endpoint, output_uid);
 
-    // Send data to stream: 12 integers, a test that the final ones don't get into the message.
-    // 12 integers, a test that the final ones don't get into the message.
+    // Send 12 integers to stream. Test that the final ones do not get into the message.
     stream << "1 0 1 1 0 1 1 1 1 0 1 1";
     knp::core::messaging::SpikeData expected_indexes = {0, 2, 3, 5, 6, 7, 8};
     const knp::core::Step send_time = 77;
 
-    // Tell channel to send a message
+    // Make channel send a message.
     channel.send(send_time);
 
-    // Process messages
+    // Process messages.
     bus.route_messages();
     endpoint.receive_all_messages();
 

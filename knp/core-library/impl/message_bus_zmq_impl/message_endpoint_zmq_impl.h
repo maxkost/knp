@@ -44,7 +44,7 @@ public:
     void send_message(const knp::core::messaging::MessageVariant &message) override
     {
         auto packed_msg = knp::core::messaging::pack_to_envelope(message);
-        SPDLOG_TRACE("Packed message size = {}...", packed_msg.size());
+        SPDLOG_TRACE("Packed message size: {}.", packed_msg.size());
         send_zmq_message(packed_msg.data(), packed_msg.size());
     }
 
