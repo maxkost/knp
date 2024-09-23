@@ -4,7 +4,7 @@
 
 include_guard(GLOBAL)
 
-include(CPM)
+include(get_cpm)
 # include("git")
 
 
