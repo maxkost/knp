@@ -1,6 +1,6 @@
 /**
- * @file generators.h
- * @brief Population generators.
+ * @file connectors.h
+ * @brief Projection connectors.
  * @author Artiom N.
  * @date 10.08.2024
  * @license Apache 2.0
@@ -17,11 +17,16 @@
 #include <random>
 #include <tuple>
 
+/**
+ * @brief Projection namespace.
+ */
+namespace knp::framework::projection
+{
 
 /**
  * @brief Namespace for framework projection connectors.
  */
-namespace knp::framework::projection::connectors
+namespace connectors
 {
 
 /**
@@ -359,4 +364,6 @@ template <typename DestinationSynapseType, typename SourceSynapseType>
         source_proj.size());
 }
 
-}  // namespace knp::framework::projection::connectors
+}  // namespace connectors
+
+}  // namespace knp::framework::projection

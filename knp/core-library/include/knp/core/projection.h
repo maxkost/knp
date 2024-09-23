@@ -53,7 +53,7 @@ enum SynapseElementAccess
 
 /**
  * @brief The Projection class is a definition of similar connections between the neurons of two populations.
- * @note This class should later be divided to interface and implementation classes.
+ * @todo This class should later be divided to interface and implementation classes.
  * @tparam SynapseType type of synapses the projection contains.
  * @see ALL_SYNAPSES.
  */

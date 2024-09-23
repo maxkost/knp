@@ -16,12 +16,18 @@
 
 
 /**
- * @brief Data storage namespace.
+ * @brief Storage namespace.
  */
-namespace knp::framework::io::storage::native
+namespace knp::framework::io::storage
 {
 
-// TODO: return and get iterators.
+/**
+ * @brief Data storage namespace.
+ */
+namespace native
+{
+
+// TODO: Return and get iterators.
 
 /**
  * @brief Read spike messages from an HDF5 file.
@@ -50,4 +56,6 @@ KNP_DECLSPEC void save_messages_to_h5(
     std::vector<core::messaging::SpikeMessage> messages, const std::filesystem::path &path_to_save,
     float time_per_step = 1.0f);
 
-}  // namespace knp::framework::io::storage::native
+}  // namespace native
+
+}  // namespace knp::framework::io::storage
