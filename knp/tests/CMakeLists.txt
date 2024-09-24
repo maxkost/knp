@@ -99,7 +99,7 @@ endif()
 
 
 set(CTEST_MEMORYCHECK_COMMAND "/usr/bin/valgrind")
-set(CTEST_MEMORYCHECK_COMMAND_OPTIONS "--tool=memcheck --leak-check=full --time-stamp=yes --trace-children=yes --track-fds=yes --track-origins=yes --error-limit=no --gen-suppressions=all --undef-value-errors=yes --error-exitcode=1")
+set(CTEST_MEMORYCHECK_COMMAND_OPTIONS "--tool=memcheck --leak-check=full --undef-value-errors=yes --error-limit=no --time-stamp=yes --trace-children=yes --track-fds=yes --track-origins=yes --gen-suppressions=all --undef-value-errors=yes --error-exitcode=1")
 
 add_custom_target(test_with_memcheck
     COMMAND ${CMAKE_CTEST_COMMAND}
