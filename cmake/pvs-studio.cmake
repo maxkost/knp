@@ -1,11 +1,10 @@
 # 2006-2008 (c) Viva64.com Team
-# 2008-2018 (c) OOO "Program Verification Systems"
-#
+# 2008-2020 (c) OOO "Program Verification Systems"
+# 2020-2022 (c) PVS-Studio LLC
 # Version 12
 
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.5)
 cmake_policy(SET CMP0054 NEW)
-
 
 if (PVS_STUDIO_AS_SCRIPT)
     # This code runs at build time.
@@ -18,8 +17,8 @@ if (PVS_STUDIO_AS_SCRIPT)
         if (NOT in_cl_params)
             if ("${arg}" STREQUAL "--cl-params")
                 set(in_cl_params TRUE)
-            endif ()
-        else ()
+            endif()
+        else()
             # A workaround for macOS frameworks (e.g. QtWidgets.framework)
             # You can test this workaround on this project: https://github.com/easyaspi314/MidiEditor/tree/gba
             if (APPLE AND "${arg}" MATCHES "^-I(.*)\\.framework$")
@@ -28,59 +27,60 @@ if (PVS_STUDIO_AS_SCRIPT)
                     get_filename_component(framework "${framework}" DIRECTORY)
                     list(APPEND additional_args "-iframework")
                     list(APPEND additional_args "${framework}")
-                endif ()
-            endif ()
-        endif ()
-    endforeach ()
+                endif()
+            endif()
+        endif()
+    endforeach()
 
+    file(REMOVE "${PVS_STUDIO_LOG_FILE}")
     execute_process(COMMAND ${PVS_STUDIO_COMMAND} ${additional_args}
-                    ERROR_VARIABLE error
-                    RESULT_VARIABLE result)
+                    RESULT_VARIABLE result
+                    OUTPUT_VARIABLE output
+                    ERROR_VARIABLE error)
 
-    set(stderr_type "")
 
-    if (result)
-        set(stderr_type FATAL_ERROR)
-    endif ()
-
-    if (result OR error)
-        message(${stderr_type} "${error}")
-    endif ()
+    SET (IGNORED_RETURN_CODES 0;7)
+    if (NOT result IN_LIST IGNORED_RETURN_CODES AND NOT output MATCHES "^No compilation units were found\\.")
+        message(FATAL_ERROR "PVS-Studio exited with code ${result}.\nStdout:\n${output}\nStderr:\n${error}\n")
+    endif()
 
     return()
-endif ()
+endif()
 
-
-include_guard(GLOBAL)
-
+if(__PVS_STUDIO_INCLUDED)
+    return()
+endif()
+set(__PVS_STUDIO_INCLUDED TRUE)
 
 set(PVS_STUDIO_SCRIPT "${CMAKE_CURRENT_LIST_FILE}")
 
 function (pvs_studio_log TEXT)
     if (PVS_STUDIO_DEBUG)
         message("PVS-Studio: ${TEXT}")
-    endif ()
-endfunction ()
-
+    endif()
+endfunction()
 
 function (pvs_studio_relative_path VAR ROOT FILEPATH)
+    if (CMAKE_HOST_WIN32)
+        STRING(REGEX REPLACE "\\\\" "/" ROOT ${ROOT})
+        STRING(REGEX REPLACE "\\\\" "/" FILEPATH ${FILEPATH})
+    endif()
     set("${VAR}" "${FILEPATH}" PARENT_SCOPE)
-    if ("${FILEPATH}" MATCHES "^/.*$" OR "${FILEPATH}" MATCHES "^.:/.*$")
+    if (IS_ABSOLUTE "${FILEPATH}")
         file(RELATIVE_PATH RPATH "${ROOT}" "${FILEPATH}")
-        if (NOT "${RPATH}" MATCHES "^\\.\\..*$")
+        if (NOT IS_ABSOLUTE "${RPATH}")
             set("${VAR}" "${RPATH}" PARENT_SCOPE)
-        endif ()
-    endif ()
-endfunction ()
+        endif()
+    endif()
+endfunction()
 
 function (pvs_studio_join_path VAR DIR1 DIR2)
     if ("${DIR2}" MATCHES "^(/|~|.:/).*$" OR "${DIR1}" STREQUAL "")
         set("${VAR}" "${DIR2}" PARENT_SCOPE)
-    else ()
+    else()
         set("${VAR}" "${DIR1}/${DIR2}" PARENT_SCOPE)
-    endif ()
-endfunction ()
-
+    endif()
+endfunction()
 
 macro (pvs_studio_append_flags_from_property CXX C DIR PREFIX)
     if (NOT "${PROPERTY}" STREQUAL "NOTFOUND" AND NOT "${PROPERTY}" STREQUAL "PROPERTY-NOTFOUND")
@@ -98,19 +98,19 @@ macro (pvs_studio_append_flags_from_property CXX C DIR PREFIX)
                 list(APPEND "${CXX}" "${PREFIX}${PROP}")
                 list(APPEND "${C}" "${PREFIX}${PROP}")
             endif()
-        endforeach ()
-    endif ()
-endmacro ()
-
+        endforeach()
+    endif()
+endmacro()
 
 macro (pvs_studio_append_standard_flag FLAGS STANDARD)
-    if ("${STANDARD}" MATCHES "^(99|11|14|17)$")
+    if ("${STANDARD}" MATCHES "^(99|11|14|17|20)$")
         if ("${PVS_STUDIO_PREPROCESSOR}" MATCHES "gcc|clang")
             list(APPEND "${FLAGS}" "-std=c++${STANDARD}")
-        endif ()
-    endif ()
-endmacro ()
-
+        elseif("${PVS_STUDIO_PREPROCESSOR}" MATCHES "visualcpp")
+            list(APPEND "${FLAGS}" "/std:c++${STANDARD}")
+        endif()
+    endif()
+endmacro()
 
 function (pvs_studio_set_directory_flags DIRECTORY CXX C)
     set(CXX_FLAGS "${${CXX}}")
@@ -124,12 +124,16 @@ function (pvs_studio_set_directory_flags DIRECTORY CXX C)
 
     set("${CXX}" "${CXX_FLAGS}" PARENT_SCOPE)
     set("${C}" "${C_FLAGS}" PARENT_SCOPE)
-endfunction ()
-
+endfunction()
 
 function (pvs_studio_set_target_flags TARGET CXX C)
     set(CXX_FLAGS "${${CXX}}")
     set(C_FLAGS "${${C}}")
+
+    if (NOT MSVC)
+        list(APPEND CXX_FLAGS "$<$<BOOL:${CMAKE_SYSROOT}>:--sysroot=${CMAKE_SYSROOT}>")
+        list(APPEND C_FLAGS "$<$<BOOL:${CMAKE_SYSROOT}>:--sysroot=${CMAKE_SYSROOT}>")
+    endif()
 
     set(prop_incdirs "$<TARGET_PROPERTY:${TARGET},INCLUDE_DIRECTORIES>")
     list(APPEND CXX_FLAGS "$<$<BOOL:${prop_incdirs}>:-I$<JOIN:${prop_incdirs},$<SEMICOLON>-I>>")
@@ -139,10 +143,13 @@ function (pvs_studio_set_target_flags TARGET CXX C)
     list(APPEND CXX_FLAGS "$<$<BOOL:${prop_compdefs}>:-D$<JOIN:${prop_compdefs},$<SEMICOLON>-D>>")
     list(APPEND C_FLAGS "$<$<BOOL:${prop_compdefs}>:-D$<JOIN:${prop_compdefs},$<SEMICOLON>-D>>")
 
+    set(prop_compopt "$<TARGET_PROPERTY:${TARGET},COMPILE_OPTIONS>")
+    list(APPEND CXX_FLAGS "$<$<BOOL:${prop_compopt}>:$<JOIN:${prop_compopt},$<SEMICOLON>>>")
+    list(APPEND C_FLAGS "$<$<BOOL:${prop_compopt}>:$<JOIN:${prop_compopt},$<SEMICOLON>>>")
+
     set("${CXX}" "${CXX_FLAGS}" PARENT_SCOPE)
     set("${C}" "${C_FLAGS}" PARENT_SCOPE)
-endfunction ()
-
+endfunction()
 
 function (pvs_studio_set_source_file_flags SOURCE)
     set(LANGUAGE "")
@@ -151,21 +158,20 @@ function (pvs_studio_set_source_file_flags SOURCE)
     if ("${LANGUAGE}" STREQUAL "" AND "${SOURCE_LOWER}" MATCHES "^.*\\.(c|cpp|cc|cx|cxx|cp|c\\+\\+)$")
         if ("${SOURCE}" MATCHES "^.*\\.c$")
             set(LANGUAGE C)
-        else ()
+        else()
             set(LANGUAGE CXX)
-        endif ()
-    endif ()
+        endif()
+    endif()
 
     if ("${LANGUAGE}" STREQUAL "C")
         set(CL_PARAMS ${PVS_STUDIO_C_FLAGS} ${PVS_STUDIO_TARGET_C_FLAGS} -DPVS_STUDIO)
     elseif ("${LANGUAGE}" STREQUAL "CXX")
         set(CL_PARAMS ${PVS_STUDIO_CXX_FLAGS} ${PVS_STUDIO_TARGET_CXX_FLAGS} -DPVS_STUDIO)
-    endif ()
+    endif()
 
     set(PVS_STUDIO_LANGUAGE "${LANGUAGE}" PARENT_SCOPE)
     set(PVS_STUDIO_CL_PARAMS "${CL_PARAMS}" PARENT_SCOPE)
-endfunction ()
-
+endfunction()
 
 function (pvs_studio_analyze_file SOURCE SOURCE_DIR BINARY_DIR)
     set(PLOGS ${PVS_STUDIO_PLOGS})
@@ -176,12 +182,12 @@ function (pvs_studio_analyze_file SOURCE SOURCE_DIR BINARY_DIR)
     get_source_file_property(PROPERTY "${SOURCE}" HEADER_FILE_ONLY)
     if (PROPERTY)
         return()
-    endif ()
+    endif()
 
     pvs_studio_relative_path(SOURCE_RELATIVE "${SOURCE_DIR}" "${SOURCE}")
     pvs_studio_join_path(SOURCE "${SOURCE_DIR}" "${SOURCE}")
 
-    set(LOG "${BINARY_DIR}/PVS-Studio/${SOURCE_RELATIVE}.plog")
+    set(LOG "${BINARY_DIR}/PVS-Studio/${TARGET}/${SOURCE_RELATIVE}.log")
     get_filename_component(LOG "${LOG}" REALPATH)
     get_filename_component(PARENT_DIR "${LOG}" DIRECTORY)
 
@@ -193,7 +199,7 @@ function (pvs_studio_analyze_file SOURCE SOURCE_DIR BINARY_DIR)
             pvs_studio_relative_path(relLog "${CMAKE_BINARY_DIR}" "${LOG}")
             set(depPvsArg --dep-file "${LOG}.d" --dep-file-target "${relLog}")
             set(depCommandArg DEPFILE "${LOG}.d")
-        endif ()
+        endif()
 
         # https://public.kitware.com/Bug/print_bug_page.php?bug_id=14353
         # https://public.kitware.com/Bug/file/5436/expand_command.cmake
@@ -208,25 +214,25 @@ function (pvs_studio_analyze_file SOURCE SOURCE_DIR BINARY_DIR)
 
         string(REPLACE ";" "$<SEMICOLON>" cmdline "${cmdline}")
         set(pvscmd "${CMAKE_COMMAND}"
-                   -D PVS_STUDIO_AS_SCRIPT=TRUE
+                   -D "PVS_STUDIO_AS_SCRIPT=TRUE"
                    -D "PVS_STUDIO_COMMAND=${cmdline}"
-                   -P "${PVS_STUDIO_SCRIPT}"
-        )
+                   -D "PVS_STUDIO_LOG_FILE=${LOG}"
+                   -P "${PVS_STUDIO_SCRIPT}")
 
         add_custom_command(OUTPUT "${LOG}"
                            COMMAND "${CMAKE_COMMAND}" -E make_directory "${PARENT_DIR}"
                            COMMAND "${CMAKE_COMMAND}" -E remove_directory "${LOG}"
                            COMMAND ${pvscmd}
                            WORKING_DIRECTORY "${BINARY_DIR}"
-                           DEPENDS "${SOURCE}" "${PVS_STUDIO_CONFIG}" "${PVS_STUDIO_SUPPRESS_BASE}"
+                           DEPENDS "${SOURCE}" "${PVS_STUDIO_SUPPRESS_BASE}" "${PVS_STUDIO_DEPENDS}"
                            IMPLICIT_DEPENDS "${PVS_STUDIO_LANGUAGE}" "${SOURCE}"
                            ${depCommandArg}
                            VERBATIM
                            COMMENT "Analyzing ${PVS_STUDIO_LANGUAGE} file ${SOURCE_RELATIVE}")
         list(APPEND PLOGS "${LOG}")
-    endif ()
+    endif()
     set(PVS_STUDIO_PLOGS "${PLOGS}" PARENT_SCOPE)
-endfunction ()
+endfunction()
 
 function (pvs_studio_analyze_target TARGET DIR)
     set(PVS_STUDIO_PLOGS "${PVS_STUDIO_PLOGS}")
@@ -237,9 +243,9 @@ function (pvs_studio_analyze_target TARGET DIR)
     pvs_studio_relative_path(BINARY_DIR "${CMAKE_SOURCE_DIR}" "${DIR}")
     if ("${BINARY_DIR}" MATCHES "^/.*$")
         pvs_studio_join_path(BINARY_DIR "${CMAKE_BINARY_DIR}" "PVS-Studio/__${BINARY_DIR}")
-    else ()
+    else()
         pvs_studio_join_path(BINARY_DIR "${CMAKE_BINARY_DIR}" "${BINARY_DIR}")
-    endif ()
+    endif()
 
     file(MAKE_DIRECTORY "${BINARY_DIR}")
 
@@ -250,11 +256,11 @@ function (pvs_studio_analyze_target TARGET DIR)
         foreach (SOURCE ${PROPERTY})
             pvs_studio_join_path(SOURCE "${DIR}" "${SOURCE}")
             pvs_studio_analyze_file("${SOURCE}" "${DIR}" "${BINARY_DIR}")
-        endforeach ()
-    endif ()
+        endforeach()
+    endif()
 
     set(PVS_STUDIO_PLOGS "${PVS_STUDIO_PLOGS}" PARENT_SCOPE)
-endfunction ()
+endfunction()
 
 set(PVS_STUDIO_RECURSIVE_TARGETS)
 set(PVS_STUDIO_RECURSIVE_TARGETS_NEW)
@@ -269,9 +275,9 @@ macro(pvs_studio_get_recursive_targets TARGET)
                 list(APPEND PVS_STUDIO_RECURSIVE_TARGETS "${lib}")
                 list(APPEND PVS_STUDIO_RECURSIVE_TARGETS_NEW "${lib}")
                 pvs_studio_get_recursive_targets("${lib}")
-            endif ()
-        endif ()
-    endforeach ()
+            endif()
+        endif()
+    endforeach()
 endmacro()
 
 option(PVS_STUDIO_DISABLE OFF "Disable PVS-Studio targets")
@@ -311,121 +317,140 @@ option(PVS_STUDIO_DEBUG OFF "Add debug info")
 # CXX_FLAGS flags...            additional CXX_FLAGS
 # ARGS args...                  additional pvs-studio-analyzer/CompilerCommandsAnalyzer.exe flags
 # CONVERTER_ARGS args...        additional plog-converter/HtmlGenerator.exe flags
-
 function (pvs_studio_add_target)
     macro (default VAR VALUE)
         if ("${${VAR}}" STREQUAL "")
             set("${VAR}" "${VALUE}")
-        endif ()
-    endmacro ()
+        endif()
+    endmacro()
 
     set(PVS_STUDIO_SUPPORTED_PREPROCESSORS "gcc|clang|visualcpp")
     if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
         set(DEFAULT_PREPROCESSOR "clang")
     elseif (MSVC)
         set(DEFAULT_PREPROCESSOR "visualcpp")
-    else ()
+    else()
         set(DEFAULT_PREPROCESSOR "gcc")
-    endif ()
+    endif()
 
-    set(OPTIONAL OUTPUT ALL RECURSIVE HIDE_HELP KEEP_COMBINED_PLOG COMPILE_COMMANDS)
+    set(OPTIONAL OUTPUT ALL RECURSIVE HIDE_HELP KEEP_COMBINED_PLOG COMPILE_COMMANDS KEEP_INTERMEDIATE_FILES)
     set(SINGLE LICENSE CONFIG TARGET LOG FORMAT BIN CONVERTER PLATFORM PREPROCESSOR CFG_TEXT SUPPRESS_BASE)
     set(MULTI SOURCES C_FLAGS CXX_FLAGS ARGS DEPENDS ANALYZE MODE CONVERTER_ARGS)
     cmake_parse_arguments(PVS_STUDIO "${OPTIONAL}" "${SINGLE}" "${MULTI}" ${ARGN})
 
-    if ("${PVS_STUDIO_CONFIG}" STREQUAL "" OR NOT "${PVS_STUDIO_CFG_TEXT}" STREQUAL "")
-        set(PVS_STUDIO_EMPTY_CONFIG ON)
-    else ()
-        set(PVS_STUDIO_EMPTY_CONFIG OFF)
-    endif ()
 
-    default(PVS_STUDIO_CFG_TEXT "analysis-mode=31")
-    default(PVS_STUDIO_CONFIG "${CMAKE_BINARY_DIR}/PVS-Studio.cfg")
     default(PVS_STUDIO_C_FLAGS "")
     default(PVS_STUDIO_CXX_FLAGS "")
     default(PVS_STUDIO_TARGET "pvs")
     default(PVS_STUDIO_LOG "PVS-Studio.log")
 
     set(PATHS)
-    if (WIN32)
-        set(ROOT "PROGRAMFILES(X86)")
-        set(ROOT "$ENV{${ROOT}}/PVS-Studio")
-        string(REPLACE \\ / ROOT "${ROOT}")
+
+    if (CMAKE_HOST_WIN32)
+        # The registry value is only read when you do some cache operation on it.
+        # https://stackoverflow.com/questions/1762201/reading-registry-values-with-cmake
+        GET_FILENAME_COMPONENT(ROOT "[HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\ProgramVerificationSystems\\PVS-Studio;installDir]" ABSOLUTE CACHE)
 
         if (EXISTS "${ROOT}")
-            set(PATHS "${ROOT}")
-        endif ()
+           set(PATHS "${ROOT}")
+        else()
+           set(ROOT "PROGRAMFILES(X86)")
+           set(ROOT "$ENV{${ROOT}}/PVS-Studio")
+           string(REPLACE \\ / ROOT "${ROOT}")
+
+           if (EXISTS "${ROOT}")
+              set(PATHS "${ROOT}")
+            else()
+              set(ROOT "PATH")
+              set(ROOT "$ENV{${ROOT}}")
+              set(PATHS "${ROOT}")
+           endif()
+        endif()
+
+
 
         default(PVS_STUDIO_BIN "CompilerCommandsAnalyzer.exe")
         default(PVS_STUDIO_CONVERTER "HtmlGenerator.exe")
-    else ()
+    else()
         default(PVS_STUDIO_BIN "pvs-studio-analyzer")
         default(PVS_STUDIO_CONVERTER "plog-converter")
-    endif ()
+    endif()
 
     find_program(PVS_STUDIO_BIN_PATH "${PVS_STUDIO_BIN}" ${PATHS})
     set(PVS_STUDIO_BIN "${PVS_STUDIO_BIN_PATH}")
 
     if (NOT EXISTS "${PVS_STUDIO_BIN}")
         message(FATAL_ERROR "pvs-studio-analyzer is not found")
-    endif ()
+    endif()
 
     find_program(PVS_STUDIO_CONVERTER_PATH "${PVS_STUDIO_CONVERTER}" ${PATHS})
     set(PVS_STUDIO_CONVERTER "${PVS_STUDIO_CONVERTER_PATH}")
 
     if (NOT EXISTS "${PVS_STUDIO_CONVERTER}")
         message(FATAL_ERROR "plog-converter is not found")
-    endif ()
+    endif()
 
     default(PVS_STUDIO_MODE "GA:1,2")
     default(PVS_STUDIO_PREPROCESSOR "${DEFAULT_PREPROCESSOR}")
     if (WIN32)
         default(PVS_STUDIO_PLATFORM "x64")
-    else ()
+    else()
         default(PVS_STUDIO_PLATFORM "linux64")
-    endif ()
+    endif()
 
     string(REPLACE ";" "+" PVS_STUDIO_MODE "${PVS_STUDIO_MODE}")
 
-    if (PVS_STUDIO_EMPTY_CONFIG)
+    if ("${PVS_STUDIO_CONFIG}" STREQUAL "" AND NOT "${PVS_STUDIO_CFG_TEXT}" STREQUAL "")
+        set(PVS_STUDIO_CONFIG "${CMAKE_BINARY_DIR}/PVS-Studio.cfg")
+
         set(PVS_STUDIO_CONFIG_COMMAND "${CMAKE_COMMAND}" -E echo "${PVS_STUDIO_CFG_TEXT}" > "${PVS_STUDIO_CONFIG}")
-    else ()
-        set(PVS_STUDIO_CONFIG_COMMAND "${CMAKE_COMMAND}" -E touch "${PVS_STUDIO_CONFIG}")
-    endif ()
 
-    add_custom_command(OUTPUT "${PVS_STUDIO_CONFIG}"
-                       COMMAND ${PVS_STUDIO_CONFIG_COMMAND}
-                       WORKING_DIRECTORY "${BINARY_DIR}"
-                       COMMENT "Generating PVS-Studio.cfg")
+        add_custom_command(OUTPUT "${PVS_STUDIO_CONFIG}"
+                           COMMAND ${PVS_STUDIO_CONFIG_COMMAND}
+                           WORKING_DIRECTORY "${BINARY_DIR}"
+                           COMMENT "Generating PVS-Studio.cfg")
 
+        list(APPEND PVS_STUDIO_DEPENDS "${PVS_STUDIO_CONFIG}")
+    endif()
     if (NOT "${PVS_STUDIO_PREPROCESSOR}" MATCHES "^${PVS_STUDIO_SUPPORTED_PREPROCESSORS}$")
         message(FATAL_ERROR "Preprocessor ${PVS_STUDIO_PREPROCESSOR} isn't supported. Available options: ${PVS_STUDIO_SUPPORTED_PREPROCESSORS}.")
-    endif ()
+    endif()
 
     pvs_studio_append_standard_flag(PVS_STUDIO_CXX_FLAGS "${CMAKE_CXX_STANDARD}")
     pvs_studio_set_directory_flags("${CMAKE_CURRENT_SOURCE_DIR}" PVS_STUDIO_CXX_FLAGS PVS_STUDIO_C_FLAGS)
 
     if (NOT "${PVS_STUDIO_LICENSE}" STREQUAL "")
-        pvs_studio_join_path(PVS_STUDIO_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}" "${PVS_STUDIO_LICENSE}")
         list(APPEND PVS_STUDIO_ARGS --lic-file "${PVS_STUDIO_LICENSE}")
-    endif ()
+    endif()
 
-    list(APPEND PVS_STUDIO_ARGS --cfg "${PVS_STUDIO_CONFIG}"
-                                --platform "${PVS_STUDIO_PLATFORM}"
+    if (NOT ${PVS_STUDIO_CONFIG} STREQUAL "")
+        list(APPEND PVS_STUDIO_ARGS --cfg "${PVS_STUDIO_CONFIG}")
+    endif()
+
+    list(APPEND PVS_STUDIO_ARGS --platform "${PVS_STUDIO_PLATFORM}"
                                 --preprocessor "${PVS_STUDIO_PREPROCESSOR}")
 
     if (NOT "${PVS_STUDIO_SUPPRESS_BASE}" STREQUAL "")
         pvs_studio_join_path(PVS_STUDIO_SUPPRESS_BASE "${CMAKE_CURRENT_SOURCE_DIR}" "${PVS_STUDIO_SUPPRESS_BASE}")
         list(APPEND PVS_STUDIO_ARGS --suppress-file "${PVS_STUDIO_SUPPRESS_BASE}")
-    endif ()
+    endif()
 
     if (NOT "${CMAKE_CXX_COMPILER}" STREQUAL "")
         list(APPEND PVS_STUDIO_ARGS --cxx "${CMAKE_CXX_COMPILER}")
-    endif ()
+    endif()
 
     if (NOT "${CMAKE_C_COMPILER}" STREQUAL "")
         list(APPEND PVS_STUDIO_ARGS --cc "${CMAKE_C_COMPILER}")
-    endif ()
+    endif()
+
+    if (PVS_STUDIO_KEEP_INTERMEDIATE_FILES)
+        list(APPEND PVS_STUDIO_ARGS --dump-files)
+    endif()
+
+    string(REGEX REPLACE [123,:] "" ANALYZER_MODE ${PVS_STUDIO_MODE})
+    if (NOT "$ANALYZER_MODE" STREQUAL "GA")
+        list (APPEND PVS_STUDIO_ARGS -a "${ANALYZER_MODE}")
+    endif()
 
     set(PVS_STUDIO_PLOGS "")
 
@@ -434,11 +459,12 @@ function (pvs_studio_add_target)
         foreach (TARGET IN LISTS PVS_STUDIO_ANALYZE)
             list(APPEND PVS_STUDIO_RECURSIVE_TARGETS_NEW "${TARGET}")
             pvs_studio_get_recursive_targets("${TARGET}")
-        endforeach ()
-    endif ()
+        endforeach()
+    endif()
 
     set(inc_path)
 
+    set(TARGET_DEPENDS)
     foreach (TARGET ${PVS_STUDIO_ANALYZE})
         set(DIR "${CMAKE_CURRENT_SOURCE_DIR}")
         string(FIND "${TARGET}" ":" DELIM)
@@ -447,43 +473,45 @@ function (pvs_studio_add_target)
             string(SUBSTRING "${TARGET}" "${DELIMI}" "-1" DIR)
             string(SUBSTRING "${TARGET}" "0" "${DELIM}" TARGET)
             pvs_studio_join_path(DIR "${CMAKE_CURRENT_SOURCE_DIR}" "${DIR}")
-        else ()
+        else()
             get_target_property(TARGET_SOURCE_DIR "${TARGET}" SOURCE_DIR)
             if (EXISTS "${TARGET_SOURCE_DIR}")
                 set(DIR "${TARGET_SOURCE_DIR}")
-            endif ()
-        endif ()
+            endif()
+        endif()
         pvs_studio_analyze_target("${TARGET}" "${DIR}")
-        list(APPEND PVS_STUDIO_DEPENDS "${TARGET}")
+        list(APPEND TARGET_DEPENDS "${TARGET}")
 
         if ("${inc_path}" STREQUAL "")
             set(inc_path "$<TARGET_PROPERTY:${TARGET},INCLUDE_DIRECTORIES>")
-        else ()
+        else()
             set(inc_path "${inc_path}$<SEMICOLON>$<TARGET_PROPERTY:${TARGET},INCLUDE_DIRECTORIES>")
-        endif ()
-    endforeach ()
+        endif()
+    endforeach()
 
     foreach (TARGET ${PVS_STUDIO_RECURSIVE_TARGETS_NEW})
         set(DIR "${CMAKE_CURRENT_SOURCE_DIR}")
         get_target_property(TARGET_SOURCE_DIR "${TARGET}" SOURCE_DIR)
         if (EXISTS "${TARGET_SOURCE_DIR}")
             set(DIR "${TARGET_SOURCE_DIR}")
-        endif ()
+        endif()
         pvs_studio_analyze_target("${TARGET}" "${DIR}")
-        list(APPEND PVS_STUDIO_DEPENDS "${TARGET}")
-    endforeach ()
+        list(APPEND TARGET_DEPENDS "${TARGET}")
+    endforeach()
+
+    list(APPEND PVS_STUDIO_DEPENDS "${TARGET_DEPENDS}")
 
     set(PVS_STUDIO_TARGET_CXX_FLAGS "")
     set(PVS_STUDIO_TARGET_C_FLAGS "")
     foreach (SOURCE ${PVS_STUDIO_SOURCES})
         pvs_studio_analyze_file("${SOURCE}" "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}")
-    endforeach ()
+    endforeach()
 
     if (PVS_STUDIO_COMPILE_COMMANDS)
         set(COMPILE_COMMANDS_LOG "${PVS_STUDIO_LOG}.pvs.analyzer.raw")
         if (NOT CMAKE_EXPORT_COMPILE_COMMANDS)
             message(FATAL_ERROR "You should set CMAKE_EXPORT_COMPILE_COMMANDS to TRUE")
-        endif ()
+        endif()
         add_custom_command(
             OUTPUT "${COMPILE_COMMANDS_LOG}"
             COMMAND "${PVS_STUDIO_BIN}" analyze -i
@@ -491,71 +519,116 @@ function (pvs_studio_add_target)
                     ${PVS_STUDIO_ARGS}
             COMMENT "Analyzing with PVS-Studio"
             WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-            DEPENDS "${PVS_STUDIO_CONFIG}" "${PVS_STUDIO_SUPPRESS_BASE}"
+            DEPENDS "${PVS_STUDIO_SUPPRESS_BASE}" "${PVS_STUDIO_DEPENDS}"
         )
         list(APPEND PVS_STUDIO_PLOGS_LOGS "${COMPILE_COMMANDS_LOG}.always")
         list(APPEND PVS_STUDIO_PLOGS_DEPENDENCIES "${COMPILE_COMMANDS_LOG}")
-    endif ()
+    endif()
 
     pvs_studio_relative_path(LOG_RELATIVE "${CMAKE_BINARY_DIR}" "${PVS_STUDIO_LOG}")
     if (PVS_STUDIO_PLOGS OR PVS_STUDIO_COMPILE_COMMANDS)
-        if (WIN32)
+        if (CMAKE_HOST_WIN32)
             string(REPLACE / \\ PVS_STUDIO_PLOGS "${PVS_STUDIO_PLOGS}")
-        endif ()
-        if (WIN32)
-            set(COMMANDS COMMAND type ${PVS_STUDIO_PLOGS} ${PVS_STUDIO_PLOGS_LOGS} > "${PVS_STUDIO_LOG}" 2>nul)
-        else ()
-            set(COMMANDS COMMAND cat ${PVS_STUDIO_PLOGS} ${PVS_STUDIO_PLOGS_LOGS} > "${PVS_STUDIO_LOG}")
-        endif ()
+            if (CMAKE_GENERATOR MATCHES "NMake")
+                set(COMMAND_TYPE_FILE "${CMAKE_BINARY_DIR}/PVSConcatAllLogs.cmd")
+
+                # The number of files that will be merged in one call to the type command
+                set(STEP_SIZE 30)
+                set(BEGIN 0)
+
+                list(APPEND PVS_STUDIO_PLOGS ${PVS_STUDIO_PLOGS_LOGS})
+                list(LENGTH PVS_STUDIO_PLOGS END)
+
+                # Creating a bat file to call the 'type' command
+                file(WRITE ${COMMAND_TYPE_FILE} "@echo off\nbreak > ${PVS_STUDIO_LOG}\n")
+
+                while(BEGIN LESS END)
+                    list(SUBLIST PVS_STUDIO_PLOGS ${BEGIN} ${STEP_SIZE} NEW_LIST)
+                    file(APPEND ${COMMAND_TYPE_FILE} "type ${NEW_LIST} >> ${PVS_STUDIO_LOG} 2>nul || cd .\n")
+                    math(EXPR BEGIN "${BEGIN} + ${STEP_SIZE}")
+                endwhile()
+
+                list(APPEND COMMANDS COMMAND call ${COMMAND_TYPE_FILE})
+            else()
+                set(COMMANDS COMMAND type ${PVS_STUDIO_PLOGS} ${PVS_STUDIO_PLOGS_LOGS} > "${PVS_STUDIO_LOG}" 2>nul || cd .)
+            endif()
+        else()
+            set(COMMANDS COMMAND cat ${PVS_STUDIO_PLOGS} ${PVS_STUDIO_PLOGS_LOGS} > "${PVS_STUDIO_LOG}" 2>/dev/null || true)
+        endif()
         set(COMMENT "Generating ${LOG_RELATIVE}")
         if (NOT "${PVS_STUDIO_FORMAT}" STREQUAL "" OR PVS_STUDIO_OUTPUT)
             if ("${PVS_STUDIO_FORMAT}" STREQUAL "")
-                set(PVS_STUDIO_FORMAT "errorfile")
-            endif ()
+              set(PVS_STUDIO_FORMAT "errorfile")
+            endif()
+            if (PVS_STUDIO_HIDE_HELP)
+              set(PVS_STUDIO_CONVERTER_ARGS ${PVS_STUDIO_CONVERTER_ARGS} --noHelpMessages)
+            endif()
+            if (PVS_STUDIO_OUTPUT)
+              set(PVS_STUDIO_CONVERTER_ARGS ${PVS_STUDIO_CONVERTER_ARGS} --stdout)
+            endif()
             list(APPEND COMMANDS
-                COMMAND "${CMAKE_COMMAND}" -E remove -f "${PVS_STUDIO_LOG}.pvs.raw"
-                COMMAND "${CMAKE_COMMAND}" -E rename "${PVS_STUDIO_LOG}" "${PVS_STUDIO_LOG}.pvs.raw"
-                COMMAND "${PVS_STUDIO_CONVERTER}" "${PVS_STUDIO_CONVERTER_ARGS}" -t "${PVS_STUDIO_FORMAT}" "${PVS_STUDIO_LOG}.pvs.raw" -o "${PVS_STUDIO_LOG}" -a "${PVS_STUDIO_MODE}"
-                )
-            if(NOT PVS_STUDIO_KEEP_COMBINED_PLOG)
+                 COMMAND "${CMAKE_COMMAND}" -E remove -f "${PVS_STUDIO_LOG}.pvs.raw"
+                 COMMAND "${CMAKE_COMMAND}" -E rename "${PVS_STUDIO_LOG}" "${PVS_STUDIO_LOG}.pvs.raw"
+                 COMMAND "${PVS_STUDIO_CONVERTER}" "${PVS_STUDIO_CONVERTER_ARGS}" -t "${PVS_STUDIO_FORMAT}" "${PVS_STUDIO_LOG}.pvs.raw" -o "${PVS_STUDIO_LOG}" -a "${PVS_STUDIO_MODE}")
+            if (NOT PVS_STUDIO_KEEP_COMBINED_PLOG)
                 list(APPEND COMMANDS COMMAND "${CMAKE_COMMAND}" -E remove -f "${PVS_STUDIO_LOG}.pvs.raw")
             endif()
-        endif ()
-    else ()
+        endif()
+    else()
         set(COMMANDS COMMAND "${CMAKE_COMMAND}" -E touch "${PVS_STUDIO_LOG}")
         set(COMMENT "Generating ${LOG_RELATIVE}: no sources found")
-    endif ()
+    endif()
 
-    if (WIN32)
+    if (CMAKE_HOST_WIN32)
         string(REPLACE / \\ PVS_STUDIO_LOG "${PVS_STUDIO_LOG}")
-    endif ()
+    endif()
 
-    add_custom_command(OUTPUT "${PVS_STUDIO_LOG}"
-                       ${COMMANDS}
-                       COMMENT "${COMMENT}"
-                       DEPENDS ${PVS_STUDIO_PLOGS} ${PVS_STUDIO_PLOGS_DEPENDENCIES}
-                       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    if (CMAKE_GENERATOR STREQUAL "Unix Makefiles")
+        get_filename_component(LOG_NAME ${LOG_RELATIVE} NAME)
+        set(LOG_TARGET "${PVS_STUDIO_TARGET}-${LOG_NAME}-log")
+        add_custom_target("${LOG_TARGET}"
+                          BYPRODUCTS "${PVS_STUDIO_LOG}"
+                          ${COMMANDS}
+                          COMMENT "${COMMENT}"
+                          DEPENDS ${PVS_STUDIO_PLOGS} ${PVS_STUDIO_PLOGS_DEPENDENCIES}
+                          WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    else()
+        set(LOG_TARGET "${PVS_STUDIO_LOG}")
+        add_custom_command(OUTPUT "${LOG_TARGET}"
+                           ${COMMANDS}
+                           COMMENT "${COMMENT}"
+                           DEPENDS ${PVS_STUDIO_PLOGS} ${PVS_STUDIO_PLOGS_DEPENDENCIES}
+                           WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    endif()
 
     if (PVS_STUDIO_ALL)
         set(ALL "ALL")
-    else ()
+    else()
         set(ALL "")
-    endif ()
+    endif()
 
-    if (PVS_STUDIO_OUTPUT)
-        if (PVS_STUDIO_HIDE_HELP AND NOT WIN32)
-            set(COMMANDS COMMAND grep -v " error: Help:" ${PVS_STUDIO_LOG} 1>&2 || exit 0)
-        elseif (WIN32)
-            set(COMMANDS COMMAND type "${PVS_STUDIO_LOG}" 1>&2)
-        else ()
-            set(COMMANDS COMMAND cat "${PVS_STUDIO_LOG}" 1>&2)
-        endif()
-    else ()
-        set(COMMANDS "")
-    endif ()
-
-    add_custom_target("${PVS_STUDIO_TARGET}" ${ALL} ${COMMANDS} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}" DEPENDS ${PVS_STUDIO_DEPENDS} "${PVS_STUDIO_LOG}")
+    add_custom_target("${PVS_STUDIO_TARGET}" ${ALL}
+                      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+                      DEPENDS ${PVS_STUDIO_DEPENDS} "${LOG_TARGET}")
 
     # A workaround to add implicit dependencies of source files from include directories
     set_target_properties("${PVS_STUDIO_TARGET}" PROPERTIES INCLUDE_DIRECTORIES "${inc_path}")
-endfunction ()
+
+    if ("${CMAKE_GENERATOR}" MATCHES "Visual Studio")
+        set(props_file "${CMAKE_BINARY_DIR}/${PVS_STUDIO_TARGET}.user.props")
+        file(WRITE "${props_file}" [=[
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+ <ImportGroup Label="PropertySheets">
+  <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+ </ImportGroup>
+ <ItemDefinitionGroup>
+  <CustomBuild>
+   <BuildInParallel>true</BuildInParallel>
+  </CustomBuild>
+ </ItemDefinitionGroup>
+</Project>
+]=])
+        set_target_properties("${PVS_STUDIO_TARGET}" PROPERTIES VS_USER_PROPS "${props_file}")
+    endif()
+endfunction()
