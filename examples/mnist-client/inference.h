@@ -16,7 +16,14 @@
  */
 struct InferenceResult
 {
+    /**
+     * @brief response creation step.
+     */
     size_t step_ = 0;
+
+    /**
+     * @brief spiking neurons indexes.
+     */
     std::vector<int> indexes_{};
 };
 
