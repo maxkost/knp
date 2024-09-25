@@ -22,24 +22,32 @@
 #include "visualize_network.h"
 
 
+// Namespace for program options.
 namespace po = boost::program_options;
 
 
+// Load network and show or run it depending on command line parameters.
+// On task=show loads a network and shows a subgraph of it.
+// On task=infer loads and runs network using data from a binary data file.
 int main(int argc, char **argv)
 {
     knp::core::UID output_uid;
     std::string task;
     std::string path_to_network, path_to_data;
     po::options_description options;
-    options.add_options()("help,h", "Produce help message")(
-        "task,t", po::value(&task), "Type of task: show, train, infer")(
+    options.add_options()("help,h", "Produce help message.")(
+        "task,t", po::value(&task), "Type of task: show, train, infer.")(
         "net-path,p", po::value(&path_to_network), "File or directory for network storage.")(
         "data-path,d", po::value(&path_to_data), "File for data storage.");
     po::variables_map options_map;
     po::store(po::parse_command_line(argc, argv, options), options_map);
     po::notify(options_map);
 
-    if (!options_map.count("net-path")) return 0;
+    if (!options_map.count("net-path"))
+    {
+        std::cout << "No \"net-path\" parameter required to load network. Stopping the program..." << std::endl;
+        return 0;
+    }
 
     if (task == "show")
     {
@@ -52,7 +60,7 @@ int main(int argc, char **argv)
         std::cout << "Loaded" << std::endl;
         print_network_description(NetworkGraph(network));
 
-        // Press ESC to exit or any key to iterate graph
+        // Press ESC to exit
         position_network_test(NetworkGraph(network), {0, 1, 2, 3, 4}, {1000, 700});
     }
 
