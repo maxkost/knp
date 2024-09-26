@@ -1,5 +1,5 @@
 /**
- * @file process_data.h
+ * @file process_data.cpp
  * @brief Functions to process a binary file.
  * @date 13.09.2024
  * @license Apache 2.0
