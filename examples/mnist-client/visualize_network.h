@@ -48,6 +48,10 @@ public:
         // cppcheck-suppress unusedStructMember
         size_t type_;
     };
+
+    /**
+     * @brief Nodes vector.
+     */
     std::vector<Node> nodes_;
 
     /**
@@ -89,6 +93,10 @@ public:
         // cppcheck-suppress unusedStructMember
         size_t type_;
     };
+
+    /**
+     * @brief Edges vector.
+     */
     std::vector<Edge> edges_;
 
     /**
