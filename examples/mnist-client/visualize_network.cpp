@@ -75,8 +75,13 @@ std::string get_name(const Entity &pop)
 }
 
 
+/*
+ * @brief Build network graph from a network.
+ * @param network source network for a graph.
+ */
 NetworkGraph::NetworkGraph(const knp::framework::Network &network)
 {
+    // Adding populations as nodes.
     for (const auto &pop : network.get_populations())
     {
         size_t pop_size = std::visit([](const auto &p) { return p.size(); }, pop);
@@ -84,6 +89,7 @@ NetworkGraph::NetworkGraph(const knp::framework::Network &network)
         nodes_.push_back(Node{pop_size, uid, get_name(pop), pop.index()});
     }
 
+    // Adding projections as edges.
     for (const auto &proj : network.get_projections())
     {
         size_t proj_size = std::visit([](const auto &p) { return p.size(); }, proj);
