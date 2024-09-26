@@ -10,8 +10,6 @@
 #include <filesystem>
 #include <vector>
 
-#include <opencv2/highgui.hpp>
-
 
 /**
  * @brief Read spike frames from grayscale file.

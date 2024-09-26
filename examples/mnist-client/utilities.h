@@ -1,12 +1,12 @@
 /**
  * @file utilities.h
  * @brief Utility functions for MNIST.
- * @author A. Vartenkov
  * @date 26.07.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
  */
 // TODO: Expand and split.
+
 #pragma once
 #include <vector>
 

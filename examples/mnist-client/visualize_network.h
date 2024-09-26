@@ -26,10 +26,25 @@ public:
      */
     struct Node
     {
+        /**
+         * @brief population size.
+         */
         // cppcheck-suppress unusedStructMember
         size_t size_;
+
+        /**
+         * @brief population UID.
+         */
         knp::core::UID uid_;
+
+        /**
+         * @brief population name.
+         */
         std::string name_;
+
+        /**
+         * @brief neuron type.
+         */
         // cppcheck-suppress unusedStructMember
         size_t type_;
     };
@@ -40,14 +55,37 @@ public:
      */
     struct Edge
     {
+        /**
+         * @brief projection size.
+         */
         // cppcheck-suppress unusedStructMember
         size_t size_;
+
+        /**
+         * @brief index of the source population.
+         */
         // cppcheck-suppress unusedStructMember
         int index_from_;
+
+        /**
+         * @brief index of the target population.
+         */
         // cppcheck-suppress unusedStructMember
         int index_to_;
+
+        /**
+         * @brief projection UID.
+         */
         knp::core::UID uid_;
+
+        /**
+         * @brief projection name.
+         */
         std::string name_;
+
+        /**
+         * @brief synapse type.
+         */
         // cppcheck-suppress unusedStructMember
         size_t type_;
     };
@@ -55,7 +93,7 @@ public:
 
     /**
      * @brief Build network graph from a network.
-     * @param network
+     * @param network source network for a graph.
      */
     explicit NetworkGraph(const knp::framework::Network &network);
 };

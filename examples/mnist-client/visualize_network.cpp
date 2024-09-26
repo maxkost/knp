@@ -25,17 +25,27 @@
 using AdjacencyList = std::vector<std::vector<size_t>>;
 
 
+// Parameters for network drawing
 struct DrawingParameters
 {
+    // Nodes will be drawn using this color.
     const cv::Scalar node_color{0, 0, 0};
+    // Background color.
     const cv::Scalar back_color{255, 255, 255};
+    // Graph edges color.
     const cv::Scalar edge_color{0, 0, 255};
+    // Size of a circular arrow pointing from a node to the same node.
     const int self_arrow_radius = 30;
+    // Node circle radius.
     const int node_radius = 10;
+    // Length of an arrow showing the projection target.
     const int arrow_len = 20;
+    // An arrow head is a triangle. Arrow width is back side length divided by 2 * arrow_len (1.0 for a right angle).
     const double arrow_width = 0.3;
+    // Minimal number of pixels between image edge and text.
     const int text_margin = 5;
 };
+
 
 template <class Entity>
 std::string get_name(const Entity &pop)
@@ -134,12 +144,14 @@ void draw_simple_arrow_line(
 }
 
 
-// TODO : draw graph of selected nodes, while all nodes not included there are considered external.
-// cv::Mat draw_subgraph(
-//    const AdjacencyList &adj_list, const AdjacencyList &rev_list, const std::vector<int> &nodes,
-//    const std::vector<cv::Point2i> &points, const cv::Size &img_size)
-
-
+/*
+ * @brief Draw edges between selected nodes.
+ * @param out_img output image matrix.
+ * @param adj_list adjacency list for the whole network.
+ * @param nodes indexes of the nodes that were selected.
+ * @param points node positions.
+ * @param params drawing parameters.
+ */
 void draw_edges(
     cv::Mat &out_img, const AdjacencyList &adj_list, const std::vector<int> &nodes,
     const std::vector<cv::Point2i> &points, const DrawingParameters &params)
@@ -173,11 +185,17 @@ void draw_edges(
 }
 
 
+/*
+ * @brief Draw graph with node names or identifiers.
+ * @param graph whole network graph.
+ * @param adj_list whole network adjacency list
+ */
 cv::Mat draw_annotated_subgraph(
     const NetworkGraph &graph, const AdjacencyList &adj_list, const std::vector<int> &nodes,
     const std::vector<cv::Point2i> &points, const std::vector<int> &inputs, const cv::Size &img_size,
     const DrawingParameters &params = DrawingParameters{})
 {
+    // TODO : draw graph of selected nodes, while all nodes not included there are considered external.
     cv::Mat out_img{img_size, CV_8UC3, params.back_color};
     // Draw inputs (black arrow from above)
     for (auto input : inputs)
@@ -407,12 +425,4 @@ std::vector<cv::Point2i> position_network(
     return vis_graph.scale_graph(screen_size, margin);
 }
 
-
-void draw_network(const NetworkGraph &graph, const cv::Size &screen_size, const DrawingParameters &params)
-{
-    // TODO : Draw all subgraphs, each in its own area
-    // Find number of subgraphs
-    // Divide screen into rectangles based on subgraph sizes (area ~ number of nodes? equally?)
-    // Draw a subgraph inside each rectangle
-    // Add up rectangles into a single image.
-}
+// TODO: draw network as a set of subgraphs.
