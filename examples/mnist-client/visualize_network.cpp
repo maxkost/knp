@@ -22,6 +22,7 @@
 
 #include "graph_physics.h"
 
+// Adjacency list is a representation of a graph where for each node there is a list of adjacent nodes.
 using AdjacencyList = std::vector<std::vector<size_t>>;
 
 
@@ -47,6 +48,9 @@ struct DrawingParameters
 };
 
 
+/*
+ * @brief Get entity name for any network object. If there is no name it's constructed from UID.
+ */
 template <class Entity>
 std::string get_name(const Entity &pop)
 {
@@ -97,9 +101,9 @@ NetworkGraph::NetworkGraph(const knp::framework::Network &network)
 }
 
 
-/**
+/*
  * Converts network graph into adjacency list form.
- * @param graph
+ * @param graph network graph built from Network object.
  * @return graph as an adjacency list (see https://en.wikipedia.org/wiki/Adjacency_list).
  * @note There is no input node in NetworkGraph, but an adjacency list must have one, it's the last node.
  */
