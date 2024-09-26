@@ -243,6 +243,7 @@ cv::Mat draw_annotated_subgraph(
  * @param points nodes coordinates.
  * @param inputs input nodes. The function draws a vertical black arrow if a node is connected to input.
  * @param img_size output image size.
+ * @param param graph drawing parameters.
  * @return image of a drawn subgraph.
  */
 cv::Mat draw_subgraph(
@@ -274,8 +275,11 @@ cv::Mat draw_subgraph(
     return out_img;
 }
 
-
-// Make a reverse adjacent list. It's used to quickly find "incoming" nodes.
+/*
+ * @brief Make a reverse adjacency list. It's used to quickly find "incoming" nodes.
+ * @param adj_list regular adjacency list.
+ * @return reversed adjacency list: each node has a list of nodes it is adjacent to.
+ */
 AdjacencyList make_reverse_list(const AdjacencyList &adj_list)
 {
     AdjacencyList rev_list;
@@ -287,8 +291,14 @@ AdjacencyList make_reverse_list(const AdjacencyList &adj_list)
     return rev_list;
 }
 
-
-// Finds an independent subgraph inside a larger graph.
+/*
+ * @brief Finds an independent subgraph inside a larger graph.
+ * @param adj_list adjacency list.
+ * @param rev_list reversed adjacency list, @see make_reverse_list
+ * @param remaining_nodes a set of nodes that are not currently in a subgraph.
+ * @param ignore_nodes indexes of nodes to ignore.
+ * @return a connected subgraph of nodes.
+ */
 std::vector<int> find_connected_set(
     const AdjacencyList &adj_list, const AdjacencyList &rev_list, std::unordered_set<int> &remaining_nodes,
     const std::unordered_set<int> &ignore_nodes = {})
@@ -329,7 +339,6 @@ std::vector<int> find_connected_set(
         processed_nodes.insert(curr_node);
     }
     for (int node_id : processed_nodes) remaining_nodes.erase(node_id);
-    // remaining_nodes.erase(processed_nodes.begin(), processed_nodes.end());
     std::vector<int> result;
     result.resize(processed_nodes.size());
     std::copy(processed_nodes.begin(), processed_nodes.end(), result.begin());
@@ -338,7 +347,10 @@ std::vector<int> find_connected_set(
 }
 
 
-// Find all independent components inside a graph.
+/*
+ * Find all independent components inside a graph.
+ * @param graph network graph.
+ */
 std::vector<std::vector<int>> divide_graph_by_connectivity(const NetworkGraph &graph)
 {
     AdjacencyList adj_list = build_adjacency_list(graph);
@@ -358,7 +370,12 @@ std::vector<std::vector<int>> divide_graph_by_connectivity(const NetworkGraph &g
 }
 
 
-// Prints a subset.
+/*
+ * @brief print network subset description.
+ * @param adj_list adjacency list, @see build_adjacency_list.
+ * @param rev_list reversed adjacency list, @see make_reverse_list
+ * @param nodes nodes from a connected subset, @see find_connected_set
+ */
 void print_connected_subset(
     const NetworkGraph &graph, const AdjacencyList &adj_list, const AdjacencyList &rev_list,
     const std::vector<int> &nodes)
@@ -378,7 +395,10 @@ void print_connected_subset(
 }
 
 
-// Prints all subsets.
+/*
+ * @brief Print all connected subsets descriptions.
+ * @param graph network graph.
+ */
 void print_network_description(const NetworkGraph &graph)
 {
     AdjacencyList adj_list = build_adjacency_list(graph);
@@ -392,7 +412,13 @@ void print_network_description(const NetworkGraph &graph)
 }
 
 
-// Draw a subgraph
+/*
+ * @brief Shows the process of subgraph adjustment.
+ * @param graph full network graph.
+ * @param nodes all nodes that are contained in a subgraph.
+ * @param screen_size output window size.
+ * @param margin margins size in pixels.
+ */
 void position_network_test(
     const NetworkGraph &graph, const std::vector<int> &nodes, const cv::Size &screen_size, int margin)
 {
@@ -419,7 +445,16 @@ void position_network_test(
     }
 }
 
-// Get node positions from Network Graph
+
+/*
+ * @brief Calculate positions of nodes.
+ * @param graph full network graph.
+ * @param nodes all nodes that are contained in a subgraph.
+ * @param screen_size output window size.
+ * @param margin margins size in pixels.
+ * @param num_iterations number of iterations for graph positioning algorithm.
+ * @return node coordinates.
+ */
 std::vector<cv::Point2i> position_network(
     const NetworkGraph &graph, const std::vector<int> &nodes, const cv::Size &screen_size, int margin,
     int num_iterations)
