@@ -243,7 +243,7 @@ cv::Mat draw_annotated_subgraph(
  * @param points nodes coordinates.
  * @param inputs input nodes. The function draws a vertical black arrow if a node is connected to input.
  * @param img_size output image size.
- * @param param graph drawing parameters.
+ * @param params graph drawing parameters.
  * @return image of a drawn subgraph.
  */
 cv::Mat draw_subgraph(
