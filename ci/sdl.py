@@ -166,12 +166,13 @@ def call_api(url: str, body: dict[str, str | dict[str, str]]) -> Any:
     return urllib.request.urlopen(req)
 
 
-def call_vulnbot_api() -> None:
+def call_vulnbot_api(make_call: bool) -> None:
     sdl_request = generate_sdl_request()
     sdl_api_url = os.getenv('SDL_API_URL')
     print(f'Calling SDL API: {sdl_api_url}\n{sdl_request}')
-    # resp = call_api(sdl_api_url, sdl_request)
-    # print(f'Returned code: {resp.getcode()}')
+    if make_call:
+        resp = call_api(sdl_api_url, sdl_request)
+        print(f'Returned code: {resp.getcode()}')
 
 
 if '__main__' == __name__:
@@ -180,6 +181,7 @@ if '__main__' == __name__:
     parser = argparse.ArgumentParser()
     parser.add_argument('--generate-artifacts', action='store_true', help='Generate SDL artifacts')
     parser.add_argument('--call-api', action='store_true', help='Call Vulnbot API')
+    parser.add_argument('--imitate-call', action='store_true', help='Don\'t call Vulnbot API, only imitate call')
     args = parser.parse_args()
 
     # RELEASE_NUMBER = get_release_number()
@@ -189,7 +191,7 @@ if '__main__' == __name__:
         generate_sdl_artifacts()
         work_completed = True
     if args.call_api:
-        call_vulnbot_api()
+        call_vulnbot_api(args.imitate_call)
         work_completed = True
     if not work_completed:
         raise ValueError('Set options!')
