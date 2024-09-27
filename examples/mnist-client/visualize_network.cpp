@@ -23,6 +23,7 @@
 #include "graph_physics.h"
 
 // Adjacency list is a representation of a graph where for each node there is a list of adjacent nodes.
+// see https://en.wikipedia.org/wiki/Adjacency_list
 using AdjacencyList = std::vector<std::vector<size_t>>;
 
 
@@ -48,9 +49,7 @@ struct DrawingParameters
 };
 
 
-/*
- * @brief Get entity name for any network object. If there is no name it's constructed from UID.
- */
+// Get entity name for any network object. If there is no name it's constructed from UID.
 template <class Entity>
 std::string get_name(const Entity &pop)
 {
@@ -75,10 +74,8 @@ std::string get_name(const Entity &pop)
 }
 
 
-/*
- * @brief Build network graph from a network.
- * @param network source network for a graph.
- */
+// Build network graph from a network.
+// @param network source network for a graph.
 NetworkGraph::NetworkGraph(const knp::framework::Network &network)
 {
     // Adding populations as nodes.
@@ -107,12 +104,10 @@ NetworkGraph::NetworkGraph(const knp::framework::Network &network)
 }
 
 
-/*
- * Converts network graph into adjacency list form.
- * @param graph network graph built from Network object.
- * @return graph as an adjacency list (see https://en.wikipedia.org/wiki/Adjacency_list).
- * @note There is no input node in NetworkGraph, but an adjacency list must have one, it's the last node.
- */
+// Converts network graph into adjacency list form.
+// @param graph network graph built from Network object.
+// @return graph as an adjacency list (see https://en.wikipedia.org/wiki/Adjacency_list).
+// @note There is no input node in NetworkGraph, but an adjacency list must have one, it's the last node.
 AdjacencyList build_adjacency_list(const NetworkGraph &graph)
 {
     AdjacencyList adj_list;
@@ -127,16 +122,14 @@ AdjacencyList build_adjacency_list(const NetworkGraph &graph)
 }
 
 
-/*
- * @brief Draws a line with an arrow that is much nicer than basic OpenCV arrow.
- * @param img image to be modified.
- * @param pt_from point to start the arrow from.
- * @param pt_to the point arrow points to.
- * @param len arrow length in pixels.
- * @param width arrow width as a fraction of arrow length.
- * @param margin shifts the arrow from the end of the line to the beginning by "margin" pixels.
- * @param color the color of both line and arrow.
- */
+// Draws a line with an arrow that is much nicer than basic OpenCV arrow.
+// @param img image to be modified.
+// @param pt_from point to start the arrow from.
+// @param pt_to the point arrow points to.
+// @param len arrow length in pixels.
+// @param width arrow width as a fraction of arrow length.
+// @param margin shifts the arrow from the end of the line to the beginning by "margin" pixels.
+// @param color the color of both line and arrow.
 void draw_simple_arrow_line(
     cv::Mat &img, const cv::Point2d &pt_from, const cv::Point2d &pt_to, int len, double width, int margin,
     const cv::Scalar &color)
@@ -154,14 +147,12 @@ void draw_simple_arrow_line(
 }
 
 
-/*
- * @brief Draw edges between selected nodes.
- * @param out_img output image matrix.
- * @param adj_list adjacency list for the whole network.
- * @param nodes indexes of the nodes that were selected.
- * @param points node positions.
- * @param params drawing parameters.
- */
+// Draw edges between selected nodes.
+// @param out_img output image matrix.
+// @param adj_list adjacency list for the whole network.
+// @param nodes indexes of the nodes that were selected.
+// @param points node positions.
+// @param params drawing parameters.
 void draw_edges(
     cv::Mat &out_img, const AdjacencyList &adj_list, const std::vector<int> &nodes,
     const std::vector<cv::Point2i> &points, const DrawingParameters &params)
@@ -195,11 +186,9 @@ void draw_edges(
 }
 
 
-/*
- * @brief Draw graph with node names or identifiers.
- * @param graph whole network graph.
- * @param adj_list whole network adjacency list
- */
+// Draw graph with node names or identifiers.
+// @param graph whole network graph.
+// @param adj_list whole network adjacency list.
 cv::Mat draw_annotated_subgraph(
     const NetworkGraph &graph, const AdjacencyList &adj_list, const std::vector<int> &nodes,
     const std::vector<cv::Point2i> &points, const std::vector<int> &inputs, const cv::Size &img_size,
@@ -242,16 +231,14 @@ cv::Mat draw_annotated_subgraph(
 }
 
 
-/*
- * @brief Draw connected subgraph. It shouldn't have any connections to the other parts of the graph, excluding inputs.
- * @param adj_list adjacency list of the whole graph.
- * @param nodes nodes that are part of the subgraph
- * @param points nodes coordinates.
- * @param inputs input nodes. The function draws a vertical black arrow if a node is connected to input.
- * @param img_size output image size.
- * @param params graph drawing parameters.
- * @return image of a drawn subgraph.
- */
+// Draw connected subgraph. It shouldn't have any connections to the other parts of the graph, excluding inputs.
+// @param adj_list adjacency list of the whole graph.
+// @param nodes nodes that are part of the subgraph
+// @param points nodes coordinates.
+// @param inputs input nodes. The function draws a vertical black arrow if a node is connected to input.
+// @param img_size output image size.
+// @param params graph drawing parameters.
+// @return image of a drawn subgraph.
 cv::Mat draw_subgraph(
     const AdjacencyList &adj_list, const std::vector<int> &nodes, const std::vector<cv::Point2i> &points,
     const std::vector<int> &inputs, const cv::Size &img_size, const DrawingParameters &params = DrawingParameters{})
@@ -281,11 +268,9 @@ cv::Mat draw_subgraph(
     return out_img;
 }
 
-/*
- * @brief Make a reverse adjacency list. It's used to quickly find "incoming" nodes.
- * @param adj_list regular adjacency list.
- * @return reversed adjacency list: each node has a list of nodes it is adjacent to.
- */
+// Make a reverse adjacency list. It's used to quickly find "incoming" nodes.
+// @param adj_list regular adjacency list.
+// @return reversed adjacency list: each node has a list of nodes it is adjacent to.
 AdjacencyList make_reverse_list(const AdjacencyList &adj_list)
 {
     AdjacencyList rev_list;
@@ -297,54 +282,53 @@ AdjacencyList make_reverse_list(const AdjacencyList &adj_list)
     return rev_list;
 }
 
-/*
- * @brief Finds an independent subgraph inside a larger graph.
- * @param adj_list adjacency list.
- * @param rev_list reversed adjacency list, @see make_reverse_list
- * @param remaining_nodes a set of nodes that are not currently in a subgraph.
- * @param ignore_nodes indexes of nodes to ignore.
- * @return a connected subgraph of nodes.
- */
+
+// Finds an independent subgraph inside a larger graph.
+// @param adj_list adjacency list.
+// @param rev_list reversed adjacency list, @see make_reverse_list
+// @param remaining_nodes a set of nodes that are not currently in a subgraph.
+// @param ignore_nodes indexes of nodes to ignore.
+// @return a connected subgraph of nodes.
 std::vector<int> find_connected_set(
     const AdjacencyList &adj_list, const AdjacencyList &rev_list, std::unordered_set<int> &remaining_nodes,
     const std::unordered_set<int> &ignore_nodes = {})
 {
-    int node = *remaining_nodes.begin();
+    auto cleaned_nodes = remaining_nodes;
+    for (const auto node : ignore_nodes) cleaned_nodes.erase(node);
+    if (cleaned_nodes.empty())
+    {
+        remaining_nodes = {};
+        return {};
+    }
+
+    // Select a node
+    int node = *cleaned_nodes.begin();
     std::unordered_set<int> processed_nodes;
     std::unordered_set<int> nonproc_nodes{node};
+    // Go through all of its connections and add nodes to the resulting set.
     while (!nonproc_nodes.empty())
     {
         int curr_node = *nonproc_nodes.begin();
-        const auto &out_nodes = adj_list[curr_node];
-        for (auto node_out : out_nodes)
+        for (const AdjacencyList &curr_list : {adj_list, rev_list})
         {
-            int n = static_cast<int>(node_out);
-            if (n == curr_node) continue;
-            if (processed_nodes.find(n) != processed_nodes.end()) continue;
-            if (ignore_nodes.find(n) != ignore_nodes.end())
+            // Add all the nodes a selected node is connected to.
+            const auto &out_nodes = curr_list[curr_node];
+            for (auto node_out : out_nodes)
             {
-                processed_nodes.insert(n);
-                continue;
+                int n = static_cast<int>(node_out);
+                if (n == curr_node) continue;
+                if (processed_nodes.find(n) != processed_nodes.end()) continue;  // Node has already been processed.
+                if (ignore_nodes.find(n) != ignore_nodes.end()) continue;        // Node is explicitly excluded.
+                nonproc_nodes.insert(n);
             }
-            nonproc_nodes.insert(n);
-        }
-        const auto &rev_nodes = rev_list[curr_node];
-        for (auto node_out : rev_nodes)
-        {
-            int n = static_cast<int>(node_out);
-            if (n == curr_node) continue;
-            if (processed_nodes.find(n) != processed_nodes.end()) continue;
-            if (ignore_nodes.find(n) != ignore_nodes.end())
-            {
-                // processed_nodes.insert(n);
-                continue;
-            }
-            nonproc_nodes.insert(n);
         }
         nonproc_nodes.erase(curr_node);
         processed_nodes.insert(curr_node);
     }
+
     for (int node_id : processed_nodes) remaining_nodes.erase(node_id);
+
+    // Return connected nodes as a sorted vector.
     std::vector<int> result;
     result.resize(processed_nodes.size());
     std::copy(processed_nodes.begin(), processed_nodes.end(), result.begin());
@@ -353,10 +337,8 @@ std::vector<int> find_connected_set(
 }
 
 
-/*
- * Find all independent components inside a graph.
- * @param graph network graph.
- */
+// Find all independent components inside a graph.
+// @param graph network graph.
 std::vector<std::vector<int>> divide_graph_by_connectivity(const NetworkGraph &graph)
 {
     AdjacencyList adj_list = build_adjacency_list(graph);
@@ -376,12 +358,10 @@ std::vector<std::vector<int>> divide_graph_by_connectivity(const NetworkGraph &g
 }
 
 
-/*
- * @brief print network subset description.
- * @param adj_list adjacency list, @see build_adjacency_list.
- * @param rev_list reversed adjacency list, @see make_reverse_list
- * @param nodes nodes from a connected subset, @see find_connected_set
- */
+// Print network subset description.
+// @param adj_list adjacency list, @see build_adjacency_list.
+// @param rev_list reversed adjacency list, @see make_reverse_list
+// @param nodes nodes from a connected subset, @see find_connected_set
 void print_connected_subset(
     const NetworkGraph &graph, const AdjacencyList &adj_list, const AdjacencyList &rev_list,
     const std::vector<int> &nodes)
@@ -401,10 +381,8 @@ void print_connected_subset(
 }
 
 
-/*
- * @brief Print all connected subsets descriptions.
- * @param graph network graph.
- */
+// Print all connected subsets descriptions.
+// @param graph network graph.
 void print_network_description(const NetworkGraph &graph)
 {
     AdjacencyList adj_list = build_adjacency_list(graph);
@@ -418,13 +396,11 @@ void print_network_description(const NetworkGraph &graph)
 }
 
 
-/*
- * @brief Shows the process of subgraph adjustment.
- * @param graph full network graph.
- * @param nodes all nodes that are contained in a subgraph.
- * @param screen_size output window size.
- * @param margin margins size in pixels.
- */
+// Shows the process of subgraph adjustment.
+// @param graph full network graph.
+// @param nodes all nodes that are contained in a subgraph.
+// @param screen_size output window size.
+// @param margin margins size in pixels.
 void position_network_test(
     const NetworkGraph &graph, const std::vector<int> &nodes, const cv::Size &screen_size, int margin)
 {
@@ -452,15 +428,13 @@ void position_network_test(
 }
 
 
-/*
- * @brief Calculate positions of nodes.
- * @param graph full network graph.
- * @param nodes all nodes that are contained in a subgraph.
- * @param screen_size output window size.
- * @param margin margins size in pixels.
- * @param num_iterations number of iterations for graph positioning algorithm.
- * @return node coordinates.
- */
+// Calculate positions of nodes.
+// @param graph full network graph.
+// @param nodes all nodes that are contained in a subgraph.
+// @param screen_size output window size.
+// @param margin margins size in pixels.
+// @param num_iterations number of iterations for graph positioning algorithm.
+// @return node coordinates.
 std::vector<cv::Point2i> position_network(
     const NetworkGraph &graph, const std::vector<int> &nodes, const cv::Size &screen_size, int margin,
     int num_iterations)

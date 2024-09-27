@@ -23,11 +23,9 @@
 namespace fs = std::filesystem;
 
 
-/*
- * @brief Visualize data instances.
- * @param data vector of flattened images.
- * @param size output image size.
- */
+// Visualize data instances.
+// @param data vector of flattened images.
+// @param size output image size.
 cv::Mat draw_data(const std::vector<unsigned char> &data, const cv::Size &size)
 {
     cv::Mat out_img(size, CV_8UC1);
@@ -45,12 +43,10 @@ cv::Mat draw_data(const std::vector<unsigned char> &data, const cv::Size &size)
 }
 
 
-/*
- * @brief Turn data frames to spikes.
- * @param buf data frame.
- * @param num_levels number of intensity levels that the original interval of 0-255 gets divided into.
- * @param num_frames all number of steps per data instance.
- */
+// Turn data frames to spikes.
+// @param buf data frame.
+// @param num_levels number of intensity levels that the original interval of 0-255 gets divided into.
+// @param num_frames all number of steps per data instance.
 std::vector<std::vector<bool>> image_to_spikes(std::vector<unsigned char> &buf, int num_levels, int num_frames_all)
 {
     double delta = 256.0 / num_levels;
@@ -67,11 +63,9 @@ std::vector<std::vector<bool>> image_to_spikes(std::vector<unsigned char> &buf, 
 }
 
 
-/*
- * @brief Read buffers from binary data file.
- * @param path_to_data path to file.
- * @param input_size data buffer length in bytes.
- */
+// Read buffers from binary data file.
+// @param path_to_data path to file.
+// @param input_size data buffer length in bytes.
 std::vector<std::vector<unsigned char>> read_images_from_file(const fs::path &path_to_data, size_t input_size)
 {
     std::ifstream file_stream(path_to_data, std::ios::binary);
@@ -88,16 +82,14 @@ std::vector<std::vector<unsigned char>> read_images_from_file(const fs::path &pa
 }
 
 
-/*
- * @brief Convert binary files to boolean vectors, one for each step. Only works for small datasets, such as MNIST.
- * @param path_to_data path to binary file.
- * @param input_size size of input buffer.
- * @param frames_per_image number of network steps per one image.
- * @param intensity_levels number of intensity levels.
- * @param skip how many images to skip.
- * @return vector of boolean frames, one per each network step.
- * @note For parameters @see image_to_spikes.
- */
+// Convert binary files to boolean vectors, one for each step. Only works for small datasets, such as MNIST.
+// @param path_to_data path to binary file.
+// @param input_size size of input buffer.
+// @param frames_per_image number of network steps per one image.
+// @param intensity_levels number of intensity levels.
+// @param skip how many images to skip.
+// @return vector of boolean frames, one per each network step.
+// @note For parameters @see image_to_spikes.
 std::vector<std::vector<bool>> read_spikes_from_grayscale_file(
     const fs::path &path_to_data, size_t input_size, int frames_per_image, int intensity_levels, size_t skip)
 {
