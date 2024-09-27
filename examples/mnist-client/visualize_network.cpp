@@ -322,6 +322,7 @@ std::vector<int> find_connected_set(
                 nonproc_nodes.insert(n);
             }
         }
+        // Move current node from unprocessed to processed.
         nonproc_nodes.erase(curr_node);
         processed_nodes.insert(curr_node);
     }
