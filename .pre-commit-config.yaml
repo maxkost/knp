@@ -147,11 +147,11 @@ repos:
     rev: "v3.0.0a7"  # pylint-2.14.5
     hooks:
       - id: pylint
-        args: ["-rn", "-sn", "--rcfile=knp/.pylintrc", "--fail-on=I", "--load-plugins=pylint.extensions.docparams"]
+        args: ["-rn", "-sn", "--rcfile=knp/python-framework/packaging/common/.pylintrc", "--fail-on=I", "--load-plugins=pylint.extensions.docparams"]
         exclude: tests(/\w*)*/functional/|tests/input|tests(/\w*)*data/|doc/
       - id: pylint
         alias: pylint-with-spelling
-        args: ["-rn", "-sn", "--rcfile=knp/.pylintrc", "--fail-on=I", "--spelling-dict=en,ru"]
+        args: ["-rn", "-sn", "--rcfile=knp/python-framework/packaging/common/.pylintrc", "--fail-on=I", "--spelling-dict=en,ru"]
         exclude: tests(/\w*)*/functional/|tests/input|tests(/\w*)*data/|doc/
         stages: [manual]
   - repo: https://github.com/PyCQA/flake8
@@ -223,11 +223,12 @@ repos:
         exclude: ".*fixtures"
 
 
-  - repo: https://github.com/pycqa/isort
-    rev: 5.12.0
-    hooks:
-      - id: isort
-        args: ["--line-length", "120"]
+# Conflicts with Black.
+#  - repo: https://github.com/pycqa/isort
+#    rev: 5.12.0
+#    hooks:
+#      - id: isort
+#        args: ["--line-length", "120"]
 
 #      - id: tests
 #        name: tests

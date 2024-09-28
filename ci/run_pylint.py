@@ -74,7 +74,13 @@ if len(sys.argv) < 3:
     sys.exit(1)
 
 SCRIPT_DIR = Path(__file__).parent.absolute()
+
 PROJECT_DIR = WORKING_DIR = Path(sys.argv[1])
+RC_FILE = PROJECT_DIR / '.pylintrc'
+
+if not RC_FILE.exists():
+    RC_FILE = PROJECT_DIR.parent / '.pylintrc'
+
 PYLINT_DIR = 'pylint_report'
 PYLINT_PATH = Path(sys.argv[2]) / PYLINT_DIR
 PYLINT_REPORT_FILE = PYLINT_PATH / 'pylint-report.txt'
@@ -84,7 +90,7 @@ PYLINT_PATH.mkdir(exist_ok=True, parents=True)
 sys.exit = ExitSuppressor.exit_function
 
 os.environ['PYTHON_PATH'] = f'{WORKING_DIR}:{os.environ.get("PYTHON_PATH", "")}'
-argv = sys.argv[1:] + [f'--rcfile={PROJECT_DIR / ".pylintrc"}', '--exit-zero', str(WORKING_DIR)]
+argv = sys.argv[1:] + [f'--rcfile={RC_FILE}', '--exit-zero', str(WORKING_DIR)]
 
 suppressors = get_pylint_suppressors(WORKING_DIR)
 
