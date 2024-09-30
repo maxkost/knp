@@ -330,7 +330,7 @@ set(CPACK_PACKAGE_VERSION_PATCH ${CMAKE_PROJECT_VERSION_PATCH})
 set(CPACK_PACKAGE_VENDOR "AO Kaspersky Lab")
 
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Artiom N.")
-SET(CPACK_PACKAGE_CONTACT "support@kaspersky.com")
+set(CPACK_PACKAGE_CONTACT "support@kaspersky.com")
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${CMAKE_PROJECT_DESCRIPTION}"
         CACHE STRING "Package description for the package metadata")
