@@ -15,6 +15,7 @@
 #include <knp/framework/network.h>
 #include <knp/framework/sonata/network_io.h>
 
+#include <string>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -42,23 +43,56 @@ auto make_input_image_generator(const std::vector<std::vector<bool>> &spike_fram
 }
 
 
-std::vector<knp::core::UID> find_inputs(
+// A general function to find a specific projection, using a criterion.
+std::vector<knp::core::UID> find_projections(
     const knp::framework::Network &network,
-    const std::function<bool(const knp::core::AllProjectionsVariant &)> &is_input)
+    const std::function<bool(const knp::core::AllProjectionsVariant &)> &criterion)
 {
     std::vector<knp::core::UID> uids;
     for (const auto &proj : network.get_projections())
     {
-        if (is_input(proj)) uids.push_back(std::visit([](const auto &p) { return p.get_uid(); }, proj));
+        if (criterion(proj)) uids.push_back(std::visit([](const auto &p) { return p.get_uid(); }, proj));
     }
     return uids;
 }
 
 
-// Do MNIST inference using binary data file and csv model. See function description in inference.h.
+// Make an observer function that outputs resulting spikes to terminal.
+auto make_observer_function(std::vector<InferenceResult> &result)
+{
+    auto observer_func = [&result](const std::vector<knp::core::messaging::SpikeMessage> &messages)
+    {
+        if (messages.empty() || messages[0].neuron_indexes_.empty()) return;
+        InferenceResult result_buf;
+        result_buf.step_ = messages[0].header_.send_time_;
+        for (auto index : messages[0].neuron_indexes_)
+        {
+            std::cout << index << " ";
+            result_buf.indexes_.push_back(index);
+        }
+        result.push_back(result_buf);
+        std::cout << std::endl;
+    };
+    return observer_func;
+}
+
+
+// Read image dataset from a binary file to a vector of boolean frames.
+std::vector<std::vector<bool>> read_spike_frames(const std::string &path_to_data)
+{
+    // Image-to-spikes conversion parameters.
+    constexpr int intensity_levels = 10;
+    constexpr int frames_per_image = 20;
+    constexpr size_t input_size = 28 * 28;
+    constexpr size_t skip = 0;
+    return read_spikes_from_grayscale_file(path_to_data, input_size, frames_per_image, intensity_levels, skip);
+}
+
+
+// Do MNIST inference using binary data file and sonata model. See function description in inference.h.
 std::vector<InferenceResult> do_inference(
     const std::filesystem::path &path_to_model, const std::filesystem::path &path_to_data,
-    const std::filesystem::path &path_to_backend, int last_step)
+    const std::filesystem::path &path_to_backend)
 {
     std::vector<std::pair<knp::core::UID, size_t>> input_uids;
     knp::framework::Network network = knp::framework::sonata::load_network(path_to_model);
@@ -76,14 +110,11 @@ std::vector<InferenceResult> do_inference(
 
     // The largest projection is the input image projection. These are numbers for a specific MNIST model.
     constexpr size_t img_input_size = 117600;
-    constexpr size_t output_population_size = 10;
-
     auto is_input = [](const knp::core::AllProjectionsVariant &proj)
     { return std::visit([](const auto &p) { return p.size(); }, proj) == img_input_size; };
 
-    std::vector<knp::core::UID> input_image_projection_uids = find_inputs(model.get_network(), is_input);
+    std::vector<knp::core::UID> input_image_projection_uids = find_projections(model.get_network(), is_input);
     if (input_image_projection_uids.empty()) throw std::runtime_error("Wrong model file: model doesn't have inputs");
-
 
     // Add input channel for each input projection that accepts an image.
     std::vector<knp::core::UID> input_image_channel_uids(input_image_projection_uids.size());
@@ -92,23 +123,8 @@ std::vector<InferenceResult> do_inference(
         model.add_input_channel(input_image_channel_uids[i], input_image_projection_uids[i]);
     }
 
-    // Image-to-spikes conversion parameters.
-    constexpr int intensity_levels = 10;
-    constexpr int frames_per_image = 20;
-    constexpr size_t input_size = 28 * 28;
-    constexpr size_t skip = 0;
-    auto spike_frames =
-        read_spikes_from_grayscale_file(path_to_data, input_size, frames_per_image, intensity_levels, skip);
-    if (last_step > 0 && last_step < spike_frames.size())
-    {
-        spike_frames.resize(last_step);
-        spike_frames.shrink_to_fit();
-    }
-    else
-        last_step = spike_frames.size();
-
+    auto spike_frames = read_spike_frames(path_to_data);
     knp::framework::ModelLoader::InputChannelMap channel_map;
-
     for (auto img_channel_uid : input_image_channel_uids)
         channel_map.insert({img_channel_uid, make_input_image_generator(spike_frames)});
 
@@ -117,6 +133,7 @@ std::vector<InferenceResult> do_inference(
     std::vector<InferenceResult> result;
 
     // Find output populations.
+    constexpr size_t output_population_size = 10;
     std::vector<knp::core::UID> output_populations;
     for (const auto &pop : model.get_network().get_populations())
     {
@@ -124,30 +141,15 @@ std::vector<InferenceResult> do_inference(
             output_populations.push_back(std::visit([](const auto &p) { return p.get_uid(); }, pop));
     }
 
-    // Make an observer function that outputs resulting spikes to terminal.
-    auto observer_func = [&result](const std::vector<knp::core::messaging::SpikeMessage> &messages)
-    {
-        if (messages.empty() || messages[0].neuron_indexes_.empty()) return;
-        InferenceResult result_buf;
-        result_buf.step_ = messages[0].header_.send_time_;
-        for (auto index : messages[0].neuron_indexes_)
-        {
-            std::cout << index << " ";
-            result_buf.indexes_.push_back(index);
-        }
-        result.push_back(result_buf);
-        std::cout << std::endl;
-    };
-
     // Add observer.
-    model_executor.add_observer<knp::core::messaging::SpikeMessage>(observer_func, output_populations);
+    model_executor.add_observer<knp::core::messaging::SpikeMessage>(make_observer_function(result), output_populations);
 
     // Start model.
     model_executor.start(
-        [last_step](size_t step)
+        [&spike_frames](size_t step)
         {
             if (step % 20 == 0) std::cout << "Step: " << step << std::endl;
-            return step != last_step;
+            return step != spike_frames.size();
         });
     return result;
 }

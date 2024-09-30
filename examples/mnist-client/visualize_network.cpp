@@ -442,7 +442,8 @@ std::vector<cv::Point2i> position_network(
 {
     VisualGraph vis_graph(nodes, build_adjacency_list(graph));
     vis_graph.iterate(num_iterations);
-    return vis_graph.scale_graph(screen_size, margin);
+    auto result = vis_graph.scale_graph(screen_size, margin);
+    return result;
 }
 
 // TODO: draw network as a set of subgraphs.

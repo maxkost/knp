@@ -43,8 +43,8 @@ int main(int argc, char **argv)
 
     if (!options_map.count("net-path"))
     {
-        std::cout << "No \"net-path\" parameter required to load network. Stopping the program..." << std::endl;
-        return 0;
+        std::cerr << "No \"net-path\" parameter required to load network. Stopping the program..." << std::endl;
+        return EXIT_FAILURE;
     }
 
     if (task == "show")
@@ -64,4 +64,6 @@ int main(int argc, char **argv)
         do_inference(
             options_map["net-path"].as<std::string>(), options_map["data-path"].as<std::string>(), path_to_backend);
     }
+
+    return EXIT_SUCCESS;
 }
