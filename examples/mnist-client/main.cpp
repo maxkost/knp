@@ -13,12 +13,10 @@
 #include <knp/framework/sonata/network_io.h>
 
 #include <iostream>
-#include <vector>
 
 #include <boost/program_options.hpp>
 
 #include "inference.h"
-#include "load_from_csv.h"
 #include "visualize_network.h"
 
 
@@ -51,17 +49,12 @@ int main(int argc, char **argv)
 
     if (task == "show")
     {
-        std::vector<std::pair<knp::core::UID, size_t>> input_uids;
-        knp::framework::Network network =
-            create_network_from_monitoring_file(options_map["net-path"].as<std::string>(), 0, {}, input_uids);
-
-        std::filesystem::create_directory("mnist_network");
-        knp::framework::sonata::save_network(network, "mnist_network");
-        std::cout << "Loaded" << std::endl;
-        print_network_description(NetworkGraph(network));
-
+        const auto network_path = options_map["net-path"].as<std::string>();
+        knp::framework::Network network = knp::framework::sonata::load_network(network_path);
+        const NetworkGraph net_graph(network);
+        print_network_description(net_graph);
         // Press ESC to exit
-        position_network_test(NetworkGraph(network), {0, 1, 2, 3, 4}, {1000, 700});
+        position_network_test(NetworkGraph(network), divide_graph_by_connectivity(net_graph)[0], {1000, 700});
     }
 
     if (task == "infer")
@@ -69,7 +62,6 @@ int main(int argc, char **argv)
         std::filesystem::path path_to_backend =
             std::filesystem::path(argv[0]).parent_path() / "knp-cpu-single-threaded-backend";
         do_inference(
-            options_map["net-path"].as<std::string>(), options_map["data-path"].as<std::string>(), path_to_backend,
-            1200000);
+            options_map["net-path"].as<std::string>(), options_map["data-path"].as<std::string>(), path_to_backend);
     }
 }

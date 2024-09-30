@@ -13,12 +13,12 @@
 #include <knp/framework/model_executor.h>
 #include <knp/framework/monitoring/observer.h>
 #include <knp/framework/network.h>
+#include <knp/framework/sonata/network_io.h>
 
 #include <unordered_map>
 #include <utility>
 #include <vector>
 
-#include "load_from_csv.h"
 #include "process_data.h"
 
 
@@ -42,15 +42,26 @@ auto make_input_image_generator(const std::vector<std::vector<bool>> &spike_fram
 }
 
 
+std::vector<knp::core::UID> find_inputs(
+    const knp::framework::Network &network,
+    const std::function<bool(const knp::core::AllProjectionsVariant &)> &is_input)
+{
+    std::vector<knp::core::UID> uids;
+    for (const auto &proj : network.get_projections())
+    {
+        if (is_input(proj)) uids.push_back(std::visit([](const auto &p) { return p.get_uid(); }, proj));
+    }
+    return uids;
+}
+
+
 // Do MNIST inference using binary data file and csv model. See function description in inference.h.
 std::vector<InferenceResult> do_inference(
     const std::filesystem::path &path_to_model, const std::filesystem::path &path_to_data,
-    const std::filesystem::path &path_to_backend, int tact, int last_step)
+    const std::filesystem::path &path_to_backend, int last_step)
 {
-    knp::core::UID output_uid;
     std::vector<std::pair<knp::core::UID, size_t>> input_uids;
-
-    knp::framework::Network network = create_network_from_monitoring_file(path_to_model, tact, {}, input_uids);
+    knp::framework::Network network = knp::framework::sonata::load_network(path_to_model);
 
     // Make a list of all populations and their sizes
     std::unordered_map<knp::core::UID, size_t, knp::core::uid_hash> population_sizes;
@@ -63,21 +74,16 @@ std::vector<InferenceResult> do_inference(
 
     knp::framework::Model model(std::move(network));
 
-    if (input_uids.empty()) throw std::runtime_error("Wrong model file: model doesn't have inputs");
-
-    std::vector<knp::core::UID> input_image_projection_uids;
-
     // The largest projection is the input image projection. These are numbers for a specific MNIST model.
     constexpr size_t img_input_size = 117600;
     constexpr size_t output_population_size = 10;
 
-    for (const auto &v : input_uids)
-    {
-        if (v.second == img_input_size)
-        {
-            input_image_projection_uids.push_back(v.first);
-        }
-    }
+    auto is_input = [](const knp::core::AllProjectionsVariant &proj)
+    { return std::visit([](const auto &p) { return p.size(); }, proj) == img_input_size; };
+
+    std::vector<knp::core::UID> input_image_projection_uids = find_inputs(model.get_network(), is_input);
+    if (input_image_projection_uids.empty()) throw std::runtime_error("Wrong model file: model doesn't have inputs");
+
 
     // Add input channel for each input projection that accepts an image.
     std::vector<knp::core::UID> input_image_channel_uids(input_image_projection_uids.size());

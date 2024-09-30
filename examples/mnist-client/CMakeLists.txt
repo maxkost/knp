@@ -21,7 +21,6 @@ add_executable(MnistExample
     main.cpp
     graph_physics.cpp
     inference.cpp
-    load_from_csv.cpp
     process_data.cpp
     visualize_network.cpp
 )

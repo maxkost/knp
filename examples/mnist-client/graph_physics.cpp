@@ -10,6 +10,7 @@
 
 #include <algorithm>
 #include <limits>
+#include <unordered_map>
 #include <utility>
 
 #include <opencv2/core.hpp>
@@ -19,14 +20,19 @@
 VisualGraph::VisualGraph(const std::vector<int> &nodes, const std::vector<std::vector<size_t>> &adj_list)
     : base_graph_(adj_list)
 {
-    edges_mat_.resize(base_graph_.size());
-    for (auto &edge : edges_mat_) edge.resize(base_graph_.size());
-
+    std::unordered_map<size_t, size_t> point_by_original_index;
     for (size_t i = 0; i < nodes.size(); ++i)
     {
         PhysicsPoint point{nodes[i], {cv::randu<double>(), cv::randu<double>()}, {0.0, 0.0}};
         points_.push_back(std::move(point));
-        for (auto n : adj_list[i]) edges_mat_[i][n] = true;
+        point_by_original_index.insert({points_[i].index_, i});
+    }
+
+    edges_mat_.resize(nodes.size());
+    for (auto &edge : edges_mat_) edge.resize(nodes.size());
+    for (size_t i = 0; i < nodes.size(); ++i)
+    {
+        for (size_t index : adj_list[points_[i].index_]) edges_mat_[i][point_by_original_index[index]] = true;
     }
 }
 

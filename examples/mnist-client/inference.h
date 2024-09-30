@@ -39,4 +39,4 @@ struct InferenceResult
  */
 std::vector<InferenceResult> do_inference(
     const std::filesystem::path &path_to_model, const std::filesystem::path &path_to_data,
-    const std::filesystem::path &path_to_backend, int tact, int last_step = -1);
+    const std::filesystem::path &path_to_backend, int last_step = -1);
