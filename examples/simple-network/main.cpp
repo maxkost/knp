@@ -92,7 +92,7 @@ int main(int argc, const char *const argv[])
             s.push_back(0);
             return s;
         }
-        return knp::core::messaging::SpikeData();
+        return {};
     };
 
     // Specifies the path to the required dynamic backend library on your computer.
