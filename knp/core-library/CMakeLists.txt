@@ -12,7 +12,7 @@ project(knp-core VERSION "${KNP_VERSION}" LANGUAGES C CXX
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 if(NOT TARGET Boost::headers)
-    find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
+    find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED CONFIG)
 endif()
 
 if(NOT TARGET cppzmq)

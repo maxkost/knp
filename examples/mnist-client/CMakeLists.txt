@@ -10,7 +10,7 @@ if (NOT OpenCV_FOUND)
 endif()
 include_directories (${OpenCV_INCLUDE_DIRS})
 
-find_package(Boost COMPONENTS program_options REQUIRED)
+find_package(Boost COMPONENTS program_options REQUIRED CONFIG)
 
 if (NOT TARGET KNP::BaseFramework::Core)
     find_package(knp-base-framework REQUIRED)

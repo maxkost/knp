@@ -81,7 +81,7 @@ if (Boost_ROOT)  # WIN32?
 endif()
 
 # set(Boost_DEBUG ON)
-find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED CONFIG)
 
 if (MSVC)
     message(STATUS "Adding \"${BOOST_LIBRARYDIR}\" to LIBPATH")

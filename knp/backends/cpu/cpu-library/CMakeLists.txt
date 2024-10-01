@@ -8,7 +8,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp-cpu-backends-library VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 
-find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED CONFIG)
 
 include(clang-tidy)
 include(knp-functions)

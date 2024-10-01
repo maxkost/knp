@@ -26,7 +26,7 @@ if (Boost_ROOT)
 endif()
 
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
-find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS python)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS python CONFIG)
 
 if (NOT BOOST_PYTHON_FOUND)
     file(GLOB _KNP_PY_VER "${BOOST_LIBRARYDIR}/*boost_python*.[lib|a]")
@@ -34,7 +34,7 @@ if (NOT BOOST_PYTHON_FOUND)
         list(GET _KNP_PY_VER 0 _KNP_PY_VER)
         string(REGEX REPLACE ".+python([0-9]+).*[\n\r]*" "\\1" _KNP_PY_VER "${_KNP_PY_VER}")
     endif()
-    find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS python${_KNP_PY_VER} REQUIRED)
+    find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS python${_KNP_PY_VER} REQUIRED CONFIG)
 endif()
 
 include(knp-functions)

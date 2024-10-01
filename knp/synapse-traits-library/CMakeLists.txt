@@ -12,7 +12,7 @@ project(knp-synapse-traits VERSION "${KNP_VERSION}" LANGUAGES C CXX
 
 include(knp-functions)
 
-find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED CONFIG)
 
 set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/synapse-traits")
 

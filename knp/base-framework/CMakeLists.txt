@@ -13,7 +13,7 @@ project(knp-base-framework VERSION "${KNP_VERSION}" LANGUAGES C CXX
 
 set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/framework")
 
-find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS filesystem REQUIRED)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS filesystem REQUIRED CONFIG)
 
 include(GNUInstallDirs)
 include(knp-functions)
