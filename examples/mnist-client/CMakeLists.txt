@@ -8,9 +8,13 @@ if (NOT OpenCV_FOUND)
     message(WARNING "OpenCV not found, skipping MNIST example...")
     return()
 endif()
-include_directories (${OpenCV_INCLUDE_DIRS})
 
-find_package(Boost COMPONENTS program_options REQUIRED CONFIG)
+include_directories(${OpenCV_INCLUDE_DIRS})
+
+# Suppress Boost warning.
+cmake_policy(SET CMP0167 OLD)
+
+find_package(Boost COMPONENTS program_options REQUIRED)
 
 if (NOT TARGET KNP::BaseFramework::Core)
     find_package(knp-base-framework REQUIRED)
