@@ -14,7 +14,7 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 # Suppress Boost warning.
 cmake_policy(SET CMP0167 OLD)
 
-find_package(Boost COMPONENTS program_options REQUIRED)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS program_options REQUIRED)
 
 if (NOT TARGET KNP::BaseFramework::Core)
     find_package(knp-base-framework REQUIRED)
