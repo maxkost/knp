@@ -3,11 +3,13 @@
  * @brief Output channel class.
  * @author Vartenkov Andrey.
  * @date 01.06.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/framework/io/output_channel.h>
 
-namespace knp::framework::output
+namespace knp::framework::io::output
 {
 auto comp_lower(const core::messaging::SpikeMessage &message, core::Step step)
 {
@@ -43,7 +45,7 @@ std::vector<core::messaging::SpikeMessage> OutputChannel::read_some_from_buffer(
     std::vector<core::messaging::SpikeMessage> result;
 
     result.reserve(starting_step + final_step + 1);
-    // Here we suppose that buffer is sorted by sending step as it should be
+    // Here we assume that buffer is sorted.
     auto begin_iter = std::lower_bound(message_buffer_.begin(), message_buffer_.end(), starting_step, comp_lower);
     auto end_iter = std::upper_bound(message_buffer_.begin(), message_buffer_.end(), final_step, comp_upper);
 
@@ -52,4 +54,4 @@ std::vector<core::messaging::SpikeMessage> OutputChannel::read_some_from_buffer(
     return result;
 }
 
-}  // namespace knp::framework::output
+}  // namespace knp::framework::io::output

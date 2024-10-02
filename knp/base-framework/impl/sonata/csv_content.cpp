@@ -3,6 +3,8 @@
  * @brief CSV helper file.
  * @author An. Vartenkov
  * @date 22.03.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include "csv_content.h"
@@ -12,10 +14,10 @@ namespace knp::framework::sonata
 {
 CsvContent load_csv_content(const fs::path &csv_path)
 {
-    if (!is_regular_file(csv_path)) throw std::runtime_error(csv_path.string() + " doesn't exist!");
+    if (!is_regular_file(csv_path)) throw std::runtime_error("\"" + csv_path.string() + "\" does not exist.");
     csv2::Reader<
         csv2::delimiter<' '>, csv2::quote_character<'"'>, csv2::first_row_is_header<true>,
-        csv2::trim_policy::no_trimming>
+        csv2::trim_policy::trim_characters<'\r'>>
         csv_reader;
     csv_reader.mmap(csv_path.string());
     const auto csv_header = csv_reader.header();

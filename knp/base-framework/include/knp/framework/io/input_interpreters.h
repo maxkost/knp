@@ -3,6 +3,8 @@
  * @brief Header for input interpreter.
  * @author Vartenkov Andrey
  * @date 31.06.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 
@@ -10,7 +12,7 @@
 /**
  * @brief Input channel namespace.
  */
-namespace knp::framework::input
+namespace knp::framework::io::input
 {
 /**
  * @brief Determine if an input value is a spike and convert an input value to boolean.
@@ -38,4 +40,4 @@ auto interpret_with_threshold(ValueType threshold)
     return [threshold](ValueType val) -> bool { return !(val < threshold); };
 }
 
-}  // namespace knp::framework::input
+}  // namespace knp::framework::io::input

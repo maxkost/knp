@@ -3,6 +3,8 @@
  * @brief STDP internal common templates.
  * @author Artiom N.
  * @date 09.08.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -18,7 +20,7 @@ namespace knp::synapse_traits
 {
 
 /**
- * @brief Common template for the all STDP implementations. 
+ * @brief Common template for the all STDP implementations.
  * @note It defines a synapse type that can be used as a wrapper over a base synapse.
  * @tparam Rule type of learning rule that is applied to the base synapse. See `STDPSynapticResourceRule`.
  * @tparam Synapse type of base synapse.

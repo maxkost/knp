@@ -3,6 +3,8 @@
  * @brief Thread pool executor class implementation.
  * @author Vartenkov A.
  * @date 08.08.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #include <knp/backends/thread_pool/thread_pool_context.h>
 

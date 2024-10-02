@@ -3,8 +3,9 @@
  * @brief Test saving and building networks.
  * @author A. Vartenkov
  * @date 22.03.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
-
 
 #include <knp/core/projection.h>
 #include <knp/framework/sonata/network_io.h>
@@ -16,7 +17,7 @@
 knp::framework::Network make_simple_network()
 {
     namespace kt = knp::testing;
-    // Create a single neuron network: input -> input_projection -> population <=> loop_projection
+    // Create a single-neuron neural network: input -> input_projection -> population <=> loop_projection.
     kt::BLIFATPopulation population{kt::neuron_generator, 1};
     knp::core::Projection<knp::synapse_traits::DeltaSynapse> loop_projection =
         kt::DeltaProjection{population.get_uid(), population.get_uid(), kt::synapse_generator, 1};
@@ -64,7 +65,7 @@ knp::core::UID get_uid(const Entity &entity)
 }
 
 
-// not efficient, doesn't matter.
+// This isn't efficient, but it doesn't matter.
 template <class Content>
 bool compare_container_contents(const Content &cont1, const Content &cont2, const knp::core::UID &uid)
 {
@@ -74,12 +75,12 @@ bool compare_container_contents(const Content &cont1, const Content &cont2, cons
     size_t size1 = std::visit([](auto &vec) { return vec.size(); }, *iter1);
     size_t size2 = std::visit([](auto &vec) { return vec.size(); }, *iter2);
     if (size1 != size2 || iter1->index() != iter2->index()) return false;
-    // TODO: It would be nice to compare the contents, but parameter comparison is not yet implemented (1.04.24)
+    // TODO: It would be nice to compare the contents, but parameter comparison is not yet implemented (1.04.24).
     return true;
 }
 
 
-// Comparing population vectors without taking order into account.
+// Compare population vectors without taking order into account.
 template <class Container>
 bool are_similar_containers(const Container &container_1, const Container &container_2)
 {

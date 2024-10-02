@@ -1,8 +1,10 @@
 /**
  * @file delta_synapse_projection.h
- * @brief Common templates for Delta synapse projection.
+ * @brief Common templates for delta synapse projection.
  * @author A. Vartenkov
  * @date 07.11.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 #include <knp/backends/cpu-library/impl/delta_synapse_projection_impl.h>
@@ -14,7 +16,7 @@
 namespace knp::backends::cpu
 {
 /**
- * @brief Make one execution step for a projection of Delta synapses.
+ * @brief Make one execution step for a projection of delta synapses.
  * @tparam DeltaLikeSynapseType type of a synapse that requires synapse weight and delay as parameters.
  * @param projection projection to update.
  * @param endpoint message endpoint used for message exchange.

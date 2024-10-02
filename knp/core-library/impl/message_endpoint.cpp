@@ -3,6 +3,8 @@
  * @brief Message bus implementation.
  * @author Artiom N.
  * @date 21.02.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/message_endpoint.h>
@@ -109,7 +111,7 @@ void MessageEndpoint::remove_receiver(const UID &receiver)
 void MessageEndpoint::send_message(const knp::core::messaging::MessageVariant &message)
 {
     SPDLOG_TRACE(
-        "Sending message from the {}, index = {}...", std::string(get_header(message).sender_uid_), message.index());
+        "Sending message from {}, index = {}...", std::string(get_header(message).sender_uid_), message.index());
     impl_->send_message(message);
 }
 
@@ -121,14 +123,14 @@ bool MessageEndpoint::receive_message()
     auto message_opt = impl_->receive_message();
     if (!message_opt.has_value())
     {
-        SPDLOG_TRACE("No message received");
+        SPDLOG_TRACE("No message received.");
         return false;
     }
     auto &message = message_opt.value();
     const UID &sender_uid = get_header(message).sender_uid_;
     const size_t type_index = message.index();
 
-    SPDLOG_TRACE("Subscriptions count = {}", subscriptions_.size());
+    SPDLOG_TRACE("Subscription count = {}.", subscriptions_.size());
 
     // Find a subscription.
     for (auto &&[k, sub_variant] : subscriptions_)
@@ -136,20 +138,20 @@ bool MessageEndpoint::receive_message()
         if (sub_variant.index() != type_index)
         {
             SPDLOG_TRACE(
-                "Subscription message type index != message type index [{} != {}]", sub_variant.index(), type_index);
+                "Subscription message type index does not match the message type index [{} != {}].", sub_variant.index(), type_index);
             continue;
         }
 
         std::visit(
             [&sender_uid, &message](auto &&subscription)
             {
-                SPDLOG_TRACE("Sender UID = {}...", std::string(sender_uid));
+                SPDLOG_TRACE("Sender UID: {}.", std::string(sender_uid));
                 if (subscription.has_sender(sender_uid))
                 {
-                    SPDLOG_TRACE("Subscription has sender with UID = {}", std::string(sender_uid));
+                    SPDLOG_TRACE("Subscription has sender with UID {}.", std::string(sender_uid));
                     subscription.add_message(
                         std::get<typename std::decay_t<decltype(subscription)>::MessageType>(message));
-                    SPDLOG_TRACE("Message was added to the subscription {}", std::string(sender_uid));
+                    SPDLOG_TRACE("Message was added to the subscription {}.", std::string(sender_uid));
                 }
             },
             sub_variant);

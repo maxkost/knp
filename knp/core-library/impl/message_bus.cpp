@@ -3,6 +3,8 @@
  * @brief Message bus implementation.
  * @author Artiom N.
  * @date 21.02.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/message_bus.h>
@@ -38,7 +40,7 @@ MessageBus::MessageBus(std::unique_ptr<messaging::impl::MessageBusImpl> &&impl) 
 {
     if (!impl_)
     {
-        throw std::runtime_error("Unavailable message bus implementation");
+        throw std::runtime_error("Unavailable message bus implementation.");
     }
 }
 
@@ -57,7 +59,7 @@ size_t MessageBus::step()
 
 size_t MessageBus::route_messages()
 {
-    SPDLOG_DEBUG("Message routing cycle started...");
+    SPDLOG_DEBUG("Message routing cycle started.");
     size_t count = 0;
     impl_->update();
     size_t num_messages = step();

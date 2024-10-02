@@ -3,10 +3,13 @@
  * @brief Header for output channel.
  * @author Vartenkov Andrey
  * @date 11.05.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 
 #include <knp/core/core.h>
+#include <knp/core/impexp.h>
 #include <knp/core/message_endpoint.h>
 #include <knp/core/messaging/messaging.h>
 
@@ -20,12 +23,12 @@
 /**
  * @brief Output channel namespace.
  */
-namespace knp::framework::output
+namespace knp::framework::io::output
 {
 /**
  * @brief The OutputChannel class is a definition of an output channel.
  */
-class OutputChannel
+class KNP_DECLSPEC OutputChannel
 {
 public:
     /**
@@ -106,4 +109,4 @@ template <typename ResultType>
     return converter(output_channel.read_some_from_buffer(step_from, step_to));
 }
 
-}  // namespace knp::framework::output
+}  // namespace knp::framework::io::output

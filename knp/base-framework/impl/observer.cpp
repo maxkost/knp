@@ -1,8 +1,10 @@
 /**
  * @file observer.cpp
- * @brief Observers implementation.
+ * @brief  Implementation of observers.
  * @author Artiom N.
  * @date 26.02.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/framework/monitoring/observer.h>

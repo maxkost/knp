@@ -3,6 +3,8 @@
  * @brief Some useful routines for working with `std::variant`.
  * @author Artiom N.
  * @date 09.08.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -52,7 +54,7 @@ void load_from_container(const std::vector<AllVariants> &from_container, ToConta
 
 
 /**
- * @brief Convert from one set of arguments to another. 
+ * @brief Convert from one set of arguments to another.
  * @note This is is a helper structure. Use `variant_cast` instead.
  * @tparam FromArgs source variant arguments.
  */
@@ -80,7 +82,8 @@ struct variant_cast_proxy
  * @brief Cast from one variant type to another.
  * @tparam Args source variant arguments
  * @param v source value.
- * @return Source value cast to `variant_cast_proxy`. `variant_cast_proxy` then implicitly converts the value to target variant.
+ * @return Source value cast to `variant_cast_proxy`. `variant_cast_proxy` then implicitly converts the value to target
+ * variant.
  */
 template <class... Args>
 static auto variant_cast(const std::variant<Args...> &v) -> variant_cast_proxy<Args...>

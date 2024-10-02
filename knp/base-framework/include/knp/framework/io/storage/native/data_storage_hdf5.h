@@ -3,9 +3,12 @@
  * @brief Load data from file.
  * @author Vartenkov Andrey
  * @date 22.04.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 
+#include <knp/core/impexp.h>
 #include <knp/core/messaging/messaging.h>
 
 #include <filesystem>
@@ -13,12 +16,18 @@
 
 
 /**
- * @brief Data storage namespace.
+ * @brief Storage namespace.
  */
-namespace knp::framework::storage::native
+namespace knp::framework::io::storage
 {
 
-// TODO: return and get iterators.
+/**
+ * @brief Data storage namespace.
+ */
+namespace native
+{
+
+// TODO: Return and get iterators.
 
 /**
  * @brief Read spike messages from an HDF5 file.
@@ -30,7 +39,7 @@ namespace knp::framework::storage::native
  * @param strict_format if `true`, method throws exception on wrong format.
  * @return vector of messages sorted by timestamps.
  */
-std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
+KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
     const std::filesystem::path &path_to_h5, const knp::core::UID &uid, float time_per_step = 1.0f,
     bool strict_format = true);
 
@@ -43,8 +52,10 @@ std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
  * @param path_to_save path to file.
  * @param time_per_step time per step.
  */
-void save_messages_to_h5(
+KNP_DECLSPEC void save_messages_to_h5(
     std::vector<core::messaging::SpikeMessage> messages, const std::filesystem::path &path_to_save,
     float time_per_step = 1.0f);
 
-}  // namespace knp::framework::storage::native
+}  // namespace native
+
+}  // namespace knp::framework::io::storage

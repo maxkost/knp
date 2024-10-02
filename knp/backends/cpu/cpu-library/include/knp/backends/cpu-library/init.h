@@ -3,6 +3,8 @@
  * @brief Initializing routines for backend.
  * @author Artiom N.
  * @date 17.08.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -55,10 +57,10 @@ struct subscribe_stdp_projection<knp::synapse_traits::STDP<Rule, SynapseType>>
         const typename core::Projection<knp::synapse_traits::STDP<Rule, SynapseType>> &p,
         knp::core::MessageEndpoint &message_endpoint)
     {
-        SPDLOG_TRACE("Subscribing method for the STDP projection {}", std::string(p.get_uid()));
+        SPDLOG_TRACE("Subscribing method for the STDP projection {}...", std::string(p.get_uid()));
         for (const auto &[pop_uid, _] : p.get_shared_parameters().stdp_populations_)
         {
-            SPDLOG_TRACE("Subscribing STDP projection {} to {}", std::string(p.get_uid()), std::string(pop_uid));
+            SPDLOG_TRACE("Subscribing STDP projection {} to {}...", std::string(p.get_uid()), std::string(pop_uid));
             if (pop_uid) message_endpoint.subscribe<knp::core::messaging::SpikeMessage>(p.get_uid(), {pop_uid});
         }
     }

@@ -1,4 +1,4 @@
-// Need to add properties to the spans, to select them in CSS.
+// Need to add properties to the spans to select them in CSS.
 
 $.add_icon_classes = function()
 {

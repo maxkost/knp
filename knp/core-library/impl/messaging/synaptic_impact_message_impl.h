@@ -1,8 +1,10 @@
 /**
  * @file synaptic_impact_message_impl.h
- * @brief Synaptic impact message I/O operators implementation.
+ * @brief Implementation od synaptic impact message I/O operators.
  * @author Artiom N.
  * @date 23.03.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once

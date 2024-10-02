@@ -1,7 +1,7 @@
 namespace knp.synapse_traits.marshal;
 
 
-// Types of synapses, used for projection-population interaction
+// Types of synapses used for projection-population interaction.
 enum OutputType : byte
 {
     EXCITATORY = 0,

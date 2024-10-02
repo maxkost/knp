@@ -61,15 +61,15 @@ confidence=
 # no Warning level messages displayed, use "--disable=all --enable=classes
 # --disable=W".
 
-#DISABLED
+# DISABLED
 disable=C0111, # Missing module docstring (Any comments should be deleted on PROD)
         W0511, # developers comments are disabled during refactoring (fixme todo etc)
         C0103,  # Variable name ... doesn't conform to snake_case naming style (less than 3 chars)
         C0328,  # unexpected-line-ending-format
-        W3101,  # missing-timeout
         W0201,  # attribute-defined-outside-init
         R0903,  # Too few public methods
         E0401,  # Unable to import module
+        C0304,  # missing-final-newline. Conflicting with trailing newlines?
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -181,7 +181,7 @@ ignored-classes=optparse.Values,thread._local,_thread._local
 # (useful for modules/projects where namespaces are manipulated during runtime
 # and thus existing member attributes cannot be deduced by static analysis. It
 # supports qualified module names, as well as Unix pattern matching.
-ignored-modules=tensorflow.keras
+ignored-modules=
 
 # Show a hint with possible names when a member name was not found. The aspect
 # of finding the hint is based on edit distance.

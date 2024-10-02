@@ -1,8 +1,10 @@
 /**
  * @file load_network.h
- * @brief loading network to Sonata format file.
+ * @brief Loading network to SONATA format file.
  * @author An. Vartenkov
  * @date 15.04.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once

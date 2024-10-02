@@ -1,26 +1,60 @@
-"""
-Importing knp.core.
-"""
+"""Importing knp.core."""
 
-from knp.core._knp_python_framework_core import UID, BLIFATNeuronPopulation, DeltaSynapseProjection, SpikeMessage,\
-                                                AdditiveSTDPDeltaSynapseParameters, AdditiveSTDPDeltaSynapseProjection,\
-                                                Backend, BaseData, DeltaSynapseParameters, MessageBus, MessageEndpoint,\
-                                                MessageHeader, SpikeData, SpikeMessageSubscription, SynapticImpact, \
-                                                SynapticImpactMessage, SynapticImpactMessageSubscription,\
-                                                SynapticImpactMessages, SynapticResourceSTDPBLIFATNeuronPopulation,\
-                                                SynapticResourceSTDPDeltaSynapseParameters,\
-                                                SynapticResourceSTDPDeltaSynapseProjection, TagMap, uid_hash,\
-                                                continuously_uid_generator, uuid, uuid_variant_type
-
+# pylint: disable = no-name-in-module
+from knp.core._knp_python_framework_core import (
+    UID,
+    AdditiveSTDPDeltaSynapseParameters,
+    AdditiveSTDPDeltaSynapseProjection,
+    Backend,
+    BaseData,
+    BLIFATNeuronPopulation,
+    DeltaSynapseParameters,
+    DeltaSynapseProjection,
+    MessageBus,
+    MessageEndpoint,
+    MessageHeader,
+    SpikeData,
+    SpikeMessage,
+    SpikeMessageSubscription,
+    SynapticImpact,
+    SynapticImpactMessage,
+    SynapticImpactMessages,
+    SynapticImpactMessageSubscription,
+    SynapticResourceSTDPBLIFATNeuronPopulation,
+    SynapticResourceSTDPDeltaSynapseParameters,
+    SynapticResourceSTDPDeltaSynapseProjection,
+    TagMap,
+    continuously_uid_generator,
+    uid_hash,
+    uuid,
+    uuid_variant_type,
+)
 
 __all__ = [
-            'UID', 'BLIFATNeuronPopulation', 'DeltaSynapseProjection', 'SpikeMessage',
-            'AdditiveSTDPDeltaSynapseParameters', 'AdditiveSTDPDeltaSynapseProjection',
-            'Backend', 'BaseData', 'DeltaSynapseParameters', 'MessageBus', 'MessageEndpoint',
-            'MessageHeader', 'SpikeData', 'SpikeMessageSubscription',
-            'SynapticImpact', 'SynapticImpactMessage', 'SynapticImpactMessageSubscription',
-            'SynapticImpactMessages', 'SynapticResourceSTDPBLIFATNeuronPopulation',
-            'SynapticResourceSTDPDeltaSynapseParameters',
-            'SynapticResourceSTDPDeltaSynapseProjection', 'TagMap', 'uid_hash',
-            'continuously_uid_generator', 'uuid', 'uuid_variant_type',
+    'UID',
+    'BLIFATNeuronPopulation',
+    'DeltaSynapseProjection',
+    'SpikeMessage',
+    'AdditiveSTDPDeltaSynapseParameters',
+    'AdditiveSTDPDeltaSynapseProjection',
+    'Backend',
+    'BaseData',
+    'DeltaSynapseParameters',
+    'MessageBus',
+    'MessageEndpoint',
+    'MessageHeader',
+    'SpikeData',
+    'SpikeMessageSubscription',
+    'SynapticImpact',
+    'SynapticImpactMessage',
+    'SynapticImpactMessageSubscription',
+    'SynapticImpactMessages',
+    'SynapticResourceSTDPBLIFATNeuronPopulation',
+    'SynapticResourceSTDPDeltaSynapseParameters',
+    'SynapticResourceSTDPDeltaSynapseProjection',
+    'TagMap',
+    'uid_hash',
+    'continuously_uid_generator',
+    'uuid',
+    'uuid_variant_type',
 ]

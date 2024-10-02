@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.25)
 
 include_guard(GLOBAL)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(CMakeDependentOption)
@@ -11,13 +15,13 @@ include(version)
 knp_get_version()
 
 if(NOT KNP_VERSION)
-    message(FATAL_ERROR "KNP version mandatory for build, but can't be determined!")
+    message(FATAL_ERROR "Kaspersky Neuromorphic Platform version is mandatory for build, but it cannot be determined.")
 endif()
 
 enable_language(CXX)
 
 if (POLICY CMP0091)
-    # Enable MSVS library select, using property.
+    # Enable MSVS library selection using property.
     cmake_policy(SET CMP0091 NEW)
 endif()
 
@@ -26,16 +30,17 @@ project(knp VERSION "${KNP_VERSION}"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 set(KNP_BOOST_MIN_VERSION "1.74.0")
-set(KNP_ROOT_DIR "${PROJECT_SOURCE_DIR}" CACHE STRING "KNP root directory")
+set(KNP_ROOT_DIR "${PROJECT_SOURCE_DIR}" CACHE STRING "Kaspersky Neuromorphic Platform root directory")
 
-foreach (boost_ver RANGE 83 89)
+if (MSVC)
+    add_compile_options(/EHsc /MP /MDd)
+    # add_link_options(/LTCG:INCREMENTAL)  # /NODEFAULTLIB:LIBCMTD
+    add_compile_definitions(_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING=1 _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS=1)
+endif()
+
+foreach (boost_ver RANGE 81 89)
     list(APPEND Boost_ADDITIONAL_VERSIONS "1.${boost_ver}")
 endforeach()
-
-# WARNING: Don't change variables case!
-set(Boost_USE_MULTITHREADED ON)
-
-set(Boost_ALL_DYN_LINK OFF)
 
 if (NOT Boost_ROOT)
     if (DEFINED ENV{Boost_ROOT})
@@ -46,12 +51,18 @@ if (NOT Boost_ROOT)
 endif()
 
 if (Boost_ROOT)  # WIN32?
+    # WARNING: Do not change variable case.
+    set(Boost_USE_MULTITHREADED ON)
     set(Boost_USE_STATIC_LIBS ON)
-    set(Boost_USE_STATIC_RUNTIME ON)
-    set(Boost_USE_STATIC_RUNTIME ON)
+    set(Boost_ALL_DYN_LINK OFF)
+
+    if (NOT WIN32)
+        set(Boost_USE_STATIC_RUNTIME ON)
+    endif()
+
     # Boost detection setup.
-    if(NOT BOOST_INCLUDEDIR)
-        set(BOOST_INCLUDEDIR "${BOOST_ROOT}")
+    if(NOT BOOST_INCLUDE_DIR)
+        set(BOOST_INCLUDE_DIR "${BOOST_ROOT}")
     endif()
 
     if (NOT BOOST_LIBRARYDIR)
@@ -66,22 +77,23 @@ if (Boost_ROOT)  # WIN32?
         endif()
     endif()
 
-    message(STATUS "Boost library dir: ${BOOST_LIBRARYDIR}")
+    message(STATUS "Boost library directory: ${BOOST_LIBRARYDIR}.")
 endif()
 
 # set(Boost_DEBUG ON)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
 
 if (MSVC)
-    find_package(Boost ${KNP_BOOST_MIN_VERSION})
-    add_link_options("/LIBPATH:${Boost_LIBRARY_DIR_RELEASE}")
+    message(STATUS "Adding \"${BOOST_LIBRARYDIR}\" to LIBPATH")
+    add_link_options("/LIBPATH:${BOOST_LIBRARYDIR}")
 endif()
 
 
 #
-# KNP build options set.
+# Kaspersky Neuromorphic Platform build option set.
 #
 
-# Build not from source directory, possible via add_subdirectory().
+# Build is not from source directory, it is possible to specify it via add_subdirectory().
 if (NOT CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     set(KNP_BUILD_AUTONOMOUS FALSE)
 else()
@@ -99,14 +111,14 @@ endif()
 if (KNP_BUILD_AUTONOMOUS OR KNP_MAINTAINER_BUILD)
     find_package(Doxygen OPTIONAL_COMPONENTS dot)
     if(NOT DOXYGEN_FOUND)
-        message(WARNING "Doxygen was not found! Documentation build will be disabled by default.")
+        message(WARNING "Doxygen was not found. Documentation build will be disabled by default.")
     endif()
 endif()
 
 find_program(_STUBGEN stubgen NO_CACHE)
 
 if ("${_STUBGEN}" STREQUAL "_STUBGEN-NOTFOUND")
-    message(WARNING "MyPy stubgen was not found! Please install MyPy (see requirements.txt)! Python framework build will be disabled.")
+    message(WARNING "MyPy stubgen was not found. Please install MyPy (see requirements.txt). Python framework build will be disabled.")
     set(KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT OFF)
 else()
     set(KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT ON)
@@ -119,7 +131,7 @@ option(KNP_ENABLE_AVX "Enable AVX and other CPU-specific extensions in the relea
 option(KNP_ENABLE_COVERAGE "Enable coverage checking" OFF)
 option(KNP_IPO_ENABLED "Enable interprocedural optimization" ON)
 option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
-cmake_dependent_option(KNP_PYTHON_FRAMEWORK_BUILD "Build KNP Python framework" ON "KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT" OFF)
+cmake_dependent_option(KNP_PYTHON_FRAMEWORK_BUILD "Build Kaspersky Neuromorphic Platform Python framework" ON "KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT" OFF)
 cmake_dependent_option(KNP_PYTHON_BUILD_WHEEL "Build WHL package for the Python framework" ${KNP_MAINTAINER_BUILD} "KNP_PYTHON_FRAMEWORK_BUILD" OFF)
 
 mark_as_advanced(KNP_MAINTAINER_BUILD)
@@ -156,7 +168,7 @@ if (NOT KNP_MAINTAINER_BUILD)
     execute_process(COMMAND pre-commit install
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
     if(ret AND NOT ret EQUAL 0)
-        message(FATAL_ERROR "Can't install pre-commit hooks!")
+        message(FATAL_ERROR "Cannot install pre-commit hooks.")
     endif()
     execute_process(COMMAND pre-commit install -t commit-msg
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -174,10 +186,10 @@ endif()
 set(ENABLE_FAST_MATH ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# Need for the linters.
+# Required for linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Always enabled for the KNP components.
+# Always enabled for the Kaspersky Neuromorphic Platform components.
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -D_FORTIFY_SOURCE=1")
 # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_FORTIFY_SOURCE=2")
 
@@ -188,13 +200,20 @@ include(print-variables)
 # Build third-party.
 #
 
-set(CPM_SOURCE_CACHE_DEFAULT "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STRING "")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/third-party)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/third-party)
+if (MSVC)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+endif()
 
-# Make cache variables for install destinations.
+set(CPM_SOURCE_CACHE_DEFAULT "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STRING "")
+
+# Make cache variables for installation destinations.
 include(GNUInstallDirs)
+
+if (MSVC AND CMAKE_GENERATOR STREQUAL "Ninja")
+    set(ZMQ_ENABLE_PRECOMPS OFF)
+else()
+    set(ZMQ_ENABLE_PRECOMPS ON)
+endif()
 
 add_third_party(NAME "libzmq"
                 GITHUB_REPOSITORY "zeromq/libzmq"
@@ -203,10 +222,11 @@ add_third_party(NAME "libzmq"
                 OPTIONS
                     "WITH_DOCS OFF"
                     "BUILD_TESTS OFF"
-                    "ENABLE_CPACK OFF")
+                    "ENABLE_CPACK OFF"
+                    "ENABLE_PRECOMPILED ${ZMQ_ENABLE_PRECOMPS}")
 
 #
-# LibHDF5 and it's dependencies.
+# LibHDF5 and its dependencies.
 #
 
 add_third_party("https://gitlab.dkrz.de/k202009/libaec.git@1.1.3")
@@ -218,7 +238,7 @@ add_third_party("gh:HDFGroup/hdf5#hdf5_1.14.4"
                 OPTIONS
                     "HDF5_NO_PACKAGES ON"
                     "BUILD_SHARED_LIBS ON"
-                    "HDF5_VOL_ALLOW_EXTERNAL YES")
+                    "HDF5_VOL_ALLOW_EXTERNAL YES")  # "HDF5_ALLOW_EXTERNAL_SUPPORT GIT" SZIP_USE_EXTERNAL
 
 add_third_party("gh:BlueBrain/HighFive@2.9.0"
                 GIT_SHALLOW ON
@@ -236,24 +256,32 @@ add_third_party("gh:p-ranav/csv2@0.1"
                     "CSV2_BUILD_TESTS OFF"
                     "CSV2_SAMPLES OFF")
 
-add_third_party("gh:simdjson/simdjson@3.9.2"
-                GIT_SHALLOW ON
+add_third_party("gh:intel/pcm"
+                GIT_TAG 2f9b0c2
                 OPTIONS
-                    "SIMDJSON_BUILD_STATIC_LIB ON")
-
-add_third_party("gh:intel/pcm#202403")
+                    "NO_STATIC_MSVC_RUNTIME_LIBRARY ON"
+                    "NO_ASAN ON")
 
 add_third_party("gh:gabime/spdlog@1.13.0"
                 OPTIONS
-                    "SPDLOG_BUILD_PIC ON")
+                    "SPDLOG_BUILD_PIC ON"
+                    "SPDLOG_BUILD_SHARED OFF")
 
 add_third_party("gh:zeromq/cppzmq@4.10.0"
                 OPTIONS
                     "CPPZMQ_BUILD_TESTS OFF")
+
 add_third_party("gh:google/flatbuffers@24.3.25"
                 OPTIONS
                     "FLATBUFFERS_BUILD_TESTS OFF"
                     "FLATBUFFERS_BUILD_CPP17 ON")
+
+add_third_party("gh:Tencent/rapidjson#7c73dd7"
+                OPTIONS
+                    "RAPIDJSON_BUILD_DOC OFF"
+                    "RAPIDJSON_BUILD_EXAMPLES OFF"
+                    "RAPIDJSON_BUILD_TESTS OFF"
+                    "RAPIDJSON_HAS_STDSTRING ON")
 
 if (KNP_BUILD_TESTS)
     add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)
@@ -263,14 +291,14 @@ endif()
 file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
 include_directories(third-party ${THIRD_PARTY_INCLUDES})
 
+if (MSVC)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS FALSE)
+endif()
+
 
 #
-# Build KNP.
+# Build Kaspersky Neuromorphic Platform.
 #
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 set(CMAKE_TIDY_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/knp/.clang-tidy" CACHE PATH  "Clang-tidy config file")
 
@@ -280,10 +308,9 @@ if (KNP_BUILD_DOCUMENTATION)
     add_subdirectory(doc)
 endif()
 
-if(KNP_BUILD_EXAMPLES)
+if (KNP_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
-
 
 #
 # Packaging.
@@ -300,10 +327,10 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${CMAKE_PROJECT_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${CMAKE_PROJECT_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${CMAKE_PROJECT_VERSION_PATCH})
 
-set(CPACK_PACKAGE_VENDOR "Kaspersky Laboratory")
+set(CPACK_PACKAGE_VENDOR "AO Kaspersky Lab")
 
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Artiom N.")
-SET(CPACK_PACKAGE_CONTACT "support@kaspersky.com")
+set(CPACK_PACKAGE_CONTACT "support@kaspersky.com")
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${CMAKE_PROJECT_DESCRIPTION}"
         CACHE STRING "Package description for the package metadata")
@@ -315,7 +342,7 @@ set(CPACK_OUTPUT_FILE_PREFIX "${CMAKE_BINARY_DIR}/_packages")
 # https://unix.stackexchange.com/a/11552/254512
 set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
 
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/packaging/LICENSE.txt")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
 
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "${CMAKE_INSTALL_PREFIX}")
@@ -324,7 +351,7 @@ set(CPACK_INSTALL_DEFAULT_DIRECTORY_PERMISSIONS
         GROUP_READ GROUP_EXECUTE
         WORLD_READ WORLD_EXECUTE)
 
-# On Linux grouping must be ignored: one component - one package.
+# On Linux, grouping must be ignored: one component corresponds to one package.
 set(CPACK_COMPONENTS_GROUPING IGNORE)
 set(CPACK_DEBIAN_ENABLE_COMPONENT_DEPENDS ON)
 

@@ -3,6 +3,8 @@
  * @brief Multi-threaded CPU backend class implementation.
  * @author Artiom N.
  * @date 21.06.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/backends/cpu-library/blifat_population.h>
@@ -31,17 +33,17 @@ MultiThreadedCPUBackend::MultiThreadedCPUBackend(
     : population_part_size_(population_part_size),
       projection_part_size_(projection_part_size),
       calc_pool_(std::make_unique<cpu_executors::ThreadPool>(
-          thread_count != 0 ? thread_count : std::thread::hardware_concurrency()))
+          thread_count ? thread_count : std::thread::hardware_concurrency()))
 {
     SPDLOG_INFO(
-        "MT CPU backend instance created, threads count = {}...",
+        "Multi-threaded CPU backend instance created, thread count = {}.",
         thread_count ? thread_count : std::thread::hardware_concurrency());
 }
 
 
 std::shared_ptr<MultiThreadedCPUBackend> MultiThreadedCPUBackend::create()
 {
-    SPDLOG_DEBUG("Creating MT CPU backend instance...");
+    SPDLOG_DEBUG("Creating multi-threaded CPU backend instance...");
     return std::make_shared<MultiThreadedCPUBackend>();
 }
 
@@ -76,7 +78,7 @@ void MultiThreadedCPUBackend::calculate_populations_pre_impact()
                         boost::mp11::mp_find<SupportedPopulations, T>{} == boost::mp11::mp_size<SupportedPopulations>{})
                     {
                         static_assert(
-                            knp::meta::always_false_v<T>, "Population isn't supported by the CPU MT backend!");
+                            knp::meta::always_false_v<T>, "Population is not supported by the multi-threaded CPU backend.");
                     }
 
                     // Start threads.
@@ -150,7 +152,7 @@ std::vector<knp::core::messaging::SpikeMessage> MultiThreadedCPUBackend::calcula
 
 void MultiThreadedCPUBackend::calculate_populations()
 {
-    SPDLOG_DEBUG("Calculating populations");
+    SPDLOG_DEBUG("Calculating populations...");
     calculate_populations_pre_impact();
 
     calculate_populations_impact();
@@ -183,7 +185,7 @@ void send_message(ProjectionWrapper &projection, core::MessageEndpoint &endpoint
 
 void MultiThreadedCPUBackend::calculate_projections()
 {
-    SPDLOG_DEBUG("Calculating projections");
+    SPDLOG_DEBUG("Calculating projections...");
     std::vector<std::unordered_map<uint64_t, size_t>> converted_message_buffer;
     converted_message_buffer.reserve(projections_.size());
 
@@ -191,7 +193,7 @@ void MultiThreadedCPUBackend::calculate_projections()
     {
         auto uid = std::visit([](auto &proj) { return proj.get_uid(); }, projection.arg_);
         auto msg_buf = get_message_endpoint().unload_messages<knp::core::messaging::SpikeMessage>(uid);
-        // We might want to add some preliminary function before, even if delta proj doesn't require it.
+        // We might want to add some preliminary function before, even if delta projection doesn't require it.
         if (msg_buf.empty())
         {
             continue;
@@ -243,7 +245,7 @@ std::vector<size_t> MultiThreadedCPUBackend::get_supported_population_indexes() 
 
 void MultiThreadedCPUBackend::_step()
 {
-    SPDLOG_DEBUG("Starting step #{}.", get_step());
+    SPDLOG_DEBUG("Starting step #{}...", get_step());
     calculate_populations();
     get_message_bus().route_messages();
     get_message_endpoint().receive_all_messages();
@@ -259,7 +261,7 @@ void MultiThreadedCPUBackend::_step()
 
 void MultiThreadedCPUBackend::load_populations(const std::vector<PopulationVariants> &populations)
 {
-    SPDLOG_DEBUG("Loading populations [{}]", populations.size());
+    SPDLOG_DEBUG("Loading populations [{}]...", populations.size());
     populations_.clear();
     populations_.reserve(populations.size());
 
@@ -267,13 +269,13 @@ void MultiThreadedCPUBackend::load_populations(const std::vector<PopulationVaria
     {
         populations_.push_back(population);
     }
-    SPDLOG_DEBUG("All populations loaded");
+    SPDLOG_DEBUG("All populations loaded.");
 }
 
 
 void MultiThreadedCPUBackend::load_projections(const std::vector<ProjectionVariants> &projections)
 {
-    SPDLOG_DEBUG("Loading populations [{}]", projections.size());
+    SPDLOG_DEBUG("Loading projections [{}]...", projections.size());
     projections_.clear();
     projections_.reserve(projections.size());
 
@@ -282,40 +284,40 @@ void MultiThreadedCPUBackend::load_projections(const std::vector<ProjectionVaria
         projections_.push_back(ProjectionWrapper{projection});
     }
 
-    SPDLOG_DEBUG("All projections loaded");
+    SPDLOG_DEBUG("All projections loaded.");
 }
 
 
 void MultiThreadedCPUBackend::load_all_projections(const std::vector<knp::core::AllProjectionsVariant> &projections)
 {
-    SPDLOG_DEBUG("Loading projections [{}]", projections.size());
+    SPDLOG_DEBUG("Loading projections [{}]...", projections.size());
     knp::meta::load_from_container<SupportedProjections>(projections, projections_);
-    SPDLOG_DEBUG("All projections loaded");
+    SPDLOG_DEBUG("All projections loaded.");
 }
 
 
 void MultiThreadedCPUBackend::load_all_populations(const std::vector<knp::core::AllPopulationsVariant> &populations)
 {
-    SPDLOG_DEBUG("Loading populations [{}]", populations.size());
+    SPDLOG_DEBUG("Loading populations [{}]...", populations.size());
     knp::meta::load_from_container<SupportedPopulations>(populations, populations_);
-    SPDLOG_DEBUG("All populations loaded");
+    SPDLOG_DEBUG("All populations loaded.");
 }
 
 
 std::vector<std::unique_ptr<knp::core::Device>> MultiThreadedCPUBackend::get_devices() const
 {
     std::vector<std::unique_ptr<knp::core::Device>> result;
-    auto processors{knp::devices::cpu::list_processors()};
+    auto &&processors{knp::devices::cpu::list_processors()};
 
     result.reserve(processors.size());
 
     for (auto &&cpu : processors)
     {
-        SPDLOG_DEBUG("Device CPU \"{}\"", cpu.get_name());
+        SPDLOG_DEBUG("Device CPU \"{}\".", cpu.get_name());
         result.push_back(std::make_unique<knp::devices::cpu::CPU>(std::move(cpu)));
     }
 
-    SPDLOG_DEBUG("CPUs count = {}", result.size());
+    SPDLOG_DEBUG("CPU count = {}.", result.size());
     return result;
 }
 
@@ -326,7 +328,7 @@ void MultiThreadedCPUBackend::_init()
 
     knp::backends::cpu::init(projections_, get_message_endpoint());
 
-    SPDLOG_DEBUG("Initializing finished...");
+    SPDLOG_DEBUG("Initialization finished.");
 }
 
 

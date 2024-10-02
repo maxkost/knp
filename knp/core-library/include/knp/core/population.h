@@ -3,6 +3,8 @@
  * @brief General population interface.
  * @author Artiom N.
  * @date 18.01.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -85,7 +87,7 @@ public:  // NOLINT
      * @return population tag map.
      * @see TagMap.
      */
-    [[nodiscard]] auto &get_tags() const { return base_.tags_; }
+    [[nodiscard]] const auto &get_tags() const { return base_.tags_; }
 
 public:  // NOLINT
     /**

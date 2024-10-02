@@ -3,6 +3,8 @@
  * @brief Message bus implementation interface class.
  * @author Vartenkov A.
  * @date 19.09.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 #include <knp/core/message_endpoint.h>
@@ -30,13 +32,13 @@ public:
     virtual size_t step() = 0;
 
     /**
-     * @brief Creates an endpoint that can be used for message exchange.
-     * @return a new endpoint.
+     * @brief Create an endpoint that can be used for message exchange.
+     * @return new endpoint.
      */
     [[nodiscard]] virtual MessageEndpoint create_endpoint() = 0;
 
     /**
-     * @brief Update if needed, to be called once before message routing.
+     * @brief Update if needed. The function is to to be called once before message routing.
      */
     virtual void update() {}
 };

@@ -7,7 +7,7 @@ from .command import Command
 
 
 class FormatterCmd(Command):
-    """Commands that format code: clang-format, uncrustify"""
+    """Commands that format code: clang-format, uncrustify."""
 
     def __init__(self, command: str, look_behind: str, args: List[str]):
         super().__init__(command, look_behind, args)
@@ -26,7 +26,7 @@ class FormatterCmd(Command):
         expected = self.get_formatted_lines(filename_str)
         if self.edit_in_place:
             # If edit in place is used, the formatter will fix in place with
-            # no stdout. So compare the before/after file for hook pass/fail
+            # no stdout. So compare the before and after files for hook pass or fail.
             expected = self.get_filelines(filename_str)
         diff = list(
             difflib.diff_bytes(difflib.unified_diff, actual, expected, fromfile=b"original", tofile=b"formatted")
@@ -38,7 +38,7 @@ class FormatterCmd(Command):
             self.returncode = 1
 
     def get_filename_opts(self, filename: str):
-        """uncrustify, to get stdout like clang-format, requires -f flag"""
+        """uncrustify, like clang-format, requires the -f flag to get stdout."""
         if self.file_flag and not self.edit_in_place:
             return [self.file_flag, filename]
         return [filename]
@@ -49,7 +49,7 @@ class FormatterCmd(Command):
         args = [self.command, *self.args, *filename_opts]
         child = sp.run(args, stdout=sp.PIPE, stderr=sp.PIPE)
         if len(child.stderr) > 0 or child.returncode != 0:
-            problem = f"Unexpected Stderr/return code received when analyzing {filename}.\nArgs: {args}"
+            problem = f"Unexpected Stderr/return code received when analyzing {filename}.\nArgs: {args}."
             self.raise_error(problem, child.stdout.decode() + child.stderr.decode())
         if child.stdout == b"":
             return []

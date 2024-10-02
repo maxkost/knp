@@ -9,8 +9,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(knp-tester VERSION "${KNP_VERSION}" LANGUAGES CXX
         DESCRIPTION "Kaspersky Neuromorphic Platform tester and tests")
 
-if(NOT KNP_BUILD_TESTS)
-    message(STATUS "Tests building disabled...")
+if (NOT KNP_BUILD_TESTS)
+    message(STATUS "Building of tests is disabled.")
     return()
 endif()
 
@@ -34,31 +34,32 @@ target_include_directories("${PROJECT_NAME}"
     PRIVATE "${GTEST_DIR}/googlemock/include"
 )
 
-knp_get_hdf5_target(HDF5_LIB)
+#knp_get_hdf5_target(HDF5_LIB)
 
-target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main spdlog::spdlog HighFive ${HDF5_LIB})
-target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::BaseFramework::Core KNP::Backends::CPUSingleThreaded KNP::Backends::CPUMultiThreaded
-        KNP::Devices::CPUStatic)
-target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::Backends::CPU::ThreadPool)
+target_link_libraries("${PROJECT_NAME}" PRIVATE KNP::BaseFramework::CoreStatic KNP::Backends::CPUSingleThreaded KNP::Backends::CPUMultiThreaded
+                                                KNP::Backends::CPU::ThreadPool)
+target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main spdlog::spdlog) #  HighFive
 
-if(KNP_ENABLE_COVERAGE)
+add_dependencies("${PROJECT_NAME}" knp-base-framework-core_static)
+
+if (KNP_ENABLE_COVERAGE)
     include(codecoverage)
     append_coverage_compiler_flags()
     link_target_with_gcov("${PROJECT_NAME}")
 endif()
 
-if(${BUILD_GMOCK})
+if (${BUILD_GMOCK})
     target_link_libraries("${PROJECT_NAME}" PRIVATE gmock gmock_main)
 endif()
 
 gtest_discover_tests("${PROJECT_NAME}"
-    # Set a working directory to find test data via paths relative to the project root
+    # Set a working directory to find test data via paths relative to the project root.
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
-if(KNP_ENABLE_COVERAGE)
-    message(STATUS "Coverage enabled")
+if (KNP_ENABLE_COVERAGE)
+    message(STATUS "Coverage enabled.")
 
     set(COV_EXECUTABLE "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
     set(COV_NAME "${PROJECT_NAME}_coverage")
@@ -67,40 +68,42 @@ if(KNP_ENABLE_COVERAGE)
 
     set(CODE_COVERAGE_VERBOSE true)
 
-    if(GCOVR_PATH)
+    if (GCOVR_PATH)
         setup_target_for_coverage_gcovr_xml(
             NAME "${COV_NAME}"
             EXECUTABLE ${COV_EXECUTABLE}
             DEPENDENCIES ${COV_DEPENDENCIES}
             BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
         )
-        message(VERBOSE "Gcovr selected")
-    elseif(LCOV_PATH)
+        message(VERBOSE "Gcovr selected.")
+    elseif (LCOV_PATH)
         setup_target_for_coverage_lcov(
             NAME "${COV_NAME}"
             EXECUTABLE ${COV_EXECUTABLE}
             DEPENDENCIES ${COV_DEPENDENCIES}
             BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
         )
-        message(VERBOSE "Lcov selected")
-    elseif(GCOV_PATH)
+        message(VERBOSE "Lcov selected.")
+    elseif (GCOV_PATH)
         setup_target_for_coverage_gcov_json(
             NAME "${COV_NAME}"
             EXECUTABLE ${COV_EXECUTABLE}
             DEPENDENCIES ${COV_DEPENDENCIES}
             BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
         )
-        message(STATUS "Gcov selected")
+        message(STATUS "Gcov selected.")
     else()
-        message(WARNING "Coverage can't be enabled!")
+        message(WARNING "Coverage cannot be enabled.")
     endif()
 endif()
 
-#[[
-add_custom_target(test_memcheck
+
+set(CTEST_MEMORYCHECK_COMMAND "/usr/bin/valgrind")
+set(CTEST_MEMORYCHECK_COMMAND_OPTIONS "--tool=memcheck --leak-check=full --undef-value-errors=yes --error-limit=no --time-stamp=yes --trace-children=yes --track-fds=yes --track-origins=yes --gen-suppressions=all --undef-value-errors=yes --error-exitcode=1")
+
+add_custom_target(test_with_memcheck
     COMMAND ${CMAKE_CTEST_COMMAND}
         --force-new-ctest-process --test-action memcheck
         --rerun-failed --output-on-failure
-    COMMAND cat "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log"
-    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/data")
-]]
+    COMMAND cat "Testing/Temporary/MemoryChecker.*.log"
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/knp/tests")

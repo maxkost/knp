@@ -1,8 +1,10 @@
 /**
  * @file save_network.h
- * @brief saving network to Sonata format file.
+ * @brief Saving network to SONATA format file.
  * @author An. Vartenkov
  * @date 15.04.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -31,7 +33,7 @@ template <class Population>
 void add_population_to_h5(HighFive::File &, const Population &);
 
 
-// Read parameter values for both projections and populations
+// Read parameter values for both projections and populations.
 template <class Attr>
 std::vector<Attr> read_parameter(
     const HighFive::Group &population_group, const std::string &param_name, size_t pop_size, const Attr &default_value)

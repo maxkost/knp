@@ -3,6 +3,8 @@
  * @brief Python bindings for Projection.
  * @author Artiom N.
  * @date 16.02.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 
@@ -40,7 +42,7 @@ py::class_<core::Synapse>(
     "Synapse description structure that contains synapse parameters and indexes of the associated neurons.")
 
     py::class_<core::SharedSynapseParametersT>(
-        "SharedSynapseParametersT", "Shared synapses parameters for the non-STDP variant of the projection.")
+        "SharedSynapseParametersT", "Shared synapse parameters for the non-STDP variant of the projection.")
 
         py::class_<SharedSynapseParametersT<core::synapse_traits::STDP<Rule, SynapseT>>>(
             "SharedSynapseParametersT<knp::synapse_traits::STDP<Rule,SynapseT>>",
@@ -103,7 +105,6 @@ py::class_<core::Synapse>(
                     py::return_internal_reference<>(),                                                                 \
                     "Get parameter values of a synapse with the given index.");  // NOLINT
 
-
-BOOST_PP_SEQ_FOR_EACH(INSTANCE_PY_PROJECTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_SYNAPSES))
+BOOST_PP_SEQ_FOR_EACH(INSTANCE_PY_PROJECTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_SYNAPSES))  //! OCLINT(Parameters used)
 
 #endif

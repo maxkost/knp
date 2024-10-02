@@ -1,8 +1,10 @@
 /**
  * @file delta.cpp
- * @brief Delta synapse Python bindings.
+ * @brief Python bindings for delta synapse.
  * @author Artiom N.
  * @date 21.02.24
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #if defined(_KNP_IN_SYNAPSE_TRAITS)
@@ -10,15 +12,15 @@
 #    include "common.h"
 
 py::enum_<knp::synapse_traits::OutputType>("OutputType")
-    .value("EXCITATORY", knp::synapse_traits::OutputType::EXCITATORY)  // "Excitatory synapse type."
+    .value("EXCITATORY", knp::synapse_traits::OutputType::EXCITATORY)  // Excitatory synapse type.
     .value(
         "INHIBITORY_CURRENT",
-        knp::synapse_traits::OutputType::INHIBITORY_CURRENT)  // "Inhibitory by current synapse type"
+        knp::synapse_traits::OutputType::INHIBITORY_CURRENT)  // Inhibitory by current synapse type.
     .value(
         "INHIBITORY_CONDUCTANCE",
-        knp::synapse_traits::OutputType::INHIBITORY_CONDUCTANCE)   // "Inhibitory by conductance synapse type"
-    .value("DOPAMINE", knp::synapse_traits::OutputType::DOPAMINE)  // "Dopamine synapse type"
-    // "Neuron-blocking synapse type".
+        knp::synapse_traits::OutputType::INHIBITORY_CONDUCTANCE)   // Inhibitory by conductance synapse type.
+    .value("DOPAMINE", knp::synapse_traits::OutputType::DOPAMINE)  // Dopamine synapse type.
+    // Neuron-blocking synapse type.
     .value("BLOCKING", knp::synapse_traits::OutputType::BLOCKING);
 
 using ds_params = knp::synapse_traits::synapse_parameters<knp::synapse_traits::DeltaSynapse>;
@@ -32,6 +34,6 @@ py::class_<ds_params>("DeltaSynapseParameters", "Structure for BLIFAT neuron par
         "Synaptic delay. Delay of `N` means that a spike sent on step `X` will be received on step `X + N`.")
     .add_property(
         "output_type", &ds_params::output_type_,
-        "Synapse type. Various types have different influences on neuron parameters, as defined by neuron function.");
+        "Synapse type. Various types have different influences on neuron parameters as defined by neuron function.");
 
 #endif

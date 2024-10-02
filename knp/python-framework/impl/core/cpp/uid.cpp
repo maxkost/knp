@@ -3,6 +3,8 @@
  * @brief Python bindings for UID.
  * @author Artiom N.
  * @date 05.02.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include "uid.h"
@@ -25,17 +27,17 @@ py::enum_<boost::uuids::uuid::variant_type>("uuid_variant_type")
     .value("FUTURE", boost::uuids::uuid::variant_type::variant_future);
 
 py::class_<boost::uuids::uuid>("uuid", "Boost UUID")
-    .add_property("size", &boost::uuids::uuid::size, "uuid size in bytes")
-    .add_property("is_nil", &boost::uuids::uuid::is_nil, "Does uuid empty?")
+    .add_property("size", &boost::uuids::uuid::size, "UUID size in bytes")
+    .add_property("is_nil", &boost::uuids::uuid::is_nil, "Is UUID empty?")
     .add_property("variant", &boost::uuids::uuid::variant, "UID format variant");
 
 py::to_python_converter<boost::uuids::uuid, uid_into_python>();
 uid_from_python();
 
 py::class_<core::UID>("UID", "The UID class is a definition of unique identifiers for entities.")
-    .def(py::init<bool>(py::arg("random")))     // , "Generate a random UID."
-    .def(py::init<const boost::uuids::uuid>())  // "Create a UID from `boost::uuids::uuid`."
-    .def(py::init<boost::uuids::uuid>())        // "Create a UID from `boost::uuids::uuid`."
+    .def(py::init<bool>(py::arg("random")))     // Generate a random UID.
+    .def(py::init<const boost::uuids::uuid>())  // Create a UID from `boost::uuids::uuid`.
+    .def(py::init<boost::uuids::uuid>())        // Create a UID from `boost::uuids::uuid`.
     // Create a UID from an array of 16 uint8_t integers.
     .def(py::init<std::array<
              boost::uuids::uuid::value_type,

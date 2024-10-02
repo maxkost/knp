@@ -4,11 +4,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Need for the linters.
+# Required for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp-devices VERSION "${KNP_VERSION}" LANGUAGES C CXX
-        DESCRIPTION "Kaspersky Neuromorphic devices parameters library"
+        DESCRIPTION "Kaspersky Neuromorphic Platform device parameters library"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 include(GNUInstallDirs)

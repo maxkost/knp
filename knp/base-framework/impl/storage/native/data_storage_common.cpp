@@ -1,8 +1,10 @@
 /**
  * @file data_storage_common.cpp
- * @brief File for common functions for saving and loading data.
+ * @brief Common functions for saving and loading data.
  * @author An. Vartenkov
  * @date 24.04.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include "data_storage_common.h"
@@ -14,7 +16,7 @@
 #include <vector>
 
 
-namespace knp::framework::storage::native
+namespace knp::framework::io::storage::native
 {
 std::vector<knp::core::messaging::SpikeMessage> convert_node_time_arrays_to_messages(
     const std::vector<int64_t> &nodes, const std::vector<float> &timestamps, const knp::core::UID &uid,
@@ -50,4 +52,4 @@ std::vector<knp::core::messaging::SpikeMessage> convert_node_time_arrays_to_mess
         [](const Message &msg1, const Message &msg2) { return msg1.header_.send_time_ < msg2.header_.send_time_; });
     return result;
 }
-}  // namespace knp::framework::storage::native
+}  // namespace knp::framework::io::storage::native

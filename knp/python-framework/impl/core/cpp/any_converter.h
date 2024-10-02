@@ -1,8 +1,10 @@
 /**
  * @file any_converter.h
- * @brief std::any for Python.
+ * @brief `std::any` for Python.
  * @author Artiom N.
  * @date 19.02.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -14,13 +16,13 @@
 // #include "common.h"
 //
 //
-//// Custom exceptions
+//// Custom exceptions.
 // struct BadAnyCastError : std::exception
 //{
 //     const char* what() const throw() { return "Bad \"any\" cast!"; }
 // };
 //
-//// Set python exceptions
+//// Set python exceptions.
 //// void translate(const std::exception& e)
 ////{
 ////    // cppcheck-suppress knownPointerToBool
@@ -44,8 +46,8 @@
 //            // return py::extract<std::any>(obj_ptr).has_value() ? obj_ptr : nullptr;
 //            return nullptr;
 //        }
-//        // Without try catch it still raises a TypeError exception
-//        // But this enables to custom your error message
+//        // Without `try catch` it still raises a TypeError exception.
+//        // But this enables you to customize your error message.
 //        catch (...)
 //        {
 //            throw BadAnyCastError();

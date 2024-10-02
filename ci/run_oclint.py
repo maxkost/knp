@@ -15,13 +15,13 @@ def download_oclint(url: str, oclint_directory: Path) -> None:
 
     print(f'Downloading {url}...')
     with requests.get(url, stream=True) as response:
-        with tarfile.open(mode='r:gz', fileobj=response.raw) as tf:
+        with tarfile.open(mode='r:gz', fileobj=response.raw) as tf:  # type: ignore
             if hasattr(tarfile, 'tar_filter'):
-                tf.extractall(filter=tarfile.tar_filter)  # nosec B202
+                tf.extractall(path=oclint_directory, filter=tarfile.tar_filter)  # nosec B202
             else:
-                tf.extractall()  # nosec B202
+                tf.extractall(path=oclint_directory)  # nosec B202
 
-    print('Downloading finished.')
+    print('Download finished.')
 
 
 def get_oclint_archive_url() -> str:
@@ -38,7 +38,7 @@ def get_oclint_archive_url() -> str:
         oc_os = 'darwin-macos'
         os_ver = '12.2-xcode-13.2'
     else:
-        raise RuntimeError(f'Can\'t download OCLint for the OS "{system}"')
+        raise RuntimeError(f'Cannot download OCLint for the OS "{system}"')
 
     machine = platform.machine().lower()
     if machine in ['amd64', 'x86_64']:
@@ -48,7 +48,7 @@ def get_oclint_archive_url() -> str:
     elif machine in ['arm64']:
         oc_arch = 'arm64'
     else:
-        raise RuntimeError(f'Can\'t download OCLint for the machine "{machine}"')
+        raise RuntimeError(f'Cannot download OCLint for the machine "{machine}"')
 
     return f'{oc_base_url}/v{oc_version}/oclint-{oc_version}-{oc_llvm_version}-{oc_arch}-{oc_os}-{os_ver}.tar.gz'
 
@@ -63,9 +63,18 @@ build_dir = Path(sys.argv[2])
 if not oclint_dir.exists():
     download_oclint(get_oclint_archive_url(), oclint_dir)
 
+oclint_bin_dir = oclint_dir / 'bin'
+oclint_lib_dir = oclint_dir / 'lib'
+
+if not (oclint_bin_dir / 'oclint-json-compilation-database').exists():
+    for ocl_dir in oclint_dir.glob('oclint*'):
+        if (ocl_dir / 'bin' / 'oclint-json-compilation-database').exists():
+            oclint_bin_dir = ocl_dir / 'bin'
+            oclint_lib_dir = ocl_dir / 'lib'
+            break
 
 command = [
-    str(oclint_dir / 'bin' / 'oclint-json-compilation-database'),
+    str(oclint_bin_dir / 'oclint-json-compilation-database'),
     '-p',
     str(build_dir),
     '-e',
@@ -77,7 +86,8 @@ command = [
     '-e',
     '/usr/include/',
     '--',
-    f'-R={oclint_dir / "lib" / "oclint" / "rules"}',
+    f'-R={oclint_lib_dir / "oclint" / "rules"}',
+    f'-o={build_dir / "oclint.log"}',
 ]
 
 print('Starting OCLint...')

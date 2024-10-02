@@ -149,8 +149,28 @@
  */
 
 /**
+ * @dir /knp/base-framework/include/knp/framework/io/storage
+ * @brief Directory for storage headers.
+ */
+
+ /**
+ * @dir /knp/base-framework/include/knp/framework/io/storage/native
+ * @brief Directory for data storage headers.
+ */
+
+/**
  * @dir /knp/base-framework/include/knp/framework/monitoring
  * @brief Directory for monitoring headers.
+ */
+
+/**
+ * @dir /knp/base-framework/include/knp/framework/population
+ * @brief Directory for headers that contain procedures and functions for working with populations.
+ */
+
+/**
+ * @dir /knp/base-framework/include/knp/framework/projection
+ * @brief Directory for headers that contain procedures and functions for working with projections.
  */
 
 /**

@@ -3,6 +3,8 @@
  * @brief Getting network data from multi-threaded CPU backend.
  * @author An. Vartenkov.
  * @date 20.05.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/backends/cpu-multi-threaded/backend.h>
@@ -77,6 +79,6 @@ core::Backend::DataRanges MultiThreadedCPUBackend::get_network_data() const
     ProjIterPtr proj_begin = std::make_unique<ProjectionValueIterator>(ProjectionValueIterator{projections_.begin()});
     ProjIterPtr proj_end = std::make_unique<ProjectionValueIterator>(ProjectionValueIterator{projections_.end()});
     auto proj_range = std::make_pair(std::move(proj_begin), std::move(proj_end));
-    return DataRanges{.projection_range{std::move(proj_range)}, .population_range{std::move(pop_range)}};
+    return DataRanges{std::move(proj_range), std::move(pop_range)};
 }
 }  // namespace knp::backends::multi_threaded_cpu

@@ -3,6 +3,8 @@
  * @brief Backend loader interface.
  * @author Artiom N.
  * @date 16.03.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -25,7 +27,7 @@ namespace knp::framework
 /**
  * @brief The BackendLoader class is a definition of a backend loader.
  */
-class BackendLoader
+class KNP_DECLSPEC BackendLoader
 {
 public:
     /**

@@ -36,7 +36,7 @@ class CcccCmd(StaticAnalyzerCmd):
         self.config_file = self.artifacts_dir / self.config_name
 
     def run(self):
-        """Run cccc"""
+        """Run cccc."""
 
         self.artifacts_dir.mkdir(parents=True, exist_ok=True)
 
@@ -50,7 +50,7 @@ class CcccCmd(StaticAnalyzerCmd):
             try:
                 tree = ElementTree.parse(self.config_file)
             except ElementTree.ParseError as e:
-                print(f'WARNING: CCCC BUG: {e}!!!')
+                print(f'WARNING: CCCC BUG: {e}.')
                 return
             root = tree.getroot()
 
@@ -73,7 +73,7 @@ class CcccCmd(StaticAnalyzerCmd):
                 for i, v in limits.items():
                     if module_data.get(i, 0) > v:
                         self.raise_error(
-                            f'{i} in "{file}" [{module_name}] == {module_data[i]}', f'This excites limit {v}!'
+                            f'{i} in "{file}" [{module_name}] == {module_data[i]}', f'This exceeds the limit of {v}.'
                         )
                         sys.exit(1)
 

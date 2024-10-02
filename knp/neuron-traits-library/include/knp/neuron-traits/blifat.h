@@ -3,6 +3,8 @@
  * @brief BLIFAT neuron type traits.
  * @author Artiom N.
  * @date 26.01.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -34,7 +36,7 @@ struct default_values<BLIFATNeuron>
     /**
      * @brief The parameter defines the default value of `n_time_steps_since_last_firing_` for a BLIFAT neuron.
      */
-    constexpr static std::size_t n_time_steps_since_last_firing_ = std::numeric_limits<std::size_t>::infinity();
+    constexpr static std::size_t n_time_steps_since_last_firing_ = std::numeric_limits<std::size_t>::max();
 
     /**
      * @brief The parameter defines a value to which membrane potential tends (for conductance-based inhibitory
@@ -103,8 +105,8 @@ struct default_values<BLIFATNeuron>
     constexpr static double potential_ = 0;
 
     /**
-     * @brief This parameter is used if there was a blocking signal. Then all potential changes due to synapses are
-     * ignored.
+     * @brief This parameter is used if there was a blocking signal.
+     * @details If used, all potential changes due to synapses are ignored.
      */
     constexpr static double pre_impact_potential_ = 0;
 
@@ -210,8 +212,8 @@ struct neuron_parameters<BLIFATNeuron>
      */
     double potential_ = default_values<BLIFATNeuron>::potential_;
     /**
-     * @brief This parameter is used if there was a blocking signal. Then all potential changes due to synapses are
-     * ignored.
+     * @brief This parameter is used if there was a blocking signal.
+     * @details If used, all potential changes due to synapses are ignored.
      */
     double pre_impact_potential_ = default_values<BLIFATNeuron>::pre_impact_potential_;
     /**

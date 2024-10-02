@@ -3,6 +3,8 @@
  * @brief Synaptic resource-based STDP neuron parameters.
  * @author Artiom N.
  * @date 06.10.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -79,6 +81,12 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
         : neuron_parameters<NeuronType>(base_neuron)
     {
     }
+
+    /**
+     * @brief Time parameter for dopamine plasticity. TODO: Remove it when 3-phase learning is ready.
+     */
+    uint32_t dopamine_plasticity_time_ = 1;
+
     /**
      * @brief Free synaptic resource.
      */
@@ -86,7 +94,7 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
     /**
      * @brief Synaptic resource threshold value.
      */
-    float synaptic_resource_threshold_ = std::numeric_limits<float>::infinity();
+    float synaptic_resource_threshold_ = std::numeric_limits<float>::max();
     /**
      * @brief Synaptic resource divided by `number of synapses + resource drain coefficient`.
      */

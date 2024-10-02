@@ -1,7 +1,9 @@
 /**
- * @brief Multithreading backend test.
+ * @brief Multi-threaded backend test.
  * @author Vartenkov An.
  * @date 07.04.23.
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/backends/cpu-multi-threaded/backend.h>
@@ -52,7 +54,7 @@ template <class Endpoint>
 bool receive_messages_smallest_network(const knp::core::UID &out_channel_uid, Endpoint &endpoint)
 {
     endpoint.receive_all_messages();
-    // Write up the steps where the network sends a spike.
+    // Write the steps on which the network sends a spike.
     if (!endpoint.template unload_messages<knp::core::messaging::SpikeMessage>(out_channel_uid).empty()) return true;
     return false;
 }
@@ -60,7 +62,7 @@ bool receive_messages_smallest_network(const knp::core::UID &out_channel_uid, En
 
 TEST(MultiThreadCpuSuite, SmallestNetwork)
 {
-    // Create a single neuron network: input -> input_projection -> population <=> loop_projection.
+    // Create a single-neuron neural network: input -> input_projection -> population <=> loop_projection.
 
     namespace kt = knp::testing;
     kt::MTestingBack backend;
@@ -156,7 +158,7 @@ TEST(MultiThreadCpuSuite, ThreadPoolTest)
 {
     knp::backends::cpu_executors::ThreadPoolContext pool;
     std::vector<uint64_t> result;
-    const int num_iterations = 10;  // Corresponding fibonacci number is 89.
+    const int num_iterations = 10;  // Corresponding Fibonacci number is 89.
     batch(pool, num_iterations, {2, 4, 5, 7, 9}, result);
     ASSERT_EQ(result.size(), 5);  // All threads are finished.
     ASSERT_EQ(result[0], 178);    // The results are correct (89 * 2).

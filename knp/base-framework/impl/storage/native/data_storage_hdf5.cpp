@@ -1,8 +1,10 @@
 /**
  * @file data_storage_hdf5.cpp
- * @brief File for saving and loading data in hdf5 format.
+ * @brief Saving and loading data in HDF5 format.
  * @author An. Vartenkov
  * @date 16.04.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/framework/io/storage/native/data_storage_json.h>
@@ -16,7 +18,7 @@
 #include "data_storage_common.h"
 
 
-namespace knp::framework::storage::native
+namespace knp::framework::io::storage::native
 {
 namespace fs = std::filesystem;
 
@@ -37,8 +39,8 @@ bool check_magic(const HighFive::File &h5_file, bool is_throw)
         if (is_throw)
         {
             throw std::runtime_error(
-                "Wrong magic number " + std::to_string(magic_number) + ". It should be " +
-                std::to_string(MAGIC_NUMBER));
+                "Wrong magic number \"" + std::to_string(magic_number) + "\". It should be \"" +
+                std::to_string(MAGIC_NUMBER) + "\".");
         }
         else
             return false;
@@ -56,21 +58,27 @@ bool check_version(const HighFive::File &doc)
 }
 
 
-std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
+void check_format(const HighFive::File &h5_file, bool is_throw)
+{
+    // Checking magic number.
+    if (!check_magic(h5_file, is_throw)) SPDLOG_WARN("No magic number found, probably wrong file format.");
+
+    // Checking version.
+    if (!check_version(h5_file)) SPDLOG_WARN("Unable to confirm file version.");
+}
+
+
+KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
     const fs::path &path_to_h5, const knp::core::UID &uid, float time_per_step, bool strict_format)
 {
     HighFive::File h5_file(path_to_h5.string());
 
-    // Checking magic number.
-    if (!check_magic(h5_file, strict_format)) SPDLOG_WARN("No magic number found, probably wrong file format");
-
-    // Checking version.
-    if (!check_version(h5_file)) SPDLOG_WARN("Unable to confirm file version");
+    check_format(h5_file, strict_format);
 
     // File should have "spikes" group.
     std::vector<std::string> obj_names = h5_file.listObjectNames();
     if (std::find(obj_names.begin(), obj_names.end(), std::string("spikes")) == obj_names.end())
-        throw std::runtime_error("No \"spikes\" group in file " + path_to_h5.string());
+        throw std::runtime_error("No \"spikes\" group in file \"" + path_to_h5.string() + "\".");
     auto data_group = h5_file.getGroup("spikes");
 
     // Checking if "internal" is needed.
@@ -91,7 +99,7 @@ std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
 
     // Checking that timestamp dataset exists.
     if (std::find(obj_names.begin(), obj_names.end(), std::string("timestamps")) == obj_names.end())
-        throw std::runtime_error(R"--(Couldn't find "timestamps" dataset in data file.)--");
+        throw std::runtime_error(R"--(Could not find "timestamps" dataset in data file.)--");
 
     // Loading datasets.
     const auto node_dataset = data_group.getDataSet(node_name);
@@ -111,7 +119,7 @@ std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
 }
 
 
-void save_messages_to_h5(
+KNP_DECLSPEC void save_messages_to_h5(
     std::vector<core::messaging::SpikeMessage> messages, const std::filesystem::path &path_to_save, float time_per_step)
 {
     HighFive::File data_file(path_to_save.string(), HighFive::File::Create | HighFive::File::Overwrite);
@@ -132,7 +140,8 @@ void save_messages_to_h5(
     timestamps.reserve(total_size);
     nodes.reserve(total_size);
 
-    // Sorting messages by step (dataset is "sorted by timestamp").
+    // Sorting messages by step.
+    // Dataset is sorted by timestamp.
     std::sort(
         messages.begin(), messages.end(),
         [](const core::messaging::SpikeMessage &msg1, const core::messaging::SpikeMessage &msg2)
@@ -153,4 +162,4 @@ void save_messages_to_h5(
     time_set.createAttribute("units", std::string{"step"});
 }
 
-}  // namespace knp::framework::storage::native
+}  // namespace knp::framework::io::storage::native

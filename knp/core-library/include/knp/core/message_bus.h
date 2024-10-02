@@ -3,6 +3,8 @@
  * @brief Message bus interface.
  * @author Artiom N.
  * @date 23.01.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -51,7 +53,7 @@ public:
      * @brief Create a message bus with default implementation.
      * @return message bus.
      */
-    static MessageBus construct_bus() { return construct_cpu_bus(); }
+    static MessageBus construct_bus() { return construct_zmq_bus(); }
 
     /**
      * @brief Default message bus constructor is deleted.

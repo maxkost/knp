@@ -3,6 +3,8 @@
  * @brief Precompiled header for the core library.
  * @author Artiom N.
  * @date 25.04.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once

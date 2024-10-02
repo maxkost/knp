@@ -4,8 +4,8 @@
 
 include_guard(GLOBAL)
 
-include(CPM)
-# include("git")
+# include(get_cpm)
+include("CPM")
 
 
 function(add_third_party module_name)

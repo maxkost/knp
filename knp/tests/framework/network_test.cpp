@@ -3,6 +3,8 @@
  * @brief Network class testing.
  * @author A. Vartenkov
  * @date 12.02.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/framework/network.h>
@@ -47,13 +49,13 @@ auto create_entities()
 
 TEST(FrameworkSuite, EmptyNetwork)
 {
-    // Testing default network constructor: should create an empty network
+    // Test default network constructor. This should create an empty network.
     knp::framework::Network network;
-    // Number of projections in an empty network is zero
+    // Number of projections in an empty network is zero.
     ASSERT_EQ(network.projections_count(), 0);
-    // Number of populations in an empty network is zero
+    // Number of populations in an empty network is zero.
     ASSERT_EQ(network.populations_count(), 0);
-    // Check iterator correctness
+    // Check iterator correctness.
     ASSERT_EQ(network.begin_populations(), network.end_populations());
     ASSERT_EQ(network.begin_projections(), network.end_projections());
 }
@@ -64,6 +66,9 @@ TEST(FrameworkSuite, NetworkCreation)
     knp::framework::Network network;
     auto [population1, projection1] = create_entities();
 
+    auto pop_uid = population1.get_uid();
+    auto proj_uid = projection1.get_uid();
+
     network.add_population(std::move(population1));
     ASSERT_EQ(network.populations_count(), 1);
     ASSERT_EQ(network.projections_count(), 0);
@@ -71,6 +76,11 @@ TEST(FrameworkSuite, NetworkCreation)
     network.add_projection(std::move(projection1));
     ASSERT_EQ(network.populations_count(), 1);
     ASSERT_EQ(network.projections_count(), 1);
+
+    ASSERT_EQ(
+        network.get_population<knp::core::Population<knp::neuron_traits::BLIFATNeuron>>(pop_uid).get_uid(), pop_uid);
+    ASSERT_EQ(network.get_projection<DeltaProjection>(proj_uid).get_uid(), proj_uid);
+    ASSERT_NE(network.get_projection<DeltaProjection>(proj_uid).get_uid(), pop_uid);
 }
 
 

@@ -3,6 +3,8 @@
  * @brief Functions for saving and loading network.
  * @author A. Vartenkov
  * @date 09.04.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include "save_network.h"
@@ -73,7 +75,7 @@ std::string make_projections_list(const Network &network)
             },
             *iter);
     }
-    result.resize(result.size() - 1);  // Remove last comma
+    result.resize(result.size() - 1);  // Remove last comma.
     return result;
 }
 
@@ -91,7 +93,7 @@ std::string make_populations_list(const Network &network)
             },
             *iter);
     }
-    result.resize(result.size() - 1);  // Remove last comma
+    result.resize(result.size() - 1);  // Remove last comma.
     return result;
 }
 
@@ -129,7 +131,7 @@ void write_network_config(
 }
 
 
-void save_network(const Network &network, const fs::path &dir)
+KNP_DECLSPEC void save_network(const Network &network, const fs::path &dir)
 {
     auto net_dir = dir / "network";
     if (!is_directory(net_dir)) fs::create_directory(net_dir);
@@ -172,7 +174,7 @@ void save_network(const Network &network, const fs::path &dir)
             *iter);
     }
     h5_pop_file.createAttribute("network_uid", std::string{network.get_uid()});
-    // TODO : move this inside add_population or add more neurons
+    // TODO: Move this inside add_population or add more neurons.
     add_neuron_type_to_csv<neuron_traits::BLIFATNeuron>(path_to_neurons_csv);
 
     write_base_config(dir, net_dir);

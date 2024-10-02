@@ -274,7 +274,7 @@ Use these commands to install some or all of the linters used in this project:
 
 [1]: llvm includes tools like `clang-format` and `clang-tidy`.
 
-[2]: While it's possible to use other package managers to install these utilities on Linux, I recommend
+[2]: While it's possible to use other package managers to install these utilities on Linux, I recommend 
   using brew to avoid dependency issues between llvm and linters that use it, such as include-what-you-use.
 
 [3]: You can install on MacOS with `brew install oclint`. Oclint's github page also provides compiled

@@ -3,11 +3,14 @@
  * @brief Class definition for CPU device.
  * @author Artiom N.
  * @date 30.01.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
 
 #include <knp/core/device.h>
+#include <knp/core/impexp.h>
 
 #include <memory>
 #include <string>
@@ -33,23 +36,18 @@ class CpuPower;
 /**
  * @brief The CPU class is a definition of an interface to the CPU device.
  */
-class CPU : public knp::core::Device
+class KNP_DECLSPEC CPU : public knp::core::Device  // cppcheck-suppress class_X_Y
 {
 public:
     /**
-     * @brief CPU device constructor.
+     * @brief Avoid copy of a CPU device.
      */
-    CPU();
-
-    /**
-     * @brief CPU device destructor.
-     */
-    ~CPU();
+    CPU(const CPU &) = delete;
 
     /**
      * @brief Avoid copy assignment of a CPU device.
      */
-    CPU(const CPU &) = delete;
+    CPU &operator=(const CPU &) = delete;
 
     /**
      * @brief CPU device move constructor.
@@ -57,10 +55,15 @@ public:
     CPU(CPU &&);
 
     /**
-     * @brief CPU device copy operator.
+     * @brief CPU device move operator.
      * @return reference to CPU instance.
      */
-    CPU &operator=(CPU &&);
+    CPU &operator=(CPU &&) noexcept;
+
+    /**
+     * @brief CPU device destructor.
+     */
+    ~CPU() override;
 
 public:
     /**
@@ -76,12 +79,26 @@ public:
     [[nodiscard]] const std::string &get_name() const override;
 
     /**
+     * @brief Get CPU device socket number.
+     * @return socket number.
+     */
+    [[nodiscard]] uint32_t get_socket_number() const;
+
+    /**
      * @brief Get power consumption details for the device.
      * @return amount of consumed power.
      */
     [[nodiscard]] float get_power() const override;
 
 private:
+    /**
+     * @brief CPU device constructor.
+     */
+    explicit CPU(uint32_t cpu_num);
+    friend KNP_DECLSPEC std::vector<CPU> list_processors();
+
+private:
+    uint32_t cpu_num_;
     // Non const, because of move operator.
     // cppcheck-suppress unusedStructMember
     std::string cpu_name_;
@@ -93,6 +110,6 @@ private:
  * @brief List all processors on which backend can be initialized.
  * @return vector of CPUs.
  */
-std::vector<CPU> list_processors();
+KNP_DECLSPEC std::vector<CPU> list_processors();
 
 }  // namespace knp::devices::cpu

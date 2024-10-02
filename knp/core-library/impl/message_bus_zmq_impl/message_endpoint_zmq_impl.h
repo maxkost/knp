@@ -3,6 +3,8 @@
  * @brief Message endpoint ZeroMQ implementation header.
  * @author Artiom N.
  * @date 31.03.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -42,7 +44,7 @@ public:
     void send_message(const knp::core::messaging::MessageVariant &message) override
     {
         auto packed_msg = knp::core::messaging::pack_to_envelope(message);
-        SPDLOG_TRACE("Packed message size = {}...", packed_msg.size());
+        SPDLOG_TRACE("Packed message size: {}.", packed_msg.size());
         send_zmq_message(packed_msg.data(), packed_msg.size());
     }
 

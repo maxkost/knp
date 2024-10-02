@@ -1,8 +1,10 @@
 /**
  * @file backend.cpp
- * @brief Common backend class Python bindings.
+ * @brief Python bindings for common Backend class.
  * @author Artiom N.
  * @date 01.02.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include "common.h"
@@ -90,12 +92,12 @@ struct BackendWrapper : core::Backend, py::wrapper<core::Backend>
 #    define INSTANCE_PY_BACKEND_SUBSCRIBE_METHOD_IMPL(n, template_for_instance, message_type)                   \
         if (BOOST_PP_STRINGIZE(message_type) == class_obj_name)                                                 \
         {                                                                                                       \
-            SPDLOG_TRACE("Backend subscribing to: {}", class_obj_name);                                         \
+            SPDLOG_TRACE("Backend subscribing to {}...", class_obj_name);                                       \
             self.subscribe<core::messaging::message_type>(receiver, py_iterable_to_vector<core::UID>(senders)); \
             return;                                                                                             \
         }
 
-// Abstract class
+// Abstract class.
 py::class_<BackendWrapper, boost::noncopyable>(
     "Backend", "The Backend class is the base class for backends.", py::no_init)
     .def(
@@ -185,16 +187,16 @@ py::class_<BackendWrapper, boost::noncopyable>(
             {
                 const auto class_obj_name = get_py_class_name(msg_class);
 
-                SPDLOG_TRACE("Message class name: {}", class_obj_name);
+                SPDLOG_TRACE("Message class name: {}.", class_obj_name);
 
                 // cppcheck-suppress unknownMacro
                 BOOST_PP_SEQ_FOR_EACH(
                     INSTANCE_PY_BACKEND_SUBSCRIBE_METHOD_IMPL, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES))
 
-                PyErr_SetString(PyExc_TypeError, "Passed object is not message class!");
+                PyErr_SetString(PyExc_TypeError, "Passed object is not a message class.");
                 py::throw_error_already_set();
 
-                throw std::runtime_error("Incorrect class!");
+                throw std::runtime_error("Incorrect class.");
             }),
         "Subscribe internal endpoint to messages.")
     .def("_init", &core::Backend::_init, "Initialize backend before starting network execution.")

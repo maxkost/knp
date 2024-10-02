@@ -3,6 +3,8 @@
  * @brief Message bus ZeroMQ implementation.
  * @author Artiom N.
  * @date 31.03.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <message_bus_zmq_impl/message_bus_zmq_impl.h>
@@ -19,6 +21,16 @@
 namespace knp::core::messaging::impl
 {
 
+#if defined(_MSC_VER)
+#    pragma warning(push)
+#    pragma warning(disable : 4455)
+#endif
+using std::chrono_literals::operator""ms;
+#if defined(_MSC_VER)
+#    pragma warning(pop)
+#endif
+
+
 class MessageEndpointZMQ : public MessageEndpoint
 {
 public:
@@ -30,15 +42,15 @@ public:
 
 
 MessageBusZMQImpl::MessageBusZMQImpl()
-    :  // TODO: replace with std::format.
+    :  // TODO: Replace with std::format.
       router_sock_address_("inproc://route_" + std::string(UID())),
       publish_sock_address_("inproc://publish_" + std::string(UID())),
       router_socket_(context_, zmq::socket_type::router),
       publish_socket_(context_, zmq::socket_type::pub)
 {
-    SPDLOG_DEBUG("Router socket binding to {}", router_sock_address_);
+    SPDLOG_DEBUG("Router socket binding to {}...", router_sock_address_);
     router_socket_.bind(router_sock_address_);
-    SPDLOG_DEBUG("Publish socket binding to {}", publish_sock_address_);
+    SPDLOG_DEBUG("Publish socket binding to {}...", publish_sock_address_);
     publish_socket_.bind(publish_sock_address_);
     // zmq::proxy(router_socket_, publish_socket_);
 }
@@ -48,43 +60,35 @@ size_t MessageBusZMQImpl::step()
 {
     zmq::message_t message;
     zmq::recv_result_t recv_result;
-#if defined(_MSC_VER)
-#    pragma warning(push)
-#    pragma warning(disable : 4455)
-#endif
-    using std::chrono_literals::operator""ms;
-#if defined(_MSC_VER)
-#    pragma warning(pop)
-#endif
 
     try
     {
-        // recv_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
+        // recv_result is an optional and if it doesn't contain a value, EAGAIN is returned by the call.
         std::vector<zmq_pollitem_t> items = {
             zmq_pollitem_t{router_socket_.handle(), 0, ZMQ_POLLIN, 0},
         };
-        SPDLOG_DEBUG("Running poll()");
+        SPDLOG_DEBUG("Running poll()...");
 
         if (zmq::poll(items, 0ms) > 0)
         {
-            SPDLOG_TRACE("Poll() successful, receiving data");
+            SPDLOG_TRACE("poll() was successful, receiving data...");
             do
             {
                 recv_result = router_socket_.recv(message, zmq::recv_flags::dontwait);
 
                 if (recv_result.has_value())
                 {
-                    SPDLOG_TRACE("Bus received {} bytes", recv_result.value());
+                    SPDLOG_TRACE("Bus received {} bytes.", recv_result.value());
                 }
                 else
                 {
-                    SPDLOG_WARN("Bus receiving error [EAGAIN]!");
+                    SPDLOG_WARN("Bus received error [EAGAIN].");
                 }
             } while (!recv_result.has_value());
         }
         else
         {
-            SPDLOG_DEBUG("Poll() returned 0, exiting");
+            SPDLOG_DEBUG("poll() returned 0, exiting...");
             return 0;
         }
 
@@ -93,14 +97,14 @@ size_t MessageBusZMQImpl::step()
             return 1;
         }
 
-        SPDLOG_DEBUG("Data was received, bus will re-send the message");
-        // send_result is an optional and if it doesn't contain a value, EAGAIN was returned by the call.
+        SPDLOG_DEBUG("Data was received, bus the message will be resent.");
+        // `send_result` is `std::optional` and if it doesn't contain a value, `EAGAIN` is returned by the call.
         zmq::send_result_t send_result;
         do
         {
             send_result = publish_socket_.send(message, zmq::send_flags::none);
         } while (!send_result.has_value());
-        SPDLOG_TRACE("Bus sent {} bytes...", send_result.value());
+        SPDLOG_TRACE("Bus sent {} bytes.", send_result.value());
     }
     catch (const zmq::error_t &e)
     {
@@ -120,7 +124,7 @@ MessageEndpoint MessageBusZMQImpl::create_endpoint()
 // #if (ZMQ_VERSION >= ZMQ_MAKE_VERSION(4, 3, 4))
 //         sub_socket_.set(zmq::sockopt::subscribe, "");
 // #else
-//  Strange version inconsistence: set() exists on Manjaro, but doesn't exist on Debian in the same library versions.
+//  Strange version inconsistence: set() exists on Manjaro, but doesn't exist on Debian in the same library version.
 #if defined(__GNUC__)
 #    pragma GCC diagnostic push
 #    pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -134,9 +138,9 @@ MessageEndpoint MessageBusZMQImpl::create_endpoint()
     sub_socket.setsockopt(ZMQ_SUBSCRIBE, nullptr, 0);
 #endif
     // #endif
-    SPDLOG_DEBUG("Pub socket connecting to {}", router_sock_address_);
+    SPDLOG_DEBUG("Pub socket connecting to {}...", router_sock_address_);
     pub_socket.connect(router_sock_address_);
-    SPDLOG_DEBUG("Sub socket connecting to {}", publish_sock_address_);
+    SPDLOG_DEBUG("Sub socket connecting to {}...", publish_sock_address_);
     sub_socket.connect(publish_sock_address_);
 
     return std::move(MessageEndpointZMQ(std::move(sub_socket), std::move(pub_socket)));

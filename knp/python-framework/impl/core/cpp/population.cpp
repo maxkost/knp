@@ -3,6 +3,8 @@
  * @brief Python bindings for Population.
  * @author Artiom N.
  * @date 07.02.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #if defined(KNP_IN_CORE)

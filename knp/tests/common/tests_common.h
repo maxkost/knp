@@ -3,12 +3,15 @@
  * @brief Common routines used for tests.
  * @author Artiom N.
  * @date 31.12.2022
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <gtest/internal/gtest-filepath.h>
+#include <spdlog/spdlog.h>
 
 #include <filesystem>
 #include <string>
@@ -21,7 +24,7 @@ namespace testing::internal
 ::std::vector<std::string> GetArgvs();
 
 #if GTEST_HAS_FILE_SYSTEM
-//// Returns the current application's name, removing directory path if that
+//// Return the current application name, removing directory path if it
 //// is present.
 FilePath GetCurrentExecutableName();
 #endif

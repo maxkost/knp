@@ -3,6 +3,8 @@
  * @brief Delta synapse type traits.
  * @author Andrey V.
  * @date 26.01.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -19,14 +21,14 @@
 namespace knp::synapse_traits
 {
 /**
- * @brief Delta synapse. 
+ * @brief Delta synapse.
  * @note Use as a template parameter only.
  */
 struct DeltaSynapse;
 
 
 /**
- * @brief Default values for Delta synapse parameters.
+ * @brief Default values for delta synapse parameters.
  */
 template <>
 struct default_values<DeltaSynapse>
@@ -37,7 +39,7 @@ struct default_values<DeltaSynapse>
     constexpr static float weight_ = 0.0F;
 
     /**
-     * @brief Synaptic delay default value. 
+     * @brief Synaptic delay default value.
      * @note Value of `1` is the least delay possible.
      */
     constexpr static uint32_t delay_ = 1;
@@ -83,12 +85,14 @@ struct synapse_parameters<DeltaSynapse>
     float weight_;
 
     /**
-     * @brief Synaptic delay. Delay of `N` means that a spike sent on step `X` will be received on step `X + N`.
+     * @brief Synaptic delay.
+     * @details Delay of `N` means that a spike sent on step `X` will be received on step `X + N`.
      */
     uint32_t delay_;
 
     /**
-     * @brief Synapse type. Various types have different influences on neuron parameters, as defined by neuron
+     * @brief Synapse type.
+     * @details Various types have different influences on neuron parameters, as defined by neuron
      * function.
      */
     knp::synapse_traits::OutputType output_type_;

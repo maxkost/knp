@@ -1,8 +1,10 @@
 /**
  * @file subscription.cpp
- * @brief Subscriptions instantiation.
+ * @brief Instantiation of subscriptions.
  * @author Artiom N.
  * @date 11.04.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/messaging/messaging.h>

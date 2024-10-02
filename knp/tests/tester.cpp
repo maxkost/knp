@@ -1,6 +1,8 @@
 /**
- * Tests runner.
- **/
+ * @brief Runner for tests.
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
+ */
 
 #include <gtest/gtest.h>
 #include <spdlog/spdlog.h>
@@ -13,8 +15,8 @@
 int main(int argc, char *argv[])
 {
     spdlog::set_level(spdlog::level::trace);
-
     testing::InitGoogleTest(&argc, argv);
+
     try
     {
         return RUN_ALL_TESTS();

@@ -39,20 +39,20 @@ report = json.loads(result.stdout)
 line_percent = int(report['line_percent'])
 
 print(
-    f'Total lines count = {report["line_total"]}\n'
-    f'Coverage lines percent = {line_percent}\n'
-    f'Total functions count = {report["function_total"]}\n'
-    f'Coverage functions percent = {report["function_covered"]}\n'
-    f'Total branches count = {report["branch_total"]}\n'
-    f'Coverage branches percent = {report["branch_percent"]}'
+    f'Total line count = {report["line_total"]}\n'
+    f'Line coverage percentage = {line_percent}\n'
+    f'Total function count = {report["function_total"]}\n'
+    f'Function coverage percentage = {report["function_covered"]}\n'
+    f'Total branch count = {report["branch_total"]}\n'
+    f'Branch coverage percentage = {report["branch_percent"]}'
 )
 
 exit_code = percent - line_percent if line_percent < percent else 0
 
 if exit_code:
-    print(f'Warning: coverage analysis was not passed [{percent}% necessary, but only {line_percent}% covered]!')
+    print(f'Warning: coverage analysis was not passed [{percent}% coverage is necessary, but only {line_percent}% is covered]!')
     files = sorted(report['files'], key=lambda k: int(k['line_total']))[:10]
-    print('TOP10 files without coverage:')
+    print('Top-10 files without coverage:')
     for f in files:
         print(f'  {f["filename"]} ({f["line_percent"]}%)')
 else:

@@ -3,6 +3,8 @@
  * @brief Test saving and loading spikes.
  * @author A. Vartenkov
  * @date 18.04.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/messaging/messaging.h>
@@ -63,16 +65,16 @@ protected:
 TEST_F(SaveLoadDataSuite, JsonTest)
 {
     file_path_ = "data.json";
-    knp::framework::storage::native::save_messages_to_json(messages_, file_path_);
-    ASSERT_EQ(messages_, knp::framework::storage::native::load_messages_from_json(file_path_, uid_));
+    knp::framework::io::storage::native::save_messages_to_json(messages_, file_path_);
+    ASSERT_EQ(messages_, knp::framework::io::storage::native::load_messages_from_json(file_path_, uid_));
 }
 
 
 TEST_F(SaveLoadDataSuite, Hdf5Test)
 {
     file_path_ = "data.h5";
-    knp::framework::storage::native::save_messages_to_h5(messages_, file_path_);
-    ASSERT_EQ(messages_, knp::framework::storage::native::load_messages_from_h5(file_path_, uid_));
+    knp::framework::io::storage::native::save_messages_to_h5(messages_, file_path_);
+    ASSERT_EQ(messages_, knp::framework::io::storage::native::load_messages_from_h5(file_path_, uid_));
 }
 
 
@@ -83,7 +85,7 @@ protected:
     {
         messages_ = generate_random_messages(uid_, 200, 20, 0.2);
         path_to_json_ = "data.json";
-        knp::framework::storage::native::save_messages_to_json(messages_, path_to_json_);
+        knp::framework::io::storage::native::save_messages_to_json(messages_, path_to_json_);
         std::ifstream file(path_to_json_);
         std::stringstream buffer;
         buffer << file.rdbuf();
@@ -105,14 +107,14 @@ protected:
 
 TEST_F(WrongMagicNumberJsonSuite, JsonTestNonStrict)
 {
-    auto loaded_messages = knp::framework::storage::native::load_messages_from_json(path_to_json_, uid_, false);
+    auto loaded_messages = knp::framework::io::storage::native::load_messages_from_json(path_to_json_, uid_, false);
     ASSERT_EQ(messages_, loaded_messages);
 }
 
 
 TEST_F(WrongMagicNumberJsonSuite, JsonTestStrict)
 {
-    ASSERT_ANY_THROW(knp::framework::storage::native::load_messages_from_json(path_to_json_, uid_, true));
+    ASSERT_ANY_THROW(knp::framework::io::storage::native::load_messages_from_json(path_to_json_, uid_, true));
 }
 
 
@@ -123,7 +125,7 @@ protected:
     {
         path_to_h5_ = "data.h5";
         messages_ = generate_random_messages(uid_, 200, 20, 0.2);
-        knp::framework::storage::native::save_messages_to_h5(messages_, path_to_h5_);
+        knp::framework::io::storage::native::save_messages_to_h5(messages_, path_to_h5_);
         HighFive::File h5_file(path_to_h5_.string(), HighFive::File::ReadWrite);
         h5_file.deleteAttribute("magic");
         h5_file.createAttribute("magic", 1234);
@@ -140,12 +142,12 @@ protected:
 
 TEST_F(WrongMagicNumberHdf5Suite, Hdf5TestNonStrict)
 {
-    auto loaded_messages = knp::framework::storage::native::load_messages_from_h5(path_to_h5_, uid_, 1.0, false);
+    auto loaded_messages = knp::framework::io::storage::native::load_messages_from_h5(path_to_h5_, uid_, 1.0, false);
     ASSERT_EQ(messages_, loaded_messages);
 }
 
 
 TEST_F(WrongMagicNumberHdf5Suite, Hdf5TestStrict)
 {
-    ASSERT_ANY_THROW(knp::framework::storage::native::load_messages_from_h5(path_to_h5_, uid_, 1.0, true));
+    ASSERT_ANY_THROW(knp::framework::io::storage::native::load_messages_from_h5(path_to_h5_, uid_, 1.0, true));
 }

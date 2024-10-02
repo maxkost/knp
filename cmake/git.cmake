@@ -6,7 +6,7 @@ find_package(Git QUIET)
 
 if(NOT Git_FOUND)
     find_package(Git REQUIRED)
-    message("Git found: ${GIT_EXECUTABLE}")
+    message("Git found: ${GIT_EXECUTABLE}.")
 endif()
 
 

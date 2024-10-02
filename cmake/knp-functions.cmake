@@ -1,5 +1,5 @@
 #
-# KNP build functions. Artiom N.(cl)2023.
+# Kaspersky Neuromorphic Platform build functions. Artiom N.(cl)2023.
 #
 
 include_guard(GLOBAL)
@@ -9,13 +9,13 @@ include(CheckIPOSupported)
 
 function(knp_get_hdf5_target target_name)
     if (TARGET hdf5-static)
-        message(STATUS "Using static HDF5 library")
+        message(STATUS "Using static HDF5 library...")
         set(${target_name} hdf5-static PARENT_SCOPE)
     elseif (TARGET HDF5::HDF5)
-        message(STATUS "Using dynamic HDF5 library")
+        message(STATUS "Using dynamic HDF5 library...")
         set(${target_name} HDF5::HDF5 PARENT_SCOPE)
     else()
-        message(FATAL_ERROR "HDF5 library was not found")
+        message(FATAL_ERROR "HDF5 library was not found.")
     endif()
 endfunction()
 
@@ -30,14 +30,14 @@ function(knp_set_target_parameters target visibility)
             if (_ipo_result)
                 set_target_properties("${target}" PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
             else()
-                message(WARNING "IPO is not supported: ${_ipo_output}")
+                message(WARNING "IPO is not supported: ${_ipo_output}.")
             endif()
         endif()
     endif()
 
-    if(MSVC)  # AND ($<COMPILE_LANGUAGE> STREQUAL CXX OR $<COMPILE_LANGUAGE> STREQUAL C))
-        set_property(TARGET "${target}" PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-    endif()
+    # if (MSVC)  # AND ($<COMPILE_LANGUAGE> STREQUAL CXX OR $<COMPILE_LANGUAGE> STREQUAL C))
+    #    set_property(TARGET "${target}" PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+    # endif()
 
     target_compile_options("${target}" ${visibility} $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wdocumentation>)
     target_compile_options("${target}" ${visibility} $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-Wdocumentation>)
@@ -60,7 +60,7 @@ function(knp_set_target_parameters target visibility)
 
     # set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address -fsanitize-recover=address")
     # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address -fsanitize-recover=address")
-    if(UNIX AND NOT APPLE)
+    if (UNIX AND NOT APPLE)
         #        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,noexecstack -Wl,-z,relro,-z,now")
     endif()
 
@@ -79,24 +79,24 @@ function (_knp_add_library lib_name lib_type)
 
     set(${lib_name}_source ${PARSED_ARGS_UNPARSED_ARGUMENTS})
 
-    if("${lib_type}" STREQUAL "PY_MODULE")
+    if ("${lib_type}" STREQUAL "PY_MODULE")
         python3_add_library("${lib_name}" MODULE ${${lib_name}_source})
     else()
         add_library("${lib_name}" ${lib_type} ${${lib_name}_source})
     endif()
 
-    if(PARSED_ARGS_ALIAS)
+    if (PARSED_ARGS_ALIAS)
         add_library(${PARSED_ARGS_ALIAS} ALIAS "${lib_name}")
     endif()
 
-    if(PARSED_ARGS_PRECOMP)
+    if (PARSED_ARGS_PRECOMP)
         string(REGEX REPLACE "[:-]" "_" _PRECOMP_NAME ${PARSED_ARGS_PRECOMP})
         if (_KNP_PRECOMP_${_PRECOMP_NAME}_)
             # Precomp already exists.
             target_precompile_headers("${lib_name}" REUSE_FROM "${_KNP_PRECOMP_${_PRECOMP_NAME}_}")
         else()
             # New precomp.
-            # PARSED_ARGS_PRECOMP may be a path: must not be changed.
+            # PARSED_ARGS_PRECOMP may be a path: it must not be changed.
             target_precompile_headers("${lib_name}" PRIVATE "${PARSED_ARGS_PRECOMP}")
             set(_KNP_PRECOMP_${_PRECOMP_NAME}_ "${lib_name}" CACHE STRING "Precomp for ${lib_name}")
             if(PARSED_ARGS_ALIAS)
@@ -106,15 +106,19 @@ function (_knp_add_library lib_name lib_type)
         endif()
     endif()
 
-    if(PARSED_ARGS_LINK_PRIVATE)
-        target_link_libraries("${lib_name}" PRIVATE ${PARSED_ARGS_LINK_PRIVATE})
-    endif()
-
     if (PARSED_ARGS_LINK_PUBLIC)
         target_link_libraries("${lib_name}" PUBLIC ${PARSED_ARGS_LINK_PUBLIC})
     endif()
 
-    if("${lib_type}" STREQUAL "INTERFACE")
+    if (PARSED_ARGS_LINK_PRIVATE)
+        if ("${lib_type}" STREQUAL "STATIC")
+            target_link_libraries("${lib_name}" PUBLIC ${PARSED_ARGS_LINK_PRIVATE})
+        else()
+            target_link_libraries("${lib_name}" PRIVATE ${PARSED_ARGS_LINK_PRIVATE})
+        endif()
+    endif()
+
+    if ("${lib_type}" STREQUAL "INTERFACE")
         knp_set_target_parameters("${lib_name}" INTERFACE)
         set(_visibility "INTERFACE")
     else()
@@ -138,9 +142,8 @@ endfunction()
 function (knp_add_library lib_name lib_type)
     string(TOUPPER "${lib_type}" lib_type)
 
-    if(NOT lib_type OR lib_type STREQUAL "BOTH")
+    if (NOT lib_type OR lib_type STREQUAL "BOTH")
         _knp_add_library("${lib_name}" SHARED ${ARGN})
-
         if (ALIAS IN_LIST ARGN)
             # Replace alias for the static library.
             list(FIND ARGN ALIAS _index)
@@ -154,16 +157,18 @@ function (knp_add_library lib_name lib_type)
         _knp_add_library("${lib_name}_static" STATIC ${ARGN})
         target_compile_definitions("${lib_name}" PRIVATE _KNP_BUILD_SHARED_LIBS)
         target_compile_definitions("${lib_name}_static" PRIVATE _KNP_INTERNAL)
-        set_target_properties("${lib_name}_static" PROPERTIES OUTPUT_NAME "${lib_name}")
-    elseif(lib_type STREQUAL SHARED OR lib_type STREQUAL MODULE OR lib_type STREQUAL PY_MODULE)
+        if (NOT WIN32)
+            set_target_properties("${lib_name}_static" PROPERTIES OUTPUT_NAME "${lib_name}")
+        endif()
+    elseif (lib_type STREQUAL SHARED OR lib_type STREQUAL MODULE OR lib_type STREQUAL PY_MODULE)
         _knp_add_library("${lib_name}" ${lib_type} ${ARGN})
         target_compile_definitions("${lib_name}" PRIVATE _KNP_BUILD_SHARED_LIBS)
-    elseif(lib_type STREQUAL STATIC OR lib_type STREQUAL INTERFACE)
+    elseif (lib_type STREQUAL STATIC OR lib_type STREQUAL INTERFACE)
         _knp_add_library("${lib_name}" ${lib_type} ${ARGN})
-        # Doesn't need to set export definitions.
+        # No need to set export definitions.
         return()
     else()
-        message(FATAL_ERROR "Incorrect library build type: \"${lib_type}\". Use SHARED/MODULE, STATIC or BOTH.")
+        message(FATAL_ERROR "Incorrect library build type: \"${lib_type}\". Use SHARED/PY_MODULE, STATIC, BOTH or INTERFACE.")
     endif()
     target_compile_definitions("${lib_name}" PRIVATE _KNP_INTERNAL)
 endfunction()
@@ -187,7 +192,7 @@ function(knp_add_python_module name)
 
     set(LIB_NAME "${PROJECT_NAME}_${name}")
 
-    if(NOT PARSED_ARGS_CPP_SOURCE_DIRECTORY)
+    if (NOT PARSED_ARGS_CPP_SOURCE_DIRECTORY)
         set(PARSED_ARGS_CPP_SOURCE_DIRECTORY "cpp")
     endif()
 
@@ -202,7 +207,7 @@ function(knp_add_python_module name)
             ${${name}_MODULES_SOURCE}
     )
 
-    if(NOT PARSED_ARGS_OUTPUT_DIRECTORY)
+    if (NOT PARSED_ARGS_OUTPUT_DIRECTORY)
         set(PARSED_ARGS_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/knp_python_framework/knp")
     endif()
 

@@ -7,10 +7,10 @@ import os
 import re
 import sys
 from pathlib import Path
-from typing import Dict, NoReturn, List, Tuple, Union
+from typing import Dict, List, NoReturn, Tuple, Union
 
-from pylint.reporters.text import ParseableTextReporter
 from pylint.lint.run import Run as PylintRun
+from pylint.reporters.text import ParseableTextReporter
 
 
 class TeeIO(io.StringIO):
@@ -21,17 +21,18 @@ class TeeIO(io.StringIO):
         self._filepath = filepath
         self._file = None
 
-    def __enter__(self):
-        self._file = open(self._filepath, 'w', encoding='utf8')
+    def __enter__(self) -> 'TeeIO':
+        self._file = open(self._filepath, 'w', encoding='utf8')  # type: ignore
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self._file.close()
+    def __exit__(self, exc_type, exc_val, exc_tb):  # type: ignore
+        if self._file is not None:
+            self._file.close()
 
-    def write(self, text: str):
+    def write(self, text: str) -> None:
         print(text, end='')
         if self._file is None:
-            raise OSError('File must be opened!')
+            raise OSError('File must be opened.')
         self._file.write(text)
 
 
@@ -44,7 +45,7 @@ class ExitSuppressor:
 
 
 def get_pylint_suppressors(
-    starting_directory: Path, current_directory=None, lines: Dict[Path, List[Tuple[int, str]]] = None
+    starting_directory: Path, current_directory: Path | None = None, lines: Dict[Path, List[Tuple[int, str]]] = None
 ) -> Dict[Path, List[Tuple[int, str]]]:
     """Print pylint suppressions."""
 
@@ -60,7 +61,7 @@ def get_pylint_suppressors(
         elif gf.is_file() and gf.name.endswith('.py'):
             with open(gf, encoding='utf8') as pf:
                 for n, ln in enumerate(pf.readlines()):
-                    # This is not totally correct, but this is a variant, used in the MLAD bash script.
+                    # This is not totally correct.
                     if 'pylint:' not in ln:
                         continue
                     lines_list = lines.setdefault(gf.relative_to(starting_directory), [])
@@ -68,22 +69,28 @@ def get_pylint_suppressors(
     return lines
 
 
-if len(sys.argv) < 2:
-    print(f'{Path(__file__).name} <working_directory>')
+if len(sys.argv) < 3:
+    print(f'{Path(__file__).name} <working_directory> <out_directory>')
     sys.exit(1)
 
 SCRIPT_DIR = Path(__file__).parent.absolute()
+
 PROJECT_DIR = WORKING_DIR = Path(sys.argv[1])
+RC_FILE = PROJECT_DIR / '.pylintrc'
+
+if not RC_FILE.exists():
+    RC_FILE = PROJECT_DIR.parent / '.pylintrc'
+
 PYLINT_DIR = 'pylint_report'
-PYLINT_PATH = WORKING_DIR / PYLINT_DIR
+PYLINT_PATH = Path(sys.argv[2]) / PYLINT_DIR
 PYLINT_REPORT_FILE = PYLINT_PATH / 'pylint-report.txt'
 
 WORKING_DIR.cwd()
-PYLINT_PATH.mkdir(exist_ok=True)
+PYLINT_PATH.mkdir(exist_ok=True, parents=True)
 sys.exit = ExitSuppressor.exit_function
 
 os.environ['PYTHON_PATH'] = f'{WORKING_DIR}:{os.environ.get("PYTHON_PATH", "")}'
-argv = sys.argv[1:] + [f'--rcfile={PROJECT_DIR / ".pylintrc"}', '--exit-zero', str(WORKING_DIR)]
+argv = sys.argv[1:] + [f'--rcfile={RC_FILE}', '--exit-zero', str(WORKING_DIR)]
 
 suppressors = get_pylint_suppressors(WORKING_DIR)
 
@@ -113,14 +120,14 @@ with open(PYLINT_REPORT_FILE, encoding='utf8') as f:
         if expr_regex.search(line):
             critical_lines.append(line.strip())
 
-    print(f'Errors count = {len(critical_lines)}')
+    print(f'Error count = {len(critical_lines)}')
 
     with TeeIO(PYLINT_PATH / 'pylint-report-critical-only.txt') as crf:
         crf.write('\n'.join(critical_lines))
 
-    # Errors and warnings make build fail only
+    # Errors and warnings make the build only fail.
     if critical_lines:
-        print('Pylint found Errors and Warnings. Fix or explain then rerun.')
+        print('Pylint found Errors and Warnings. Fix or explain, then rerun.')
         if os.environ.get('BYPASS_BLOCKING_PYLINT') is None:
             ExitSuppressor.real_exit(1)
         else:

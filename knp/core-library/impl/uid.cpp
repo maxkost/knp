@@ -3,6 +3,8 @@
  * @brief UID implementation.
  * @author Artiom N.
  * @date 22.05.20
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/uid.h>
@@ -28,7 +30,7 @@ volatile ::std::atomic_uint64_t tag_counter = 1;
     constexpr auto value_size = sizeof(c_value);
 
     static_assert(
-        sizeof(decltype(tag_counter)::value_type) <= ::boost::uuids::uuid::static_size(), "Uid counter size error!");
+        sizeof(decltype(tag_counter)::value_type) <= ::boost::uuids::uuid::static_size(), "UID counter size error.");
     for (size_t i = 0; i < value_size; ++i)
     {
         auto digit = c_value & 0xffU;

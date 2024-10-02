@@ -3,6 +3,8 @@
  * @brief Population class implementation.
  * @author Artiom N.
  * @date 11.01.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 
@@ -14,21 +16,20 @@
 namespace knp::core
 {
 template <typename NeuronType>
-Population<NeuronType>::Population(
-    Population<NeuronType>::NeuronGenerator generator, size_t neurons_count)  // !OCLint(Parameters used)
+Population<NeuronType>::Population(Population<NeuronType>::NeuronGenerator generator, size_t neurons_count)  // !OCLINT
 {
-    SPDLOG_DEBUG("Creating population with UID = {} and neurons count = {}", std::string(get_uid()), neurons_count);
+    SPDLOG_DEBUG("Creating population with UID = {} and number of neurons = {}...", std::string(get_uid()), neurons_count);
     add_neurons(generator, neurons_count);
 }
 
 
 template <typename NeuronType>
 Population<NeuronType>::Population(
-    const UID &uid, Population<NeuronType>::NeuronGenerator generator,
-    size_t neurons_count)  // !OCLint(Parameters used)
+    const UID &uid, Population<NeuronType>::NeuronGenerator generator,  // !OCLINT
+    size_t neurons_count)                                               // !OCLINT
     : base_{uid}
 {
-    SPDLOG_DEBUG("Creating population with UID = {} and neurons count = {}", std::string(get_uid()), neurons_count);
+    SPDLOG_DEBUG("Creating population with UID = {} and number of neurons = {}...", std::string(get_uid()), neurons_count);
     add_neurons(generator, neurons_count);
 }
 

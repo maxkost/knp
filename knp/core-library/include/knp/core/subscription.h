@@ -3,6 +3,8 @@
  * @brief Subscription class that determines message exchange between entities in the network.
  * @author Vartenkov A.
  * @date 15.03.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -64,7 +66,7 @@ public:
 
     /**
      * @brief Unsubscribe from a sender.
-     * @details If a sender is not associated with the subscription, the method does not do anything.
+     * @details If a sender is not associated with the subscription, the method doesn't do anything.
      * @param uid sender UID.
      * @return number of senders deleted from subscription.
      */
@@ -72,7 +74,7 @@ public:
 
     /**
      * @brief Add a sender with the given UID to the subscription.
-     * @details If a sender is already associated with the subscription, the method does not do anything.
+     * @details If a sender is already associated with the subscription, the method doesn't do anything.
      * @param uid UID of the new sender.
      * @return number of senders added.
      */

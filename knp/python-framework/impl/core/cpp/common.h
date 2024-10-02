@@ -1,8 +1,10 @@
 /**
  * @file common.h
- * @brief Python bindings common header.
+ * @brief Common header for Python bindings.
  * @author Artiom N.
  * @date 05.02.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 
@@ -19,11 +21,17 @@
 #include <knp/core/subscription.h>
 #include <knp/core/uid.h>
 
-#if defined(__GNUC__) && __GNUC_MINOR__ >= 14
+#if defined(__GNUC__) && (__GNUC__ >= 14)
 #    pragma GCC diagnostic push
 #    pragma GCC diagnostic ignored "-Wdangling-reference"
 #    include <spdlog/spdlog.h>
 #    pragma GCC diagnostic pop
+#elif defined(__clang__)
+#    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wunknown-warning-option"
+#    pragma clang diagnostic ignored "-Wnan-infinity-disabled"
+#    include <spdlog/spdlog.h>
+#    pragma clang diagnostic pop
 #else
 #    include <spdlog/spdlog.h>
 #endif

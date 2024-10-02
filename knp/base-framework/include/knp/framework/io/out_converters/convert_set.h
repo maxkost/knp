@@ -3,10 +3,13 @@
  * @brief Header for set converter.
  * @author Vartenkov Andrey
  * @date 01.06.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
 
+#include <knp/core/impexp.h>
 #include <knp/core/messaging/spike_message.h>
 
 #include <set>
@@ -16,14 +19,14 @@
 /**
  * @brief Output channel namespace.
  */
-namespace knp::framework::output
+namespace knp::framework::io::output
 {
 
 /**
  * @brief The ConvertToSet class is a definition of a converter that gets a set of spiked neuron indexes from spike
  * messages.
  */
-class ConvertToSet
+class KNP_DECLSPEC ConvertToSet
 {
 public:
     /**
@@ -45,7 +48,7 @@ public:
             result.insert(message.neuron_indexes_.cbegin(), message.neuron_indexes_.cend());
         }
 
-        // Ignore extra neurons
+        // Ignore extra neurons.
         auto iter = result.lower_bound(output_size_);
         result.erase(iter, result.end());
         return result;
@@ -55,4 +58,4 @@ private:
     const size_t output_size_;
 };
 
-}  // namespace knp::framework::output
+}  // namespace knp::framework::io::output

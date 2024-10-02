@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Need for the linters.
+# Required it for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp-core VERSION "${KNP_VERSION}" LANGUAGES C CXX
@@ -19,13 +19,18 @@ if(NOT TARGET cppzmq)
     find_package(cppzmq REQUIRED)
 endif()
 
+if (MSVC)
+    set(CPP_ZMQ cppzmq-static)
+else()
+    set(CPP_ZMQ cppzmq)
+endif()
+
 include(GNUInstallDirs)
-# Need for installation.
+# Need it for installation.
 include(CMakePackageConfigHelpers)
 include(clang-tidy)
 include(knp-functions)
 include(third-party)
-
 
 set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/core")
 
@@ -79,9 +84,9 @@ knp_add_library("${PROJECT_NAME}"
     ${${PROJECT_NAME}_headers}
     # PRECOMP impl/common_precomp.h
     LINK_PRIVATE
-        Boost::headers spdlog::spdlog cppzmq flatbuffers "${PROJECT_NAME}_messaging"
+        Boost::headers spdlog::spdlog ${CPP_ZMQ} flatbuffers "${PROJECT_NAME}_messaging"
     LINK_PUBLIC
-        # This is using in the library for message parameters.
+        # This is used in the library for message parameters.
         KNP::Neuron::Traits KNP::Synapse::Traits
     ALIAS KNP::Core
 )
@@ -90,7 +95,7 @@ source_group(source REGULAR_EXPRESSION "impl/.*")
 
 target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS} "impl")
 
-# Flatbuffers headers must be generated before core compilation started.
+# Flatbuffer headers must be generated before core compilation starts.
 add_dependencies("${PROJECT_NAME}" "GENERATE_${PROJECT_NAME}_messaging" "${PROJECT_NAME}_messaging")
 
 # add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
@@ -106,7 +111,7 @@ endif()
 # Installation.
 #
 
-message(STATUS "Installation config...")
+message(STATUS "Configuring installation...")
 
 set(PACKAGE_INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR}/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR})
 

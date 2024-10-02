@@ -3,6 +3,8 @@
  * @brief Class definition for multi-threaded CPU backend.
  * @author Artiom N.
  * @date 21.06.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -131,7 +133,7 @@ public:
 
     /**
      * @brief Get a set of iterators for projections and populations.
-     * @return DataRanges structure containing iterators.
+     * @return `DataRanges` structure containing iterators.
      */
     [[nodiscard]] DataRanges get_network_data() const override;
 

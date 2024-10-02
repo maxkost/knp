@@ -3,9 +3,12 @@
  * @brief Load data from file.
  * @author Vartenkov Andrey
  * @date 16.04.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 
+#include <knp/core/impexp.h>
 #include <knp/core/messaging/messaging.h>
 
 #include <filesystem>
@@ -15,7 +18,7 @@
 /**
  * @brief Data storage namespace.
  */
-namespace knp::framework::storage::native
+namespace knp::framework::io::storage::native
 {
 
 // TODO: return and get iterators.
@@ -27,7 +30,7 @@ namespace knp::framework::storage::native
  * @param strict_format if `true`, method throws exception on wrong format.
  * @return vector of messages sorted by timestamps.
  */
-std::vector<core::messaging::SpikeMessage> load_messages_from_json(
+KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_json(
     const std::filesystem::path &path_to_json, const knp::core::UID &uid, bool strict_format = true);
 
 
@@ -37,6 +40,6 @@ std::vector<core::messaging::SpikeMessage> load_messages_from_json(
  * @param messages vector of spike messages to save.
  * @param path_to_save path to file.
  */
-void save_messages_to_json(
+KNP_DECLSPEC void save_messages_to_json(
     std::vector<core::messaging::SpikeMessage> messages, const std::filesystem::path &path_to_save);
-}  // namespace knp::framework::storage::native
+}  // namespace knp::framework::io::storage::native

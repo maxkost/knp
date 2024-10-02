@@ -1,8 +1,10 @@
 /**
  * @file optional_converter.h
- * @brief std::optional for Python.
+ * @brief `std::optional` for Python.
  * @author Artiom N.
  * @date 09.02.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -14,7 +16,7 @@
 #include "common.h"
 
 
-// Custom exceptions
+// Custom exceptions.
 struct AttributeError : std::exception
 {
     const char* what() const throw() { return "AttributeError exception"; }
@@ -25,7 +27,7 @@ struct TypeError : std::exception
     const char* what() const throw() { return "TypeError exception"; }
 };
 
-// Set python exceptions
+// Set python exceptions.
 void translate(const std::exception& e)
 {
     // cppcheck-suppress knownPointerToBool
@@ -57,8 +59,8 @@ struct from_python_optional
         {
             return typename py::extract<std::optional<T>>::extract(obj_ptr) ? obj_ptr : nullptr;
         }
-        // Without try catch it still raises a TypeError exception
-        // But this enables to custom your error message
+        // Without `try catch` it still raises a TypeError exception.
+        // But this enables you to customize your error message.
         catch (...)
         {
             throw TypeError();
@@ -71,6 +73,7 @@ struct from_python_optional
 
         if (value)
         {
+            // cppcheck-suppress cstyleCast
             void* storage = ((py::converter::rvalue_from_python_storage<std::optional<T>>*)data)->storage.bytes;
             new (storage) std::optional<T>(value);
             data->convertible = storage;

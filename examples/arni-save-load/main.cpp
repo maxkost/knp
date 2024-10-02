@@ -1,8 +1,10 @@
 /**
  * @file main.cpp
- * @brief Loading model from ARNI format and saving to sonata format example.
+ * @brief Loading model from ARNI format and saving to SONATA format example.
  * @author A. Vartenkov
  * @date 04.04.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/population.h>
@@ -84,7 +86,7 @@ struct SynapseRule
         if (weight < min_weight_)
             weight = min_weight_;
         else if (weight >= max_weight_)
-            weight = 0.96875F * max_weight_;  // max weight is unreachable and 1 - 1/32 is close enough.
+            weight = 0.96875F * max_weight_;  // Max weight is unreachable and 1 - 1/32 is close enough.
         float resource = (weight - min_weight_) * (max_weight_ - min_weight_) / (max_weight_ - weight) * 1000.F;
         return resource;
     }
@@ -193,7 +195,7 @@ knp::framework::Network create_network_from_monitoring_file(
     char comma;
     int neuron;
 
-    if (!moncsv.good()) throw std::runtime_error(std::filesystem::absolute(monitoring_file).string() + " not found");
+    if (!moncsv.good()) throw std::runtime_error("\"" + std::filesystem::absolute(monitoring_file).string() + "\" not found.");
 
     std::string str;
     std::vector<PopulationParams> populations;
@@ -229,12 +231,12 @@ knp::framework::Network create_network_from_monitoring_file(
         populations.push_back(pop);
     } while (true);
 
-    if (populations.empty()) throw std::runtime_error(monitoring_file.string() + " has wrong format.");
+    if (populations.empty()) throw std::runtime_error("\"" + monitoring_file.string() + "\" has wrong format.");
 
     std::stringstream ss;
     ss << "neu->sec," << tact << ',';
     size_t n = ss.str().length();
-    std::vector<std::pair<int, size_t>> neuron_populations;  // population id, neuron id
+    std::vector<std::pair<int, size_t>> neuron_populations;  // Population ID, neuron ID.
 
     while (!getline(moncsv, str).eof())
     {
@@ -257,7 +259,7 @@ knp::framework::Network create_network_from_monitoring_file(
 
     if (neuron_populations.empty())
         throw std::runtime_error(
-            monitoring_file.string() + " has wrong format or does not contain tact #" + std::to_string(tact));
+            "\"" + monitoring_file.string() + "\" has wrong format or does not contain tact #" + std::to_string(tact) + ".");
 
     // Now str contains description of the first neuron.
 
@@ -270,7 +272,7 @@ knp::framework::Network create_network_from_monitoring_file(
     std::vector<BLIFATParams> all_neurons(neuron_populations.size());
     std::vector<BaseSynapse> all_synapses;
 
-    // To a separate function
+    // To a separate function.
     do
     {
         if (str.substr(0, n) == ssneu.str())
@@ -308,13 +310,14 @@ knp::framework::Network create_network_from_monitoring_file(
                     str_stream >> comma >> syn_p.weight_;
                     std::get<knp::core::target_neuron_id>(syn) = uint32_t(neuron_populations[neuron].second);
                     std::get<knp::core::source_neuron_id>(syn) =
+                        // cppcheck-suppress negativeContainerIndex
                         source < 0 ? uint32_t(-1 - source) : uint32_t(neuron_populations[source - 1].second);
                     syn_p.output_type_ = ArNI_KNP_SynapseTypeTranslation[proj.connection_type];
-
+                    // cppcheck-suppress negativeContainerIndex
                     proj.ind_population_from = source < 0 ? -1 : neuron_populations[source - 1].first;
                     proj.ind_population_to = neuron_populations[neuron].first;
 
-                    // If a projection leads to a STDP population and is not dopamine then it's considered STDP.
+                    // If a projection leads to a STDP population and is not dopamine then it's considered to be STDP.
                     if (std::find(
                             stdp_population_names.begin(), stdp_population_names.end(),
                             populations[proj.ind_population_to].name) != stdp_population_names.end() &&
@@ -335,7 +338,7 @@ knp::framework::Network create_network_from_monitoring_file(
         std::getline(moncsv, str);
     } while (true);
 
-    // To a separate function
+    // To a separate function.
     for (size_t pop_index = 0; pop_index < populations.size(); ++pop_index)
     {
         auto &pop_params = populations[pop_index];
@@ -357,7 +360,7 @@ knp::framework::Network create_network_from_monitoring_file(
         if (pop_index == output_population_index) output_population_uid = pop_params.uid;
     }
 
-    // To a separate function
+    // To a separate function.
     for (const auto &projection_params : projections)
     {
         auto pop_from = projection_params.first.ind_population_from;
@@ -365,7 +368,7 @@ knp::framework::Network create_network_from_monitoring_file(
         knp::core::UID projection_uid;
         if (projection_params.first.is_stdp && can_be_stdp(projection_params))
         {
-            // This is an STDP projection, as a presynaptic to STDP populations
+            // This is an STDP projection, as it is presynaptic to STDP populations.
             STDPDeltaProjection pro(
                 pop_from < 0 ? knp::core::UID{false} : populations[pop_from].uid, populations[pop_to].uid,
                 Generator<STDPSynapse>(projection_params.second, all_synapses), projection_params.second.size());
@@ -375,7 +378,7 @@ knp::framework::Network create_network_from_monitoring_file(
         }
         else
         {
-            // This is a common delta projection
+            // This is a common delta projection.
             DeltaProjection pro(
                 pop_from < 0 ? knp::core::UID{false} : populations[pop_from].uid, populations[pop_to].uid,
                 Generator<BaseSynapse>(projection_params.second, all_synapses), projection_params.second.size());
@@ -399,7 +402,7 @@ int main(int argc, const char *argv[])
     const std::filesystem::path path_save = argv[2];
     if (!is_regular_file(path_to_network))
     {
-        std::cout << "Couldn't find file: " << path_to_network << std::endl;
+        std::cout << "Could not find file: " << path_to_network << std::endl;
         return EXIT_FAILURE;
     }
     if (!is_directory(path_save))

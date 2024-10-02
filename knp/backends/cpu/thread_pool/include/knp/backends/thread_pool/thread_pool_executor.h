@@ -3,6 +3,8 @@
  * @brief Thread pool executor class.
  * @author Vartenkov A.
  * @date 08.08.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 
@@ -10,6 +12,7 @@
 #include <utility>
 
 #include "thread_pool_context.h"
+
 
 /**
  * @brief Namespace for CPU backend executors.
@@ -101,7 +104,7 @@ private:
     void on_work_finished()
     {
         std::lock_guard lock(context_.mutex_);
-        context_.do_work_finished(task_count_);  // locks
+        context_.do_work_finished(task_count_);  // Locks.
     }
 
 

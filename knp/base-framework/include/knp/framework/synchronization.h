@@ -1,13 +1,16 @@
 /**
  * @file synchronization.h
- * @brief Functions to read network back from .
+ * @brief Functions to read network back from.
  * @author Artiom N.
  * @date 22.03.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
 
 #include <knp/core/backend.h>
+#include <knp/core/impexp.h>
 #include <knp/framework/network.h>
 
 
@@ -21,6 +24,6 @@ namespace knp::framework::synchronization
  * @param backend backend containing a network.
  * @return Network in its current state on backend.
  */
-Network get_network_copy(const knp::core::Backend &backend);
+KNP_DECLSPEC Network get_network_copy(const knp::core::Backend &backend);
 
 }  // namespace knp::framework::synchronization

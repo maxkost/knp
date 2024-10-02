@@ -1,8 +1,10 @@
 /**
  * @file type_id_defines.h
- * @brief Basic type defines and templates for saving and loading.
+ * @brief Basic type definitions and templates for saving and loading.
  * @author A. Vartenkov
  * @date 22.03.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -51,7 +53,7 @@ void add_neuron_type_to_csv(const fs::path &csv_path)
 
     if (!fs::is_regular_file(csv_path))
     {
-        // No file, need to create one
+        // No file, need to create one.
         CsvContent csv_file;
         csv_file.set_header(node_file_header);
         csv_file.add_row(type_row);
@@ -66,7 +68,7 @@ void add_neuron_type_to_csv(const fs::path &csv_path)
     {
         if (std::find(file_header.begin(), file_header.end(), column_name) ==
             file_header.end())  // cppcheck-suppress useStlAlgorithm
-            throw std::runtime_error("Couldn't find column: \"" + column_name + "\" in file " + csv_path.string());
+            throw std::runtime_error("Could not find column \"" + column_name + "\" in file \"" + csv_path.string() + "\".");
     }
     // Header is okay, check if type exists already.
     size_t height = csv_file.get_rc_size().first - 1;
@@ -95,7 +97,7 @@ void add_synapse_type_to_csv(const fs::path &csv_path)
         {
             if (std::find(file_header.begin(), file_header.end(), column_name) ==
                 file_header.end())  // cppcheck-suppress useStlAlgorithm
-                throw std::runtime_error("Couldn't find column: " + column_name + " in file " + csv_path.string());
+                throw std::runtime_error("Could not find column \"" + column_name + "\" in file \"" + csv_path.string() + "\".");
         }
         // Header is okay, check if type exists already.
         size_t height = csv_file.get_rc_size().first - 1;
@@ -104,7 +106,7 @@ void add_synapse_type_to_csv(const fs::path &csv_path)
             int type_id = csv_file.get_value<int>(row_id, "edge_type_id");
             if (type_id == get_synapse_type_id<Synapse>())
             {
-                return;  // Type exists, nothing to add. TODO: update
+                return;  // Type exists, nothing to add. TODO: Update.
             }
         }
         std::vector<std::string> type_row{

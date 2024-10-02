@@ -1,8 +1,10 @@
 /**
  * @file load_network.cpp
- * @brief network loading source file.
+ * @brief Network loading source file.
  * @author An. Vartenkov
  * @date 29.02.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include "load_network.h"
@@ -48,7 +50,7 @@ std::vector<std::string> get_projection_names(const HighFive::File &file)
 
 std::vector<core::AllProjectionsVariant> load_projections(const fs::path &proj_h5_file)
 {
-    if (!fs::is_regular_file(proj_h5_file)) throw std::runtime_error("Couldn't open file " + proj_h5_file.string());
+    if (!fs::is_regular_file(proj_h5_file)) throw std::runtime_error("Could not open file \"" + proj_h5_file.string() + "\".");
     HighFive::File storage{proj_h5_file.string()};
     auto group = storage.getGroup("edges");
     size_t num_projections = group.getNumberObjects();
@@ -58,13 +60,13 @@ std::vector<core::AllProjectionsVariant> load_projections(const fs::path &proj_h
     {
         std::string proj_name = group.getObjectName(i);
         int proj_type =
-            group.getGroup(proj_name).getDataSet("edge_type_id").read<std::vector<int>>()[0];  // one type only
-        // TODO: Check if type in type_file
+            group.getGroup(proj_name).getDataSet("edge_type_id").read<std::vector<int>>()[0];  // One type only.
+        // TODO: Check if type is in type_file.
         if (proj_type == get_synapse_type_id<synapse_traits::DeltaSynapse>())
             result.emplace_back(load_projection<synapse_traits::DeltaSynapse>(group, proj_name));
         else if (proj_type == get_synapse_type_id<synapse_traits::SynapticResourceSTDPDeltaSynapse>())
             result.emplace_back(load_projection<synapse_traits::SynapticResourceSTDPDeltaSynapse>(group, proj_name));
-        // TODO: Add other supported types or better use a template!
+        // TODO: Add other supported types or better use a template.
     }
     return result;
 }
@@ -74,7 +76,7 @@ std::vector<core::AllPopulationsVariant> load_populations(const fs::path &pop_h5
 {
     if (!fs::is_regular_file(pop_h5_file))
     {
-        throw std::runtime_error("Couldn't open file " + pop_h5_file.string());
+        throw std::runtime_error("Could not open file \"" + pop_h5_file.string() + "\".");
     }
 
     const HighFive::File storage{pop_h5_file.string()};
@@ -86,13 +88,13 @@ std::vector<core::AllPopulationsVariant> load_populations(const fs::path &pop_h5
     {
         const std::string proj_name = group.getObjectName(i);
         const int proj_type =
-            group.getGroup(proj_name).getDataSet("node_type_id").read<std::vector<int>>()[0];  // one type only
-        // Check if type in type_file
+            group.getGroup(proj_name).getDataSet("node_type_id").read<std::vector<int>>()[0];  // One type only.
+        // Check if type is in type_file.
         if (proj_type == get_neuron_type_id<neuron_traits::BLIFATNeuron>())
             result.emplace_back(load_population<neuron_traits::BLIFATNeuron>(group, proj_name));
         else if (proj_type == get_neuron_type_id<neuron_traits::SynapticResourceSTDPBLIFATNeuron>())
             result.emplace_back(load_population<neuron_traits::SynapticResourceSTDPBLIFATNeuron>(group, proj_name));
-        // TODO: Add other supported types or better use a template!
+        // TODO: Add other supported types or better use a template.
     }
     return result;
 }
@@ -116,7 +118,7 @@ NetworkConfig read_config_file(const fs::path &config_path)
     const fs::path edges_types = network_dir / "synapses.csv";
     const fs::path nodes_types = network_dir / "neurons.csv";
     return NetworkConfig{config_path, edges_storage, nodes_storage, edges_types, nodes_types};
-    // TODO: actually read config
+    // TODO: Actually read config.
 }
 
 
@@ -132,11 +134,11 @@ core::UID get_network_uid(const fs::path &nodes_path)
 }
 
 
-Network load_network(const fs::path &config_path)
+KNP_DECLSPEC Network load_network(const fs::path &config_path)
 {
-    // TODO: Get this value from config file at config_path
+    // TODO: Get this value from config file at config_path.
     const std::string config_path_suffix = "network/network_config.json";
-    // Open and read config files
+    // Open and read config files.
     auto config = read_config_file(config_path / config_path_suffix);
     Network network{get_network_uid(config.nodes_storage)};
     auto populations = load_populations(config.nodes_storage);

@@ -3,6 +3,8 @@
  * @brief CPU endpoint implementation header.
  * @author Vartenkov A.
  * @date 18.09.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 
@@ -23,7 +25,7 @@ namespace knp::core::messaging::impl
 
 /**
  * @brief Endpoint implementation class for CPU message bus.
- * @note should never be used explicitly.
+ * @note It should never be used explicitly.
  */
 class MessageEndpointCPUImpl : public MessageEndpointImpl
 {
@@ -40,14 +42,14 @@ public:
         const std::lock_guard lock(mutex_);
 
         messages_to_send_->push_back(message);
-        SPDLOG_TRACE("Message was sent, type index = {}", message.index());
+        SPDLOG_TRACE("Message was sent, type index = {}.", message.index());
     }
 
     ~MessageEndpointCPUImpl() override = default;
 
     /**
-     * @brief Reads all the messages queued to be sent, then clears message container.
-     * @return a vector of messages to be sent to other endpoints.
+     * @brief Read all the messages queued to be sent, then clear message container.
+     * @return vector of messages to be sent to other endpoints.
      */
     [[nodiscard]] std::vector<knp::core::messaging::MessageVariant> unload_sent_messages()
     {
@@ -58,7 +60,7 @@ public:
         return result;
     }
 
-    // TODO: Embarrassingly inefficient: all endpoints basically receive all messages by copying them. Should do better.
+    // TODO: Embarrassingly inefficient: all endpoints basically receive all messages by copying them. It needs to be optimized.
     void add_received_messages(const std::vector<knp::core::messaging::MessageVariant> &incoming_messages)
     {
         const std::lock_guard lock(mutex_);

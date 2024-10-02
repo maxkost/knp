@@ -1,8 +1,10 @@
 /**
  * @file blifat_neuron.cpp
- * @brief BLIFAT neuron procedures file.
+ * @brief BLIFAT neuron procedures.
  * @author An. Vartenkov
  * @date 28.03.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/population.h>
@@ -34,12 +36,12 @@ template <>
 void add_population_to_h5<core::Population<knp::neuron_traits::BLIFATNeuron>>(
     HighFive::File &file_h5, const core::Population<knp::neuron_traits::BLIFATNeuron> &population)
 {
-    SPDLOG_TRACE("Adding population {} to hdf5", std::string(population.get_uid()));
+    SPDLOG_TRACE("Adding population {} to HDF5...", std::string(population.get_uid()));
 
     // Check that an external function has created "nodes" group.
     if (!file_h5.exist("nodes"))
     {
-        throw std::runtime_error("File doesn't contain \"nodes\" group");
+        throw std::runtime_error("File does not contain the \"nodes\" group.");
     }
 
     HighFive::Group population_group = file_h5.createGroup("nodes/" + std::string{population.get_uid()});
@@ -56,8 +58,8 @@ void add_population_to_h5<core::Population<knp::neuron_traits::BLIFATNeuron>>(
         "node_type_id", std::vector<size_t>(population.size(), get_neuron_type_id<neuron_traits::BLIFATNeuron>()));
     auto group0 = population_group.createGroup("0");
 
-    // TODO: This function need to check if all parameters are the same, then not save those into h5.
-    // Static
+    // TODO: Need to check if all parameters are the same. If not, save them into h5.
+    // Static.
     PUT_NEURON_TO_DATASET(population, n_time_steps_since_last_firing_, group0);
     PUT_NEURON_TO_DATASET(population, activation_threshold_, group0);
     PUT_NEURON_TO_DATASET(population, threshold_decay_, group0);
@@ -76,7 +78,7 @@ void add_population_to_h5<core::Population<knp::neuron_traits::BLIFATNeuron>>(
     PUT_NEURON_TO_DATASET(population, min_potential_, group0);
 
     auto dynamic_group0 = group0.createGroup("dynamics_params");
-    // Dynamic
+    // Dynamic.
     PUT_NEURON_TO_DATASET(population, dynamic_threshold_, dynamic_group0);
     PUT_NEURON_TO_DATASET(population, potential_, dynamic_group0);
     PUT_NEURON_TO_DATASET(population, pre_impact_potential_, dynamic_group0);
@@ -90,11 +92,11 @@ template <>
 core::Population<neuron_traits::BLIFATNeuron> load_population<neuron_traits::BLIFATNeuron>(
     const HighFive::Group &nodes_group, const std::string &population_name)
 {
-    SPDLOG_DEBUG("Loading nodes");
+    SPDLOG_DEBUG("Loading nodes...");
     auto group = nodes_group.getGroup(population_name).getGroup("0");
     const size_t group_size = nodes_group.getGroup(population_name).getDataSet("node_id").getDimensions().at(0);
 
-    // TODO: Load default neuron from json file.
+    // TODO: Load default neuron from JSON file.
     std::vector<neuron_traits::neuron_parameters<neuron_traits::BLIFATNeuron>> target(group_size);
     LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, n_time_steps_since_last_firing_, group, group_size);
     LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, activation_threshold_, group, group_size);
@@ -113,7 +115,7 @@ core::Population<neuron_traits::BLIFATNeuron> load_population<neuron_traits::BLI
     LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, potential_reset_value_, group, group_size);
     LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, min_potential_, group, group_size);
 
-    // Dynamic
+    // Dynamic.
     auto dyn_group = group.getGroup("dynamics_params");
     LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, dynamic_threshold_, dyn_group, group_size);
     LOAD_NEURONS_PARAMETER(target, neuron_traits::BLIFATNeuron, potential_, dyn_group, group_size);

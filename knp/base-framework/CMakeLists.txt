@@ -6,8 +6,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+
 project(knp-base-framework VERSION "${KNP_VERSION}" LANGUAGES C CXX
-        DESCRIPTION "Kaspersky Neuromorphic Platform C++ framework"
+        DESCRIPTION "Kaspersky Neuromorphic Platform C++ framework library"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/framework")
@@ -24,6 +25,10 @@ source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "includ
 
 knp_get_hdf5_target(HDF5_LIB)
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    set(ADD_LIBS "supc++")
+endif()
+
 knp_add_library("${PROJECT_NAME}-core"
     BOTH
     impl/backend_loader.cpp
@@ -33,6 +38,7 @@ knp_add_library("${PROJECT_NAME}-core"
     impl/network.cpp
     impl/model.cpp
     impl/model_executor.cpp
+    impl/model_loader.cpp
     impl/input_converter.cpp
     impl/output_channel.cpp
     impl/synchronization.cpp
@@ -49,17 +55,25 @@ knp_add_library("${PROJECT_NAME}-core"
     ${${PROJECT_NAME}_headers}
     ALIAS KNP::BaseFramework::Core
     LINK_PRIVATE
-        spdlog::spdlog Boost::headers Boost::filesystem HighFive ${HDF5_LIB} simdjson::simdjson_static
+        spdlog::spdlog Boost::headers Boost::filesystem RapidJSON HighFive ${HDF5_LIB}
+        # Hack to build with CLang.
+        ${ADD_LIBS}
     LINK_PUBLIC
         KNP::Core KNP::Neuron::Traits KNP::Synapse::Traits
     #PRECOMP KNP::Core
 )
 
 set_target_properties(
-        "${PROJECT_NAME}-core"
-        PROPERTIES
-        VERSION "${CMAKE_PROJECT_VERSION}"
-        SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
+    "${PROJECT_NAME}-core"
+    PROPERTIES
+    VERSION "${CMAKE_PROJECT_VERSION}"
+    SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
+
+if(KNP_ENABLE_COVERAGE)
+    include(codecoverage)
+    append_coverage_compiler_flags()
+    link_target_with_gcov("${PROJECT_NAME}-core")
+endif()
 
 set(COMPONENT_NAME framework)
 
@@ -91,7 +105,8 @@ install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
         FILES_MATCHING PATTERN "*.h")
 
 install(FILES
-        "${CMAKE_SOURCE_DIR}/LICENSE.txt"
+        "${CMAKE_SOURCE_DIR}/packaging/LICENSE.txt"
+        "${CMAKE_SOURCE_DIR}/packaging/NOTICE.txt"
         "${CMAKE_SOURCE_DIR}/README.md"
         COMPONENT "${COMPONENT_NAME}"
         TYPE DOC)

@@ -3,6 +3,8 @@
  * @brief Model interface.
  * @author Artiom N.
  * @date 30.03.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -32,7 +34,7 @@ namespace knp::framework
  * @brief The Model class is a definition of a model that contains a network, input and output channels, a monitor and a
  * backend.
  */
-class Model
+class KNP_DECLSPEC Model
 {
 public:
     /**
@@ -82,19 +84,21 @@ public:
 
     /**
      * @brief Return all input channels.
-     * @return map of input channels.
+     * @return map of input channels to projections.
      */
     const std::unordered_multimap<core::UID, core::UID, core::uid_hash> &get_input_channels() const;
     /**
      * @brief Return all output channels.
-     * @return map of output channels.
+     * @return map of output channels to populations.
      */
     const std::unordered_multimap<core::UID, core::UID, core::uid_hash> &get_output_channels() const;
 
 private:
     knp::core::BaseData base_;
     knp::framework::Network network_;
+    // cppcheck-suppress unusedStructMember
     std::unordered_multimap<core::UID, core::UID, core::uid_hash> in_channels_;
+    // cppcheck-suppress unusedStructMember
     std::unordered_multimap<core::UID, core::UID, core::uid_hash> out_channels_;
 };
 

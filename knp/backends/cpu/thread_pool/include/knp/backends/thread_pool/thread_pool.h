@@ -3,12 +3,15 @@
  * @brief Reusable thread pool class, a modified example from asio documentation that aggregates context and executor.
  * @author Vartenkov A.
  * @date 27.07.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 #include <memory>
 
 #include "thread_pool_context.h"
 #include "thread_pool_executor.h"
+
 
 /**
  * @brief Namespace for CPU backend executors.
@@ -51,7 +54,7 @@ public:
     void join() { executor_.join(); }
 
 private:
-    // Don't change the order of declarations.
+    // Do not change the order of declarations.
     std::unique_ptr<ThreadPoolContext> context_;
     ThreadPoolExecutor executor_;
 };

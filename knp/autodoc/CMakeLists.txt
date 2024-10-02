@@ -10,7 +10,7 @@ project(knp-autodoc
 if(KNP_BUILD_DOCUMENTATION)
     file(REAL_PATH "${CMAKE_SOURCE_DIR}/knp" SOURCE_ROOT_DIR)
 
-    message(DEBUG "Source root directory: ${SOURCE_ROOT_DIR}")
+    message(DEBUG "Source root directory: ${SOURCE_ROOT_DIR}.")
 
     include("doxygen")
 
@@ -29,12 +29,15 @@ if(KNP_BUILD_DOCUMENTATION)
 
     list(APPEND _strip_list "${SOURCE_ROOT_DIR}")
 
+    # Additional tag.
+    set(DOXYGEN_ALIASES "license=@par License:")
+
     set(DOXYGEN_BUILTIN_STL_SUPPORT YES)
     set(DOXYGEN_CALL_GRAPH YES)
     set(DOXYGEN_CALLER_GRAPH YES)
     set(DOXYGEN_CASE_SENSE_NAMES YES)
     set(DOXYGEN_CREATE_SUBDIRS YES)
-    set(DOXYGEN_DOCSET_PUBLISHER_NAME "Kaspersky Lab")
+    set(DOXYGEN_DOCSET_PUBLISHER_NAME "AO Kaspersky Lab")
     set(DOXYGEN_DOT_FONTPATH "")
     set(DOXYGEN_DOT_IMAGE_FORMAT "svg")
     set(DOXYGEN_DOT_UML_DETAILS YES)
@@ -86,7 +89,7 @@ if(KNP_BUILD_DOCUMENTATION)
     set(DOXYGEN_SOURCE_BROWSER YES)
     set(DOXYGEN_DOCSET_BUNDLE_ID "com.kaspersky.KNP")
     set(DOXYGEN_DOCSET_PUBLISHER_ID "com.kaspersky.KNP.documentation")
-    set(DOXYGEN_DOCSET_PUBLISHER_NAME "Kaspersky Lab")
+    set(DOXYGEN_DOCSET_PUBLISHER_NAME "AO Kaspersky Lab")
     set(DOXYGEN_VERBATIM_HEADERS YES)
     set(DOXYGEN_HTML_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/common_files/header.html")
     set(DOXYGEN_HTML_FOOTER "${CMAKE_CURRENT_SOURCE_DIR}/common_files/footer.html")

@@ -3,10 +3,13 @@
  * @brief Header for counting converter.
  * @author Vartenkov Andrey
  * @date 01.06.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
 
+#include <knp/core/impexp.h>
 #include <knp/core/messaging/spike_message.h>
 
 #include <vector>
@@ -15,7 +18,7 @@
 /**
  * @brief Output channel namespace.
  */
-namespace knp::framework::output
+namespace knp::framework::io::output
 {
 /**
  * @brief Convert a set of spike messages to a vector where an element value is equal to the number of times that a
@@ -26,7 +29,8 @@ namespace knp::framework::output
  * @param output_size output vector size (usually corresponds to the size of an output population).
  * @return vector.
  */
-std::vector<size_t> converter_count(const std::vector<core::messaging::SpikeMessage> &message_list, size_t output_size)
+std::vector<size_t> KNP_DECLSPEC
+converter_count(const std::vector<core::messaging::SpikeMessage> &message_list, size_t output_size)
 {
     std::vector<size_t> result(output_size, 0);
     for (const auto &message : message_list)
@@ -38,4 +42,4 @@ std::vector<size_t> converter_count(const std::vector<core::messaging::SpikeMess
     }
     return result;
 }
-}  // namespace knp::framework::output
+}  // namespace knp::framework::io::output

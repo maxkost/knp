@@ -3,6 +3,8 @@
  * @brief Enumeration of different ways that a synaptic impact may influence a neuron.
  * @author Vartenkov A.
  * @date 4.03.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once

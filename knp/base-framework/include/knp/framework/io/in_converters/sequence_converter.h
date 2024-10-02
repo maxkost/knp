@@ -3,6 +3,8 @@
  * @brief Header for input sequence converter.
  * @author Vartenkov Andrey
  * @date 25.04.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 
@@ -24,7 +26,7 @@
 /**
  * @brief Input channel namespace.
  */
-namespace knp::framework::input
+namespace knp::framework::io::input
 {
 /**
  * @brief The SequenceConverter class is a definition of a stream-like converter that converts a list of input values
@@ -56,7 +58,7 @@ public:
      */
     core::messaging::SpikeData operator()(core::Step step = 0)
     {
-        SPDLOG_TRACE("Getting message from a stream using sequence converter.");
+        SPDLOG_TRACE("Getting message from a stream using sequence converter...");
 
         core::messaging::SpikeData message_data;
         for (size_t i = 0; i < data_size_; ++i)
@@ -68,7 +70,7 @@ public:
                 message_data.push_back(i);
             }
         }
-        SPDLOG_TRACE("Finished loading a message, it contains {} spikes", message_data.size());
+        SPDLOG_TRACE("Finished loading a message, it contains {} spikes.", message_data.size());
         return message_data;
     }
 
@@ -103,4 +105,4 @@ private:
     size_t data_size_;
 };
 
-}  // namespace knp::framework::input
+}  // namespace knp::framework::io::input

@@ -3,9 +3,12 @@
  * @brief Header for input index converter.
  * @author Vartenkov Andrey
  * @date 25.04.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 
+#include <knp/core/impexp.h>
 #include <knp/core/message_endpoint.h>
 #include <knp/core/messaging/spike_message.h>
 #include <knp/core/uid.h>
@@ -24,13 +27,13 @@
 /**
  * @brief Input channel namespace.
  */
-namespace knp::framework::input
+namespace knp::framework::io::input
 {
 /**
  * @brief The IndexConverter class is a definition of a converter that converts lines of integers into spiked neuron
  * indexes.
  */
-class IndexConverter
+class KNP_DECLSPEC IndexConverter
 {
 public:
     /**
@@ -68,4 +71,4 @@ private:
     const char delim_ = ',';
 };
 
-}  // namespace knp::framework::input
+}  // namespace knp::framework::io::input

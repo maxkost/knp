@@ -2,6 +2,8 @@
  * @brief Synchronization tests for different backends.
  * @author Vartenkov An.
  * @date 17.05.24.
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/backends/cpu-multi-threaded/backend.h>
@@ -38,7 +40,7 @@ public:
 
 TEST(SynchronizationSuite, SingleThreadCpuTest)
 {
-    // Create a single neuron network: input -> input_projection -> population <=> loop_projection
+    // Create a single-neuron neural network: input -> input_projection -> population <=> loop_projection.
     knp::testing::STestingBack backend;
     knp::testing::BLIFATPopulation population{knp::testing::neuron_generator, 1};
     auto loop_projection =
@@ -64,7 +66,7 @@ TEST(SynchronizationSuite, SingleThreadCpuTest)
 
 TEST(SynchronizationSuite, MultiThreadCpuTest)
 {
-    // Create a single neuron network: input -> input_projection -> population <=> loop_projection
+    // Create a single-neuron neural network: input -> input_projection -> population <=> loop_projection.
     knp::testing::MTestingBack backend;
     knp::testing::BLIFATPopulation population{knp::testing::neuron_generator, 1};
     auto loop_projection =

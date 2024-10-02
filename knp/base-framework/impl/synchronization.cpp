@@ -3,13 +3,15 @@
  * @brief Getting network from backend.
  * @author Vartenkov Andrey.
  * @date 13.05.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/framework/network.h>
 
 namespace knp::framework::synchronization
 {
-Network get_network_copy(const knp::core::Backend &backend)
+KNP_DECLSPEC Network get_network_copy(const knp::core::Backend &backend)
 {
     auto data_ranges = backend.get_network_data();
     knp::framework::Network res_network;

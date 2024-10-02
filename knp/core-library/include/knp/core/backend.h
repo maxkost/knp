@@ -3,6 +3,8 @@
  * @brief Class definition for backend base.
  * @author Artiom N.
  * @date 11.01.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -42,16 +44,16 @@ class BOOST_SYMBOL_VISIBLE Backend
 public:
     /**
      * @brief Predicate type.
-     * @details If the predicate returns `true`, network execution continues. Otherwise network execution stops./n
+     * @details If the predicate returns `true`, network execution continues. Otherwise network execution stops.\n
      * The predicate gets a step number as a parameter.
      */
     using RunPredicate = std::function<bool(knp::core::Step)>;
 
 public:
     /**
-     * @brief Pure virtual backend destructor.
+     * @brief Backend destructor.
      */
-    virtual ~Backend() = 0;
+    virtual ~Backend();
 
 public:
     /**
@@ -65,6 +67,13 @@ public:
      * @see TagMap.
      */
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
+
+    /**
+     * @brief Get tags used by the backend.
+     * @return backend tag map.
+     * @see TagMap
+     */
+    [[nodiscard]] const auto &get_tags() const { return base_.tags_; }
 
 public:
     /**
@@ -254,8 +263,9 @@ public:
 
 public:
     /**
-     * @brief The BaseValueIterator class is a definition of an interface to the iterator used to access populations or projections by value.
-     * @tparam Type one of types sepcified for `AllProjectionsVariant` or `AllPopulationsVariant` depending on the goal.
+     * @brief The BaseValueIterator class is a definition of an interface to the iterator used to access populations or
+     * projections by value.
+     * @tparam Type one of types specified for `AllProjectionsVariant` or `AllPopulationsVariant` depending on the goal.
      */
     template <class Type>
     class BaseValueIterator

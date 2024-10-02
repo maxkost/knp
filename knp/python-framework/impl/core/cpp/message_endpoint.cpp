@@ -1,8 +1,10 @@
 /**
  * @file message_endpoint.cpp
- * @brief Message endpoint Python bindings.
+ * @brief Python bindings for message endpoint.
  * @author Artiom N.
  * @date 01.02.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include "message_endpoint.h"
@@ -29,7 +31,7 @@ namespace mt = core::messaging;
 #    define INSTANCE_PY_MESSAGE_ENDPOINT_SUBSCRIBE_METHOD_IMPL(n, template_for_instance, message_type) \
         if (BOOST_PP_STRINGIZE(message_type) == class_obj_name)                                        \
         {                                                                                              \
-            SPDLOG_TRACE("Subscribing to: {}", class_obj_name);                                        \
+            SPDLOG_TRACE("Subscribing to {}...", class_obj_name);                                      \
             self.subscribe<mt::message_type>(receiver, py_iterable_to_vector<core::UID>(senders));     \
             return;                                                                                    \
         }
@@ -42,7 +44,7 @@ namespace mt = core::messaging;
         if (BOOST_PP_STRINGIZE(message_type) == class_obj_name)                                              \
         {                                                                                                    \
             auto msgs = self.unload_messages<mt::message_type>(receiver);                                    \
-            SPDLOG_TRACE("Unloading messages of the type {} [count = {}]", class_obj_name, msgs.size());     \
+            SPDLOG_TRACE("Unloading messages of type {} [count = {}]...", class_obj_name, msgs.size());      \
             return py::object(msgs);                                                                         \
         }
 
@@ -62,16 +64,16 @@ py::class_<core::MessageEndpoint, boost::noncopyable, std::shared_ptr<core::Mess
             {
                 const auto class_obj_name = get_py_class_name(msg_class);
 
-                SPDLOG_TRACE("Message class name: {}", class_obj_name);
+                SPDLOG_TRACE("Message class name: {}.", class_obj_name);
 
                 // cppcheck-suppress unknownMacro
                 BOOST_PP_SEQ_FOR_EACH(
                     INSTANCE_PY_MESSAGE_ENDPOINT_SUBSCRIBE_METHOD_IMPL, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES))
 
-                PyErr_SetString(PyExc_TypeError, "Passed object is not message class!");
+                PyErr_SetString(PyExc_TypeError, "Passed object is not a message class.");
                 py::throw_error_already_set();
 
-                throw std::runtime_error("Incorrect class!");
+                throw std::runtime_error("Incorrect class.");
             }),
         "Add a subscription to messages of the specified type from senders with given UIDs.")
     .def(
@@ -80,7 +82,7 @@ py::class_<core::MessageEndpoint, boost::noncopyable, std::shared_ptr<core::Mess
             [](core::MessageEndpoint &self, const py::object &msg_class, const core::UID &receiver) -> bool
             {
                 const auto class_obj_name = get_py_class_name(msg_class);
-                SPDLOG_TRACE("Message class name: {}", class_obj_name);
+                SPDLOG_TRACE("Message class name: {}.", class_obj_name);
 
                 BOOST_PP_SEQ_FOR_EACH(
                     INSTANCE_PY_MESSAGE_ENDPOINT_UNSUBSCRIBE_METHOD_IMPL, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES))
@@ -95,16 +97,16 @@ py::class_<core::MessageEndpoint, boost::noncopyable, std::shared_ptr<core::Mess
             {
                 const auto class_obj_name = get_py_class_name(msg_class);
 
-                SPDLOG_TRACE("Message class name: {}", class_obj_name);
+                SPDLOG_TRACE("Message class name: {}.", class_obj_name);
 
                 BOOST_PP_SEQ_FOR_EACH(
                     INSTANCE_PY_MESSAGE_ENDPOINT_UNLOAD_MESSAGES_METHOD_IMPL, "",
                     BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES))
 
-                PyErr_SetString(PyExc_TypeError, "Passed object is not message class!");
+                PyErr_SetString(PyExc_TypeError, "Passed object is not a message class.");
                 py::throw_error_already_set();
 
-                throw std::runtime_error("Incorrect class!");
+                throw std::runtime_error("Incorrect class.");
             }),
         "Read messages of the specified type received via subscription.")
     .def(

@@ -3,6 +3,8 @@
  * @brief Class definition for single-threaded CPU backend.
  * @author Artiom N.
  * @date 30.01.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -60,6 +62,7 @@ public:
      * @brief List of supported projection types based on synapse types specified in `SupportedSynapses`.
      */
     using SupportedProjections = boost::mp11::mp_transform<knp::core::Projection, SupportedSynapses>;
+
     /**
      * @brief Population variant that contains any population type specified in `SupportedPopulations`.
      * @details `PopulationVariants` takes the value of `std::variant<PopulationType_1,..., PopulationType_n>`, where
@@ -288,7 +291,7 @@ public:
 
     /**
      * @brief Get a set of iterators for projections and populations.
-     * @return DataRanges structure containing iterators.
+     * @return `DataRanges` structure containing iterators.
      */
     [[nodiscard]] DataRanges get_network_data() const override;
 
@@ -321,7 +324,7 @@ protected:
     std::optional<core::messaging::SpikeMessage> calculate_population(
         knp::core::Population<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron> &population);
     /**
-     * @brief Calculate projection of Delta synapses.
+     * @brief Calculate projection of delta synapses.
      * @note Projection will be changed during calculation.
      * @param projection projection to calculate.
      * @param message_queue message queue to send to projection for calculation.

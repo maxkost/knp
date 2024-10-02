@@ -1,8 +1,10 @@
 /**
  * @file device.cpp
- * @brief Device description Python bindings.
+ * @brief Python bindings for device description.
  * @author Artiom N.
  * @date 01.02.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #if defined(KNP_IN_CORE)
 

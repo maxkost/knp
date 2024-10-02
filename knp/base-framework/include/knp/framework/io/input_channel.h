@@ -3,6 +3,8 @@
  * @brief Header for input channel.
  * @author Vartenkov Andrey
  * @date 04.05.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 #pragma once
 
@@ -17,13 +19,13 @@
 /**
  * @brief Input channel namespace.
  */
-namespace knp::framework::input
+namespace knp::framework::io::input
 {
 
 /**
  * @brief The InputChannel class is a definition of an input channel.
  */
-class InputChannel
+class KNP_DECLSPEC InputChannel
 {
 public:
     /**
@@ -124,4 +126,4 @@ inline void connect_input(
     target_endpoint.subscribe<core::messaging::SpikeMessage>(receiver_uid, {channel.get_uid()});
 }
 
-}  // namespace knp::framework::input
+}  // namespace knp::framework::io::input

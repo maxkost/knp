@@ -1,5 +1,7 @@
 /**
- * Message functions testing
+ * @brief Testing of message functions.
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/messaging/messaging.h>

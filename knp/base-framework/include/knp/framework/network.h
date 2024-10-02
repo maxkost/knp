@@ -3,6 +3,8 @@
  * @brief Network interface.
  * @author Artiom N.
  * @date 22.03.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -30,7 +32,7 @@ namespace knp::framework
 /**
  * @brief The Network class is a definition of a neural network that contains populations and projections.
  */
-class Network
+class KNP_DECLSPEC Network
 {
 public:
     /**
@@ -143,6 +145,7 @@ public:
      */
     template <typename PopulationType>
     [[nodiscard]] PopulationType &get_population(const knp::core::UID &population_uid);
+
     /**
      * @brief Get a population with the given UID from the network.
      * @note Constant method.
@@ -153,6 +156,15 @@ public:
      */
     template <typename PopulationType>
     [[nodiscard]] const PopulationType &get_population(const knp::core::UID &population_uid) const;
+
+    /**
+     * @brief Get a population with the given UID from the network.
+     * @param population_uid population UID.
+     * @throw std::logic_error if population is not found in the network.
+     * @return population.
+     */
+    [[nodiscard]] core::AllPopulationsVariant &get_population(const knp::core::UID &population_uid);
+
     /**
      * @brief Remove a population with the given UID from the network.
      * @param population_uid UID of the population to remove.
@@ -191,7 +203,7 @@ public:
     template <typename SynapseType>
     void add_projection(
         knp::core::UID projection_uid, knp::core::UID pre_population_uid, knp::core::UID post_population_uid,
-        typename knp::core::Projection<SynapseType>::SynapseGenerator1 generator, size_t synapse_count);
+        typename knp::core::Projection<SynapseType>::SynapseGenerator generator, size_t synapse_count);
 
     /**
      * @brief Get a projection with the given UID from the network.
@@ -212,6 +224,13 @@ public:
      */
     template <typename ProjectionType>
     [[nodiscard]] const ProjectionType &get_projection(const knp::core::UID &projection_uid) const;
+    /**
+     * @brief Get a projection with the given UID from the network.
+     * @param projection_uid projection UID.
+     * @throw std::logic_error if projection is not found in the network.
+     * @return projection.
+     */
+    [[nodiscard]] core::AllProjectionsVariant &get_projection(const knp::core::UID &projection_uid);
     /**
      * @brief Remove a projection with the given UID from the network.
      * @param projection_uid UID of the projection to remove.
@@ -297,12 +316,6 @@ public:
      * @see TagMap.
      */
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
-
-private:
-    template <typename T, typename VT>
-    typename std::vector<VT>::iterator find_elem(const knp::core::UID &uid, std::vector<VT> &container);
-    template <typename Ts, typename VT>
-    typename std::vector<VT>::iterator find_variant(const knp::core::UID &uid, std::vector<VT> &container);
 
 private:
     knp::core::BaseData base_;

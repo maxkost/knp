@@ -1,5 +1,7 @@
 /**
  * @brief Some common test functions.
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <tests_common.h>
@@ -16,7 +18,7 @@ std::filesystem::path get_exe_path()
 
 std::filesystem::path get_backend_path(const std::string &backend_name)
 {
-    return knp::testing::get_exe_path().parent_path() / "lib" / backend_name;
+    return knp::testing::get_exe_path() / backend_name;
 }
 
 }  // namespace knp::testing

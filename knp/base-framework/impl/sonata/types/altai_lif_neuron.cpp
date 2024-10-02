@@ -1,8 +1,10 @@
 /**
  * @file altai_lif_neuron.cpp
- * @brief AltaiLIF neuron procedures file.
+ * @brief AltaiLIF neuron procedures.
  * @author An. Vartenkov
  * @date 15.05.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <knp/core/population.h>
@@ -31,10 +33,11 @@ std::string get_neuron_type_name<neuron_traits::AltAILIF>()
 
 template <>
 void add_population_to_h5<core::Population<knp::neuron_traits::AltAILIF>>(
+    // cppcheck-suppress constParameterReference
     HighFive::File &file_h5, const core::Population<knp::neuron_traits::AltAILIF> &population)
 {
-    SPDLOG_TRACE("Adding population {} to hdf5", std::string(population.get_uid()));
-    throw std::runtime_error("AltAILIF neuron saving unimplemented!");
+    SPDLOG_TRACE("Adding population {} to HDF5...", std::string(population.get_uid()));
+    throw std::runtime_error("AltAILIF neuron saving unimplemented.");
 }
 
 
@@ -42,8 +45,8 @@ template <>
 core::Population<neuron_traits::AltAILIF> load_population<neuron_traits::AltAILIF>(
     const HighFive::Group &nodes_group, const std::string &population_name)
 {
-    SPDLOG_DEBUG("Loading nodes");
-    throw std::runtime_error("AltAILIF neuron loading unimplemented!");
+    SPDLOG_DEBUG("Loading nodes...");
+    throw std::runtime_error("AltAILIF neuron loading unimplemented.");
 }
 
 

@@ -7,11 +7,16 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(knp_python_framework VERSION "${KNP_VERSION}" LANGUAGES C CXX  # PYTHON
-        DESCRIPTION "Kaspersky Neuromorphic Platform Python framework"
+        DESCRIPTION "Kaspersky Neuromorphic Platform Python framework library"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
+if (MSVC)
+    message(STATUS "Temporarily cannot be built under Windows.")
+    return()
+endif()
+
 if (NOT KNP_PYTHON_FRAMEWORK_BUILD)
-    message(STATUS "Python framework building disabled...")
+    message(STATUS "Python framework building disabled.")
     return()
 endif()
 
@@ -49,6 +54,12 @@ knp_add_python_module(synapse_traits
 knp_add_python_module(base_framework
         LINK_LIBRARIES KNP::BaseFramework::Core
         PY_VER ${_KNP_PY_VER})
+
+if(KNP_ENABLE_COVERAGE)
+#    include(codecoverage)
+#    append_coverage_compiler_flags()
+#    link_target_with_gcov("${PROJECT_NAME}-core")
+endif()
 
 add_custom_target("${PROJECT_NAME}-copy-python-tests" ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/tests" "${KNP_PYTHON_OUTPUT_DIRECTORY}/tests")
@@ -109,7 +120,7 @@ if(KNP_PYTHON_BUILD_WHEEL)
         WORKING_DIRECTORY "${KNP_PYTHON_OUTPUT_DIRECTORY}"
     )
 
-    # TODO: automatically get all targets in CMakeLists.txt.
+    # TODO: Automatically get all targets in CMakeLists.txt.
     add_custom_target(
         "${PROJECT_NAME}-pip-build-package" ALL
         DEPENDS

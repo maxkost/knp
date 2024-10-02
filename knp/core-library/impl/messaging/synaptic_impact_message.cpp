@@ -1,8 +1,10 @@
 /**
  * @file synaptic_impact_message.cpp
- * @brief Synaptic impact message I/O operators implementation.
+ * @brief Synaptic impact message I/O operator implementation.
  * @author Vartenkov A.
  * @date 23.03.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #include <spdlog/spdlog.h>
@@ -100,7 +102,7 @@ std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg)
 
 std::vector<uint8_t> pack(const SynapticImpactMessage &msg)
 {
-    // TODO: don't create instance every time.
+    // TODO: Don't create instance every time.
     ::flatbuffers::FlatBufferBuilder builder;
     auto s_msg = std::move(pack_internal(builder, msg));
     marshal::FinishSynapticImpactMessageBuffer(
@@ -111,7 +113,7 @@ std::vector<uint8_t> pack(const SynapticImpactMessage &msg)
 
 SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg)
 {
-    SPDLOG_TRACE("Unpacking synaptic impact message FlatBuffers class");
+    SPDLOG_TRACE("Unpacking synaptic impact message FlatBuffers class...");
     assert(s_msg);
 
     const marshal::MessageHeader *const s_msg_header{s_msg->header()};

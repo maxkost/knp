@@ -3,6 +3,8 @@
  * @brief General projection interface.
  * @author Artiom N.
  * @date 18.01.2023
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
  */
 
 #pragma once
@@ -51,7 +53,7 @@ enum SynapseElementAccess
 
 /**
  * @brief The Projection class is a definition of similar connections between the neurons of two populations.
- * @note This class should later be divided to interface and implementation classes.
+ * @todo This class should later be divided to interface and implementation classes.
  * @tparam SynapseType type of synapses the projection contains.
  * @see ALL_SYNAPSES.
  */
@@ -186,6 +188,14 @@ public:
      * @see TagMap.
      */
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
+
+    /**
+     * @brief Get tags used by the projection.
+     * @return projection tag map.
+     * @see TagMap.
+     */
+    [[nodiscard]] const auto &get_tags() const { return base_.tags_; }
+
 
 public:
     /**
