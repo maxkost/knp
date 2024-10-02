@@ -6,6 +6,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Required for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# Suppress Boost warning.
+cmake_policy(SET CMP0167 OLD)
 
 project(knp-cpu-single-threaded-backend VERSION "${KNP_VERSION}" LANGUAGES C CXX
         DESCRIPTION "Kaspersky Neuromorphic Platform single-threaded CPU backend"
@@ -17,7 +19,7 @@ include(GNUInstallDirs)
 include(clang-tidy)
 include(knp-functions)
 
-find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS system filesystem REQUIRED CONFIG)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS system filesystem REQUIRED)
 
 file(GLOB_RECURSE ${PROJECT_NAME}_headers include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/*.h)
 source_group(source REGULAR_EXPRESSION "impl/.*")

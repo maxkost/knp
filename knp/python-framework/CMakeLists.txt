@@ -6,6 +6,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Suppress Boost warning.
+cmake_policy(SET CMP0167 OLD)
+
 project(knp_python_framework VERSION "${KNP_VERSION}" LANGUAGES C CXX  # PYTHON
         DESCRIPTION "Kaspersky Neuromorphic Platform Python framework library"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
@@ -34,7 +37,7 @@ if (NOT BOOST_PYTHON_FOUND)
         list(GET _KNP_PY_VER 0 _KNP_PY_VER)
         string(REGEX REPLACE ".+python([0-9]+).*[\n\r]*" "\\1" _KNP_PY_VER "${_KNP_PY_VER}")
     endif()
-    find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS python${_KNP_PY_VER} REQUIRED CONFIG)
+    find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS python${_KNP_PY_VER} REQUIRED)
 endif()
 
 include(knp-functions)

@@ -7,6 +7,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Required for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Suppress Boost warning.
+cmake_policy(SET CMP0167 OLD)
+
 project(knp-meta VERSION "${KNP_VERSION}" LANGUAGES C CXX
         DESCRIPTION "Kaspersky Neuromorphic Platform meta functions and templates library"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")

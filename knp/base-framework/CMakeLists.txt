@@ -6,6 +6,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Suppress Boost warning.
+cmake_policy(SET CMP0167 OLD)
 
 project(knp-base-framework VERSION "${KNP_VERSION}" LANGUAGES C CXX
         DESCRIPTION "Kaspersky Neuromorphic Platform C++ framework library"
@@ -13,7 +15,7 @@ project(knp-base-framework VERSION "${KNP_VERSION}" LANGUAGES C CXX
 
 set(${PROJECT_NAME}_PUBLIC_INCLUDE_DIR "knp/framework")
 
-find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS filesystem REQUIRED CONFIG)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS filesystem REQUIRED)
 
 include(GNUInstallDirs)
 include(knp-functions)

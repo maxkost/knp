@@ -6,13 +6,15 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Required it for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# Suppress Boost warning.
+cmake_policy(SET CMP0167 OLD)
 
 project(knp-core VERSION "${KNP_VERSION}" LANGUAGES C CXX
         DESCRIPTION "Kaspersky Neuromorphic Platform core library"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
 
 if(NOT TARGET Boost::headers)
-    find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED CONFIG)
+    find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
 endif()
 
 if(NOT TARGET cppzmq)

@@ -25,6 +25,9 @@ if (POLICY CMP0091)
     cmake_policy(SET CMP0091 NEW)
 endif()
 
+# Suppress Boost warning.
+cmake_policy(SET CMP0167 OLD)
+
 project(knp VERSION "${KNP_VERSION}"
         DESCRIPTION "Kaspersky Neuromorphic Platform"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
@@ -81,7 +84,7 @@ if (Boost_ROOT)  # WIN32?
 endif()
 
 # set(Boost_DEBUG ON)
-find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED CONFIG)
+find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
 
 if (MSVC)
     message(STATUS "Adding \"${BOOST_LIBRARYDIR}\" to LIBPATH")
