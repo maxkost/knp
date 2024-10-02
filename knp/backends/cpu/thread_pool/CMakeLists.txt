@@ -5,8 +5,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-# Suppress Boost warning.
-cmake_policy(SET CMP0167 OLD)
+
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.30")
+    # Suppress Boost warning.
+    cmake_policy(SET CMP0167 OLD)
+endif()
 
 project(knp-thread-pool-library VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 

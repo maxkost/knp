@@ -11,8 +11,10 @@ endif()
 
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-# Suppress Boost warning.
-cmake_policy(SET CMP0167 OLD)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.30")
+    # Suppress Boost warning.
+    cmake_policy(SET CMP0167 OLD)
+endif()
 
 find_package(Boost ${KNP_BOOST_MIN_VERSION} COMPONENTS program_options REQUIRED)
 
