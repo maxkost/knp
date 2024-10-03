@@ -32,9 +32,9 @@ file(GLOB PVS_DIRS LIST_DIRECTORIES true "*")
 file(GLOB dirs LIST_DIRECTORIES true "backends/cpu/*")
 set(PVS_DIRS "${PVS_DIRS};${dirs}")
 
-find_program(PVS_ANALYZER pvs-studio-analyzer NO_CACHE)
+find_program(PVS_BINARY NAMES pvs-studio-analyzer PVS-Studio_Cmd NO_CACHE)
 
-if (PVS_ANALYZER)
+if (PVS_BINARY)
     set(PVS_TARGETS "")
     set(PVS_SKIP_LIST ".*autodoc|GENERATE_.*|.*-copy-.*|.*memcheck|.*_static")
 
