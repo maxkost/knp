@@ -33,7 +33,7 @@ file(GLOB dirs LIST_DIRECTORIES true "backends/cpu/*")
 set(PVS_DIRS "${PVS_DIRS};${dirs}")
 
 if (WIN32)
-    find_program(PVS_BINARY PVS-Studio_Cmd HINTS ""$ENV{ProgramFiles}/PVS-Studio" NO_CACHE)
+    find_program(PVS_BINARY PVS-Studio_Cmd HINTS "$ENV{ProgramFiles}/PVS-Studio" NO_CACHE)
 else()
     find_program(PVS_BINARY pvs-studio-analyzer NO_CACHE)
 endif()
