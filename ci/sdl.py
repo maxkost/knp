@@ -7,7 +7,7 @@ import pathlib
 import urllib.request
 from typing import Any
 
-ARTIFACTS_HOSTNAME = os.getenv('SDL_ARTIFACTS_HOSTNAME')
+ARTIFACTS_URL = os.getenv('ARTIFACTS_URL')
 SDL_ARTIFACTS_DIRECTORY = os.getenv('SDL_ARTIFACTS_DIRECTORY', 'build/SDL')
 
 HLA_FILENAME = 'hla.xml'
@@ -27,8 +27,8 @@ RELEASE_NUMBER = os.getenv('TFS_RELEASE_NUMBER')
 COLLECTION_URI = os.getenv('COLLECTION_URI')
 
 
-def artifact_url(file_name: str, build: str, server: str = ARTIFACTS_HOSTNAME) -> str:
-    return f'http://{server}/tfs_artifacts/{build}/{file_name}'
+def artifact_url(file_name: str, build: str, server: str = ARTIFACTS_URL) -> str:
+    return f'http://{server}/{build}/{file_name}'
 
 
 def generate_tfs_url(branch: str = 'develop', project: str = 'FT-SNN', repo: str = 'KNP', path: str = '/') -> str:
@@ -43,10 +43,10 @@ def generate_hla_artifact_xml() -> str:
 </SDL>'''
 
 
-def generate_third_party_xml(third_party_url: str) -> str:
+def generate_third_party_xml(third_party_url: str, build: str) -> str:
     return f'''<SDL>
     <third_party>
-        <third_party link="{third_party_url}"/>
+        <third_party link="{artifact_url(f'{build}_{third_party_url}', build)}"/>
     </third_party>
 </SDL>'''
 
@@ -71,39 +71,38 @@ def generate_code_review_xml(link: str) -> str:
 
 
 def generate_static_analysis_xml(build: str) -> str:
-    oclint_logs_archive = 'oclint.log'
-    pvs_logs_archive = 'PVS-Studio.log'
-    artifact_url('.pylintrc', build)
-    pylint_report_url = artifact_url('pylint-report/pylint-report.txt', build)
-    bandit_report_url = artifact_url('bandit.log', build)
+    pvs_logs = []
+
+    for osname in ['linux', 'windows']:
+        pvs_logs_archive = f'{build}_{osname}_pvs_report.7z'
+        pvs_logs.append(
+            f'<analyzer name="PVS Studio C++ {osname.capitalize()}" type="pvs">\n'
+            f'<log link="{artifact_url(pvs_logs_archive, build)}"/>\n</analyzer>'
+        )
 
     return f'''<SDL>
     <static_analysis>
-        <analyzer name="PVS Studio C++" type="pvs">
-            <log link="{artifact_url(pvs_logs_archive, build)}"/>
+        {'\n'.join(pvs_logs)}\n
+        <analyzer name="OCLint C++ Linux" type="oclint">
+            <config name=".oclint" link="{artifact_url(f'{build}_oclint', build)}"/>
+            <log link="{artifact_url(f'{build}_linux_oclint_report.7z', build)}"/>
         </analyzer>
-        <analyzer name="OCLint C++" type="oclint">
-            <config name="oclint" link="{generate_tfs_url(path='.oclint')}"/>
-            <log link="{artifact_url(oclint_logs_archive, build)}"/>
+        <analyzer name="PyLint Linux" type="pylint">
+            <log link="{artifact_url(f'{build}_linux_pylint_report.7z', build)}"/>
+            <config name=".pylintrc" link="{artifact_url(f'{build}_pylintrc', build)}"/>
         </analyzer>
-        <analyzer name="PyLint" type="pylint">
-            <config name="pylintrc" link="{generate_tfs_url(path='knp/.pylintrc')}"/>
-            <log link="{pylint_report_url}"/>
-        </analyzer>
-        <analyzer name="Bandit Python" type="bandit">
-            <log link="{bandit_report_url}"/>
+        <analyzer name="Bandit Python Linux" type="bandit">
+            <log link="{artifact_url(f'{build}_linux_bandit_report.7z', build)}"/>
         </analyzer>
     </static_analysis>
 </SDL>'''
 
 
 def generate_dynamic_analysis_xml(build: str) -> str:
-    valgrind_report_url = artifact_url(f'{build}_valgrind.7z', build)
-
     return f'''<SDL>
     <dynamic_analysis>
-        <analyzer name="Valgrind" type="valgrind">
-            <log link="{valgrind_report_url}"/>
+        <analyzer name="Valgrind Linux" type="valgrind">
+            <log link="artifact_url(f'{build}_linux_dynamic_testing_report.7z', build)"/>
         </analyzer>
     </dynamic_analysis>
 </SDL>'''
@@ -120,11 +119,7 @@ def generate_sdl_artifacts() -> None:
         f.write(generate_hla_artifact_xml())
 
     with open(sdl_path / THIRD_PARTY_FILENAME, 'w', encoding='utf8') as f:
-        f.write(
-            generate_third_party_xml(
-                f'{generate_tfs_url(path=str(pathlib.Path(__file__).resolve().parent / THIRD_PARTY_LIST_FILENAME))}'
-            )
-        )
+        f.write(generate_third_party_xml(THIRD_PARTY_LIST_FILENAME, build))
 
     with open(sdl_path / DEVOPS_PIPELINE_FILENAME, 'w', encoding='utf8') as f:
         f.write(generate_devops_pipeline_xml())
