@@ -137,7 +137,7 @@ def generate_sdl_artifacts() -> None:
 
 
 def generate_sdl_request() -> dict[str, str | dict[str, str]]:
-    build = f'{os.getenv("TFS_PIPELINE")}/{BUILD_NUMBER}'
+    build = f'{BUILD_NUMBER}'
     # major, minor, *_ = RELEASE_NUMBER.split('.')
     release_iteration = r'FT-SNN\Open Source Release'
     return {
