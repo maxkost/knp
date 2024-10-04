@@ -27,8 +27,10 @@ RELEASE_NUMBER = os.getenv('TFS_RELEASE_NUMBER')
 COLLECTION_URI = os.getenv('COLLECTION_URI')
 
 
-def artifact_url(file_name: str, build: str, server: str = ARTIFACTS_URL) -> str:
-    return f'http://{server}/{build}/{file_name}'
+def artifact_url(file_name: str, build: str, server: str = ARTIFACTS_URL, add_build_to_name: bool = True) -> str:
+    return (
+        f'http://{server}/{build}/{build}_{file_name}' if add_build_to_name else f'http://{server}/{build}/{file_name}'
+    )
 
 
 def generate_tfs_url(branch: str = 'develop', project: str = 'FT-SNN', repo: str = 'KNP', path: str = '/') -> str:
@@ -46,7 +48,7 @@ def generate_hla_artifact_xml() -> str:
 def generate_third_party_xml(third_party_url: str, build: str) -> str:
     return f'''<SDL>
     <third_party>
-        <third_party link="{artifact_url(f'{build}_{third_party_url}', build)}"/>
+        <third_party link="{artifact_url(third_party_url, build)}"/>
     </third_party>
 </SDL>'''
 
@@ -74,7 +76,7 @@ def generate_static_analysis_xml(build: str) -> str:
     pvs_logs = []
 
     for osname in ['linux', 'windows']:
-        pvs_logs_archive = f'{build}_{osname}_pvs_report.7z'
+        pvs_logs_archive = f'{osname}_pvs_report.7z'
         pvs_logs.append(
             f'<analyzer name="PVS Studio C++ {osname.capitalize()}" type="pvs">\n'
             f'<log link="{artifact_url(pvs_logs_archive, build)}"/>\n</analyzer>'
@@ -84,15 +86,15 @@ def generate_static_analysis_xml(build: str) -> str:
     <static_analysis>
         {'\n'.join(pvs_logs)}\n
         <analyzer name="OCLint C++ Linux" type="oclint">
-            <config name=".oclint" link="{artifact_url(f'{build}_oclint', build)}"/>
-            <log link="{artifact_url(f'{build}_linux_oclint_report.7z', build)}"/>
+            <config name=".oclint" link="{artifact_url('oclint', build)}"/>
+            <log link="{artifact_url('linux_oclint_report.7z', build)}"/>
         </analyzer>
         <analyzer name="PyLint Linux" type="pylint">
-            <log link="{artifact_url(f'{build}_linux_pylint_report.7z', build)}"/>
-            <config name=".pylintrc" link="{artifact_url(f'{build}_pylintrc', build)}"/>
+            <log link="{artifact_url('linux_pylint_report.7z', build)}"/>
+            <config name=".pylintrc" link="{artifact_url('pylintrc', build)}"/>
         </analyzer>
         <analyzer name="Bandit Python Linux" type="bandit">
-            <log link="{artifact_url(f'{build}_linux_bandit_report.7z', build)}"/>
+            <log link="{artifact_url('linux_bandit_report.7z', build)}"/>
         </analyzer>
     </static_analysis>
 </SDL>'''
@@ -102,7 +104,7 @@ def generate_dynamic_analysis_xml(build: str) -> str:
     return f'''<SDL>
     <dynamic_analysis>
         <analyzer name="Valgrind Linux" type="valgrind">
-            <log link="artifact_url(f'{build}_linux_dynamic_testing_report.7z', build)"/>
+            <log link="{artifact_url('linux_dynamic_testing_report.7z', build)}"/>
         </analyzer>
     </dynamic_analysis>
 </SDL>'''
@@ -141,12 +143,24 @@ def generate_sdl_request() -> dict[str, str | dict[str, str]]:
     return {
         'release_tfs_id': RELEASE_NUMBER,
         'build_number': BUILD_NUMBER,
-        'hla': artifact_url(HLA_FILENAME, build),
-        'third_party': {'type': 'uri', 'data': artifact_url(THIRD_PARTY_FILENAME, build)},
-        'devops_pipeline': {'type': 'uri', 'data': artifact_url(DEVOPS_PIPELINE_FILENAME, build)},
-        'source_code': {'type': 'uri', 'data': artifact_url(SECURE_CODE_REVIEW_FILENAME, build)},
-        'static_analysis': {'type': 'uri', 'data': artifact_url(STATIC_ANALYSIS_FILENAME, build)},
-        'dynamic_analysis': {'type': 'uri', 'data': artifact_url(DYNAMIC_ANALYSIS_FILENAME, build)},
+        'hla': artifact_url(HLA_FILENAME, build, add_build_to_name=False),
+        'third_party': {'type': 'uri', 'data': artifact_url(THIRD_PARTY_FILENAME, build, add_build_to_name=False)},
+        'devops_pipeline': {
+            'type': 'uri',
+            'data': artifact_url(DEVOPS_PIPELINE_FILENAME, build, add_build_to_name=False),
+        },
+        'source_code': {
+            'type': 'uri',
+            'data': artifact_url(SECURE_CODE_REVIEW_FILENAME, build, add_build_to_name=False),
+        },
+        'static_analysis': {
+            'type': 'uri',
+            'data': artifact_url(STATIC_ANALYSIS_FILENAME, build, add_build_to_name=False),
+        },
+        'dynamic_analysis': {
+            'type': 'uri',
+            'data': artifact_url(DYNAMIC_ANALYSIS_FILENAME, build, add_build_to_name=False),
+        },
         'iteration_path_for_bug': release_iteration,
         'iteration_path_for_req': release_iteration,
     }
@@ -180,13 +194,13 @@ if '__main__' == __name__:
     args = parser.parse_args()
 
     # RELEASE_NUMBER = get_release_number()
-    work_completed: bool = False
+    mode_set: bool = False
 
     if args.generate_artifacts:
         generate_sdl_artifacts()
-        work_completed = True
+        mode_set = True
     if args.call_api:
         call_vulnbot_api(args.imitate_call)
-        work_completed = True
-    if not work_completed:
+        mode_set = True
+    if not mode_set:
         raise ValueError('Set options!')
