@@ -78,13 +78,13 @@ def generate_static_analysis_xml(build: str) -> str:
     for osname in ['linux', 'windows']:
         pvs_logs_archive = f'{osname}_pvs_report.7z'
         pvs_logs.append(
-            f'<analyzer name="PVS Studio C++ {osname.capitalize()}" type="pvs">\n'
-            f'<log link="{artifact_url(pvs_logs_archive, build)}"/>\n</analyzer>'
+            f'<analyzer name="PVS Studio C++ {osname.capitalize()}" type="pvs">'
+            f'<log link="{artifact_url(pvs_logs_archive, build)}"/></analyzer>'
         )
 
     return f'''<SDL>
     <static_analysis>
-        {'\n'.join(pvs_logs)}\n
+        {' '.join(pvs_logs)}
         <analyzer name="OCLint C++ Linux" type="oclint">
             <config name=".oclint" link="{artifact_url('oclint', build)}"/>
             <log link="{artifact_url('linux_oclint_report.7z', build)}"/>
