@@ -30,7 +30,7 @@ COLLECTION_URI = os.getenv('COLLECTION_URI')
 def artifact_url(
     file_name: str, build: str = BUILD_NUMBER, server: str = ARTIFACTS_URL, add_build_to_name: bool = True
 ) -> str:
-    return f'{server}/{build}/{build}_{file_name}' if add_build_to_name else f'{server}/{build}/{file_name}'
+    return f'{server}/{build}/SDL/{build}_{file_name}' if add_build_to_name else f'{server}/{build}/SDL/{file_name}'
 
 
 def generate_tfs_url(branch: str = 'develop', project: str = 'FT-SNN', repo: str = 'KNP', path: str = '/') -> str:
