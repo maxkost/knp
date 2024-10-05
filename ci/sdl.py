@@ -198,7 +198,7 @@ if '__main__' == __name__:
         generate_sdl_artifacts()
         mode_set = True
     if args.call_api:
-        call_vulnbot_api(args.imitate_call)
+        call_vulnbot_api(not args.imitate_call)
         mode_set = True
     if not mode_set:
         raise ValueError('Set options!')
