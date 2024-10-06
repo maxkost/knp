@@ -1,4 +1,4 @@
-<depends update_date="26.09.2024">
+<depends update_date="04.10.2024">
     <!-- library name, vendor_name, os_name, os_version are optional -->
 
     <!-- Third Party Code исходный код -->
@@ -12,7 +12,7 @@
     <depend type="lib" ecosystem_name="github" name="google/flatbuffers" version="23.5.26" site="https://github.com/google/flatbuffers/tree/v23.5.26" legal_type_of_use="static_library"/>
     <depend type="lib" ecosystem_name="github" name="gabime/spdlog" version="1.12.0" site="https://github.com/gabime/spdlog/tree/v1.12.0" legal_type_of_use="static_library"/>
     <depend type="lib" ecosystem_name="github" name="google/googletest" version="1.14.0" site="https://github.com/google/googletest/tree/v1.14.0" legal_type_of_use="static_library"/>
-    <depend type="lib" ecosystem_name="github" name="intel/pcm" version="202307 Release" site="https://github.com/intel/pcm/tree/202307" legal_type_of_use="static_library"/>
+    <depend type="lib" ecosystem_name="github" name="intel/pcm" version="коммит 2f9b0c2" site="https://github.com/intel/pcm/tree/202307" legal_type_of_use="static_library"/>
     <depend type="toolset" ecosystem_name="github" name="jothepro/doxygen-awesome-css" version="2.2.0" site="https://github.com/jothepro/doxygen-awesome-css/tree/v2.2.0" is_modified="true" legal_type_of_use="unknown"/>
     <depend type="lib" ecosystem_name="github" name="zeromq/libzmq" version="4.3.5" site="https://github.com/zeromq/libzmq/tree/v4.3.5" legal_type_of_use="static_library"/>
     <depend type="lib" ecosystem_name="github" name="zeromq/cppzmq" version="4.10.0" site="https://github.com/zeromq/cppzmq/tree/v4.10.0" legal_type_of_use="static_library"/>
@@ -23,8 +23,8 @@
     <depend type="toolset" ecosystem_name="github" name="sarnold/cccc" version="3.2.0" site="https://github.com/sarnold/cccc/tree/3.2.0" legal_type_of_use="tool"/>
     <depend type="toolset" ecosystem_name="pypi" name="pybind11gen" version="-" site="https://github.com/virtuald/pybind11gen.git" is_modified="true" legal_type_of_use="tool"/>
     <depend type="lib" ecosystem_name="github" name="BlueBrain/HighFive" version="2.9.0" site="https://github.com/BlueBrain/HighFive/tree/v2.9.0" legal_type_of_use="static_library"/>
-    <depend type="lib" ecosystem_name="github" name="Tencent/rapidjson" version="1.1.0" site="https://github.com/Tencent/rapidjson/releases/tag/v1.1.0" legal_type_of_use="static_library"/>
-    <depend type="toolset" ecosystem_name="github" name="pre-commit/pre-commit-hooks" version="4.4.0" site="https://github.com/pre-commit/pre-commit-hooks/blob/v4.4.0/pre_commit_hooks/check_merge_conflict.py (лицензия указана на все компоненты pre-commit-hooks - https://github.com/pre-commit/pre-commit-hooks/tree/v4.4.0)" legal_type_of_use="tool"/>
+    <depend type="lib" ecosystem_name="github" name="Tencent/rapidjson" version="коммит 7c73dd7" site="https://github.com/Tencent/rapidjson/releases/tag/v1.1.0" legal_type_of_use="static_library"/>
+    <depend type="toolset" ecosystem_name="github" name="pre-commit/pre-commit-hooks" version="4.4.0" site="https://github.com/pre-commit/pre-commit-hooks/blob/v4.4.0/pre_commit_hooks/check_merge_conflict.py " legal_type_of_use="tool"/>
     <depend type="toolset" ecosystem_name="github" name="PyCQA/autoflake" version="2.2.0" site="https://github.com/PyCQA/autoflake/tree/v2.2.0" legal_type_of_use="tool"/>
     <depend type="toolset" ecosystem_name="pypi" name="PyUpgrade" version="3.10.1" site="https://github.com/asottile/pyupgrade/tree/v3.10.1" legal_type_of_use="tool"/>
     <depend type="toolset" ecosystem_name="pypi" name="PydocstringFormatter" version="0.7.3" site="https://github.com/DanielNoord/pydocstringformatter/tree/v0.7.3" legal_type_of_use="tool"/>
@@ -40,6 +40,8 @@
     <depend type="lib" ecosystem_name="github" name="freedick/cltcache" version="1.1.2" site="https://github.com/freedick/cltcache" is_modified="true" legal_type_of_use="source"/>
     <depend type="lib" ecosystem_name="github" name="davidcaron/CppHeaderParser" version="2.7.3.1" site="https://github.com/davidcaron/CppHeaderParser/blob/master/CppHeaderParser/CppHeaderParser.py" is_modified="true" legal_type_of_use="source"/>
     <depend type="lib" ecosystem_name="github" name="pocc/pre-commit-hooks" version="1.3.5" site="https://github.com/pocc/pre-commit-hooks/tree/master" is_modified="true" legal_type_of_use="source"/>
+    <depend type="lib" ecosystem_name="github" name="opencv/opencv" version="4.10.0" site="https://github.com/opencv/opencv/releases/tag/4.10.0" legal_type_of_use="shared_library"/>
+    <depend type="toolset" ecosystem_name="common" name="Valgrind" version="3.23.0" site="https://valgrind.org/downloads/current.html" legal_type_of_use="tool"/>
 
     <!-- Third Party Code бинарный пакет -->
 
@@ -146,4 +148,5 @@
     <depend type="lib" ecosystem_name="deb" name="vim" version="2:9.0.1378-2" site="https://packages.debian.org/bookworm/vim" legal_type_of_use="binary"/>
     <depend type="lib" ecosystem_name="deb" name="wget" version="1.21.3-1+b2" site="https://packages.debian.org/bookworm/wget" legal_type_of_use="binary"/>
     <depend type="lib" ecosystem_name="deb" name="zip" version="3.0-13" site="https://packages.debian.org/bookworm/zip" legal_type_of_use="binary"/>
+    <depend type="toolset" ecosystem_name="common" name="Valgrind" version="3.23.0" site="https://valgrind.org/downloads/current.html" legal_type_of_use="tool"/>
 </depends>

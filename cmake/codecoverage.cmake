@@ -83,6 +83,10 @@
 #     - Change gcovr output from -o <filename> for --xml <filename> and --html <filename> output respectively.
 #       This will allow for Multiple Output Formats at the same time by making use of GCOVR_ADDITIONAL_ARGS, e.g. GCOVR_ADDITIONAL_ARGS "--txt".
 #
+# 2022-09-28, Sebastian Mueller
+#     - fix append_coverage_compiler_flags_to_target to correctly add flags
+#     - replace "-fprofile-arcs -ftest-coverage" with "--coverage" (equivalent)
+#
 # USAGE:
 #
 # 1. Copy this file into your cmake modules path.
@@ -131,7 +135,7 @@
 #      make my_coverage_target
 #
 
-include_guard(GLOBAL)
+include(CMakeParseArguments)
 
 option(CODE_COVERAGE_VERBOSE "Verbose information" FALSE)
 
@@ -160,28 +164,23 @@ foreach(LANG ${LANGUAGES})
   endif()
 endforeach()
 
-set(COVERAGE_COMPILER_FLAGS "-g --coverage" CACHE INTERNAL "")
-
-macro(check_and_set_compiler_flag option_name)
-    include(CheckCXXCompilerFlag)
-
-    string(REGEX REPLACE "[-/\\]" "_" _optvar "${option_name}")
-    check_cxx_compiler_flag(${option_name} "HAVE_${_optvar}")
-
-    if(${HAVE_${_optvar}})
-        list(APPEND COVERAGE_COMPILER_FLAGS ${option_name})
-    endif()
-endmacro()
+set(COVERAGE_COMPILER_FLAGS "-g --coverage"
+    CACHE INTERNAL "")
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
-    check_and_set_compiler_flag(-fprofile-abs-path)
-    # Need to be linked with gcov to test.
-    # check_and_set_compiler_flag(-fprofile-arcs)
-    check_and_set_compiler_flag(-fprofile-instr-generate)
-    check_and_set_compiler_flag(-fcoverage-mapping)
+    include(CheckCXXCompilerFlag)
+    check_cxx_compiler_flag(-fprofile-abs-path HAVE_cxx_fprofile_abs_path)
+    if(HAVE_cxx_fprofile_abs_path)
+        set(COVERAGE_CXX_COMPILER_FLAGS "${COVERAGE_COMPILER_FLAGS} -fprofile-abs-path")
+    endif()
 endif()
-
-list(JOIN COVERAGE_COMPILER_FLAGS " " COVERAGE_COMPILER_FLAGS)
+if(CMAKE_C_COMPILER_ID MATCHES "(GNU|Clang)")
+    include(CheckCCompilerFlag)
+    check_c_compiler_flag(-fprofile-abs-path HAVE_c_fprofile_abs_path)
+    if(HAVE_c_fprofile_abs_path)
+        set(COVERAGE_C_COMPILER_FLAGS "${COVERAGE_COMPILER_FLAGS} -fprofile-abs-path")
+    endif()
+endif()
 
 set(CMAKE_Fortran_FLAGS_COVERAGE
     ${COVERAGE_COMPILER_FLAGS}
@@ -215,19 +214,9 @@ if(NOT (CMAKE_BUILD_TYPE STREQUAL "Debug" OR GENERATOR_IS_MULTI_CONFIG))
     message(WARNING "Code coverage results with an optimised (non-Debug) build may be misleading")
 endif() # NOT (CMAKE_BUILD_TYPE STREQUAL "Debug" OR GENERATOR_IS_MULTI_CONFIG)
 
-# GCC.
-link_libraries(
-    $<$<LINK_LANG_AND_ID:CXX,GNU>:gcov>
-    $<$<LINK_LANG_AND_ID:C,GNU>:gcov>
-    $<$<LINK_LANG_AND_ID:Fortran,GNU>:gcov>)
-
-# Clang.
-link_libraries(
-    $<$<LINK_LANG_AND_ID:CXX,Clang,AppleClang>:profile_rt>
-    $<$<LINK_LANG_AND_ID:C,Clang,AppleClang>:profile_rt>
-    $<$<LINK_LANG_AND_ID:Fortran,Clang,AppleClang>:profile_rt>)
-
-
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+    link_libraries(gcov)
+endif()
 
 # Defines a target for running and collection code coverage information
 # Builds dependencies, runs the given executable and outputs reports.
@@ -423,7 +412,7 @@ endfunction() # setup_target_for_coverage_lcov
 #                                            #  to BASE_DIRECTORY, with CMake 3.4+)
 # )
 # The user can set the variable GCOVR_ADDITIONAL_ARGS to supply additional flags to the
-# GCOVR command.
+# GCVOR command.
 function(setup_target_for_coverage_gcovr_xml)
 
     set(options NONE)
@@ -661,7 +650,6 @@ function(setup_target_for_coverage_fastcov)
         --process-gcno
         --output ${Coverage_NAME}.json
         --exclude ${FASTCOV_EXCLUDES}
-        --exclude ${FASTCOV_EXCLUDES}
     )
 
     set(FASTCOV_CONVERT_CMD ${FASTCOV_PATH}
@@ -745,96 +733,6 @@ function(setup_target_for_coverage_fastcov)
 
 endfunction() # setup_target_for_coverage_fastcov
 
-# Defines a target for running and collection code coverage information
-# Builds dependencies, runs the given executable and outputs reports.
-
-# setup_target_for_coverage_gcov_json(
-#     NAME ctest_coverage                    # New target name
-#     EXECUTABLE ctest -j ${PROCESSOR_COUNT} # Executable in PROJECT_BINARY_DIR
-#     DEPENDENCIES executable_target         # Dependencies to build first
-#     BASE_DIRECTORY "../"                   # Base directory for report
-#                                            #  (defaults to PROJECT_SOURCE_DIR)
-#     EXCLUDE "src/dir1/*" "src/dir2/*"      # Patterns to exclude (can be relative
-#                                            #  to BASE_DIRECTORY, with CMake 3.4+)
-# )
-# The user can set the variable GCOV_ADDITIONAL_ARGS to supply additional flags to the
-# GCOV command.
-function(setup_target_for_coverage_gcov_json)
-
-    set(options NONE)
-    set(oneValueArgs BASE_DIRECTORY NAME)
-    set(multiValueArgs EXCLUDE EXECUTABLE EXECUTABLE_ARGS DEPENDENCIES)
-    cmake_parse_arguments(Coverage "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-
-    if(NOT GCOV_PATH)
-        message(FATAL_ERROR "gcov not found! Aborting...")
-    endif() # NOT GCOV_PATH
-
-    # Set base directory (as absolute path), or default to PROJECT_SOURCE_DIR
-    if(DEFINED Coverage_BASE_DIRECTORY)
-        get_filename_component(BASEDIR ${Coverage_BASE_DIRECTORY} ABSOLUTE)
-    else()
-        set(BASEDIR ${PROJECT_SOURCE_DIR})
-    endif()
-
-    # Collect excludes (CMake 3.4+: Also compute absolute paths)
-    set(GCOV_EXCLUDES "")
-    foreach(EXCLUDE ${Coverage_EXCLUDE} ${COVERAGE_EXCLUDES} ${COVERAGE_GCOV_EXCLUDES})
-        if(CMAKE_VERSION VERSION_GREATER 3.4)
-            get_filename_component(EXCLUDE ${EXCLUDE} ABSOLUTE BASE_DIR ${BASEDIR})
-        endif()
-        list(APPEND GCOV_EXCLUDES "${EXCLUDE}")
-    endforeach()
-    list(REMOVE_DUPLICATES GCOV_EXCLUDES)
-
-    # Combine excludes to several -e arguments [GCov doesn't support excludes].
-    #set(GCOV_EXCLUDE_ARGS "")
-    #foreach(EXCLUDE ${GCOV_EXCLUDES})
-    #    list(APPEND GCOV_EXCLUDE_ARGS "-e")
-    #    list(APPEND GCOV_EXCLUDE_ARGS "${EXCLUDE}")
-    #endforeach()
-
-    # Set up commands which will be run to generate coverage data
-    # Run tests
-    set(GCOV_JSON_EXEC_TESTS_CMD
-        ${Coverage_EXECUTABLE} ${Coverage_EXECUTABLE_ARGS}
-    )
-    # Running gcovr
-    set(GCOV_JSON_CMD
-        ${GCOV_PATH} --json-format ${Coverage_NAME}.json -r ${BASEDIR} ${GCOV_ADDITIONAL_ARGS}
-        ${GCOVR_EXCLUDE_ARGS} --object-directory "${PROJECT_BINARY_DIR}"
-    )
-
-    if(CODE_COVERAGE_VERBOSE)
-        message(STATUS "Executed command report")
-
-        message(STATUS "Command to run tests: ")
-        string(REPLACE ";" " " GCOV_JSON_EXEC_TESTS_CMD_SPACED "${GCOV_JSON_EXEC_TESTS_CMD}")
-        message(STATUS "${GCOV_JSON_EXEC_TESTS_CMD_SPACED}")
-
-        message(STATUS "Command to generate gcovr XML coverage data: ")
-        string(REPLACE ";" " " GCOV_JSON_CMD_SPACED "${GCOV_JSON_CMD}")
-        message(STATUS "${GCOV_JSON_CMD_SPACED}")
-    endif()
-
-    add_custom_target(${Coverage_NAME}
-        COMMAND ${GCOV_JSON_EXEC_TESTS_CMD}
-        COMMAND ${GCOV_JSON_CMD}
-        BYPRODUCTS ${Coverage_NAME}.json
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-        DEPENDS ${Coverage_DEPENDENCIES}
-        VERBATIM # Protect arguments to commands
-        COMMENT "Running gcov to produce JSON code coverage report."
-    )
-
-    # Show info where to find the report
-    add_custom_command(TARGET ${Coverage_NAME} POST_BUILD
-        COMMAND ;
-        COMMENT "JSON code coverage report saved in ${Coverage_NAME}.json."
-    )
-endfunction() # setup_target_for_coverage_gcov_json
-
-
 function(append_coverage_compiler_flags)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COVERAGE_COMPILER_FLAGS}" PARENT_SCOPE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COVERAGE_COMPILER_FLAGS}" PARENT_SCOPE)
@@ -844,15 +742,9 @@ endfunction() # append_coverage_compiler_flags
 
 # Setup coverage for specific library
 function(append_coverage_compiler_flags_to_target name)
-    target_compile_options(${name}
-        PRIVATE ${COVERAGE_COMPILER_FLAGS})
-endfunction()
-
-
-function(link_target_with_gcov name)
-    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-        target_link_libraries(${name} PRIVATE gcov)
-    elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    separate_arguments(_flag_list NATIVE_COMMAND "${COVERAGE_COMPILER_FLAGS}")
+    target_compile_options(${name} PRIVATE ${_flag_list})
+    if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
         target_link_libraries(${name} PRIVATE gcov)
     endif()
 endfunction()

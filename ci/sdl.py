@@ -7,7 +7,7 @@ import pathlib
 import urllib.request
 from typing import Any
 
-ARTIFACTS_HOSTNAME = os.getenv('SDL_ARTIFACTS_HOSTNAME')
+ARTIFACTS_URL = os.getenv('ARTIFACTS_URL')
 SDL_ARTIFACTS_DIRECTORY = os.getenv('SDL_ARTIFACTS_DIRECTORY', 'build/SDL')
 
 HLA_FILENAME = 'hla.xml'
@@ -27,8 +27,10 @@ RELEASE_NUMBER = os.getenv('TFS_RELEASE_NUMBER')
 COLLECTION_URI = os.getenv('COLLECTION_URI')
 
 
-def artifact_url(file_name: str, build: str, server: str = ARTIFACTS_HOSTNAME) -> str:
-    return f'http://{server}/tfs_artifacts/{build}/{file_name}'
+def artifact_url(
+    file_name: str, build: str = BUILD_NUMBER, server: str = ARTIFACTS_URL, add_build_to_name: bool = True
+) -> str:
+    return f'{server}/{build}/SDL/{build}_{file_name}' if add_build_to_name else f'{server}/{build}/SDL/{file_name}'
 
 
 def generate_tfs_url(branch: str = 'develop', project: str = 'FT-SNN', repo: str = 'KNP', path: str = '/') -> str:
@@ -46,7 +48,7 @@ def generate_hla_artifact_xml() -> str:
 def generate_third_party_xml(third_party_url: str) -> str:
     return f'''<SDL>
     <third_party>
-        <third_party link="{third_party_url}"/>
+        <third_party link="{artifact_url(third_party_url)}"/>
     </third_party>
 </SDL>'''
 
@@ -70,61 +72,55 @@ def generate_code_review_xml(link: str) -> str:
 </SDL>'''
 
 
-def generate_static_analysis_xml(build: str) -> str:
-    oclint_logs_archive = 'oclint.log'
-    pvs_logs_archive = 'PVS-Studio.log'
-    artifact_url('.pylintrc', build)
-    pylint_report_url = artifact_url('pylint-report/pylint-report.txt', build)
-    bandit_report_url = artifact_url('bandit.log', build)
+def generate_static_analysis_xml() -> str:
+    pvs_logs = []
+
+    for osname in ['linux', 'windows']:
+        pvs_logs_archive = f'{osname}_pvs_report.7z'
+        pvs_logs.append(
+            f'<analyzer name="PVS Studio C++ {osname.capitalize()}" type="pvs">'
+            f'<log link="{artifact_url(pvs_logs_archive)}"/></analyzer>'
+        )
 
     return f'''<SDL>
     <static_analysis>
-        <analyzer name="PVS Studio C++" type="pvs">
-            <log link="{artifact_url(pvs_logs_archive, build)}"/>
+        {' '.join(pvs_logs)}
+        <analyzer name="OCLint C++ Linux" type="oclint">
+            <config name=".oclint" link="{artifact_url('oclint')}"/>
+            <log link="{artifact_url('linux_oclint_report.7z')}"/>
         </analyzer>
-        <analyzer name="OCLint C++" type="oclint">
-            <config name="oclint" link="{generate_tfs_url(path='.oclint')}"/>
-            <log link="{artifact_url(oclint_logs_archive, build)}"/>
+        <analyzer name="PyLint Linux" type="pylint">
+            <log link="{artifact_url('linux_pylint_report.7z')}"/>
+            <config name=".pylintrc" link="{artifact_url('pylintrc')}"/>
         </analyzer>
-        <analyzer name="PyLint" type="pylint">
-            <config name="pylintrc" link="{generate_tfs_url(path='knp/.pylintrc')}"/>
-            <log link="{pylint_report_url}"/>
-        </analyzer>
-        <analyzer name="Bandit Python" type="bandit">
-            <log link="{bandit_report_url}"/>
+        <analyzer name="Bandit Python Linux" type="bandit">
+            <log link="{artifact_url('linux_bandit_report.7z')}"/>
         </analyzer>
     </static_analysis>
 </SDL>'''
 
 
-def generate_dynamic_analysis_xml(build: str) -> str:
-    valgrind_report_url = artifact_url(f'{build}_valgrind.7z', build)
-
+def generate_dynamic_analysis_xml() -> str:
     return f'''<SDL>
     <dynamic_analysis>
-        <analyzer name="Valgrind" type="valgrind">
-            <log link="{valgrind_report_url}"/>
+        <analyzer name="Valgrind Linux" type="valgrind">
+            <log link="{artifact_url('linux_dynamic_testing_report.7z')}"/>
         </analyzer>
     </dynamic_analysis>
 </SDL>'''
 
 
 def generate_sdl_artifacts() -> None:
-    build = f'{os.getenv("TFS_PIPELINE")}/{BUILD_NUMBER}'
     sdl_path = pathlib.Path(__file__).resolve().parent.parent / SDL_ARTIFACTS_DIRECTORY
     sdl_path.mkdir(parents=True, exist_ok=True)
 
-    print(f'Generating SDL XMLs for build {build} in path "{sdl_path}"')
+    print(f'Generating SDL XMLs for build {BUILD_NUMBER} in path "{sdl_path}"')
 
     with open(sdl_path / HLA_FILENAME, 'w', encoding='utf8') as f:
         f.write(generate_hla_artifact_xml())
 
     with open(sdl_path / THIRD_PARTY_FILENAME, 'w', encoding='utf8') as f:
-        f.write(
-            generate_third_party_xml(
-                f'{generate_tfs_url(path=str(pathlib.Path(__file__).resolve().parent / THIRD_PARTY_LIST_FILENAME))}'
-            )
-        )
+        f.write(generate_third_party_xml(THIRD_PARTY_LIST_FILENAME))
 
     with open(sdl_path / DEVOPS_PIPELINE_FILENAME, 'w', encoding='utf8') as f:
         f.write(generate_devops_pipeline_xml())
@@ -133,25 +129,36 @@ def generate_sdl_artifacts() -> None:
         f.write(generate_code_review_xml(generate_tfs_url()))
 
     with open(sdl_path / STATIC_ANALYSIS_FILENAME, 'w', encoding='utf8') as f:
-        f.write(generate_static_analysis_xml(build))
+        f.write(generate_static_analysis_xml())
 
     with open(sdl_path / DYNAMIC_ANALYSIS_FILENAME, 'w', encoding='utf8') as f:
-        f.write(generate_dynamic_analysis_xml(build))
+        f.write(generate_dynamic_analysis_xml())
 
 
 def generate_sdl_request() -> dict[str, str | dict[str, str]]:
-    build = f'{os.getenv("TFS_PIPELINE")}/{BUILD_NUMBER}'
     # major, minor, *_ = RELEASE_NUMBER.split('.')
     release_iteration = r'FT-SNN\Open Source Release'
     return {
         'release_tfs_id': RELEASE_NUMBER,
         'build_number': BUILD_NUMBER,
-        'hla': artifact_url(HLA_FILENAME, build),
-        'third_party': {'type': 'uri', 'data': artifact_url(THIRD_PARTY_FILENAME, build)},
-        'devops_pipeline': {'type': 'uri', 'data': artifact_url(DEVOPS_PIPELINE_FILENAME, build)},
-        'source_code': {'type': 'uri', 'data': artifact_url(SECURE_CODE_REVIEW_FILENAME, build)},
-        'static_analysis': {'type': 'uri', 'data': artifact_url(STATIC_ANALYSIS_FILENAME, build)},
-        'dynamic_analysis': {'type': 'uri', 'data': artifact_url(DYNAMIC_ANALYSIS_FILENAME, build)},
+        'hla': artifact_url(HLA_FILENAME, add_build_to_name=False),
+        'third_party': {'type': 'uri', 'data': artifact_url(THIRD_PARTY_FILENAME, add_build_to_name=False)},
+        'devops_pipeline': {
+            'type': 'uri',
+            'data': artifact_url(DEVOPS_PIPELINE_FILENAME, add_build_to_name=False),
+        },
+        'source_code': {
+            'type': 'uri',
+            'data': artifact_url(SECURE_CODE_REVIEW_FILENAME, add_build_to_name=False),
+        },
+        'static_analysis': {
+            'type': 'uri',
+            'data': artifact_url(STATIC_ANALYSIS_FILENAME, add_build_to_name=False),
+        },
+        'dynamic_analysis': {
+            'type': 'uri',
+            'data': artifact_url(DYNAMIC_ANALYSIS_FILENAME, add_build_to_name=False),
+        },
         'iteration_path_for_bug': release_iteration,
         'iteration_path_for_req': release_iteration,
     }
@@ -185,13 +192,13 @@ if '__main__' == __name__:
     args = parser.parse_args()
 
     # RELEASE_NUMBER = get_release_number()
-    work_completed: bool = False
+    mode_set: bool = False
 
     if args.generate_artifacts:
         generate_sdl_artifacts()
-        work_completed = True
+        mode_set = True
     if args.call_api:
-        call_vulnbot_api(args.imitate_call)
-        work_completed = True
-    if not work_completed:
+        call_vulnbot_api(not args.imitate_call)
+        mode_set = True
+    if not mode_set:
         raise ValueError('Set options!')

@@ -6,7 +6,7 @@
  * @copyright © 2024 AO Kaspersky Lab
  */
 
-#if !defined(WIN32)
+#if !defined(_MSC_VER)
 extern "C"
 {
 #    include <unistd.h>
