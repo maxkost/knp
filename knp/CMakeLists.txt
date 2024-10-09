@@ -56,7 +56,7 @@ if (PVS_BINARY)
         endif()
     endforeach()
 
-    pvs_studio_add_target(TARGET "pvs-analyze" ANALYZE ${PVS_TARGETS})
+    pvs_studio_add_target(TARGET "pvs-analyze" ANALYZE ${PVS_TARGETS} ARGS --dump-files)
 else()
     message(WARNING "PVS analyzer was not found, static analysis with PVS Studio disabled.")
 endif()
