@@ -5,7 +5,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(OpenCV)
 if (NOT OpenCV_FOUND)
-    message(WARNING "OpenCV not found, skipping MNIST example...")
+    message(WARNING "OpenCV was not found. Skipping MNIST example...")
     return()
 endif()
 
@@ -22,8 +22,8 @@ if (NOT TARGET KNP::BaseFramework::Core)
     find_package(knp-base-framework REQUIRED)
 endif()
 
-project(MnistExample)
-add_executable(MnistExample
+project(mnist-client)
+add_executable(mnist-client
     main.cpp
     graph_physics.cpp
     inference.cpp
@@ -31,4 +31,4 @@ add_executable(MnistExample
     visualize_network.cpp
 )
 
-target_link_libraries(MnistExample PRIVATE KNP::BaseFramework::Core ${OpenCV_LIBS} ${Boost_LIBRARIES})
+target_link_libraries(mnist-client PRIVATE KNP::BaseFramework::Core ${OpenCV_LIBS} ${Boost_LIBRARIES})

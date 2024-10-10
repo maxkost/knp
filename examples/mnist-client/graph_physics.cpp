@@ -1,6 +1,6 @@
 /**
  * @file graph_physics.cpp
- * @brief Implement graph physics.
+ * @brief Implementing a graph physics.
  * @date 21.08.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -16,7 +16,7 @@
 #include <opencv2/core.hpp>
 
 
-// Construct graph class from an adjacency list.
+// Construct a graph class from an adjacency list.
 VisualGraph::VisualGraph(const std::vector<int> &nodes, const std::vector<std::vector<size_t>> &adj_list)
     : base_graph_(adj_list)
 {
@@ -37,9 +37,9 @@ VisualGraph::VisualGraph(const std::vector<int> &nodes, const std::vector<std::v
 }
 
 
-// We show graph using a physical model: all nodes repel each other, all connected nodes are connected as if by
-// springs of a fixed length. There is also a drag force to dampen oscillations, it's calculated independently.
-// This function calculates forces between two nodes.
+// We show graph using a following physical model: all nodes repel each other, all connected nodes are connected 
+// as if by springs of a fixed length. There is also a drag force to dampen oscillations, it's calculated 
+// independently. This function calculates forces between two graph nodes.
 cv::Vec2d VisualGraph::get_force(const PhysicsPoint &target, const PhysicsPoint &influence, bool has_edge) const
 {
     double very_small_number = 1e-5;
@@ -52,12 +52,12 @@ cv::Vec2d VisualGraph::get_force(const PhysicsPoint &target, const PhysicsPoint 
 }
 
 
-// A single iteration recalculates forces and velocities then moves the points according to their corresponding
+// A single iteration recalculates forces and velocities then moves the graph points according to their corresponding
 // velocities.
 void VisualGraph::iterate()
 {
     double dt = 0.2;
-    // Calculate forces
+    // Calculate forces.
     std::vector<cv::Vec2d> forces;
     forces.resize(points_.size(), {0.0, 0.0});
     for (size_t i = 0; i < points_.size(); ++i)
@@ -68,7 +68,7 @@ void VisualGraph::iterate()
             auto force = get_force(points_[i], points_[j], edges_mat_[i][j] || edges_mat_[j][i]);
             forces[i] += force;
         }
-        // Drag
+        // Drag.
         forces[i] += -points_[i].vel_ * resistance_;
     }
     // Update velocities and positions.
@@ -87,7 +87,7 @@ void VisualGraph::iterate(int n)
 }
 
 
-// Get all points positions.
+// Get positions for all graph points.
 [[nodiscard]] std::vector<cv::Point2d> VisualGraph::get_positions() const
 {
     std::vector<cv::Point2d> result;
@@ -108,7 +108,7 @@ std::vector<cv::Point2i> VisualGraph::scale_graph(const cv::Size &screen_size, i
     cv::Size graph_max_size = screen_size - cv::Size{2 * margin, 2 * margin};
     auto points = get_positions();
 
-    // Maybe do a rotation here later, probably using cv::minAreaRect.
+    // TODO: Maybe do a rotation here later, probably using cv::minAreaRect.
     for (const auto &point : points)
     {
         low_point.x = std::min(low_point.x, point.x);

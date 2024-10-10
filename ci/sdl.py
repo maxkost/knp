@@ -114,7 +114,7 @@ def generate_sdl_artifacts() -> None:
     sdl_path = pathlib.Path(__file__).resolve().parent.parent / SDL_ARTIFACTS_DIRECTORY
     sdl_path.mkdir(parents=True, exist_ok=True)
 
-    print(f'Generating SDL XMLs for build {BUILD_NUMBER} in path "{sdl_path}"')
+    print(f'Generating SDL XMLs for build {BUILD_NUMBER} in path "{sdl_path}"...')
 
     with open(sdl_path / HLA_FILENAME, 'w', encoding='utf8') as f:
         f.write(generate_hla_artifact_xml())

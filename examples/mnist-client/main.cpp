@@ -1,6 +1,6 @@
 /**
  * @file main.cpp
- * @brief An in-progress demo program for building and running MNIST-classification spiking network.
+ * @brief A program for building and running MNIST-classification spiking network.
  * @author A. Vartenkov
  * @date 26.07.2024
  * @license Apache 2.0
@@ -25,42 +25,56 @@ namespace po = boost::program_options;
 
 
 // Load network and show or run it depending on command line parameters.
-// On task=show loads a network and shows a subgraph of it.
-// On task=infer loads and runs network using data from a binary data file.
+// On `task=show`, the function loads a network and shows a subgraph of it.
+// On `task=infer`, the function loads and runs network using data from a binary data file.
 int main(int argc, char **argv)
 {
+    // Creates an output ID.
     knp::core::UID output_uid;
+    // Defines `std::string` object for task types.
     std::string task;
+    // Defines `std::string` objects for path to network and path to a file storing data.
     std::string path_to_network, path_to_data;
     po::options_description options;
+    // Defines options for task types, path to network, and path to a file storing data.
     options.add_options()("help,h", "Produce help message.")(
         "task,t", po::value(&task), "Type of task: show, train, infer.")(
         "net-path,p", po::value(&path_to_network), "File or directory for network storage.")(
         "data-path,d", po::value(&path_to_data), "File for data storage.");
+    // Stores defines options in a variable map.
     po::variables_map options_map;
     po::store(po::parse_command_line(argc, argv, options), options_map);
     po::notify(options_map);
 
+    // If a path to network is not provided, the function exits.
     if (!options_map.count("net-path"))
     {
         std::cerr << "No \"net-path\" parameter required to load network. Stopping the program..." << std::endl;
         return EXIT_FAILURE;
     }
 
+    // If `task=show`, the function loads a network and shows a subgraph of it.
     if (task == "show")
     {
         const auto network_path = options_map["net-path"].as<std::string>();
+        // Create a network objects by loading it using the `load_network` function from the `sonata` namespace.
         knp::framework::Network network = knp::framework::sonata::load_network(network_path);
+        // Constructs a network graph.
         const NetworkGraph net_graph(network);
+        // Prints descriptions of graph connections.
         print_network_description(net_graph);
-        // Press ESC to exit
+        // Draws a subgraph in the OpenCV window.
+        // Press `Esc` to exit the OpenCV window.
         position_network_test(NetworkGraph(network), divide_graph_by_connectivity(net_graph)[0], {1000, 700});
     }
 
+    // If `task=infer`, the function loads a network and runs inference.
     if (task == "infer")
     {
+        // Defines path to backend, on which to run a network.
         std::filesystem::path path_to_backend =
             std::filesystem::path(argv[0]).parent_path() / "knp-cpu-single-threaded-backend";
+        // Runs inference of network on the specified path. 
         do_inference(
             options_map["net-path"].as<std::string>(), options_map["data-path"].as<std::string>(), path_to_backend);
     }
