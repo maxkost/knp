@@ -1,6 +1,6 @@
 /**
  * @file synaptic_impact_message_impl.h
- * @brief Implementation od synaptic impact message I/O operators.
+ * @brief Implementation of synaptic impact message I/O operators.
  * @author Artiom N.
  * @date 23.03.2023
  * @license Apache 2.0
@@ -25,6 +25,7 @@
  */
 namespace knp::core::messaging
 {
+
 ::flatbuffers::uoffset_t pack_internal(::flatbuffers::FlatBufferBuilder &builder, const SynapticImpactMessage &msg);
 SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg);
 }  // namespace knp::core::messaging
