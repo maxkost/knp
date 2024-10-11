@@ -36,11 +36,5 @@ target_include_directories("${PROJECT_NAME}" INTERFACE "impl")
 target_link_libraries("${PROJECT_NAME}" INTERFACE Boost::headers spdlog::spdlog)
 target_link_libraries("${PROJECT_NAME}" INTERFACE KNP::Core KNP::Devices::CPU)
 
-#if(KNP_ENABLE_COVERAGE)
-#    include(codecoverage)
-#    append_coverage_compiler_flags()
-##    link_target_with_gcov("${PROJECT_NAME}")
-#endif()
-
 # Internal library, used by backends.
 # This doesn't require installation.

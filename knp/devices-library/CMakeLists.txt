@@ -45,15 +45,6 @@ set_target_properties(
         VERSION "${CMAKE_PROJECT_VERSION}"
         SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
 
-#add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
-
-if(KNP_ENABLE_COVERAGE)
-    include(codecoverage)
-    append_coverage_compiler_flags()
-    link_target_with_gcov("${PROJECT_NAME}-cpu")
-endif()
-
-
 install(TARGETS "${PROJECT_NAME}-cpu"
         COMPONENT "framework-dev"
         EXPORT "${PROJECT_NAME}-cpu"

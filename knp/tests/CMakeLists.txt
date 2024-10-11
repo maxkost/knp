@@ -47,12 +47,6 @@ target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main spdlog::spdlog)
 
 add_dependencies("${PROJECT_NAME}" knp-base-framework-core_static)
 
-if (KNP_ENABLE_COVERAGE)
-    include(codecoverage)
-    append_coverage_compiler_flags()
-    link_target_with_gcov("${PROJECT_NAME}")
-endif()
-
 if (${BUILD_GMOCK})
     target_link_libraries("${PROJECT_NAME}" PRIVATE gmock gmock_main)
 endif()
@@ -73,15 +67,7 @@ if (KNP_ENABLE_COVERAGE)
 
     set(CODE_COVERAGE_VERBOSE true)
 
-    if (GCOVR_PATH)
-        setup_target_for_coverage_gcovr_xml(
-            NAME "${COV_NAME}"
-            EXECUTABLE ${COV_EXECUTABLE}
-            DEPENDENCIES ${COV_DEPENDENCIES}
-            BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
-        )
-        message(VERBOSE "Gcovr selected.")
-    elseif (LCOV_PATH)
+    if (LCOV_PATH)
         setup_target_for_coverage_lcov(
             NAME "${COV_NAME}"
             EXECUTABLE ${COV_EXECUTABLE}
@@ -89,6 +75,22 @@ if (KNP_ENABLE_COVERAGE)
             BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
         )
         message(VERBOSE "Lcov selected.")
+    elseif (FASTCOV_PATH)
+        setup_target_for_coverage_fastcov(
+            NAME "${COV_NAME}"
+            EXECUTABLE ${COV_EXECUTABLE}
+            DEPENDENCIES ${COV_DEPENDENCIES}
+            BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
+        )
+        message(VERBOSE "Gcovr selected.")
+    elseif (GCOVR_PATH)
+        setup_target_for_coverage_gcovr_xml(
+            NAME "${COV_NAME}"
+            EXECUTABLE ${COV_EXECUTABLE}
+            DEPENDENCIES ${COV_DEPENDENCIES}
+            BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
+        )
+        message(VERBOSE "Gcovr selected.")
     elseif (GCOV_PATH)
         setup_target_for_coverage_gcov_json(
             NAME "${COV_NAME}"
