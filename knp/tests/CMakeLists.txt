@@ -60,19 +60,33 @@ gtest_discover_tests("${PROJECT_NAME}"
 if (KNP_ENABLE_COVERAGE)
     message(STATUS "Coverage enabled.")
 
-    set(COV_EXECUTABLE "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
+    set(COV_EXECUTABLE "${PROJECT_NAME}")
+    #set(COV_EXECUTABLE "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
     set(COV_NAME "${PROJECT_NAME}_coverage")
     set(COV_DEPENDENCIES "${PROJECT_NAME}")
     set(COV_BASE_DIRECTORY "${CMAKE_SOURCE_DIR}")
+    set(COV_EXCLUDES "/usr/*;third-party/*")
 
-    set(CODE_COVERAGE_VERBOSE true)
+    set(CODE_COVERAGE_VERBOSE ON)
 
-    if (LCOV_PATH)
+    if (GCOVR_PATH)
+        set(GCOVR_ADDITIONAL_ARGS --gcov-ignore-parse-errors)
+        setup_target_for_coverage_gcovr_xml(
+            NAME "${COV_NAME}"
+            EXECUTABLE ${COV_EXECUTABLE}
+            DEPENDENCIES ${COV_DEPENDENCIES}
+            BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
+        )
+        message(VERBOSE "Gcovr selected.")
+    elseif (LCOV_PATH)
         setup_target_for_coverage_lcov(
             NAME "${COV_NAME}"
             EXECUTABLE ${COV_EXECUTABLE}
             DEPENDENCIES ${COV_DEPENDENCIES}
             BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
+            EXCLUDE ${COV_EXCLUDES}
+            LCOV_ARGS
+                --ignore-errors empty,inconsistent
         )
         message(VERBOSE "Lcov selected.")
     elseif (FASTCOV_PATH)
@@ -82,23 +96,7 @@ if (KNP_ENABLE_COVERAGE)
             DEPENDENCIES ${COV_DEPENDENCIES}
             BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
         )
-        message(VERBOSE "Gcovr selected.")
-    elseif (GCOVR_PATH)
-        setup_target_for_coverage_gcovr_xml(
-            NAME "${COV_NAME}"
-            EXECUTABLE ${COV_EXECUTABLE}
-            DEPENDENCIES ${COV_DEPENDENCIES}
-            BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
-        )
-        message(VERBOSE "Gcovr selected.")
-    elseif (GCOV_PATH)
-        setup_target_for_coverage_gcov_json(
-            NAME "${COV_NAME}"
-            EXECUTABLE ${COV_EXECUTABLE}
-            DEPENDENCIES ${COV_DEPENDENCIES}
-            BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
-        )
-        message(STATUS "Gcov selected.")
+        message(VERBOSE "Fastcov selected.")
     else()
         message(WARNING "Coverage cannot be enabled.")
     endif()
