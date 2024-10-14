@@ -17,6 +17,11 @@ include(pvs-studio)
 # set(Boost_USE_STATIC_LIBS ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+if (KNP_ENABLE_COVERAGE)
+    include(codecoverage)
+    append_coverage_compiler_flags()
+endif()
+
 add_subdirectory(meta-library)
 add_subdirectory(neuron-traits-library)
 add_subdirectory(synapse-traits-library)
@@ -30,6 +35,7 @@ add_subdirectory(tests)
 
 file(GLOB PVS_DIRS LIST_DIRECTORIES true "*")
 file(GLOB dirs LIST_DIRECTORIES true "backends/cpu/*")
+
 set(PVS_DIRS "${PVS_DIRS};${dirs}")
 
 if (WIN32)

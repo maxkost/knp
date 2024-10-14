@@ -21,7 +21,7 @@ struct uid_into_python
 {
     static PyObject* convert(boost::uuids::uuid const& u)
     {
-        return py::incref(py_uuid_UUID(py::object(), std::vector<uint8_t>(u.data, u.data + sizeof(u.data))).ptr());
+        return py::incref(py_uuid_UUID(py::object(), std::vector<uint8_t>(u.begin(), u.end())).ptr());
     }
 };
 

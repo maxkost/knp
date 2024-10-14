@@ -98,7 +98,7 @@ struct UID
                  boost::uuids::uuid::value_type, sizeof(boost::uuids::uuid::data) / sizeof(boost::uuids::uuid::data[0])>
                      &guid_value)
     {
-        std::copy(guid_value.begin(), guid_value.end(), tag.data);
+        std::copy(guid_value.begin(), guid_value.end(), tag.begin());
     }
 
     /**

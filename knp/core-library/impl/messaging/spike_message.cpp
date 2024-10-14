@@ -10,6 +10,7 @@
 #include <spdlog/spdlog.h>
 
 #include "spike_message_impl.h"
+#include "uid_marshal.h"
 
 
 namespace knp::core::messaging
@@ -56,7 +57,8 @@ std::istream &operator>>(std::istream &stream, SpikeMessage &msg)
 ::flatbuffers::uoffset_t pack_internal(::flatbuffers::FlatBufferBuilder &builder, const SpikeMessage &msg)
 {
     SPDLOG_TRACE("Packing spike message...");
-    marshal::MessageHeader header{marshal::UID{msg.header_.sender_uid_.tag.data}, msg.header_.send_time_};
+
+    marshal::MessageHeader header(get_marshaled_uid(msg.header_.sender_uid_), msg.header_.send_time_);
 
     return marshal::CreateSpikeMessageDirect(builder, &header, &msg.neuron_indexes_).o;
 }
@@ -84,7 +86,7 @@ SpikeMessage unpack(const marshal::SpikeMessage *s_msg)
     std::copy(
         s_msg_header->sender_uid().data()->begin(),  // clang_sa_ignore [core.CallAndMessage]
         s_msg_header->sender_uid().data()->end(),    // clang_sa_ignore [core.CallAndMessage]
-        uid1.tag.data);
+        uid1.tag.begin());
 
     return SpikeMessage{
         {uid1, s_msg_header->send_time()}, {s_msg->neuron_indexes()->begin(), s_msg->neuron_indexes()->end()}};

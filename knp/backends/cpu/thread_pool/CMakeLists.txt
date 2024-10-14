@@ -34,11 +34,5 @@ target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS})
 
 target_link_libraries("${PROJECT_NAME}" PRIVATE Boost::headers spdlog::spdlog)
 
-if(KNP_ENABLE_COVERAGE)
-    include(codecoverage)
-    append_coverage_compiler_flags()
-    link_target_with_gcov("${PROJECT_NAME}")
-endif()
-
 # Internal library, used by backends.
 # This doesn't require installation.
