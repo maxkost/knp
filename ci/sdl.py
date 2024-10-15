@@ -5,6 +5,7 @@ import json
 import os
 import pathlib
 import urllib.request
+from urllib.parse import urlparse, urlunparse, ParseResult
 from typing import Any
 
 ARTIFACTS_URL = os.getenv('ARTIFACTS_URL')
@@ -34,7 +35,18 @@ def artifact_url(
 
 
 def generate_tfs_url(branch: str = 'develop', project: str = 'FT-SNN', repo: str = 'KNP', path: str = '/') -> str:
-    return f'{COLLECTION_URI}/{project}/_git/{repo}?path={path}&amp;version=GB{branch}'
+    url_comps = urlparse(f'{COLLECTION_URI}/{project}/_git/{repo}?path={path}&amp;version=GB{branch}')
+
+    return urlunparse(
+        ParseResult(
+            url_comps.scheme,
+            url_comps.netloc,
+            str(pathlib.Path(url_comps.path)),
+            url_comps.params,
+            url_comps.query,
+            url_comps.fragment,
+        )
+    )
 
 
 def generate_hla_artifact_xml() -> str:
