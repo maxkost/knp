@@ -19,7 +19,7 @@ namespace knp::framework::coordinates::cartesian
 {
 
 /**
- * @brief Namespace for two-demensional Cartesian coordinates.
+ * @brief Namespace for two-dimensional Cartesian coordinates.
  */
 namespace d2
 {
@@ -42,7 +42,7 @@ using coordinate = boost::geometry::model::d2::point_xy<CoordinateType>;
 
 
 /**
- * @brief Namespace for three-demensional Cartesian coordinates.
+ * @brief Namespace for three-dimensional Cartesian coordinates.
  */
 namespace d3
 {

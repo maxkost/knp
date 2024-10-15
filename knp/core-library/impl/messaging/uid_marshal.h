@@ -1,6 +1,6 @@
 /**
  * @file uid_marshal.h
- * @brief Implementation of UID marshaling.
+ * @brief Implementation of UID marshalling.
  * @author Artiom N.
  * @date 12.10.2024
  * @license Apache 2.0

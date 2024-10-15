@@ -103,7 +103,7 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
     /**
      * @brief Dynamic synapse attribute for stability. 
      * @details The stability reflects how well a synapse is trained. 
-     * The value increases with correct responses from a synapse and dicreases in case of incorrect ones. 
+     * The value increases with correct responses from a synapse and decreases in case of incorrect ones. 
      * The higher the stability, the smaller the changes in synapse weight associated with plasticity. 
      * An increase in stability by 1 decreases synapse weight changes by two times.
      */
