@@ -3,7 +3,8 @@
 """Helpers for SDL process."""
 import json
 import os
-import pathlib
+from pathlib import Path
+import re
 import urllib.request
 from urllib.parse import urlparse, urlunparse, ParseResult
 from typing import Any
@@ -27,6 +28,8 @@ BUILD_NUMBER = os.getenv('BUILD_NUMBER')
 RELEASE_NUMBER = os.getenv('TFS_RELEASE_NUMBER')
 COLLECTION_URI = os.getenv('COLLECTION_URI')
 
+KNP_ROOT = Path(__file__).resolve().parent.parent
+
 
 def artifact_url(
     file_name: str, build: str = BUILD_NUMBER, server: str = ARTIFACTS_URL, add_build_to_name: bool = True
@@ -41,7 +44,7 @@ def generate_tfs_url(branch: str = 'develop', project: str = 'FT-SNN', repo: str
         ParseResult(
             url_comps.scheme,
             url_comps.netloc,
-            str(pathlib.Path(url_comps.path)),
+            str(Path(url_comps.path)),
             url_comps.params,
             url_comps.query,
             url_comps.fragment,
@@ -84,14 +87,38 @@ def generate_code_review_xml(link: str) -> str:
 </SDL>'''
 
 
+def get_config(filename: Path, regex: str) -> str:
+    with open(filename, encoding='utf8') as config_file:
+        file_content = config_file.read()
+        m_res = re.findall(regex, file_content, re.MULTILINE | re.IGNORECASE)
+        if not m_res:
+            raise RuntimeError(f'"{filename}" doesn\'t contain configuration data!')
+        return re.sub(r'\s\s+', '\n', '\n'.join(m_res))
+
+
+def get_pvs_config(filename: Path = KNP_ROOT / 'knp' / 'CMakeLists.txt') -> str:
+    return get_config(filename, r'pvs_studio_add_target\(([^\)]+)\)')
+
+
+def get_valgrind_config(filename: Path = KNP_ROOT / 'knp' / 'tests' / 'CMakeLists.txt') -> str:
+    return get_config(filename, r'set\((CTEST_MEMORYCHECK_COMMAND[^\)]+)\)')
+
+
 def generate_static_analysis_xml() -> str:
     pvs_logs = []
 
     for osname in ['linux', 'windows']:
         pvs_logs_archive = f'{osname}_pvs_report.7z'
+        pvs_config = f'{osname}_pvs_config.txt'
+
+        with open(KNP_ROOT / SDL_ARTIFACTS_DIRECTORY / pvs_config, 'w', encoding='utf8') as pc_f:
+            pc_f.write(get_pvs_config())
+
         pvs_logs.append(
             f'<analyzer name="PVS Studio C++ {osname.capitalize()}" type="pvs">'
-            f'<log link="{artifact_url(pvs_logs_archive)}"/></analyzer>'
+            f'<log link="{artifact_url(pvs_logs_archive)}"/>'
+            f'<config name="CMakeLists.txt" link="{artifact_url(pvs_config)}"/>'
+            '</analyzer>'
         )
 
     return f'''<SDL>
@@ -113,17 +140,21 @@ def generate_static_analysis_xml() -> str:
 
 
 def generate_dynamic_analysis_xml() -> str:
+    with open(KNP_ROOT / SDL_ARTIFACTS_DIRECTORY / 'valgrind_config.txt', 'w', encoding='utf8') as pc_f:
+        pc_f.write(get_valgrind_config())
+
     return f'''<SDL>
     <dynamic_analysis>
         <analyzer name="Valgrind Linux" type="valgrind">
             <log link="{artifact_url('linux_dynamic_testing_report.7z')}"/>
+            <log name="CMakeLists.txt" link="{artifact_url('valgrind_config.txt')}"/>
         </analyzer>
     </dynamic_analysis>
 </SDL>'''
 
 
 def generate_sdl_artifacts() -> None:
-    sdl_path = pathlib.Path(__file__).resolve().parent.parent / SDL_ARTIFACTS_DIRECTORY
+    sdl_path = KNP_ROOT / SDL_ARTIFACTS_DIRECTORY
     sdl_path.mkdir(parents=True, exist_ok=True)
 
     print(f'Generating SDL XMLs for build {BUILD_NUMBER} in path "{sdl_path}"...')
