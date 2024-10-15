@@ -140,7 +140,7 @@ def generate_static_analysis_xml() -> str:
 
 
 def generate_dynamic_analysis_xml() -> str:
-    with open(KNP_ROOT / SDL_ARTIFACTS_DIRECTORY / '{BUILD_NUMBER}_valgrind_config.txt', 'w', encoding='utf8') as pc_f:
+    with open(KNP_ROOT / SDL_ARTIFACTS_DIRECTORY / f'{BUILD_NUMBER}_valgrind_config.txt', 'w', encoding='utf8') as pc_f:
         pc_f.write(get_valgrind_config())
 
     return f'''<SDL>
