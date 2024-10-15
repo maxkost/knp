@@ -109,7 +109,7 @@ def generate_static_analysis_xml() -> str:
 
     for osname in ['linux', 'windows']:
         pvs_logs_archive = f'{osname}_pvs_report.7z'
-        pvs_config = f'{osname}_pvs_config.txt'
+        pvs_config = f'{BUILD_NUMBER}_{osname}_pvs_config.txt'
 
         with open(KNP_ROOT / SDL_ARTIFACTS_DIRECTORY / pvs_config, 'w', encoding='utf8') as pc_f:
             pc_f.write(get_pvs_config())
@@ -140,14 +140,14 @@ def generate_static_analysis_xml() -> str:
 
 
 def generate_dynamic_analysis_xml() -> str:
-    with open(KNP_ROOT / SDL_ARTIFACTS_DIRECTORY / 'valgrind_config.txt', 'w', encoding='utf8') as pc_f:
+    with open(KNP_ROOT / SDL_ARTIFACTS_DIRECTORY / '{BUILD_NUMBER}_valgrind_config.txt', 'w', encoding='utf8') as pc_f:
         pc_f.write(get_valgrind_config())
 
     return f'''<SDL>
     <dynamic_analysis>
         <analyzer name="Valgrind Linux" type="valgrind">
             <log link="{artifact_url('linux_dynamic_testing_report.7z')}"/>
-            <log name="CMakeLists.txt" link="{artifact_url('valgrind_config.txt')}"/>
+            <config name="CMakeLists.txt" link="{artifact_url('valgrind_config.txt')}"/>
         </analyzer>
     </dynamic_analysis>
 </SDL>'''
