@@ -34,6 +34,7 @@ if (PVS_STUDIO_AS_SCRIPT)
 
     file(REMOVE "${PVS_STUDIO_LOG_FILE}")
     execute_process(COMMAND ${PVS_STUDIO_COMMAND} ${additional_args}
+                    COMMAND_ECHO STDOUT
                     RESULT_VARIABLE result
                     OUTPUT_VARIABLE output
                     ERROR_VARIABLE error)
@@ -228,7 +229,7 @@ function (pvs_studio_analyze_file SOURCE SOURCE_DIR BINARY_DIR)
                            IMPLICIT_DEPENDS "${PVS_STUDIO_LANGUAGE}" "${SOURCE}"
                            ${depCommandArg}
                            VERBATIM
-                           COMMENT "Analyzing ${PVS_STUDIO_LANGUAGE} file ${SOURCE_RELATIVE}")
+                           COMMENT "Analyzing ${PVS_STUDIO_LANGUAGE} file ${SOURCE_RELATIVE} with args: ${pvscmd}")
         list(APPEND PLOGS "${LOG}")
     endif()
     set(PVS_STUDIO_PLOGS "${PLOGS}" PARENT_SCOPE)
