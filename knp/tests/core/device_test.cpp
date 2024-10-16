@@ -22,11 +22,12 @@ TEST(DeviceTestSuite, CPUTest)
 {
 #if defined(WIN32)
     GTEST_SKIP() << "Test needs driver under Windows";
-#endif
+#else
     if (geteuid() != 0)
     {
         GTEST_SKIP() << "This test must be run under root.";
     }
+#endif
 
     auto processors = knp::devices::cpu::list_processors();
 
@@ -40,12 +41,13 @@ TEST(DeviceTestSuite, BackendDevicesTest)
 {
 #if defined(WIN32)
     GTEST_SKIP() << "Test needs driver under Windows";
-#endif
+#else
     if (geteuid() != 0)
     {
         SPDLOG_WARN("This test must be run under root.");
         GTEST_SKIP() << "This test must be run under root.";
     }
+#endif
 
     knp::backends::single_threaded_cpu::SingleThreadedCPUBackend backend;
 
