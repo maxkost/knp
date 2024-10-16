@@ -111,7 +111,7 @@ def generate_static_analysis_xml() -> str:
         pvs_logs_archive = f'{osname}_pvs_report.7z'
         pvs_config = f'{osname}_pvs_config.txt'
 
-        with open(KNP_ROOT / SDL_ARTIFACTS_DIRECTORY / f'{BUILD_NUMBER}_pvs_config', 'w', encoding='utf8') as pc_f:
+        with open(KNP_ROOT / SDL_ARTIFACTS_DIRECTORY / f'{BUILD_NUMBER}_{pvs_config}', 'w', encoding='utf8') as pc_f:
             pc_f.write(get_pvs_config())
 
         pvs_logs.append(
