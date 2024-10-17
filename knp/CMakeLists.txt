@@ -62,7 +62,12 @@ if (PVS_BINARY)
         endif()
     endforeach()
 
-    pvs_studio_add_target(TARGET "pvs-analyze" ANALYZE ${PVS_TARGETS} ARGS --dump-files)
+    pvs_studio_add_target(TARGET "pvs-analyze"
+                          OUTPUT FORMAT tasklist
+                          ANALYZE ${PVS_TARGETS}
+                          MODE GA:1,2
+                          ARGS -e "${CMAKE_SOURCE_DIR}/third-party"
+                          ARGS -e "/usr/local")
 else()
     message(WARNING "PVS analyzer was not found, static analysis with PVS Studio disabled.")
 endif()
