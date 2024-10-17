@@ -1,6 +1,6 @@
 /**
  * @file altai.cpp
- * @brief AltAI devices class implementation.
+ * @brief Implementation of AltAI devices classes.
  * @author Liubiakin A.
  * @date
  */
