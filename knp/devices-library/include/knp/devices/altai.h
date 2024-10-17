@@ -2,7 +2,7 @@
  * @file altai.h
  * @brief Class definitions for AltAI and AltAI_GM devices.
  * @author Liubiakin A.
- * @date
+ * @date 17.10.2024
  */
 
 #pragma once

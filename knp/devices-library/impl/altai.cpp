@@ -2,7 +2,7 @@
  * @file altai.cpp
  * @brief Implementation of AltAI devices classes.
  * @author Liubiakin A.
- * @date
+ * @date 17.10.2024
  */
 
 #include <knp/devices/altai.h>
