@@ -116,6 +116,7 @@ TEST(ProjectionConnectors, FromMap)
 
     for (const auto& synapse : proj)
     {
+        // Find in map.
         ASSERT_NE(
             syn_map.find(std::make_tuple(
                 std::get<knp::core::source_neuron_id>(synapse), std::get<knp::core::target_neuron_id>(synapse))),
