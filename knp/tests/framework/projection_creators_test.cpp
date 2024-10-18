@@ -1,13 +1,13 @@
 /**
- * @file projection_connectors_test.cpp
- * @brief Tests for projection connectors.
+ * @file projection_creators_test.cpp
+ * @brief Tests for projection creators.
  * @date 27.08.2024
  * @license Apache 2.0
  * @author Artiom N.
  * @copyright © 2024 AO Kaspersky Lab
  */
 
-#include <knp/framework/projection/connectors.h>
+#include <knp/framework/projection/creators.h>
 #include <knp/synapse-traits/delta.h>
 
 #include <tests_common.h>

@@ -19,6 +19,7 @@
 
 #include "synapse_parameters_generators.h"
 
+
 /**
  * @brief Projection namespace.
  */
@@ -99,28 +100,45 @@ template <typename SynapseType, template <typename...> class Container>
 
 
 /**
- * @brief Generate synapses from `std::map` object.
+ * @brief Generate synapses from `std::map` or `std::unordered_map` object.
  * @details 'std::map' object must contain synapse parameters as values and `(from_index, to_index)` tuples as keys.
- * @param synapses_map map with tuples containing indexes of presynaptic and postsynaptic neurons as keys
- *  and synapse parameters as values.
  * @tparam SynapseType projection synapse type.
+ * @tparam Map map class.
  * @return synapse generator.
  */
 template <typename SynapseType, template <typename, typename, typename...> class Map>
-[[nodiscard]] typename knp::core::Projection<SynapseType>::SynapseGenerator from_map(
-    const Map<typename std::tuple<size_t, size_t>, typename knp::core::Projection<SynapseType>::SynapseParameters>
-        &synapses_map)
+class FromMap
 {
-    auto iter = synapses_map.begin();
-    // Catch by value, after this external function exiting, in lambda this iterator will not be destroyed.
-    return [iter](size_t index) -> std::optional<typename knp::core::Projection<SynapseType>::Synapse>
+public:
+    /**
+     * @brief Type of the map.
+     */
+    using MapType =
+        Map<typename std::tuple<size_t, size_t>, typename knp::core::Projection<SynapseType>::SynapseParameters>;
+
+    /**
+     * @brief Constructor.
+     * @param synapses_map map with tuples containing indexes of presynaptic and postsynaptic neurons as keys
+     *  and synapse parameters as values.
+     */
+    explicit FromMap(const MapType &synapses_map) : iter_(synapses_map.cbegin()) {}
+
+    /**
+     * @brief Call operator.
+     * @param index synapse index.
+     * @return optional synapse parameters.
+     */
+    [[nodiscard]] typename std::optional<typename knp::core::Projection<SynapseType>::Synapse> operator()(size_t index)
     {
-        const auto [from_index, to_index] = iter->first;
-        auto synapse = std::make_tuple(iter->second, from_index, to_index);
-        iter++;
+        const auto [from_index, to_index] = iter_->first;
+        auto synapse = std::make_tuple(iter_->second, from_index, to_index);
+        ++iter_;
         return synapse;
-    };
-}
+    }
+
+private:
+    typename MapType::const_iterator iter_;
+};
 
 
 /**

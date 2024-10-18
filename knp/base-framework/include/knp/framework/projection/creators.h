@@ -1,6 +1,6 @@
 /**
- * @file connectors.h
- * @brief Projection connectors.
+ * @file creators.h
+ * @brief Projection creators.
  * @author Artiom N.
  * @date 10.08.2024
  * @license Apache 2.0
@@ -127,7 +127,7 @@ template <typename SynapseType, template <typename, typename, typename...> class
         &synapses_map)
 {
     return knp::core::Projection<SynapseType>(
-        presynaptic_uid, postsynaptic_uid, synapse_generators::from_map<SynapseType>(synapses_map),
+        presynaptic_uid, postsynaptic_uid, synapse_generators::FromMap<SynapseType, Map>(synapses_map),
         synapses_map.size());
 }
 
