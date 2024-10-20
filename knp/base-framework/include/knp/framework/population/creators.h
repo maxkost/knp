@@ -23,6 +23,11 @@ namespace knp::framework::population
 {
 
 /**
+ * @brief Namespace for population creators.
+ */
+namespace creators
+{
+/**
  * @brief Generate a population from a container.
  * @param container container with neuron parameters.
  * @tparam NeuronType neuron type.
@@ -78,4 +83,7 @@ template <typename NeuronType>
 {
     return core::Population<NeuronType>(neurons_generators::make_copy<NeuronType>(source_neuron), neuron_count);
 }
+
+}  // namespace creators
+
 }  // namespace knp::framework::population

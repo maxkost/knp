@@ -8,7 +8,6 @@
  */
 #pragma once
 
-#include <knp/core/population.h>
 #include <knp/core/projection.h>
 
 #include <exception>
@@ -27,9 +26,9 @@ namespace knp::framework::projection
 {
 
 /**
- * @brief Namespace for framework projection connectors.
+ * @brief Namespace for framework projection creators.
  */
-namespace connectors
+namespace creators
 {
 
 /**
@@ -270,6 +269,6 @@ template <typename DestinationSynapseType, typename SourceSynapseType>
         source_proj.size());
 }
 
-}  // namespace connectors
+}  // namespace creators
 
 }  // namespace knp::framework::projection

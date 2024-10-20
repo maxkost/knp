@@ -18,7 +18,8 @@ TEST(PopulationGenerators, CreatorFromContainer)
 {
     const typename std::vector<knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>> params{
         {1}, {2}, {3}};
-    auto new_pop{knp::framework::population::from_container<knp::neuron_traits::BLIFATNeuron, std::vector>(params)};
+    auto new_pop{
+        knp::framework::population::creators::from_container<knp::neuron_traits::BLIFATNeuron, std::vector>(params)};
 
     ASSERT_EQ(new_pop.size(), params.size());
     ASSERT_EQ(new_pop[0].n_time_steps_since_last_firing_, 1);
@@ -30,7 +31,7 @@ TEST(PopulationGenerators, CreatorRandom)
 {
     constexpr auto neurons_count = 5;
 
-    auto new_pop{knp::framework::population::make_random<knp::neuron_traits::BLIFATNeuron>(neurons_count)};
+    auto new_pop{knp::framework::population::creators::make_random<knp::neuron_traits::BLIFATNeuron>(neurons_count)};
 
     ASSERT_EQ(new_pop.size(), neurons_count);
 }
@@ -40,7 +41,7 @@ TEST(PopulationGenerators, CreatorDefault)
 {
     constexpr auto neurons_count = 1;
 
-    auto new_pop{knp::framework::population::make_default<knp::neuron_traits::BLIFATNeuron>(neurons_count)};
+    auto new_pop{knp::framework::population::creators::make_default<knp::neuron_traits::BLIFATNeuron>(neurons_count)};
 
     ASSERT_EQ(new_pop.size(), neurons_count);
     ASSERT_EQ(
@@ -60,7 +61,8 @@ TEST(PopulationGenerators, CreatorCopy)
 
     source_neuron.absolute_refractory_period_ = 12345;
 
-    auto new_pop{knp::framework::population::make_copy<knp::neuron_traits::BLIFATNeuron>(neurons_count, source_neuron)};
+    auto new_pop{knp::framework::population::creators::make_copy<knp::neuron_traits::BLIFATNeuron>(
+        neurons_count, source_neuron)};
 
     ASSERT_EQ(new_pop.size(), neurons_count);
     ASSERT_EQ(new_pop[0].absolute_refractory_period_, source_neuron.absolute_refractory_period_);

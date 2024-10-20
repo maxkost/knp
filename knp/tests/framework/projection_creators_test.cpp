@@ -20,7 +20,7 @@ TEST(ProjectionConnectors, AllToAll)
     constexpr size_t src_pop_size = 3;
     constexpr size_t dest_pop_size = 3;
 
-    auto proj = knp::framework::projection::connectors::all_to_all<typename knp::synapse_traits::DeltaSynapse>(
+    auto proj = knp::framework::projection::creators::all_to_all<typename knp::synapse_traits::DeltaSynapse>(
         knp::core::UID(), knp::core::UID(), src_pop_size, dest_pop_size);
 
     ASSERT_EQ(proj.size(), src_pop_size * dest_pop_size);
@@ -47,7 +47,7 @@ TEST(ProjectionConnectors, OneToOne)
 {
     constexpr size_t pop_size = 5;
 
-    auto proj = knp::framework::projection::connectors::one_to_one<typename knp::synapse_traits::DeltaSynapse>(
+    auto proj = knp::framework::projection::creators::one_to_one<typename knp::synapse_traits::DeltaSynapse>(
         knp::core::UID(), knp::core::UID(), pop_size);
 
     ASSERT_EQ(proj.size(), pop_size);
@@ -84,7 +84,7 @@ TEST(ProjectionConnectors, FromContainer)
     }
 
     auto proj =
-        knp::framework::projection::connectors::from_container<typename knp::synapse_traits::DeltaSynapse, std::vector>(
+        knp::framework::projection::creators::from_container<typename knp::synapse_traits::DeltaSynapse, std::vector>(
             knp::core::UID(), knp::core::UID(), container);
 
     int i = 0;
@@ -111,7 +111,7 @@ TEST(ProjectionConnectors, FromMap)
             knp::core::Projection<knp::synapse_traits::DeltaSynapse>::SynapseParameters();
     }
 
-    auto proj = knp::framework::projection::connectors::from_map<typename knp::synapse_traits::DeltaSynapse, std::map>(
+    auto proj = knp::framework::projection::creators::from_map<typename knp::synapse_traits::DeltaSynapse, std::map>(
         knp::core::UID(), knp::core::UID(), syn_map);
 
     for (const auto& synapse : proj)
@@ -127,7 +127,7 @@ TEST(ProjectionConnectors, FromMap)
 
 TEST(ProjectionConnectors, FixedProbability)
 {
-    auto proj = knp::framework::projection::connectors::fixed_probability<typename knp::synapse_traits::DeltaSynapse>(
+    auto proj = knp::framework::projection::creators::fixed_probability<typename knp::synapse_traits::DeltaSynapse>(
         knp::core::UID(), knp::core::UID(), 3, 5, 0.5);
 }
 
@@ -137,7 +137,7 @@ TEST(ProjectionConnectors, IndexBased)
     constexpr size_t src_pop_size = 5;
     constexpr size_t dest_pop_size = 3;
 
-    auto proj = knp::framework::projection::connectors::index_based<typename knp::synapse_traits::DeltaSynapse>(
+    auto proj = knp::framework::projection::creators::index_based<typename knp::synapse_traits::DeltaSynapse>(
         knp::core::UID(), knp::core::UID(), src_pop_size, dest_pop_size,
         [dest_pop_size](size_t index0, size_t index1)
             -> std::optional<typename knp::core::Projection<knp::synapse_traits::DeltaSynapse>::SynapseParameters>
@@ -159,7 +159,7 @@ TEST(ProjectionConnectors, FixedNumberPost)
     constexpr size_t dest_pop_size = 5;
     constexpr size_t conn_count = 3;
 
-    auto proj = knp::framework::projection::connectors::fixed_number_post<typename knp::synapse_traits::DeltaSynapse>(
+    auto proj = knp::framework::projection::creators::fixed_number_post<typename knp::synapse_traits::DeltaSynapse>(
         knp::core::UID(), knp::core::UID(), src_pop_size, dest_pop_size, conn_count);
 
     ASSERT_EQ(proj.size(), src_pop_size * conn_count);
@@ -189,7 +189,7 @@ TEST(ProjectionConnectors, FixedNumberPre)
     constexpr size_t dest_pop_size = 8;
     constexpr size_t conn_count = 3;
 
-    auto proj = knp::framework::projection::connectors::fixed_number_pre<typename knp::synapse_traits::DeltaSynapse>(
+    auto proj = knp::framework::projection::creators::fixed_number_pre<typename knp::synapse_traits::DeltaSynapse>(
         knp::core::UID(), knp::core::UID(), src_pop_size, dest_pop_size, conn_count);
 
     ASSERT_EQ(proj.size(), dest_pop_size * conn_count);
@@ -217,12 +217,11 @@ TEST(ProjectionConnectors, CloneProjection)
 {
     constexpr size_t pop_size = 3;
 
-    auto proj = knp::framework::projection::connectors::one_to_one<typename knp::synapse_traits::DeltaSynapse>(
+    auto proj = knp::framework::projection::creators::one_to_one<typename knp::synapse_traits::DeltaSynapse>(
         knp::core::UID(), knp::core::UID(), pop_size);
 
-    auto new_proj =
-        knp::framework::projection::connectors::clone_projection<typename knp::synapse_traits::DeltaSynapse>(
-            proj, [&proj](size_t index) { return std::get<knp::core::synapse_data>(proj[index]); });
+    auto new_proj = knp::framework::projection::creators::clone_projection<typename knp::synapse_traits::DeltaSynapse>(
+        proj, [&proj](size_t index) { return std::get<knp::core::synapse_data>(proj[index]); });
 
     ASSERT_EQ(new_proj.size(), proj.size());
 
