@@ -246,18 +246,21 @@ KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_json(
 
 
 KNP_DECLSPEC void save_messages_to_json(
-    std::vector<core::messaging::SpikeMessage> messages, const std::filesystem::path &path_to_save)
+    const std::vector<core::messaging::SpikeMessage> &messages, const std::filesystem::path &path_to_save)
 {
     boost::format format_nodes(node_structure);
     boost::format format_times(timestamp_structure);
     boost::format format_file(whole_file_string);
     std::ostringstream node_stream;
     std::ostringstream time_stream;
-    std::sort(
-        messages.begin(), messages.end(),
+    std::vector<core::messaging::SpikeMessage> sorted_messages(messages.size());
+
+    partial_sort_copy(
+        messages.begin(), messages.end(), sorted_messages.begin(), sorted_messages.end(),
         [](const auto &msg1, const auto &msg2) { return msg1.header_.send_time_ < msg2.header_.send_time_; });
+
     size_t count = 0;
-    for (const auto &msg : messages)
+    for (const auto &msg : sorted_messages)
     {
         for (auto index : msg.neuron_indexes_)
         {

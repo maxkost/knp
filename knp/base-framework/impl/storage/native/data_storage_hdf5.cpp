@@ -120,7 +120,8 @@ KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
 
 
 KNP_DECLSPEC void save_messages_to_h5(
-    std::vector<core::messaging::SpikeMessage> messages, const std::filesystem::path &path_to_save, float time_per_step)
+    const std::vector<core::messaging::SpikeMessage> &messages, const std::filesystem::path &path_to_save,
+    float time_per_step)
 {
     HighFive::File data_file(path_to_save.string(), HighFive::File::Create | HighFive::File::Overwrite);
 
@@ -140,15 +141,17 @@ KNP_DECLSPEC void save_messages_to_h5(
     timestamps.reserve(total_size);
     nodes.reserve(total_size);
 
+    std::vector<core::messaging::SpikeMessage> sorted_messages(messages.size());
+
     // Sorting messages by step.
     // Dataset is sorted by timestamp.
-    std::sort(
-        messages.begin(), messages.end(),
+    partial_sort_copy(
+        messages.begin(), messages.end(), sorted_messages.begin(), sorted_messages.end(),
         [](const core::messaging::SpikeMessage &msg1, const core::messaging::SpikeMessage &msg2)
         { return msg1.header_.send_time_ < msg2.header_.send_time_; });
 
     // Forming dataset vectors.
-    for (const auto &msg : messages)
+    for (const auto &msg : sorted_messages)
     {
         const std::vector<float> values(
             msg.neuron_indexes_.size(), static_cast<float>(msg.header_.send_time_) * time_per_step);
