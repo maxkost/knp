@@ -196,7 +196,6 @@ public:
      */
     [[nodiscard]] const auto &get_tags() const { return base_.tags_; }
 
-
 public:
     /**
      * @brief Get parameter values of a synapse with the given index.

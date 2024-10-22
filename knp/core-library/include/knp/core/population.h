@@ -116,7 +116,7 @@ public:  // NOLINT
      * @param index index of the population neuron.
      * @param parameters vector of neuron parameters defined in NeuronParameters for the population.
      * @note Copy method.
-     */
+    0 */
     void set_neurons_parameters(size_t index, const NeuronParameters &parameters) { neurons_[index] = parameters; }
 
 public:  // NOLINT
