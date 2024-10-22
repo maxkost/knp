@@ -1,5 +1,8 @@
 /**
+ * @file message_bus_test.cpp.
  * @brief Message bus and message endpoint testing.
+ * @author Artiom N.
+ * @date 13.04.2023.
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
  */

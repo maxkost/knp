@@ -1,5 +1,8 @@
 /**
+ * @file output_test.cpp
  * @brief Tests for output channels and converters.
+ * @author A. Vartenkov
+ * @date 01.06.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
  */
@@ -94,7 +97,9 @@ TEST(OutputSuite, ChannelTest)
     // Use channels.
     std::vector<size_t> count_result =
         knp::framework::io::output::output_channel_get<std::vector<size_t>>(channel_count, count_converter, 1, 5);
-    decltype(count_result) expected_count{0, 3, 0, 1, 2, 0, 0, 1};  // Expected result. Each number corresponds to the target neuron count of each index in messages.
+    decltype(count_result) expected_count{
+        0, 3, 0, 1,
+        2, 0, 0, 1};  // Expected result. Each number corresponds to the target neuron count of each index in messages.
 
     std::set<knp::core::messaging::SpikeIndex> set_result =
         knp::framework::io::output::output_channel_get<std::set<knp::core::messaging::SpikeIndex>>(

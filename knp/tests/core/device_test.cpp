@@ -1,6 +1,7 @@
 /**
  * @file device_test.cpp
  * @brief Device tests.
+ * @author Artiom N.
  * @date 09.08.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

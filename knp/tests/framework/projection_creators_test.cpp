@@ -1,9 +1,9 @@
 /**
  * @file projection_creators_test.cpp
  * @brief Tests for projection creators.
+ * @author Artiom N.
  * @date 27.08.2024
  * @license Apache 2.0
- * @author Artiom N.
  * @copyright © 2024 AO Kaspersky Lab
  */
 

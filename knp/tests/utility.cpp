@@ -1,5 +1,8 @@
 /**
+ * @file utility.cpp
  * @brief Some common test functions.
+ * @author Artiom N.
+ * @date 20.03.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
  */

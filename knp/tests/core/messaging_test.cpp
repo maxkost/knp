@@ -1,5 +1,8 @@
 /**
+ * @file messaging_test.cpp.
  * @brief Testing of message functions.
+ * @author A. Vartenkov
+ * @date 19.04.2023.
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
  */
