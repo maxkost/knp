@@ -15,10 +15,15 @@
 #include <knp/core/population.h>
 #include <knp/core/projection.h>
 #include <knp/framework/coordinates/generator.h>
+#include <knp/framework/projection/connectors.h>
+#include <knp/framework/projection/synapse_parameters_generators.h>
 #include <knp/neuron-traits/all_traits.h>
 #include <knp/synapse-traits/all_traits.h>
 
+#include <string>
+#include <tuple>
 #include <type_traits>
+#include <utility>
 #include <variant>
 #include <vector>
 
@@ -137,25 +142,32 @@ public:
     void add_population(typename std::decay<PopulationType>::type &population);
 
     /**
+     * @brief Check if population exists.
+     * @param population_uid population id to check.
+     * @return true if population exists, false otherwise.
+     */
+    [[nodiscard]] bool is_population_exists(const knp::core::UID &population_uid) const;
+
+    /**
      * @brief Get a population with the given UID from the network.
-     * @tparam PopulationType type of population to get.
+     * @tparam NeuronType type of population to get.
      * @param population_uid population UID.
      * @throw std::logic_error if population is not found in the network.
      * @return population.
      */
-    template <typename PopulationType>
-    [[nodiscard]] PopulationType &get_population(const knp::core::UID &population_uid);
+    template <typename NeuronType>
+    [[nodiscard]] knp::core::Population<NeuronType> &get_population(const knp::core::UID &population_uid);
 
     /**
      * @brief Get a population with the given UID from the network.
      * @note Constant method.
-     * @tparam PopulationType type of population to get.
+     * @tparam NeuronType type of population neuron.
      * @param population_uid population UID.
      * @throw std::logic_error if population is not found in the network.
      * @return population.
      */
-    template <typename PopulationType>
-    [[nodiscard]] const PopulationType &get_population(const knp::core::UID &population_uid) const;
+    template <typename NeuronType>
+    [[nodiscard]] const knp::core::Population<NeuronType> &get_population(const knp::core::UID &population_uid) const;
 
     /**
      * @brief Get a population with the given UID from the network.
@@ -206,24 +218,31 @@ public:
         typename knp::core::Projection<SynapseType>::SynapseGenerator generator, size_t synapse_count);
 
     /**
+     * @brief Check if projection exists.
+     * @param projection_uid projection id to check.
+     * @return true if projection exists, false otherwise.
+     */
+    [[nodiscard]] bool is_projection_exists(const knp::core::UID &projection_uid) const;
+
+    /**
      * @brief Get a projection with the given UID from the network.
-     * @tparam ProjectionType type of projection to get.
+     * @tparam SynapseType type of projection synapse.
      * @param projection_uid projection UID.
      * @throw std::logic_error if projection is not found in the network.
      * @return projection.
      */
-    template <typename ProjectionType>
-    [[nodiscard]] ProjectionType &get_projection(const knp::core::UID &projection_uid);
+    template <typename SynapseType>
+    [[nodiscard]] knp::core::Projection<SynapseType> &get_projection(const knp::core::UID &projection_uid);
     /**
      * @brief Get a projection with the given UID from the network.
      * @note Constant method.
-     * @tparam ProjectionType type of projection to get.
+     * @tparam SynapseType type of projection synapse.
      * @param projection_uid projection UID.
      * @throw std::logic_error if projection is not found in the network.
      * @return projection.
      */
-    template <typename ProjectionType>
-    [[nodiscard]] const ProjectionType &get_projection(const knp::core::UID &projection_uid) const;
+    template <typename SynapseType>
+    [[nodiscard]] const knp::core::Projection<SynapseType> &get_projection(const knp::core::UID &projection_uid) const;
     /**
      * @brief Get a projection with the given UID from the network.
      * @param projection_uid projection UID.
@@ -236,6 +255,60 @@ public:
      * @param projection_uid UID of the projection to remove.
      */
     void remove_projection(const knp::core::UID &projection_uid);
+
+public:
+    /**
+     * @brief Connect source and destination populations and add projection to network.
+     * @details Make all to all connection between two populations.
+     * @tparam SourceNeuronType type of the source population neuron.
+     * @tparam DestinationNeuronType type of the destination population neuron.
+     * @tparam SynapseType new projection synapse type.
+     * @param src presynaptic population.
+     * @param dst postsynaptic population.
+     * @param syn_gen synapse parameters generator.
+     * @return new projection UID.
+     */
+    template <typename SynapseType, typename SourceNeuronType, typename DestinationNeuronType>
+    knp::core::UID connect_populations(
+        const core::Population<SourceNeuronType> &src, const core::Population<SourceNeuronType> &dst,
+        typename projection::parameters_generators::SynGen2ParamsType<SynapseType> syn_gen =
+            projection::parameters_generators::default_synapse_gen<SynapseType>)
+    {
+        const auto &[src_uid, dst_uid] = get_populations_uid(src, dst);
+        auto new_proj =
+            projection::connect_populations<SynapseType, SourceNeuronType, DestinationNeuronType>(src, dst, syn_gen);
+        const auto proj_uid = new_proj.get_uid();
+
+        add_projection(std::move(new_proj));
+
+        return proj_uid;
+    }
+
+    /**
+     * @brief Connect source and destination populations and add projection to network.
+     * @tparam SourceNeuronType type of the source population neuron.
+     * @tparam DestinationNeuronType type of the destination population neuron.
+     * @tparam SynapseType new projection synapse type.
+     * @param src presynaptic population.
+     * @param dst postsynaptic population.
+     * @param syn_gen synapse generator.
+     * @param num_iterations projection generator call iterations.
+     * @return new projection UID.
+     */
+    template <typename SynapseType, typename SourceNeuronType, typename DestinationNeuronType>
+    knp::core::UID connect_populations(
+        const core::Population<SourceNeuronType> &src, const core::Population<SourceNeuronType> &dst,
+        typename knp::core::Projection<SynapseType>::SynapseGenerator syn_gen, size_t num_iterations)
+    {
+        const auto &[src_uid, dst_uid] = get_populations_uid(src, dst);
+        auto new_proj = projection::connect_populations<SynapseType, SourceNeuronType, DestinationNeuronType>(
+            src, dst, syn_gen, num_iterations);
+        const auto proj_uid = new_proj.get_uid();
+
+        add_projection(std::move(new_proj));
+
+        return proj_uid;
+    }
 
 public:
     /**
@@ -316,6 +389,26 @@ public:
      * @see TagMap.
      */
     [[nodiscard]] auto &get_tags() { return base_.tags_; }
+
+private:
+    template <typename SourceNeuronType, typename DestinationNeuronType>
+    [[nodiscard]] std::tuple<core::UID, core::UID> get_populations_uid(
+        const core::Population<SourceNeuronType> &src, const core::Population<DestinationNeuronType> &dst)
+    {
+        const auto src_uid = src.get_uid();
+        if (!is_population_exists(src_uid))
+        {
+            throw std::logic_error("Source population with UID = " + std::string(src_uid) + " doesn't exist.");
+        }
+
+        const auto dst_uid = dst.get_uid();
+        if (!is_population_exists(dst_uid))
+        {
+            throw std::logic_error("Source population with UID = " + std::string(dst_uid) + " doesn't exist.");
+        }
+
+        return std::make_tuple(src_uid, dst_uid);
+    }
 
 private:
     knp::core::BaseData base_;
