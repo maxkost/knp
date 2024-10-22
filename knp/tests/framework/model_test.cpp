@@ -1,0 +1,86 @@
+/**
+ * @file network_test.cpp
+ * @brief Network class testing.
+ * @author A. Vartenkov
+ * @date 12.02.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
+ */
+
+#include <knp/framework/model.h>
+#include <knp/framework/population/creators.h>
+#include <knp/framework/projection/connectors.h>
+
+#include <tests_common.h>
+
+#include <exception>
+#include <tuple>
+
+
+using BLIFATParams = knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>;
+using DeltaProjection = knp::core::Projection<knp::synapse_traits::DeltaSynapse>;
+using Synapse = DeltaProjection::Synapse;
+
+
+TEST(FrameworkSuite, ModelAddInputChannels)
+{
+    constexpr auto src_neurons_count = 5;
+    constexpr auto dst_neurons_count = 3;
+
+    auto src_pop{
+        knp::framework::population::creators::make_random<knp::neuron_traits::BLIFATNeuron>(src_neurons_count)};
+    auto dst_pop{
+        knp::framework::population::creators::make_random<knp::neuron_traits::BLIFATNeuron>(dst_neurons_count)};
+
+    knp::framework::Network network;
+
+    network.add_population(src_pop);
+    network.add_population(dst_pop);
+
+    knp::framework::Model model(std::move(network));
+
+    auto new_proj = knp::framework::projection::connect_populations<
+        knp::synapse_traits::DeltaSynapse, decltype(src_pop)::PopulationNeuronType,
+        decltype(dst_pop)::PopulationNeuronType>(src_pop, dst_pop);
+
+    SPDLOG_DEBUG(
+        "Src pop UID = {}, dst pop UID = {}, proj UID = {}", std::string(src_pop.get_uid()),
+        std::string(dst_pop.get_uid()), std::string(new_proj.get_uid()));
+
+    EXPECT_THROW(model.connect_input_projection(knp::core::UID(), new_proj), std::logic_error);
+    EXPECT_THROW(model.add_input_channel(knp::core::UID(), new_proj.get_uid()), std::logic_error);
+
+    model.get_network().add_projection(new_proj);
+
+    EXPECT_NO_THROW(model.connect_input_projection(knp::core::UID(), new_proj));
+    ASSERT_EQ(model.get_input_channels().size(), 1);
+    EXPECT_NO_THROW(model.add_input_channel(knp::core::UID(), new_proj.get_uid()));
+    ASSERT_EQ(model.get_input_channels().size(), 2);
+}
+
+
+TEST(FrameworkSuite, ModelAddOutputChannels)
+{
+    constexpr auto dst_neurons_count = 3;
+
+    auto dst_pop{
+        knp::framework::population::creators::make_random<knp::neuron_traits::BLIFATNeuron>(dst_neurons_count)};
+
+    knp::framework::Network network;
+
+    const auto pop_uid = dst_pop.get_uid();
+
+    knp::framework::Model model(std::move(network));
+
+    SPDLOG_DEBUG("Output pop UID = {}", std::string(pop_uid));
+
+    EXPECT_THROW(model.connect_output_population(knp::core::UID(), dst_pop), std::logic_error);
+    EXPECT_THROW(model.add_output_channel(knp::core::UID(), dst_pop.get_uid()), std::logic_error);
+
+    model.get_network().add_population(dst_pop);
+
+    EXPECT_NO_THROW(model.connect_output_population(knp::core::UID(), dst_pop));
+    ASSERT_EQ(model.get_output_channels().size(), 1);
+    EXPECT_NO_THROW(model.add_output_channel(knp::core::UID(), pop_uid));
+    ASSERT_EQ(model.get_output_channels().size(), 2);
+}
