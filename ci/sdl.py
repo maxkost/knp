@@ -15,7 +15,7 @@ SDL_ARTIFACTS_DIRECTORY = os.getenv('SDL_ARTIFACTS_DIRECTORY', 'build/SDL')
 HLA_FILENAME = 'hla.xml'
 
 THIRD_PARTY_FILENAME = 'third_party.xml'
-THIRD_PARTY_LIST_FILENAME = '3d-party-requirements.xml'
+THIRD_PARTY_LIST_FILENAMES = ['3d-party-requirements.xml', '3d-party-requirements-motiv.xml']
 
 SECURE_CODE_REVIEW_FILENAME = 'code_review.xml'
 DEVOPS_PIPELINE_FILENAME = 'devops_pipeline.xml'
@@ -60,10 +60,16 @@ def generate_hla_artifact_xml() -> str:
 </SDL>'''
 
 
-def generate_third_party_xml(third_party_url: str) -> str:
+def generate_third_party_xml(third_party_urls: list[str]) -> str:
+    tp_list = []
+    for third_party_url in third_party_urls:
+        tp_list.append(f'<third_party link="{artifact_url(third_party_url)}"/>')
+
+    tp_code = ('\n' + ' ' * 8).join(tp_list)
+
     return f'''<SDL>
     <third_party>
-        <third_party link="{artifact_url(third_party_url)}"/>
+        {tp_code}
     </third_party>
 </SDL>'''
 
@@ -163,7 +169,7 @@ def generate_sdl_artifacts() -> None:
         f.write(generate_hla_artifact_xml())
 
     with open(sdl_path / THIRD_PARTY_FILENAME, 'w', encoding='utf8') as f:
-        f.write(generate_third_party_xml(THIRD_PARTY_LIST_FILENAME))
+        f.write(generate_third_party_xml(THIRD_PARTY_LIST_FILENAMES))
 
     with open(sdl_path / DEVOPS_PIPELINE_FILENAME, 'w', encoding='utf8') as f:
         f.write(generate_devops_pipeline_xml())
