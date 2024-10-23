@@ -96,11 +96,11 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
      */
     float synaptic_resource_threshold_ = std::numeric_limits<float>::max();
     /**
-     * @brief Synaptic resource divided by `number of synapses + resource drain coefficient`.
+     * @brief Synaptic resource divided by `number of synapses + resource drain coefficient`. Number of silent synapses.
      */
     uint32_t resource_drain_coefficient_ = 0;
     /**
-     * @brief Stability.
+     * @brief Stability. Dynamic parameter, the higher it is the lower the synapse weight changes are.
      */
     float stability_ = 0;
 

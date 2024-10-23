@@ -30,6 +30,7 @@
             "add_projection",                                            \
             &knp::framework::Network::add_projection<knp::core::Projection<knp::synapse_traits::synapse_type>>)
 
+
 py::class_<knp::framework::Network>("Network")
     .def(py::init<const knp::core::UID&>())
     .def("add_projection", network_add_projection_variant)
@@ -44,5 +45,6 @@ py::class_<knp::framework::Network>("Network")
     .add_property("projections_count", &knp::framework::Network::projections_count)
     .def("get_uid", &get_entity_uid<knp::framework::Network>);
 
+// BOOST_PP_SEQ_FOR_EACH(ADD_POPULATION_MACRO, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_NEURONS))
 
 #endif  // KNP_IN_BASE_FW

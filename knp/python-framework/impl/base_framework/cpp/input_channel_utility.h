@@ -9,14 +9,14 @@
 #include <utility>
 
 
-std::shared_ptr<knp::framework::input::InputChannel> construct_input_channel(
-    const knp::core::UID &uid, knp::core::MessageEndpoint &endpoint, knp::framework::input::DataGenerator &gen)
+std::shared_ptr<knp::framework::io::input::InputChannel> construct_input_channel(
+    const knp::core::UID &uid, knp::core::MessageEndpoint &endpoint, knp::framework::io::input::DataGenerator &gen)
 {
-    return std::make_shared<knp::framework::input::InputChannel>(uid, std::move(endpoint), std::move(gen));
+    return std::make_shared<knp::framework::io::input::InputChannel>(uid, std::move(endpoint), std::move(gen));
 }
 
 
-knp::core::UID get_input_channel_uid(knp::framework::input::InputChannel &self)
+knp::core::UID get_input_channel_uid(knp::framework::io::input::InputChannel &self)
 {
     return self.get_uid();
 }

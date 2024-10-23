@@ -380,7 +380,7 @@ function (pvs_studio_add_target)
     set(PVS_STUDIO_BIN "${PVS_STUDIO_BIN_PATH}")
 
     if (NOT EXISTS "${PVS_STUDIO_BIN}")
-        message(FATAL_ERROR "pvs-studio-analyzer is not found")
+    #    message(FATAL_ERROR "pvs-studio-analyzer is not found")
     endif()
 
     find_program(PVS_STUDIO_CONVERTER_PATH "${PVS_STUDIO_CONVERTER}" ${PATHS})

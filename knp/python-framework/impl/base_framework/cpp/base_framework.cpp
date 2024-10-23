@@ -37,6 +37,7 @@ BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
         .def("load", &load_backend, "Load backend")
         .def(
             "is_backend", &cpp_framework::BackendLoader::is_backend, "Check if the specified path points to a backend");
+
 #include "input_channel.cpp"   // NOLINT
 #include "model.cpp"           // NOLINT
 #include "network.cpp"         // NOLINT

@@ -10,8 +10,8 @@
 #include <utility>
 
 
-std::shared_ptr<knp::framework::output::OutputChannel> construct_output_channel(
+std::shared_ptr<knp::framework::io::output::OutputChannel> construct_output_channel(
     const knp::core::UID &uid, knp::core::MessageEndpoint &endpoint)
 {
-    return std::make_shared<knp::framework::output::OutputChannel>(uid, std::move(endpoint));
+    return std::make_shared<knp::framework::io::output::OutputChannel>(uid, std::move(endpoint));
 }

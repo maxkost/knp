@@ -6,11 +6,11 @@
 
 #ifdef KNP_IN_BASE_FW
 
-py::class_<knp::framework::input::DataGenerator>("DataGenerator", "Class to output data");
+py::class_<knp::framework::io::input::DataGenerator>("DataGenerator", "Class to output data");
 
-py::class_<knp::framework::input::InputChannel, boost::noncopyable>("InputChannel", py::no_init)
-    .def("get_uid", &get_entity_uid<knp::framework::input::InputChannel>)
-    .def("send", &knp::framework::input::InputChannel::send)
+py::class_<knp::framework::io::input::InputChannel, boost::noncopyable>("InputChannel", py::no_init)
+    .def("get_uid", &get_entity_uid<knp::framework::io::input::InputChannel>)
+    .def("send", &knp::framework::io::input::InputChannel::send)
     .def("__init__", &construct_input_channel);
 
 

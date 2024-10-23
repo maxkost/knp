@@ -68,12 +68,3 @@ def test_smallest_network(pytestconfig):  # type: ignore[no-untyped-def]
     expected_results = [1, 6, 7, 11, 12, 13, 16, 17, 18, 19]
 
     assert results == expected_results
-
-
-# Data storage test
-def test_data_storage(_):  # type: ignore[no-untyped-def]
-    return
-
-
-def save_load_test(_):  # type: ignore[no-untyped-def]
-    return

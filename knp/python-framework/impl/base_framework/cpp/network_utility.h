@@ -11,12 +11,12 @@
 #include <utility>
 
 
-void network_add_projection_variant(knp::framework::Network &self, knp::core::AllProjectionsVariant &proj)
+void network_add_projection_variant(knp::framework::Network &self, knp::core::AllProjectionsVariant proj)
 {
     self.add_projection(std::move(proj));
 }
 
-void network_add_population_variant(knp::framework::Network &self, knp::core::AllPopulationsVariant &pop)
+void network_add_population_variant(knp::framework::Network &self, knp::core::AllPopulationsVariant pop)
 {
     self.add_population(std::move(pop));
 }
