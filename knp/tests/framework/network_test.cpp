@@ -105,7 +105,7 @@ TEST(FrameworkSuite, NetworkRemoveEntities)
     ASSERT_EQ(network.projections_count(), 1);
 
     // Incorrect UID.
-    EXPECT_THROW(network.remove_population(uid_proj), std::runtime_error);  // !OCLint(no "non case label")
+    EXPECT_THROW(network.remove_population(uid_proj), std::logic_error);  // !OCLint(no "non case label")
     ASSERT_EQ(network.populations_count(), 1);
     // Correct UID.
     network.remove_population(uid_pop);
@@ -113,7 +113,7 @@ TEST(FrameworkSuite, NetworkRemoveEntities)
     ASSERT_EQ(network.populations_count(), 0);
 
     // Incorrect UID.
-    EXPECT_THROW(network.remove_projection(uid_pop), std::runtime_error);  // !OCLint(no "non case label")
+    EXPECT_THROW(network.remove_projection(uid_pop), std::logic_error);  // !OCLint(no "non case label")
     ASSERT_EQ(network.projections_count(), 1);
     // Correct UID.
     network.remove_projection(uid_proj);

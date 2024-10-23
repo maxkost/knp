@@ -92,6 +92,9 @@ typename std::vector<VT>::const_iterator find_cvariant(const knp::core::UID &uid
 void Network::add_population(core::AllPopulationsVariant &&population)
 {
     SPDLOG_DEBUG("Adding population variant...");
+
+    //    check_population_constraints(std::visit([](const auto &var_val) { return var_val; }, population));
+
     populations_.emplace_back(population);
 }
 
@@ -99,7 +102,10 @@ void Network::add_population(core::AllPopulationsVariant &&population)
 template <typename PopulationType>
 void Network::add_population(typename std::decay<PopulationType>::type &&population)
 {
-    SPDLOG_DEBUG("Adding population...");
+    SPDLOG_DEBUG("Adding population [move]...");
+
+    check_population_constraints(population);
+
     add_population(population);
 }
 
@@ -107,7 +113,9 @@ void Network::add_population(typename std::decay<PopulationType>::type &&populat
 template <typename PopulationType>
 void Network::add_population(typename std::decay<PopulationType>::type &population)
 {
-    SPDLOG_DEBUG("Adding population...");
+    SPDLOG_DEBUG("Adding population [copy]...");
+
+    check_population_constraints(population);
     add_population(population);
 }
 
@@ -132,7 +140,7 @@ knp::core::Population<NeuronType> &Network::get_population(const knp::core::UID 
     {
         return std::get<knp::core::Population<NeuronType>>(*pop_iterator);
     }
-    throw std::runtime_error("Cannot find population with UID \"" + std::string(population_uid) + "\".");
+    throw std::logic_error("Cannot find population with UID \"" + std::string(population_uid) + "\".");
 }
 
 
@@ -145,7 +153,7 @@ const knp::core::Population<NeuronType> &Network::get_population(const knp::core
     {
         return std::get<knp::core::Population<NeuronType>>(*pop_iterator);
     }
-    throw std::runtime_error("Cannot find population with UID \"" + std::string(population_uid) + "\".");
+    throw std::logic_error("Cannot find population with UID \"" + std::string(population_uid) + "\".");
 }
 
 
@@ -157,7 +165,7 @@ core::AllPopulationsVariant &Network::get_population(const knp::core::UID &popul
 
     if (populations_.end() == iter)
     {
-        throw std::runtime_error("Cannot find population with UID \"" + std::string(population_uid) + "\".");
+        throw std::logic_error("Cannot find population with UID \"" + std::string(population_uid) + "\".");
     }
 
     return *iter;
@@ -171,7 +179,7 @@ void Network::remove_population(const core::UID &population_uid)
 
     if (result == populations_.end())
     {
-        throw std::runtime_error(
+        throw std::logic_error(
             "Cannot remove non-existent population with UID \"" + std::string(population_uid) + "\".");
     }
     populations_.erase(result);
@@ -181,6 +189,8 @@ void Network::remove_population(const core::UID &population_uid)
 void Network::add_projection(core::AllProjectionsVariant &&projection)
 {
     SPDLOG_DEBUG("Adding projection variant...");
+
+    // check_projection_constraints(std::visit([](const auto &var_val) { return var_val; }, projection));
     projections_.emplace_back(projection);
 }
 
@@ -189,6 +199,8 @@ template <typename ProjectionType>
 void Network::add_projection(typename std::decay<ProjectionType>::type &&projection)
 {
     SPDLOG_DEBUG("Adding projection [move] {}...", std::string(projection.get_uid()));
+
+    check_projection_constraints(projection);
     projections_.emplace_back(std::move(projection));
 }
 
@@ -197,6 +209,8 @@ template <typename ProjectionType>
 void Network::add_projection(typename std::decay<ProjectionType>::type &projection)
 {
     SPDLOG_DEBUG("Adding projection [copy] {}...", std::string(projection.get_uid()));
+
+    check_projection_constraints(projection);
     projections_.emplace_back(projection);
 }
 
@@ -207,8 +221,12 @@ void Network::add_projection(
     typename knp::core::Projection<SynapseType>::SynapseGenerator generator, size_t synapses_count)
 {
     SPDLOG_DEBUG("Adding projection {}...", std::string(projection_uid));
-    add_projection(core::AllProjectionsVariant(knp::core::Projection<SynapseType>(
-        projection_uid, pre_population_uid, post_population_uid, generator, synapses_count)));
+
+    auto projection = knp::core::Projection<SynapseType>(
+        projection_uid, pre_population_uid, post_population_uid, generator, synapses_count);
+    check_projection_constraints(projection);
+
+    add_projection(core::AllProjectionsVariant(std::move(projection)));
 }
 
 
@@ -234,7 +252,7 @@ knp::core::Projection<SynapseType> &Network::get_projection(const knp::core::UID
         return std::get<knp::core::Projection<SynapseType>>(*proj_iterator);
     }
 
-    throw std::runtime_error("Cannot find projection with UID \"" + std::string(projection_uid) + "\".");
+    throw std::logic_error("Cannot find projection with UID \"" + std::string(projection_uid) + "\".");
 }
 
 
@@ -249,7 +267,7 @@ const knp::core::Projection<SynapseType> &Network::get_projection(const knp::cor
         return std::get<knp::core::Projection<SynapseType>>(*proj_iterator);
     }
 
-    throw std::runtime_error("Cannot find projection with UID \"" + std::string(projection_uid) + "\".");
+    throw std::logic_error("Cannot find projection with UID \"" + std::string(projection_uid) + "\".");
 }
 
 
@@ -261,7 +279,7 @@ core::AllProjectionsVariant &Network::get_projection(const knp::core::UID &proje
 
     if (projections_.end() == iter)
     {
-        throw std::runtime_error("Cannot find projection with UID \"" + std::string(projection_uid) + "\".");
+        throw std::logic_error("Cannot find projection with UID \"" + std::string(projection_uid) + "\".");
     }
 
     return *iter;
@@ -275,24 +293,66 @@ void Network::remove_projection(const core::UID &projection_uid)
 
     if (result == projections_.end())
     {
-        throw std::runtime_error(
+        throw std::logic_error(
             "Cannot remove non-existent projection with UID \"" + std::string(projection_uid) + "\".");
     }
     projections_.erase(result);
 }
 
 
+template <typename PopulationType>
+void Network::check_population_constraints(const PopulationType &population) const
+{
+    if (is_population_exists(population.get_uid()))
+    {
+        const std::string msg =
+            "Population with UID = " + std::string(population.get_uid()) + " already exists in the network.";
+        SPDLOG_ERROR("{}", msg);
+        throw std::logic_error(msg);
+    }
+}
+
+
+template <typename ProjectionType>
+void Network::check_projection_constraints(const ProjectionType &projection) const
+{
+    const auto proj_uid = projection.get_uid();
+    if (is_projection_exists(proj_uid))
+    {
+        const std::string msg = "Projection with UID = " + std::string(proj_uid) + " already exists in the network.";
+        SPDLOG_ERROR("{}", msg);
+        throw std::logic_error(msg);
+    }
+
+    if (core::UID{false} != projection.get_presynaptic())
+    {
+        if (is_population_exists(projection.get_presynaptic()))
+        {
+            SPDLOG_WARN(
+                "Presynaptic population with UID = {} doesn't exist.", std::string(projection.get_presynaptic()));
+        }
+    }
+
+    if (is_population_exists(projection.get_postsynaptic()))
+    {
+        SPDLOG_WARN("Postsynaptic population with UID = {} doesn't exist.", std::string(projection.get_postsynaptic()));
+    }
+}
+
+
 namespace nt = knp::neuron_traits;
 
-#define INSTANCE_POPULATION_FUNCTIONS(n, template_for_instance, neuron_type)                    \
-    template KNP_DECLSPEC void Network::add_population<knp::core::Population<nt::neuron_type>>( \
-        knp::core::Population<nt::neuron_type> &&);                                             \
-    template KNP_DECLSPEC void Network::add_population<knp::core::Population<nt::neuron_type>>( \
-        knp::core::Population<nt::neuron_type> &);                                              \
-    template KNP_DECLSPEC knp::core::Population<nt::neuron_type>                                \
-        &Network::get_population<knp::neuron_traits::neuron_type>(const knp::core::UID &);      \
-    template KNP_DECLSPEC const knp::core::Population<nt::neuron_type>                          \
-        &Network::get_population<knp::neuron_traits::neuron_type>(const knp::core::UID &) const;
+#define INSTANCE_POPULATION_FUNCTIONS(n, template_for_instance, neuron_type)                                  \
+    template KNP_DECLSPEC void Network::add_population<knp::core::Population<nt::neuron_type>>(               \
+        knp::core::Population<nt::neuron_type> &&);                                                           \
+    template KNP_DECLSPEC void Network::add_population<knp::core::Population<nt::neuron_type>>(               \
+        knp::core::Population<nt::neuron_type> &);                                                            \
+    template KNP_DECLSPEC knp::core::Population<nt::neuron_type>                                              \
+        &Network::get_population<knp::neuron_traits::neuron_type>(const knp::core::UID &);                    \
+    template KNP_DECLSPEC const knp::core::Population<nt::neuron_type>                                        \
+        &Network::get_population<knp::neuron_traits::neuron_type>(const knp::core::UID &) const;              \
+    template KNP_DECLSPEC void Network::check_population_constraints<knp::core::Population<nt::neuron_type>>( \
+        const knp::core::Population<nt::neuron_type> &) const;
 
 namespace st = knp::synapse_traits;
 
@@ -307,8 +367,9 @@ namespace st = knp::synapse_traits;
     template KNP_DECLSPEC knp::core::Projection<st::synapse_type> &Network::get_projection<st::synapse_type>(       \
         const knp::core::UID &);                                                                                    \
     template KNP_DECLSPEC const knp::core::Projection<st::synapse_type> &Network::get_projection<st::synapse_type>( \
-        const knp::core::UID &) const;
-
+        const knp::core::UID &) const;                                                                              \
+    template KNP_DECLSPEC void Network::check_projection_constraints<knp::core::Projection<st::synapse_type>>(      \
+        const knp::core::Projection<st::synapse_type> &) const;
 // cppcheck-suppress unknownMacro
 BOOST_PP_SEQ_FOR_EACH(INSTANCE_POPULATION_FUNCTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_NEURONS))
 // cppcheck-suppress unknownMacro

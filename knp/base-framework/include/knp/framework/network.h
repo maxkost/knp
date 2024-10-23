@@ -393,7 +393,7 @@ public:
 private:
     template <typename SourceNeuronType, typename DestinationNeuronType>
     [[nodiscard]] std::tuple<core::UID, core::UID> get_populations_uid(
-        const core::Population<SourceNeuronType> &src, const core::Population<DestinationNeuronType> &dst)
+        const core::Population<SourceNeuronType> &src, const core::Population<DestinationNeuronType> &dst) const
     {
         const auto src_uid = src.get_uid();
         if (!is_population_exists(src_uid))
@@ -409,6 +409,11 @@ private:
 
         return std::make_tuple(src_uid, dst_uid);
     }
+
+    template <typename PopulationType>
+    void check_population_constraints(const PopulationType &population) const;
+    template <typename ProjectionType>
+    void check_projection_constraints(const ProjectionType &projection) const;
 
 private:
     knp::core::BaseData base_;
