@@ -7,7 +7,7 @@ from pathlib import Path
 import re
 import urllib.request
 from urllib.parse import urlparse, urlunparse, ParseResult
-from typing import Any
+from typing import Any, Collection
 
 ARTIFACTS_URL = os.getenv('ARTIFACTS_URL')
 SDL_ARTIFACTS_DIRECTORY = os.getenv('SDL_ARTIFACTS_DIRECTORY', 'build/SDL')
@@ -15,7 +15,7 @@ SDL_ARTIFACTS_DIRECTORY = os.getenv('SDL_ARTIFACTS_DIRECTORY', 'build/SDL')
 HLA_FILENAME = 'hla.xml'
 
 THIRD_PARTY_FILENAME = 'third_party.xml'
-THIRD_PARTY_LIST_FILENAME = '3d-party-requirements.xml'
+THIRD_PARTY_LIST_FILENAMES = ['3d-party-requirements.xml', '3d-party-requirements-motiv.xml']
 
 SECURE_CODE_REVIEW_FILENAME = 'code_review.xml'
 DEVOPS_PIPELINE_FILENAME = 'devops_pipeline.xml'
@@ -26,6 +26,7 @@ BUILD_NUMBER = os.getenv('BUILD_NUMBER')
 
 # TFS ID of the release card.
 RELEASE_NUMBER = os.getenv('TFS_RELEASE_NUMBER')
+SERVICE_NUMBER = os.getenv('TFS_SERVICE_NUMBER')
 COLLECTION_URI = os.getenv('COLLECTION_URI')
 
 KNP_ROOT = Path(__file__).resolve().parent.parent
@@ -60,10 +61,16 @@ def generate_hla_artifact_xml() -> str:
 </SDL>'''
 
 
-def generate_third_party_xml(third_party_url: str) -> str:
+def generate_third_party_xml(third_party_urls: list[str]) -> str:
+    tp_list = []
+    for third_party_url in third_party_urls:
+        tp_list.append(f'<third_party link="{artifact_url(third_party_url)}"/>')
+
+    tp_code = ('\n' + ' ' * 8).join(tp_list)
+
     return f'''<SDL>
     <third_party>
-        <third_party link="{artifact_url(third_party_url)}"/>
+        {tp_code}
     </third_party>
 </SDL>'''
 
@@ -163,7 +170,7 @@ def generate_sdl_artifacts() -> None:
         f.write(generate_hla_artifact_xml())
 
     with open(sdl_path / THIRD_PARTY_FILENAME, 'w', encoding='utf8') as f:
-        f.write(generate_third_party_xml(THIRD_PARTY_LIST_FILENAME))
+        f.write(generate_third_party_xml(THIRD_PARTY_LIST_FILENAMES))
 
     with open(sdl_path / DEVOPS_PIPELINE_FILENAME, 'w', encoding='utf8') as f:
         f.write(generate_devops_pipeline_xml())
@@ -178,10 +185,12 @@ def generate_sdl_artifacts() -> None:
         f.write(generate_dynamic_analysis_xml())
 
 
-def generate_sdl_request() -> dict[str, str | dict[str, str]]:
+def generate_sdl_requests() -> (
+    tuple[dict[str, str | Collection[str] | dict[str, str]], dict[str, str | Collection[str] | dict[str, str]]]
+):
     # major, minor, *_ = RELEASE_NUMBER.split('.')
     release_iteration = r'FT-SNN\Open Source Release'
-    return {
+    product_req = {
         'release_tfs_id': RELEASE_NUMBER,
         'build_number': BUILD_NUMBER,
         'hla': artifact_url(HLA_FILENAME, add_build_to_name=False),
@@ -206,23 +215,47 @@ def generate_sdl_request() -> dict[str, str | dict[str, str]]:
         'iteration_path_for_req': release_iteration,
     }
 
+    service_req = {
+        'release_tfs_id': RELEASE_NUMBER,
+        'build_number': BUILD_NUMBER,
+        'third_party': {'type': 'uri', 'data': artifact_url(THIRD_PARTY_FILENAME, add_build_to_name=False)},
+        'devops_pipeline': {
+            'type': 'uri',
+            'data': artifact_url(DEVOPS_PIPELINE_FILENAME, add_build_to_name=False),
+        },
+        'source_code': {
+            'type': 'uri',
+            'data': artifact_url(SECURE_CODE_REVIEW_FILENAME, add_build_to_name=False),
+        },
+        'iteration_path_for_bug': release_iteration,
+        'iteration_path_for_req': release_iteration,
+    }
 
-def call_api(url: str, body: dict[str, str | dict[str, str]]) -> Any:
-    req = urllib.request.Request(
-        url=url,
-        data=json.dumps(body).encode('utf8'),
-        headers={'Content-Type': 'application/json'},
-    )
-    return urllib.request.urlopen(req)
+    return product_req, service_req
+
+
+def call_api(
+    url: str,
+    requests: tuple[
+        dict[str, str | Collection[str] | dict[str, str]], dict[str, str | Collection[str] | dict[str, str]]
+    ],
+) -> Any:
+    for body in requests:
+        req = urllib.request.Request(
+            url=url,
+            data=json.dumps(body).encode('utf8'),
+            headers={'Content-Type': 'application/json'},
+        )
+        with urllib.request.urlopen(req) as resp:
+            print(f'Returned code: {resp.getcode()}')
 
 
 def call_vulnbot_api(make_call: bool) -> None:
-    sdl_request = generate_sdl_request()
+    sdl_requests = generate_sdl_requests()
     sdl_api_url = os.getenv('SDL_API_URL')
-    print(f'Calling SDL API: {sdl_api_url}\n{sdl_request}')
+    print(f'Calling SDL API: {sdl_api_url}\n{sdl_requests}')
     if make_call:
-        resp = call_api(sdl_api_url, sdl_request)
-        print(f'Returned code: {resp.getcode()}')
+        call_api(sdl_api_url, sdl_requests)
 
 
 if '__main__' == __name__:
