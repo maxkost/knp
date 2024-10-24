@@ -62,7 +62,7 @@ TEST(PopulationGenerators, CreatorCopy)
 
     source_neuron.absolute_refractory_period_ = 12345;
 
-    auto new_pop{knp::framework::population::creators::make_copy<knp::neuron_traits::BLIFATNeuron>(
+    auto new_pop{knp::framework::population::creators::make_clone<knp::neuron_traits::BLIFATNeuron>(
         neurons_count, source_neuron)};
 
     ASSERT_EQ(new_pop.size(), neurons_count);

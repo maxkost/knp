@@ -71,17 +71,17 @@ template <typename NeuronType>
 
 
 /**
- * @brief Generate a population with copy of neuron parameter values.
+ * @brief Generate a population with clone of neuron parameter values.
  * @param neuron_count number of neurons in a population.
  * @param source_neuron parameters source.
  * @tparam NeuronType type of neuron parameters.
  * @return population.
  */
 template <typename NeuronType>
-[[nodiscard]] typename core::Population<NeuronType> make_copy(
+[[nodiscard]] typename core::Population<NeuronType> make_clone(
     size_t neuron_count, const typename core::Population<NeuronType>::NeuronParameters& source_neuron)
 {
-    return core::Population<NeuronType>(neurons_generators::make_copy<NeuronType>(source_neuron), neuron_count);
+    return core::Population<NeuronType>(neurons_generators::make_clone<NeuronType>(source_neuron), neuron_count);
 }
 
 }  // namespace creators

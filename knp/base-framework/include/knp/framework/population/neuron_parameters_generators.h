@@ -89,13 +89,13 @@ template <typename NeuronType>
 
 
 /**
- * @brief Generate a population with neuron parameter values copied from the source neuron.
+ * @brief Generate a population with neuron parameter values cloned from the source neuron.
  * @param source_neuron parameters source.
  * @tparam NeuronType type of neuron parameters.
  * @return neuron parameters generator.
  */
 template <typename NeuronType>
-[[nodiscard]] typename core::Population<NeuronType>::NeuronGenerator make_copy(
+[[nodiscard]] typename core::Population<NeuronType>::NeuronGenerator make_clone(
     const typename core::Population<NeuronType>::NeuronParameters source_neuron)
 {
     return [source_neuron](size_t index) -> std::optional<typename core::Population<NeuronType>::NeuronParameters>
