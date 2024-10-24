@@ -174,6 +174,55 @@ bool is_correct_version(const rapidjson::Document &doc)  // cppcheck-suppress co
 }
 
 
+auto read_nodes(const rapidjson::Document::Object &spikes_group)
+{
+    // Reading node IDs.
+    if (!spikes_group.HasMember("node_ids") || !spikes_group["node_ids"].IsObject())
+        throw std::runtime_error("No \"node_ids\" array in \"spikes\" group.");
+    const auto &nodes_ids = spikes_group["node_ids"].GetObject();
+
+    if (!nodes_ids.HasMember("value") || !nodes_ids["value"].IsArray())
+        throw std::runtime_error("Missing node data in JSON data file.");
+    const auto &nodes_array = nodes_ids["value"].GetArray();
+
+    std::vector<int64_t> nodes;
+    nodes.reserve(nodes_array.Size());
+
+    // No const reference val possible.
+    for (auto val_iter = nodes_array.Begin(); val_iter != nodes_array.End(); ++val_iter)
+    {
+        // std::transform isn't compiled by MSVC.
+        nodes.push_back(val_iter->GetInt());  // cppcheck-suppress useStlAlgorithm
+    }
+
+    return nodes;
+}
+
+
+auto read_timestamps(const rapidjson::Document::Object &spikes_group)
+{
+    // Reading timestamps.
+    if (!spikes_group.HasMember("timestamps") || !spikes_group["timestamps"].IsObject())
+        throw std::runtime_error("No \"timestamps\" array in \"spikes\" group.");
+    const auto &timestamps_group = spikes_group["timestamps"];
+
+    if (!timestamps_group.HasMember("value") || !timestamps_group["value"].IsArray())
+        throw std::runtime_error("No \"value\" array in \"timestamps\" group.");
+    const auto &timestamps_array = timestamps_group["value"].GetArray();
+
+    std::vector<float> timestamps;
+    timestamps.reserve(timestamps_array.Size());
+    // No const reference val possible.
+    for (auto val_iter = timestamps_array.Begin(); val_iter != timestamps_array.End(); ++val_iter)
+    {
+        // std::transform isn't compiled by MSVC.
+        timestamps.push_back(static_cast<float>(val_iter->GetDouble()));  // cppcheck-suppress useStlAlgorithm
+    }
+
+    return timestamps;
+}
+
+
 KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_json(
     std::istream &input_stream, const knp::core::UID &uid, bool strict_format)
 {
@@ -194,42 +243,9 @@ KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_json(
         throw std::runtime_error("Unable to find \"spikes\" group in data file.");
     const auto &spikes_group = doc["spikes"].GetObject();
 
-    // Reading node IDs.
-    if (!spikes_group.HasMember("node_ids") || !spikes_group["node_ids"].IsObject())
-        throw std::runtime_error("No \"node_ids\" array in \"spikes\" group.");
-    const auto &nodes_ids = spikes_group["node_ids"].GetObject();
+    auto nodes = read_nodes(spikes_group);
+    auto timestamps = read_timestamps(spikes_group);
 
-    if (!nodes_ids.HasMember("value") || !nodes_ids["value"].IsArray())
-        throw std::runtime_error("Missing node data in JSON data file.");
-    const auto &nodes_array = nodes_ids["value"].GetArray();
-
-    std::vector<int64_t> nodes;
-    nodes.reserve(nodes_array.Size());
-
-    // No const reference val possible.
-    for (auto val_iter = nodes_array.Begin(); val_iter != nodes_array.End(); ++val_iter)
-    {
-        // std::transform isn't compiled by MSVC.
-        nodes.push_back(val_iter->GetInt());  // cppcheck-suppress useStlAlgorithm
-    }
-
-    // Reading timestamps.
-    if (!spikes_group.HasMember("timestamps") || !spikes_group["timestamps"].IsObject())
-        throw std::runtime_error("No \"timestamps\" array in \"spikes\" group.");
-    const auto &timestamps_group = spikes_group["timestamps"];
-
-    if (!timestamps_group.HasMember("value") || !timestamps_group["value"].IsArray())
-        throw std::runtime_error("No \"value\" array in \"timestamps\" group.");
-    const auto &timestamps_array = timestamps_group["value"].GetArray();
-
-    std::vector<float> timestamps;
-    timestamps.reserve(timestamps_array.Size());
-    // No const reference val possible.
-    for (auto val_iter = timestamps_array.Begin(); val_iter != timestamps_array.End(); ++val_iter)
-    {
-        // std::transform isn't compiled by MSVC.
-        timestamps.push_back(static_cast<float>(val_iter->GetDouble()));  // cppcheck-suppress useStlAlgorithm
-    }
     return convert_node_time_arrays_to_messages(nodes, timestamps, uid, 1);
 
     throw std::runtime_error("Missing timestamp data in JSON data file.");
