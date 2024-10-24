@@ -57,7 +57,7 @@ AltAI_GM::AltAI_GM()
     Device::base_.uid_ = knp::core::UID(altai_gm_uid);
     columns_ = 4;
     rows_ = 4;
-    ports_ = std::move(std::vector<Port>{make_standart_north_port(0)});
+    ports_ = std::vector<Port>{make_standart_north_port(0)};
 }
 
 
