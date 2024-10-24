@@ -127,8 +127,9 @@ TEST(ProjectionConnectors, FromMap)
 
 TEST(ProjectionConnectors, FixedProbability)
 {
-    knp::framework::projection::creators::fixed_probability<typename knp::synapse_traits::DeltaSynapse>(
-        knp::core::UID(), knp::core::UID(), 3, 5, 0.5);
+    [[maybe_unused]] auto proj =
+        knp::framework::projection::creators::fixed_probability<typename knp::synapse_traits::DeltaSynapse>(
+            knp::core::UID(), knp::core::UID(), 3, 5, 0.5);
 }
 
 
