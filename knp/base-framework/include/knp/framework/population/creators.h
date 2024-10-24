@@ -38,7 +38,8 @@ template <typename NeuronType, template <typename...> class Container>
 [[nodiscard]] typename core::Population<NeuronType> from_container(
     const Container<typename core::Population<NeuronType>::NeuronParameters>& container)
 {
-    return core::Population<NeuronType>(neurons_generators::from_container<NeuronType>(container), container.size());
+    return core::Population<NeuronType>(
+        neurons_generators::from_container<NeuronType, Container>(container), container.size());
 }
 
 

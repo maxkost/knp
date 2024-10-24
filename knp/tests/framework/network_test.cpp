@@ -139,8 +139,8 @@ TEST(FrameworkSuite, NetworkConnectPopulations)
     auto connector = [&]()
     {
         proj_uid = network.connect_populations<
-            knp::synapse_traits::DeltaSynapse, decltype(src_pop)::PopulationNeuronType,
-            decltype(dst_pop)::PopulationNeuronType>(src_pop, dst_pop);
+            typename knp::synapse_traits::DeltaSynapse, knp::neuron_traits::BLIFATNeuron,
+            knp::neuron_traits::BLIFATNeuron>(src_pop, dst_pop);
         SPDLOG_DEBUG("New proj UID = {}", std::string(proj_uid));
     };
 
@@ -181,10 +181,9 @@ TEST(FrameworkSuite, NetworkConnectPopulationsArbitrary)
     auto connector = [&]()
     {
         proj_uid = network.connect_populations<
-            knp::synapse_traits::DeltaSynapse, decltype(src_pop)::PopulationNeuronType,
-            decltype(dst_pop)::PopulationNeuronType>(
+            knp::synapse_traits::DeltaSynapse, knp::neuron_traits::BLIFATNeuron, knp::neuron_traits::BLIFATNeuron>(
             src_pop, dst_pop,
-            [](size_t index)
+            [dst_neurons_count](size_t index)
             {
                 return std::make_tuple(
                     knp::core::Projection<knp::synapse_traits::DeltaSynapse>::SynapseParameters(), index,

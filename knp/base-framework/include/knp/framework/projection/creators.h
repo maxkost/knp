@@ -103,8 +103,8 @@ template <typename SynapseType, template <typename...> class Container>
     const knp::core::UID &presynaptic_uid, const knp::core::UID &postsynaptic_uid,
     const Container<typename core::Projection<SynapseType>::Synapse> &container)
 {
-    return knp::core::Projection<SynapseType>(
-        presynaptic_uid, postsynaptic_uid, synapse_generators::from_container<SynapseType>(container),
+    return typename knp::core::Projection<SynapseType>(
+        presynaptic_uid, postsynaptic_uid, synapse_generators::from_container<SynapseType, Container>(container),
         container.size());
 }
 
