@@ -49,7 +49,7 @@ TEST(PopulationConnectors, ArbitraryConnector)
         knp::synapse_traits::DeltaSynapse, decltype(src_pop)::PopulationNeuronType,
         decltype(dst_pop)::PopulationNeuronType>(
         src_pop, dst_pop,
-        [](size_t index)
+        [dst_neurons_count](size_t index)
         {
             return std::make_tuple(
                 knp::core::Projection<knp::synapse_traits::DeltaSynapse>::SynapseParameters(), index,

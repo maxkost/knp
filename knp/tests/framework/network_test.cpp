@@ -127,10 +127,10 @@ TEST(FrameworkSuite, NetworkConnectPopulations)
     constexpr auto src_neurons_count = 5;
     constexpr auto dst_neurons_count = 3;
 
-    auto src_pop{
-        knp::framework::population::creators::make_random<knp::neuron_traits::BLIFATNeuron>(src_neurons_count)};
-    auto dst_pop{
-        knp::framework::population::creators::make_random<knp::neuron_traits::BLIFATNeuron>(dst_neurons_count)};
+    auto src_pop{knp::framework::population::creators::make_random<typename knp::neuron_traits::BLIFATNeuron>(
+        src_neurons_count)};
+    auto dst_pop{knp::framework::population::creators::make_random<typename knp::neuron_traits::BLIFATNeuron>(
+        dst_neurons_count)};
 
     knp::framework::Network network;
 
