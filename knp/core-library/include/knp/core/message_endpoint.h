@@ -177,6 +177,12 @@ public:
      */
     using SubscriptionContainer = std::map<std::pair<size_t, UID>, SubscriptionVariant>;
 
+    /**
+     * @brief Get access to subscription container of the endpoint.
+     * @return Reference to subscription container.
+     */
+    const SubscriptionContainer &get_endpoint_subscriptions() const { return subscriptions_; }
+
 protected:
     /**
      * @brief Message endpoint implementation.
