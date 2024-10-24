@@ -93,7 +93,7 @@ void Network::add_population(core::AllPopulationsVariant &&population)
 {
     SPDLOG_DEBUG("Adding population variant...");
 
-    //    check_population_constraints(std::visit([](const auto &var_val) { return var_val; }, population));
+    // check_population_constraints(std::visit([](const auto &var_val) { return var_val; }, population));
 
     populations_.emplace_back(population);
 }
@@ -324,13 +324,9 @@ void Network::check_projection_constraints(const ProjectionType &projection) con
         throw std::logic_error(msg);
     }
 
-    if (core::UID{false} != projection.get_presynaptic())
+    if (core::UID{false} != projection.get_presynaptic() && is_population_exists(projection.get_presynaptic()))
     {
-        if (is_population_exists(projection.get_presynaptic()))
-        {
-            SPDLOG_WARN(
-                "Presynaptic population with UID = {} doesn't exist.", std::string(projection.get_presynaptic()));
-        }
+        SPDLOG_WARN("Presynaptic population with UID = {} doesn't exist.", std::string(projection.get_presynaptic()));
     }
 
     if (is_population_exists(projection.get_postsynaptic()))

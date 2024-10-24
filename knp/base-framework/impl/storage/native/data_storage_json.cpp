@@ -153,22 +153,22 @@ bool is_correct_version(const rapidjson::Document &doc)  // cppcheck-suppress co
     {
         const auto &group = group_iter->GetObject();
 
-        if (group.HasMember("name") && group["name"].GetString() == version_str)
+        if (!group.HasMember("name") || group["name"].GetString() != version_str) continue;
+        if (!group.HasMember("value") || !group["value"].IsArray()) return false;
+
+        const auto &version_arr = group["value"].GetArray();
+        if (VERSION.size() != version_arr.Size()) return false;
+
+        std::vector<int64_t> version;
+        version.reserve(VERSION.size());
+
+        for (auto val_iter = version_arr.Begin(); val_iter != version_arr.End(); ++val_iter)
         {
-            if (!group.HasMember("value") || !group["value"].IsArray()) return false;
-            const auto &version_arr = group["value"].GetArray();
-            if (VERSION.size() != version_arr.Size()) return false;
-            std::vector<int64_t> version;
-            version.reserve(VERSION.size());
-
-            for (auto val_iter = version_arr.Begin(); val_iter != version_arr.End(); ++val_iter)
-            {
-                // std::transform isn't compiled by MSVC.
-                version.push_back(val_iter->GetInt());  // cppcheck-suppress useStlAlgorithm
-            }
-
-            return std::equal(version.begin(), version.end(), VERSION.begin());
+            // std::transform isn't compiled by MSVC.
+            version.push_back(val_iter->GetInt());  // cppcheck-suppress useStlAlgorithm
         }
+
+        return std::equal(version.begin(), version.end(), VERSION.begin());
     }
     return false;
 }
@@ -247,8 +247,6 @@ KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_json(
     auto timestamps = read_timestamps(spikes_group);
 
     return convert_node_time_arrays_to_messages(nodes, timestamps, uid, 1);
-
-    throw std::runtime_error("Missing timestamp data in JSON data file.");
 }
 
 

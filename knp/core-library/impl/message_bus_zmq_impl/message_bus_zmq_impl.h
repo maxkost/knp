@@ -40,6 +40,7 @@ public:
     [[nodiscard]] MessageEndpoint create_endpoint() override;
 
 private:
+    zmq::recv_result_t poll(zmq::message_t &message);
     bool isit_id(const zmq::recv_result_t &recv_result) const { return recv_result.value() == 5; }
 
 private:

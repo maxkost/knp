@@ -47,19 +47,21 @@ TEST(FrameworkSuite, ModelAddInputChannels)
         "Src pop UID = {}, dst pop UID = {}, proj UID = {}", std::string(src_pop.get_uid()),
         std::string(dst_pop.get_uid()), std::string(new_proj.get_uid()));
 
-    EXPECT_THROW(model.connect_input_projection(knp::core::UID(), new_proj), std::logic_error);
-    EXPECT_THROW(model.add_input_channel(knp::core::UID(), new_proj.get_uid()), std::logic_error);
+    EXPECT_THROW(
+        model.connect_input_projection(knp::core::UID(), new_proj), std::logic_error);  //!OCLINT(False positive)
+    EXPECT_THROW(
+        model.add_input_channel(knp::core::UID(), new_proj.get_uid()), std::logic_error);  //!OCLINT(False positive)
 
     model.get_network().add_projection(new_proj);
 
-    EXPECT_NO_THROW(model.connect_input_projection(knp::core::UID(), new_proj));
+    EXPECT_NO_THROW(model.connect_input_projection(knp::core::UID(), new_proj));  //!OCLINT(False positive)
     ASSERT_EQ(model.get_input_channels().size(), 1);
-    EXPECT_NO_THROW(model.add_input_channel(knp::core::UID(), new_proj.get_uid()));
+    EXPECT_NO_THROW(model.add_input_channel(knp::core::UID(), new_proj.get_uid()));  //!OCLINT(False positive)
     ASSERT_EQ(model.get_input_channels().size(), 2);
 }
 
 
-TEST(FrameworkSuite, ModelAddOutputChannels)
+TEST(FrameworkSuite, ModelAddOutputChannels)  //!OCLINT(False positive)
 {
     constexpr auto dst_neurons_count = 3;
 
@@ -74,13 +76,15 @@ TEST(FrameworkSuite, ModelAddOutputChannels)
 
     SPDLOG_DEBUG("Output pop UID = {}", std::string(pop_uid));
 
-    EXPECT_THROW(model.connect_output_population(knp::core::UID(), dst_pop), std::logic_error);
-    EXPECT_THROW(model.add_output_channel(knp::core::UID(), dst_pop.get_uid()), std::logic_error);
+    EXPECT_THROW(
+        model.connect_output_population(knp::core::UID(), dst_pop), std::logic_error);  //!OCLINT(False positive)
+    EXPECT_THROW(
+        model.add_output_channel(knp::core::UID(), dst_pop.get_uid()), std::logic_error);  //!OCLINT(False positive)
 
     model.get_network().add_population(dst_pop);
 
-    EXPECT_NO_THROW(model.connect_output_population(knp::core::UID(), dst_pop));
+    EXPECT_NO_THROW(model.connect_output_population(knp::core::UID(), dst_pop));  //!OCLINT(False positive)
     ASSERT_EQ(model.get_output_channels().size(), 1);
-    EXPECT_NO_THROW(model.add_output_channel(knp::core::UID(), pop_uid));
+    EXPECT_NO_THROW(model.add_output_channel(knp::core::UID(), pop_uid));  //!OCLINT(False positive)
     ASSERT_EQ(model.get_output_channels().size(), 2);
 }

@@ -66,6 +66,9 @@ std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg)
 {
     size_t impacts_count = 0;
     stream >> msg.header_ >> msg.postsynaptic_population_uid_ >> msg.presynaptic_population_uid_ >> impacts_count;
+
+    if (0 == impacts_count) return stream;
+
     msg.impacts_.resize(impacts_count);
     for (size_t i = 0; i < impacts_count; ++i)
     {
@@ -128,12 +131,10 @@ SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg)
         s_msg_header->sender_uid().data()->begin(),  // clang_sa_ignore [core.CallAndMessage]
         s_msg_header->sender_uid().data()->end(),    // clang_sa_ignore [core.CallAndMessage]
         sender_uid.tag.begin());
-    std::copy(
-        s_msg->presynaptic_population_uid()->data()->begin(), s_msg->presynaptic_population_uid()->data()->end(),
-        presynaptic_uid.tag.begin());
-    std::copy(
-        s_msg->postsynaptic_population_uid()->data()->begin(), s_msg->postsynaptic_population_uid()->data()->end(),
-        postsynaptic_uid.tag.begin());
+    const auto &presynaptic_data = s_msg->presynaptic_population_uid()->data();
+    std::copy(presynaptic_data->begin(), presynaptic_data->end(), presynaptic_uid.tag.begin());
+    const auto &postsynaptic_data = s_msg->postsynaptic_population_uid()->data();
+    std::copy(postsynaptic_data->begin(), postsynaptic_data->end(), postsynaptic_uid.tag.begin());
 
     std::vector<SynapticImpact> impacts;
     impacts.reserve(s_msg->impacts()->size());

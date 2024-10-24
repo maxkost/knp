@@ -63,7 +63,7 @@ TEST(FrameworkSuite, EmptyNetwork)
 }
 
 
-TEST(FrameworkSuite, NetworkCreation)
+TEST(FrameworkSuite, NetworkCreation)  //!OCLINT(False positive)
 {
     knp::framework::Network network;
     auto [population1, projection1] = create_entities();
@@ -87,7 +87,7 @@ TEST(FrameworkSuite, NetworkCreation)
 }
 
 
-TEST(FrameworkSuite, NetworkRemoveEntities)
+TEST(FrameworkSuite, NetworkRemoveEntities)  //!OCLINT(False positive)
 {
     knp::framework::Network network;
 
@@ -105,7 +105,7 @@ TEST(FrameworkSuite, NetworkRemoveEntities)
     ASSERT_EQ(network.projections_count(), 1);
 
     // Incorrect UID.
-    EXPECT_THROW(network.remove_population(uid_proj), std::logic_error);  // !OCLint(no "non case label")
+    EXPECT_THROW(network.remove_population(uid_proj), std::logic_error);  //!OCLINT(False positive)
     ASSERT_EQ(network.populations_count(), 1);
     // Correct UID.
     network.remove_population(uid_pop);
@@ -113,7 +113,7 @@ TEST(FrameworkSuite, NetworkRemoveEntities)
     ASSERT_EQ(network.populations_count(), 0);
 
     // Incorrect UID.
-    EXPECT_THROW(network.remove_projection(uid_pop), std::logic_error);  // !OCLint(no "non case label")
+    EXPECT_THROW(network.remove_projection(uid_pop), std::logic_error);  //!OCLINT(False positive)
     ASSERT_EQ(network.projections_count(), 1);
     // Correct UID.
     network.remove_projection(uid_proj);
@@ -144,15 +144,15 @@ TEST(FrameworkSuite, NetworkConnectPopulations)
         SPDLOG_DEBUG("New proj UID = {}", std::string(proj_uid));
     };
 
-    EXPECT_THROW(connector(), std::logic_error);
+    EXPECT_THROW(connector(), std::logic_error);  //!OCLINT(False positive)
 
     network.add_population(src_pop);
-    EXPECT_THROW(connector(), std::logic_error);
+    EXPECT_THROW(connector(), std::logic_error);  //!OCLINT(False positive)
 
     SPDLOG_DEBUG("Checking proj UID = {} [False?]", std::string(proj_uid));
     ASSERT_FALSE(network.is_projection_exists(proj_uid));
     network.add_population(dst_pop);
-    EXPECT_NO_THROW(connector());
+    EXPECT_NO_THROW(connector());  //!OCLINT(False positive)
 
     ASSERT_EQ(network.projections_count(), 1);
     ASSERT_EQ(network.populations_count(), 2);
@@ -193,14 +193,14 @@ TEST(FrameworkSuite, NetworkConnectPopulationsArbitrary)
         SPDLOG_DEBUG("New proj UID = {}", std::string(proj_uid));
     };
 
-    EXPECT_THROW(connector(), std::logic_error);
+    EXPECT_THROW(connector(), std::logic_error);  //!OCLINT(False positive)
 
     network.add_population(src_pop);
-    EXPECT_THROW(connector(), std::logic_error);
+    EXPECT_THROW(connector(), std::logic_error);  //!OCLINT(False positive)
 
     ASSERT_FALSE(network.is_projection_exists(proj_uid));
     network.add_population(dst_pop);
-    EXPECT_NO_THROW(connector());
+    EXPECT_NO_THROW(connector());  //!OCLINT(False positive)
 
     ASSERT_EQ(network.projections_count(), 1);
     ASSERT_EQ(network.populations_count(), 2);

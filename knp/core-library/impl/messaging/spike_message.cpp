@@ -45,6 +45,9 @@ std::istream &operator>>(std::istream &stream, SpikeMessage &msg)
 {
     size_t neurons_count = 0;
     stream >> msg.header_.sender_uid_ >> msg.header_.send_time_ >> neurons_count;
+
+    if (0 == neurons_count) return stream;
+
     msg.neuron_indexes_.resize(neurons_count);
     for (size_t i = 0; i < neurons_count; ++i)
     {

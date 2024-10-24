@@ -57,5 +57,5 @@ TEST(FrameworkSuite, ModelWithIncorrectInputChannel)
     knp::framework::ModelLoader mld(
         backend_loader.load(knp::testing::get_backend_path()), {{knp::core::UID(), input_gen}});
 
-    EXPECT_THROW(mld.load(model), std::logic_error);
+    EXPECT_THROW(mld.load(model), std::logic_error);  //!OCLINT(False positive)
 }
