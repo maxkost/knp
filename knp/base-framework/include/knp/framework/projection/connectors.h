@@ -35,7 +35,7 @@ namespace knp::framework::projection
  */
 template <typename SynapseType, typename SourceNeuronType, typename DestinationNeuronType>
 [[nodiscard]] typename core::Projection<SynapseType> connect_populations(
-    const core::Population<SourceNeuronType> &src, const core::Population<SourceNeuronType> &dst,
+    const core::Population<SourceNeuronType> &src, const core::Population<DestinationNeuronType> &dst,
     typename parameters_generators::SynGen2ParamsType<SynapseType> syn_gen =
         parameters_generators::default_synapse_gen<SynapseType>)
 {
@@ -57,7 +57,7 @@ template <typename SynapseType, typename SourceNeuronType, typename DestinationN
  */
 template <typename SynapseType, typename SourceNeuronType, typename DestinationNeuronType>
 [[nodiscard]] typename core::Projection<SynapseType> connect_populations(
-    const core::Population<SourceNeuronType> &src, const core::Population<SourceNeuronType> &dst,
+    const core::Population<SourceNeuronType> &src, const core::Population<DestinationNeuronType> &dst,
     typename knp::core::Projection<SynapseType>::SynapseGenerator syn_gen, size_t num_iterations)
 {
     return core::Projection<SynapseType>(src.get_uid(), dst.get_uid(), syn_gen, num_iterations);
