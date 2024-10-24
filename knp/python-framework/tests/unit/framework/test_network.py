@@ -25,7 +25,6 @@ def test_empty_network():  # type: ignore[no-untyped-def]
     network = Network()
     assert network.populations_count == 0
     assert network.projections_count == 0
-    return
 
 
 def test_add_population():  # type: ignore[no-untyped-def]
@@ -34,7 +33,6 @@ def test_add_population():  # type: ignore[no-untyped-def]
     network.add_population(population)
     assert network.populations_count == 1
     assert network.projections_count == 0
-    return
 
 
 def test_add_projection():  # type: ignore[no-untyped-def]
@@ -43,14 +41,21 @@ def test_add_projection():  # type: ignore[no-untyped-def]
     network.add_projection(projection)
     assert network.populations_count == 0
     assert network.projections_count == 1
-    return
 
 
-# Data storage test
-def test_data_storage():  # type: ignore[no-untyped-def]
-    return
+def test_remove_projection():  # type: ignore[no-untyped-def]
+    network = Network()
+    projection = DeltaSynapseProjection(UID(), UID(), synapse_generator, 5)
+    proj_uid = projection.uid
+    network.add_projection(projection)
+    network.remove_projection(proj_uid)
+    assert network.projections_count == 0
 
 
-# Save load network test
-def save_load_test(_):  # type: ignore[no-untyped-def]
-    return
+def test_remove_population():  # type: ignore[no-untyped-def]
+    network = Network()
+    population = BLIFATNeuronPopulation(neuron_generator, 5)
+    pop_uid = population.uid
+    network.add_population(population)
+    network.remove_population(pop_uid)
+    assert network.populations_count == 0
