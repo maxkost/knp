@@ -87,10 +87,10 @@ TEST(ProjectionConnectors, FromContainer)
         knp::framework::projection::creators::from_container<typename knp::synapse_traits::DeltaSynapse, std::vector>(
             knp::core::UID(), knp::core::UID(), container);
 
-    int i = 0;
+    int syn_num = 0;
     for (const auto& synapse : proj)
     {
-        const auto container_syn = container[i++];
+        const auto container_syn = container[syn_num++];
         ASSERT_EQ(std::get<knp::core::target_neuron_id>(synapse), std::get<knp::core::target_neuron_id>(container_syn));
         ASSERT_EQ(std::get<knp::core::source_neuron_id>(synapse), std::get<knp::core::source_neuron_id>(container_syn));
     }
@@ -127,7 +127,7 @@ TEST(ProjectionConnectors, FromMap)
 
 TEST(ProjectionConnectors, FixedProbability)
 {
-    auto proj = knp::framework::projection::creators::fixed_probability<typename knp::synapse_traits::DeltaSynapse>(
+    knp::framework::projection::creators::fixed_probability<typename knp::synapse_traits::DeltaSynapse>(
         knp::core::UID(), knp::core::UID(), 3, 5, 0.5);
 }
 

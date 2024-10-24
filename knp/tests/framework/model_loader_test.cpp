@@ -25,8 +25,6 @@ TEST(FrameworkSuite, EmptyModelLoad)
 {
     namespace kt = knp::testing;
 
-    const knp::core::UID i_channel_uid, o_channel_uid;
-
     knp::framework::Model model(std::move(knp::framework::Network()));
     knp::framework::BackendLoader backend_loader;
     knp::framework::ModelLoader mld(backend_loader.load(knp::testing::get_backend_path()), {});
