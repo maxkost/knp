@@ -20,6 +20,9 @@
 namespace knp::framework::population
 {
 
+/**
+ * @brief Generators of the neurons with specific parameters.
+ */
 namespace neurons_generators
 {
 
