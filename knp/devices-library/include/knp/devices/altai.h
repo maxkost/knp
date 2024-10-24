@@ -1,6 +1,6 @@
 /**
  * @file altai.h
- * @brief Class definitions for AltAI and AltAI_GM devices.
+ * @brief Class definitions for AltAI, AltAI_GM and AltAI_HW devices.
  * @author Liubiakin A.
  * @date 17.10.2024
  */
@@ -38,9 +38,24 @@ struct Port
      */
     enum class port_side
     {
+        /**
+         * @brief Represent the North side of the grid (y = 0).
+         */
         kNorth,
+        /**
+         * @brief Represent the South side of the grid (y = y_max).
+         * @note Only North side for ports are currently supported.
+         */
         kSouth,
+        /**
+         * @brief Represent the East side of the grid (x = 0).
+         * @note Only North side for ports are currently supported.
+         */
         kEast,
+        /**
+         * @brief Represent the West side of the grid (x = x_max).
+         * @note Only North side for ports are currently supported.
+         */
         kWest
     };
 
@@ -48,17 +63,17 @@ struct Port
      * @brief Start core.
      */
     // cppcheck-suppress unusedStructMember
-    size_t start_core_;
+    size_t start_core;
     /**
      * @brief Port length from start core.
      */
     // cppcheck-suppress unusedStructMember
-    size_t port_length_;
+    size_t port_length;
     /**
      * @brief Side {kNorth, kSouth, kEast, kWest}.
      */
     // cppcheck-suppress unusedStructMember
-    port_side side_;
+    port_side side;
 };
 
 /**
@@ -69,11 +84,58 @@ struct Port
  */
 Port make_standart_north_port(size_t begin_core);
 
+/**
+ * @brief Base class for AltAI devices.
+ */
+class AltAI : public knp::core::Device
+{
+public:
+    /**
+     * @brief AltAI destructor.
+     */
+    virtual ~AltAI() = default;
+
+    /**
+     * @brief Get device type.
+     * @return device type.
+     */
+    [[nodiscard]] knp::core::DeviceType get_type() const override;
+
+    /**
+     * @brief Get number of columns and rows in device grid.
+     * @return pair of AltAI grid columns and rows.
+     */
+    [[nodiscard]] std::pair<size_t, size_t> get_grid_cols_rows() const;
+
+    /**
+     * @brief Get port vector of device grid.
+     * @return `Port` vector of a given AltAI device.
+     */
+    [[nodiscard]] std::vector<Port> get_grid_ports() const;
+
+protected:
+    /**
+     * @brief Number of columns in core grid of AltAI device.
+     */
+    // cppcheck-suppress unusedStructMember
+    size_t columns_;
+    /**
+     * @brief Number of rows in core grid of AltAI device.
+     */
+    // cppcheck-suppress unusedStructMember
+    size_t rows_;
+    /**
+     * @brief Ports in core grid of AltAI device.
+     */
+    // cppcheck-suppress unusedStructMember
+    std::vector<Port> ports_;
+};
+
 
 /**
  * @brief The `AltAI_GM` class is a defintion of an interface to the AltAI golden model device.
  */
-class AltAI_GM : public knp::core::Device
+class AltAI_GM : public AltAI
 {
 public:
     /**
@@ -104,12 +166,6 @@ public:
 
 public:
     /**
-     * @brief Get device type.
-     * @return device type.
-     */
-    [[nodiscard]] knp::core::DeviceType get_type() const override;
-
-    /**
      * @brief Get device name.
      * @return device name in the arbitrary format.
      */
@@ -120,59 +176,68 @@ public:
      * @return amount of consumed power.
      */
     [[nodiscard]] float get_power() const override;
+
+public:
+    /**
+     * @brief Load parametrs to initialization grid of the AltAI core network.
+     * @param rows number of rows in grid of AltAI cores.
+     * @param columns number of columns in grid of AltAI cores.
+     * @param ports port configuration in grid of AltAI cores.
+     */
+    void load_core_grid_params(
+        size_t rows, size_t columns, const std::vector<Port> &ports = {make_standart_north_port(0)});
 
 private:
     /**
      * @brief `AltAI_GM` device constructor.
+     * @details Create `AltAI_GM` device with 4 by 4 core grid and standart port from the North side.
      */
     AltAI_GM();
-    friend std::vector<std::unique_ptr<knp::core::Device>> list_altai_devices();
+    friend std::vector<std::unique_ptr<AltAI>> list_altai_devices();
 
 private:
     // cppcheck-suppress unusedStructMember
     std::string altai_name_;
 };
 
-
 /**
- * @brief The `AltAI` class is a definition of an interface to AltAI hardware device.
+ * @brief The `AltAI_HW` class is a definition of an interface to AltAI hardware device.
  */
-class AltAI : public knp::core::Device
+class AltAI_HW : public AltAI
 {
 public:
     /**
-     * @brief Avoid copy of a AltAI device.
+     * @brief No public contructor for `AltAI_HW` deivce.
      */
-    AltAI(const AltAI &) = delete;
+    AltAI_HW() = delete;
 
     /**
-     * @brief Avoid copy assignment of a AltAI device.
+     * @brief Avoid copy of a `AltAI_HW` device.
      */
-    AltAI &operator=(const AltAI &) = delete;
+    AltAI_HW(const AltAI_HW &) = delete;
 
     /**
-     * @brief AltAI device move constructor.
+     * @brief Avoid copy assignment of a `AltAI_HW` device.
      */
-    AltAI(AltAI &&);
+    AltAI_HW &operator=(const AltAI_HW &) = delete;
 
     /**
-     * @brief AltAI device move operator.
-     * @return reference to AltAI instance.
+     * @brief `AltAI_HW` device move constructor.
      */
-    AltAI &operator=(AltAI &&) noexcept;
+    AltAI_HW(AltAI_HW &&);
 
     /**
-     * @brief AltAI device destructor.
+     * @brief `AltAI_HW` device move operator.
+     * @return reference to `AltAI_HW` instance.
      */
-    ~AltAI() override;
+    AltAI_HW &operator=(AltAI_HW &&) noexcept;
+
+    /**
+     * @brief `AltAI_HW` device destructor.
+     */
+    ~AltAI_HW() override;
 
 public:
-    /**
-     * @brief Get device type.
-     * @return device type.
-     */
-    [[nodiscard]] knp::core::DeviceType get_type() const override;
-
     /**
      * @brief Get device name.
      * @return device name in the arbitrary format.
@@ -185,41 +250,25 @@ public:
      */
     [[nodiscard]] float get_power() const override;
 
-    /**
-     * @brief Get number of columns and rows in device grid.
-     * @details Only AltAI hardware device can return this parameters.
-     * @return pair of AltAI grid columns and rows.
-     */
-    [[nodiscard]] std::pair<size_t, size_t> get_grid_cols_rows() const;
-
-    /**
-     * @brief Get port vector of device grid.
-     * @details Only AltAI hardware device can return this parameters.
-     * @return `Port` vector of a given AltAI device.
-     */
-    [[nodiscard]] std::vector<Port> get_grid_ports() const;
-
 private:
     /**
-     * @brief AltAI device constructor.
+     * @brief `AltAI_HW` device constructor.
+     * @param rows number of rows in core grid of given AltAI hardware.
+     * @param columns number of columns in core grid of given AltAI hardware.
+     * @param ports input/output ports in core grid of given AltAI hardware.
      */
-    AltAI();
-    friend std::vector<std::unique_ptr<knp::core::Device>> list_altai_devices();
+    AltAI_HW(size_t rows, size_t columns, const std::vector<Port> &ports);
+    friend std::vector<std::unique_ptr<AltAI>> list_altai_devices();
 
 private:
     // cppcheck-suppress unusedStructMember
     std::string altai_name_;
-    // cppcheck-suppress unusedStructMember
-    size_t columns_;
-    // cppcheck-suppress unusedStructMember
-    size_t rows_;
-    // cppcheck-suppress unusedStructMember
-    std::vector<Port> ports_;
 };
 
 /**
  * @brief List all AltAI devices on which backend can be initializated.
- * @return Vector of unique pointers to devices, which are `AltAI` or `AltAI_GM` devices.
+ * @return Vector of unique pointers to base `AltAI` device class,
+ *  which are `AltAI_HW` or `AltAI_GM` devices.
  */
-std::vector<std::unique_ptr<knp::core::Device>> list_altai_devices();
+std::vector<std::unique_ptr<AltAI>> list_altai_devices();
 }  // namespace knp::devices::altai

@@ -40,24 +40,12 @@ set_target_properties(
         VERSION "${CMAKE_PROJECT_VERSION}"
         SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
 
-knp_add_library("${PROJECT_NAME}-altai"
-    BOTH
-    impl/altai.cpp
+if(KNP_ENABLE_COVERAGE)
+    include(codecoverage)
+    append_coverage_compiler_flags()
+    link_target_with_gcov("${PROJECT_NAME}-cpu")
+endif()
 
-    include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/altai.h
-
-    LINK_PRIVATE
-        spdlog::spdlog
-        KNP::Core
-    ALIAS KNP::Devices::AltAI
-)
-
-set_target_properties(
-    "${PROJECT_NAME}-altai"
-    PROPERTIES
-    VERSION "${CMAKE_PROJECT_VERSION}"
-    SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}"
-)
 
 install(TARGETS "${PROJECT_NAME}-cpu"
         COMPONENT "framework-dev"
@@ -70,6 +58,25 @@ install(TARGETS "${PROJECT_NAME}-cpu_static"
         EXPORT "${PROJECT_NAME}-cpu_static"
         COMPONENT "framework-dev"
         ARCHIVE)
+
+knp_add_library("${PROJECT_NAME}-altai"
+    BOTH
+    impl/altai.cpp
+
+    include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/altai.h
+
+    LINK_PRIVATE
+        spdlog::spdlog PCM_STATIC
+        KNP::Core
+    ALIAS KNP::Devices::AltAI
+)
+
+set_target_properties(
+    "${PROJECT_NAME}-altai"
+    PROPERTIES
+    VERSION "${CMAKE_PROJECT_VERSION}"
+    SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}"
+)
 
 # Install for AltAI
 install(TARGETS "${PROJECT_NAME}-altai"

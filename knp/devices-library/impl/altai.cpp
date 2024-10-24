@@ -1,6 +1,6 @@
 /**
  * @file altai.cpp
- * @brief Implementation of AltAI devices classes.
+ * @brief AltAI devices class implementation.
  * @author Liubiakin A.
  * @date 17.10.2024
  */
@@ -28,6 +28,22 @@ Port make_standart_north_port(size_t begin_core)
     return Port{begin_core, 4, Port::port_side::kNorth};
 }
 
+std::pair<size_t, size_t> AltAI::get_grid_cols_rows() const
+{
+    return std::pair<size_t, size_t>(columns_, rows_);
+}
+
+
+std::vector<Port> AltAI::get_grid_ports() const
+{
+    return ports_;
+}
+
+knp::core::DeviceType AltAI::get_type() const
+{
+    return knp::core::DeviceType::AltAI1_NPU;
+}
+
 
 AltAI_GM::AltAI_GM()
 {
@@ -39,6 +55,9 @@ AltAI_GM::AltAI_GM()
         is_generated = true;
     }
     Device::base_.uid_ = knp::core::UID(altai_gm_uid);
+    columns_ = 4;
+    rows_ = 4;
+    ports_ = std::move(std::vector<Port>{make_standart_north_port(0)});
 }
 
 
@@ -50,13 +69,11 @@ AltAI_GM::~AltAI_GM() {}
 
 AltAI_GM& AltAI_GM::operator=(AltAI_GM&& other) noexcept
 {
-    altai_name_.swap(other.altai_name_);
+    if (this != &other)
+    {
+        altai_name_.swap(other.altai_name_);
+    }
     return *this;
-}
-
-knp::core::DeviceType AltAI_GM::get_type() const
-{
-    return knp::core::DeviceType::AltAI1_NPU;
 }
 
 
@@ -71,7 +88,14 @@ float AltAI_GM::get_power() const
     return 0.;
 }
 
-AltAI::AltAI()
+void AltAI_GM::load_core_grid_params(size_t rows, size_t columns, const std::vector<Port>& ports)
+{
+    columns_ = columns;
+    rows_ = rows;
+    ports_ = ports;
+}
+
+AltAI_HW::AltAI_HW(size_t rows, size_t columns, const std::vector<Port>& ports)
 {
     altai_name_ = "AltAIv1_Compact_v1.0";
     if (!is_generated)
@@ -82,65 +106,42 @@ AltAI::AltAI()
     }
     Device::base_.uid_ =
         knp::core::UID(boost::uuids::name_generator(knp::core::UID(altai_gm_uid))(altai_name_.c_str()));
-    columns_ = compact_board_columns;
-    rows_ = compact_board_rows;
-    ports_ = compact_board_ports;
+    columns_ = columns;
+    rows_ = rows;
+    ports_ = ports;
 }
 
-AltAI::AltAI(AltAI&& other)
-    : altai_name_{std::move(other.altai_name_)},
-      columns_{other.columns_},
-      rows_{other.rows_},
-      ports_{std::move(other.ports_)}
+AltAI_HW::AltAI_HW(AltAI_HW&& other) : altai_name_(std::move(other.altai_name_)) {}
+
+AltAI_HW::~AltAI_HW() {}
+
+AltAI_HW& AltAI_HW::operator=(AltAI_HW&& other) noexcept
 {
-}
-
-
-AltAI::~AltAI() {}
-
-
-AltAI& AltAI::operator=(AltAI&& other) noexcept
-{
-    altai_name_.swap(other.altai_name_);
-    columns_ = other.columns_;
-    rows_ = other.rows_;
-    ports_.swap(other.ports_);
+    if (this != &other)
+    {
+        altai_name_.swap(other.altai_name_);
+    }
     return *this;
 }
 
-knp::core::DeviceType AltAI::get_type() const
-{
-    return knp::core::DeviceType::AltAI1_NPU;
-}
 
-
-const std::string& AltAI::get_name() const
+const std::string& AltAI_HW::get_name() const
 {
     return altai_name_;
 }
 
 
-float AltAI::get_power() const
+float AltAI_HW::get_power() const
 {
     return 0.;
 }
 
-
-std::pair<size_t, size_t> AltAI::get_grid_cols_rows() const
+std::vector<std::unique_ptr<AltAI>> list_altai_devices()
 {
-    return std::pair<size_t, size_t>(columns_, rows_);
-}
-
-
-std::vector<Port> AltAI::get_grid_ports() const
-{
-    return ports_;
-}
-
-std::vector<std::unique_ptr<knp::core::Device>> list_altai_devices()
-{
-    std::vector<std::unique_ptr<knp::core::Device>> devices;
-    devices.push_back(std::unique_ptr<knp::core::Device>(new AltAI_GM()));
+    std::vector<std::unique_ptr<AltAI>> devices;
+    devices.push_back(std::unique_ptr<AltAI>(new AltAI_GM()));
+    devices.push_back(
+        std::unique_ptr<AltAI>(new AltAI_HW(compact_board_rows, compact_board_columns, compact_board_ports)));
     return devices;
 }
 
