@@ -40,18 +40,6 @@ set_target_properties(
         VERSION "${CMAKE_PROJECT_VERSION}"
         SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
 
-install(TARGETS "${PROJECT_NAME}-cpu"
-        COMPONENT "framework-dev"
-        EXPORT "${PROJECT_NAME}-cpu"
-        LIBRARY
-#        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
-)
-
-install(TARGETS "${PROJECT_NAME}-cpu_static"
-        EXPORT "${PROJECT_NAME}-cpu_static"
-        COMPONENT "framework-dev"
-        ARCHIVE)
-
 knp_add_library("${PROJECT_NAME}-altai"
     BOTH
     impl/altai.cpp
@@ -70,6 +58,18 @@ set_target_properties(
     VERSION "${CMAKE_PROJECT_VERSION}"
     SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}"
 )
+
+install(TARGETS "${PROJECT_NAME}-cpu"
+        COMPONENT "framework-dev"
+        EXPORT "${PROJECT_NAME}-cpu"
+        LIBRARY
+#        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
+)
+
+install(TARGETS "${PROJECT_NAME}-cpu_static"
+        EXPORT "${PROJECT_NAME}-cpu_static"
+        COMPONENT "framework-dev"
+        ARCHIVE)
 
 # Install for AltAI
 install(TARGETS "${PROJECT_NAME}-altai"
