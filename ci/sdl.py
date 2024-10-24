@@ -216,7 +216,7 @@ def generate_sdl_requests() -> (
     }
 
     service_req = {
-        'release_tfs_id': RELEASE_NUMBER,
+        'release_tfs_id': SERVICE_NUMBER,
         'build_number': BUILD_NUMBER,
         'third_party': {'type': 'uri', 'data': artifact_url(THIRD_PARTY_FILENAME, add_build_to_name=False)},
         'devops_pipeline': {

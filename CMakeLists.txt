@@ -160,9 +160,9 @@ if (KNP_ENABLE_AVX)
     # -pipe
     set(CMAKE_C_FLAGS_RELEASE "-march=native -mtune=native -mno-vzeroupper -Ofast -funroll-loops -fomit-frame-pointer -finline")
 
-    if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-        set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -fopt-info-vec-optimized")
-    endif()
+    # if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    #    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -fopt-info-vec-optimized")
+    # endif()
 
     set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
     add_compile_options(-include x86intrin.h)
@@ -193,10 +193,6 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Required for linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-# Always enabled for the Kaspersky Neuromorphic Platform components.
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -D_FORTIFY_SOURCE=1")
-# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_FORTIFY_SOURCE=2")
 
 include(knp-functions)
 include(print-variables)

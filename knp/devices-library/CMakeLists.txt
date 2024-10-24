@@ -7,11 +7,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Required for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.30")
-    # Suppress Boost warning.
-    cmake_policy(SET CMP0167 OLD)
-endif()
-
 project(knp-devices VERSION "${KNP_VERSION}" LANGUAGES C CXX
         DESCRIPTION "Kaspersky Neuromorphic Platform device parameters library"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
@@ -45,6 +40,25 @@ set_target_properties(
         VERSION "${CMAKE_PROJECT_VERSION}"
         SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
 
+knp_add_library("${PROJECT_NAME}-altai"
+    BOTH
+    impl/altai.cpp
+
+    include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/altai.h
+
+    LINK_PRIVATE
+        spdlog::spdlog PCM_STATIC
+        KNP::Core
+    ALIAS KNP::Devices::AltAI
+)
+
+set_target_properties(
+    "${PROJECT_NAME}-altai"
+    PROPERTIES
+    VERSION "${CMAKE_PROJECT_VERSION}"
+    SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}"
+)
+
 install(TARGETS "${PROJECT_NAME}-cpu"
         COMPONENT "framework-dev"
         EXPORT "${PROJECT_NAME}-cpu"
@@ -56,6 +70,21 @@ install(TARGETS "${PROJECT_NAME}-cpu_static"
         EXPORT "${PROJECT_NAME}-cpu_static"
         COMPONENT "framework-dev"
         ARCHIVE)
+
+# Install for AltAI
+install(TARGETS "${PROJECT_NAME}-altai"
+        COMPONENT "framework-dev"
+        EXPORT "${PROJECT_NAME}-altai"
+        LIBRARY
+#        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
+)
+
+install(TARGETS "${PROJECT_NAME}-altai_static"
+        EXPORT "${PROJECT_NAME}-altai_static"
+        COMPONENT "framework-dev"
+        ARCHIVE)
+
+#add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
 
 install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
         COMPONENT "framework-dev"
