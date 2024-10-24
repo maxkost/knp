@@ -92,11 +92,7 @@ void ModelLoader::gen_output_channel(
 
 void ModelLoader::load(knp::framework::Model &model)
 {
-    SPDLOG_DEBUG("Model executor initializing...");
-    const auto &network = model.get_network();
-
-    backend_->load_all_populations(network.get_populations());
-    backend_->load_all_projections(network.get_projections());
+    SPDLOG_DEBUG("Model loader initializing...");
 
     // Create input.
     SPDLOG_TRACE("Input channels initializing...");
@@ -105,6 +101,13 @@ void ModelLoader::load(knp::framework::Model &model)
     // Create output.
     SPDLOG_TRACE("Output channels initializing...");
     init_channels(model, model.get_output_channels(), &ModelLoader::gen_output_channel);
+
+    const auto &network = model.get_network();
+
+    // Must be used after channel initializing, because init_channels() add tags to the input projections and output
+    // populations.
+    backend_->load_all_populations(network.get_populations());
+    backend_->load_all_projections(network.get_projections());
 }
 
 
