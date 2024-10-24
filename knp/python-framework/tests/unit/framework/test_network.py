@@ -1,8 +1,8 @@
 """
-Kaspersky Neuromorphic Platform single-thread CPU backend tests.
+Kaspersky Neuromorphic Platform network tests.
 
 Author: A. Vartenkov
-Date: 01.10.2024
+Date: 22.10.2024
 """
 from knp.base_framework import BackendLoader
 from knp.base_framework import Network

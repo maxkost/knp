@@ -7,7 +7,7 @@
 
 
 py::class_<knp::framework::Model>("Model", py::no_init)
-    .def("__init__", &model_constructor)
+    .def("__init__", py::make_constructor(&model_constructor))
     .def("add_input_channel", &knp::framework::Model::add_input_channel)
     .def("add_output_channel", &knp::framework::Model::add_output_channel)
     .def("get_uid", &get_entity_uid<knp::framework::Model>, "Model UID")

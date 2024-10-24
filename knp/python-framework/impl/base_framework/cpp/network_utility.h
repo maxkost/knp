@@ -16,7 +16,22 @@ void network_add_projection_variant(knp::framework::Network &self, knp::core::Al
     self.add_projection(std::move(proj));
 }
 
+
 void network_add_population_variant(knp::framework::Network &self, knp::core::AllPopulationsVariant pop)
 {
     self.add_population(std::move(pop));
+}
+
+
+knp::core::AllPopulationsVariant network_get_population_variant(
+    knp::framework::Network &self, const knp::core::UID &population_uid)
+{
+    return self.get_population(population_uid);
+}
+
+
+knp::core::AllProjectionsVariant network_get_projection_variant(
+    knp::framework::Network &self, const knp::core::UID &projection_uid)
+{
+    return self.get_projection(projection_uid);
 }
