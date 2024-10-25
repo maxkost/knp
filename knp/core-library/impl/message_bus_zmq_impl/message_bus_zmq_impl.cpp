@@ -101,7 +101,11 @@ size_t MessageBusZMQImpl::step()
 
     try
     {
-        if (!poll(message).has_value()) return 0;
+        recv_result = this->poll(message).has_value();
+        if (!recv_result.has_value())
+        {
+            return 0;
+        }
 
         if (isit_id(recv_result))
         {
