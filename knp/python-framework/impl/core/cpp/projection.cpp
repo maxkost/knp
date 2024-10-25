@@ -8,9 +8,9 @@
  */
 
 
-//  "Construct an empty projection.")
-// "Construct a projection by running a synapse generator a given number of times."
-// py::arg("presynaptic_uid"), py::arg("postsynaptic_uid"))
+// "Construct an empty projection.")
+//"Construct a projection by running a synapse generator a given number of times."
+//py::arg("presynaptic_uid"), py::arg("postsynaptic_uid"))
 
 #if defined(_KNP_IN_CORE)
 
@@ -107,6 +107,6 @@ py::class_<core::Synapse>(
 
 
 // cppcheck-suppress unknownMacro
-BOOST_PP_SEQ_FOR_EACH(INSTANCE_PY_PROJECTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_SYNAPSES))  //! OCLINT(Parameters used)
+BOOST_PP_SEQ_FOR_EACH(INSTANCE_PY_PROJECTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_SYNAPSES))  //!OCLINT(Parameters used)
 
 #endif

@@ -114,8 +114,8 @@ Projection<SynapseType>::Projection(UID uid, UID presynaptic_uid, UID postsynapt
 
 template <typename SynapseType>
 Projection<SynapseType>::Projection(
-    UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator,
-    size_t num_iterations)  //!OCLINT(Parameters used)
+    UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator,  //!OCLINT(Parameters used)
+    size_t num_iterations)                                                  //!OCLINT(Parameters used)
     : presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
@@ -135,7 +135,7 @@ Projection<SynapseType>::Projection(
 template <typename SynapseType>
 Projection<SynapseType>::Projection(
     UID uid, UID presynaptic_uid, UID postsynaptic_uid, SynapseGenerator generator,  //!OCLINT(Parameters used)
-    size_t num_iterations)
+    size_t num_iterations)                                                           //!OCLINT(Parameters used)
     : base_{uid}, presynaptic_uid_(presynaptic_uid), postsynaptic_uid_(postsynaptic_uid)
 {
     SPDLOG_DEBUG(
