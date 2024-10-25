@@ -80,7 +80,6 @@ public:
      * @brief Add an input channel to the network.
      * @param channel_uid UID of the input channel.
      * @param projection projection which will be connected to the channel.
-     * @tparam SynapseType projection synapse type.
      */
     template <typename SynapseType>
     void connect_input_projection(const core::UID &channel_uid, const core::Projection<SynapseType> &projection)
@@ -99,7 +98,6 @@ public:
      * @brief Add an output channel to the network.
      * @param channel_uid UID of the channel object.
      * @param population population which will be connected to the channel.
-     * @tparam NeuronType population neuron type.
      */
     template <typename NeuronType>
     void connect_output_population(const core::UID &channel_uid, const core::Population<NeuronType> &population)

@@ -104,7 +104,6 @@ template <typename SynapseType, template <typename...> class Container>
  * @details 'std::map' object must contain synapse parameters as values and `(from_index, to_index)` tuples as keys.
  * @tparam SynapseType projection synapse type.
  * @tparam Map map class.
- * @return synapse generator.
  */
 template <typename SynapseType, template <typename, typename, typename...> class Map>
 class FromMap
@@ -146,7 +145,6 @@ private:
  * to each postsynaptic population (destination) neuron.
  * @warning It doesn't get "real" populations and can't be used with populations that contain non-contiguous indexes.
  * @tparam SynapseType projection synapse type.
- * @return synapse generator.
  */
 template <typename SynapseType>
 class FixedProbability

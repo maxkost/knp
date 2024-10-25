@@ -66,7 +66,6 @@ typename knp::core::Projection<SynapseType>::SynapseParameters default_synapse_g
 /**
  * @brief Copy parameters generator of synapse parameters.
  * @tparam SynapseType synapse type.
- * @return synapse parameters.
  */
 template <typename SynapseType>
 class CopySynapseGen
