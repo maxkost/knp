@@ -13,7 +13,8 @@ BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
 {
 #define _KNP_IN_SYNAPSE_TRAITS
 
-#include "delta.cpp"  // NOLINT
+#include "delta.cpp"                // NOLINT
+#include "resource_stdp_delta.cpp"  // NOLINT
 
 #undef _KNP_IN_SYNAPSE_TRAITS
 }
