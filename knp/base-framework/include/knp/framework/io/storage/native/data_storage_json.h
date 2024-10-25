@@ -41,5 +41,5 @@ KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_json(
  * @param path_to_save path to file.
  */
 KNP_DECLSPEC void save_messages_to_json(
-    std::vector<core::messaging::SpikeMessage> messages, const std::filesystem::path &path_to_save);
+    const std::vector<core::messaging::SpikeMessage> &messages, const std::filesystem::path &path_to_save);
 }  // namespace knp::framework::io::storage::native

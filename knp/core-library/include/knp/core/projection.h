@@ -80,7 +80,7 @@ public:
     using Synapse = std::tuple<SynapseParameters, size_t, size_t>;
 
     /**
-     * @brief Synapse generation function.
+     * @brief Synapse generation function type.
      */
     using SynapseGenerator = std::function<std::optional<Synapse>(size_t)>;
 
@@ -195,7 +195,6 @@ public:
      * @see TagMap.
      */
     [[nodiscard]] const auto &get_tags() const { return base_.tags_; }
-
 
 public:
     /**

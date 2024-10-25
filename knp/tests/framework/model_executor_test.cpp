@@ -78,9 +78,13 @@ TEST(FrameworkSuite, ModelExecutorLoad)
     ASSERT_EQ(results, expected_results);
 
     auto pop_tag = std::any_cast<knp::core::tags::IOType>(
-        model.get_network().get_population<kt::BLIFATPopulation>(output_uid).get_tags()[knp::core::tags::io_type_tag]);
+        model.get_network()
+            .get_population<kt::BLIFATPopulation::PopulationNeuronType>(output_uid)
+            .get_tags()[knp::core::tags::io_type_tag]);
     auto proj_tag = std::any_cast<knp::core::tags::IOType>(
-        model.get_network().get_projection<kt::DeltaProjection>(input_uid).get_tags()[knp::core::tags::io_type_tag]);
+        model.get_network()
+            .get_projection<kt::DeltaProjection::ProjectionSynapseType>(input_uid)
+            .get_tags()[knp::core::tags::io_type_tag]);
     ASSERT_EQ(pop_tag, knp::core::tags::IOType::output);
     ASSERT_EQ(proj_tag, knp::core::tags::IOType::input);
 }

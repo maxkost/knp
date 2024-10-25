@@ -15,7 +15,9 @@ SDL_ARTIFACTS_DIRECTORY = os.getenv('SDL_ARTIFACTS_DIRECTORY', 'build/SDL')
 HLA_FILENAME = 'hla.xml'
 
 THIRD_PARTY_FILENAME = 'third_party.xml'
+THIRD_PARTY_FILENAME_SERVICE = 'third_party_service.xml'
 THIRD_PARTY_LIST_FILENAMES = ['3d-party-requirements.xml', '3d-party-requirements-motiv.xml']
+THIRD_PARTY_LIST_SERVICE = '3d-party-requirements-service.xml'
 
 SECURE_CODE_REVIEW_FILENAME = 'code_review.xml'
 DEVOPS_PIPELINE_FILENAME = 'devops_pipeline.xml'
@@ -71,6 +73,14 @@ def generate_third_party_xml(third_party_urls: list[str]) -> str:
     return f'''<SDL>
     <third_party>
         {tp_code}
+    </third_party>
+</SDL>'''
+
+
+def generate_service_third_party_xml(third_party_url: str) -> str:
+    return f'''<SDL>
+    <third_party>
+        <third_party link="{artifact_url(third_party_url)}"/>
     </third_party>
 </SDL>'''
 
@@ -172,6 +182,9 @@ def generate_sdl_artifacts() -> None:
     with open(sdl_path / THIRD_PARTY_FILENAME, 'w', encoding='utf8') as f:
         f.write(generate_third_party_xml(THIRD_PARTY_LIST_FILENAMES))
 
+    with open(sdl_path / THIRD_PARTY_FILENAME_SERVICE, 'w', encoding='utf8') as f:
+        f.write(generate_service_third_party_xml(THIRD_PARTY_LIST_SERVICE))
+
     with open(sdl_path / DEVOPS_PIPELINE_FILENAME, 'w', encoding='utf8') as f:
         f.write(generate_devops_pipeline_xml())
 
@@ -218,7 +231,7 @@ def generate_sdl_requests() -> (
     service_req = {
         'release_tfs_id': SERVICE_NUMBER,
         'build_number': BUILD_NUMBER,
-        'third_party': {'type': 'uri', 'data': artifact_url(THIRD_PARTY_FILENAME, add_build_to_name=False)},
+        'third_party': {'type': 'uri', 'data': artifact_url(THIRD_PARTY_FILENAME_SERVICE, add_build_to_name=False)},
         'devops_pipeline': {
             'type': 'uri',
             'data': artifact_url(DEVOPS_PIPELINE_FILENAME, add_build_to_name=False),

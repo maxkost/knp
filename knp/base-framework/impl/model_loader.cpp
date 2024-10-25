@@ -11,6 +11,8 @@
 
 #include <spdlog/spdlog.h>
 
+#include <exception>
+
 
 namespace knp::framework
 {
@@ -46,7 +48,16 @@ void ModelLoader::init_channels(
 void ModelLoader::gen_input_channel(
     knp::framework::Model &model, const core::UID &channel_uid, const std::vector<core::UID> &p_uids)
 {
-    in_channels_.emplace_back(channel_uid, backend_->get_message_bus().create_endpoint(), i_map_.at(channel_uid));
+    try
+    {
+        in_channels_.emplace_back(channel_uid, backend_->get_message_bus().create_endpoint(), i_map_.at(channel_uid));
+    }
+    catch (const std::out_of_range &)
+    {
+        const std::string msg = "Incorrect input channel UID = " + std::string(channel_uid) + ".";
+        SPDLOG_ERROR("{}", msg);
+        throw std::logic_error(msg);
+    }
     auto &network = model.get_network();
 
     for (const auto &proj_uid : p_uids)

@@ -15,6 +15,11 @@ SpaceInEmptyParentheses: false
 TabWidth: 4
 UseTab: Never
 
+SpacesInLineCommentPrefix:
+  # Need to support special OCLint comments: //!OCLint
+  Minimum: 0
+  Maximum: 1
+
 IncludeBlocks: Regroup
 IncludeCategories:
   # KNP headers in <>.

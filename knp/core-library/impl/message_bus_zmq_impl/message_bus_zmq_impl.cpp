@@ -56,6 +56,44 @@ MessageBusZMQImpl::MessageBusZMQImpl()
 }
 
 
+zmq::recv_result_t MessageBusZMQImpl::poll(zmq::message_t &message)
+{
+    // recv_result is an optional and if it doesn't contain a value, EAGAIN is returned by the call.
+    zmq::recv_result_t recv_result;
+
+    std::vector<zmq_pollitem_t> items = {
+        zmq_pollitem_t{router_socket_.handle(), 0, ZMQ_POLLIN, 0},
+    };
+
+    SPDLOG_DEBUG("Running poll()...");
+
+    if (zmq::poll(items, 0ms) > 0)
+    {
+        SPDLOG_TRACE("poll() was successful, receiving data...");
+        do
+        {
+            recv_result = router_socket_.recv(message, zmq::recv_flags::dontwait);
+
+            if (recv_result.has_value())
+            {
+                SPDLOG_TRACE("Bus received {} bytes.", recv_result.value());
+            }
+            else
+            {
+                SPDLOG_WARN("Bus received error [EAGAIN].");
+            }
+        } while (!recv_result.has_value());
+    }
+    else
+    {
+        SPDLOG_DEBUG("poll() returned 0, exiting...");
+        return std::nullopt;
+    }
+
+    return recv_result;
+}
+
+
 size_t MessageBusZMQImpl::step()
 {
     zmq::message_t message;
@@ -63,32 +101,9 @@ size_t MessageBusZMQImpl::step()
 
     try
     {
-        // recv_result is an optional and if it doesn't contain a value, EAGAIN is returned by the call.
-        std::vector<zmq_pollitem_t> items = {
-            zmq_pollitem_t{router_socket_.handle(), 0, ZMQ_POLLIN, 0},
-        };
-        SPDLOG_DEBUG("Running poll()...");
-
-        if (zmq::poll(items, 0ms) > 0)
+        recv_result = this->poll(message);
+        if (!recv_result.has_value())
         {
-            SPDLOG_TRACE("poll() was successful, receiving data...");
-            do
-            {
-                recv_result = router_socket_.recv(message, zmq::recv_flags::dontwait);
-
-                if (recv_result.has_value())
-                {
-                    SPDLOG_TRACE("Bus received {} bytes.", recv_result.value());
-                }
-                else
-                {
-                    SPDLOG_WARN("Bus received error [EAGAIN].");
-                }
-            } while (!recv_result.has_value());
-        }
-        else
-        {
-            SPDLOG_DEBUG("poll() returned 0, exiting...");
             return 0;
         }
 
