@@ -49,12 +49,12 @@ namespace nt = knp::neuron_traits;
                     "__init__",                                                                                        \
                     py::make_constructor(static_cast<std::shared_ptr<core::Population<nt::neuron_type>> (*)(           \
                                              const core::UID &, const py::object &, size_t)>(                          \
-                        &population_constructor_wrapper<nt::neuron_type>)))                                            \
+                        &population_constructor_wrapper<nt::neuron_type>)), "Construct a population by running a neuron generator.")                                            \
                 .def(                                                                                                  \
                     "__init__",                                                                                        \
                     py::make_constructor(                                                                              \
                         static_cast<std::shared_ptr<core::Population<nt::neuron_type>> (*)(                            \
-                            const py::object &, size_t)>(&population_constructor_wrapper<nt::neuron_type>)))           \
+                            const py::object &, size_t)>(&population_constructor_wrapper<nt::neuron_type>)), "Construct a population by running a neuron generator.")           \
                 .def(                                                                                                  \
                     "add_neurons", &population_neurons_add_wrapper<nt::neuron_type>, "Add neurons to the population.") \
                 .def(                                                                                                  \
@@ -71,7 +71,7 @@ namespace nt = knp::neuron_traits;
                         static_cast<std::vector<core::Population<nt::neuron_type>::NeuronParameters>::iterator (       \
                             core::Population<nt::neuron_type>::*)()>(&core::Population<nt::neuron_type>::end)),        \
                     "Get an iterator of the population.")                                                              \
-                .def("__len__", &core::Population<nt::neuron_type>::size)                                              \
+                .def("__len__", &core::Population<nt::neuron_type>::size, "Count number of neurons in the population.")                                              \
                 .def(                                                                                                  \
                     "__getitem__",                                                                                     \
                     static_cast<core::Population<nt::neuron_type>::NeuronParameters &(                                 \

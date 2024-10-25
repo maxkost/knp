@@ -20,16 +20,16 @@ py::implicitly_convertible<core::UID, boost::uuids::uuid>();
 
 py::class_<core::continuously_uid_generator>("continuously_uid_generator", "UID generator for entities.");
 
-py::enum_<boost::uuids::uuid::variant_type>("uuid_variant_type")
+py::enum_<boost::uuids::uuid::variant_type>("uuid_variant_type", "UUID variant type.")
     .value("NCS", boost::uuids::uuid::variant_type::variant_ncs)
     .value("RFC_4122", boost::uuids::uuid::variant_type::variant_rfc_4122)
     .value("MICROSOFT", boost::uuids::uuid::variant_type::variant_microsoft)
     .value("FUTURE", boost::uuids::uuid::variant_type::variant_future);
 
-py::class_<boost::uuids::uuid>("uuid", "Boost UUID")
-    .add_property("size", &boost::uuids::uuid::size, "UUID size in bytes")
-    .add_property("is_nil", &boost::uuids::uuid::is_nil, "Is UUID empty?")
-    .add_property("variant", &boost::uuids::uuid::variant, "UID format variant");
+py::class_<boost::uuids::uuid>("uuid", "Boost UUID.")
+    .add_property("size", &boost::uuids::uuid::size, "Define UUID size in bytes.")
+    .add_property("is_nil", &boost::uuids::uuid::is_nil, "Define if UUID is empty.")
+    .add_property("variant", &boost::uuids::uuid::variant, "Define UID format variant.");
 
 py::to_python_converter<boost::uuids::uuid, uid_into_python>();
 uid_from_python();
@@ -46,7 +46,7 @@ py::class_<core::UID>("UID", "The UID class is a definition of unique identifier
     .def(py::self_ns::str(py::self))
     .def("__bool__", &core::UID::operator bool, "Check if UID is valid.")
     // cppcheck-suppress syntaxError
-    .def("__lt__", &core::UID::operator<, "Check if the current UIDgis less than the specified UID.")
+    .def("__lt__", &core::UID::operator<, "Check if the current UID is less than the specified UID.")
     .def("__eq__", &core::UID::operator==, "Check if two UIDs are the same.")
     .def("__ne__", &core::UID::operator!=, "Check if two UIDs are different.")
     .add_property("tag", &core::UID::tag, "UID value.");

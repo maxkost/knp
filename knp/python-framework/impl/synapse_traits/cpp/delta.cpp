@@ -12,20 +12,19 @@
 #    include "common.h"
 
 py::enum_<knp::synapse_traits::OutputType>("OutputType")
-    .value("EXCITATORY", knp::synapse_traits::OutputType::EXCITATORY)  // Excitatory synapse type.
+    .value("EXCITATORY", knp::synapse_traits::OutputType::EXCITATORY, "Excitatory synapse type.") 
     .value(
         "INHIBITORY_CURRENT",
-        knp::synapse_traits::OutputType::INHIBITORY_CURRENT)  // Inhibitory by current synapse type.
+        knp::synapse_traits::OutputType::INHIBITORY_CURRENT, "Inhibitory by current synapse type.") 
     .value(
         "INHIBITORY_CONDUCTANCE",
-        knp::synapse_traits::OutputType::INHIBITORY_CONDUCTANCE)   // Inhibitory by conductance synapse type.
-    .value("DOPAMINE", knp::synapse_traits::OutputType::DOPAMINE)  // Dopamine synapse type.
-    // Neuron-blocking synapse type.
-    .value("BLOCKING", knp::synapse_traits::OutputType::BLOCKING);
+        knp::synapse_traits::OutputType::INHIBITORY_CONDUCTANCE, "Inhibitory by conductance synapse type.")  
+    .value("DOPAMINE", knp::synapse_traits::OutputType::DOPAMINE, "Dopamine synapse type.")
+    .value("BLOCKING", knp::synapse_traits::OutputType::BLOCKING, "Neuron-blocking synapse type.");
 
 using ds_params = knp::synapse_traits::synapse_parameters<knp::synapse_traits::DeltaSynapse>;
 
-py::class_<ds_params>("DeltaSynapseParameters", "Structure for BLIFAT neuron parameters")
+py::class_<ds_params>("DeltaSynapseParameters", "Structure for Delta synapse parameters.")
     .def(py::init<>())
     .def(py::init<float, uint32_t, knp::synapse_traits::OutputType>())
     .add_property("weight", &ds_params::weight_, "Synaptic weight.")

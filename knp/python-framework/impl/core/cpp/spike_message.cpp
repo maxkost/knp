@@ -21,10 +21,10 @@ py::class_<core::messaging::SpikeData>("SpikeData", "List of spike indexes.")
 
 
 py::class_<core::messaging::SpikeMessage>("SpikeMessage", "Structure of the spike message.")
-    .def("__init__", py::make_constructor(&spike_message_constructor))
-    .add_property("header", &core::messaging::SpikeMessage::header_, "Message header")
+    .def("__init__", py::make_constructor(&spike_message_constructor), "Constract a spike message.")
+    .add_property("header", &core::messaging::SpikeMessage::header_, "Message header.")
     .add_property(
-        "neuron_indexes", &core::messaging::SpikeMessage::neuron_indexes_, "Indexes of the recently spiked neurons")
+        "neuron_indexes", &core::messaging::SpikeMessage::neuron_indexes_, "Indexes of the recently spiked neurons.")
     .def(py::self_ns::str(py::self));
 
 #endif

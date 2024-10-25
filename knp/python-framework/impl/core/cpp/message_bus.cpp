@@ -18,8 +18,8 @@ py::class_<core::MessageBus, boost::noncopyable>(
         "create_endpoint",
         make_handler([](core::MessageBus &self)
                      { return std::make_shared<core::MessageEndpoint>(self.create_endpoint()); }),
-        "Create a new endpoint that sends and receives messages through the message bus")
-    .def("step", &core::MessageBus::step, "Route some messages")
-    .def("route_messages", &core::MessageBus::route_messages, "Route messages");
+        "Create a new endpoint that sends and receives messages through the message bus.")
+    .def("step", &core::MessageBus::step, "Route some messages.")
+    .def("route_messages", &core::MessageBus::route_messages, "Route messages.");
 
 #endif

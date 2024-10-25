@@ -13,12 +13,12 @@
 #include "common.h"
 
 #ifdef KNP_IN_BASE_FW
-py::class_<ModelExecutor>("ModelExecutor")
-    .def("start", &knp::framework::ModelExecutor::start<void, void>)
-    .def("start", &knp::framework::ModelExecutor::start<void, knp::core::Backend::run_predicate>)
-    .def("stop", &knp::framework::ModelExecutor::stop)
-    .def("get_output_channel", &knp::framework::ModelExecutor::get_output_channel)  // TODO overloaded
-    .def("get_input_channel", &knp::framework::ModelExecutor::get_input_channel)
+py::class_<ModelExecutor>("ModelExecutor", "The ModelExecutor class is a definition of an executor that runs the uploaded model on the specified backend.")
+    .def("start", &knp::framework::ModelExecutor::start<void, void>, "Start model execution.")
+    .def("start", &knp::framework::ModelExecutor::start<void, knp::core::Backend::run_predicate>, "Start model execution.")
+    .def("stop", &knp::framework::ModelExecutor::stop, "Stop model execution.")
+    .def("get_output_channel", &knp::framework::ModelExecutor::get_output_channel, "Get output channel.")  // TODO overloaded
+    .def("get_input_channel", &knp::framework::ModelExecutor::get_input_channel, "Get input channel.")
 
 #endif  // KNP_IN_BASE_FW
 
