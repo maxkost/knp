@@ -46,32 +46,34 @@ set_target_properties(
         VERSION "${CMAKE_PROJECT_VERSION}"
         SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
 
-knp_get_component_name("${PROJECT_NAME}" COMPONENT_NAME)
-knp_get_component_var_name("${COMPONENT_NAME}" COMPONENT_VAR)
+if (KNP_INSTALL)
+    knp_get_component_name("${PROJECT_NAME}" COMPONENT_NAME)
+    knp_get_component_var_name("${COMPONENT_NAME}" COMPONENT_VAR)
 
-install(TARGETS "${PROJECT_NAME}"
-        EXPORT "${PROJECT_NAME}"
-        COMPONENT "${COMPONENT_NAME}"
-        LIBRARY)
+    install(TARGETS "${PROJECT_NAME}"
+            EXPORT "${PROJECT_NAME}"
+            COMPONENT "${COMPONENT_NAME}"
+            LIBRARY)
 
-install(TARGETS "${PROJECT_NAME}_static"
-        EXPORT "${PROJECT_NAME}_static"
-        COMPONENT "${COMPONENT_NAME}-dev"
-        ARCHIVE)
+    install(TARGETS "${PROJECT_NAME}_static"
+            EXPORT "${PROJECT_NAME}_static"
+            COMPONENT "${COMPONENT_NAME}-dev"
+            ARCHIVE)
 
-install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
-        COMPONENT "${COMPONENT_NAME}-dev"
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp/backends"
-        FILES_MATCHING PATTERN "*.h")
+    install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+            COMPONENT "${COMPONENT_NAME}-dev"
+            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp/backends"
+            FILES_MATCHING PATTERN "*.h")
 
-knp_packaging_set_parameters("${COMPONENT_NAME}" "${PROJECT_NAME}"
-    DESCRIPTION "${PROJECT_DESCRIPTION}")
+    knp_packaging_set_parameters("${COMPONENT_NAME}" "${PROJECT_NAME}"
+        DESCRIPTION "${PROJECT_DESCRIPTION}")
 
-set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_DEPENDS "libboost-all (= ${Boost_VERSION}), libzmq" CACHE STRING "${PROJECT_NAME} deb package dependencies")
+    set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_DEPENDS "libboost-all (= ${Boost_VERSION}), libzmq" CACHE STRING "${PROJECT_NAME} deb package dependencies")
 
-knp_packaging_set_parameters("${COMPONENT_NAME}-dev" "${PROJECT_NAME}"
-    DESCRIPTION "${PROJECT_DESCRIPTION} development package: C++ headers and CMake modules"
-    DEPENDS "${COMPONENT_NAME}"
-)
+    knp_packaging_set_parameters("${COMPONENT_NAME}-dev" "${PROJECT_NAME}"
+        DESCRIPTION "${PROJECT_DESCRIPTION} development package: C++ headers and CMake modules"
+        DEPENDS "${COMPONENT_NAME}"
+    )
 
-set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_PROVIDES "knp-backend" CACHE STRING "${PROJECT_NAME} provides")
+    #set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_PROVIDES "knp-backend" CACHE STRING "${PROJECT_NAME} provides")
+endif()

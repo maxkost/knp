@@ -135,6 +135,7 @@ option(KNP_BUILD_TESTS "Build tests" ${KNP_BUILD_AUTONOMOUS})
 option(KNP_ENABLE_AVX "Enable AVX and other CPU-specific extensions in the release build" ${KNP_ENABLE_AVX_DEFAULT})
 option(KNP_ENABLE_COVERAGE "Enable coverage checking" OFF)
 option(KNP_IPO_ENABLED "Enable interprocedural optimization" ON)
+option(KNP_INSTALL "Enable Kaspersky Neuromorphic Platform installation" ON)
 option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
 cmake_dependent_option(KNP_PYTHON_FRAMEWORK_BUILD "Build Kaspersky Neuromorphic Platform Python framework" ON "KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT" OFF)
 cmake_dependent_option(KNP_PYTHON_BUILD_WHEEL "Build WHL package for the Python framework" ${KNP_MAINTAINER_BUILD} "KNP_PYTHON_FRAMEWORK_BUILD" OFF)
@@ -150,6 +151,7 @@ message(STATUS "KNP_BUILD_TESTS = ${KNP_BUILD_TESTS}")
 message(STATUS "KNP_ENABLE_AVX = ${KNP_ENABLE_AVX}")
 message(STATUS "KNP_ENABLE_COVERAGE = ${KNP_ENABLE_COVERAGE}")
 message(STATUS "KNP_IPO_ENABLED = ${KNP_IPO_ENABLED}")
+message(STATUS "KNP_INSTALL = ${KNP_INSTALL}")
 message(STATUS "KNP_MAINTAINER_BUILD = ${KNP_MAINTAINER_BUILD}")
 message(STATUS "KNP_PYTHON_FRAMEWORK_BUILD = ${KNP_PYTHON_FRAMEWORK_BUILD}")
 message(STATUS "KNP_PYTHON_BUILD_WHEEL = ${KNP_PYTHON_BUILD_WHEEL}")
@@ -286,7 +288,10 @@ add_third_party("gh:Tencent/rapidjson#7c73dd7"
 
 if (KNP_BUILD_TESTS)
     add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)
-    add_third_party("gh:google/googletest@1.14.0")
+    add_third_party("gh:google/googletest@1.14.0"
+                    OPTIONS
+                        "INSTALL_GMOCK OFF"
+                        "INSTALL_GTEST OFF")
 endif()
 
 file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
@@ -329,8 +334,6 @@ set(CPACK_PACKAGE_VERSION_MINOR ${CMAKE_PROJECT_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${CMAKE_PROJECT_VERSION_PATCH})
 
 set(CPACK_PACKAGE_VENDOR "AO Kaspersky Lab")
-
-set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Artiom N.")
 set(CPACK_PACKAGE_CONTACT "support@kaspersky.com")
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${CMAKE_PROJECT_DESCRIPTION}"
@@ -353,7 +356,8 @@ set(CPACK_INSTALL_DEFAULT_DIRECTORY_PERMISSIONS
         WORLD_READ WORLD_EXECUTE)
 
 # On Linux, grouping must be ignored: one component corresponds to one package.
-set(CPACK_COMPONENTS_GROUPING IGNORE)
+#set(CPACK_COMPONENTS_GROUPING IGNORE)
+set(CPACK_COMPONENTS_GROUPING ONE_PER_GROUP)
 set(CPACK_DEBIAN_ENABLE_COMPONENT_DEPENDS ON)
 
 
@@ -364,6 +368,7 @@ set(CPACK_DEBIAN_ENABLE_COMPONENT_DEPENDS ON)
 set(CPACK_DEB_PACKAGE_COMPONENT ON)
 set(CPACK_DEB_COMPONENT_INSTALL ON)
 
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Artiom N.")
 set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION}")
 
 set(CPACK_DEBIAN_PACKAGE_SECTION "science")

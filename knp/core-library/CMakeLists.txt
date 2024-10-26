@@ -119,24 +119,26 @@ configure_file(
     "${CMAKE_CURRENT_LIST_DIR}/include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/version.h.in"
     "${CMAKE_CURRENT_BINARY_DIR}/include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/version.h")
 
-install(TARGETS "${PROJECT_NAME}_messaging"
-        EXPORT "${PROJECT_NAME}_messaging"
-        COMPONENT "framework-dev")
+if (KNP_INSTALL)
+    install(TARGETS "${PROJECT_NAME}_messaging"
+            EXPORT "${PROJECT_NAME}_messaging"
+            COMPONENT "framework-dev")
 
-install(TARGETS "${PROJECT_NAME}"
-        EXPORT "${PROJECT_NAME}"
-        ARCHIVE
-        COMPONENT "framework-dev")
+    install(TARGETS "${PROJECT_NAME}"
+            EXPORT "${PROJECT_NAME}"
+            ARCHIVE
+            COMPONENT "framework-dev")
 
-#install(EXPORT "${PROJECT_NAME}" DESTINATION knp
-#        COMPONENT "framework-dev")
+    #install(EXPORT "${PROJECT_NAME}" DESTINATION knp
+    #        COMPONENT "framework-dev")
 
-install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
-        COMPONENT "framework-dev"
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
-        FILES_MATCHING PATTERN "*.h")
+    install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+            COMPONENT "framework-dev"
+            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
+            FILES_MATCHING PATTERN "*.h")
 
-install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/version.h"
-        COMPONENT "framework-dev"
-        DESTINATION "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}")
+    install(FILES
+            "${CMAKE_CURRENT_BINARY_DIR}/include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/version.h"
+            COMPONENT "framework-dev"
+            DESTINATION "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}")
+endif()

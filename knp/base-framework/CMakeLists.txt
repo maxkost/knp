@@ -73,8 +73,6 @@ set_target_properties(
     VERSION "${CMAKE_PROJECT_VERSION}"
     SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
 
-set(COMPONENT_NAME framework)
-
 configure_package_config_file(
         "${CMAKE_CURRENT_LIST_DIR}/cmake/${PROJECT_NAME}Config.cmake.in"
         "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake"
@@ -86,48 +84,51 @@ write_basic_package_version_file(
         VERSION ${PROJECT_VERSION}
         COMPATIBILITY AnyNewerVersion)
 
-install(TARGETS "${PROJECT_NAME}-core"
-        EXPORT "${PROJECT_NAME}-core"
-        LIBRARY
-        COMPONENT "${COMPONENT_NAME}")
-#install(EXPORT "${PROJECT_NAME}-core" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cmake")
+if (KNP_INSTALL)
+    install(FILES
+            "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake"
+            "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake"
+            COMPONENT framework-dev
+            DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
 
-install(TARGETS "${PROJECT_NAME}-core_static"
-        EXPORT "${PROJECT_NAME}-core_static"
-        COMPONENT "${COMPONENT_NAME}-dev"
-        ARCHIVE)
+    install(TARGETS "${PROJECT_NAME}-core"
+            EXPORT "${PROJECT_NAME}-core"
+            LIBRARY
+            COMPONENT framework)
+    #install(EXPORT "${PROJECT_NAME}-core" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cmake")
 
-install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
-        COMPONENT "${COMPONENT_NAME}-dev"
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
-        FILES_MATCHING PATTERN "*.h")
+    install(TARGETS "${PROJECT_NAME}-core_static"
+            EXPORT "${PROJECT_NAME}-core_static"
+            COMPONENT framework-dev
+            ARCHIVE)
 
-install(FILES
-        "${CMAKE_SOURCE_DIR}/packaging/LICENSE.txt"
-        "${CMAKE_SOURCE_DIR}/packaging/NOTICE.txt"
-        "${CMAKE_SOURCE_DIR}/README.md"
-        COMPONENT "${COMPONENT_NAME}"
-        TYPE DOC)
+    install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+            COMPONENT framework-dev
+            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
+            FILES_MATCHING PATTERN "*.h")
 
-knp_packaging_set_parameters("${COMPONENT_NAME}" "${PROJECT_NAME}"
-        DESCRIPTION "${PROJECT_DESCRIPTION}"
-        DEPENDS backend)
+    install(FILES
+            "${CMAKE_SOURCE_DIR}/packaging/LICENSE.txt"
+            "${CMAKE_SOURCE_DIR}/packaging/NOTICE.txt"
+            "${CMAKE_SOURCE_DIR}/README.md"
+            COMPONENT framework
+            TYPE DOC)
 
-set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_DEPENDS "libboost-all (= ${Boost_VERSION}), libhdf5, libzmq5"
-    CACHE STRING "${PROJECT_NAME} deb package dependencies")
+    knp_packaging_set_parameters("${COMPONENT_NAME}" "${PROJECT_NAME}"
+            DESCRIPTION "${PROJECT_DESCRIPTION}"
+            DEPENDS backend)
 
-knp_packaging_set_parameters("${COMPONENT_NAME}-dev" "${PROJECT_NAME}"
-        DESCRIPTION "${PROJECT_DESCRIPTION} development files: C++ headers, CMake modules, static libraries"
-        DEPENDS "${COMPONENT_NAME}")
+    set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_DEPENDS "libboost-all (= ${Boost_VERSION}), libhdf5, libzmq5"
+        CACHE STRING "${PROJECT_NAME} deb package dependencies")
 
-set(CPACK_DEBIAN_${COMPONENT_VAR}-DEV_PACKAGE_DEPENDS "libboost-all-dev (= ${Boost_VERSION})"
-    CACHE STRING "${PROJECT_NAME}-dev deb package dependencies")
+    knp_packaging_set_parameters(framework-dev "${PROJECT_NAME}"
+            DESCRIPTION "${PROJECT_DESCRIPTION} development files: C++ headers, CMake modules, static libraries"
+            DEPENDS "${COMPONENT_NAME}")
 
-set(CPACK_DEBIAN_${COMPONENT_VAR}-DEV_PACKAGE_RECOMMENDS "cppzmq-dev (>= 4.9.0-1), cppzmq (= 4.9.0-1)"
-    CACHE STRING "${PROJECT_NAME}-dev deb package recommendations")
+    set(CPACK_DEBIAN_${COMPONENT_VAR}-DEV_PACKAGE_DEPENDS "libboost-all-dev (= ${Boost_VERSION})"
+        CACHE STRING "${PROJECT_NAME}-dev deb package dependencies")
 
-install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake"
-        COMPONENT "framework-dev"
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
+    set(CPACK_DEBIAN_${COMPONENT_VAR}-DEV_PACKAGE_RECOMMENDS "cppzmq-dev (>= 4.9.0-1), cppzmq (= 4.9.0-1)"
+        CACHE STRING "${PROJECT_NAME}-dev deb package recommendations")
+
+endif()
