@@ -9,11 +9,11 @@
 
 
 #include <knp/neuron-traits/all_traits.h>
+
 using rsbn_params = knp::neuron_traits::neuron_parameters<knp::neuron_traits::SynapticResourceSTDPBLIFATNeuron>;
+using bn_params = knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>;
 
 #if defined(_KNP_IN_NEURON_TRAITS)
-
-#    include "common.h"
 
 py::class_<rsbn_params, py::bases<bn_params>>(
     "SynapticResourceSTDPBLIFATNeuronParameters", "Structure for STDP Resource BLIFAT neuron parameters", py::no_init);
