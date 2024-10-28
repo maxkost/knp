@@ -1,5 +1,8 @@
 /**
+ * @file output_test.cpp
  * @brief Tests for output channels and converters.
+ * @author A. Vartenkov
+ * @date 01.06.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
  */
@@ -77,32 +80,31 @@ TEST(OutputSuite, ChannelTest)
 
     // Do message exchange.
 
-    // The message with delay 0 will be ignored.
-    knp::core::messaging::SpikeMessage msg_0{{sender_uid, 0}, {0, 1, 2, 3, 4, 5}};
-    // All indexes over 7 should also be ignored.
-    knp::core::messaging::SpikeMessage msg_1{{sender_uid, 1}, {1, 3, 8}};
-    knp::core::messaging::SpikeMessage msg_2{{sender_uid, 3}, {1, 4, 10}};
-    knp::core::messaging::SpikeMessage msg_3{{sender_uid, 5}, {1, 4, 7, 12}};
     // const knp::core::messaging::SpikeMessage msg_4{{sender_uid, 6}, {1, 2, 4, 7, 10}};
-    endpoint.send_message(msg_0);
-    endpoint.send_message(msg_1);
-    endpoint.send_message(msg_2);
-    endpoint.send_message(msg_3);
+    // The message with delay 0 will be ignored.
+    endpoint.send_message(knp::core::messaging::SpikeMessage{{sender_uid, 0}, {0, 1, 2, 3, 4, 5}});
+    // All indexes over 7 should also be ignored.
+    endpoint.send_message(knp::core::messaging::SpikeMessage{{sender_uid, 1}, {1, 3, 8}});
+    endpoint.send_message(knp::core::messaging::SpikeMessage{{sender_uid, 3}, {1, 4, 10}});
+    endpoint.send_message(knp::core::messaging::SpikeMessage{{sender_uid, 5}, {1, 4, 7, 12}});
     bus.route_messages();
     endpoint.receive_all_messages();
 
     // Use channels.
     std::vector<size_t> count_result =
         knp::framework::io::output::output_channel_get<std::vector<size_t>>(channel_count, count_converter, 1, 5);
-    decltype(count_result) expected_count{0, 3, 0, 1, 2, 0, 0, 1};  // Expected result. Each number corresponds to the target neuron count of each index in messages.
+    // Expected result. Each number corresponds to the target neuron count of each index in messages.
+    decltype(count_result) expected_count{0, 3, 0, 1, 2, 0, 0, 1};
 
     std::set<knp::core::messaging::SpikeIndex> set_result =
         knp::framework::io::output::output_channel_get<std::set<knp::core::messaging::SpikeIndex>>(
             channel_set, set_converter, 1, 5);
-    decltype(set_result) expected_set{1, 3, 4, 7};  // Expected result.
+    // Expected result.
+    decltype(set_result) expected_set{1, 3, 4, 7};
 
     size_t index = knp::framework::io::output::output_channel_get<size_t>(channel_max, max_converter, 1, 5);
-    decltype(index) expected_index = 1;  // Expected result.
+    // Expected result.
+    decltype(index) expected_index = 1;
 
     // Compare with expected result.
     ASSERT_EQ(count_result, expected_count);

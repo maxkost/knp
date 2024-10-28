@@ -8,9 +8,9 @@
  */
 
 
-//  "Construct an empty projection.")
-// "Construct a projection by running a synapse generator a given number of times."
-// py::arg("presynaptic_uid"), py::arg("postsynaptic_uid"))
+// "Construct an empty projection.")
+//"Construct a projection by running a synapse generator a given number of times."
+//py::arg("presynaptic_uid"), py::arg("postsynaptic_uid"))
 
 #if defined(KNP_IN_CORE)
 
@@ -76,12 +76,14 @@ py::class_<core::Synapse>(
                     "__init__",                                                                                        \
                     py::make_constructor(static_cast<std::shared_ptr<core::Projection<st::synapse_type>> (*)(          \
                                              core::UID, core::UID, core::UID, const py::object &, size_t)>(            \
-                        &projection_constructor_wrapper<st::synapse_type>)), "Construct a projection by running a synapse generator a given number of times.")                                           \
+                        &projection_constructor_wrapper<st::synapse_type>)),                                           \
+                    "Construct a projection by running a synapse generator a given number of times.")                  \
                 .def(                                                                                                  \
                     "__init__",                                                                                        \
                     py::make_constructor(static_cast<std::shared_ptr<core::Projection<st::synapse_type>> (*)(          \
                                              core::UID, core::UID, const py::object &, size_t)>(                       \
-                        &projection_constructor_wrapper<st::synapse_type>)), "Construct a projection by running a synapse generator a given number of times.")                                           \
+                        &projection_constructor_wrapper<st::synapse_type>)),                                           \
+                    "Construct a projection by running a synapse generator a given number of times.")                  \
                 .def(                                                                                                  \
                     "add_synapses", &projection_synapses_add_wrapper<st::synapse_type>,                                \
                     "Append connections to the existing projection.")                                                  \
@@ -96,7 +98,9 @@ py::class_<core::Synapse>(
                         static_cast<std::vector<core::Projection<st::synapse_type>::Synapse>::iterator (               \
                             core::Projection<st::synapse_type>::*)()>(&core::Projection<st::synapse_type>::end)),      \
                     "Get an iterator of the population.")                                                              \
-                .def("__len__", &core::Projection<st::synapse_type>::size, "Count number of synapses in the projection.")                                             \
+                .def(                                                                                                  \
+                    "__len__", &core::Projection<st::synapse_type>::size,                                              \
+                    "Count number of synapses in the projection.")                                                     \
                 .def(                                                                                                  \
                     "__getitem__",                                                                                     \
                     static_cast<core::Projection<st::synapse_type>::Synapse &(                                         \
@@ -105,6 +109,6 @@ py::class_<core::Synapse>(
                     py::return_internal_reference<>(),                                                                 \
                     "Get parameter values of a synapse with the given index.");  // NOLINT
 
-BOOST_PP_SEQ_FOR_EACH(INSTANCE_PY_PROJECTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_SYNAPSES))  //! OCLINT(Parameters used)
+BOOST_PP_SEQ_FOR_EACH(INSTANCE_PY_PROJECTIONS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_SYNAPSES))  //!OCLINT(Parameters used)
 
 #endif

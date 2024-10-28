@@ -6,6 +6,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.30")
+    # Suppress Boost warning.
+    cmake_policy(SET CMP0167 OLD)
+endif()
+
 project(knp-neuron-traits VERSION "${KNP_VERSION}" LANGUAGES C CXX
         DESCRIPTION "Kaspersky Neuromorphic Platform neuron traits library"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")

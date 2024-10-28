@@ -13,7 +13,7 @@
 
 
 #if defined(__GNUC__)
-#    define KNP_UNROLL_LOOP() _Pragma(BOOST_PP_STRINGIZE(GCC unroll 16))
+#    define KNP_UNROLL_LOOP() _Pragma("GCC unroll 16")
 #elif defined(__clang__)
 #    define KNP_UNROLL_LOOP() _Pragma("unroll")
 #elif defined(_MSC_VER)

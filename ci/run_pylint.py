@@ -90,7 +90,7 @@ PYLINT_PATH.mkdir(exist_ok=True, parents=True)
 sys.exit = ExitSuppressor.exit_function
 
 os.environ['PYTHON_PATH'] = f'{WORKING_DIR}:{os.environ.get("PYTHON_PATH", "")}'
-argv = sys.argv[1:] + [f'--rcfile={RC_FILE}', '--exit-zero', str(WORKING_DIR)]
+argv = sys.argv[3:] + [f'--rcfile={RC_FILE}', '--exit-zero', str(WORKING_DIR)]
 
 suppressors = get_pylint_suppressors(WORKING_DIR)
 

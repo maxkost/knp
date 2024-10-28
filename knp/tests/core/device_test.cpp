@@ -1,12 +1,13 @@
 /**
  * @file device_test.cpp
  * @brief Device tests.
+ * @author Artiom N.
  * @date 09.08.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
  */
 
-#if !defined(WIN32)
+#if !defined(_MSC_VER)
 extern "C"
 {
 #    include <unistd.h>
@@ -18,14 +19,16 @@ extern "C"
 
 #include <tests_common.h>
 
-#if !defined(WIN32)
 TEST(DeviceTestSuite, CPUTest)
 {
+#if defined(WIN32)
+    GTEST_SKIP() << "Test needs driver under Windows";
+#else
     if (geteuid() != 0)
     {
-        SPDLOG_WARN("This test must be run under root.");
-        return;
+        GTEST_SKIP() << "This test must be run under root.";
     }
+#endif
 
     auto processors = knp::devices::cpu::list_processors();
 
@@ -37,11 +40,15 @@ TEST(DeviceTestSuite, CPUTest)
 
 TEST(DeviceTestSuite, BackendDevicesTest)
 {
+#if defined(WIN32)
+    GTEST_SKIP() << "Test needs driver under Windows";
+#else
     if (geteuid() != 0)
     {
         SPDLOG_WARN("This test must be run under root.");
-        return;
+        GTEST_SKIP() << "This test must be run under root.";
     }
+#endif
 
     knp::backends::single_threaded_cpu::SingleThreadedCPUBackend backend;
 
@@ -58,4 +65,3 @@ TEST(DeviceTestSuite, BackendDevicesTest)
 
     // std::cout << device.get_name() << std::endl;
 }
-#endif

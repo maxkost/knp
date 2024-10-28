@@ -7,6 +7,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Required it for the linters.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.30")
+    # Suppress Boost warning.
+    cmake_policy(SET CMP0167 OLD)
+endif()
+
 project(knp-core VERSION "${KNP_VERSION}" LANGUAGES C CXX
         DESCRIPTION "Kaspersky Neuromorphic Platform core library"
         HOMEPAGE_URL "https://neuro.kaspersky.ru/neyromorfnye-tekhnologii/")
@@ -75,6 +80,7 @@ knp_add_library("${PROJECT_NAME}"
     impl/message_bus_impl.h
     impl/message_header.cpp
     impl/messaging/message_envelope.cpp
+    impl/messaging/uid_marshal.h
     impl/messaging/spike_message_impl.h
     impl/messaging/spike_message.cpp
     impl/messaging/synaptic_impact_message_impl.h
@@ -99,12 +105,6 @@ target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS} "impl
 add_dependencies("${PROJECT_NAME}" "GENERATE_${PROJECT_NAME}_messaging" "${PROJECT_NAME}_messaging")
 
 # add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
-
-if(KNP_ENABLE_COVERAGE)
-    include(codecoverage)
-    append_coverage_compiler_flags()
-    link_target_with_gcov("${PROJECT_NAME}")
-endif()
 
 
 #

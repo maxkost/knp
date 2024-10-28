@@ -1,6 +1,7 @@
 /**
  * @file visualize_network.h
- * @brief Functions for graph visualization. Warning: most of them are not well-tested or stable yet.
+ * @brief Functions for graph visualization. 
+ * @warning Most of the functions are not well-tested or stable yet.
  * @date 26.07.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -16,7 +17,8 @@
 
 
 /**
- * Network description for drawing. You can use this to check network structure.
+ * @brief Network description structure for drawing. 
+ * @note You can use this to check network structure.
  */
 struct NetworkGraph
 {
@@ -27,75 +29,75 @@ public:
     struct Node
     {
         /**
-         * @brief population size.
+         * @brief Population size.
          */
         // cppcheck-suppress unusedStructMember
         size_t size_;
 
         /**
-         * @brief population UID.
+         * @brief Population UID.
          */
         knp::core::UID uid_;
 
         /**
-         * @brief population name.
+         * @brief Population name.
          */
         std::string name_;
 
         /**
-         * @brief neuron type.
+         * @brief Neuron type.
          */
         // cppcheck-suppress unusedStructMember
         size_t type_;
     };
 
     /**
-     * @brief Nodes vector.
+     * @brief Node vector.
      */
     std::vector<Node> nodes_;
 
     /**
-     * @brief edge description structure
+     * @brief Edge description structure.
      */
     struct Edge
     {
         /**
-         * @brief projection size.
+         * @brief Projection size.
          */
         // cppcheck-suppress unusedStructMember
         size_t size_;
 
         /**
-         * @brief index of the source population.
+         * @brief Index of the source population.
          */
         // cppcheck-suppress unusedStructMember
         int index_from_;
 
         /**
-         * @brief index of the target population.
+         * @brief Index of the target population.
          */
         // cppcheck-suppress unusedStructMember
         int index_to_;
 
         /**
-         * @brief projection UID.
+         * @brief Projection UID.
          */
         knp::core::UID uid_;
 
         /**
-         * @brief projection name.
+         * @brief Projection name.
          */
         std::string name_;
 
         /**
-         * @brief synapse type.
+         * @brief Synapse type.
          */
         // cppcheck-suppress unusedStructMember
         size_t type_;
     };
 
     /**
-     * @brief Edges vector.
+     * @brief Edge vector.
      */
     std::vector<Edge> edges_;
 
@@ -108,14 +110,15 @@ public:
 
 
 /**
- * @brief Print nodes and edges connections.
+ * @brief Print node and edge connections.
  * @param graph network graph.
  */
 void print_network_description(const NetworkGraph &graph);
 
 
 /**
- * @brief Print whole network information, though not in a very human-friendly manner.
+ * @brief Print whole network information.
+ * @note The function prints information not in a human-friendly manner.
  * @param graph network graph.
  */
 void print_modified_network_description(const NetworkGraph &graph);

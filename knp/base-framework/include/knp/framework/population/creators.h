@@ -1,6 +1,6 @@
 /**
- * @file generators.h
- * @brief Population generators.
+ * @file creators.h
+ * @brief Population creators.
  * @date 08.08.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -13,6 +13,8 @@
 #include <optional>
 #include <random>
 
+#include "neuron_parameters_generators.h"
+
 
 /**
  * @brief Namespace for framework population routines.
@@ -20,7 +22,11 @@
 namespace knp::framework::population
 {
 
-
+/**
+ * @brief Namespace for population creators.
+ */
+namespace creators
+{
 /**
  * @brief Generate a population from a container.
  * @param container container with neuron parameters.
@@ -33,9 +39,7 @@ template <typename NeuronType, template <typename...> class Container>
     const Container<typename core::Population<NeuronType>::NeuronParameters>& container)
 {
     return core::Population<NeuronType>(
-        [&container](size_t index) -> std::optional<typename core::Population<NeuronType>::NeuronParameters>
-        { return container[index]; },
-        container.size());
+        neurons_generators::from_container<NeuronType, Container>(container), container.size());
 }
 
 
@@ -50,19 +54,7 @@ template <typename NeuronType, template <typename...> class Container>
 template <typename NeuronType>
 [[nodiscard]] typename core::Population<NeuronType> make_random(size_t neuron_count)
 {
-    std::random_device rd;
-    std::mt19937 mt(rd());
-    std::uniform_int_distribution<int> dist(0, 255);
-
-    return core::Population<NeuronType>(
-        [&dist, &mt](size_t index) -> std::optional<typename core::Population<NeuronType>::NeuronParameters>
-        {
-            typename core::Population<NeuronType>::NeuronParameters params;
-            for (size_t i = 0; i < sizeof(params); ++i) reinterpret_cast<uint8_t*>(&params)[i] = dist(mt);
-
-            return params;
-        },
-        neuron_count);
+    return core::Population<NeuronType>(neurons_generators::MakeRandom<NeuronType>(), neuron_count);
 }
 
 
@@ -75,9 +67,24 @@ template <typename NeuronType>
 template <typename NeuronType>
 [[nodiscard]] typename core::Population<NeuronType> make_default(size_t neuron_count)
 {
-    return core::Population<NeuronType>(
-        [](size_t index) -> std::optional<typename core::Population<NeuronType>::NeuronParameters>
-        { return typename core::Population<NeuronType>::NeuronParameters(); },
-        neuron_count);
+    return core::Population<NeuronType>(neurons_generators::make_default<NeuronType>(), neuron_count);
 }
+
+
+/**
+ * @brief Generate a population with clone of neuron parameter values.
+ * @param neuron_count number of neurons in a population.
+ * @param source_neuron parameters source.
+ * @tparam NeuronType type of neuron parameters.
+ * @return population.
+ */
+template <typename NeuronType>
+[[nodiscard]] typename core::Population<NeuronType> make_clone(
+    size_t neuron_count, const typename core::Population<NeuronType>::NeuronParameters& source_neuron)
+{
+    return core::Population<NeuronType>(neurons_generators::make_clone<NeuronType>(source_neuron), neuron_count);
+}
+
+}  // namespace creators
+
 }  // namespace knp::framework::population

@@ -53,7 +53,7 @@ KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_h5(
  * @param time_per_step time per step.
  */
 KNP_DECLSPEC void save_messages_to_h5(
-    std::vector<core::messaging::SpikeMessage> messages, const std::filesystem::path &path_to_save,
+    const std::vector<core::messaging::SpikeMessage> &messages, const std::filesystem::path &path_to_save,
     float time_per_step = 1.0f);
 
 }  // namespace native

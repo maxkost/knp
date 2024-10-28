@@ -6,6 +6,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.30")
+    # Suppress Boost warning.
+    cmake_policy(SET CMP0167 OLD)
+endif()
+
 project(knp-tester VERSION "${KNP_VERSION}" LANGUAGES CXX
         DESCRIPTION "Kaspersky Neuromorphic Platform tester and tests")
 
@@ -42,12 +47,6 @@ target_link_libraries("${PROJECT_NAME}" PRIVATE gtest gtest_main spdlog::spdlog)
 
 add_dependencies("${PROJECT_NAME}" knp-base-framework-core_static)
 
-if (KNP_ENABLE_COVERAGE)
-    include(codecoverage)
-    append_coverage_compiler_flags()
-    link_target_with_gcov("${PROJECT_NAME}")
-endif()
-
 if (${BUILD_GMOCK})
     target_link_libraries("${PROJECT_NAME}" PRIVATE gmock gmock_main)
 endif()
@@ -61,14 +60,17 @@ gtest_discover_tests("${PROJECT_NAME}"
 if (KNP_ENABLE_COVERAGE)
     message(STATUS "Coverage enabled.")
 
-    set(COV_EXECUTABLE "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
+    set(COV_EXECUTABLE "${PROJECT_NAME}")
+    #set(COV_EXECUTABLE "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
     set(COV_NAME "${PROJECT_NAME}_coverage")
     set(COV_DEPENDENCIES "${PROJECT_NAME}")
     set(COV_BASE_DIRECTORY "${CMAKE_SOURCE_DIR}")
+    set(COV_EXCLUDES "/usr/*;third-party/*")
 
-    set(CODE_COVERAGE_VERBOSE true)
+    set(CODE_COVERAGE_VERBOSE ON)
 
     if (GCOVR_PATH)
+        set(GCOVR_ADDITIONAL_ARGS --gcov-ignore-parse-errors)
         setup_target_for_coverage_gcovr_xml(
             NAME "${COV_NAME}"
             EXECUTABLE ${COV_EXECUTABLE}
@@ -82,16 +84,19 @@ if (KNP_ENABLE_COVERAGE)
             EXECUTABLE ${COV_EXECUTABLE}
             DEPENDENCIES ${COV_DEPENDENCIES}
             BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
+            EXCLUDE ${COV_EXCLUDES}
+            LCOV_ARGS
+                --ignore-errors empty,inconsistent
         )
         message(VERBOSE "Lcov selected.")
-    elseif (GCOV_PATH)
-        setup_target_for_coverage_gcov_json(
+    elseif (FASTCOV_PATH)
+        setup_target_for_coverage_fastcov(
             NAME "${COV_NAME}"
             EXECUTABLE ${COV_EXECUTABLE}
             DEPENDENCIES ${COV_DEPENDENCIES}
             BASE_DIRECTORY "${COV_BASE_DIRECTORY}"
         )
-        message(STATUS "Gcov selected.")
+        message(VERBOSE "Fastcov selected.")
     else()
         message(WARNING "Coverage cannot be enabled.")
     endif()

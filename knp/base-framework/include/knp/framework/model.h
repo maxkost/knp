@@ -75,12 +75,35 @@ public:
      * @param projection_uid UID of the projection which will be connected to the channel.
      */
     void add_input_channel(const core::UID &channel_uid, const core::UID &projection_uid);
+
+    /**
+     * @brief Add an input channel to the network.
+     * @param channel_uid UID of the input channel.
+     * @param projection projection which will be connected to the channel.
+     */
+    template <typename SynapseType>
+    void connect_input_projection(const core::UID &channel_uid, const core::Projection<SynapseType> &projection)
+    {
+        add_input_channel(channel_uid, projection.get_uid());
+    }
+
     /**
      * @brief Add an output channel to the network.
      * @param channel_uid UID of the channel object.
      * @param population_uid UID of the population which will be connected to the channel.
      */
     void add_output_channel(const core::UID &channel_uid, const core::UID &population_uid);
+
+    /**
+     * @brief Add an output channel to the network.
+     * @param channel_uid UID of the channel object.
+     * @param population population which will be connected to the channel.
+     */
+    template <typename NeuronType>
+    void connect_output_population(const core::UID &channel_uid, const core::Population<NeuronType> &population)
+    {
+        add_output_channel(channel_uid, population.get_uid());
+    }
 
     /**
      * @brief Return all input channels.

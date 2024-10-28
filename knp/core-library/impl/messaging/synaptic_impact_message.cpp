@@ -12,6 +12,7 @@
 #include <algorithm>
 
 #include "synaptic_impact_message_impl.h"
+#include "uid_marshal.h"
 
 
 namespace knp::core::messaging
@@ -65,6 +66,9 @@ std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg)
 {
     size_t impacts_count = 0;
     stream >> msg.header_ >> msg.postsynaptic_population_uid_ >> msg.presynaptic_population_uid_ >> impacts_count;
+
+    if (0 == impacts_count) return stream;
+
     msg.impacts_.resize(impacts_count);
     for (size_t i = 0; i < impacts_count; ++i)
     {
@@ -77,7 +81,8 @@ std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg)
 ::flatbuffers::uoffset_t pack_internal(::flatbuffers::FlatBufferBuilder &builder, const SynapticImpactMessage &msg)
 {
     SPDLOG_TRACE("Packing synaptic impact message...");
-    marshal::MessageHeader header{marshal::UID{msg.header_.sender_uid_.tag.data}, msg.header_.send_time_};
+
+    marshal::MessageHeader header{get_marshaled_uid(msg.header_.sender_uid_), msg.header_.send_time_};
 
     std::vector<knp::core::messaging::marshal::SynapticImpact> impacts;
     impacts.reserve(msg.impacts_.size());
@@ -92,8 +97,8 @@ std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg)
                 msg_val.postsynaptic_neuron_index_};
         });
 
-    auto pre_synaptic_uid = marshal::UID{msg.presynaptic_population_uid_.tag.data};
-    auto post_synaptic_uid = marshal::UID{msg.postsynaptic_population_uid_.tag.data};
+    auto pre_synaptic_uid = get_marshaled_uid(msg.presynaptic_population_uid_);
+    auto post_synaptic_uid = get_marshaled_uid(msg.postsynaptic_population_uid_);
 
     return marshal::CreateSynapticImpactMessageDirect(builder, &header, &pre_synaptic_uid, &post_synaptic_uid, &impacts)
         .o;
@@ -125,13 +130,11 @@ SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg)
     std::copy(
         s_msg_header->sender_uid().data()->begin(),  // clang_sa_ignore [core.CallAndMessage]
         s_msg_header->sender_uid().data()->end(),    // clang_sa_ignore [core.CallAndMessage]
-        sender_uid.tag.data);
-    std::copy(
-        s_msg->presynaptic_population_uid()->data()->begin(), s_msg->presynaptic_population_uid()->data()->end(),
-        presynaptic_uid.tag.data);
-    std::copy(
-        s_msg->postsynaptic_population_uid()->data()->begin(), s_msg->postsynaptic_population_uid()->data()->end(),
-        postsynaptic_uid.tag.data);
+        sender_uid.tag.begin());
+    const auto &presynaptic_data = s_msg->presynaptic_population_uid()->data();
+    std::copy(presynaptic_data->begin(), presynaptic_data->end(), presynaptic_uid.tag.begin());
+    const auto &postsynaptic_data = s_msg->postsynaptic_population_uid()->data();
+    std::copy(postsynaptic_data->begin(), postsynaptic_data->end(), postsynaptic_uid.tag.begin());
 
     std::vector<SynapticImpact> impacts;
     impacts.reserve(s_msg->impacts()->size());

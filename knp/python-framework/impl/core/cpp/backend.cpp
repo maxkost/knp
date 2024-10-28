@@ -14,7 +14,7 @@
 
 struct BackendWrapper : core::Backend, py::wrapper<core::Backend>
 {
-    ~BackendWrapper() = default;
+    virtual ~BackendWrapper() = default;
     bool plasticity_supported() const override { return this->get_override("plasticity_supported")(); }
 
     std::vector<std::string> get_supported_neurons() const override
@@ -127,20 +127,20 @@ py::class_<BackendWrapper, boost::noncopyable>(
     .def(
         "remove_populations", py::pure_virtual(&core::Backend::remove_populations),
         "Remove populations with given UIDs from the backend.")
-    //    .def("get_current_devices",
-    //    py::pure_virtual(static_cast<std::vector<std::unique_ptr<core::Device>>&(core::Backend::*)()>(&core::Backend::get_current_devices)),
-    //         "Get a list of devices on which the backend runs a network.")
-    //    .def("get_current_devices", py::pure_virtual(static_cast<const
-    //    std::vector<std::unique_ptr<core::Device>>&(core::Backend::*) const ()>(&core::Backend::get_current_devices)),
-    //         "Get a list of devices on which the backend runs a network.")
+    // .def("get_current_devices",
+    // py::pure_virtual(static_cast<std::vector<std::unique_ptr<core::Device>>&(core::Backend::*)()>(&core::Backend::get_current_devices)),
+    //      "Get a list of devices on which the backend runs a network.")
+    // .def("get_current_devices", py::pure_virtual(static_cast<const
+    // std::vector<std::unique_ptr<core::Device>>&(core::Backend::*) const ()>(&core::Backend::get_current_devices)),
+    //      "Get a list of devices on which the backend runs a network.")
     .def(
         "select_devices", py::pure_virtual(&core::Backend::select_devices),
         "Select devices on which to run the backend.")
-    //    .def( "get_message_endpoint",
-    //    py::pure_virtual(static_cast<core::MessageEndpoint&(core::Backend::*)()>(&core::Backend::get_message_endpoint)),
-    //    "Get message endpoint.") .def("get_message_endpoint", static_cast<const
-    //    core::MessageEndpoint&(core::Backend::*)() const>(& core::Backend::get_message_endpoint), "Get message
-    //    endpoint.")
+    // .def( "get_message_endpoint",
+    // py::pure_virtual(static_cast<core::MessageEndpoint&(core::Backend::*)()>(&core::Backend::get_message_endpoint)),
+    // "Get message endpoint.") .def("get_message_endpoint", static_cast<const
+    // core::MessageEndpoint&(core::Backend::*)() const>(& core::Backend::get_message_endpoint), "Get message
+    // endpoint.")
     .def(
         "start", static_cast<void (core::Backend::*)()>(&core::Backend::start),
         "Start network execution on the backend.")

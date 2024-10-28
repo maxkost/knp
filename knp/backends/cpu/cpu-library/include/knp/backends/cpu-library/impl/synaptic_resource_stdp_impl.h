@@ -134,7 +134,8 @@ template <class NeuronType>
 neuron_traits::ISIPeriodType update_isi(
     neuron_traits::neuron_parameters<neuron_traits::SynapticResourceSTDPNeuron<NeuronType>> &neuron, uint64_t step)
 {
-    if (neuron.is_being_forced_)  // This neuron got a forcing spike this turn and doesn't continue its spiking sequence.
+    if (neuron
+            .is_being_forced_)  // This neuron got a forcing spike this turn and doesn't continue its spiking sequence.
     {
         neuron.isi_status_ = neuron_traits::ISIPeriodType::is_forced;
         // Do not update last_step_.
@@ -143,6 +144,7 @@ neuron_traits::ISIPeriodType update_isi(
 
     switch (neuron.isi_status_)
     {
+        case neuron_traits::ISIPeriodType::not_in_period:
         case neuron_traits::ISIPeriodType::is_forced:
             neuron.isi_status_ = neuron_traits::ISIPeriodType::period_started;
             neuron.first_isi_spike_ = step;
@@ -159,10 +161,6 @@ neuron_traits::ISIPeriodType update_isi(
                 neuron.isi_status_ = neuron_traits::ISIPeriodType::period_started;
                 neuron.first_isi_spike_ = step;
             }
-            break;
-        case neuron_traits::ISIPeriodType::not_in_period:
-            neuron.isi_status_ = neuron_traits::ISIPeriodType::period_started;
-            neuron.first_isi_spike_ = step;
             break;
         default:
             throw std::runtime_error("Not supported ISI status.");

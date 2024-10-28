@@ -8,9 +8,11 @@
  */
 
 #include <knp/framework/network.h>
+#include <knp/framework/population/creators.h>
 
 #include <tests_common.h>
 
+#include <exception>
 #include <tuple>
 
 
@@ -61,7 +63,7 @@ TEST(FrameworkSuite, EmptyNetwork)
 }
 
 
-TEST(FrameworkSuite, NetworkCreation)
+TEST(FrameworkSuite, NetworkCreation)  //!OCLINT(False positive)
 {
     knp::framework::Network network;
     auto [population1, projection1] = create_entities();
@@ -77,14 +79,15 @@ TEST(FrameworkSuite, NetworkCreation)
     ASSERT_EQ(network.populations_count(), 1);
     ASSERT_EQ(network.projections_count(), 1);
 
-    ASSERT_EQ(
-        network.get_population<knp::core::Population<knp::neuron_traits::BLIFATNeuron>>(pop_uid).get_uid(), pop_uid);
-    ASSERT_EQ(network.get_projection<DeltaProjection>(proj_uid).get_uid(), proj_uid);
-    ASSERT_NE(network.get_projection<DeltaProjection>(proj_uid).get_uid(), pop_uid);
+    ASSERT_TRUE(network.is_population_exists(pop_uid));
+    ASSERT_EQ(network.get_population<knp::neuron_traits::BLIFATNeuron>(pop_uid).get_uid(), pop_uid);
+    ASSERT_TRUE(network.is_projection_exists(proj_uid));
+    ASSERT_EQ(network.get_projection<DeltaProjection::ProjectionSynapseType>(proj_uid).get_uid(), proj_uid);
+    ASSERT_NE(network.get_projection<DeltaProjection::ProjectionSynapseType>(proj_uid).get_uid(), pop_uid);
 }
 
 
-TEST(FrameworkSuite, NetworkRemoveEntities)
+TEST(FrameworkSuite, NetworkRemoveEntities)  //!OCLINT(False positive)
 {
     knp::framework::Network network;
 
@@ -102,7 +105,7 @@ TEST(FrameworkSuite, NetworkRemoveEntities)
     ASSERT_EQ(network.projections_count(), 1);
 
     // Incorrect UID.
-    EXPECT_THROW(network.remove_population(uid_proj), std::runtime_error);  // !OCLint(no "non case label")
+    EXPECT_THROW(network.remove_population(uid_proj), std::logic_error);  //!OCLINT(False positive)
     ASSERT_EQ(network.populations_count(), 1);
     // Correct UID.
     network.remove_population(uid_pop);
@@ -110,10 +113,98 @@ TEST(FrameworkSuite, NetworkRemoveEntities)
     ASSERT_EQ(network.populations_count(), 0);
 
     // Incorrect UID.
-    EXPECT_THROW(network.remove_projection(uid_pop), std::runtime_error);  // !OCLint(no "non case label")
+    EXPECT_THROW(network.remove_projection(uid_pop), std::logic_error);  //!OCLINT(False positive)
     ASSERT_EQ(network.projections_count(), 1);
     // Correct UID.
     network.remove_projection(uid_proj);
 
     ASSERT_EQ(network.projections_count(), 0);
+}
+
+
+TEST(FrameworkSuite, NetworkConnectPopulations)
+{
+    constexpr auto src_neurons_count = 5;
+    constexpr auto dst_neurons_count = 3;
+
+    auto src_pop{knp::framework::population::creators::make_random<typename knp::neuron_traits::BLIFATNeuron>(
+        src_neurons_count)};
+    auto dst_pop{knp::framework::population::creators::make_random<typename knp::neuron_traits::BLIFATNeuron>(
+        dst_neurons_count)};
+
+    knp::framework::Network network;
+
+    knp::core::UID proj_uid;
+
+    auto connector = [&]()
+    {
+        proj_uid = network.connect_populations<
+            typename knp::synapse_traits::DeltaSynapse, knp::neuron_traits::BLIFATNeuron,
+            knp::neuron_traits::BLIFATNeuron>(src_pop, dst_pop);
+        SPDLOG_DEBUG("New proj UID = {}", std::string(proj_uid));
+    };
+
+    EXPECT_THROW(connector(), std::logic_error);  //!OCLINT(False positive)
+
+    network.add_population(src_pop);
+    EXPECT_THROW(connector(), std::logic_error);  //!OCLINT(False positive)
+
+    SPDLOG_DEBUG("Checking proj UID = {} [False?]", std::string(proj_uid));
+    ASSERT_FALSE(network.is_projection_exists(proj_uid));
+    network.add_population(dst_pop);
+    EXPECT_NO_THROW(connector());  //!OCLINT(False positive)
+
+    ASSERT_EQ(network.projections_count(), 1);
+    ASSERT_EQ(network.populations_count(), 2);
+    SPDLOG_DEBUG("Checking proj UID = {} [True?]", std::string(proj_uid));
+    ASSERT_TRUE(network.is_projection_exists(proj_uid));
+    ASSERT_EQ(
+        network.get_projection<knp::synapse_traits::DeltaSynapse>(proj_uid).size(),
+        src_neurons_count * dst_neurons_count);
+}
+
+
+TEST(FrameworkSuite, NetworkConnectPopulationsArbitrary)
+{
+    constexpr auto src_neurons_count = 5;
+    constexpr auto dst_neurons_count = 3;
+
+    auto src_pop{
+        knp::framework::population::creators::make_random<knp::neuron_traits::BLIFATNeuron>(src_neurons_count)};
+    auto dst_pop{
+        knp::framework::population::creators::make_random<knp::neuron_traits::BLIFATNeuron>(dst_neurons_count)};
+
+    knp::framework::Network network;
+
+    knp::core::UID proj_uid;
+
+    auto connector = [&]()
+    {
+        proj_uid = network.connect_populations<
+            knp::synapse_traits::DeltaSynapse, knp::neuron_traits::BLIFATNeuron, knp::neuron_traits::BLIFATNeuron>(
+            src_pop, dst_pop,
+            [dst_neurons_count](size_t index)
+            {
+                return std::make_tuple(
+                    knp::core::Projection<knp::synapse_traits::DeltaSynapse>::SynapseParameters(), index,
+                    index % dst_neurons_count);
+            },
+            src_neurons_count);
+        SPDLOG_DEBUG("New proj UID = {}", std::string(proj_uid));
+    };
+
+    EXPECT_THROW(connector(), std::logic_error);  //!OCLINT(False positive)
+
+    network.add_population(src_pop);
+    EXPECT_THROW(connector(), std::logic_error);  //!OCLINT(False positive)
+
+    ASSERT_FALSE(network.is_projection_exists(proj_uid));
+    network.add_population(dst_pop);
+    EXPECT_NO_THROW(connector());  //!OCLINT(False positive)
+
+    ASSERT_EQ(network.projections_count(), 1);
+    ASSERT_EQ(network.populations_count(), 2);
+    SPDLOG_DEBUG("Checking proj UID = {} [True?]", std::string(proj_uid));
+    ASSERT_TRUE(network.is_projection_exists(proj_uid));
+    ASSERT_EQ(network.get_projection<knp::synapse_traits::DeltaSynapse>(proj_uid).size(), src_neurons_count);
 }

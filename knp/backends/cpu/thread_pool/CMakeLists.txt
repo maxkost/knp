@@ -6,6 +6,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.30")
+    # Suppress Boost warning.
+    cmake_policy(SET CMP0167 OLD)
+endif()
+
 project(knp-thread-pool-library VERSION "${KNP_VERSION}" LANGUAGES C CXX)
 
 find_package(Boost ${KNP_BOOST_MIN_VERSION} REQUIRED)
@@ -28,12 +33,6 @@ source_group(headers FILES ${${PROJECT_NAME}_headers} REGULAR_EXPRESSION "includ
 target_include_directories("${PROJECT_NAME}" PRIVATE ${Boost_INCLUDE_DIRS})
 
 target_link_libraries("${PROJECT_NAME}" PRIVATE Boost::headers spdlog::spdlog)
-
-if(KNP_ENABLE_COVERAGE)
-    include(codecoverage)
-    append_coverage_compiler_flags()
-    link_target_with_gcov("${PROJECT_NAME}")
-endif()
 
 # Internal library, used by backends.
 # This doesn't require installation.

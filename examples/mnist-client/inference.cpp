@@ -1,6 +1,6 @@
 /**
  * @file inference.cpp
- * @brief Do inference for MNIST example network.
+ * @brief Implementing inference for MNIST example network.
  * @date 18.09.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -43,7 +43,7 @@ auto make_input_image_generator(const std::vector<std::vector<bool>> &spike_fram
 }
 
 
-// A general function to find a specific projection, using a criterion.
+// Find a specific projection using a criterion.
 std::vector<knp::core::UID> find_projections(
     const knp::framework::Network &network,
     const std::function<bool(const knp::core::AllProjectionsVariant &)> &criterion)
@@ -57,7 +57,7 @@ std::vector<knp::core::UID> find_projections(
 }
 
 
-// Make an observer function that outputs resulting spikes to terminal.
+// Create an observer function that outputs resulting spikes to terminal.
 auto make_observer_function(std::vector<InferenceResult> &result)
 {
     auto observer_func = [&result](const std::vector<knp::core::messaging::SpikeMessage> &messages)
@@ -77,7 +77,7 @@ auto make_observer_function(std::vector<InferenceResult> &result)
 }
 
 
-// Read image dataset from a binary file to a vector of boolean frames.
+// Read image dataset from a binary file and trasnform it into a vector of boolean frames.
 std::vector<std::vector<bool>> read_spike_frames(const std::string &path_to_data)
 {
     // Image-to-spikes conversion parameters.
@@ -89,7 +89,8 @@ std::vector<std::vector<bool>> read_spike_frames(const std::string &path_to_data
 }
 
 
-// Do MNIST inference using binary data file and sonata model. See function description in inference.h.
+// Run MNIST inference using binary data file and model loaded through `sonata` namespace functions. 
+// See function description in `inference.h`.
 std::vector<InferenceResult> do_inference(
     const std::filesystem::path &path_to_model, const std::filesystem::path &path_to_data,
     const std::filesystem::path &path_to_backend)
@@ -97,7 +98,7 @@ std::vector<InferenceResult> do_inference(
     std::vector<std::pair<knp::core::UID, size_t>> input_uids;
     knp::framework::Network network = knp::framework::sonata::load_network(path_to_model);
 
-    // Make a list of all populations and their sizes
+    // Make a list of all populations and their sizes.
     std::unordered_map<knp::core::UID, size_t, knp::core::uid_hash> population_sizes;
     for (const auto &pop : network.get_populations())
     {

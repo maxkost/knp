@@ -11,6 +11,8 @@
 
 #include <spdlog/spdlog.h>
 
+#include <exception>
+
 
 namespace knp::framework
 {
@@ -46,7 +48,16 @@ void ModelLoader::init_channels(
 void ModelLoader::gen_input_channel(
     knp::framework::Model &model, const core::UID &channel_uid, const std::vector<core::UID> &p_uids)
 {
-    in_channels_.emplace_back(channel_uid, backend_->get_message_bus().create_endpoint(), i_map_.at(channel_uid));
+    try
+    {
+        in_channels_.emplace_back(channel_uid, backend_->get_message_bus().create_endpoint(), i_map_.at(channel_uid));
+    }
+    catch (const std::out_of_range &)
+    {
+        const std::string msg = "Incorrect input channel UID = " + std::string(channel_uid) + ".";
+        SPDLOG_ERROR("{}", msg);
+        throw std::logic_error(msg);
+    }
     auto &network = model.get_network();
 
     for (const auto &proj_uid : p_uids)
@@ -92,11 +103,7 @@ void ModelLoader::gen_output_channel(
 
 void ModelLoader::load(knp::framework::Model &model)
 {
-    SPDLOG_DEBUG("Model executor initializing...");
-    const auto &network = model.get_network();
-
-    backend_->load_all_populations(network.get_populations());
-    backend_->load_all_projections(network.get_projections());
+    SPDLOG_DEBUG("Model loader initializing...");
 
     // Create input.
     SPDLOG_TRACE("Input channels initializing...");
@@ -105,6 +112,13 @@ void ModelLoader::load(knp::framework::Model &model)
     // Create output.
     SPDLOG_TRACE("Output channels initializing...");
     init_channels(model, model.get_output_channels(), &ModelLoader::gen_output_channel);
+
+    const auto &network = model.get_network();
+
+    // Must be used after channel initializing, because init_channels() add tags to the input projections and output
+    // populations.
+    backend_->load_all_populations(network.get_populations());
+    backend_->load_all_projections(network.get_projections());
 }
 
 

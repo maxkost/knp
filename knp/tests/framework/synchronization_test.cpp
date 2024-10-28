@@ -1,4 +1,5 @@
 /**
+ * @file synchronization_test.cpp
  * @brief Synchronization tests for different backends.
  * @author Vartenkov An.
  * @date 17.05.24.

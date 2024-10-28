@@ -153,24 +153,73 @@ bool is_correct_version(const rapidjson::Document &doc)  // cppcheck-suppress co
     {
         const auto &group = group_iter->GetObject();
 
-        if (group.HasMember("name") && group["name"].GetString() == version_str)
+        if (!group.HasMember("name") || group["name"].GetString() != version_str) continue;
+        if (!group.HasMember("value") || !group["value"].IsArray()) return false;
+
+        const auto &version_arr = group["value"].GetArray();
+        if (VERSION.size() != version_arr.Size()) return false;
+
+        std::vector<int64_t> version;
+        version.reserve(VERSION.size());
+
+        for (auto val_iter = version_arr.Begin(); val_iter != version_arr.End(); ++val_iter)
         {
-            if (!group.HasMember("value") || !group["value"].IsArray()) return false;
-            const auto &version_arr = group["value"].GetArray();
-            if (VERSION.size() != version_arr.Size()) return false;
-            std::vector<int64_t> version;
-            version.reserve(VERSION.size());
-
-            for (auto val_iter = version_arr.Begin(); val_iter != version_arr.End(); ++val_iter)
-            {
-                // std::transform isn't compiled by MSVC.
-                version.push_back(val_iter->GetInt());  // cppcheck-suppress useStlAlgorithm
-            }
-
-            return std::equal(version.begin(), version.end(), VERSION.begin());
+            // std::transform isn't compiled by MSVC.
+            version.push_back(val_iter->GetInt());  // cppcheck-suppress useStlAlgorithm
         }
+
+        return std::equal(version.begin(), version.end(), VERSION.begin());
     }
     return false;
+}
+
+
+auto read_nodes(const rapidjson::Document::Object &spikes_group)
+{
+    // Reading node IDs.
+    if (!spikes_group.HasMember("node_ids") || !spikes_group["node_ids"].IsObject())
+        throw std::runtime_error("No \"node_ids\" array in \"spikes\" group.");
+    const auto &nodes_ids = spikes_group["node_ids"].GetObject();
+
+    if (!nodes_ids.HasMember("value") || !nodes_ids["value"].IsArray())
+        throw std::runtime_error("Missing node data in JSON data file.");
+    const auto &nodes_array = nodes_ids["value"].GetArray();
+
+    std::vector<int64_t> nodes;
+    nodes.reserve(nodes_array.Size());
+
+    // No const reference val possible.
+    for (auto val_iter = nodes_array.Begin(); val_iter != nodes_array.End(); ++val_iter)
+    {
+        // std::transform isn't compiled by MSVC.
+        nodes.push_back(val_iter->GetInt());  // cppcheck-suppress useStlAlgorithm
+    }
+
+    return nodes;
+}
+
+
+auto read_timestamps(const rapidjson::Document::Object &spikes_group)
+{
+    // Reading timestamps.
+    if (!spikes_group.HasMember("timestamps") || !spikes_group["timestamps"].IsObject())
+        throw std::runtime_error("No \"timestamps\" array in \"spikes\" group.");
+    const auto &timestamps_group = spikes_group["timestamps"];
+
+    if (!timestamps_group.HasMember("value") || !timestamps_group["value"].IsArray())
+        throw std::runtime_error("No \"value\" array in \"timestamps\" group.");
+    const auto &timestamps_array = timestamps_group["value"].GetArray();
+
+    std::vector<float> timestamps;
+    timestamps.reserve(timestamps_array.Size());
+    // No const reference val possible.
+    for (auto val_iter = timestamps_array.Begin(); val_iter != timestamps_array.End(); ++val_iter)
+    {
+        // std::transform isn't compiled by MSVC.
+        timestamps.push_back(static_cast<float>(val_iter->GetDouble()));  // cppcheck-suppress useStlAlgorithm
+    }
+
+    return timestamps;
 }
 
 
@@ -194,45 +243,10 @@ KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_json(
         throw std::runtime_error("Unable to find \"spikes\" group in data file.");
     const auto &spikes_group = doc["spikes"].GetObject();
 
-    // Reading node IDs.
-    if (!spikes_group.HasMember("node_ids") || !spikes_group["node_ids"].IsObject())
-        throw std::runtime_error("No \"node_ids\" array in \"spikes\" group.");
-    const auto &nodes_ids = spikes_group["node_ids"].GetObject();
+    auto nodes = read_nodes(spikes_group);
+    auto timestamps = read_timestamps(spikes_group);
 
-    if (!nodes_ids.HasMember("value") || !nodes_ids["value"].IsArray())
-        throw std::runtime_error("Missing node data in JSON data file.");
-    const auto &nodes_array = nodes_ids["value"].GetArray();
-
-    std::vector<int64_t> nodes;
-    nodes.reserve(nodes_array.Size());
-
-    // No const reference val possible.
-    for (auto val_iter = nodes_array.Begin(); val_iter != nodes_array.End(); ++val_iter)
-    {
-        // std::transform isn't compiled by MSVC.
-        nodes.push_back(val_iter->GetInt());  // cppcheck-suppress useStlAlgorithm
-    }
-
-    // Reading timestamps.
-    if (!spikes_group.HasMember("timestamps") || !spikes_group["timestamps"].IsObject())
-        throw std::runtime_error("No \"timestamps\" array in \"spikes\" group.");
-    const auto &timestamps_group = spikes_group["timestamps"];
-
-    if (!timestamps_group.HasMember("value") || !timestamps_group["value"].IsArray())
-        throw std::runtime_error("No \"value\" array in \"timestamps\" group.");
-    const auto &timestamps_array = timestamps_group["value"].GetArray();
-
-    std::vector<float> timestamps;
-    timestamps.reserve(timestamps_array.Size());
-    // No const reference val possible.
-    for (auto val_iter = timestamps_array.Begin(); val_iter != timestamps_array.End(); ++val_iter)
-    {
-        // std::transform isn't compiled by MSVC.
-        timestamps.push_back(static_cast<float>(val_iter->GetDouble()));  // cppcheck-suppress useStlAlgorithm
-    }
     return convert_node_time_arrays_to_messages(nodes, timestamps, uid, 1);
-
-    throw std::runtime_error("Missing timestamp data in JSON data file.");
 }
 
 
@@ -246,18 +260,21 @@ KNP_DECLSPEC std::vector<core::messaging::SpikeMessage> load_messages_from_json(
 
 
 KNP_DECLSPEC void save_messages_to_json(
-    std::vector<core::messaging::SpikeMessage> messages, const std::filesystem::path &path_to_save)
+    const std::vector<core::messaging::SpikeMessage> &messages, const std::filesystem::path &path_to_save)
 {
     boost::format format_nodes(node_structure);
     boost::format format_times(timestamp_structure);
     boost::format format_file(whole_file_string);
     std::ostringstream node_stream;
     std::ostringstream time_stream;
-    std::sort(
-        messages.begin(), messages.end(),
+    std::vector<core::messaging::SpikeMessage> sorted_messages(messages.size());
+
+    partial_sort_copy(
+        messages.begin(), messages.end(), sorted_messages.begin(), sorted_messages.end(),
         [](const auto &msg1, const auto &msg2) { return msg1.header_.send_time_ < msg2.header_.send_time_; });
+
     size_t count = 0;
-    for (const auto &msg : messages)
+    for (const auto &msg : sorted_messages)
     {
         for (auto index : msg.neuron_indexes_)
         {

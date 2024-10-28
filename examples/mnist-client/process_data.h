@@ -12,12 +12,12 @@
 
 
 /**
- * @brief Read spike frames from grayscale file.
+ * @brief Read spike frames from grayscale image file.
  * @param path_to_data path to grayscale image dataset file.
  * @param input_size number of pixels per image.
  * @param frames_per_image number of frames used for a given image.
  * @param num_levels number of intensity levels for an image.
- * @param skip how many frames to skip.
+ * @param skip number of frames to skip.
  * @return vector of boolean spike frames.
  */
 std::vector<std::vector<bool>> read_spikes_from_grayscale_file(

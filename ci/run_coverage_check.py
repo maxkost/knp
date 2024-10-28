@@ -4,6 +4,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+
 if len(sys.argv) < 3:
     print(f'{Path(__file__).name} <root directory> <percent>')
     sys.exit(1)
@@ -17,6 +18,8 @@ command = [
     '-r',
     str(root_dir),
     '-e',
+    str(Path('.*usr') / 'include'),
+    '-e',
     str(root_dir / 'third-party' / '.*'),
     '-e',
     str(root_dir / 'lib' / 'third-party' / '.*'),
@@ -25,7 +28,9 @@ command = [
     '-e',
     str(root_dir / 'knp' / '.*-traits-library'),
     '-e',
-    '.*\\.h',
+    str(root_dir / 'examples'),
+    '--filter',
+    'knp',
     '--json-summary',
     '--gcov-ignore-parse-errors',
 ]
@@ -50,7 +55,10 @@ print(
 exit_code = percent - line_percent if line_percent < percent else 0
 
 if exit_code:
-    print(f'Warning: coverage analysis was not passed [{percent}% coverage is necessary, but only {line_percent}% is covered]!')
+    print(
+        f'Warning: coverage analysis was not passed [{percent}% coverage is necessary, '
+        f'but only {line_percent}% is covered]!'
+    )
     files = sorted(report['files'], key=lambda k: int(k['line_total']))[:10]
     print('Top-10 files without coverage:')
     for f in files:

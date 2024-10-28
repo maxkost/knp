@@ -114,7 +114,8 @@ TEST_F(WrongMagicNumberJsonSuite, JsonTestNonStrict)
 
 TEST_F(WrongMagicNumberJsonSuite, JsonTestStrict)
 {
-    ASSERT_ANY_THROW(knp::framework::io::storage::native::load_messages_from_json(path_to_json_, uid_, true));
+    ASSERT_ANY_THROW(knp::framework::io::storage::native::load_messages_from_json(
+        path_to_json_, uid_, true));  //!OCLINT(False positive)
 }
 
 
@@ -149,5 +150,6 @@ TEST_F(WrongMagicNumberHdf5Suite, Hdf5TestNonStrict)
 
 TEST_F(WrongMagicNumberHdf5Suite, Hdf5TestStrict)
 {
-    ASSERT_ANY_THROW(knp::framework::io::storage::native::load_messages_from_h5(path_to_h5_, uid_, 1.0, true));
+    ASSERT_ANY_THROW(knp::framework::io::storage::native::load_messages_from_h5(
+        path_to_h5_, uid_, 1.0, true));  //!OCLINT(False positive)
 }

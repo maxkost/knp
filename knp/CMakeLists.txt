@@ -17,6 +17,11 @@ include(pvs-studio)
 # set(Boost_USE_STATIC_LIBS ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+if (KNP_ENABLE_COVERAGE)
+    include(codecoverage)
+    append_coverage_compiler_flags()
+endif()
+
 add_subdirectory(meta-library)
 add_subdirectory(neuron-traits-library)
 add_subdirectory(synapse-traits-library)
@@ -30,24 +35,40 @@ add_subdirectory(tests)
 
 file(GLOB PVS_DIRS LIST_DIRECTORIES true "*")
 file(GLOB dirs LIST_DIRECTORIES true "backends/cpu/*")
+
 set(PVS_DIRS "${PVS_DIRS};${dirs}")
 
-set(PVS_TARGETS "")
-set(PVS_SKIP_LIST ".*autodoc|GENERATE_.*|.*-copy-.*|.*memcheck|.*_static")
+if (WIN32)
+    find_program(PVS_BINARY PVS-Studio_Cmd.exe HINTS "$ENV{ProgramFiles}\\PVS-Studio" "$ENV{ProgramFiles\(x86\)}\\PVS-Studio" NO_CACHE)
+else()
+    find_program(PVS_BINARY pvs-studio-analyzer NO_CACHE)
+endif()
 
-foreach(_dir ${PVS_DIRS})
-    if (IS_DIRECTORY "${_dir}")
-        get_filename_component(DIR_NAME "${_dir}" NAME)
-        message(WARNING "Directory is ${_dir}.")
-        get_directory_property(DIR_TARGETS DIRECTORY "${_dir}" BUILDSYSTEM_TARGETS)
-        foreach(PVS_TARGET ${DIR_TARGETS})
-            string(REGEX MATCH "${PVS_SKIP_LIST}" PVS_SKIP ${PVS_TARGET})
-            if (PVS_SKIP)
-                continue()
-			endif()
-            list(APPEND PVS_TARGETS "${PVS_TARGET}")
-        endforeach()
-    endif()
-endforeach()
 
-# pvs_studio_add_target(TARGET "pvs-analyze" ANALYZE ${PVS_TARGETS})
+if (PVS_BINARY)
+    set(PVS_TARGETS "")
+    set(PVS_SKIP_LIST ".*autodoc|GENERATE_.*|.*-copy-.*|.*memcheck|.*_static")
+
+    foreach(_dir ${PVS_DIRS})
+        if (IS_DIRECTORY "${_dir}")
+            get_filename_component(DIR_NAME "${_dir}" NAME)
+            get_directory_property(DIR_TARGETS DIRECTORY "${_dir}" BUILDSYSTEM_TARGETS)
+            foreach(PVS_TARGET ${DIR_TARGETS})
+                string(REGEX MATCH "${PVS_SKIP_LIST}" PVS_SKIP ${PVS_TARGET})
+                if (PVS_SKIP)
+                    continue()
+                endif()
+                list(APPEND PVS_TARGETS "${PVS_TARGET}")
+            endforeach()
+        endif()
+    endforeach()
+
+    pvs_studio_add_target(TARGET "pvs-analyze"
+                          OUTPUT FORMAT tasklist
+                          ANALYZE ${PVS_TARGETS}
+                          MODE GA:1,2
+                          ARGS -e "${CMAKE_SOURCE_DIR}/third-party"
+                          ARGS -e "/usr/local")
+else()
+    message(WARNING "PVS analyzer was not found, static analysis with PVS Studio disabled.")
+endif()

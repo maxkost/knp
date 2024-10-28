@@ -83,7 +83,8 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
     }
 
     /**
-     * @brief Time parameter for dopamine plasticity. TODO: Remove it when 3-phase learning is ready.
+     * @brief Time parameter for dopamine plasticity.
+     * @todo Remove it when 3-phase learning is ready.
      */
     uint32_t dopamine_plasticity_time_ = 1;
 
@@ -100,7 +101,11 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
      */
     uint32_t resource_drain_coefficient_ = 0;
     /**
-     * @brief Stability. Dynamic parameter, the higher it is the lower the synapse weight changes are.
+     * @brief Dynamic synapse attribute for stability.
+     * @details The stability reflects how well a synapse is trained.
+     * The value increases with correct responses from a synapse and decreases in case of incorrect ones.
+     * The higher the stability, the smaller the changes in synapse weight associated with plasticity.
+     * An increase in stability by 1 decreases synapse weight changes by two times.
      */
     float stability_ = 0;
 

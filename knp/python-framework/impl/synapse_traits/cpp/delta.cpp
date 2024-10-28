@@ -7,20 +7,17 @@
  * @copyright © 2024 AO Kaspersky Lab
  */
 
+
 #if defined(_KNP_IN_SYNAPSE_TRAITS)
 
 #    include "common.h"
 
 py::enum_<knp::synapse_traits::OutputType>("OutputType")
-    .value("EXCITATORY", knp::synapse_traits::OutputType::EXCITATORY, "Excitatory synapse type.") 
-    .value(
-        "INHIBITORY_CURRENT",
-        knp::synapse_traits::OutputType::INHIBITORY_CURRENT, "Inhibitory by current synapse type.") 
-    .value(
-        "INHIBITORY_CONDUCTANCE",
-        knp::synapse_traits::OutputType::INHIBITORY_CONDUCTANCE, "Inhibitory by conductance synapse type.")  
-    .value("DOPAMINE", knp::synapse_traits::OutputType::DOPAMINE, "Dopamine synapse type.")
-    .value("BLOCKING", knp::synapse_traits::OutputType::BLOCKING, "Neuron-blocking synapse type.");
+    .value("EXCITATORY", knp::synapse_traits::OutputType::EXCITATORY)
+    .value("INHIBITORY_CURRENT", knp::synapse_traits::OutputType::INHIBITORY_CURRENT)
+    .value("INHIBITORY_CONDUCTANCE", knp::synapse_traits::OutputType::INHIBITORY_CONDUCTANCE)
+    .value("DOPAMINE", knp::synapse_traits::OutputType::DOPAMINE)
+    .value("BLOCKING", knp::synapse_traits::OutputType::BLOCKING);
 
 using ds_params = knp::synapse_traits::synapse_parameters<knp::synapse_traits::DeltaSynapse>;
 
