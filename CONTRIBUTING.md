@@ -1,23 +1,11 @@
-# Kaspersky Neuromorphic Platform contributing guide
+# Сode contribution workflow
 
-# Version control
-
-- In the internal TFS, modified Gitflow is used.
-- On Github, standard Github process is used.
-
-In the end of the commit message, issue or task number must be specified after the hash (`#`) symbol.
-
-Branches:
-
-- master - release branch.
-- develop - develop branch.
-- feature/\* - feature branches. Split from develop. Name format: `feature/#<issue_number>-branch-name>`. Example: `feature/#123-some-feature`.
-- bugfix/\* - error-fixing branches. Similar to feature branches.
-- release/\* - release branches. Split from develop, merged into master. Marked with release number tag. Example: `release/1.0.0`.
-
-# Coding Style
-
-- Python: [PEP8](https://www.python.org/dev/peps/pep-0008/) + [Black](https://github.com/psf/black).
-- C++: Modified [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
-
-In the C++ code, Doxygen docstrings MUST be used.
+1.	Find an open issue or create a new issue on issue tracker for the feature you want to contribute. 
+2.	Fork the project on GitHub. You need to create a feature-branch for your work on your fork, as this way you be able to submit a pull request.
+3.	Make any necessary changes to the source code.
+4.	Add tests that verify that your contribution works as expected and modify existing tests if required.
+5.	Run all unit tests and make sure all of them pass.
+6.	Run code coverage to check if the lines of code you added are covered by unit tests.
+7.	Once your feature is complete, prepare the commit with appropriate message and the issue number.
+8.	Create a pull request and wait for the users to review. When you submit a pull request, please, agree to the terms of [CLA](CLA.md).
+9.	Once everything is done, your pull request gets merged. Your feature will be available with the next release and your name will be added to AUTHORS.
