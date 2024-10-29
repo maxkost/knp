@@ -11,6 +11,7 @@
 #include "input_channel_utility.h"
 #include "model_utility.h"
 #include "network_utility.h"
+#include "observer_utility.h"
 #include "output_channel_utility.h"
 
 

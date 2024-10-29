@@ -1,6 +1,11 @@
-//
-// Created by an_vartenkov on 14.06.24.
-//
+/**
+ * @file output_channel_utility.h
+ * @brief Auxiliary functions for OutputChannel bindings.
+ * @kaspersky_developer Vartenkov A.
+ * @date 05.06.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
+ */
 
 #pragma once
 

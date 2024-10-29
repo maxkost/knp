@@ -1,6 +1,11 @@
-//
-// Created by an_vartenkov on 04.06.24.
-//
+/**
+ * @file model.cpp
+ * @brief Python bindings for Model class.
+ * @kaspersky_developer Vartenkov A.
+ * @date 04.06.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
+ */
 
 #include "common.h"
 #ifdef KNP_IN_BASE_FW

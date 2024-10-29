@@ -1,6 +1,12 @@
-//
-// Created by an_vartenkov on 14.06.24.
-//
+/**
+ * @file input_channel_utility.h
+ * @brief Auxiliary functions for input channel bindings.
+ * @kaspersky_developer Vartenkov A.
+ * @date 05.06.2024
+ * @license Apache 2.0
+ * @copyright © 2024 AO Kaspersky Lab
+ */
+
 
 #pragma once
 #include <knp/framework/io/input_channel.h>

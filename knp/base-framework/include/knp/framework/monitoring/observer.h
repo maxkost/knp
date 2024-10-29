@@ -57,6 +57,17 @@ public:
     }
 
     /**
+     * @brief Move constructor for observer.
+     * @param other other observer.
+     */
+    MessageObserver(MessageObserver<Message> &&other) noexcept
+        : endpoint_(std::move(other.endpoint_)),
+          process_messages_(std::move(other.process_messages_)),
+          uid_(std::move(other.uid_))
+    {
+    }
+
+    /**
      * @brief Subscribe to messages.
      * @param entities message senders.
      */
@@ -71,6 +82,11 @@ public:
         auto messages_raw = endpoint_.unload_messages<Message>(uid_);
         process_messages_(messages_raw);
     }
+
+    /**
+     * @brief Get observer UID.
+     */
+    knp::core::UID get_uid() { return uid_; }
 
 private:
     core::MessageEndpoint endpoint_;
