@@ -49,7 +49,6 @@ set_target_properties(
 
 if (KNP_INSTALL)
     knp_get_component_name("${PROJECT_NAME}" COMPONENT_NAME)
-    knp_get_component_var_name("${COMPONENT_NAME}" COMPONENT_VAR)
 
     install(TARGETS "${PROJECT_NAME}"
             EXPORT "${PROJECT_NAME}"
@@ -67,13 +66,11 @@ if (KNP_INSTALL)
             FILES_MATCHING PATTERN "*.h")
 
     knp_packaging_set_parameters("${COMPONENT_NAME}" "${PROJECT_NAME}"
-            DESCRIPTION "${PROJECT_DESCRIPTION}")
-
-    set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_DEPENDS "libboost-all (= ${Boost_VERSION}), libzmq" CACHE STRING "${PROJECT_NAME} deb package dependencies")
+            DESCRIPTION "${PROJECT_DESCRIPTION}"
+            DEPENDS "libboost-all (= ${Boost_VERSION})" "libzmq"
+            PROVIDES "knp-backend")
 
     knp_packaging_set_parameters("${COMPONENT_NAME}-dev" "${PROJECT_NAME}"
             DESCRIPTION "${PROJECT_DESCRIPTION} development package: C++ headers and CMake modules"
             DEPENDS "${COMPONENT_NAME}")
-
-    #set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_PROVIDES "knp-backend" CACHE STRING "${PROJECT_NAME} provides")
 endif()

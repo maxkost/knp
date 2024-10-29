@@ -160,16 +160,19 @@ if(KNP_BUILD_DOCUMENTATION)
     # Automatically build doc.
     add_dependencies(knp-core "${PROJECT_NAME}")
 
-    autodoc_get_files_and_dir("${CMAKE_BINARY_DIR}/doc_doxygen/html" DOC_DIRS DOC_FILES)
+    if (KNP_INSTALL)
+        set(COMPONENT_NAME "documentation")
+        autodoc_get_files_and_dir("${CMAKE_BINARY_DIR}/doc_doxygen/html" DOC_DIRS DOC_FILES)
 
-    install(DIRECTORY
-            ${DOC_DIRS}
-            COMPONENT "documentation"
-            DESTINATION "${CMAKE_INSTALL_DOCDIR}/html/reference")
-    install(FILES
-            ${DOC_FILES}
-            COMPONENT "documentation"
-            DESTINATION "${CMAKE_INSTALL_DOCDIR}/html/reference")
+        install(DIRECTORY
+                ${DOC_DIRS}
+                COMPONENT "${COMPONENT_NAME}"
+                DESTINATION "${CMAKE_INSTALL_DOCDIR}/html/reference")
+        install(FILES
+                ${DOC_FILES}
+                COMPONENT "${COMPONENT_NAME}"
+                DESTINATION "${CMAKE_INSTALL_DOCDIR}/html/reference")
+    endif()
 else()
     message(STATUS "Documentation generating disabled.")
 endif()

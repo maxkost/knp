@@ -247,24 +247,39 @@ function(knp_packaging_set_parameters component_name project_name)
             "PARSED_ARGS"
             ""
             "DESCRIPTION"
-            "DEPENDS"
+            "DEPENDS;PROVIDES;RECOMMENDS"
             ${ARGN}
     )
 
-    set(LIB_NAME "${PROJECT_NAME}_${name}")
-
     knp_get_component_var_name("${component_name}" COMPONENT_VAR_NAME)
+
+    set(CPACK_COMPONENT_${COMPONENT_VAR_NAME}_FILE_NAME "knp_${component_name}_${CPACK_DEBIAN_PACKAGE_VERSION}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}.deb"
+            CACHE STRING "${project_name} package filename" FORCE)
 
     if (PARSED_ARGS_DESCRIPTION)
         set(CPACK_COMPONENT_${COMPONENT_VAR_NAME}_DESCRIPTION "${PARSED_ARGS_DESCRIPTION}"
-            CACHE STRING "${project_name} description")
+            CACHE STRING "${project_name} description" FORCE)
     else()
         unset(CPACK_COMPONENT_${COMPONENT_VAR_NAME}_DESCRIPTION CACHE)
     endif()
 
     if (PARSED_ARGS_DEPENDS)
-        set(CPACK_COMPONENT_${COMPONENT_VAR_NAME}_DEPENDS "${PARSED_ARGS_DEPENDS}" CACHE STRING "${project_name} dependencies")
+        string(REPLACE ";" ", " PARSED_ARGS_DEPENDS "${PARSED_ARGS_DEPENDS}")
+        set(CPACK_COMPONENT_${COMPONENT_VAR_NAME}_DEPE  NDS "${PARSED_ARGS_DEPENDS}" CACHE STRING "${project_name} dependencies" FORCE)
     else()
         unset(CPACK_COMPONENT_${COMPONENT_VAR_NAME}_DEPENDS CACHE)
+    endif()
+
+    if (PARSED_ARGS_PROVIDES)
+        set(CPACK_COMPONENT_${COMPONENT_VAR_NAME}_PROVIDES "${PARSED_ARGS_PROVIDES}" CACHE STRING "${project_name} provides" FORCE)
+    else()
+        unset(CPACK_COMPONENT_${COMPONENT_VAR_NAME}_PROVIDES CACHE)
+    endif()
+
+    if (PARSED_ARGS_RECOMMENDS)
+        string(REPLACE ";" ", " PARSED_ARGS_RECOMMENDS "${PARSED_ARGS_RECOMMENDS}")
+        set(CPACK_COMPONENT_${COMPONENT_VAR_NAME}_RECOMMENDS "${PARSED_ARGS_RECOMMENDS}" CACHE STRING "${project_name} deb package recommendations" FORCE)
+    else()
+        unset(CPACK_COMPONENT_${COMPONENT_VAR_NAME}_RECOMMENDS CACHE)
     endif()
 endfunction()

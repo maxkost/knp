@@ -60,33 +60,33 @@ set_target_properties(
 )
 
 if (KNP_INSTALL)
+    set(COMPONENT_NAME "cpp-framework")
+
     install(TARGETS "${PROJECT_NAME}-cpu"
-            COMPONENT "framework-dev"
+            COMPONENT "${COMPONENT_NAME}-dev"
             EXPORT "${PROJECT_NAME}-cpu"
             LIBRARY
     )
 
     install(TARGETS "${PROJECT_NAME}-cpu_static"
             EXPORT "${PROJECT_NAME}-cpu_static"
-            COMPONENT "framework-dev"
+            COMPONENT "${COMPONENT_NAME}-dev"
             ARCHIVE)
 
     # Install for AltAI
     install(TARGETS "${PROJECT_NAME}-altai"
-            COMPONENT "framework-dev"
+            COMPONENT "${COMPONENT_NAME}-dev"
             EXPORT "${PROJECT_NAME}-altai"
             LIBRARY
     )
 
     install(TARGETS "${PROJECT_NAME}-altai_static"
             EXPORT "${PROJECT_NAME}-altai_static"
-            COMPONENT "framework-dev"
+            COMPONENT "${COMPONENT_NAME}-dev"
             ARCHIVE)
 
-    #add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
-
     install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
-            COMPONENT "framework-dev"
+            COMPONENT "${COMPONENT_NAME}-dev"
             DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
             FILES_MATCHING PATTERN "*.h")
 endif()

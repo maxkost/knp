@@ -59,7 +59,7 @@ knp_add_library("${PROJECT_NAME}-core"
     ${${PROJECT_NAME}_headers}
     ALIAS KNP::BaseFramework::Core
     LINK_PRIVATE
-        spdlog::spdlog Boost::headers Boost::filesystem RapidJSON HighFive ${HDF5_LIB}
+        spdlog::spdlog Boost::headers Boost::filesystem #[[RapidJSON]] HighFive ${HDF5_LIB}
         # Hack to build with CLang.
         ${ADD_LIBS}
     LINK_PUBLIC
@@ -73,62 +73,54 @@ set_target_properties(
     VERSION "${CMAKE_PROJECT_VERSION}"
     SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
 
-configure_package_config_file(
-        "${CMAKE_CURRENT_LIST_DIR}/cmake/${PROJECT_NAME}Config.cmake.in"
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake"
-        INSTALL_DESTINATION
-        "${CMAKE_INSTALL_LIBDIR}/cmake/")
-
-write_basic_package_version_file(
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake"
-        VERSION ${PROJECT_VERSION}
-        COMPATIBILITY AnyNewerVersion)
-
 if (KNP_INSTALL)
-    install(FILES
-            "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake"
-            "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake"
-            COMPONENT framework-dev
-            DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
+    set(COMPONENT_NAME "cpp-framework")
+
+    configure_package_config_file(
+            "${CMAKE_CURRENT_LIST_DIR}/packaging/${PROJECT_NAME}Config.cmake.in"
+            "${CMAKE_CURRENT_BINARY_DIR}/packaging/${PROJECT_NAME}Config.cmake"
+            INSTALL_DESTINATION
+            "${CMAKE_INSTALL_LIBDIR}/cmake/")
+
+    write_basic_package_version_file(
+            "${CMAKE_CURRENT_BINARY_DIR}/packaging/${PROJECT_NAME}ConfigVersion.cmake"
+            VERSION ${PROJECT_VERSION}
+            COMPATIBILITY AnyNewerVersion)
 
     install(TARGETS "${PROJECT_NAME}-core"
             EXPORT "${PROJECT_NAME}-core"
             LIBRARY
-            COMPONENT framework)
-    #install(EXPORT "${PROJECT_NAME}-core" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cmake")
-
-    install(TARGETS "${PROJECT_NAME}-core_static"
-            EXPORT "${PROJECT_NAME}-core_static"
-            COMPONENT framework-dev
-            ARCHIVE)
-
-    install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
-            COMPONENT framework-dev
-            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
-            FILES_MATCHING PATTERN "*.h")
+            COMPONENT ${COMPONENT_NAME})
 
     install(FILES
             "${CMAKE_SOURCE_DIR}/packaging/LICENSE.txt"
             "${CMAKE_SOURCE_DIR}/packaging/NOTICE.txt"
             "${CMAKE_SOURCE_DIR}/README.md"
-            COMPONENT framework
+            COMPONENT ${COMPONENT_NAME}
             TYPE DOC)
 
-    knp_packaging_set_parameters("${COMPONENT_NAME}" "${PROJECT_NAME}"
-            DESCRIPTION "${PROJECT_DESCRIPTION}"
-            DEPENDS backend)
+    install(TARGETS "${PROJECT_NAME}-core_static"
+            EXPORT "${PROJECT_NAME}-core_static"
+            COMPONENT ${COMPONENT_NAME}-dev
+            ARCHIVE)
 
-    set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_DEPENDS "libboost-all (= ${Boost_VERSION}), libhdf5, libzmq5"
-        CACHE STRING "${PROJECT_NAME} deb package dependencies")
+    install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+            COMPONENT ${COMPONENT_NAME}-dev
+            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
+            FILES_MATCHING PATTERN "*.h")
 
-    knp_packaging_set_parameters(framework-dev "${PROJECT_NAME}"
-            DESCRIPTION "${PROJECT_DESCRIPTION} development files: C++ headers, CMake modules, static libraries"
-            DEPENDS "${COMPONENT_NAME}")
+    install(FILES
+            "${CMAKE_CURRENT_BINARY_DIR}/packaging/${PROJECT_NAME}Config.cmake"
+            "${CMAKE_CURRENT_BINARY_DIR}/packaging/${PROJECT_NAME}ConfigVersion.cmake"
+            COMPONENT ${COMPONENT_NAME}-dev
+            DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
 
-    set(CPACK_DEBIAN_${COMPONENT_VAR}-DEV_PACKAGE_DEPENDS "libboost-all-dev (= ${Boost_VERSION})"
-        CACHE STRING "${PROJECT_NAME}-dev deb package dependencies")
-
-    set(CPACK_DEBIAN_${COMPONENT_VAR}-DEV_PACKAGE_RECOMMENDS "cppzmq-dev (>= 4.9.0-1), cppzmq (= 4.9.0-1)"
-        CACHE STRING "${PROJECT_NAME}-dev deb package recommendations")
-
+    #    knp_packaging_set_parameters(${COMPONENT_NAME} "${PROJECT_NAME}"
+#            DESCRIPTION "${PROJECT_DESCRIPTION}"
+#            DEPENDS )
+#
+#    knp_packaging_set_parameters(${COMPONENT_NAME}-dev "${PROJECT_NAME}"
+#            DESCRIPTION "${PROJECT_DESCRIPTION} development files: C++ headers, CMake modules, static libraries"
+#            DEPENDS "${COMPONENT_NAME}" "libboost-all-dev (= ${Boost_VERSION})"
+#            RECOMMENDS "cppzmq-dev (>= 4.9.0-1)" "cppzmq (= 4.9.0-1)")
 endif()
