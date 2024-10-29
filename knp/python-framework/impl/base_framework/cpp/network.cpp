@@ -12,7 +12,7 @@
 #ifdef KNP_IN_BASE_FW
 
 
-py::class_<knp::framework::Network>("Network")
+py::class_<knp::framework::Network>("Network", "The Network class is a definition of a neural network that contains populations and projections.")
     .def(py::init<const knp::core::UID&>())
     .def("add_projection", network_add_projection_variant, "Add a projection to the network.")
     .def("add_population", network_add_population_variant, "Add a population to the network.")

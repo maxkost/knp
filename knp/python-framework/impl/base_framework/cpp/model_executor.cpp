@@ -22,7 +22,7 @@ py::class_<ModelExecutor>(
     .def("get_input_channel", &knp::framework::ModelExecutor::get_input_channel, "Get input channel.")
     .def("start_learning", &knp::framework::ModelExecutor::start_learning, "Unlock synapse weights.")
     .def("stop_learning", &knp::framework::ModelExecutor::stop_learning, "Lock synapse weights.")
-    .def("get_backend", &knp::framework::ModelExecutor::get_backend, "Get backend.");
+    .def("get_backend", &knp::framework::ModelExecutor::get_backend, "Get pointer to backend object.");
 
 #endif  // KNP_IN_BASE_FW
 
