@@ -39,22 +39,22 @@ struct Port
     enum class port_side
     {
         /**
-         * @brief Represent the North side of the grid (y = 0).
+         * @brief The north side of the grid (y = 0).
          */
         kNorth,
         /**
-         * @brief Represent the South side of the grid (y = y_max).
-         * @note Only North side for ports are currently supported.
+         * @brief The south side of the grid (y = y_max).
+         * @note Only the north side for ports is currently supported.
          */
         kSouth,
         /**
-         * @brief Represent the East side of the grid (x = 0).
-         * @note Only North side for ports are currently supported.
+         * @brief The east side of the grid (x = 0).
+         * @note Only the north side for ports is currently supported.
          */
         kEast,
         /**
-         * @brief Represent the West side of the grid (x = x_max).
-         * @note Only North side for ports are currently supported.
+         * @brief The west side of the grid (x = x_max).
+         * @note Only the north side for ports is currently supported.
          */
         kWest
     };
@@ -70,14 +70,14 @@ struct Port
     // cppcheck-suppress unusedStructMember
     size_t port_length;
     /**
-     * @brief Side {kNorth, kSouth, kEast, kWest}.
+     * @brief Side: kNorth, kSouth, kEast, or kWest.
      */
     // cppcheck-suppress unusedStructMember
     port_side side;
 };
 
 /**
- * @brief Create port of standard size (4) for AltAI grid, located on the north side.
+ * @brief Create port of standard size (4) on the north side of the AltAI grid.
  * @details The function creates a port with standard length and size, which are used on most of existing AltAI devices.
  * @param begin_core position of a core, from which the port starts.
  * @return created port.
@@ -133,7 +133,7 @@ protected:
 
 
 /**
- * @brief The `AltAI_GM` class is a defintion of an interface to the AltAI golden model device.
+ * @brief The `AltAI_GM` class is a definition of an interface to the AltAI golden model device.
  */
 class AltAI_GM : public AltAI
 {
@@ -179,7 +179,7 @@ public:
 
 public:
     /**
-     * @brief Load parametrs to initialization grid of the AltAI core network.
+     * @brief Load parameters to initialization grid of the AltAI core network.
      * @param rows number of rows in grid of AltAI cores.
      * @param columns number of columns in grid of AltAI cores.
      * @param ports port configuration in grid of AltAI cores.
@@ -190,7 +190,7 @@ public:
 private:
     /**
      * @brief `AltAI_GM` device constructor.
-     * @details Create `AltAI_GM` device with 4 by 4 core grid and standart port from the North side.
+     * @details Create `AltAI_GM` device with 4-by-4 core grid and standard port on the north side.
      */
     AltAI_GM();
     friend std::vector<std::unique_ptr<AltAI>> list_altai_devices();
@@ -207,7 +207,7 @@ class AltAI_HW : public AltAI
 {
 public:
     /**
-     * @brief No public contructor for `AltAI_HW` deivce.
+     * @brief `AltAI_HW` device constructor is deleted.
      */
     AltAI_HW() = delete;
 
@@ -253,9 +253,9 @@ public:
 private:
     /**
      * @brief `AltAI_HW` device constructor.
-     * @param rows number of rows in core grid of given AltAI hardware.
-     * @param columns number of columns in core grid of given AltAI hardware.
-     * @param ports input/output ports in core grid of given AltAI hardware.
+     * @param rows number of rows in core grid of the given AltAI hardware.
+     * @param columns number of columns in core grid of the given AltAI hardware.
+     * @param ports input and output ports in core grid of the given AltAI hardware.
      */
     AltAI_HW(size_t rows, size_t columns, const std::vector<Port> &ports);
     friend std::vector<std::unique_ptr<AltAI>> list_altai_devices();
@@ -266,8 +266,8 @@ private:
 };
 
 /**
- * @brief List all AltAI devices on which backend can be initializated.
- * @return Vector of unique pointers to base `AltAI` device class,
+ * @brief List all AltAI devices on which backend can be initialized.
+ * @return vector of unique pointers to base `AltAI` device class,
  *  which are `AltAI_HW` or `AltAI_GM` devices.
  */
 std::vector<std::unique_ptr<AltAI>> list_altai_devices();

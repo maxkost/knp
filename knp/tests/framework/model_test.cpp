@@ -5,6 +5,18 @@
  * @date 22.10.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 #include <knp/framework/model.h>
@@ -44,7 +56,7 @@ TEST(FrameworkSuite, ModelAddInputChannels)
         decltype(dst_pop)::PopulationNeuronType>(src_pop, dst_pop);
 
     SPDLOG_DEBUG(
-        "Src pop UID = {}, dst pop UID = {}, proj UID = {}", std::string(src_pop.get_uid()),
+        "Presynaptic population UID = {}, postsynaptic population UID = {}, projection UID = {}.", std::string(src_pop.get_uid()),
         std::string(dst_pop.get_uid()), std::string(new_proj.get_uid()));
 
     EXPECT_THROW(
@@ -74,7 +86,7 @@ TEST(FrameworkSuite, ModelAddOutputChannels)  //!OCLINT(False positive)
 
     knp::framework::Model model(std::move(network));
 
-    SPDLOG_DEBUG("Output pop UID = {}", std::string(pop_uid));
+    SPDLOG_DEBUG("Output population UID = {}.", std::string(pop_uid));
 
     EXPECT_THROW(
         model.connect_output_population(knp::core::UID(), dst_pop), std::logic_error);  //!OCLINT(False positive)

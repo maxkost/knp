@@ -5,6 +5,18 @@
  * @date 22.03.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 #pragma once
@@ -143,14 +155,14 @@ public:
 
     /**
      * @brief Check if population exists.
-     * @param population_uid population id to check.
-     * @return true if population exists, false otherwise.
+     * @param population_uid UID of the population to check.
+     * @return `true` if population exists, `false` otherwise.
      */
     [[nodiscard]] bool is_population_exists(const knp::core::UID &population_uid) const;
 
     /**
      * @brief Get a population with the given UID from the network.
-     * @tparam NeuronType type of population to get.
+     * @tparam NeuronType type of population neuron.
      * @param population_uid population UID.
      * @throw std::logic_error if population is not found in the network.
      * @return population.
@@ -219,8 +231,8 @@ public:
 
     /**
      * @brief Check if projection exists.
-     * @param projection_uid projection id to check.
-     * @return true if projection exists, false otherwise.
+     * @param projection_uid UID of the projection to check.
+     * @return `true` if projection exists, `false` otherwise.
      */
     [[nodiscard]] bool is_projection_exists(const knp::core::UID &projection_uid) const;
 
@@ -258,10 +270,11 @@ public:
 
 public:
     /**
-     * @brief Connect source and destination populations and add projection to network.
-     * @details Make all to all connection between two populations.
-     * @tparam SourceNeuronType type of the source population neuron.
-     * @tparam DestinationNeuronType type of the destination population neuron.
+     * @brief Connect presynaptic and postsynaptic populations and add projection to the network.
+     * @details The method makes connections between each presynaptic population (source) neuron 
+     * to each postsynaptic population (destination) neuron.
+     * @tparam SourceNeuronType type of the presynaptic population neuron.
+     * @tparam DestinationNeuronType type of the postsynaptic population neuron.
      * @tparam SynapseType new projection synapse type.
      * @param src presynaptic population.
      * @param dst postsynaptic population.
@@ -285,14 +298,14 @@ public:
     }
 
     /**
-     * @brief Connect source and destination populations and add projection to network.
-     * @tparam SourceNeuronType type of the source population neuron.
-     * @tparam DestinationNeuronType type of the destination population neuron.
+     * @brief Connect presynaptic and postsynaptic populations and add projection to the network.
+     * @tparam SourceNeuronType type of the presynaptic population neuron.
+     * @tparam DestinationNeuronType type of the postsynaptic population neuron.
      * @tparam SynapseType new projection synapse type.
      * @param src presynaptic population.
      * @param dst postsynaptic population.
      * @param syn_gen synapse generator.
-     * @param num_iterations projection generator call iterations.
+     * @param num_iterations number of iterations.
      * @return new projection UID.
      */
     template <typename SynapseType, typename SourceNeuronType, typename DestinationNeuronType>

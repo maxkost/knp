@@ -5,6 +5,18 @@
  * @date 12.02.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 #include <knp/framework/network.h>
@@ -141,7 +153,7 @@ TEST(FrameworkSuite, NetworkConnectPopulations)
         proj_uid = network.connect_populations<
             typename knp::synapse_traits::DeltaSynapse, knp::neuron_traits::BLIFATNeuron,
             knp::neuron_traits::BLIFATNeuron>(src_pop, dst_pop);
-        SPDLOG_DEBUG("New proj UID = {}", std::string(proj_uid));
+        SPDLOG_DEBUG("New projection UID = {}.", std::string(proj_uid));
     };
 
     EXPECT_THROW(connector(), std::logic_error);  //!OCLINT(False positive)
@@ -149,14 +161,14 @@ TEST(FrameworkSuite, NetworkConnectPopulations)
     network.add_population(src_pop);
     EXPECT_THROW(connector(), std::logic_error);  //!OCLINT(False positive)
 
-    SPDLOG_DEBUG("Checking proj UID = {} [False?]", std::string(proj_uid));
+    SPDLOG_DEBUG("Checking projection UID = {} [False?]", std::string(proj_uid));
     ASSERT_FALSE(network.is_projection_exists(proj_uid));
     network.add_population(dst_pop);
     EXPECT_NO_THROW(connector());  //!OCLINT(False positive)
 
     ASSERT_EQ(network.projections_count(), 1);
     ASSERT_EQ(network.populations_count(), 2);
-    SPDLOG_DEBUG("Checking proj UID = {} [True?]", std::string(proj_uid));
+    SPDLOG_DEBUG("Checking projection UID = {} [True?]", std::string(proj_uid));
     ASSERT_TRUE(network.is_projection_exists(proj_uid));
     ASSERT_EQ(
         network.get_projection<knp::synapse_traits::DeltaSynapse>(proj_uid).size(),
@@ -190,7 +202,7 @@ TEST(FrameworkSuite, NetworkConnectPopulationsArbitrary)
                     index % dst_neurons_count);
             },
             src_neurons_count);
-        SPDLOG_DEBUG("New proj UID = {}", std::string(proj_uid));
+        SPDLOG_DEBUG("New projection UID = {}.", std::string(proj_uid));
     };
 
     EXPECT_THROW(connector(), std::logic_error);  //!OCLINT(False positive)
@@ -204,7 +216,7 @@ TEST(FrameworkSuite, NetworkConnectPopulationsArbitrary)
 
     ASSERT_EQ(network.projections_count(), 1);
     ASSERT_EQ(network.populations_count(), 2);
-    SPDLOG_DEBUG("Checking proj UID = {} [True?]", std::string(proj_uid));
+    SPDLOG_DEBUG("Checking projection UID = {} [True?]", std::string(proj_uid));
     ASSERT_TRUE(network.is_projection_exists(proj_uid));
     ASSERT_EQ(network.get_projection<knp::synapse_traits::DeltaSynapse>(proj_uid).size(), src_neurons_count);
 }
