@@ -1,7 +1,7 @@
 /**
  * @file cpu_power.h
  * @brief CPU power consumption received via Intel PCM library.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 20.02.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

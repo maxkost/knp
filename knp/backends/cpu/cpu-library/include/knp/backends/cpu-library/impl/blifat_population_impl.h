@@ -1,7 +1,7 @@
 /**
  * @file blifat_population_impl.h
  * @brief Definition of BLIFAT neuron calculation routines.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 21.02.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -48,7 +48,8 @@ constexpr bool has_dopamine_plasticity<neuron_traits::SynapticResourceSTDPBLIFAT
  * @brief Apply STDP to all presynaptic connections of a single population.
  * @tparam NeuronType type of neuron that is compatible with STDP.
  * @param msg spikes emited by population.
- * @param working_projections all projections. The function skips projections that are not connected, locked or are of a wrong type.
+ * @param working_projections all projections. The function skips projections that are not connected, locked or are of a
+ * wrong type.
  * @param population population.
  * @param step current network step.
  * @note All projections are supposed to be of the same type.

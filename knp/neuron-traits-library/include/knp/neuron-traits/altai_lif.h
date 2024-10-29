@@ -1,7 +1,7 @@
 /**
  * @file altai_lif.h
  * @brief AltAILIF neuron type traits.
- * @author Alexey Lubiakin
+ * @kaspersky_support Alexey Lubiakin
  * @date 02.05.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

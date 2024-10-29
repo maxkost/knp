@@ -1,7 +1,7 @@
 /**
  * @file synapse_generators.h
  * @brief Projection connectors.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 10.08.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

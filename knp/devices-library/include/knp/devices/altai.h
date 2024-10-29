@@ -1,7 +1,7 @@
 /**
  * @file altai.h
  * @brief Class definitions for AltAI, AltAI_GM and AltAI_HW devices.
- * @author Liubiakin A.
+ * @kaspersky_support Liubiakin A.
  * @date 17.10.2024
  */
 

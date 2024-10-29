@@ -1,7 +1,7 @@
 /**
  * @file message_endpoint_impl.h.
  * @brief Bus implementation interface.
- * @author An. Vartenkov
+ * @kaspersky_support An. Vartenkov
  * @date 25.09.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

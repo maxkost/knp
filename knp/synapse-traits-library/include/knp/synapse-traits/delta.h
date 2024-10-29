@@ -1,7 +1,7 @@
 /**
  * @file delta.h
  * @brief Delta synapse type traits.
- * @author Andrey V.
+ * @kaspersky_support Andrey V.
  * @date 26.01.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

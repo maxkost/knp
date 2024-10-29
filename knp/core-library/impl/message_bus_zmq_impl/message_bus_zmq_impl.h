@@ -1,7 +1,7 @@
 /**
  * @file message_bus_zmq_impl.h
  * @brief Message bus ZeroMQ implementation header.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 31.03.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

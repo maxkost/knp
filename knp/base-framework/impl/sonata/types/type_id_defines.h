@@ -1,7 +1,7 @@
 /**
  * @file type_id_defines.h
  * @brief Basic type definitions and templates for saving and loading.
- * @author A. Vartenkov
+ * @kaspersky_support A. Vartenkov
  * @date 22.03.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -68,7 +68,8 @@ void add_neuron_type_to_csv(const fs::path &csv_path)
     {
         if (std::find(file_header.begin(), file_header.end(), column_name) ==
             file_header.end())  // cppcheck-suppress useStlAlgorithm
-            throw std::runtime_error("Could not find column \"" + column_name + "\" in file \"" + csv_path.string() + "\".");
+            throw std::runtime_error(
+                "Could not find column \"" + column_name + "\" in file \"" + csv_path.string() + "\".");
     }
     // Header is okay, check if type exists already.
     size_t height = csv_file.get_rc_size().first - 1;
@@ -97,7 +98,8 @@ void add_synapse_type_to_csv(const fs::path &csv_path)
         {
             if (std::find(file_header.begin(), file_header.end(), column_name) ==
                 file_header.end())  // cppcheck-suppress useStlAlgorithm
-                throw std::runtime_error("Could not find column \"" + column_name + "\" in file \"" + csv_path.string() + "\".");
+                throw std::runtime_error(
+                    "Could not find column \"" + column_name + "\" in file \"" + csv_path.string() + "\".");
         }
         // Header is okay, check if type exists already.
         size_t height = csv_file.get_rc_size().first - 1;

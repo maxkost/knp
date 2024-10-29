@@ -1,7 +1,7 @@
 /**
  * @file output_channel.h
  * @brief Header for output channel.
- * @author Vartenkov Andrey
+ * @kaspersky_support Vartenkov Andrey
  * @date 11.05.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

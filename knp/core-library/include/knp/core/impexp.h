@@ -1,7 +1,7 @@
 /**
  * @file impexp.h
  * @brief Header for import and export control.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 25.10.2021
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

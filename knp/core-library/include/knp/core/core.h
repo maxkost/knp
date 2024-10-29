@@ -1,7 +1,7 @@
 /**
  * @file core.h
  * @brief Class definition for core library basic entities.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 11.01.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

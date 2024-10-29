@@ -1,7 +1,7 @@
 /**
  * @file message_bus_impl.h
  * @brief Message bus implementation interface class.
- * @author Vartenkov A.
+ * @kaspersky_support Vartenkov A.
  * @date 19.09.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

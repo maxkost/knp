@@ -1,7 +1,7 @@
 /**
  * @file message_endpoint_cpu_impl.h
  * @brief CPU endpoint implementation header.
- * @author Vartenkov A.
+ * @kaspersky_support Vartenkov A.
  * @date 18.09.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -60,7 +60,8 @@ public:
         return result;
     }
 
-    // TODO: Embarrassingly inefficient: all endpoints basically receive all messages by copying them. It needs to be optimized.
+    // TODO: Embarrassingly inefficient: all endpoints basically receive all messages by copying them. It needs to be
+    // optimized.
     void add_received_messages(const std::vector<knp::core::messaging::MessageVariant> &incoming_messages)
     {
         const std::lock_guard lock(mutex_);

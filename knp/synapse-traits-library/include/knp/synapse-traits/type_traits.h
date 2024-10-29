@@ -1,7 +1,7 @@
 /**
  * @file type_traits.h
  * @brief Common synapse type traits.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 26.01.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

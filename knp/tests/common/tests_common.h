@@ -1,7 +1,7 @@
 /**
  * @file tests_common.h
  * @brief Common routines used for tests.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 31.12.2022
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

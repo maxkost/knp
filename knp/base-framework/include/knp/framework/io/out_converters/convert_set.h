@@ -1,7 +1,7 @@
 /**
  * @file convert_set.h
  * @brief Header for set converter.
- * @author Vartenkov Andrey
+ * @kaspersky_support Vartenkov Andrey
  * @date 01.06.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

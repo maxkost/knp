@@ -1,7 +1,7 @@
 /**
  * @file stdp_add_rule.h
  * @brief Rule for additive STDP.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 09.08.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

@@ -1,7 +1,7 @@
 /**
  * @file optional_converter.h
  * @brief `std::optional` for Python.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 09.02.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
