@@ -10,16 +10,16 @@
     <depend type="lib" ecosystem_name="github" name="boostorg/asio" version="1.81" site="https://github.com/boostorg/asio/tree/boost-1.81.0" legal_type_of_use="binary"/>
     <depend type="lib" ecosystem_name="common" name="doxygen" version="1.10.0" site="https://www.doxygen.nl/download.html" legal_type_of_use="binary"/>
     <depend type="lib" ecosystem_name="github" name="gcovr/gcovr" version="5.2" site="https://github.com/gcovr/gcovr/releases/tag/5.2" legal_type_of_use="binary"/>
-    <depend type="toolset" ecosystem_name="github" name="pre-commit/pre-commit" version="2.20.0" site="https://github.com/pre-commit/pre-commit/releases/tag/v2.20.0 " legal_type_of_use="tool"/>
+    <depend type="lib" ecosystem_name="github" name="pre-commit/pre-commit" version="2.20.0" site="https://github.com/pre-commit/pre-commit/releases/tag/v2.20.0 " legal_type_of_use="tool"/>
     <depend type="lib" ecosystem_name="github" name="oclint/oclint" version="22.02" site="https://github.com/oclint/oclint/releases/tag/v22.02" legal_type_of_use="binary"/>
     <depend type="lib" ecosystem_name="common" name="graphviz" version="2.42.2" site="https://gitlab.com/graphviz/graphviz/-/tree/2.42.2?ref_type=tags" legal_type_of_use="binary"/>
-    <depend type="toolset" ecosystem_name="github" name="llvm/llvm-project" version="19.0.0" site="https://github.com/llvm/llvm-project/tree/llvmorg-19-init/clang-tools-extra/clang-tidy" legal_type_of_use="tool"/>
-    <depend type="toolset" ecosystem_name="github" name="llvm/llvm-project" version="15.0.7" site="https://github.com/llvm/llvm-project/tree/llvmorg-15.0.7/clang/tools/clang-format" legal_type_of_use="tool"/>
-    <depend type="toolset" ecosystem_name="github" name="danmar/cppcheck" version="2.13" site="https://github.com/danmar/cppcheck/archive/2.13.0.zip" legal_type_of_use="tool"/>
-    <depend type="toolset" ecosystem_name="github" name="cpplint/cpplint" version="1.6.1" site="https://github.com/cpplint/cpplint/tree/1.6.1" legal_type_of_use="tool"/>
+    <depend type="lib" ecosystem_name="github" name="llvm/llvm-project" version="19.0.0" site="https://github.com/llvm/llvm-project/tree/llvmorg-19-init/clang-tools-extra/clang-tidy" legal_type_of_use="tool"/>
+    <depend type="lib" ecosystem_name="github" name="llvm/llvm-project" version="15.0.7" site="https://github.com/llvm/llvm-project/tree/llvmorg-15.0.7/clang/tools/clang-format" legal_type_of_use="tool"/>
+    <depend type="lib" ecosystem_name="github" name="danmar/cppcheck" version="2.13" site="https://github.com/danmar/cppcheck/archive/2.13.0.zip" legal_type_of_use="tool"/>
+    <depend type="lib" ecosystem_name="github" name="cpplint/cpplint" version="1.6.1" site="https://github.com/cpplint/cpplint/tree/1.6.1" legal_type_of_use="tool"/>
     <depend type="lib" ecosystem_name="pypi" name="PyLint" version="3.0.0a7" site="https://github.com/pylint-dev/pylint/tree/v3.0.0a7" legal_type_of_use="binary"/>
-    <depend type="toolset" ecosystem_name="github" name="PyCQA/flake8" version="6.1.0" site="https://github.com/PyCQA/flake8/tree/6.1.0" legal_type_of_use="tool"/>
-    <depend type="toolset" ecosystem_name="github" name="psf/black" version="23.7.0" site="https://github.com/psf/black/tree/23.7.0" legal_type_of_use="tool"/>
+    <depend type="lib" ecosystem_name="github" name="PyCQA/flake8" version="6.1.0" site="https://github.com/PyCQA/flake8/tree/6.1.0" legal_type_of_use="tool"/>
+    <depend type="lib" ecosystem_name="github" name="psf/black" version="23.7.0" site="https://github.com/psf/black/tree/23.7.0" legal_type_of_use="tool"/>
     <depend type="lib" ecosystem_name="github" name="Kitware/CMake" version="3.29" site="https://github.com/Kitware/CMake/tree/v3.29.0" legal_type_of_use="binary"/>
     <depend type="lib" ecosystem_name="pypi" name="Pytest" version="8.0" site="https://github.com/pytest-dev/pytest/tree/8.0.0" legal_type_of_use="binary"/>
     <depend type="lib" ecosystem_name="pypi" name="MyPy" version="1.0.1" site="https://github.com/python/mypy/tree/v1.0.1" legal_type_of_use="binary"/>
@@ -80,5 +80,5 @@
     <depend type="lib" ecosystem_name="deb" name="vim" version="2:9.0.1378-2" site="https://packages.debian.org/bookworm/vim" legal_type_of_use="binary"/>
     <depend type="lib" ecosystem_name="deb" name="wget" version="1.21.3-1+b2" site="https://packages.debian.org/bookworm/wget" legal_type_of_use="binary"/>
     <depend type="lib" ecosystem_name="deb" name="zip" version="3.0-13" site="https://packages.debian.org/bookworm/zip" legal_type_of_use="binary"/>
-    <depend type="toolset" ecosystem_name="common" name="Valgrind" version="3.23.0" site="https://valgrind.org/downloads/current.html" legal_type_of_use="tool"/>
+    <depend type="lib" ecosystem_name="common" name="Valgrind" version="3.23.0" site="https://valgrind.org/downloads/current.html" legal_type_of_use="tool"/>
 </depends>
