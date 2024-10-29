@@ -31,6 +31,7 @@ if(KNP_BUILD_DOCUMENTATION)
 
     # Additional tag.
     set(DOXYGEN_ALIASES "license=@par License:")
+    set(DOXYGEN_ALIASES "kaspersky_support=@par Developers:")
 
     set(DOXYGEN_BUILTIN_STL_SUPPORT YES)
     set(DOXYGEN_CALL_GRAPH YES)
