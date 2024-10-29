@@ -1,4 +1,16 @@
 #!/usr/bin/env python3
+"""
+@file pybind11_gen.py
+@brief Binding generator for PyBind11.
+
+@license Apache 2.0 License.
+@copyright © 2024 AO Kaspersky Lab
+@date 03.10.2023.
+
+This file has been modified by AO Kaspersky Lab in 10-2023.
+Scope of modification: Changes to the grammar processing function.
+"""
+
 #
 # Apache 2 license
 #
