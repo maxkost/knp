@@ -44,7 +44,7 @@ TEST(FrameworkSuite, ModelAddInputChannels)
         decltype(dst_pop)::PopulationNeuronType>(src_pop, dst_pop);
 
     SPDLOG_DEBUG(
-        "Src pop UID = {}, dst pop UID = {}, proj UID = {}", std::string(src_pop.get_uid()),
+        "Presynaptic population UID = {}, postsynaptic population UID = {}, projection UID = {}.", std::string(src_pop.get_uid()),
         std::string(dst_pop.get_uid()), std::string(new_proj.get_uid()));
 
     EXPECT_THROW(
@@ -74,7 +74,7 @@ TEST(FrameworkSuite, ModelAddOutputChannels)  //!OCLINT(False positive)
 
     knp::framework::Model model(std::move(network));
 
-    SPDLOG_DEBUG("Output pop UID = {}", std::string(pop_uid));
+    SPDLOG_DEBUG("Output population UID = {}.", std::string(pop_uid));
 
     EXPECT_THROW(
         model.connect_output_population(knp::core::UID(), dst_pop), std::logic_error);  //!OCLINT(False positive)

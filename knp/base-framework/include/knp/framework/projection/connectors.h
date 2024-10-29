@@ -23,10 +23,11 @@ namespace knp::framework::projection
 {
 
 /**
- * @brief Connect source and destination populations.
- * @details Make all to all connection between two populations.
- * @tparam SourceNeuronType type of the source population neuron.
- * @tparam DestinationNeuronType type of the destination population neuron.
+ * @brief Connect presynaptic and postsynaptic populations.
+ * @details The function makes connections between each presynaptic population (source) neuron to each postsynaptic population
+ * (destination) neuron.
+ * @tparam SourceNeuronType type of the presynaptic population neuron.
+ * @tparam DestinationNeuronType type of the postsynaptic population neuron.
  * @tparam SynapseType new projection synapse type.
  * @param src presynaptic population.
  * @param dst postsynaptic population.
@@ -44,15 +45,15 @@ template <typename SynapseType, typename SourceNeuronType, typename DestinationN
 
 
 /**
- * @brief Connect source and destination populations.
- * @details Make arbitrary projection.
- * @tparam SourceNeuronType type of the source population neuron.
- * @tparam DestinationNeuronType type of the destination population neuron.
+ * @brief Connect presynaptic and postsynaptic populations.
+ * @details The function makes a projection with arbitrary connections between population neurons.
+ * @tparam SourceNeuronType type of the presynaptic population neuron.
+ * @tparam DestinationNeuronType type of the postsynaptic population neuron.
  * @tparam SynapseType new projection synapse type.
  * @param src presynaptic population.
  * @param dst postsynaptic population.
- * @param syn_gen synapse generator.
- * @param num_iterations projection generator call iterations.
+ * @param syn_gen synapse parameters generator.
+ * @param num_iterations number of iterations.
  * @return new projection between two populations.
  */
 template <typename SynapseType, typename SourceNeuronType, typename DestinationNeuronType>

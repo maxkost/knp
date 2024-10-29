@@ -21,14 +21,14 @@ namespace knp::framework::population
 {
 
 /**
- * @brief Generators of the neurons with specific parameters.
+ * @brief Namespace for generators of neurons with specific parameters.
  */
 namespace neurons_generators
 {
 
 /**
- * @brief Generate a population from a container.
- * @param container container with neuron parameters.
+ * @brief Generate neurons from a container with parameter values.
+ * @param container container with neuron parameter values.
  * @tparam NeuronType neuron type.
  * @tparam Container container type.
  * @return neuron parameters generator.
@@ -43,9 +43,9 @@ template <typename NeuronType, template <typename...> class Container>
 
 
 /**
- * @brief Generate a random population.
+ * @brief Generate neurons with random paramater values.
  * @details This generator uses MT19937 RNG with uniform integer distribution.
- * @warning Neurons parameters are absolutely random: generator doesn't pay attention to the limits.
+ * @warning Neuron parameter values are absolutely random: generator doesn't pay attention to the limits.
  * @tparam NeuronType type of neuron parameters.
  */
 template <typename NeuronType>
@@ -76,7 +76,7 @@ private:
 
 
 /**
- * @brief Generate a population with default neuron parameter values.
+ * @brief Generate neurons with default neuron parameter values.
  * @tparam NeuronType type of neuron parameters.
  * @return neuron parameters generator.
  */
@@ -89,8 +89,8 @@ template <typename NeuronType>
 
 
 /**
- * @brief Generate a population with neuron parameter values cloned from the source neuron.
- * @param source_neuron parameters source.
+ * @brief Generate neurons which parameter values are cloned from a specified neuron.
+ * @param source_neuron source neuron from which to clone parameters.
  * @tparam NeuronType type of neuron parameters.
  * @return neuron parameters generator.
  */

@@ -115,8 +115,8 @@ void ModelLoader::load(knp::framework::Model &model)
 
     const auto &network = model.get_network();
 
-    // Must be used after channel initializing, because init_channels() add tags to the input projections and output
-    // populations.
+    // Must be used after channel initialization, because the `init_channels()` function adds tags to 
+    // the input projections and output populations.
     backend_->load_all_populations(network.get_populations());
     backend_->load_all_projections(network.get_projections());
 }

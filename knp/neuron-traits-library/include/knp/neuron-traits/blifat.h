@@ -90,7 +90,7 @@ struct default_values<BLIFATNeuron>
     constexpr static double postsynaptic_trace_increment_ = 0.;
 
     /**
-     * @brief The parameter defines speed with which a potential tends to the `reverse_inhibitory_potential` value.
+     * @brief The parameter defines speed with which a potential tends to the `reversal_inhibitory_potential` value.
      */
     constexpr static double inhibitory_conductance_ = 0.;
 
@@ -199,7 +199,7 @@ struct neuron_parameters<BLIFATNeuron>
      */
     double postsynaptic_trace_increment_ = default_values<BLIFATNeuron>::postsynaptic_trace_increment_;
     /**
-     * @brief The parameter defines speed with which a potential tends to the `reverse_inhibitory_potential` value.
+     * @brief The parameter defines speed with which a potential tends to the `reversal_inhibitory_potential` value.
      */
     double inhibitory_conductance_ = default_values<BLIFATNeuron>::inhibitory_conductance_;
 
@@ -237,7 +237,7 @@ struct neuron_parameters<BLIFATNeuron>
     double reflexive_weight_ = default_values<BLIFATNeuron>::reflexive_weight_;
 
     /**
-     * @brief The parameter takes the default value of `reverse_inhibitory_potential` defined for a BLIFAT neuron.
+     * @brief The parameter takes the default value of `reversal_inhibitory_potential` defined for a BLIFAT neuron.
      */
     double reversal_inhibitory_potential_ = default_values<BLIFATNeuron>::reversal_inhibitory_potential_;
 
