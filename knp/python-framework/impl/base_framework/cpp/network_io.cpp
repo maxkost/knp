@@ -1,7 +1,7 @@
 /**
  * @file network_io.cpp
  * @brief Python bindings for saving and loading network.
- * @kaspersky_developer Vartenkov A.
+ * @author Vartenkov A.
  * @date 05.06.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

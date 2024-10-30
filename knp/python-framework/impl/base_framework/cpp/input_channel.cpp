@@ -1,7 +1,7 @@
 /**
  * @file input_channel.cpp
  * @brief Python bindings for InputChannel.
- * @kaspersky_developer Vartenkov A.
+ * @author Vartenkov A.
  * @date 30.05.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
