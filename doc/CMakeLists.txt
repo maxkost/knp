@@ -26,7 +26,7 @@ knp_get_component_name("${PROJECT_NAME}" COMPONENT_NAME)
 
 install(DIRECTORY
         "${CMAKE_CURRENT_SOURCE_DIR}/html"
-        "${CMAKE_CURRENT_SOURCE_DIR}/pdf"
+#        "${CMAKE_CURRENT_SOURCE_DIR}/pdf"
         COMPONENT "${COMPONENT_NAME}"
         TYPE DOC)
 
