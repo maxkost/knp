@@ -3,7 +3,7 @@
 @file comment_editor.py
 @brief Doxygen heading comment fixer.
 
-@author Artiom N.
+@kaspersky_support Artiom N.
 @license Apache 2.0 License.
 @copyright © 2024 AO Kaspersky Lab
 @date 11.06.2024.
