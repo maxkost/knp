@@ -46,8 +46,7 @@ if(KNP_BUILD_DOCUMENTATION)
     list(APPEND _strip_list "${SOURCE_ROOT_DIR}")
 
     # Additional tag.
-    set(DOXYGEN_ALIASES "license=@par License:")
-    set(DOXYGEN_ALIASES "kaspersky_support=@par Developers:")
+    set(DOXYGEN_ALIASES "license=@par License:" "kaspersky_support=@par Developers:")
 
     set(DOXYGEN_BUILTIN_STL_SUPPORT YES)
     set(DOXYGEN_CALL_GRAPH YES)
