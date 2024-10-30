@@ -131,12 +131,13 @@ if (KNP_INSTALL)
             COMPONENT ${COMPONENT_NAME}-dev
             DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
 
-    #    knp_packaging_set_parameters(${COMPONENT_NAME} "${PROJECT_NAME}"
-#            DESCRIPTION "${PROJECT_DESCRIPTION}"
-#            DEPENDS )
-#
-#    knp_packaging_set_parameters(${COMPONENT_NAME}-dev "${PROJECT_NAME}"
-#            DESCRIPTION "${PROJECT_DESCRIPTION} development files: C++ headers, CMake modules, static libraries"
-#            DEPENDS "${COMPONENT_NAME}" "libboost-all-dev (= ${Boost_VERSION})"
-#            RECOMMENDS "cppzmq-dev (>= 4.9.0-1)" "cppzmq (= 4.9.0-1)")
+    knp_packaging_set_parameters(${COMPONENT_NAME} "${PROJECT_NAME}"
+        DESCRIPTION "${PROJECT_DESCRIPTION}"
+        # DEPENDS "backend" "libboost-all (= ${Boost_VERSION})" "libhdf5" "libzmq5"
+    )
+
+    knp_packaging_set_parameters(${COMPONENT_NAME}-dev "${PROJECT_NAME}"
+            DESCRIPTION "${PROJECT_DESCRIPTION} development files: C++ headers, CMake modules, static libraries"
+            DEPENDS "${COMPONENT_NAME}" "libboost-all-dev (= ${Boost_VERSION})"
+            RECOMMENDS "cppzmq-dev (>= 4.9.0-1)" "cppzmq (= 4.9.0-1)")
 endif()

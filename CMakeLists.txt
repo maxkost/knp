@@ -235,15 +235,6 @@ else()
     set(ZMQ_ENABLE_PRECOMPS ON)
 endif()
 
-macro(install)
-    # Special hack needs to prevent redundant packages generation by third-party.
-    if (CMAKE_CURRENT_SOURCE_DIR MATCHES "${CPM_SOURCE_CACHE}/.*" OR CMAKE_CURRENT_SOURCE_DIR MATCHES "${CPM_SOURCE_CACHE_DEFAULT}/.*")
-        message(STATUS "Third-party installation will be skipped: ${CMAKE_CURRENT_SOURCE_DIR}")
-        return()
-    endif()
-    _install(${ARGV})
-endmacro()
-
 add_third_party(NAME "libzmq"
                 GITHUB_REPOSITORY "zeromq/libzmq"
                 VERSION "4.3.5"
@@ -253,6 +244,15 @@ add_third_party(NAME "libzmq"
                     "BUILD_TESTS OFF"
                     "ENABLE_CPACK OFF"
                     "ENABLE_PRECOMPILED ${ZMQ_ENABLE_PRECOMPS}")
+
+macro(install)
+    # Special hack needs to prevent redundant packages generation by third-party.
+    if (CMAKE_CURRENT_SOURCE_DIR MATCHES "${CPM_SOURCE_CACHE}/.*" OR CMAKE_CURRENT_SOURCE_DIR MATCHES "${CPM_SOURCE_CACHE_DEFAULT}/.*")
+        message(STATUS "Third-party installation will be skipped: ${CMAKE_CURRENT_SOURCE_DIR}")
+        return()
+    endif()
+    _install(${ARGV})
+endmacro()
 
 #
 # LibHDF5 and its dependencies.
@@ -423,28 +423,5 @@ set(CPACK_RPM_COMPONENT_INSTALL ON)
 set(CPACK_RPM_PACKAGE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 set(CPACK_RPM_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION}")
 set(CPACK_RPM_PACKAGE_GROUP "science")
-
-
-#
-# Components.
-#
-
-cpack_add_component(cpp-framework
-        #            DISPLAY_NAME knp-"${COMPONENT_NAME}"
-        DESCRIPTION "${PROJECT_DESCRIPTION}"
-        DISABLED
-        GROUP development
-        DEPENDS "backend" "libboost-all (= ${Boost_VERSION})" "libhdf5" "libzmq5")
-
-#cpack_add_component("${COMPONENT_NAME}-dev"
-#        DISPLAY_NAME knp-"${COMPONENT_NAME}-dev"
-#        DESCRIPTION "${PROJECT_DESCRIPTION}"
-#        DISABLED
-#        #             GROUP dev
-#        DEPENDS "knp-backend" "libboost-all (= ${Boost_VERSION})" "libhdf5" "libzmq5"
-#        #            INSTALL_TYPES type1 type2 ...
-#        )
-
-set(CPACK_DEBIAN_PACKAGE_DEBUG ON)
 
 include (CPack)
