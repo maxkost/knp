@@ -2,13 +2,11 @@
 
 Platform for the spiking neural network execution.
 
-[![Build status](https://hqrndtfs.avp.ru/tfs/DefaultCollection/FT-SNN/_apis/build/status/KNP)](https://hqrndtfs.avp.ru/tfs/DefaultCollection/FT-SNN/_build/latest?definitionId=204945)
-
 <div align="center">
-  <img src="doc/img/neuromorphic-platform.svg" alt="Logo">
+  <img src="packaging/neuromorphic-platform.svg" alt="Logo">
 </div>
 
-The Kaspersky Neuromorphic Platform ("KNP" or "platform") is a software platform for developing, training and executing spiking neural networks on a variety of computers. 
+The Kaspersky Neuromorphic Platform ("KNP" or "platform") is a software platform for developing, training and executing spiking neural networks on a variety of computers.
 
 You can use Kaspersky Neuromorphic Platform to do the following:
 
