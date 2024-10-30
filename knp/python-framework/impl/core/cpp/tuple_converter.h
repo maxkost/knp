@@ -1,8 +1,7 @@
 /**
  * @file tuple_converter.h
  * @brief C++ <-> Python std::tuple converter.
- * @kaspersky_support Roman Yakovenko copyright 2004-2007
- * @authors Artiom N.
+ * @author Roman Yakovenko copyright 2004-2007
  * @copyright Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy
  * at http://www.boost.org/LICENSE_1_0.txt)
  * @date 23.02.2024
