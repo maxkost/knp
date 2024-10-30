@@ -13,10 +13,10 @@ using rds_rule = knp::synapse_traits::STDPSynapticResourceRule<knp::synapse_trai
 
 
 py::class_<rds_rule>(
-    "SynapticResourceSTDPDeltaSynapseRule", "Parameters for synaptic resource delta synapse plasticity.")
+    "SynapticResourceSTDPDeltaSynapseRule", "Delta synapse parameters with support of synaptic resource-based STDP.")
     .def(py::init<>())
     .add_property(
-        "synaptic_resource", &rds_rule::synaptic_resource_, "Synaptic resource that determines synapse weight")
+        "synaptic_resource", &rds_rule::synaptic_resource_, "Synaptic resource that determines synapse weight.")
     .add_property("min_weight", &rds_rule::w_min_, "Minimal weight value.")
     .add_property("max_weight", &rds_rule::w_max_, "Maximal weight value.")
     .add_property("d_u", &rds_rule::d_u_, "Resource decreasing constant.")
@@ -30,7 +30,7 @@ py::class_<rds_rule>(
 
 
 py::class_<rds_params, py::bases<ds_params>>(
-    "SynapticResourceSTDPDeltaSynapseParameters", "Structure for Resource STDP Delta synapse parameters.")
+    "SynapticResourceSTDPDeltaSynapseParameters", "Structure for Delta synapse parameters with support of synaptic resource-based STDP.")
     .def(py::init<>())
     .add_property("weight", &rds_params::weight_, "Synaptic weight.")
     .add_property(

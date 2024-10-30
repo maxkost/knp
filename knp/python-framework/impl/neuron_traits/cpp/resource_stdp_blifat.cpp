@@ -16,6 +16,6 @@ using bn_params = knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIF
 #if defined(_KNP_IN_NEURON_TRAITS)
 
 py::class_<rsbn_params, py::bases<bn_params>>(
-    "SynapticResourceSTDPBLIFATNeuronParameters", "Structure for STDP Resource BLIFAT neuron parameters", py::no_init);
+    "SynapticResourceSTDPBLIFATNeuronParameters", "Structure for BLIFAT neuron parameters with support of synaptic resource-based STDP.", py::no_init);
 
 #endif

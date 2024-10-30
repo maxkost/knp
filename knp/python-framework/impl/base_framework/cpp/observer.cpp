@@ -17,9 +17,9 @@ using ImpactMsg = knp::core::messaging::SynapticImpactMessage;
 using SpikeObserver = knp::framework::monitoring::MessageObserver<SpikeMsg>;
 using ImpactObserver = knp::framework::monitoring::MessageObserver<ImpactMsg>;
 
-py::def("make_spike_observer", make_observer<SpikeMsg>, "Create an observer to process spike messages");
+py::def("make_spike_observer", make_observer<SpikeMsg>, "Create an observer to process spike messages.");
 
-py::def("make_impact_observer", make_observer<ImpactMsg>, "Create an observer to process synaptic impacts");
+py::def("make_impact_observer", make_observer<ImpactMsg>, "Create an observer to process synaptic impact messages.");
 
 
 py::class_<SpikeObserver, boost::noncopyable>(
@@ -31,7 +31,7 @@ py::class_<SpikeObserver, boost::noncopyable>(
 
 py::class_<ImpactObserver, boost::noncopyable>(
     "ImpactMessageObserver",
-    "The ImpactMessageObserver class is an observer that receives synaptic impact messages and processes them.",
+    "The ImpactMessageObserver class is a definition of an observer that receives synaptic impact messages and processes them.",
     py::no_init)
     .def("get_uid", &get_entity_uid<ImpactObserver>, "Get observer UID.")
     .def("subscribe", &ImpactObserver::subscribe, "Subscribe to synaptic impact messages from a list of entities.");

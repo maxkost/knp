@@ -207,7 +207,7 @@ py::class_<BackendWrapper, boost::noncopyable>(
         py::make_function(
             static_cast<core::MessageBus &(core::Backend::*)()>(&core::Backend::get_message_bus),  // NOLINT
             py::return_internal_reference<>()),
-        "Get message bus used by backend")
+        "Get message bus used by backend.")
     .add_property(
         "message_endpoint",
         py::make_function(
