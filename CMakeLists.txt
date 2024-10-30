@@ -245,6 +245,12 @@ add_third_party(NAME "libzmq"
                     "ENABLE_CPACK OFF"
                     "ENABLE_PRECOMPILED ${ZMQ_ENABLE_PRECOMPS}")
 
+add_third_party("gh:google/flatbuffers@24.3.25"
+                OPTIONS
+                    "FLATBUFFERS_BUILD_TESTS OFF"
+                    "FLATBUFFERS_BUILD_CPP17 ON"
+                    "FLATBUFFERS_INSTALL OFF")
+
 macro(install)
     # Special hack needs to prevent redundant packages generation by third-party.
     if (CMAKE_CURRENT_SOURCE_DIR MATCHES "${CPM_SOURCE_CACHE}/.*" OR CMAKE_CURRENT_SOURCE_DIR MATCHES "${CPM_SOURCE_CACHE_DEFAULT}/.*")
@@ -304,11 +310,6 @@ add_third_party("gh:gabime/spdlog@1.13.0"
 add_third_party("gh:zeromq/cppzmq@4.10.0"
                 OPTIONS
                     "CPPZMQ_BUILD_TESTS OFF")
-
-add_third_party("gh:google/flatbuffers@24.3.25"
-                OPTIONS
-                    "FLATBUFFERS_BUILD_TESTS OFF"
-                    "FLATBUFFERS_BUILD_CPP17 ON")
 
 add_third_party("gh:Tencent/rapidjson#7c73dd7"
                 OPTIONS
