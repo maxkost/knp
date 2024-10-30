@@ -1,7 +1,7 @@
 /**
  * @file altai.cpp
  * @brief AltAI devices class implementation.
- * @author Liubiakin A.
+ * @kaspersky_support Liubiakin A.
  * @date 17.10.2024
  */
 

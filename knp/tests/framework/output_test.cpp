@@ -1,7 +1,7 @@
 /**
  * @file output_test.cpp
  * @brief Tests for output channels and converters.
- * @author A. Vartenkov
+ * @kaspersky_support A. Vartenkov
  * @date 01.06.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

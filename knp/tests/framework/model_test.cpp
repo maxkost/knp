@@ -1,7 +1,7 @@
 /**
  * @file model_test.cpp
  * @brief Model class testing.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 22.10.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -56,8 +56,8 @@ TEST(FrameworkSuite, ModelAddInputChannels)
         decltype(dst_pop)::PopulationNeuronType>(src_pop, dst_pop);
 
     SPDLOG_DEBUG(
-        "Presynaptic population UID = {}, postsynaptic population UID = {}, projection UID = {}.", std::string(src_pop.get_uid()),
-        std::string(dst_pop.get_uid()), std::string(new_proj.get_uid()));
+        "Presynaptic population UID = {}, postsynaptic population UID = {}, projection UID = {}.",
+        std::string(src_pop.get_uid()), std::string(dst_pop.get_uid()), std::string(new_proj.get_uid()));
 
     EXPECT_THROW(
         model.connect_input_projection(knp::core::UID(), new_proj), std::logic_error);  //!OCLINT(False positive)

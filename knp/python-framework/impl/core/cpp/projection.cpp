@@ -1,7 +1,7 @@
 /**
  * @file projection.cpp
  * @brief Python bindings for Projection.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 16.02.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

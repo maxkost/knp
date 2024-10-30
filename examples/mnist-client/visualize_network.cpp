@@ -1,7 +1,7 @@
 /**
  * @file visualize_network.cpp
  * @brief Functions for subgraph visualization.
- * @author A. Vartenkov
+ * @kaspersky_support A. Vartenkov
  * @date 26.07.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -43,7 +43,7 @@ using AdjacencyList = std::vector<std::vector<size_t>>;
 
 /**
  * @brief Parameters for network drawing.
- */ 
+ */
 struct DrawingParameters
 {
     /**
@@ -71,7 +71,8 @@ struct DrawingParameters
      */
     const int arrow_len = 20;
     /**
-     * @brief An arrow head is a triangle. Arrow width is back side length divided by `2 * arrow_len` (`1.0` for a right angle).
+     * @brief An arrow head is a triangle. Arrow width is back side length divided by `2 * arrow_len` (`1.0` for a right
+     * angle).
      */
     const double arrow_width = 0.3;
     /**
@@ -199,7 +200,7 @@ void draw_simple_arrow_line(
 void draw_edges(
     cv::Mat &out_img, const AdjacencyList &adj_list, const std::vector<int> &nodes,
     const std::vector<cv::Point2i> &points, const DrawingParameters &params)
-{  
+{
     for (size_t i = 0; i < nodes.size(); ++i)
     {
         // This is a bit nonobvious. `adj_list` is a list for all nodes in the graph,
@@ -282,7 +283,7 @@ cv::Mat draw_annotated_subgraph(
  * @param adj_list adjacency list of the whole graph.
  * @param nodes nodes that are part of the subgraph.
  * @param points node coordinates.
- * @param inputs input nodes. 
+ * @param inputs input nodes.
  * @param img_size output image size.
  * @param params graph drawing parameters.
  * @return image of a drawn subgraph.
@@ -417,8 +418,8 @@ std::vector<std::vector<int>> divide_graph_by_connectivity(const NetworkGraph &g
 /**
  * @brief Print network subset description.
  * @param adj_list adjacency list.
- * @param rev_list reversed adjacency list. 
- * @param nodes nodes from a connected subset. 
+ * @param rev_list reversed adjacency list.
+ * @param nodes nodes from a connected subset.
  * @see build_adjacency_list, make_reverse_list, and find_connected_set.
  */
 void print_connected_subset(

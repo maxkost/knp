@@ -1,7 +1,7 @@
 /**
  * @file backend.cpp
  * @brief Multi-threaded CPU backend class implementation.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 21.06.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -90,7 +90,8 @@ void MultiThreadedCPUBackend::calculate_populations_pre_impact()
                         boost::mp11::mp_find<SupportedPopulations, T>{} == boost::mp11::mp_size<SupportedPopulations>{})
                     {
                         static_assert(
-                            knp::meta::always_false_v<T>, "Population is not supported by the multi-threaded CPU backend.");
+                            knp::meta::always_false_v<T>,
+                            "Population is not supported by the multi-threaded CPU backend.");
                     }
 
                     // Start threads.

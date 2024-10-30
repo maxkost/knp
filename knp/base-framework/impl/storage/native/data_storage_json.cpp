@@ -1,7 +1,7 @@
 /**
  * @file data_storage_json.cpp
  * @brief Saving and loading data from JSON format.
- * @author An. Vartenkov
+ * @kaspersky_support An. Vartenkov
  * @date 16.04.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

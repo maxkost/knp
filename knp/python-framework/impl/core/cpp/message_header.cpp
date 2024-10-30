@@ -1,7 +1,7 @@
 /**
  * @file message_header.cpp
  * @brief Python bindings for message header.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 01.02.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

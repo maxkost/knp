@@ -1,7 +1,7 @@
 /**
  * @file synaptic_impact_message.cpp
  * @brief Synaptic impact message I/O operator implementation.
- * @author Vartenkov A.
+ * @kaspersky_support Vartenkov A.
  * @date 23.03.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

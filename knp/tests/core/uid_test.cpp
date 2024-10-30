@@ -1,7 +1,7 @@
 /**
  * @file uid_test.cpp
  * @brief UUID tests.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 13.07.2023.
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -53,14 +53,14 @@ TEST(UidSuite, UidToString)
 
 TEST(UidSuite, UidFromStream)
 {
-    //    ::knp::core::UID uid;
+    // ::knp::core::UID uid;
 
-    //    std::istringstream ss;
+    // std::istringstream ss;
 
-    //    ss << "01020300-0000-0000-0000-000000000000";
-    //    uid << ss;
+    // ss << "01020300-0000-0000-0000-000000000000";
+    // uid << ss;
 
-    //    ASSERT_EQ(uid, ::knp::core::UID(::boost::uuids::uuid{{1, 2, 3}}));
+    // ASSERT_EQ(uid, ::knp::core::UID(::boost::uuids::uuid{{1, 2, 3}}));
 }
 
 

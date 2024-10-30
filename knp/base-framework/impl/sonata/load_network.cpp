@@ -1,7 +1,7 @@
 /**
  * @file load_network.cpp
  * @brief Network loading source file.
- * @author An. Vartenkov
+ * @kaspersky_support An. Vartenkov
  * @date 29.02.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -62,7 +62,8 @@ std::vector<std::string> get_projection_names(const HighFive::File &file)
 
 std::vector<core::AllProjectionsVariant> load_projections(const fs::path &proj_h5_file)
 {
-    if (!fs::is_regular_file(proj_h5_file)) throw std::runtime_error("Could not open file \"" + proj_h5_file.string() + "\".");
+    if (!fs::is_regular_file(proj_h5_file))
+        throw std::runtime_error("Could not open file \"" + proj_h5_file.string() + "\".");
     HighFive::File storage{proj_h5_file.string()};
     auto group = storage.getGroup("edges");
     size_t num_projections = group.getNumberObjects();

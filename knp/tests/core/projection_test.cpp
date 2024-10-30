@@ -1,7 +1,7 @@
 /**
  * @file projection_test.cpp
  * @brief Tests for projection entity.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 13.04.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -123,7 +123,7 @@ TEST(ProjectionSuite, SynapseAddition)
     ASSERT_EQ(count, presynaptic_size);
     ASSERT_EQ(projection.size(), 2 * presynaptic_size + 1);
 
-    // Check that neuron #10 now has three connections: #10, #11 and #12. 
+    // Check that neuron #10 now has three connections: #10, #11 and #12.
     std::vector<Synapse> connections;
     std::copy_if(
         projection.begin(), projection.end(), std::back_inserter(connections),
@@ -197,8 +197,8 @@ TEST(ProjectionSuite, SynapseRemoval)
     const size_t synapses_per_neuron = 4;
     const size_t total_connections = presynaptic_size * synapses_per_neuron;
 
-    // If we run this generator `N * presynaptic size` times, we will have 1 to N cycled connections of `x -> x, x -> x + 1, ... 
-    // x -> x + N`.
+    // If we run this generator `N * presynaptic size` times, we will have 1 to N cycled connections of `x -> x, x -> x
+    // + 1, ... x -> x + N`.
     count = projection.add_synapses(
         make_cyclic_generator(
             {presynaptic_size, postsynaptic_size}, {0, 1, knp::synapse_traits::OutputType::EXCITATORY}),

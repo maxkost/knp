@@ -1,7 +1,7 @@
 /**
  * @file main.cpp
  * @brief Loading model from ARNI format and saving to SONATA format example.
- * @author A. Vartenkov
+ * @kaspersky_support A. Vartenkov
  * @date 04.04.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -207,7 +207,8 @@ knp::framework::Network create_network_from_monitoring_file(
     char comma;
     int neuron;
 
-    if (!moncsv.good()) throw std::runtime_error("\"" + std::filesystem::absolute(monitoring_file).string() + "\" not found.");
+    if (!moncsv.good())
+        throw std::runtime_error("\"" + std::filesystem::absolute(monitoring_file).string() + "\" not found.");
 
     std::string str;
     std::vector<PopulationParams> populations;
@@ -271,7 +272,8 @@ knp::framework::Network create_network_from_monitoring_file(
 
     if (neuron_populations.empty())
         throw std::runtime_error(
-            "\"" + monitoring_file.string() + "\" has wrong format or does not contain tact #" + std::to_string(tact) + ".");
+            "\"" + monitoring_file.string() + "\" has wrong format or does not contain tact #" + std::to_string(tact) +
+            ".");
 
     // Now str contains description of the first neuron.
 

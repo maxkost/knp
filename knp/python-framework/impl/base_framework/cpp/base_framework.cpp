@@ -1,7 +1,7 @@
 /**
  * @file base_framework.cpp
  * @brief Python bindings for C++ framework.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 21.02.24
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

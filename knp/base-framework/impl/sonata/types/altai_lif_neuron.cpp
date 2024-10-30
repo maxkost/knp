@@ -1,7 +1,7 @@
 /**
  * @file altai_lif_neuron.cpp
  * @brief AltaiLIF neuron procedures.
- * @author An. Vartenkov
+ * @kaspersky_support An. Vartenkov
  * @date 15.05.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

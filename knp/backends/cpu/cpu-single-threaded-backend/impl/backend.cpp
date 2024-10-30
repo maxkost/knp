@@ -1,7 +1,7 @@
 /**
  * @file backend.cpp
  * @brief Single-threaded CPU backend class implementation.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 21.02.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -102,7 +102,9 @@ void SingleThreadedCPUBackend::_step()
                 if constexpr (
                     boost::mp11::mp_find<SupportedPopulations, T>{} == boost::mp11::mp_size<SupportedPopulations>{})
                 {
-                    static_assert(knp::meta::always_false_v<T>, "Population is not supported by the single-threaded CPU backend.");
+                    static_assert(
+                        knp::meta::always_false_v<T>,
+                        "Population is not supported by the single-threaded CPU backend.");
                 }
                 auto message_opt = calculate_population(arg);
                 messages.push_back(std::move(message_opt));
@@ -123,7 +125,9 @@ void SingleThreadedCPUBackend::_step()
                 if constexpr (
                     boost::mp11::mp_find<SupportedProjections, T>{} == boost::mp11::mp_size<SupportedProjections>{})
                 {
-                    static_assert(knp::meta::always_false_v<T>, "Projection is not supported by the single-threaded CPU backend.");
+                    static_assert(
+                        knp::meta::always_false_v<T>,
+                        "Projection is not supported by the single-threaded CPU backend.");
                 }
                 calculate_projection(arg, projection.messages_);
             },

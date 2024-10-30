@@ -1,7 +1,7 @@
 /**
  * @file save-load-networks.h
  * @brief Example of saving and loading a simple network.
- * @author A. Vartenkov
+ * @kaspersky_support A. Vartenkov
  * @date 04.04.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
