@@ -9,6 +9,7 @@
 
 #include "common.h"
 #include "input_channel_utility.h"
+#include "model_loader_utility.h"
 #include "model_utility.h"
 #include "network_utility.h"
 #include "observer_utility.h"
@@ -41,9 +42,11 @@ BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
 
 #include "input_channel.cpp"   // NOLINT
 #include "model.cpp"           // NOLINT
+#include "model_loader.cpp"    // NOLINT
 #include "network.cpp"         // NOLINT
 #include "network_io.cpp"      // NOLINT
 #include "observer.cpp"        // NOLINT
 #include "output_channel.cpp"  // NOLINT
+
 #undef KNP_IN_BASE_FW
 }
