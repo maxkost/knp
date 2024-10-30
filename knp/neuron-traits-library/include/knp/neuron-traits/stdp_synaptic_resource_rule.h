@@ -1,7 +1,7 @@
 /**
  * @file stdp_synaptic_resource_rule.h
  * @brief Synaptic resource-based STDP neuron parameters.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 06.10.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -95,7 +95,7 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
     }
 
     /**
-     * @brief Time parameter for dopamine plasticity. 
+     * @brief Time parameter for dopamine plasticity.
      * @todo Remove it when 3-phase learning is ready.
      */
     uint32_t dopamine_plasticity_time_ = 1;
@@ -113,10 +113,10 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
      */
     uint32_t resource_drain_coefficient_ = 0;
     /**
-     * @brief Dynamic synapse attribute for stability. 
-     * @details The stability reflects how well a synapse is trained. 
-     * The value increases with correct responses from a synapse and decreases in case of incorrect ones. 
-     * The higher the stability, the smaller the changes in synapse weight associated with plasticity. 
+     * @brief Dynamic synapse attribute for stability.
+     * @details The stability reflects how well a synapse is trained.
+     * The value increases with correct responses from a synapse and decreases in case of incorrect ones.
+     * The higher the stability, the smaller the changes in synapse weight associated with plasticity.
      * An increase in stability by 1 decreases synapse weight changes by two times.
      */
     float stability_ = 0;

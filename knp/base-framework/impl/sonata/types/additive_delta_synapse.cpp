@@ -1,7 +1,7 @@
 /**
  * @file additive_delta_synapse.cpp
  * @brief Functions for loading and saving Additive STDP delta synapses.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 15.05.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

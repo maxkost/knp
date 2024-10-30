@@ -1,7 +1,7 @@
 /**
  * @file get_network.cpp
  * @brief Getting network data from single-threaded CPU backend.
- * @author An. Vartenkov.
+ * @kaspersky_support An. Vartenkov.
  * @date 21.05.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

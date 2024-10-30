@@ -1,7 +1,7 @@
 /**
  * @file multi_thread_cpu_test.cpp
  * @brief Multi-threaded backend test.
- * @author Vartenkov An.
+ * @kaspersky_support Vartenkov An.
  * @date 07.04.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

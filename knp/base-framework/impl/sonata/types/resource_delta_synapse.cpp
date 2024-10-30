@@ -1,7 +1,7 @@
 /**
  * @file resource_delta_synapse.cpp
  * @brief Functions for loading and saving resource-based STDP-compatible delta synapses.
- * @author A. Vartenkov
+ * @kaspersky_support A. Vartenkov
  * @date 09.04.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -139,7 +139,7 @@ core::Projection<ResourceDeltaSynapse> load_projection(
     auto group = projection_group.getGroup("0");
     size_t group_size = edges_group.getGroup(projection_name).getDataSet("edge_group_id").getDimensions().at(0);
 
-    //    std::vector<core::Projection<ResourceDeltaSynapse>::Synapse> target(group_size);
+    // std::vector<core::Projection<ResourceDeltaSynapse>::Synapse> target(group_size);
 
     const auto weights = read_parameter<decltype(synapse_traits::synapse_parameters<ResourceDeltaSynapse>::weight_)>(
         group, "syn_weight", group_size, synapse_traits::default_values<synapse_traits::DeltaSynapse>::weight_);

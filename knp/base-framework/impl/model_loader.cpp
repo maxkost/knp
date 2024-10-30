@@ -1,7 +1,7 @@
 /**
  * @file model_loader.cpp
  * @brief Model loader class implementation.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 14.06.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -127,7 +127,7 @@ void ModelLoader::load(knp::framework::Model &model)
 
     const auto &network = model.get_network();
 
-    // Must be used after channel initialization, because the `init_channels()` function adds tags to 
+    // Must be used after channel initialization, because the `init_channels()` function adds tags to
     // the input projections and output populations.
     backend_->load_all_populations(network.get_populations());
     backend_->load_all_projections(network.get_projections());

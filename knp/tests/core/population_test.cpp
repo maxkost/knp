@@ -1,7 +1,7 @@
 /**
  * @file population_test.cpp
  * @brief Tests for population entity.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 13.02.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

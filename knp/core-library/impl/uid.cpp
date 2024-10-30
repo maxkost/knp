@@ -1,7 +1,7 @@
 /**
  * @file uid.cpp
  * @brief UID implementation.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 22.05.20
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

@@ -1,7 +1,7 @@
 /**
  * @file thread_pool.h
  * @brief Reusable thread pool class, a modified example from asio documentation that aggregates context and executor.
- * @author Vartenkov A.
+ * @kaspersky_support Vartenkov A.
  * @date 27.07.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

@@ -1,7 +1,7 @@
 /**
  * @file stdp_synaptic_resource_rule.h
  * @brief Rule for synapse resource-based STDP.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 05.09.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

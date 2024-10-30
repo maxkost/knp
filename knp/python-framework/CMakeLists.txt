@@ -106,29 +106,28 @@ if(KNP_BUILD_TESTS)
             COMMAND "${Python_EXECUTABLE}" -m pytest)
 endif()
 
-install(DIRECTORY
-        "${KNP_PYTHON_OUTPUT_DIRECTORY}/knp"
-        COMPONENT "python"
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/python3"
-        PATTERN "__pycache__" EXCLUDE
-        PATTERN "__init__.pyi" EXCLUDE
-        PATTERN "*.egg-info" EXCLUDE)
+if (KNP_INSTALL)
+    set(COMPONENT_NAME "python3-framework")
 
-knp_packaging_set_parameters("${COMPONENT_NAME}" "${PROJECT_NAME}"
-        DESCRIPTION "${PROJECT_DESCRIPTION}"
-        DEPENDS framework)
+    install(DIRECTORY
+            "${KNP_PYTHON_OUTPUT_DIRECTORY}/knp"
+            COMPONENT "${COMPONENT_NAME}"
+            DESTINATION "${CMAKE_INSTALL_LIBDIR}/python3"
+            PATTERN "__pycache__" EXCLUDE
+            PATTERN "__init__.pyi" EXCLUDE
+            PATTERN "*.egg-info" EXCLUDE
+            PATTERN "*.gcno" EXCLUDE)
 
-knp_get_component_name("${PROJECT_NAME}" COMPONENT_NAME)
-knp_get_component_var_name("${COMPONENT_NAME}" COMPONENT_VAR)
-set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_DEPENDS "python3 (>= 3.10)"
-    CACHE STRING "${PROJECT_NAME} deb package dependencies")
+    knp_packaging_set_parameters("${COMPONENT_NAME}" "${PROJECT_NAME}"
+            DESCRIPTION "${PROJECT_DESCRIPTION}"
+            DEPENDS "cpp-framework" "python3 (>= 3.10)")
+endif()
 
 #
 # PIP packaging.
 #
 
 if(KNP_PYTHON_BUILD_WHEEL)
-    #message(FATAL_ERROR ${Python3_EXECUTABLE})
     add_custom_command(
         OUTPUT "${KNP_PYTHON_OUTPUT_DIRECTORY}/dist/knp-${PROJECT_VERSION}-py3-none-any.whl"
         COMMAND "${Python3_EXECUTABLE}" -m build --wheel

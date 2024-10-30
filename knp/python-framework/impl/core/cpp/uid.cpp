@@ -1,7 +1,7 @@
 /**
  * @file uid.cpp
  * @brief Python bindings for UID.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 05.02.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

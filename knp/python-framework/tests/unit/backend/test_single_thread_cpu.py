@@ -2,7 +2,7 @@
 @file test_single_thread_cpu.py
 @brief Kaspersky Neuromorphic Platform single-thread CPU backend tests.
 
-@author Artiom N.
+@kaspersky_support Artiom N.
 @license Apache 2.0 License.
 @copyright © 2024 AO Kaspersky Lab
 @date 01.03.2024.

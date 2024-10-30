@@ -1,7 +1,7 @@
 /**
  * @file stdp_type_traits.h
  * @brief STDP associations and type traits.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 19.09.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

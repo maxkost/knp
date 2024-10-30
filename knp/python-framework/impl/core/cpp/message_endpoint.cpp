@@ -1,7 +1,7 @@
 /**
  * @file message_endpoint.cpp
  * @brief Python bindings for message endpoint.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 01.02.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -43,7 +43,7 @@ namespace mt = core::messaging;
 #    define INSTANCE_PY_MESSAGE_ENDPOINT_SUBSCRIBE_METHOD_IMPL(n, template_for_instance, message_type) \
         if (BOOST_PP_STRINGIZE(message_type) == class_obj_name)                                        \
         {                                                                                              \
-            SPDLOG_TRACE("Subscribing to {}...", class_obj_name);                                        \
+            SPDLOG_TRACE("Subscribing to {}...", class_obj_name);                                      \
             self.subscribe<mt::message_type>(receiver, py_iterable_to_vector<core::UID>(senders));     \
             return;                                                                                    \
         }
@@ -56,7 +56,7 @@ namespace mt = core::messaging;
         if (BOOST_PP_STRINGIZE(message_type) == class_obj_name)                                              \
         {                                                                                                    \
             auto msgs = self.unload_messages<mt::message_type>(receiver);                                    \
-            SPDLOG_TRACE("Unloading messages of type {} [count = {}]...", class_obj_name, msgs.size());     \
+            SPDLOG_TRACE("Unloading messages of type {} [count = {}]...", class_obj_name, msgs.size());      \
             return py::object(msgs);                                                                         \
         }
 

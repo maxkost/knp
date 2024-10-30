@@ -1,7 +1,7 @@
 /**
  * @file thread_pool_executor.h
  * @brief Thread pool executor class.
- * @author Vartenkov A.
+ * @kaspersky_support Vartenkov A.
  * @date 08.08.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

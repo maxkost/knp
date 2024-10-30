@@ -1,7 +1,7 @@
 /**
  * @file polar.h
  * @brief Implementations of radial coordinates.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 22.03.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

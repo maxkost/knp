@@ -2,7 +2,7 @@
 @file setup.py
 @brief Configurator for python build.
 
-@author Artiom N.
+@kaspersky_support Artiom N.
 @license Apache 2.0 License.
 @copyright © 2024 AO Kaspersky Lab
 @date 28.10.2024.

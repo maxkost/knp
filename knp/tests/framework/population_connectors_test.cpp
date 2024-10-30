@@ -1,7 +1,7 @@
 /**
  * @file population_connectors_test.cpp
  * @brief Tests for population connectors.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 08.08.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

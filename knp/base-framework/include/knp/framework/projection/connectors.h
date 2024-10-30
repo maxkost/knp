@@ -1,7 +1,7 @@
 /**
  * @file connectors.h
  * @brief Population connector.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 21.10.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

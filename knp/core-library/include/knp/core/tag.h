@@ -1,7 +1,7 @@
 /**
  * @file tag.h
  * @brief Tag class and well-known tags registry.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 11.06.24.
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

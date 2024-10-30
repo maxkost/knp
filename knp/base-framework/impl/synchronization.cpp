@@ -1,7 +1,7 @@
 /**
  * @file synchronization.cpp
  * @brief Getting network from backend.
- * @author Vartenkov Andrey.
+ * @kaspersky_support Vartenkov Andrey.
  * @date 13.05.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

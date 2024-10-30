@@ -1,7 +1,7 @@
 /**
  * @file core_test.cpp.
  * @brief UUID tests.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 21.08.2023.
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

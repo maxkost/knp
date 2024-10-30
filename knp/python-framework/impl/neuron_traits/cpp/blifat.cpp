@@ -1,7 +1,7 @@
 /**
  * @file blifat.cpp
  * @brief Python bindings for BLIFAT neuron.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 20.02.24
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

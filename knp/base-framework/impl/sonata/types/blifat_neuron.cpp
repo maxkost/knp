@@ -1,7 +1,7 @@
 /**
  * @file blifat_neuron.cpp
  * @brief BLIFAT neuron procedures.
- * @author An. Vartenkov
+ * @kaspersky_support An. Vartenkov
  * @date 28.03.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

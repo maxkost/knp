@@ -1,7 +1,7 @@
 /**
  * @file base_stdp_impl.h
  * @brief Common templates used for different STDP variants.
- * @author A. Vartenkov
+ * @kaspersky_support A. Vartenkov
  * @date 04.11.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

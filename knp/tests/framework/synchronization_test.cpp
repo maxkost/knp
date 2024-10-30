@@ -1,7 +1,7 @@
 /**
  * @file synchronization_test.cpp
  * @brief Synchronization tests for different backends.
- * @author Vartenkov An.
+ * @kaspersky_support Vartenkov An.
  * @date 17.05.24.
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

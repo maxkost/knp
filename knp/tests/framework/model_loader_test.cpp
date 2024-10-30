@@ -1,7 +1,7 @@
 /**
  * @file model_loader_test.cpp
  * @brief Model loader class testing.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 23.10.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

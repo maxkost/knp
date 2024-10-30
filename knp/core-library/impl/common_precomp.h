@@ -1,7 +1,7 @@
 /**
  * @file common_precomp.h
  * @brief Precompiled header for the core library.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 25.04.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

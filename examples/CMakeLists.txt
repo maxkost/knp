@@ -26,10 +26,12 @@ add_subdirectory(save-load-networks)
 add_subdirectory(simple-network)
 add_subdirectory(mnist-client)
 
-install(DIRECTORY "."
-        COMPONENT "examples"
-        DESTINATION "src/knp/examples")
+if (KNP_INSTALL)
+    install(DIRECTORY "."
+            COMPONENT "examples"
+            DESTINATION "src/knp/examples")
 
-knp_packaging_set_parameters(examples examples
-        DESCRIPTION "Kaspersky Neuromorphic Platform examples"
-        DEPENDS framework-dev)
+    knp_packaging_set_parameters(examples examples
+            DESCRIPTION "Kaspersky Neuromorphic Platform examples"
+            DEPENDS cpp-framework-dev)
+endif()

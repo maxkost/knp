@@ -1,7 +1,7 @@
 /**
  * @file highfive.h
  * @brief HighFive library wrapper with pragmas for CLang.
- * @author An. Vartenkov
+ * @kaspersky_support An. Vartenkov
  * @date 13.04.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

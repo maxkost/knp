@@ -1,7 +1,7 @@
 /**
  * @file resource_blifat_neuron.cpp
  * @brief Functions for loading and saving resource STDP BLIFAT neurons.
- * @author A. Vartenkov
+ * @kaspersky_support A. Vartenkov
  * @date 09.04.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -57,8 +57,8 @@ void add_population_to_h5<core::Population<knp::neuron_traits::SynapticResourceS
     HighFive::Group population_group = file_h5.createGroup("nodes/" + std::string{population.get_uid()});
 
     std::vector<size_t> neuron_ids;
-    //    std::vector<int> neuron_type_ids(
-    //        population.size(), get_neuron_type_id<neuron_traits::SynapticResourceSTDPBLIFATNeuron>());
+    // std::vector<int> neuron_type_ids(
+    //     population.size(), get_neuron_type_id<neuron_traits::SynapticResourceSTDPBLIFATNeuron>());
 
     neuron_ids.reserve(population.size());
 

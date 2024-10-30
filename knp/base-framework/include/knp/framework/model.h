@@ -1,7 +1,7 @@
 /**
  * @file model.h
  * @brief Model interface.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 30.03.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

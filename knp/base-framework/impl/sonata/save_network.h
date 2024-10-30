@@ -1,7 +1,7 @@
 /**
  * @file save_network.h
  * @brief Saving network to SONATA format file.
- * @author An. Vartenkov
+ * @kaspersky_support An. Vartenkov
  * @date 15.04.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

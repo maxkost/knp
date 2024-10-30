@@ -1,7 +1,7 @@
 /**
  * @file network_io.h
  * @brief Saving and loading networks.
- * @author A. Vartenkov
+ * @kaspersky_support A. Vartenkov
  * @date 31.01.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

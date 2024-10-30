@@ -1,7 +1,7 @@
 /**
  * @file spike_message.cpp
  * @brief Python bindings for SpikeMessage.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 01.02.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
@@ -28,8 +28,8 @@
 
 py::class_<core::messaging::SpikeData>("SpikeData", "List of spike indexes.")
     .def(py::vector_indexing_suite<core::messaging::SpikeData>());
-//    .def("__str__", static_cast<std::ostream &(std::ostream &, const
-//    core::messaging::SpikeData&)>(&core::messaging::operator<<));
+// .def("__str__", static_cast<std::ostream &(std::ostream &, const
+// core::messaging::SpikeData&)>(&core::messaging::operator<<));
 
 
 py::class_<core::messaging::SpikeMessage>("SpikeMessage", "Structure of the spike message.")

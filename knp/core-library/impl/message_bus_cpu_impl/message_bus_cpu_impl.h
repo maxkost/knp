@@ -1,7 +1,7 @@
 /**
  * @file message_bus_cpu_impl.h
  * @brief CPU-based message bus implementation header.
- * @author Vartenkov A.
+ * @kaspersky_support Vartenkov A.
  * @date 18.09.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

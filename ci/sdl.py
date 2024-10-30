@@ -3,7 +3,7 @@
 @file sdl.py
 @brief Helpers for SDL process.
 
-@author Artiom N.
+@kaspersky_support Artiom N.
 @license Apache 2.0 License.
 @copyright © 2024 AO Kaspersky Lab
 @date 28.10.2024.
@@ -133,6 +133,15 @@ def get_config(filename: Path, regex: str) -> str:
         return re.sub(r'\s\s+', '\n', '\n'.join(m_res))
 
 
+def get_bandit_config() -> str:
+    """
+    This is not real config, because real bandit configuration set on CI and may
+    differ from this.
+    """
+    return '''-r -lll -x ".*fixtures" $(Build.SourcesDirectory)/knp/python-framework
+$(Build.BinariesDirectory)/knp_python_framework/ -o $(Build.BinariesDirectory)/bandit.log'''
+
+
 def get_pvs_config(filename: Path = KNP_ROOT / 'knp' / 'CMakeLists.txt') -> str:
     return get_config(filename, r'pvs_studio_add_target\(([^\)]+)\)')
 
@@ -158,6 +167,9 @@ def generate_static_analysis_xml() -> str:
             '</analyzer>'
         )
 
+    with open(KNP_ROOT / SDL_ARTIFACTS_DIRECTORY / f'{BUILD_NUMBER}_bandit', 'w', encoding='utf8') as pc_f:
+        pc_f.write(get_bandit_config())
+
     return f'''<SDL>
     <static_analysis>
         {' '.join(pvs_logs)}
@@ -171,6 +183,7 @@ def generate_static_analysis_xml() -> str:
         </analyzer>
         <analyzer name="Bandit Python Linux" type="bandit">
             <log link="{artifact_url('linux_bandit_report.7z')}"/>
+            <config name="bandit" link="{artifact_url('bandit')}"/>
         </analyzer>
     </static_analysis>
 </SDL>'''

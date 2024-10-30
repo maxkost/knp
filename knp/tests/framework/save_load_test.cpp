@@ -1,7 +1,7 @@
 /**
  * @file save_load_test.cpp
  * @brief Test saving and building networks.
- * @author A. Vartenkov
+ * @kaspersky_support A. Vartenkov
  * @date 22.03.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

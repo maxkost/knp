@@ -1,7 +1,7 @@
 /**
  * @file delta_synapse_projection.h
  * @brief Common templates for delta synapse projection.
- * @author A. Vartenkov
+ * @kaspersky_support A. Vartenkov
  * @date 07.11.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

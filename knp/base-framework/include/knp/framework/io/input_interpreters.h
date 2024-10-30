@@ -1,7 +1,7 @@
 /**
  * @file input_interpreters.h
  * @brief Header for input interpreter.
- * @author Vartenkov Andrey
+ * @kaspersky_support Vartenkov Andrey
  * @date 31.06.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

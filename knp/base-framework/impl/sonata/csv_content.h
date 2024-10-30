@@ -1,7 +1,7 @@
 /**
  * @file csv_content.h
  * @brief CSV helper file.
- * @author An. Vartenkov
+ * @kaspersky_support An. Vartenkov
  * @date 22.03.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

@@ -1,7 +1,7 @@
 /**
  * @file data_storage_test.cpp
  * @brief Test saving and loading spikes.
- * @author A. Vartenkov
+ * @kaspersky_support A. Vartenkov
  * @date 18.04.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

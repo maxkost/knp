@@ -1,7 +1,7 @@
 /**
  * @file main.cpp
  * @brief Example of running a simple network.
- * @author A. Vartenkov
+ * @kaspersky_support A. Vartenkov
  * @date 28.03.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

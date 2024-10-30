@@ -1,7 +1,7 @@
 /**
  * @file network_test.cpp
  * @brief Network class testing.
- * @author A. Vartenkov
+ * @kaspersky_support A. Vartenkov
  * @date 12.02.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

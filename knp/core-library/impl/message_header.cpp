@@ -1,7 +1,7 @@
 /**
  * @file message_header.cpp
  * @brief Implementation of message header I/O operators.
- * @author Vartenkov A.
+ * @kaspersky_support Vartenkov A.
  * @date 23.03.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

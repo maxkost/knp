@@ -1,7 +1,7 @@
 /**
  * @file describe_network.h
  * @brief Print network statistics to console.
- * @author A. Vartenkov
+ * @kaspersky_support A. Vartenkov
  * @date 04.04.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

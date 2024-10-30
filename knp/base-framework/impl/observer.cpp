@@ -1,7 +1,7 @@
 /**
  * @file observer.cpp
  * @brief  Implementation of observers.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 26.02.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
