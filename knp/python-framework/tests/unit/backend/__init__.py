@@ -1,7 +1,7 @@
 """
-@file __init__.py
+@file __init__.py.
 
-@author Artiom N.
+@kaspersky_support Artiom N.
 @license Apache 2.0 License.
 @copyright © 2024 AO Kaspersky Lab
 @date 28.10.2024.
@@ -18,4 +18,3 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-
