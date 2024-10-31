@@ -21,7 +21,6 @@ include(knp-functions)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_subdirectory(arni-save-load)
 add_subdirectory(save-load-networks)
 add_subdirectory(simple-network)
 add_subdirectory(mnist-client)
