@@ -22,7 +22,8 @@ limitations under the License.
 
 
 from knp.base_framework import BackendLoader
-from knp.core import UID, BLIFATNeuronPopulation, DeltaSynapseProjection, SpikeMessage
+from knp.core import UID, BLIFATNeuronPopulation, DeltaSynapseProjection
+from knp.core.messaging import SpikeMessage
 from knp.neuron_traits import BLIFATNeuronParameters
 from knp.synapse_traits import DeltaSynapseParameters, OutputType
 
