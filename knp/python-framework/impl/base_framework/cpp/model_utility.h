@@ -34,7 +34,7 @@ std::shared_ptr<knp::framework::Model> model_constructor(knp::framework::Network
 
 
 // A very bad and wrong way to access network from model
-knp::framework::Network get_network_from_model(knp::framework::Model &self)
+knp::framework::Network &get_network_from_model(knp::framework::Model &self)
 {
     return self.get_network();
 }

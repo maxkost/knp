@@ -52,3 +52,27 @@ knp::core::AllProjectionsVariant network_get_projection_variant(
 {
     return self.get_projection(projection_uid);
 }
+
+
+auto network_begin_populations(knp::framework::Network &self)
+{
+    return self.begin_populations();
+}
+
+
+auto network_end_populations(knp::framework::Network &self)
+{
+    return self.end_populations();
+}
+
+
+auto network_begin_projections(knp::framework::Network &self)
+{
+    return self.begin_projections();
+}
+
+
+auto network_end_projections(knp::framework::Network &self)
+{
+    return self.end_projections();
+}
