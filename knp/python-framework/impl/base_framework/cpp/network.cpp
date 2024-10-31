@@ -41,6 +41,6 @@ py::class_<knp::framework::Network>(
     .add_property("projections_count", &knp::framework::Network::projections_count, "Count projections in the network.")
     .def("get_uid", &get_entity_uid<knp::framework::Network>, "Get network UID.")
     .def("populations_range", py::range(&network_begin_populations, &network_end_populations), "Populations range.")
-    .def("projcetions_range", py::range(&network_begin_projections, &network_end_projections), "Projections range.");
+    .def("projections_range", py::range(&network_begin_projections, &network_end_projections), "Projections range.");
 
 #endif  // KNP_IN_BASE_FW
