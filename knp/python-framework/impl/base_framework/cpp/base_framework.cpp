@@ -21,6 +21,7 @@
 
 #include "common.h"
 #include "input_channel_utility.h"
+#include "model_executor_utility.h"
 #include "model_loader_utility.h"
 #include "model_utility.h"
 #include "network_utility.h"
