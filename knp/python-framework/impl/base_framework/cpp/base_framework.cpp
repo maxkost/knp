@@ -54,6 +54,7 @@ BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
 
 #include "input_channel.cpp"   // NOLINT
 #include "model.cpp"           // NOLINT
+#include "model_executor.cpp"  // NOLINT
 #include "model_loader.cpp"    // NOLINT
 #include "network.cpp"         // NOLINT
 #include "network_io.cpp"      // NOLINT
