@@ -1,8 +1,11 @@
 """
-Kaspersky Neuromorphic Platform network tests.
+@file test_network.py
+@brief KNP Network tests.
 
-Author: A. Vartenkov
-Date: 22.10.2024
+@kaspersky_support Vartenkov A.
+@license Apache 2.0 License.
+@copyright © 2024 AO Kaspersky Lab
+@date 22.10.2024.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

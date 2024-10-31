@@ -1,8 +1,14 @@
 """
-Kaspersky Neuromorphic Platform single-thread CPU backend tests.
+@file test_storage.py
+@brief Storage tests.
 
-Author: A. Vartenkov
-Date: 01.10.2024
+@kaspersky_support Vartenkov A.
+@license Apache 2.0 License.
+@copyright © 2024 AO Kaspersky Lab
+@date 22.10.2024.
+
+Kaspersky Neuromorphic Platform
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
