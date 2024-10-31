@@ -55,7 +55,7 @@ template <typename NeuronType, template <typename...> class Container>
 
 
 /**
- * @brief Generate neurons with random paramater values.
+ * @brief Generate neurons with random parameter values.
  * @details This generator uses MT19937 RNG with uniform integer distribution.
  * @warning Neuron parameter values are absolutely random: generator doesn't pay attention to the limits.
  * @tparam NeuronType type of neuron parameters.
