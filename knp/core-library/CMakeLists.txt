@@ -1,3 +1,19 @@
+#[[
+© 2024 AO Kaspersky Lab
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+]]
+
 cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -119,24 +135,25 @@ configure_file(
     "${CMAKE_CURRENT_LIST_DIR}/include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/version.h.in"
     "${CMAKE_CURRENT_BINARY_DIR}/include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/version.h")
 
-install(TARGETS "${PROJECT_NAME}_messaging"
-        EXPORT "${PROJECT_NAME}_messaging"
-        COMPONENT "framework-dev")
+if (KNP_INSTALL)
+    set(COMPONENT_NAME "cpp-framework")
 
-install(TARGETS "${PROJECT_NAME}"
-        EXPORT "${PROJECT_NAME}"
-        ARCHIVE
-        COMPONENT "framework-dev")
+    install(TARGETS "${PROJECT_NAME}_messaging"
+            EXPORT "${PROJECT_NAME}_messaging"
+            COMPONENT "${COMPONENT_NAME}-dev")
 
-#install(EXPORT "${PROJECT_NAME}" DESTINATION knp
-#        COMPONENT "framework-dev")
+    install(TARGETS "${PROJECT_NAME}"
+            EXPORT "${PROJECT_NAME}"
+            ARCHIVE
+            COMPONENT "${COMPONENT_NAME}-dev")
 
-install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
-        COMPONENT "framework-dev"
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
-        FILES_MATCHING PATTERN "*.h")
+    install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+            COMPONENT "${COMPONENT_NAME}-dev"
+            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
+            FILES_MATCHING PATTERN "*.h")
 
-install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/version.h"
-        COMPONENT "framework-dev"
-        DESTINATION "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}")
+    install(FILES
+            "${CMAKE_CURRENT_BINARY_DIR}/include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/version.h"
+            COMPONENT "${COMPONENT_NAME}-dev"
+            DESTINATION "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}")
+endif()

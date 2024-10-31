@@ -1,10 +1,22 @@
 /**
  * @file core.cpp
  * @brief Python bindings for core library.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 01.02.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 #include <knp/core/core.h>
@@ -47,12 +59,12 @@ BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
 {
     spdlog::set_level(static_cast<spdlog::level::level_enum>(SPDLOG_ACTIVE_LEVEL));
 
-    //    py::to_python_converter<std::any, to_python_any>();
-    //    from_python_any();
+    // py::to_python_converter<std::any, to_python_any>();
+    // from_python_any();
     py::class_<core::TagMap>(
         "TagMap", "The TagMap class is a definition of tags used by entity and their values.");  // NOLINT
-    //        .def("get_tag", static_cast<std::any&(core::TagMap::*)(const std::string&)>(&core::TagMap::get_tag),
-    //             "Get tag value by tag name.")
+    // .def("get_tag", static_cast<std::any&(core::TagMap::*)(const std::string&)>(&core::TagMap::get_tag),
+    //      "Get tag value by tag name.")
 
     py::class_<core::BaseData>("BaseData", "Common parameters for several different entities.");
 

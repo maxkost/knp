@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  vsts:
+    build:
+      context: .
+    hostname: vsts-runner
+    privileged: true
+    restart: always
+    runtime: nvidia
+    cap_add:
+      - SYS_PTRACE
+    container_name: vsts-runner

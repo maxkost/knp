@@ -1,10 +1,22 @@
 /**
  * @file type_id_defines.h
  * @brief Basic type definitions and templates for saving and loading.
- * @author A. Vartenkov
+ * @kaspersky_support A. Vartenkov
  * @date 22.03.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 #pragma once
@@ -68,7 +80,8 @@ void add_neuron_type_to_csv(const fs::path &csv_path)
     {
         if (std::find(file_header.begin(), file_header.end(), column_name) ==
             file_header.end())  // cppcheck-suppress useStlAlgorithm
-            throw std::runtime_error("Could not find column \"" + column_name + "\" in file \"" + csv_path.string() + "\".");
+            throw std::runtime_error(
+                "Could not find column \"" + column_name + "\" in file \"" + csv_path.string() + "\".");
     }
     // Header is okay, check if type exists already.
     size_t height = csv_file.get_rc_size().first - 1;
@@ -97,7 +110,8 @@ void add_synapse_type_to_csv(const fs::path &csv_path)
         {
             if (std::find(file_header.begin(), file_header.end(), column_name) ==
                 file_header.end())  // cppcheck-suppress useStlAlgorithm
-                throw std::runtime_error("Could not find column \"" + column_name + "\" in file \"" + csv_path.string() + "\".");
+                throw std::runtime_error(
+                    "Could not find column \"" + column_name + "\" in file \"" + csv_path.string() + "\".");
         }
         // Header is okay, check if type exists already.
         size_t height = csv_file.get_rc_size().first - 1;

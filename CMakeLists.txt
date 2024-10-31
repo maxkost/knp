@@ -1,3 +1,19 @@
+#[[
+© 2024 AO Kaspersky Lab
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+]]
+
 cmake_minimum_required(VERSION 3.25)
 
 include_guard(GLOBAL)
@@ -135,6 +151,7 @@ option(KNP_BUILD_TESTS "Build tests" ${KNP_BUILD_AUTONOMOUS})
 option(KNP_ENABLE_AVX "Enable AVX and other CPU-specific extensions in the release build" ${KNP_ENABLE_AVX_DEFAULT})
 option(KNP_ENABLE_COVERAGE "Enable coverage checking" OFF)
 option(KNP_IPO_ENABLED "Enable interprocedural optimization" ON)
+option(KNP_INSTALL "Enable Kaspersky Neuromorphic Platform installation" ON)
 option(KNP_MAINTAINER_BUILD "Build for maintainer, but not for the development purposes" OFF)
 cmake_dependent_option(KNP_PYTHON_FRAMEWORK_BUILD "Build Kaspersky Neuromorphic Platform Python framework" ON "KNP_PYTHON_FRAMEWORK_BUILD_DEFAULT" OFF)
 cmake_dependent_option(KNP_PYTHON_BUILD_WHEEL "Build WHL package for the Python framework" ${KNP_MAINTAINER_BUILD} "KNP_PYTHON_FRAMEWORK_BUILD" OFF)
@@ -150,6 +167,7 @@ message(STATUS "KNP_BUILD_TESTS = ${KNP_BUILD_TESTS}")
 message(STATUS "KNP_ENABLE_AVX = ${KNP_ENABLE_AVX}")
 message(STATUS "KNP_ENABLE_COVERAGE = ${KNP_ENABLE_COVERAGE}")
 message(STATUS "KNP_IPO_ENABLED = ${KNP_IPO_ENABLED}")
+message(STATUS "KNP_INSTALL = ${KNP_INSTALL}")
 message(STATUS "KNP_MAINTAINER_BUILD = ${KNP_MAINTAINER_BUILD}")
 message(STATUS "KNP_PYTHON_FRAMEWORK_BUILD = ${KNP_PYTHON_FRAMEWORK_BUILD}")
 message(STATUS "KNP_PYTHON_BUILD_WHEEL = ${KNP_PYTHON_BUILD_WHEEL}")
@@ -205,7 +223,8 @@ if (MSVC)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 endif()
 
-set(CPM_SOURCE_CACHE_DEFAULT "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STRING "")
+set(CPM_SOURCE_CACHE_DEFAULT "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STRING "" FORCE)
+set(CPM_SOURCE_CACHE "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STRING "" FORCE)
 
 # Make cache variables for installation destinations.
 include(GNUInstallDirs)
@@ -226,6 +245,21 @@ add_third_party(NAME "libzmq"
                     "ENABLE_CPACK OFF"
                     "ENABLE_PRECOMPILED ${ZMQ_ENABLE_PRECOMPS}")
 
+add_third_party("gh:google/flatbuffers@24.3.25"
+                OPTIONS
+                    "FLATBUFFERS_BUILD_TESTS OFF"
+                    "FLATBUFFERS_BUILD_CPP17 ON"
+                    "FLATBUFFERS_INSTALL OFF")
+
+macro(install)
+    # Special hack needs to prevent redundant packages generation by third-party.
+    if (CMAKE_CURRENT_SOURCE_DIR MATCHES "${CPM_SOURCE_CACHE}/.*" OR CMAKE_CURRENT_SOURCE_DIR MATCHES "${CPM_SOURCE_CACHE_DEFAULT}/.*")
+        message(STATUS "Third-party installation will be skipped: ${CMAKE_CURRENT_SOURCE_DIR}")
+        return()
+    endif()
+    _install(${ARGV})
+endmacro()
+
 #
 # LibHDF5 and its dependencies.
 #
@@ -237,8 +271,12 @@ add_third_party("gh:HDFGroup/hdf5#hdf5_1.14.4"
                 GIT_SHALLOW ON
                 FIND_PACKAGE_ARGUMENTS "NAMES hdf5 libhdf5 hdf5-static"
                 OPTIONS
+                    "HDF5_EXTERNALLY_CONFIGURED ON"
+                    "HDF5_BUILD_DOC OFF"
                     "HDF5_NO_PACKAGES ON"
-                    "BUILD_SHARED_LIBS ON"
+                    "HDF5_BUILD_SHARED_LIBS ON"
+                    "HDF5_BUILD_TOOLS OFF"
+                    "HDF5_BUILD_UTILS OFF"
                     "HDF5_VOL_ALLOW_EXTERNAL YES")  # "HDF5_ALLOW_EXTERNAL_SUPPORT GIT" SZIP_USE_EXTERNAL
 
 add_third_party("gh:BlueBrain/HighFive@2.9.0"
@@ -248,6 +286,7 @@ add_third_party("gh:BlueBrain/HighFive@2.9.0"
                     "HIGHFIVE_EXAMPLES OFF"
                     "HIGHFIVE_BUILD_DOCS OFF"
                     "HIGHFIVE_USE_BOOST OFF"
+                    "HIGHFIVE_UNIT_TESTS OFF"
                     "HDF5_C_LIBRARIES ${HDF5_LIBRARIES_TO_EXPORT}")
 
 # End of LibHDF5.
@@ -272,11 +311,6 @@ add_third_party("gh:zeromq/cppzmq@4.10.0"
                 OPTIONS
                     "CPPZMQ_BUILD_TESTS OFF")
 
-add_third_party("gh:google/flatbuffers@24.3.25"
-                OPTIONS
-                    "FLATBUFFERS_BUILD_TESTS OFF"
-                    "FLATBUFFERS_BUILD_CPP17 ON")
-
 add_third_party("gh:Tencent/rapidjson#7c73dd7"
                 OPTIONS
                     "RAPIDJSON_BUILD_DOC OFF"
@@ -286,11 +320,14 @@ add_third_party("gh:Tencent/rapidjson#7c73dd7"
 
 if (KNP_BUILD_TESTS)
     add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)
-    add_third_party("gh:google/googletest@1.14.0")
+    add_third_party("gh:google/googletest@1.14.0"
+                    OPTIONS
+                        "INSTALL_GMOCK OFF"
+                        "INSTALL_GTEST OFF")
 endif()
 
-file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "third-party/**/include")
-include_directories(third-party ${THIRD_PARTY_INCLUDES})
+file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "${CPM_SOURCE_CACHE}/**/include")
+include_directories("${CPM_SOURCE_CACHE}" ${THIRD_PARTY_INCLUDES})
 
 if (MSVC)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS FALSE)
@@ -320,17 +357,15 @@ endif()
 set(CPACK_PACKAGE_NAME "${PROJECT_NAME}" CACHE STRING "The resulting package name")
 
 #SET(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}.${CMAKE_SYSTEM_PROCESSOR}")
-set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}")
+#set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}")
 set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
-set(CPACK_PACKAGE_ICON "doc/html/img/neuromorphic-platform.svg")
+set(CPACK_PACKAGE_ICON "packaging/neuromorphic-platform.svg")
 
 set(CPACK_PACKAGE_VERSION_MAJOR ${CMAKE_PROJECT_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${CMAKE_PROJECT_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${CMAKE_PROJECT_VERSION_PATCH})
 
 set(CPACK_PACKAGE_VENDOR "AO Kaspersky Lab")
-
-set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Artiom N.")
 set(CPACK_PACKAGE_CONTACT "support@kaspersky.com")
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${CMAKE_PROJECT_DESCRIPTION}"
@@ -354,7 +389,6 @@ set(CPACK_INSTALL_DEFAULT_DIRECTORY_PERMISSIONS
 
 # On Linux, grouping must be ignored: one component corresponds to one package.
 set(CPACK_COMPONENTS_GROUPING IGNORE)
-set(CPACK_DEBIAN_ENABLE_COMPONENT_DEPENDS ON)
 
 
 #
@@ -363,15 +397,16 @@ set(CPACK_DEBIAN_ENABLE_COMPONENT_DEPENDS ON)
 
 set(CPACK_DEB_PACKAGE_COMPONENT ON)
 set(CPACK_DEB_COMPONENT_INSTALL ON)
+#set(CPACK_COMPONENTS_GROUPING ONE_PER_GROUP)
+set(CPACK_DEBIAN_ENABLE_COMPONENT_DEPENDS ON)
 
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Artiom N.")
 set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION}")
 
 set(CPACK_DEBIAN_PACKAGE_SECTION "science")
 
 set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
 
-#set(CPACK_DEBIAN_PACKAGE_NAME ${PROJECT_NAME}-dev)
-#set(CPACK_DEBIAN_FILE_NAME "${PROJECT_NAME}-dev_${PROJECT_VERSION}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}.deb")
 set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS OFF)
@@ -389,6 +424,5 @@ set(CPACK_RPM_COMPONENT_INSTALL ON)
 set(CPACK_RPM_PACKAGE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 set(CPACK_RPM_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION}")
 set(CPACK_RPM_PACKAGE_GROUP "science")
-
 
 include (CPack)

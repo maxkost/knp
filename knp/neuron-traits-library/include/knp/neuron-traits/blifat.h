@@ -1,10 +1,22 @@
 /**
  * @file blifat.h
  * @brief BLIFAT neuron type traits.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 26.01.2023
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 #pragma once
@@ -90,7 +102,7 @@ struct default_values<BLIFATNeuron>
     constexpr static double postsynaptic_trace_increment_ = 0.;
 
     /**
-     * @brief The parameter defines speed with which a potential tends to the `reverse_inhibitory_potential` value.
+     * @brief The parameter defines speed with which a potential tends to the `reversal_inhibitory_potential` value.
      */
     constexpr static double inhibitory_conductance_ = 0.;
 
@@ -199,7 +211,7 @@ struct neuron_parameters<BLIFATNeuron>
      */
     double postsynaptic_trace_increment_ = default_values<BLIFATNeuron>::postsynaptic_trace_increment_;
     /**
-     * @brief The parameter defines speed with which a potential tends to the `reverse_inhibitory_potential` value.
+     * @brief The parameter defines speed with which a potential tends to the `reversal_inhibitory_potential` value.
      */
     double inhibitory_conductance_ = default_values<BLIFATNeuron>::inhibitory_conductance_;
 
@@ -237,7 +249,7 @@ struct neuron_parameters<BLIFATNeuron>
     double reflexive_weight_ = default_values<BLIFATNeuron>::reflexive_weight_;
 
     /**
-     * @brief The parameter takes the default value of `reverse_inhibitory_potential` defined for a BLIFAT neuron.
+     * @brief The parameter takes the default value of `reversal_inhibitory_potential` defined for a BLIFAT neuron.
      */
     double reversal_inhibitory_potential_ = default_values<BLIFATNeuron>::reversal_inhibitory_potential_;
 

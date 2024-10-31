@@ -1,3 +1,19 @@
+#[[
+© 2024 AO Kaspersky Lab
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+]]
+
 cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -59,34 +75,34 @@ set_target_properties(
     SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}"
 )
 
-install(TARGETS "${PROJECT_NAME}-cpu"
-        COMPONENT "framework-dev"
-        EXPORT "${PROJECT_NAME}-cpu"
-        LIBRARY
-#        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
-)
+if (KNP_INSTALL)
+    set(COMPONENT_NAME "cpp-framework")
 
-install(TARGETS "${PROJECT_NAME}-cpu_static"
-        EXPORT "${PROJECT_NAME}-cpu_static"
-        COMPONENT "framework-dev"
-        ARCHIVE)
+    install(TARGETS "${PROJECT_NAME}-cpu"
+            COMPONENT "${COMPONENT_NAME}-dev"
+            EXPORT "${PROJECT_NAME}-cpu"
+            LIBRARY
+    )
 
-# Install for AltAI
-install(TARGETS "${PROJECT_NAME}-altai"
-        COMPONENT "framework-dev"
-        EXPORT "${PROJECT_NAME}-altai"
-        LIBRARY
-#        DESTINATION "${CMAKE_INSTALL_LIBDIR}/knp"
-)
+    install(TARGETS "${PROJECT_NAME}-cpu_static"
+            EXPORT "${PROJECT_NAME}-cpu_static"
+            COMPONENT "${COMPONENT_NAME}-dev"
+            ARCHIVE)
 
-install(TARGETS "${PROJECT_NAME}-altai_static"
-        EXPORT "${PROJECT_NAME}-altai_static"
-        COMPONENT "framework-dev"
-        ARCHIVE)
+    # Install for AltAI
+    install(TARGETS "${PROJECT_NAME}-altai"
+            COMPONENT "${COMPONENT_NAME}-dev"
+            EXPORT "${PROJECT_NAME}-altai"
+            LIBRARY
+    )
 
-#add_clang_tidy("${PROJECT_NAME}" CONFIG_FILE_PATH "${CMAKE_TIDY_CONFIG}" EXTRA_ARGS "--use-color")
+    install(TARGETS "${PROJECT_NAME}-altai_static"
+            EXPORT "${PROJECT_NAME}-altai_static"
+            COMPONENT "${COMPONENT_NAME}-dev"
+            ARCHIVE)
 
-install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
-        COMPONENT "framework-dev"
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
-        FILES_MATCHING PATTERN "*.h")
+    install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+            COMPONENT "${COMPONENT_NAME}-dev"
+            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp"
+            FILES_MATCHING PATTERN "*.h")
+endif()

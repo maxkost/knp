@@ -1,3 +1,19 @@
+#[[
+© 2024 AO Kaspersky Lab
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+]]
+
 cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -46,32 +62,30 @@ set_target_properties(
         VERSION "${CMAKE_PROJECT_VERSION}"
         SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
 
-knp_get_component_name("${PROJECT_NAME}" COMPONENT_NAME)
-knp_get_component_var_name("${COMPONENT_NAME}" COMPONENT_VAR)
+if (KNP_INSTALL)
+    knp_get_component_name("${PROJECT_NAME}" COMPONENT_NAME)
 
-install(TARGETS "${PROJECT_NAME}"
-        EXPORT "${PROJECT_NAME}"
-        COMPONENT "${COMPONENT_NAME}"
-        LIBRARY)
+    install(TARGETS "${PROJECT_NAME}"
+            EXPORT "${PROJECT_NAME}"
+            COMPONENT "${COMPONENT_NAME}"
+            LIBRARY)
 
-install(TARGETS "${PROJECT_NAME}_static"
-        EXPORT "${PROJECT_NAME}_static"
-        COMPONENT "${COMPONENT_NAME}-dev"
-        ARCHIVE)
+    install(TARGETS "${PROJECT_NAME}_static"
+            EXPORT "${PROJECT_NAME}_static"
+            COMPONENT "${COMPONENT_NAME}-dev"
+            ARCHIVE)
 
-install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
-        COMPONENT "${COMPONENT_NAME}-dev"
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp/backends"
-        FILES_MATCHING PATTERN "*.h")
+    install(DIRECTORY "include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}"
+            COMPONENT "${COMPONENT_NAME}-dev"
+            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/knp/backends"
+            FILES_MATCHING PATTERN "*.h")
 
-knp_packaging_set_parameters("${COMPONENT_NAME}" "${PROJECT_NAME}"
-    DESCRIPTION "${PROJECT_DESCRIPTION}")
+    knp_packaging_set_parameters("${COMPONENT_NAME}" "${PROJECT_NAME}"
+            DESCRIPTION "${PROJECT_DESCRIPTION}"
+            DEPENDS "libboost-all (= ${Boost_VERSION})" "libzmq"
+            PROVIDES "knp-backend")
 
-set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_DEPENDS "libboost-all (= ${Boost_VERSION}), libzmq" CACHE STRING "${PROJECT_NAME} deb package dependencies")
-
-knp_packaging_set_parameters("${COMPONENT_NAME}-dev" "${PROJECT_NAME}"
-    DESCRIPTION "${PROJECT_DESCRIPTION} development package: C++ headers and CMake modules"
-    DEPENDS "${COMPONENT_NAME}"
-)
-
-set(CPACK_DEBIAN_${COMPONENT_VAR}_PACKAGE_PROVIDES "knp-backend" CACHE STRING "${PROJECT_NAME} provides")
+    knp_packaging_set_parameters("${COMPONENT_NAME}-dev" "${PROJECT_NAME}"
+            DESCRIPTION "${PROJECT_DESCRIPTION} development package: C++ headers and CMake modules"
+            DEPENDS "${COMPONENT_NAME}")
+endif()

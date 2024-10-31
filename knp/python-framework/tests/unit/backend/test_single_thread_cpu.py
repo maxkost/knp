@@ -1,8 +1,11 @@
 """
-Kaspersky Neuromorphic Platform single-thread CPU backend tests.
+@file test_single_thread_cpu.py
+@brief Kaspersky Neuromorphic Platform single-thread CPU backend tests.
 
-Author: Artiom N.
-Date: 01.03.2024
+@kaspersky_support Artiom N.
+@license Apache 2.0 License.
+@copyright © 2024 AO Kaspersky Lab
+@date 01.03.2024.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,6 +19,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+
 
 from knp.base_framework import BackendLoader
 from knp.core import UID, BLIFATNeuronPopulation, DeltaSynapseProjection, SpikeMessage

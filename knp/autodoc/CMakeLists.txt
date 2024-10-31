@@ -1,3 +1,19 @@
+#[[
+© 2024 AO Kaspersky Lab
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+]]
+
 cmake_minimum_required(VERSION 3.25)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -30,7 +46,7 @@ if(KNP_BUILD_DOCUMENTATION)
     list(APPEND _strip_list "${SOURCE_ROOT_DIR}")
 
     # Additional tag.
-    set(DOXYGEN_ALIASES "license=@par License:")
+    set(DOXYGEN_ALIASES "license=@par License:" "kaspersky_support=@par Developers:")
 
     set(DOXYGEN_BUILTIN_STL_SUPPORT YES)
     set(DOXYGEN_CALL_GRAPH YES)
@@ -160,16 +176,19 @@ if(KNP_BUILD_DOCUMENTATION)
     # Automatically build doc.
     add_dependencies(knp-core "${PROJECT_NAME}")
 
-    autodoc_get_files_and_dir("${CMAKE_BINARY_DIR}/doc_doxygen/html" DOC_DIRS DOC_FILES)
+    if (KNP_INSTALL)
+        set(COMPONENT_NAME "documentation")
+        autodoc_get_files_and_dir("${CMAKE_BINARY_DIR}/doc_doxygen/html" DOC_DIRS DOC_FILES)
 
-    install(DIRECTORY
-            ${DOC_DIRS}
-            COMPONENT "documentation"
-            DESTINATION "${CMAKE_INSTALL_DOCDIR}/html/reference")
-    install(FILES
-            ${DOC_FILES}
-            COMPONENT "documentation"
-            DESTINATION "${CMAKE_INSTALL_DOCDIR}/html/reference")
+        install(DIRECTORY
+                ${DOC_DIRS}
+                COMPONENT "${COMPONENT_NAME}"
+                DESTINATION "${CMAKE_INSTALL_DOCDIR}/html/reference")
+        install(FILES
+                ${DOC_FILES}
+                COMPONENT "${COMPONENT_NAME}"
+                DESTINATION "${CMAKE_INSTALL_DOCDIR}/html/reference")
+    endif()
 else()
     message(STATUS "Documentation generating disabled.")
 endif()

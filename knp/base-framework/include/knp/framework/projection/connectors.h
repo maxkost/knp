@@ -1,10 +1,22 @@
 /**
  * @file connectors.h
  * @brief Population connector.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 21.10.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 #pragma once
 
@@ -23,10 +35,11 @@ namespace knp::framework::projection
 {
 
 /**
- * @brief Connect source and destination populations.
- * @details Make all to all connection between two populations.
- * @tparam SourceNeuronType type of the source population neuron.
- * @tparam DestinationNeuronType type of the destination population neuron.
+ * @brief Connect presynaptic and postsynaptic populations.
+ * @details The function makes connections between each presynaptic population (source) neuron to each postsynaptic population
+ * (destination) neuron.
+ * @tparam SourceNeuronType type of the presynaptic population neuron.
+ * @tparam DestinationNeuronType type of the postsynaptic population neuron.
  * @tparam SynapseType new projection synapse type.
  * @param src presynaptic population.
  * @param dst postsynaptic population.
@@ -44,15 +57,15 @@ template <typename SynapseType, typename SourceNeuronType, typename DestinationN
 
 
 /**
- * @brief Connect source and destination populations.
- * @details Make arbitrary projection.
- * @tparam SourceNeuronType type of the source population neuron.
- * @tparam DestinationNeuronType type of the destination population neuron.
+ * @brief Connect presynaptic and postsynaptic populations.
+ * @details The function makes a projection with arbitrary connections between population neurons.
+ * @tparam SourceNeuronType type of the presynaptic population neuron.
+ * @tparam DestinationNeuronType type of the postsynaptic population neuron.
  * @tparam SynapseType new projection synapse type.
  * @param src presynaptic population.
  * @param dst postsynaptic population.
- * @param syn_gen synapse generator.
- * @param num_iterations projection generator call iterations.
+ * @param syn_gen synapse parameters generator.
+ * @param num_iterations number of iterations.
  * @return new projection between two populations.
  */
 template <typename SynapseType, typename SourceNeuronType, typename DestinationNeuronType>

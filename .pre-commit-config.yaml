@@ -18,6 +18,7 @@ repos:
       - id: end-of-file-fixer
         exclude: \.(cp?p?$|output)
       - id: check-added-large-files
+        exclude: doc/html/static/background.mp4
       - id: check-executables-have-shebangs
       - id: check-shebang-scripts-are-executable
       - id: check-yaml

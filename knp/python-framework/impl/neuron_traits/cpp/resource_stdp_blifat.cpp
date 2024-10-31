@@ -1,7 +1,7 @@
 /**
  * @file resource_stdp_blifat.cpp
  * @brief Python bindings for resource stdp BLIFAT neuron.
- * @author Vartenkov A.
+ * @kaspersky_support Vartenkov A.
  * @date 28.10.24
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab

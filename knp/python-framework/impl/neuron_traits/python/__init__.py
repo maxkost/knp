@@ -1,5 +1,11 @@
 """
-Import knp.neuron_traits.
+@file __init__.py
+@brief Import knp.neuron_traits.
+
+@kaspersky_support Artiom N.
+@license Apache 2.0 License.
+@copyright © 2024 AO Kaspersky Lab
+@date 28.10.2024.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

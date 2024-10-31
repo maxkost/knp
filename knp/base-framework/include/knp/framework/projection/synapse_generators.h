@@ -1,10 +1,22 @@
 /**
  * @file synapse_generators.h
  * @brief Projection connectors.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 10.08.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 #pragma once
 
@@ -100,7 +112,7 @@ template <typename SynapseType, template <typename...> class Container>
 
 
 /**
- * @brief Generate synapses from `std::map` or `std::unordered_map` object.
+ * @brief The FromMap class is a defintion of a generator of synapses from `std::map` or `std::unordered_map` object.
  * @details 'std::map' object must contain synapse parameters as values and `(from_index, to_index)` tuples as keys.
  * @tparam SynapseType projection synapse type.
  * @tparam Map map class.
@@ -141,8 +153,8 @@ private:
 
 
 /**
- * @brief Make connections with some probability between each presynaptic population (source) neuron
- * to each postsynaptic population (destination) neuron.
+ * @brief The FixedProbability class is a definition of a generator that makes connections with some probability 
+ * between each presynaptic population (source) neuron to each postsynaptic population (destination) neuron.
  * @warning It doesn't get "real" populations and can't be used with populations that contain non-contiguous indexes.
  * @tparam SynapseType projection synapse type.
  */
@@ -169,7 +181,7 @@ public:
           dist_(0, 1)
     {
         if (connection_probability > 1 || connection_probability < 0)
-            throw std::logic_error("Incorrect probability, set probability between 0..1.");
+            throw std::logic_error("Incorrect probability, set probability between 0 and 1.");
     }
 
     /**
@@ -224,7 +236,8 @@ template <typename SynapseType>
 
 
 /**
- * @brief Make connections between each presynaptic neuron and a fixed number of random postsynaptic neurons.
+ * @brief The FixedNumberPost class is a definition of a generator that makes connections between each presynaptic neuron 
+ * and a fixed number of random postsynaptic neurons.
  * @details This connector uses MT19937 generator with uniform integer distribution.
  * @warning It doesn't get "real" populations and can't be used with populations that contain non-contiguous indexes.
  * @tparam SynapseType projection synapse type.
@@ -274,7 +287,8 @@ private:
 
 
 /**
- * @brief Make connections between each postsynaptic neuron and a fixed number of random presynaptic neurons.
+ * @brief The FixedNumberPre class is a definition of a generator that makes connections between each postsynaptic neuron 
+ * and a fixed number of random presynaptic neurons.
  * @details This uses MT19937 generator with uniform integer distribution.
  * @warning It doesn't get "real" populations and can't be used with populations that contain non-contiguous indexes.
  * @tparam SynapseType projection synapse type.
@@ -326,7 +340,7 @@ private:
 /**
  * @brief Make connections duplicated from another projection.
  * @details Source and target projections can have different types.
- *          In this case synapse parameters can not be equal.
+ * In this case projection types cannot be same.
  * @todo Clone synapse parameters when projection types are the same.
  * @param source_proj source projection.
  * @param syn_gen generator of synapse parameters.

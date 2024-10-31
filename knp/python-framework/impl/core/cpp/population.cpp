@@ -1,10 +1,22 @@
 /**
  * @file population.cpp
  * @brief Python bindings for Population.
- * @author Artiom N.
+ * @kaspersky_support Artiom N.
  * @date 07.02.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 #if defined(KNP_IN_CORE)
@@ -49,12 +61,14 @@ namespace nt = knp::neuron_traits;
                     "__init__",                                                                                        \
                     py::make_constructor(static_cast<std::shared_ptr<core::Population<nt::neuron_type>> (*)(           \
                                              const core::UID &, const py::object &, size_t)>(                          \
-                        &population_constructor_wrapper<nt::neuron_type>)), "Construct a population by running a neuron generator.")                                            \
+                        &population_constructor_wrapper<nt::neuron_type>)),                                            \
+                    "Construct a population by running a neuron generator.")                                           \
                 .def(                                                                                                  \
                     "__init__",                                                                                        \
                     py::make_constructor(                                                                              \
                         static_cast<std::shared_ptr<core::Population<nt::neuron_type>> (*)(                            \
-                            const py::object &, size_t)>(&population_constructor_wrapper<nt::neuron_type>)), "Construct a population by running a neuron generator.")           \
+                            const py::object &, size_t)>(&population_constructor_wrapper<nt::neuron_type>)),           \
+                    "Construct a population by running a neuron generator.")                                           \
                 .def(                                                                                                  \
                     "add_neurons", &population_neurons_add_wrapper<nt::neuron_type>, "Add neurons to the population.") \
                 .def(                                                                                                  \
@@ -71,7 +85,8 @@ namespace nt = knp::neuron_traits;
                         static_cast<std::vector<core::Population<nt::neuron_type>::NeuronParameters>::iterator (       \
                             core::Population<nt::neuron_type>::*)()>(&core::Population<nt::neuron_type>::end)),        \
                     "Get an iterator of the population.")                                                              \
-                .def("__len__", &core::Population<nt::neuron_type>::size, "Count number of neurons in the population.")                                              \
+                .def(                                                                                                  \
+                    "__len__", &core::Population<nt::neuron_type>::size, "Count number of neurons in the population.") \
                 .def(                                                                                                  \
                     "__getitem__",                                                                                     \
                     static_cast<core::Population<nt::neuron_type>::NeuronParameters &(                                 \
