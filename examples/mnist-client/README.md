@@ -109,7 +109,9 @@ _Image classification of handwritten numbers from the MNIST database consists of
 
 1.  Header files required for the neural network execution are included using the `#include` directive.
 2.  The `main` function is implemented that loads a network and runs it or shows a subgraph of it depending on the specified task type.
+
     The `main` function implements the following:
+    
     1.  Creates an output ID.
     2.  Defines `std::string` objects for task types, path to network and path to file storing data. 
     3.  Defines option values for task types, path to network and path to file storing data.
@@ -138,13 +140,15 @@ If you install the `knp-examples` package, the example binary file is located in
 
 You can also build the example by using CMake. The example binary file will be located in the `/build/bin` directory. To execute the created binary file, run the following commands:
 
-`$ cd /build/bin`
-`$ mnist-client`
+```
+$ cd /build/bin
+$ mnist-client
+```
 
 
 # Information about third-party code
 
-Information about third-party code is provided in the `NOTICES.txt` file located in the platform repository.
+Information about third-party code is provided in the `NOTICE.txt` file located in the platform repository.
 
 
 # Trademark notices

@@ -18,7 +18,9 @@ _Implementation of a neural network automatic upload to the backend and executio
 3.  The `synapse_generator` function is implemented that generates synapses for the projection, which loops the population output on itself.
 4.  The `neuron_generator` function is implemented that generates neurons.
 5.  The `main` function is implemented that creates the objects required for the neural network execution.
+
     The `main` function implements the following:
+    
     1.  Creates a population object using `neuron_generator`.
     2.  Creates a projection object that loops the output of the population to itself is constructed using the associated population ID and `synapse_generator`.
     3.  Creates an input projection object using `synapse_generator` and associated population ID.
@@ -44,13 +46,15 @@ If you install the `knp-examples` package, the example binary file is located in
 
 You can also build the example by using CMake. The example binary file will be located in the `/build/bin` directory. To execute the created binary file, run the following commands:
 
-`$ cd /build/bin`
-`$ simple-network`
+```
+$ cd /build/bin
+$ simple-network
+```
 
 
 # Information about third-party code
 
-Information about third-party code is provided in the `NOTICES.txt` file located in the platform repository.
+Information about third-party code is provided in the `NOTICE.txt` file located in the platform repository.
 
 
 # Trademark notices

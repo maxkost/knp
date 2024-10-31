@@ -18,13 +18,17 @@ _Implementation of saving and loading a simple neural network consists of the fo
 3.  The `synapse_generator` function is implemented that generates synapses for the projection, which loops the population output on itself.
 4.  The `neuron_generator` function is implemented that generates neurons.
 5.  The `make_simple_network` function is implemented that returns a neural network.
+
     The `make_simple_network` function implements the following:
+
     1.  Creates a population object using `neuron_generator`.
     2.  Creates a projection object that loops the output of the population to itself is constructed using the associated population ID and `synapse_generator`.
     3.  Creates an input projection object using `synapse_generator` and associated population ID.
     4.  Creates a neural network object and adds the created projections and population to the neural network object.
 6.  The `main` function is implemented that calls `sonata` namespace functions to save and load a network.
+
     The `main` function implements the following:
+
     1.  Creates a neural network using the `make_simple_network` function.
     2.  Saves a network using the `save_network` function.
     3.  Loads a network using the `load_network` function.
@@ -42,13 +46,15 @@ If you install the `knp-examples` package, the example binary file is located in
 
 You can also build the example by using CMake. The example binary file will be located in the `/build/bin` directory. To execute the created binary file, run the following commands:
 
-`$ cd /build/bin`
-`$ save-load-networks`
+```
+$ cd /build/bin
+$ save-load-networks
+```
 
 
 # Information about third-party code
 
-Information about third-party code is provided in the `NOTICES.txt` file located in the platform repository.
+Information about third-party code is provided in the `NOTICE.txt` file located in the platform repository.
 
 
 # Trademark notices
