@@ -31,6 +31,22 @@ if (KNP_INSTALL)
             COMPONENT "examples"
             DESTINATION "src/knp/examples")
 
+    file(GLOB EXAMPLES_DIRS LIST_DIRECTORIES true "*")
+    set(INSTALL_TARGETS "")
+
+    foreach(_dir ${EXAMPLES_DIRS})
+        if (IS_DIRECTORY "${_dir}")
+            get_filename_component(DIR_NAME "${_dir}" NAME)
+            get_directory_property(DIR_TARGETS DIRECTORY "${_dir}" BUILDSYSTEM_TARGETS)
+            foreach(INSTALL_TARGET ${DIR_TARGETS})
+                list(APPEND INSTALL_TARGETS "${INSTALL_TARGET}")
+            endforeach()
+        endif()
+    endforeach()
+
+    install(TARGETS ${INSTALL_TARGETS}
+            COMPONENT "examples")
+
     knp_packaging_set_parameters(examples examples
             DESCRIPTION "Kaspersky Neuromorphic Platform examples"
             DEPENDS cpp-framework-dev)
