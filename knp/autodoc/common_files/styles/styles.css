@@ -1,12 +1,18 @@
-/* The standard CSS for doxygen 1.8.13. */
-/* Updated with:
-    - MathJax messages hidden.
-    - All fonts changed to MuseoSans.
-    - Colors ajusted to LK
-    - Title area typography.
-    - Patch .sm-dox.
-    - Patch searchbox.
-    - Footer styles.
+/**
+The standard CSS for doxygen 1.8.13.
+
+© 2024 AO Kaspersky Lab
+
+This file has been modified by AO Kaspersky Lab in <mon-yyyy - дата изменения>.
+Scope of modification:
+
+- MathJax messages hidden.
+- All fonts changed to MuseoSans.
+- Colors ajusted to LK
+- Title area typography.
+- Patch .sm-dox.
+- Patch searchbox.
+- Footer styles.
 */
 
 @import 'museo-sans.css';
