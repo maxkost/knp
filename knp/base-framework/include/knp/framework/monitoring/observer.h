@@ -92,6 +92,7 @@ public:
 
     /**
      * @brief Get observer UID.
+     * @return Observer UID.
      */
     [[nodiscard]] knp::core::UID get_uid() const { return base_data_.uid_; }
 
