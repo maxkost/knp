@@ -60,7 +60,6 @@ else()
     find_program(PVS_BINARY pvs-studio-analyzer NO_CACHE)
 endif()
 
-
 if (PVS_BINARY)
     set(PVS_TARGETS "")
     set(PVS_SKIP_LIST ".*autodoc|GENERATE_.*|.*-copy-.*|.*memcheck|.*_static")

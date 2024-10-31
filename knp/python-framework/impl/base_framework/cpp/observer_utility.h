@@ -33,7 +33,8 @@ auto make_observer(
     knp::core::MessageEndpoint &endpoint, knp::framework::monitoring::MessageProcessor<Message> &processor,
     const knp::core::UID &uid)
 {
-    return knp::framework::monitoring::MessageObserver<Message>{std::move(endpoint), std::move(processor), uid};
+    return std::make_shared<knp::framework::monitoring::MessageObserver<Message>>(
+        std::move(endpoint), std::move(processor), uid);
 }
 
 
