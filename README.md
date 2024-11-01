@@ -284,4 +284,11 @@ JavaScript is a registered trademark of Oracle and/or its affiliates.\
 Python is a trademark or registered trademark of the Python Software Foundation.\
 Debian is a registered trademark of Software in the Public Interest, Inc.
 
-© 2024 AO Kaspersky Lab
+## Contribution
+
+This is an open source project. If you are interested in making a code contribution, please see CONTRIBUTING.md for more information.
+
+## License
+
+Copyright © 2024 AO Kaspersky Lab
+Licensed under the Apache 2.0 License. See the LICENSE.txt file in the root directory for details.
