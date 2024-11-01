@@ -21,6 +21,7 @@ limitations under the License.
 """
 
 
+# pylint: disable = no-name-in-module
 from knp.core._knp_python_framework_core import (
     MessageHeader,
     SpikeData,
