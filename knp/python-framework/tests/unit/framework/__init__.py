@@ -1,6 +1,5 @@
 """
-@file __init__.py
-@brief Import knp.synapse_traits.
+@file __init__.py.
 
 @kaspersky_support Artiom N.
 @license Apache 2.0 License.
@@ -19,19 +18,3 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-
-
-# pylint: disable = no-name-in-module
-from knp.synapse_traits._knp_python_framework_synapse_traits import (  # pylint: disable = no-name-in-module
-    SynapticResourceSTDPDeltaSynapseParameters,
-    SynapticResourceSTDPDeltaSynapseRule,
-    DeltaSynapseParameters,
-    OutputType,
-)
-
-__all__ = [
-    'DeltaSynapseParameters',
-    'SynapticResourceSTDPDeltaSynapseParameters',
-    'SynapticResourceSTDPDeltaSynapseRule',
-    'OutputType',
-]

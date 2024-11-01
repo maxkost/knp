@@ -20,8 +20,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from knp.base_framework._knp_python_framework_base_framework import BackendLoader  # pylint: disable = no-name-in-module
+
+# pylint: disable = no-name-in-module
+from knp.base_framework._knp_python_framework_base_framework import (
+    BackendLoader,
+    Network,
+    Model,
+    ModelExecutor,
+    InputChannel,
+    OutputChannel,
+    SpikeMessageObserver,
+    ImpactMessageObserver,
+    ModelLoader,
+)
+
 
 __all__ = [
     'BackendLoader',
+    'Network',
+    'Model',
+    'ModelExecutor',
+    'InputChannel',
+    'OutputChannel',
+    'SpikeMessageObserver',
+    'ImpactMessageObserver',
+    'ModelLoader',
 ]

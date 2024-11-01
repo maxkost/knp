@@ -63,7 +63,7 @@ py::class_<bn_params>("BLIFATNeuronParameters", "Structure for BLIFAT neuron par
     .add_property("potential", &bn_params::potential_, "The parameter defines the current membrane potential.")
     .add_property(
         "pre_impact_potential", &bn_params::pre_impact_potential_,
-        "This parameter is used if there was a blocking signal. Then all potential changes due to synapses are "
+        "This parameter is used if there was a blocking signal. If used, all potential changes due to synapses are "
         "ignored.")
     .add_property(
         "potential_decay", &bn_params::potential_decay_,

@@ -1,11 +1,11 @@
 """
-@file __init__.py
-@brief Import knp.synapse_traits.
+@file test_model.py
+@brief KNP Model tests.
 
-@kaspersky_support Artiom N.
+@kaspersky_support Vartenkov A.
 @license Apache 2.0 License.
 @copyright © 2024 AO Kaspersky Lab
-@date 28.10.2024.
+@date 24.10.2024.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,18 +20,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+from knp.base_framework import Network, Model
+from knp.core import UID
 
-# pylint: disable = no-name-in-module
-from knp.synapse_traits._knp_python_framework_synapse_traits import (  # pylint: disable = no-name-in-module
-    SynapticResourceSTDPDeltaSynapseParameters,
-    SynapticResourceSTDPDeltaSynapseRule,
-    DeltaSynapseParameters,
-    OutputType,
-)
 
-__all__ = [
-    'DeltaSynapseParameters',
-    'SynapticResourceSTDPDeltaSynapseParameters',
-    'SynapticResourceSTDPDeltaSynapseRule',
-    'OutputType',
-]
+def test_add_empty_network() -> None:
+    network_uid = UID()
+    network = Network(network_uid)
+    model = Model(network)
+    assert model.network.populations_count == 0
+    assert model.network.projections_count == 0
+    assert model.network.get_uid() == network_uid

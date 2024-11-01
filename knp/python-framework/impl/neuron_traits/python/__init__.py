@@ -20,12 +20,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-
 # pylint: disable = no-name-in-module
 from knp.neuron_traits._knp_python_framework_neuron_traits import (
     BLIFATNeuronParameters,
+    SynapticResourceSTDPBLIFATNeuronParameters,
 )
 
-__all__ = [
-    'BLIFATNeuronParameters',
-]
+__all__ = ['BLIFATNeuronParameters', 'SynapticResourceSTDPBLIFATNeuronParameters']

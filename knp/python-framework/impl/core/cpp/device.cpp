@@ -18,7 +18,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if defined(_KNP_IN_CORE)
+#if defined(KNP_IN_CORE)
 
 /*
 py::enum_<core::DeviceType>("DeviceType")

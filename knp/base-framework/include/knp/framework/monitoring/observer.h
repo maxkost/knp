@@ -64,15 +64,21 @@ public:
      */
     MessageObserver(
         core::MessageEndpoint &&endpoint, MessageProcessor<Message> &&processor, core::UID uid = core::UID{true})
-        : endpoint_(std::move(endpoint)), process_messages_(processor), uid_(uid)
+        : endpoint_(std::move(endpoint)), process_messages_(processor), base_data_{uid}
     {
     }
+
+    /**
+     * @brief Move constructor for observer.
+     * @param other other observer.
+     */
+    MessageObserver(MessageObserver<Message> &&other) noexcept = default;
 
     /**
      * @brief Subscribe to messages.
      * @param entities message senders.
      */
-    void subscribe(const std::vector<core::UID> &entities) { endpoint_.subscribe<Message>(uid_, entities); }
+    void subscribe(const std::vector<core::UID> &entities) { endpoint_.subscribe<Message>(base_data_.uid_, entities); }
 
     /**
      * @brief Receive and process messages.
@@ -80,14 +86,20 @@ public:
     void update()
     {
         endpoint_.receive_all_messages();
-        auto messages_raw = endpoint_.unload_messages<Message>(uid_);
+        auto messages_raw = endpoint_.unload_messages<Message>(base_data_.uid_);
         process_messages_(messages_raw);
     }
+
+    /**
+     * @brief Get observer UID.
+     * @return Observer UID.
+     */
+    [[nodiscard]] knp::core::UID get_uid() const { return base_data_.uid_; }
 
 private:
     core::MessageEndpoint endpoint_;
     MessageProcessor<Message> process_messages_;
-    core::UID uid_;
+    core::BaseData base_data_;
 };
 
 /**

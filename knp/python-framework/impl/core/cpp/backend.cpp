@@ -22,7 +22,7 @@
 #include "common.h"
 
 
-#if defined(_KNP_IN_CORE)
+#if defined(KNP_IN_CORE)
 
 struct BackendWrapper : core::Backend, py::wrapper<core::Backend>
 {
@@ -219,7 +219,7 @@ py::class_<BackendWrapper, boost::noncopyable>(
         py::make_function(
             static_cast<core::MessageBus &(core::Backend::*)()>(&core::Backend::get_message_bus),  // NOLINT
             py::return_internal_reference<>()),
-        "Get message bus")
+        "Get message bus used by backend.")
     .add_property(
         "message_endpoint",
         py::make_function(

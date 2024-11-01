@@ -1,8 +1,8 @@
 /**
- * @file message_envelope.cpp
- * @brief Python bindings for message envelope.
- * @kaspersky_support Artiom N.
- * @date 01.02.2024
+ * @file output_channel_utility.h
+ * @brief Auxiliary functions for OutputChannel bindings.
+ * @kaspersky_support Vartenkov A.
+ * @date 05.06.2024
  * @license Apache 2.0
  * @copyright © 2024 AO Kaspersky Lab
  *
@@ -18,8 +18,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if defined(KNP_IN_CORE)
 
-// BOOST_PYTHON_MODULE(MessageEnvelope) {}
+#pragma once
 
-#endif
+#include <knp/framework/io/output_channel.h>
+
+#include <memory>
+#include <utility>
+
+
+std::shared_ptr<knp::framework::io::output::OutputChannel> construct_output_channel(
+    const knp::core::UID &uid, knp::core::MessageEndpoint &endpoint)
+{
+    return std::make_shared<knp::framework::io::output::OutputChannel>(uid, std::move(endpoint));
+}

@@ -27,7 +27,7 @@
 #include "common.h"
 
 
-#if defined(_KNP_IN_CORE)
+#if defined(KNP_IN_CORE)
 
 namespace mt = core::messaging;
 
@@ -63,10 +63,8 @@ namespace mt = core::messaging;
 
 py::class_<core::MessageEndpoint, boost::noncopyable, std::shared_ptr<core::MessageEndpoint>>(
     "MessageEndpoint", "The MessageEndpoint class is a definition of message endpoints.", py::no_init)
-    // cppcheck-suppress unknownMacro
     .add_property(
         "receiver_uid", &core::MessageEndpoint::get_receiver_uid, "Get receiver UID from a subscription variant.")
-    // cppcheck-suppress unknownMacro
     .add_property(
         "subscription_key", &core::MessageEndpoint::get_subscription_key,
         "Get subscription key from a subscription variant.")
@@ -98,7 +96,6 @@ py::class_<core::MessageEndpoint, boost::noncopyable, std::shared_ptr<core::Mess
                 const auto class_obj_name = get_py_class_name(msg_class);
                 SPDLOG_TRACE("Message class name: {}.", class_obj_name);
 
-                // cppcheck-suppress unknownMacro
                 BOOST_PP_SEQ_FOR_EACH(
                     INSTANCE_PY_MESSAGE_ENDPOINT_UNSUBSCRIBE_METHOD_IMPL, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES))
 
@@ -114,7 +111,6 @@ py::class_<core::MessageEndpoint, boost::noncopyable, std::shared_ptr<core::Mess
 
                 SPDLOG_TRACE("Message class name: {}.", class_obj_name);
 
-                // cppcheck-suppress unknownMacro
                 BOOST_PP_SEQ_FOR_EACH(
                     INSTANCE_PY_MESSAGE_ENDPOINT_UNLOAD_MESSAGES_METHOD_IMPL, "",
                     BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES))
@@ -136,7 +132,6 @@ py::class_<core::MessageEndpoint, boost::noncopyable, std::shared_ptr<core::Mess
         "Receive all messages that were sent to the endpoint.");
 
 
-// cppcheck-suppress unknownMacro
 BOOST_PP_SEQ_FOR_EACH(INSTANCE_PY_MESSAGE_CONVERTERS, "", BOOST_PP_VARIADIC_TO_SEQ(ALL_MESSAGES))
 
 #endif

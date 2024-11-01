@@ -20,6 +20,14 @@
  */
 
 #include "common.h"
+#include "input_channel_utility.h"
+#include "model_executor_utility.h"
+#include "model_loader_utility.h"
+#include "model_utility.h"
+#include "network_utility.h"
+#include "observer_utility.h"
+#include "output_channel_utility.h"
+
 
 std::shared_ptr<knp::core::Backend> load_backend(cpp_framework::BackendLoader& loader, const py::object& backend_path)
 {
@@ -29,7 +37,7 @@ std::shared_ptr<knp::core::Backend> load_backend(cpp_framework::BackendLoader& l
 
 BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
 {
-#define _KNP_IN_BASE_FW
+#define KNP_IN_BASE_FW
     // Py_Initialize();
 
     // auto path_type = py::import("pathlib.Path");
@@ -45,5 +53,14 @@ BOOST_PYTHON_MODULE(KNP_FULL_LIBRARY_NAME)
         .def(
             "is_backend", &cpp_framework::BackendLoader::is_backend, "Check if the specified path points to a backend");
 
-#undef _KNP_IN_BASE_FW
+#include "input_channel.cpp"   // NOLINT
+#include "model.cpp"           // NOLINT
+#include "model_executor.cpp"  // NOLINT
+#include "model_loader.cpp"    // NOLINT
+#include "network.cpp"         // NOLINT
+#include "network_io.cpp"      // NOLINT
+#include "observer.cpp"        // NOLINT
+#include "output_channel.cpp"  // NOLINT
+
+#undef KNP_IN_BASE_FW
 }

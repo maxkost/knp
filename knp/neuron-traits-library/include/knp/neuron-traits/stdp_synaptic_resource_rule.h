@@ -86,6 +86,11 @@ template <typename NeuronType>
 struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron_parameters<NeuronType>
 {
     /**
+     * @brief Default constructor.
+     */
+    neuron_parameters() = default;
+
+    /**
      * @brief Construct parameters for synaptic resource-based STDP from a base neuron.
      * @param base_neuron starting parameters of the base neuron type.
      */
@@ -104,14 +109,18 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
      * @brief Free synaptic resource.
      */
     float free_synaptic_resource_ = 1;
+
     /**
      * @brief Synaptic resource threshold value.
      */
     float synaptic_resource_threshold_ = std::numeric_limits<float>::max();
+
     /**
-     * @brief Synaptic resource divided by `number of synapses + resource drain coefficient`.
+     * @brief Synaptic resource divided by `number of synapses + resource drain coefficient`. The parameter value
+     * defines the number of silent synapses.
      */
     uint32_t resource_drain_coefficient_ = 0;
+
     /**
      * @brief Dynamic synapse attribute for stability.
      * @details The stability reflects how well a synapse is trained.
@@ -130,18 +139,22 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
      * @brief This value is added to stability at the beginning of each ISI period.
      */
     float stability_change_at_isi_ = 0;
+
     /**
      * @brief Time between spikes in the ISI period.
      */
     uint32_t isi_max_ = 1;
+
     /**
      * @brief Hebbian plasticity value.
      */
     float d_h_ = 1.F;
+
     /**
      * @brief ISI period status.
      */
     ISIPeriodType isi_status_ = ISIPeriodType::period_continued;
+
     /**
      * @brief Last non-forced spike step.
      */
