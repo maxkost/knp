@@ -23,7 +23,7 @@ ENV OCLINT_FILE=oclint-22.02-llvm-13.0.1-x86_64-linux-ubuntu-20.04.tar.gz \
 WORKDIR /azp
 
 RUN \
-  && echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes \
+  echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes \
   && export DEBIAN_VERSION=debian$(cat /etc/debian_version | sed 's/\..*//') \
 #  && wget https://developer.download.nvidia.com/compute/cuda/repos/${DEBIAN_VERSION}/x86_64/cuda-keyring_1.1-1_all.deb \
 #  && dpkg -i cuda-keyring_1.1-1_all.deb \
