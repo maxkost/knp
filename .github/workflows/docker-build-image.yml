@@ -1,0 +1,29 @@
+name: Build and push Docker image
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'src/docker_images/**'
+      - '.github/workflows/docker-images-build.yml'
+  pull_request:
+    branches: [ "master" ]
+    paths:
+      - 'src/docker_images/**'
+      - '.github/workflows/docker-images-build.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+#      - name: Login to Docker Hub
+#        uses: docker/login-action@v2
+#        with:
+#          username: artiomn
+#          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: actions/checkout@v4
+      - name: Build the Docker image for KNP build
+        working-directory: ./docker/build_image
+        run: docker build . --file Dockerfile --tag knp-build-image-amd64
