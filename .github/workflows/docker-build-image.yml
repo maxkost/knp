@@ -27,5 +27,5 @@ jobs:
 #          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - uses: actions/checkout@v4
       - name: Build the Docker image for KNP build
-        working-directory: docker/build_image
+        working-directory: ${{ github.workspace }}/docker/build_image
         run: docker build . --file Dockerfile --tag knp-build-image-amd64
