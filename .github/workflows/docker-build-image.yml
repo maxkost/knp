@@ -1,16 +1,18 @@
 name: Build and push Docker image
 
 on:
+  # For the manual run.
+  workflow_dispatch:
   push:
     branches: [ "master" ]
     paths:
-      - 'src/docker_images/**'
-      - '.github/workflows/docker-images-build.yml'
+      - 'docker/build_image/**'
+      - '.github/workflows/docker-build-image.yml'
   pull_request:
     branches: [ "master" ]
     paths:
-      - 'src/docker_images/**'
-      - '.github/workflows/docker-images-build.yml'
+      - 'docker/build_image/**'
+      - '.github/workflows/docker-build-image.yml'
 
 jobs:
   build:
