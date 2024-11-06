@@ -53,7 +53,7 @@ jobs:
         shell: bash
         run: |
           echo "build-output-dir=build_${{ matrix.c_compiler }}" >> "$GITHUB_OUTPUT"
-  
+
       - name: Configure
         run: >
           docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image cmake -B ${{ steps.strings.outputs.build-output-dir }}
@@ -62,30 +62,30 @@ jobs:
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -DKNP_PYTHON_BUILD_WHEEL=ON
           -S .
-  
+
       - name: Build
         run: docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image cmake --build ${{ steps.strings.outputs.build-output-dir }} --parallel 8
         timeout-minutes: 180
-  
+
       - name: Test
         run: docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP/${{ steps.strings.outputs.build-output-dir }}/knp/tests ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image ctest -V
         timeout-minutes: 180
-  
+
       - name: Create deb packages
         run: docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP/${{ steps.strings.outputs.build-output-dir }} ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image cpack -G DEB
         timeout-minutes: 180
-  
+
       - name: Upload deb packages
         if: matrix.c_compiler == 'gcc'
         uses: actions/upload-artifact@v4
-        with: 
+        with:
           name: pkg-deb
           path: ${{ steps.strings.outputs.build-output-dir }}/_packages/
 
       - name: Upload Python wheel
         if: matrix.c_compiler == 'gcc'
         uses: actions/upload-artifact@v4
-        with: 
+        with:
           name: pkg-python
           path: ${{ steps.strings.outputs.build-output-dir }}/knp_python_framework/dist/knp-*.whl
 
@@ -161,7 +161,7 @@ jobs:
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
-        with: 
+        with:
           name: ${{ matrix.os }}_executables
           path: ${{ steps.strings.outputs.build-output-dir }}/bin
 
@@ -169,6 +169,8 @@ jobs:
     needs: [linux_build, non_linux_build]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
@@ -178,8 +180,8 @@ jobs:
           ls -1
       - name: Create new release
         id: create_release
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
         env:
           # This token is provided by Actions.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -187,8 +189,10 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           files: |
-            *.deb
-            knp-*.whl
+            pkg-deb
+            pkg-python
+            LICENSE.txt
+            NOTICE.txt
           body: |
             Release creating added to CI
           draft: false
