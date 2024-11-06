@@ -119,13 +119,13 @@ RUN \
         >> tools/build/example/user-config.jam \
   && cp tools/build/example/user-config.jam ~ \
   && ./bootstrap.sh  --with-python=/usr/bin/python3 --with-python-version=${PY_VER} --with-python-root=/usr/lib/python${PY_VER} \
-  && ./b2 -a -j 4 cxxflags="-fPIC" cflags="-fPIC" link=static,shared threading=multi \
+  && ./b2 -a -j 6 cxxflags="-fPIC" cflags="-fPIC" link=static,shared threading=multi \
   && cd /azp \
   # New Doxygen version. \
   && git clone --depth 1 https://github.com/doxygen/doxygen.git \
   && cd doxygen \
   && cmake -G "Unix Makefiles" -DCMAKE_POSITION_INDEPENDENT_CODE=ON . \
-  && cmake --build . --parallel \
+  && cmake --build . --parallel 4 \
   && cmake --install . \
   && cd .. \
   && rm -rf doxygen \
