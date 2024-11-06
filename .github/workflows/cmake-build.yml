@@ -65,11 +65,11 @@ jobs:
       id: strings
       shell: bash
       run: |
-        echo "build-output-dir=build" >> "$GITHUB_OUTPUT"
+        echo "build-output-dir=build_${{ matrix.c_compiler }}" >> "$GITHUB_OUTPUT"
 
     - name: Configure CMake
       run: >
-        ${{ matrix.pre_run_comman }} cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        ${{ matrix.pre_run_comman }} cmake -B ${{ steps.strings.outputs.build-output-dir }}_${{ matrix.c_compiler }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
@@ -89,3 +89,32 @@ jobs:
     - name: Create packages
       run: docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP/${{ steps.strings.outputs.build-output-dir }} ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image cpack -G DEB
       timeout-minutes: 180
+
+  publish:
+    - name: Create new release
+      id: create_release
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && ${{ matrix.c_compiler }} == 'gcc'
+      uses: juitnow/github-action-create-release@v1
+      env:
+        # This token is provided by Actions.
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        files: |
+          ${{ steps.strings.outputs.build-output-dir }}/_packages/*.deb
+        body: |
+          Release creating added to CI
+        draft: false
+        prerelease: false
+
+    # - name: Publish package to the PyPI
+      # Already on push in the master branch.
+      # if: startsWith(github.head_ref, 'master')
+    #  if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    #  uses: pypa/gh-action-pypi-publish@release/v1
+    #  with:
+    #    password: ${{ secrets.PYPI_API_TOKEN }}
+    #    repository_url: https://upload.pypi.org/legacy/
+    #    skip_existing: true
+        print_hash: true
