@@ -44,9 +44,11 @@ jobs:
           - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
+            pre_run_command: docker run --rm ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image -v ${{ github.workspace }}:/KNP
           - os: ubuntu-latest
             c_compiler: clang
             cpp_compiler: clang++
+            pre_run_command: docker run --rm ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image -v ${{ github.workspace }}:/KNP
         exclude:
 #          - os: windows-latest
 #            c_compiler: gcc
@@ -66,7 +68,7 @@ jobs:
 
     - name: Configure CMake
       run: >
-        docker run --rm knp-build-image-amd64 -v ${{ github.workspace }}:/KNP cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        docker run --rm ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image -v ${{ github.workspace }}:/KNP cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
