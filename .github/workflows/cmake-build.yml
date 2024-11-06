@@ -107,7 +107,7 @@ jobs:
           - os: macos-latest
             c_compiler: clang
             cpp_compiler: clang++
-            boost_install_dir: /home/runner/boost
+            boost_install_dir: /home/runner/
             boost_platform_version: 11
             boost_toolset: clang
           - os: windows-latest
