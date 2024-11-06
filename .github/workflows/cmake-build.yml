@@ -64,7 +64,7 @@ jobs:
       id: strings
       shell: bash
       run: |
-        echo "build-output-dir=/KNP/build" >> "$GITHUB_OUTPUT"
+        echo "build-output-dir=build" >> "$GITHUB_OUTPUT"
 
     - name: Configure CMake
       run: >
@@ -76,10 +76,10 @@ jobs:
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
-      run: docker run --rm -v ${{ github.workspace }}:/KNP ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }} --parallel 8
+      run: docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }} --parallel 8
 
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       # Execute tests defined by the CMake configuration. Note that --build-config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: docker run --rm -v ${{ github.workspace }}:/KNP ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image ctest --build-config ${{ matrix.build_type }} -V ${{ steps.strings.outputs.build-output-dir }}/knp/tests
+      run: docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image ctest --build-config ${{ matrix.build_type }} -V ${{ steps.strings.outputs.build-output-dir }}/knp/tests
