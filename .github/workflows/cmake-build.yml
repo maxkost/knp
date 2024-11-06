@@ -79,14 +79,14 @@ jobs:
         if: matrix.c_compiler == 'gcc'
         uses: actions/upload-artifact@v4
         with: 
-          name: Deb packages
+          name: pkg-deb
           path: ${{ steps.strings.outputs.build-output-dir }}/_packages/
 
       - name: Upload Python wheel
         if: matrix.c_compiler == 'gcc'
         uses: actions/upload-artifact@v4
         with: 
-          name: Python wheel
+          name: pkg-python
           path: ${{ steps.strings.outputs.build-output-dir }}/knp_python_framework/dist/knp-*.whl
 
   non_linux_build:
@@ -162,7 +162,7 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with: 
-          name: ${{ matrix.os }} executables
+          name: ${{ matrix.os }}_executables
           path: ${{ steps.strings.outputs.build-output-dir }}/bin
 
   publish:
@@ -172,7 +172,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: linux_build
+          pattern: pkg-*
       - shell: bash
         run: |
           ls -1
