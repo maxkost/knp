@@ -26,10 +26,11 @@ jobs:
           username: ${{ vars.DOCKERHUB_LOGIN }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - uses: actions/checkout@v4
-      - name: Build the Docker image for KNP build
-        working-directory: docker/build-image
-        run: |
-          docker build . --file Dockerfile --tag ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image && \
-          docker push ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image
-        timeout-minutes: 180  # Adjust the timeout as needed
-        continue-on-error: false
+      - name: Build and push the Docker image for KNP build
+        uses: docker/build-push-action@v6
+        with:
+          context: "{{defaultContext}}:docker/build-image"
+          push: true
+          tags: ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image:latest
+          timeout-minutes: 180
+          continue-on-error: false
