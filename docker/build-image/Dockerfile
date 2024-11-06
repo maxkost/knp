@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM gcc:14
+FROM gcc:14.1.0
 
 ENV OCLINT_FILE=oclint-22.02-llvm-13.0.1-x86_64-linux-ubuntu-20.04.tar.gz \
     PVS_FILE=pvs-studio-7.32.83291.394-amd64.deb \
