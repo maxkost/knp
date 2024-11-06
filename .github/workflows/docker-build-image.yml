@@ -24,7 +24,7 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: ${{ env.DOCKERHUB_LOGIN }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - uses: actions/checkout@v4
       - name: Build the Docker image for KNP build
         working-directory: docker/build-image
@@ -32,4 +32,4 @@ jobs:
           docker build . --file Dockerfile --tag ${{ env.DOCKERHUB_LOGIN }}/knp-build-image && \
           docker push ${{ env.DOCKERHUB_LOGIN }}/knp-build-image
         timeout-minutes: 180  # Adjust the timeout as needed
-        continue-on-error: true
+        continue-on-error: false
