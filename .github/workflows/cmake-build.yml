@@ -34,26 +34,27 @@ jobs:
       # 2. <Linux, Release, latest GCC compiler toolchain on the default runner image, default generator>
       # 3. <Linux, Release, latest Clang compiler toolchain on the default runner image, default generator>
       matrix:
-        os: [ubuntu-latest] #, windows-latest]
+        os: [ubuntu-latest, windows-latest]
         build_type: [Debug]
         c_compiler: [gcc, clang, cl]
         include:
-#          - os: windows-latest
-#            c_compiler: cl
-#            cpp_compiler: cl
+          - os: windows-latest
+            c_compiler: cl
+            cpp_compiler: cl
+            pre_run_command: 
           - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
-            pre_run_command: docker run --rm ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image -v ${{ github.workspace }}:/KNP
+            pre_run_command: docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image
           - os: ubuntu-latest
             c_compiler: clang
             cpp_compiler: clang++
-            pre_run_command: docker run --rm ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image -v ${{ github.workspace }}:/KNP
+            pre_run_command: docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image
         exclude:
-#          - os: windows-latest
-#            c_compiler: gcc
-#          - os: windows-latest
-#            c_compiler: clang
+          - os: windows-latest
+            c_compiler: gcc
+          - os: windows-latest
+            c_compiler: clang
           - os: ubuntu-latest
             c_compiler: cl
 
@@ -68,7 +69,7 @@ jobs:
 
     - name: Configure CMake
       run: >
-        docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        ${{ matrix.pre_run_comman }} cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
