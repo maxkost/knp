@@ -22,7 +22,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  unix_build:
+  linux_build:
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -105,9 +105,27 @@ jobs:
 
       # Set up a matrix to run:
       matrix:
+        os: [macos-latest, windows-latest]
         build_type: [Debug]
+        c_compiler: [clang, cl]
         include:
-          - build_type: Debug
+          - os: macos-latest
+            c_compiler: clang
+            cpp_compiler: clang++
+            boost_install_dir: /usr/local
+            boost_platform_version: 11
+            boost_toolset: clang
+          - os: windows-latest
+            c_compiler: cl
+            cpp_compiler: cl
+            boost_install_dir: C:/
+            boost_platform_version: 2022
+            boost_toolset: msvc
+        exclude:
+          - os: windows-latest
+            c_compiler: clang
+          - os: macos-latest
+            c_compiler: cl
 
     # <Windows, Release, latest MSVC compiler toolchain on the default runner image, default generator>
     steps:
@@ -119,13 +137,12 @@ jobs:
         run: |
           echo "build-output-dir=build_windows" >> "$GITHUB_OUTPUT"
 
-      - name: Install Windows boost
+      - name: Install Boost
         uses: MarkusJx/install-boost@v2.4.5
         id: install-boost
-        if: ${{ matrix.os }} == 'windows-latest'
         with:
             boost_version: 1.81.0
-            boost_install_dir: C:/
+            boost_install_dir: ${{ matrix.boost_install_dir }}
             platform_version: 2022
             toolset: msvc
 
@@ -147,6 +164,7 @@ jobs:
       - name: Test
         run: ctest --build-config ${{ matrix.build_type }} -V
         timeout-minutes: 180
+        working-directory: ${{ steps.strings.outputs.build-output-dir }}/knp/tests
 
     # - name: Publish package to the PyPI
       # Already on push in the master branch.
