@@ -76,7 +76,7 @@ jobs:
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
-      run: docker run --rm -v ${{ github.workspace }}:/KNP ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+      run: docker run --rm -v ${{ github.workspace }}:/KNP ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }} --parallel 8
 
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
