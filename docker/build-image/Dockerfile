@@ -110,16 +110,17 @@ RUN \
     vim \
     wget \
     zip \
+    $(apt list|awk '/boost.*1.81.*-dev/ {print($1);}') \
   && apt-get purge -y libboost\* \
   && apt-get clean \
-  && git clone --recursive --depth 1 --branch boost-1.84.0 https://github.com/boostorg/boost /usr/local/boost/1.84.0 \
-  && cd /usr/local/boost/1.84.0 \
-  && PY_VER="$(python3 --version|cut -f2 -d' '|cut -f1-2 -d.)" \
-  && echo "using python : ${PY_VER} : /usr/bin/python3 : /usr/include/python${PY_VER} : /usr/lib/python${PY_VER} ;" \
-        >> tools/build/example/user-config.jam \
-  && cp tools/build/example/user-config.jam ~ \
-  && ./bootstrap.sh  --with-python=/usr/bin/python3 --with-python-version=${PY_VER} --with-python-root=/usr/lib/python${PY_VER} \
-  && ./b2 -a -j 6 cxxflags="-fPIC" cflags="-fPIC" link=static,shared threading=multi \
+  # && git clone --recursive --depth 1 --branch boost-1.84.0 https://github.com/boostorg/boost /usr/local/boost/1.84.0 \
+  # && cd /usr/local/boost/1.84.0 \
+  # && PY_VER="$(python3 --version|cut -f2 -d' '|cut -f1-2 -d.)" \
+  # && echo "using python : ${PY_VER} : /usr/bin/python3 : /usr/include/python${PY_VER} : /usr/lib/python${PY_VER} ;" \
+  #      >> tools/build/example/user-config.jam \
+  # && cp tools/build/example/user-config.jam ~ \
+  # && ./bootstrap.sh  --with-python=/usr/bin/python3 --with-python-version=${PY_VER} --with-python-root=/usr/lib/python${PY_VER} \
+  # && ./b2 -a -j 6 cxxflags="-fPIC" cflags="-fPIC" link=static,shared threading=multi \
   && cd /azp \
   # New Doxygen version. \
   && git clone --depth 1 https://github.com/doxygen/doxygen.git \
