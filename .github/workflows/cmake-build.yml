@@ -68,11 +68,11 @@ jobs:
 
     - name: Configure CMake
       run: >
-        docker run --rm -v ${{ github.workspace }}:/KNP ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -S /KNP
+        -S .
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
