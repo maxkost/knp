@@ -35,7 +35,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         build_type: [Debug]
-        c_compiler: [gcc, clang, cl]
+        c_compiler: [gcc, clang]
         include:
           - os: ubuntu-latest
             c_compiler: gcc
@@ -44,12 +44,10 @@ jobs:
             c_compiler: clang
             cpp_compiler: clang++
         # exclude:
-        #   - os: windows-latest
+        #   - os: macos-latest
         #     c_compiler: gcc
-        #   - os: windows-latest
+        #   - os: macos-latest
         #     c_compiler: clang
-        #   - os: ubuntu-latest
-        #     c_compiler: cl
 
     steps:
     - uses: actions/checkout@v4
@@ -59,16 +57,6 @@ jobs:
       shell: bash
       run: |
         echo "build-output-dir=build_${{ matrix.c_compiler }}" >> "$GITHUB_OUTPUT"
-
-    - name: Install Windows boost
-      uses: MarkusJx/install-boost@v2.4.5
-      id: install-boost
-      if: ${{ matrix.os }} == 'windows-latest'
-      with:
-          boost_version: 1.81.0
-          boost_install_dir: C:/
-          platform_version: 2022
-          toolset: msvc
 
     - name: Configure
       run: >
@@ -113,6 +101,16 @@ jobs:
         shell: bash
         run: |
           echo "build-output-dir=build_windows" >> "$GITHUB_OUTPUT"
+
+      - name: Install Windows boost
+        uses: MarkusJx/install-boost@v2.4.5
+        id: install-boost
+        if: ${{ matrix.os }} == 'windows-latest'
+        with:
+            boost_version: 1.81.0
+            boost_install_dir: C:/
+            platform_version: 2022
+            toolset: msvc
 
       - name: Configure CMake
         env:
