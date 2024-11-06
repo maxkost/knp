@@ -43,11 +43,6 @@ jobs:
           - os: ubuntu-latest
             c_compiler: clang
             cpp_compiler: clang++
-        # exclude:
-        #   - os: macos-latest
-        #     c_compiler: gcc
-        #   - os: macos-latest
-        #     c_compiler: clang
 
     steps:
     - uses: actions/checkout@v4
@@ -143,8 +138,8 @@ jobs:
         with:
             boost_version: 1.81.0
             boost_install_dir: ${{ matrix.boost_install_dir }}
-            platform_version: 2022
-            toolset: msvc
+            platform_version: ${{ matrix.boost_platform_version }}
+            toolset: ${{ matrix.boost_toolset }}
 
       - name: Configure CMake
         env:
