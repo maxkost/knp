@@ -79,6 +79,23 @@ jobs:
       run: docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP/${{ steps.strings.outputs.build-output-dir }} ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image cpack -G DEB
       timeout-minutes: 180
 
+    - name: Create new release
+      id: create_release
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && matrix.c_compiler == 'gcc'
+      uses: softprops/action-gh-release@v1
+      env:
+        # This token is provided by Actions.
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        files: |
+          ${{ steps.strings.outputs.build-output-dir }}/_packages/*.deb
+        body: |
+          Release creating added to CI
+        draft: false
+        prerelease: false
+
   windows_build:
     runs-on: windows-latest
 
@@ -130,27 +147,6 @@ jobs:
       - name: Test
         run: ctest --build-config ${{ matrix.build_type }} -V
         timeout-minutes: 180
-
-  publish:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Create new release
-        id: create_release
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-        uses: softprops/action-gh-release@v1
-        env:
-          # This token is provided by Actions.
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          files: |
-            ${{ steps.strings.outputs.build-output-dir }}/_packages/*.deb
-          body: |
-            Release creating added to CI
-          draft: false
-          prerelease: false
-
 
     # - name: Publish package to the PyPI
       # Already on push in the master branch.
