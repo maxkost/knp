@@ -46,57 +46,48 @@ jobs:
             cpp_compiler: clang++
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set reusable strings
-      # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
-      id: strings
-      shell: bash
-      run: |
-        echo "build-output-dir=build_${{ matrix.c_compiler }}" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+      - name: Set reusable strings
+        # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
+        id: strings
+        shell: bash
+        run: |
+          echo "build-output-dir=build_${{ matrix.c_compiler }}" >> "$GITHUB_OUTPUT"
+  
+      - name: Configure
+        run: >
+          docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image cmake -B ${{ steps.strings.outputs.build-output-dir }}
+          -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DKNP_PYTHON_BUILD_WHEEL=ON
+          -S .
+  
+      - name: Build
+        run: docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image cmake --build ${{ steps.strings.outputs.build-output-dir }} --parallel 8
+        timeout-minutes: 180
+  
+      - name: Test
+        run: docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP/${{ steps.strings.outputs.build-output-dir }}/knp/tests ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image ctest -V
+        timeout-minutes: 180
+  
+      - name: Create deb packages
+        run: docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP/${{ steps.strings.outputs.build-output-dir }} ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image cpack -G DEB
+        timeout-minutes: 180
+  
+      - name: Upload deb packages
+        if: matrix.c_compiler == 'gcc'
+        uses: actions/upload-artifact@v4
+        with: 
+          name: Deb packages
+          path: ${{ steps.strings.outputs.build-output-dir }}/_packages/
 
-    - name: Configure
-      run: >
-        docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image cmake -B ${{ steps.strings.outputs.build-output-dir }}
-        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
-        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -S .
-
-    - name: Build
-      run: docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image cmake --build ${{ steps.strings.outputs.build-output-dir }} --parallel 8
-      timeout-minutes: 180
-
-    - name: Test
-      run: docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP/${{ steps.strings.outputs.build-output-dir }}/knp/tests ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image ctest -V
-      timeout-minutes: 180
-
-    - name: Create deb packages
-      run: docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP/${{ steps.strings.outputs.build-output-dir }} ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image cpack -G DEB
-      timeout-minutes: 180
-
-    - name: Upload build artifacts
-      if: matrix.c_compiler == 'gcc'
-      uses: actions/upload-artifact@v3
-      with: 
-        name: Deb packages
-        path: ${{ steps.strings.outputs.build-output-dir }}/_packages/
-
-    - name: Create new release
-      id: create_release
-      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && matrix.c_compiler == 'gcc'
-      uses: softprops/action-gh-release@v1
-      env:
-        # This token is provided by Actions.
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        files: |
-          ${{ steps.strings.outputs.build-output-dir }}/_packages/*.deb
-        body: |
-          Release creating added to CI
-        draft: false
-        prerelease: false
+      - name: Upload Python wheel
+        if: matrix.c_compiler == 'gcc'
+        uses: actions/upload-artifact@v4
+        with: 
+          name: Python wheel
+          path: ${{ steps.strings.outputs.build-output-dir }}/knp_python_framework/dist/knp-*.whl
 
   non_linux_build:
     runs-on: ${{ matrix.os }}
@@ -130,7 +121,6 @@ jobs:
           # - os: macos-latest
           #   c_compiler: cl
 
-    # <Windows, Release, latest MSVC compiler toolchain on the default runner image, default generator>
     steps:
       - uses: actions/checkout@v4
       - name: Set reusable strings
@@ -168,6 +158,41 @@ jobs:
         run: ctest --build-config ${{ matrix.build_type }} -V
         timeout-minutes: 180
         working-directory: ${{ steps.strings.outputs.build-output-dir }}/knp/tests
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with: 
+          name: ${{ matrix.os }} executables
+          path: ${{ steps.strings.outputs.build-output-dir }}/bin
+
+  publish:
+    needs: [linux_build, non_linux_build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: linux_build
+      - shell: bash
+        run: |
+          ls -1
+      - name: Create new release
+        id: create_release
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        uses: softprops/action-gh-release@v1
+        env:
+          # This token is provided by Actions.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          files: |
+            *.deb
+            knp-*.whl
+          body: |
+            Release creating added to CI
+          draft: false
+          prerelease: false
 
     # - name: Publish package to the PyPI
       # Already on push in the master branch.
