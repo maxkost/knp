@@ -90,7 +90,6 @@ jobs:
       run: docker run --rm -v ${{ github.workspace }}:/KNP -w /KNP/${{ steps.strings.outputs.build-output-dir }} ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image cpack -G DEB
       timeout-minutes: 180
 
-  publish:
     - name: Create new release
       id: create_release
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && ${{ matrix.c_compiler }} == 'gcc'
