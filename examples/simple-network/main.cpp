@@ -22,14 +22,14 @@
 #include <knp/framework/io/out_converters/convert_set.h>
 #include <knp/framework/model_executor.h>
 #include <knp/framework/network.h>
-#include <knp/neuron-traits/blifat.h>
+#include <knp/neuron-traits/altai_lif.h>
 #include <knp/synapse-traits/delta.h>
 
 #include <filesystem>
 
 
 using DeltaProjection = knp::core::Projection<knp::synapse_traits::DeltaSynapse>;
-using BLIFATPopulation = knp::core::Population<knp::neuron_traits::BLIFATNeuron>;
+using LIFPopulation = knp::core::Population<knp::neuron_traits::AltAILIF>;
 
 // A function is implemented that generates synapses for the projection connected
 // to an input channel. The function is stored in the input_projection_gen variable.
@@ -48,16 +48,16 @@ inline std::optional<DeltaProjection::Synapse> synapse_generator(size_t /*index*
 
 // A function is implemented that generates neurons.
 // The function is stored in the neuron_generator variable.
-inline knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron> neuron_generator(size_t)  // NOLINT
+inline knp::neuron_traits::neuron_parameters<knp::neuron_traits::AltAILIF> neuron_generator(size_t)  // NOLINT
 {
-    return knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>{};
+    return knp::neuron_traits::neuron_parameters<knp::neuron_traits::AltAILIF>{};
 }
 
 
 int main(int argc, const char *const argv[])
 {
     // Creates a population object with one BLIFAT neuron.
-    BLIFATPopulation population{neuron_generator, 1};
+    LIFPopulation population{neuron_generator, 1};
     // Creates a projection object with one delta synapse, which loops the output of the population
     // to itself.
     DeltaProjection loop_projection = DeltaProjection{population.get_uid(), population.get_uid(), synapse_generator, 1};
@@ -108,14 +108,22 @@ int main(int argc, const char *const argv[])
     };
 
     // Specifies the path to the required dynamic backend library on your computer.
-    auto backend_path = std::filesystem::path(argv[0]).parent_path() / "knp-cpu-single-threaded-backend";
+    auto backend_path = std::filesystem::path(argv[0]).parent_path() / "knp-altai-backend";
     knp::framework::BackendLoader backend_loader;
+
+    auto backend = backend_loader.load(backend_path);
+    auto backend_devices = backend->get_devices();
+    for (const auto& device : backend_devices) {
+        if (device->get_name() == "AltAIv1_GoldenModel") {
+            backend->select_devices({device->get_uid()});
+        }
+    }
 
     // Creates the model executor object (model_executor). Passes to the model_executor object the model object,
     // the path to the backend (backend_path), the input channel ID (i_channel_uid), and
     // the spike generation functor (input_gen).
     knp::framework::ModelExecutor model_executor(
-        model, backend_loader.load(backend_path), {{i_channel_uid, input_gen}});
+        model, backend, {{i_channel_uid, input_gen}});
 
     // Receives a link to the output channel object (out_channel) from
     // the model executor (model_executor) by the output channel ID (o_channel_uid).
