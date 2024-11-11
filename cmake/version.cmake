@@ -46,12 +46,13 @@ function(determine_version_with_git)
         return()
     endif()
 
-    string(FIND ${VERSION} "." VALID_VERSION)
+    string(FIND ${GIT_PKG_VERSION_FULL} "." VALID_VERSION)
     if(VALID_VERSION EQUAL -1)
-        message(WARNING "Version string ${VERSION} retrieved with `git describe` is invalid.")
+        message(WARNING "Version string ${GIT_PKG_VERSION_FULL} retrieved with `git describe` is invalid.")
         return()
     endif()
-    message(STATUS "Version string determined with `git describe`: ${VERSION}.")
+    set(KNP_VERSION ${GIT_PKG_VERSION_FULL} PARENT_SCOPE)
+    message(STATUS "Version string determined with `git describe`: ${KNP_VERSION}.")
 endfunction()
 
 
