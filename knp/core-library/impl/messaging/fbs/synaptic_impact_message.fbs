@@ -40,6 +40,7 @@ table SynapticImpactMessage
     header: MessageHeader;
     presynaptic_population_uid: UID;
     postsynaptic_population_uid: UID;
+    is_forcing: bool;
     impacts: [SynapticImpact];
 }
 

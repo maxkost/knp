@@ -122,7 +122,7 @@ TEST(MessageBusSuite, SynapticImpactMessageSendZMQ)
         {knp::core::UID{}},
         knp::core::UID{},
         knp::core::UID{},
-        false,
+        true,
         {{1, 2, synapse_type, 3, 4}, {4, 3, synapse_type, 2, 1}, {7, 8, synapse_type, 9, 10}}};
 
     auto &subscription = ep1.subscribe<SynapticImpactMessage>(knp::core::UID(), {msg.header_.sender_uid_});
@@ -138,6 +138,7 @@ TEST(MessageBusSuite, SynapticImpactMessageSendZMQ)
     EXPECT_EQ(msgs[0].header_.sender_uid_, msg.header_.sender_uid_);
     ASSERT_EQ(msgs[0].presynaptic_population_uid_, msg.presynaptic_population_uid_);
     ASSERT_EQ(msgs[0].postsynaptic_population_uid_, msg.postsynaptic_population_uid_);
+    ASSERT_EQ(msgs[0].is_forcing_, msg.is_forcing_);
     ASSERT_EQ(msgs[0].impacts_, msg.impacts_);
 }
 
@@ -153,7 +154,7 @@ TEST(MessageBusSuite, SynapticImpactMessageSendCPU)
         {knp::core::UID{}},
         knp::core::UID{},
         knp::core::UID{},
-        false,
+        true,
         {{1, 2, synapse_type, 3, 4}, {4, 3, synapse_type, 2, 1}, {7, 8, synapse_type, 9, 10}}};
 
     auto &subscription = ep1.subscribe<SynapticImpactMessage>(knp::core::UID(), {msg.header_.sender_uid_});
@@ -169,5 +170,6 @@ TEST(MessageBusSuite, SynapticImpactMessageSendCPU)
     EXPECT_EQ(msgs[0].header_.sender_uid_, msg.header_.sender_uid_);
     ASSERT_EQ(msgs[0].presynaptic_population_uid_, msg.presynaptic_population_uid_);
     ASSERT_EQ(msgs[0].postsynaptic_population_uid_, msg.postsynaptic_population_uid_);
+    ASSERT_EQ(msgs[0].is_forcing_, msg.is_forcing_);
     ASSERT_EQ(msgs[0].impacts_, msg.impacts_);
 }

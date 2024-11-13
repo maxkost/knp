@@ -50,10 +50,11 @@ TEST(MessageSuite, ImpactToChannelTest)
 {
     const knp::core::UID uid{true}, pre_uid{true}, post_uid{true};
     const size_t time = 7;
+    const bool forcing = true;
     const knp::synapse_traits::OutputType type = knp::synapse_traits::OutputType::DOPAMINE;
     const std::vector<knp::core::messaging::SynapticImpact> impacts{{1, 2, type, 3, 4}, {5, 6, type, 7, 8}};
 
-    const knp::core::messaging::SynapticImpactMessage message_in{{uid, time}, pre_uid, post_uid, false, impacts};
+    const knp::core::messaging::SynapticImpactMessage message_in{{uid, time}, pre_uid, post_uid, forcing, impacts};
     knp::core::messaging::SynapticImpactMessage message_out;
 
     std::stringstream stream;
@@ -65,6 +66,7 @@ TEST(MessageSuite, ImpactToChannelTest)
     ASSERT_EQ(message_out.header_.send_time_, time);
     ASSERT_EQ(message_out.presynaptic_population_uid_, pre_uid);
     ASSERT_EQ(message_out.postsynaptic_population_uid_, post_uid);
+    ASSERT_EQ(message_out.is_forcing_, forcing);
     ASSERT_EQ(message_out.impacts_, impacts);
 }
 

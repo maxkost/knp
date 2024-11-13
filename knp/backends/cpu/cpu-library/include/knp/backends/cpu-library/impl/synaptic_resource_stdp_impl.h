@@ -146,8 +146,8 @@ template <class NeuronType>
 neuron_traits::ISIPeriodType update_isi(
     neuron_traits::neuron_parameters<neuron_traits::SynapticResourceSTDPNeuron<NeuronType>> &neuron, uint64_t step)
 {
-    if (neuron
-            .is_being_forced_)  // This neuron got a forcing spike this turn and doesn't continue its spiking sequence.
+    // This neuron got a forcing spike this turn and doesn't continue its spiking sequence.
+    if (neuron.is_being_forced_)
     {
         neuron.isi_status_ = neuron_traits::ISIPeriodType::is_forced;
         // Do not update last_step_.
@@ -320,8 +320,8 @@ void do_dopamine_plasticity(
                 if (step - synapse->rule_.last_spike_step_ < synapse->rule_.dopamine_plasticity_period_)
                 {
                     // Change synapse resource.
-                    float d_r = neuron.dopamine_value_ *
-                                std::min(static_cast<float>(std::pow(2, -neuron.stability_)), 1.F) / 1000.0F;
+                    float d_r =
+                        neuron.dopamine_value_ * std::min(static_cast<float>(std::pow(2, -neuron.stability_)), 1.F);
                     synapse->rule_.synaptic_resource_ += d_r;
                     neuron.free_synaptic_resource_ -= d_r;
                 }
