@@ -153,7 +153,7 @@ struct neuron_parameters<SynapticResourceSTDPNeuron<NeuronType>> : public neuron
     /**
      * @brief ISI period status.
      */
-    ISIPeriodType isi_status_ = ISIPeriodType::period_continued;
+    ISIPeriodType isi_status_ = ISIPeriodType::not_in_period;
 
     /**
      * @brief Last non-forced spike step.

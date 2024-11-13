@@ -68,7 +68,7 @@ std::ostream &operator<<(std::ostream &stream, const SynapticImpact &impact)
 std::ostream &operator<<(std::ostream &stream, const SynapticImpactMessage &msg)
 {
     stream << msg.header_ << " " << msg.postsynaptic_population_uid_ << " " << msg.presynaptic_population_uid_ << " "
-           << msg.impacts_.size();
+           << static_cast<int>(msg.is_forcing_) << " " << msg.impacts_.size();
     for (auto v : msg.impacts_) stream << " " << v;
     return stream;
 }
@@ -77,8 +77,11 @@ std::ostream &operator<<(std::ostream &stream, const SynapticImpactMessage &msg)
 std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg)
 {
     size_t impacts_count = 0;
-    stream >> msg.header_ >> msg.postsynaptic_population_uid_ >> msg.presynaptic_population_uid_ >> impacts_count;
+    int forcing_buf;
+    stream >> msg.header_ >> msg.postsynaptic_population_uid_ >> msg.presynaptic_population_uid_ >> forcing_buf >>
+        impacts_count;
 
+    msg.is_forcing_ = forcing_buf;
     if (0 == impacts_count) return stream;
 
     msg.impacts_.resize(impacts_count);
@@ -112,7 +115,8 @@ std::istream &operator>>(std::istream &stream, SynapticImpactMessage &msg)
     auto pre_synaptic_uid = get_marshaled_uid(msg.presynaptic_population_uid_);
     auto post_synaptic_uid = get_marshaled_uid(msg.postsynaptic_population_uid_);
 
-    return marshal::CreateSynapticImpactMessageDirect(builder, &header, &pre_synaptic_uid, &post_synaptic_uid, &impacts)
+    return marshal::CreateSynapticImpactMessageDirect(
+               builder, &header, &pre_synaptic_uid, &post_synaptic_uid, msg.is_forcing_, &impacts)
         .o;
 }
 
@@ -138,7 +142,6 @@ SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg)
     UID sender_uid{false};
     UID presynaptic_uid{false};
     UID postsynaptic_uid{false};
-    bool is_forced = false;
     std::copy(
         s_msg_header->sender_uid().data()->begin(),  // clang_sa_ignore [core.CallAndMessage]
         s_msg_header->sender_uid().data()->end(),    // clang_sa_ignore [core.CallAndMessage]
@@ -150,7 +153,6 @@ SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg)
 
     std::vector<SynapticImpact> impacts;
     impacts.reserve(s_msg->impacts()->size());
-
     std::transform(
         s_msg->impacts()->begin(), s_msg->impacts()->end(), std::back_inserter(impacts),
         [](const auto &msg_val)
@@ -160,9 +162,9 @@ SynapticImpactMessage unpack(const marshal::SynapticImpactMessage *s_msg)
                 msg_val->connection_index(), msg_val->impact_value(), type, msg_val->presynaptic_neuron_index(),
                 msg_val->postsynaptic_neuron_index()};
         });
-
+    bool is_forcing = s_msg->is_forcing();
     return SynapticImpactMessage{
-        {sender_uid, s_msg_header->send_time()}, presynaptic_uid, postsynaptic_uid, is_forced, std::move(impacts)};
+        {sender_uid, s_msg_header->send_time()}, presynaptic_uid, postsynaptic_uid, is_forcing, std::move(impacts)};
 }
 
 }  // namespace knp::core::messaging

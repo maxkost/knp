@@ -131,7 +131,7 @@ void process_inputs(
             {
                 if (impact.synapse_type_ == synapse_traits::OutputType::EXCITATORY)
                 {
-                    neuron.is_being_forced_ = message.is_forcing_;
+                    neuron.is_being_forced_ |= message.is_forcing_;
                 }
             }
         }
