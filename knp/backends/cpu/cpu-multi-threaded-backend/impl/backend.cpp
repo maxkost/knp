@@ -392,4 +392,7 @@ MultiThreadedCPUBackend::ProjectionConstIterator MultiThreadedCPUBackend::end_pr
     return projections_.cend();
 }
 
+
+BOOST_DLL_ALIAS(knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::create, create_knp_backend)
+
 }  // namespace knp::backends::multi_threaded_cpu

@@ -368,6 +368,4 @@ private:
     ProjectionContainer projections_;
 };
 
-BOOST_DLL_ALIAS(knp::backends::single_threaded_cpu::SingleThreadedCPUBackend::create, create_knp_backend)
-
 }  // namespace knp::backends::single_threaded_cpu
