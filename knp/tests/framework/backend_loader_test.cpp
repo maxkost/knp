@@ -26,10 +26,19 @@
 #include <filesystem>
 
 
-TEST(FrameworkSuite, BackendLoaderLoad)
+TEST(FrameworkSuite, StBackendLoaderLoad)
 {
     knp::framework::BackendLoader backend_loader;
     auto cpu_st_backend{backend_loader.load(knp::testing::get_backend_path())};
+
+    EXPECT_NO_THROW((void)cpu_st_backend->get_uid());  //!OCLINT(False positive)
+}
+
+
+TEST(FrameworkSuite, MtBackendLoaderLoad)
+{
+    knp::framework::BackendLoader backend_loader;
+    auto cpu_st_backend{backend_loader.load(knp::testing::get_backend_path("knp-cpu-multi-threaded-backend"))};
 
     EXPECT_NO_THROW((void)cpu_st_backend->get_uid());  //!OCLINT(False positive)
 }
