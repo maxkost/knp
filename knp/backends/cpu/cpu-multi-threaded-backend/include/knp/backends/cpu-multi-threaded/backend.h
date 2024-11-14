@@ -363,7 +363,4 @@ private:
     std::mutex ep_mutex_;
 };
 
-
-BOOST_DLL_ALIAS(knp::backends::multi_threaded_cpu::MultiThreadedCPUBackend::create, create_knp_mcpu_backend)
-
 }  // namespace knp::backends::multi_threaded_cpu
