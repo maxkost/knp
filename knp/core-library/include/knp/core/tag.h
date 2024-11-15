@@ -66,6 +66,12 @@ public:
      */
     auto &operator[](const std::string &name) { return get_tag(name); }
 
+    /**
+     * @brief Return true if no tag specified.
+     * @return bool.
+     */
+    [[nodiscard]] bool empty() const noexcept { return tags_.empty(); }
+
 private:
     std::map<std::string, std::any> tags_{};
 };

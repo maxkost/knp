@@ -35,4 +35,6 @@ TEST(CoreSuite, TagMapTest)
     tag_map["test"] = std::string("new");
 
     ASSERT_EQ(tag_map.get_tag<std::string>("test"), "new");
+
+    ASSERT_TRUE(!tag_map.empty());
 }
