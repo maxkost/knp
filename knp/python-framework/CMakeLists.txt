@@ -84,10 +84,10 @@ add_custom_target("${PROJECT_NAME}-copy-common-python-files" ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/packaging/python" "${KNP_PYTHON_OUTPUT_DIRECTORY}/knp")
 add_custom_target("${PROJECT_NAME}-copy-common-project-files" ALL
         COMMAND ${CMAKE_COMMAND} -E copy
-            "${CMAKE_SOURCE_DIR}/AUTHORS"
-            "${CMAKE_SOURCE_DIR}/LICENSE.txt"
-            "${CMAKE_SOURCE_DIR}/README.md"
-            "${CMAKE_SOURCE_DIR}/VERSION"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../../AUTHORS"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../../LICENSE.txt"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../../README.md"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../../VERSION"
             "${KNP_PYTHON_OUTPUT_DIRECTORY}")
 
 find_program(MYPY_STUBGEN stubgen REQUIRED)
