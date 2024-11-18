@@ -223,8 +223,10 @@ if (MSVC)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 endif()
 
-set(CPM_SOURCE_CACHE_DEFAULT "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STRING "" FORCE)
-set(CPM_SOURCE_CACHE "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STRING "" FORCE)
+if (KNP_BUILD_AUTONOMOUS)
+    set(CPM_SOURCE_CACHE_DEFAULT "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STRING "")
+    set(CPM_SOURCE_CACHE "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STRING "")
+endif()
 
 # Make cache variables for installation destinations.
 include(GNUInstallDirs)
