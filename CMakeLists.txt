@@ -328,8 +328,11 @@ if (KNP_BUILD_TESTS)
                         "INSTALL_GTEST OFF")
 endif()
 
-file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "${CPM_SOURCE_CACHE}/**/include")
-include_directories("${CPM_SOURCE_CACHE}" ${THIRD_PARTY_INCLUDES})
+
+if (CPM_SOURCE_CACHE)
+    file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "${CPM_SOURCE_CACHE}/**/include")
+    include_directories("${CPM_SOURCE_CACHE}" ${THIRD_PARTY_INCLUDES})
+endif()
 
 if (MSVC)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS FALSE)
