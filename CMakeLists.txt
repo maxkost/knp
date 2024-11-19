@@ -114,11 +114,11 @@ endif()
 # Kaspersky Neuromorphic Platform build option set.
 #
 
-# Build is not from source directory, it is possible to specify it via add_subdirectory().
-if (NOT CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
-    set(KNP_BUILD_AUTONOMOUS FALSE)
-else()
+if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     set(KNP_BUILD_AUTONOMOUS TRUE)
+else()
+    # Build is not from source directory, it is possible to specify it via add_subdirectory().
+    set(KNP_BUILD_AUTONOMOUS FALSE)
 endif()
 
 if (CMAKE_SYSTEM_PROCESSOR MATCHES "(x86)|(X86)|(amd64)|(AMD64)")
