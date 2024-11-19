@@ -39,7 +39,7 @@ source_group(source REGULAR_EXPRESSION "impl/.*")
 source_group(headers REGULAR_EXPRESSION "include/.*")
 
 knp_add_library("${PROJECT_NAME}-cpu"
-    BOTH
+    STATIC
     impl/cpu.cpp impl/cpu_power.cpp impl/cpu_power.h
 
     ${${PROJECT_NAME}_headers}
@@ -57,7 +57,7 @@ set_target_properties(
         SOVERSION "${CMAKE_PROJECT_VERSION_MAJOR}")
 
 knp_add_library("${PROJECT_NAME}-altai"
-    BOTH
+    STATIC
     impl/altai.cpp
 
     include/${${PROJECT_NAME}_PUBLIC_INCLUDE_DIR}/altai.h
@@ -79,25 +79,13 @@ if (KNP_INSTALL)
     set(COMPONENT_NAME "cpp-framework")
 
     install(TARGETS "${PROJECT_NAME}-cpu"
-            COMPONENT "${COMPONENT_NAME}-dev"
             EXPORT "${PROJECT_NAME}-cpu"
-            LIBRARY
-    )
-
-    install(TARGETS "${PROJECT_NAME}-cpu_static"
-            EXPORT "${PROJECT_NAME}-cpu_static"
             COMPONENT "${COMPONENT_NAME}-dev"
             ARCHIVE)
 
     # Install for AltAI
     install(TARGETS "${PROJECT_NAME}-altai"
-            COMPONENT "${COMPONENT_NAME}-dev"
             EXPORT "${PROJECT_NAME}-altai"
-            LIBRARY
-    )
-
-    install(TARGETS "${PROJECT_NAME}-altai_static"
-            EXPORT "${PROJECT_NAME}-altai_static"
             COMPONENT "${COMPONENT_NAME}-dev"
             ARCHIVE)
 
