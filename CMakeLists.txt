@@ -310,8 +310,6 @@ add_third_party("gh:intel/pcm"
                     "NO_STATIC_MSVC_RUNTIME_LIBRARY ON"
                     "NO_ASAN ON")
 
-include_directories("${CPM_PACKAGE_pcm_SOURCE_DIR}/src")
-
 add_third_party("gh:gabime/spdlog@1.13.0"
                 OPTIONS
                     "SPDLOG_BUILD_PIC ON"
@@ -324,9 +322,14 @@ add_third_party("gh:zeromq/cppzmq@4.10.0"
 add_third_party("gh:Tencent/rapidjson#7c73dd7"
                 OPTIONS
                     "RAPIDJSON_BUILD_DOC OFF"
+                    "RAPIDJSON_BUILD_ASAN OFF"
+                    "RAPIDJSON_BUILD_UBSAN OFF"
+                    "RAPIDJSON_BUILD_CXX17 ON"
                     "RAPIDJSON_BUILD_EXAMPLES OFF"
                     "RAPIDJSON_BUILD_TESTS OFF"
                     "RAPIDJSON_HAS_STDSTRING ON")
+
+include_directories("${CPM_PACKAGE_pcm_SOURCE_DIR}/src" "${CPM_PACKAGE_rapidjson_SOURCE_DIR}/include")
 
 if (KNP_BUILD_TESTS)
     add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)
