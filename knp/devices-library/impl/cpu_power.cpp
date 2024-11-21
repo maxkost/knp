@@ -21,8 +21,8 @@
 
 #include "cpu_power.h"
 
-#include <pcm/src/utils.h>
 #include <spdlog/spdlog.h>
+#include <utils.h>
 
 #include <exception>
 #include <utility>

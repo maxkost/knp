@@ -28,7 +28,7 @@
 #    pragma clang diagnostic ignored "-Wdocumentation"
 #endif
 
-#include <pcm/src/cpucounters.h>
+#include <cpucounters.h>
 
 #if defined(__clang__)
 #    pragma clang diagnostic pop

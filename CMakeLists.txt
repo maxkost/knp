@@ -187,7 +187,7 @@ if (KNP_ENABLE_AVX)
     # -include bits/stdc++.h
 endif()
 
-if (NOT KNP_MAINTAINER_BUILD)
+if (NOT KNP_MAINTAINER_BUILD AND KNP_BUILD_AUTONOMOUS)
     execute_process(COMMAND pre-commit install
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
     if(ret AND NOT ret EQUAL 0)
@@ -224,8 +224,14 @@ if (MSVC)
 endif()
 
 if (KNP_BUILD_AUTONOMOUS)
-    set(CPM_SOURCE_CACHE_DEFAULT "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STRING "")
-    set(CPM_SOURCE_CACHE "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STRING "")
+    if (NOT CPM_SOURCE_CACHE_DEFAULT)
+        set(CPM_SOURCE_CACHE_DEFAULT "${CMAKE_CURRENT_SOURCE_DIR}/third-party")
+    endif()
+
+    if (NOT CPM_SOURCE_CACHE)
+        message(STATUS "Autonomous build. Setting source cached directory to \"${CPM_SOURCE_CACHE_DEFAULT}\".")
+        set(CPM_SOURCE_CACHE "${CPM_SOURCE_CACHE_DEFAULT}")
+    endif()
 endif()
 
 # Make cache variables for installation destinations.
@@ -304,6 +310,8 @@ add_third_party("gh:intel/pcm"
                     "NO_STATIC_MSVC_RUNTIME_LIBRARY ON"
                     "NO_ASAN ON")
 
+include_directories("${CPM_PACKAGE_pcm_SOURCE_DIR}/src")
+
 add_third_party("gh:gabime/spdlog@1.13.0"
                 OPTIONS
                     "SPDLOG_BUILD_PIC ON"
@@ -328,11 +336,10 @@ if (KNP_BUILD_TESTS)
                         "INSTALL_GTEST OFF")
 endif()
 
-
-if (CPM_SOURCE_CACHE)
-    file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "${CPM_SOURCE_CACHE}/**/include")
-    include_directories("${CPM_SOURCE_CACHE}" ${THIRD_PARTY_INCLUDES})
-endif()
+#if (CPM_SOURCE_CACHE)
+#    file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "${CPM_SOURCE_CACHE}/**/include")
+#    include_directories("${CPM_SOURCE_CACHE}" ${THIRD_PARTY_INCLUDES})
+#endif()
 
 if (MSVC)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS FALSE)
