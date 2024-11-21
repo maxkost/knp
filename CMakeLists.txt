@@ -302,6 +302,7 @@ add_third_party("gh:BlueBrain/HighFive@2.9.0"
 add_third_party("gh:p-ranav/csv2@0.1"
                 OPTIONS
                     "CSV2_BUILD_TESTS OFF"
+                    "CSV2_TEST OFF"
                     "CSV2_SAMPLES OFF")
 
 add_third_party("gh:intel/pcm"
