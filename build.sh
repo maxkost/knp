@@ -33,7 +33,7 @@ build()
   fi
 
   if [[ ${SINGLE_PROCESS} == 0 ]]; then
-    BUILD_ADD_OPTS="${BUILD_ADD_OPTS} --parallel"
+    BUILD_ADD_OPTS="${BUILD_ADD_OPTS} --parallel $(nproc)"
   fi
 
   set -e
