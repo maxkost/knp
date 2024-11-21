@@ -21,7 +21,7 @@ limitations under the License.
 include_guard(GLOBAL)
 
 # include(get_cpm)
-include("CPM")
+include(CPM)
 
 
 function(add_third_party module_name)
@@ -36,15 +36,15 @@ function(add_third_party module_name)
         # The shorthand syntax implies EXCLUDE_FROM_ALL and SYSTEM
         list(GET ARGN 1 _repo_name)
         get_filename_component(_repo_name ${_repo_name} NAME)
-        CPMADDPackage(${ARGN}
+        CPMAddPackage(${ARGN}
                       EXCLUDE_FROM_ALL YES
-                      SYSTEM YES
-                      SOURCE_DIR "${KNP_ROOT_DIR}/third-party/${_repo_name}")
+                      SYSTEM YES)
+                      # SOURCE_DIR "${KNP_ROOT_DIR}/third-party/${_repo_name}")
     else()
         list(GET ARGN 0 _m_name)
-        CPMADDPackage("${module_name}" ${ARGN}
+        CPMAddPackage("${module_name}" ${ARGN}
                       EXCLUDE_FROM_ALL YES
-                      SYSTEM YES
-                      SOURCE_DIR "${KNP_ROOT_DIR}/third-party/${_m_name}")
+                      SYSTEM YES)
+                      # SOURCE_DIR "${KNP_ROOT_DIR}/third-party/${_m_name}")
     endif()
 endfunction()

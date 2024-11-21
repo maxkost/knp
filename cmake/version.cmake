@@ -33,9 +33,9 @@ endfunction()
 
 
 function(determine_version_with_git)
-    message(STATUS "Determining version from Git...")
+    message(STATUS "Determining version from Git in \"${CMAKE_CURRENT_SOURCE_DIR}\"...")
     execute_process(COMMAND git describe --tags
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
             RESULT_VARIABLE GIT_EXECUTION_RESULT
             OUTPUT_VARIABLE GIT_PKG_VERSION_FULL
             ERROR_VARIABLE GIT_VERSION_ERROR
@@ -60,7 +60,7 @@ function(knp_get_version)
     determine_version_with_git()
 
     if (NOT KNP_VERSION)
-        read_version_file("${CMAKE_SOURCE_DIR}/VERSION")
+        read_version_file("${CMAKE_CURRENT_SOURCE_DIR}/VERSION")
     endif()
 
     message(STATUS "Kaspersky Neuromorphic Platform version: ${KNP_VERSION}.")

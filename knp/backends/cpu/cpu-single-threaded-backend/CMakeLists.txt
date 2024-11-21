@@ -53,7 +53,7 @@ knp_add_library("${PROJECT_NAME}"
     LINK_PRIVATE
         Boost::headers ${Boost_LIBRARIES} spdlog::spdlog KNP::Backends::CPU::Library
     LINK_PUBLIC
-        KNP::Core KNP::Devices::CPUStatic
+        KNP::Core KNP::Devices::CPU
 )
 
 set_target_properties(

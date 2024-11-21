@@ -114,11 +114,11 @@ endif()
 # Kaspersky Neuromorphic Platform build option set.
 #
 
-# Build is not from source directory, it is possible to specify it via add_subdirectory().
-if (NOT CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
-    set(KNP_BUILD_AUTONOMOUS FALSE)
-else()
+if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     set(KNP_BUILD_AUTONOMOUS TRUE)
+else()
+    # Build is not from source directory, it is possible to specify it via add_subdirectory().
+    set(KNP_BUILD_AUTONOMOUS FALSE)
 endif()
 
 if (CMAKE_SYSTEM_PROCESSOR MATCHES "(x86)|(X86)|(amd64)|(AMD64)")
@@ -187,7 +187,7 @@ if (KNP_ENABLE_AVX)
     # -include bits/stdc++.h
 endif()
 
-if (NOT KNP_MAINTAINER_BUILD)
+if (NOT KNP_MAINTAINER_BUILD AND KNP_BUILD_AUTONOMOUS)
     execute_process(COMMAND pre-commit install
                     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
     if(ret AND NOT ret EQUAL 0)
@@ -223,8 +223,16 @@ if (MSVC)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 endif()
 
-set(CPM_SOURCE_CACHE_DEFAULT "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STRING "" FORCE)
-set(CPM_SOURCE_CACHE "${CMAKE_CURRENT_SOURCE_DIR}/third-party" CACHE STRING "" FORCE)
+if (KNP_BUILD_AUTONOMOUS)
+    if (NOT CPM_SOURCE_CACHE_DEFAULT)
+        set(CPM_SOURCE_CACHE_DEFAULT "${CMAKE_CURRENT_SOURCE_DIR}/third-party")
+    endif()
+
+    if (NOT CPM_SOURCE_CACHE)
+        message(STATUS "Autonomous build. Setting source cached directory to \"${CPM_SOURCE_CACHE_DEFAULT}\".")
+        set(CPM_SOURCE_CACHE "${CPM_SOURCE_CACHE_DEFAULT}")
+    endif()
+endif()
 
 # Make cache variables for installation destinations.
 include(GNUInstallDirs)
@@ -314,9 +322,14 @@ add_third_party("gh:zeromq/cppzmq@4.10.0"
 add_third_party("gh:Tencent/rapidjson#7c73dd7"
                 OPTIONS
                     "RAPIDJSON_BUILD_DOC OFF"
+                    "RAPIDJSON_BUILD_ASAN OFF"
+                    "RAPIDJSON_BUILD_UBSAN OFF"
+                    "RAPIDJSON_BUILD_CXX17 ON"
                     "RAPIDJSON_BUILD_EXAMPLES OFF"
                     "RAPIDJSON_BUILD_TESTS OFF"
                     "RAPIDJSON_HAS_STDSTRING ON")
+
+include_directories("${CPM_PACKAGE_pcm_SOURCE_DIR}/src" "${CPM_PACKAGE_rapidjson_SOURCE_DIR}/include")
 
 if (KNP_BUILD_TESTS)
     add_compile_definitions(SPDLOG_ACTIVE_LEVEL=0)
@@ -326,8 +339,10 @@ if (KNP_BUILD_TESTS)
                         "INSTALL_GTEST OFF")
 endif()
 
-file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "${CPM_SOURCE_CACHE}/**/include")
-include_directories("${CPM_SOURCE_CACHE}" ${THIRD_PARTY_INCLUDES})
+#if (CPM_SOURCE_CACHE)
+#    file(GLOB THIRD_PARTY_INCLUDES LIST_DIRECTORIES true "${CPM_SOURCE_CACHE}/**/include")
+#    include_directories("${CPM_SOURCE_CACHE}" ${THIRD_PARTY_INCLUDES})
+#endif()
 
 if (MSVC)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS FALSE)
