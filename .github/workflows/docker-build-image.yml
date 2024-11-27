@@ -45,6 +45,6 @@ jobs:
           context: "{{defaultContext}}:docker/build-image"
           load: true
           push: true
-          tags: kasperskydh/knp-build-image:latest
+          tags: ${{ vars.DOCKERHUB_LOGIN }}/knp-build-image:latest
           timeout-minutes: 180
           continue-on-error: false
