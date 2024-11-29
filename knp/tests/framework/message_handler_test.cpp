@@ -56,7 +56,7 @@ TEST(MessageHandlerSuite, MessageHandlerGroupWTASingle)
     std::random_device rd;
     int seed = rd();
     SPDLOG_DEBUG("Seed is {}", seed);
-    // the intervals are [0, 1, 2], [3, 4, 5], [6, 7, 8], [9, ...]
+    // the intervals are [0, 1, 2], [3, 4, 5], [6, 7, 8], [9, ...].
     knp::framework::modifier::GroupWtaRandomHandler group_handler({3, 6, 9}, 1, seed);
 
     // Message contains two spikes in group 0, one in group 1 and one in group 2, group 0 should be selected.
