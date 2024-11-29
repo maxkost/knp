@@ -76,7 +76,7 @@ knp_add_library("${PROJECT_NAME}-core"
     ${${PROJECT_NAME}_headers}
     ALIAS KNP::BaseFramework::Core
     LINK_PRIVATE
-        spdlog::spdlog Boost::headers Boost::filesystem #[[RapidJSON]] HighFive ${HDF5_LIB} csv2
+        spdlog::spdlog Boost::headers Boost::filesystem HighFive ${HDF5_LIB} csv2 # RapidJSON
         # Hack to build with CLang.
         ${ADD_LIBS}
     LINK_PUBLIC

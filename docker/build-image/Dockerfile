@@ -141,9 +141,9 @@ RUN \
   && chmod +x ${DESTINATION} \
   && ln -sf ${DESTINATION} /usr/bin/docker-compose
 
-RUN \
-  wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.23_amd64.deb && dpkg -i libssl1.1_1.1.1f-1ubuntu2.23_amd64.deb && rm libssl1.1_1.1.1f-1ubuntu2.23_amd64.deb \
-  && sed -i 's/openssl_conf = openssl_init/#openssl_conf = openssl_init/g' /etc/ssl/openssl.cnf
+#RUN \
+#  wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.23_amd64.deb && dpkg -i libssl1.1_1.1.1f-1ubuntu2.23_amd64.deb && rm libssl1.1_1.1.1f-1ubuntu2.23_amd64.deb \
+#  && sed -i 's/openssl_conf = openssl_init/#openssl_conf = openssl_init/g' /etc/ssl/openssl.cnf
 
 # COPY "${OCLINT_FILE}" .
 RUN \
