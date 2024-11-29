@@ -40,8 +40,19 @@ namespace knp::framework::modifier
 class SpikeMessageHandler
 {
 public:
+    /**
+     * @brief Input message type.
+     */
     using MessageIn = knp::core::messaging::SpikeMessage;
+
+    /**
+     * @brief Output message type.
+     */
     using MessageOut = knp::core::messaging::SpikeMessage;
+
+    /**
+     * @brief Functor type.
+     */
     using FunctionType = std::function<core::messaging::SpikeData(std::vector<MessageIn> &)>;
 
     /**
