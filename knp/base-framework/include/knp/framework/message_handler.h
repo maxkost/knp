@@ -72,12 +72,10 @@ public:
      */
     SpikeMessageHandler(SpikeMessageHandler &&other) noexcept = default;
 
-
     /**
      * @brief Is not copyable.
      */
     SpikeMessageHandler(const SpikeMessageHandler &) = delete;
-
 
     /**
      * @brief Subscribe handler to a number of other entities.
@@ -86,7 +84,6 @@ public:
      */
     void subscribe(const std::vector<core::UID> &entities) { endpoint_.subscribe<MessageIn>(base_.uid_, entities); }
 
-
     /**
      * @brief Read, process and send messages.
      * @param step current step.
@@ -94,13 +91,11 @@ public:
      */
     void update(size_t step);
 
-
     /**
      * @brief Get handler UID.
      * @return object UID.
      */
     [[nodiscard]] knp::core::UID get_uid() const { return base_.uid_; };
-
 
     /**
      * @brief Get a tag.
@@ -124,7 +119,7 @@ class KWtaRandomHandler
 {
 public:
     /**
-     * @brief Constructor
+     * @brief Constructor.
      * @param winners_number Max number of output spikes.
      * @param seed random generator seed.
      * @note uses mt19937 for random number generation.
@@ -134,9 +129,8 @@ public:
     {
     }
 
-
     /**
-     * @brief operator that takes a number of messages and returns a set of spikes.
+     * @brief Function call operator that takes a number of messages and returns a set of spikes.
      * @param messages spike messages.
      * @return spikes data containing no more than K spikes.
      * @note it's assumed that it gets no more than one message per step, so all messages except first are ignored.
@@ -171,9 +165,8 @@ public:
         std::sort(group_borders_.begin(), group_borders_.end());
     }
 
-
     /**
-     * @brief Functor operator.
+     * @brief Function call operator.
      * @param messages input messages.
      * @return spikes from winning groups.
      */
@@ -194,7 +187,8 @@ class SpikeUnionHandler
 {
 public:
     /**
-     * @brief Functor operator, receives a vector of messages, returns a union of all spike sets from those messages.
+     * @brief Function call operator, receives a vector of messages, returns a union of all spike sets from those
+     * messages.
      * @param messages incoming spike messages.
      * @return spikes vector containing the union of input message spike sets.
      */
