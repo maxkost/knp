@@ -76,6 +76,19 @@ TEST(MessageHandlerSuite, MessageHandlerGroupWTASingle)
 }
 
 
+TEST(MessageHandlerSuite, SpikeUnionHandler)
+{
+    knp::framework::modifier::SpikeUnionHandler union_handler;
+    knp::core::messaging::SpikeMessage message_1 = {{knp::core::UID{}, 0}, {1, 3, 5}};
+    knp::core::messaging::SpikeMessage message_2 = {{knp::core::UID{}, 0}, {0, 1, 3}};
+    knp::core::messaging::SpikeMessage message_3 = {{knp::core::UID{}, 0}, {3, 4, 7}};
+    auto result = union_handler({message_1, message_2, message_3});
+    std::sort(result.begin(), result.end());
+    const decltype(result) expected_result{0, 1, 3, 4, 5, 7};
+    ASSERT_EQ(result, expected_result);
+}
+
+
 namespace knp::testing
 {
 
@@ -90,7 +103,6 @@ public:
 
 
 using BlifatParams = knp::neuron_traits::neuron_parameters<knp::neuron_traits::BLIFATNeuron>;
-using DeltaParams = knp::synapse_traits::synapse_parameters<knp::synapse_traits::DeltaSynapse>;
 using DeltaProjection = knp::core::Projection<knp::synapse_traits::DeltaSynapse>;
 using BlifatPopulation = knp::core::Population<knp::neuron_traits::BLIFATNeuron>;
 
