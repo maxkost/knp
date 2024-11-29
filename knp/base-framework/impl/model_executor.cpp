@@ -55,6 +55,11 @@ void ModelExecutor::start(core::Backend::RunPredicate run_predicate)
             {
                 o_ch.update();
             }
+            // Running handlers
+            for (auto &handler : message_handlers_)
+            {
+                handler.update(get_backend()->get_step());
+            }
             // Run monitoring observers.
             for (auto &observer : observers_)
             {
@@ -70,6 +75,21 @@ void ModelExecutor::start(core::Backend::RunPredicate run_predicate)
 void ModelExecutor::stop()
 {
     get_backend()->stop();
+}
+
+
+void ModelExecutor::add_message_handler(
+    typename modifier::SpikeMessageHandler::FunctionType &&message_handler_function,
+    const std::vector<core::UID> &senders, const std::vector<core::UID> &receivers, const knp::core::UID &uid)
+{
+    knp::core::MessageEndpoint endpoint = get_backend()->get_message_bus().create_endpoint();
+    message_handlers_.emplace_back(
+        modifier::SpikeMessageHandler{std::move(message_handler_function), std::move(endpoint), uid});
+    message_handlers_.back().subscribe(senders);
+    for (const knp::core::UID &rec_uid : receivers)
+    {
+        get_backend()->subscribe<typename modifier::SpikeMessageHandler::MessageOut>(rec_uid, {uid});
+    }
 }
 
 }  // namespace knp::framework

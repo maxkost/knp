@@ -24,6 +24,7 @@
 #include <knp/core/impexp.h>
 #include <knp/framework/backend_loader.h>
 #include <knp/framework/io/input_converter.h>
+#include <knp/framework/message_handler.h>
 #include <knp/framework/model.h>
 #include <knp/framework/model_loader.h>
 #include <knp/framework/monitoring/observer.h>
@@ -94,6 +95,18 @@ public:
     }
 
     /**
+     * @brief Add spike message handler to executor.
+     * @param message_handler_function functor to process received messages.
+     * @param senders list of entities sending messages to the handler.
+     * @param receivers list of entities receiving messages from handler.
+     * @param uid handler uid.
+     */
+    void add_message_handler(
+        typename modifier::SpikeMessageHandler::FunctionType &&message_handler_function,
+        const std::vector<core::UID> &senders, const std::vector<core::UID> &receivers,
+        const knp::core::UID &uid = knp::core::UID{});
+
+    /**
      * @brief Unlock synapse weights.
      */
     void start_learning() { get_backend()->start_learning(); }
@@ -120,5 +133,6 @@ private:
     ModelLoader loader_;
 
     std::vector<monitoring::AnyObserverVariant> observers_;
+    std::vector<modifier::SpikeMessageHandler> message_handlers_;
 };
 }  // namespace knp::framework
