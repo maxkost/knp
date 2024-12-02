@@ -22,7 +22,7 @@
 
 #include <knp/backends/cpu-single-threaded/backend.h>
 #include <knp/core/messaging/messaging.h>
-#include <knp/framework/message_handler.h>
+#include <knp/framework/message_handlers.h>
 #include <knp/framework/model_executor.h>
 #include <knp/framework/network.h>
 #include <knp/neuron-traits/blifat.h>
@@ -169,7 +169,7 @@ TEST(MessageHandlerSuite, NetworkIntegrationTest)
     auto &out_channel = model_executor.get_loader().get_output_channel(output_uid);
     const std::vector<size_t> group_borders{2, 4};
     const knp::core::UID handler_uid;
-    model_executor.add_message_handler(
+    model_executor.add_spike_message_handler(
         knp::framework::modifier::GroupWtaRandomHandler{group_borders}, {in_pop_uid}, {inter_proj_uid}, handler_uid);
     constexpr int num_steps = 20;
     model_executor.start([](size_t step) { return step < num_steps; });

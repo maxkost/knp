@@ -1,6 +1,6 @@
 /**
- * @file message_handler.h
- * @brief A class that processes a number of messages then sends messages of its own.
+ * @file message_handlers.h
+ * @brief A set of predefined message handling functions to add to model executor.
  * @kaspersky_support Vartenkov A.
  * @date 19.11.2024
  * @license Apache 2.0
@@ -33,83 +33,6 @@
 
 namespace knp::framework::modifier
 {
-
-/**
- * @brief An object that receives and processes messages.
- */
-class SpikeMessageHandler
-{
-public:
-    /**
-     * @brief Input message type.
-     */
-    using MessageIn = knp::core::messaging::SpikeMessage;
-
-    /**
-     * @brief Output message type.
-     */
-    using MessageOut = knp::core::messaging::SpikeMessage;
-
-    /**
-     * @brief Functor type.
-     */
-    using FunctionType = std::function<core::messaging::SpikeData(std::vector<MessageIn> &)>;
-
-    /**
-     * @brief Handler constructor.
-     * @param function a function that takes a vector of spike messages and returns a vector of spikes.
-     * @param endpoint message endpoint.
-     * @param uid the uid of this object.
-     */
-    SpikeMessageHandler(FunctionType &&function, knp::core::MessageEndpoint &&endpoint, const knp::core::UID &uid = {})
-        : message_handler_function_(std::move(function)), endpoint_(std::move(endpoint)), base_{uid}
-    {
-    }
-
-    /**
-     * @brief Default move constructor.
-     * @param other object to move from.
-     */
-    SpikeMessageHandler(SpikeMessageHandler &&other) noexcept = default;
-
-    /**
-     * @brief Is not copyable.
-     */
-    SpikeMessageHandler(const SpikeMessageHandler &) = delete;
-
-    /**
-     * @brief Subscribe handler to a number of other entities.
-     * @param entities network uids.
-     * @note For internal use, don't try to call it manually.
-     */
-    void subscribe(const std::vector<core::UID> &entities) { endpoint_.subscribe<MessageIn>(base_.uid_, entities); }
-
-    /**
-     * @brief Read, process and send messages.
-     * @param step current step.
-     * @note for internal use, don't try to call it manually.
-     */
-    void update(size_t step);
-
-    /**
-     * @brief Get handler UID.
-     * @return object UID.
-     */
-    [[nodiscard]] knp::core::UID get_uid() const { return base_.uid_; };
-
-    /**
-     * @brief Get a tag.
-     * @param tag_name tag name.
-     * @return tag value reference.
-     */
-    [[nodiscard]] std::any &get_tag(const std::string &tag_name) { return base_.tags_[tag_name]; };
-
-private:
-    FunctionType message_handler_function_;
-    core::MessageEndpoint endpoint_;
-    knp::core::BaseData base_;
-};
-
 
 /**
  * @brief A modifier functor to process spikes and select random K spikes out of the whole set.

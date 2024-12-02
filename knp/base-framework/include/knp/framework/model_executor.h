@@ -24,7 +24,7 @@
 #include <knp/core/impexp.h>
 #include <knp/framework/backend_loader.h>
 #include <knp/framework/io/input_converter.h>
-#include <knp/framework/message_handler.h>
+#include <knp/framework/message_handlers.h>
 #include <knp/framework/model.h>
 #include <knp/framework/model_loader.h>
 #include <knp/framework/monitoring/observer.h>
@@ -95,16 +95,21 @@ public:
     }
 
     /**
+     * @brief Function type for message handlers.
+     */
+    using SpikeHandlerFunction =
+        std::function<knp::core::messaging::SpikeData(std::vector<knp::core::messaging::SpikeMessage> &)>;
+
+    /**
      * @brief Add spike message handler to executor.
      * @param message_handler_function functor to process received messages.
      * @param senders list of entities sending messages to the handler.
      * @param receivers list of entities receiving messages from handler.
      * @param uid handler uid.
      */
-    void add_message_handler(
-        typename modifier::SpikeMessageHandler::FunctionType &&message_handler_function,
-        const std::vector<core::UID> &senders, const std::vector<core::UID> &receivers,
-        const knp::core::UID &uid = knp::core::UID{});
+    void add_spike_message_handler(
+        SpikeHandlerFunction &&message_handler_function, const std::vector<core::UID> &senders,
+        const std::vector<core::UID> &receivers, const knp::core::UID &uid = knp::core::UID{});
 
     /**
      * @brief Unlock synapse weights.
@@ -129,10 +134,42 @@ public:
     auto &get_loader() { return loader_; }
 
 private:
+    /**
+     * @brief An object that receives and processes messages.
+     */
+    class SpikeMessageHandler
+    {
+    public:
+        using MessageIn = knp::core::messaging::SpikeMessage;
+        using MessageData = knp::core::messaging::SpikeData;
+        using FunctionType = std::function<MessageData(std::vector<MessageIn> &)>;
+
+        SpikeMessageHandler(
+            FunctionType &&function, knp::core::MessageEndpoint &&endpoint, const knp::core::UID &uid = {})
+            : message_handler_function_(std::move(function)), endpoint_(std::move(endpoint)), base_{uid}
+        {
+        }
+
+        SpikeMessageHandler(SpikeMessageHandler &&other) noexcept = default;
+
+        SpikeMessageHandler(const SpikeMessageHandler &) = delete;
+
+        void subscribe(const std::vector<core::UID> &entities) { endpoint_.subscribe<MessageIn>(base_.uid_, entities); }
+
+        void update(size_t step);
+
+        [[nodiscard]] knp::core::UID get_uid() const { return base_.uid_; };
+
+    private:
+        FunctionType message_handler_function_;
+        core::MessageEndpoint endpoint_;
+        knp::core::BaseData base_;
+    };
+
     knp::core::BaseData base_;
     ModelLoader loader_;
 
     std::vector<monitoring::AnyObserverVariant> observers_;
-    std::vector<modifier::SpikeMessageHandler> message_handlers_;
+    std::vector<SpikeMessageHandler> message_handlers_;
 };
 }  // namespace knp::framework

@@ -1,5 +1,5 @@
 /**
- * @file message_handler.cpp
+ * @file message_handlers.cpp
  * @brief Implementation of message handler functionality.
  * @kaspersky_support  A. Vartenkov
  * @date 25.11.2024
@@ -19,33 +19,30 @@
  * limitations under the License.
  */
 
-#include <knp/framework/message_handler.h>
+#include <knp/framework/message_handlers.h>
 
 #include <unordered_set>
 #include <utility>
 
 
+/**
+ * @brief namespace for message modifier callables.
+ */
 namespace knp::framework::modifier
 {
 
-void SpikeMessageHandler::update(size_t step)
-{
-    endpoint_.receive_all_messages();
-    auto incoming_messages = endpoint_.unload_messages<MessageIn>(base_.uid_);
-    MessageOut outgoing_message = {{base_.uid_, step}, message_handler_function_(incoming_messages)};
-    if (!(outgoing_message.neuron_indexes_.empty()))
-    {
-        endpoint_.send_message(outgoing_message);
-    }
-}
-
-
 knp::core::messaging::SpikeData KWtaRandomHandler::operator()(std::vector<knp::core::messaging::SpikeMessage> &messages)
 {
-    if (messages.empty()) return {};
+    if (messages.empty())
+    {
+        return {};
+    }
 
     auto &msg = messages[0];
-    if (msg.neuron_indexes_.size() < num_winners_) return msg.neuron_indexes_;
+    if (msg.neuron_indexes_.size() < num_winners_)
+    {
+        return msg.neuron_indexes_;
+    }
 
     knp::core::messaging::SpikeData out_spikes;
     for (size_t i = 0; i < num_winners_; ++i)
@@ -54,6 +51,7 @@ knp::core::messaging::SpikeData KWtaRandomHandler::operator()(std::vector<knp::c
         out_spikes.push_back(msg.neuron_indexes_[index]);
         std::swap(msg.neuron_indexes_[index], msg.neuron_indexes_[msg.neuron_indexes_.size() - 1 - i]);
     }
+
     return out_spikes;
 }
 
@@ -61,13 +59,23 @@ knp::core::messaging::SpikeData KWtaRandomHandler::operator()(std::vector<knp::c
 knp::core::messaging::SpikeData GroupWtaRandomHandler::operator()(
     const std::vector<knp::core::messaging::SpikeMessage> &messages)
 {
-    if (messages.empty()) return {};
-    if (num_winners_ > group_borders_.size()) return messages[0].neuron_indexes_;
+    if (messages.empty())
+    {
+        return {};
+    }
+
+    if (num_winners_ > group_borders_.size())
+    {
+        return messages[0].neuron_indexes_;
+    }
 
     const auto &spikes = messages[0].neuron_indexes_;
-    if (spikes.empty()) return {};
+    if (spikes.empty())
+    {
+        return {};
+    }
 
-    std::vector<std::vector<size_t>> spikes_per_group(group_borders_.size() + 1);
+    std::vector<knp::core::messaging::SpikeData> spikes_per_group(group_borders_.size() + 1);
 
     // Fill groups in.
     for (const auto &spike : spikes)
@@ -94,7 +102,10 @@ knp::core::messaging::SpikeData GroupWtaRandomHandler::operator()(
     knp::core::messaging::SpikeData result;
     for (size_t i = 0; i < num_winners_; ++i)
     {
-        for (auto spike : spikes_per_group[i]) result.push_back(spike);
+        for (const auto &spike : spikes_per_group[i])
+        {
+            result.push_back(spike);
+        }
     }
     return result;
 }
@@ -103,7 +114,7 @@ knp::core::messaging::SpikeData GroupWtaRandomHandler::operator()(
 knp::core::messaging::SpikeData SpikeUnionHandler::operator()(
     const std::vector<knp::core::messaging::SpikeMessage> &messages)
 {
-    std::unordered_set<size_t> spikes;
+    std::unordered_set<knp::core::messaging::SpikeIndex> spikes;
     for (const auto &msg : messages)
     {
         spikes.insert(msg.neuron_indexes_.begin(), msg.neuron_indexes_.end());

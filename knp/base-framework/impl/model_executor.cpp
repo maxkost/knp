@@ -78,17 +78,29 @@ void ModelExecutor::stop()
 }
 
 
-void ModelExecutor::add_message_handler(
-    typename modifier::SpikeMessageHandler::FunctionType &&message_handler_function,
-    const std::vector<core::UID> &senders, const std::vector<core::UID> &receivers, const knp::core::UID &uid)
+void ModelExecutor::SpikeMessageHandler::update(size_t step)
+{
+    endpoint_.receive_all_messages();
+    auto incoming_messages = endpoint_.unload_messages<MessageIn>(base_.uid_);
+    knp::core::messaging::SpikeMessage outgoing_message = {
+        {base_.uid_, step}, message_handler_function_(incoming_messages)};
+    if (!(outgoing_message.neuron_indexes_.empty()))
+    {
+        endpoint_.send_message(outgoing_message);
+    }
+}
+
+
+void ModelExecutor::add_spike_message_handler(
+    typename SpikeMessageHandler::FunctionType &&message_handler_function, const std::vector<core::UID> &senders,
+    const std::vector<core::UID> &receivers, const knp::core::UID &uid)
 {
     knp::core::MessageEndpoint endpoint = get_backend()->get_message_bus().create_endpoint();
-    message_handlers_.emplace_back(
-        modifier::SpikeMessageHandler{std::move(message_handler_function), std::move(endpoint), uid});
+    message_handlers_.emplace_back(SpikeMessageHandler{std::move(message_handler_function), std::move(endpoint), uid});
     message_handlers_.back().subscribe(senders);
     for (const knp::core::UID &rec_uid : receivers)
     {
-        get_backend()->subscribe<typename modifier::SpikeMessageHandler::MessageOut>(rec_uid, {uid});
+        get_backend()->subscribe<knp::core::messaging::SpikeMessage>(rec_uid, {uid});
     }
 }
 
