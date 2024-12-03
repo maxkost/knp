@@ -172,7 +172,7 @@ TEST(MessageHandlerSuite, NetworkIntegrationTest)
     model_executor.add_spike_message_handler(
         knp::framework::modifier::GroupWtaRandomHandler{group_borders}, {in_pop_uid}, {inter_proj_uid}, handler_uid);
     constexpr int num_steps = 20;
-    model_executor.start([](size_t step) { return step < num_steps; });
+    model_executor.start([num_steps](size_t step) { return step < num_steps; });
 
     const auto &spikes = out_channel.update();
 
