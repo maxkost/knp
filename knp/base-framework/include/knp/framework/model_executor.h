@@ -55,11 +55,12 @@ public:
      * @param i_map input channel map.
      */
     ModelExecutor(
-        knp::framework::Model &model, std::shared_ptr<core::Backend> backend, ModelLoader::InputChannelMap i_map)
-        : loader_(backend, i_map)
-    {
-        loader_.load(model);
-    }
+        knp::framework::Model &model, std::shared_ptr<core::Backend> backend, ModelLoader::InputChannelMap i_map);
+
+    /**
+     * @brief ModelExecutor destructor.
+     */
+    ~ModelExecutor();
 
 public:
     /**
@@ -134,42 +135,12 @@ public:
     auto &get_loader() { return loader_; }
 
 private:
-    /**
-     * @brief An object that receives and processes messages.
-     */
-    class SpikeMessageHandler
-    {
-    public:
-        using MessageIn = knp::core::messaging::SpikeMessage;
-        using MessageData = knp::core::messaging::SpikeData;
-        using FunctionType = std::function<MessageData(std::vector<MessageIn> &)>;
-
-        SpikeMessageHandler(
-            FunctionType &&function, knp::core::MessageEndpoint &&endpoint, const knp::core::UID &uid = {})
-            : message_handler_function_(std::move(function)), endpoint_(std::move(endpoint)), base_{uid}
-        {
-        }
-
-        SpikeMessageHandler(SpikeMessageHandler &&other) noexcept = default;
-
-        SpikeMessageHandler(const SpikeMessageHandler &) = delete;
-
-        void subscribe(const std::vector<core::UID> &entities) { endpoint_.subscribe<MessageIn>(base_.uid_, entities); }
-
-        void update(size_t step);
-
-        [[nodiscard]] knp::core::UID get_uid() const { return base_.uid_; };
-
-    private:
-        FunctionType message_handler_function_;
-        core::MessageEndpoint endpoint_;
-        knp::core::BaseData base_;
-    };
+    class SpikeMessageHandler;
 
     knp::core::BaseData base_;
     ModelLoader loader_;
 
     std::vector<monitoring::AnyObserverVariant> observers_;
-    std::vector<SpikeMessageHandler> message_handlers_;
+    std::vector<std::unique_ptr<SpikeMessageHandler>> message_handlers_;
 };
 }  // namespace knp::framework
